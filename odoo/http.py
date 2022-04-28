@@ -132,6 +132,11 @@ from datetime import datetime
 from os.path import join as opj
 
 import babel.core
+<<<<<<< HEAD
+=======
+from datetime import datetime
+import passlib.utils
+>>>>>>> dfd467dc119... temp
 import psycopg2
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -1743,6 +1748,7 @@ class Application:
         current_thread.url = httprequest.url
 
         try:
+<<<<<<< HEAD
             segments = httprequest.path.split('/')
             if len(segments) >= 4 and segments[2] == 'static':
                 with contextlib.suppress(NotFound):
@@ -1755,6 +1761,36 @@ class Application:
             else:
                 response = request._serve_nodb()
             return response(environ, start_response)
+=======
+            server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            mtime = datetime.strptime(mtime.split('.')[0], server_format)
+        except Exception:
+            mtime = None
+    if mtime is not None:
+        rv.last_modified = mtime
+
+    rv.cache_control.public = True
+    if cache_timeout:
+        rv.cache_control.max_age = cache_timeout
+        rv.expires = int(time.time() + cache_timeout)
+
+    if add_etags and filename and mtime:
+        rv.set_etag('odoo-%s-%s-%s' % (
+            mtime,
+            size,
+            adler32(
+                filename.encode('utf-8') if isinstance(filename, str)
+                else filename
+            ) & 0xffffffff
+        ))
+        if conditional:
+            rv = rv.make_conditional(request.httprequest)
+            # make sure we don't send x-sendfile for servers that
+            # ignore the 304 status code for x-sendfile.
+            if rv.status_code == 304:
+                rv.headers.pop('x-sendfile', None)
+    return rv
+>>>>>>> dfd467dc119... temp
 
         except Exception as exc:
             # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
