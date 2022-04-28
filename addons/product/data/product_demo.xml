@@ -511,6 +511,19 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_27-image.jpg"/>
         </record>
 
+        <record id="consu_delivery_04" model="product.product">
+            <field name="name">Coffee machine</field>
+            <field name="categ_id" ref="product_category_5"/>
+            <field name="standard_price">250.0</field>
+            <field name="list_price">200.0</field>
+            <field name="detailed_type">consu</field>
+            <field name="weight">1</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">Coffee machine</field>
+            <field name="default_code">FURN_8230</field>
+        </record>
+
         <record id="consu_delivery_03" model="product.product">
             <field name="name">Four Person Desk</field>
             <field name="categ_id" ref="product_category_5"/>
