@@ -115,25 +115,39 @@ export class ListRenderer extends Component {
 
         useEffect(
             (columns, isEmpty) => {
+                if (!this.tableRef.el) return;
+
                 const widths = [];
                 for (const column of columns) {
                     widths.push(this.calculateColumnWidth(column));
                 }
 
-                const relativeWidths = widths.filter((w) => w.type === "relative");
-                let totalOfRelativeWidths = relativeWidths.reduce((acc, w) => acc + w.value, 0);
-                for (const column of columns) {
-                    const width = widths.shift();
-                    if (width.type === "absolute") {
-                        column.widthStyle = "min-width:" + width.value + ";";
-                        if (isEmpty) {
-                            column.widthStyle = column.widthStyle + "width:" + width.value + ";";
+                if (!this.props.editable) {
+                    this.tableRef.el.style.tableLayout = "auto";
+                    for (const column of columns) {
+                        const width = this.calculateColumnWidth(column);
+                        if (width.type === "absolute") {
+                            column.widthStyle = "min-width:" + width.value + ";";
                         }
                     }
-                    if (width.type === "relative" && this.props.editable && isEmpty) {
-                        const value =
-                            ((width.value / totalOfRelativeWidths) * 100).toFixed(2) + "%";
-                        column.widthStyle = "width:" + value + ";";
+                } else {
+                    this.tableRef.el.style.tableLayout = "fixed";
+                    const widths = [];
+                    for (const column of columns) {
+                        widths.push(this.calculateColumnWidth(column));
+                    }
+                    const relativeWidths = widths.filter((w) => w.type === "relative");
+                    let totalOfRelativeWidths = relativeWidths.reduce((acc, w) => acc + w.value, 0);
+
+                    for (const column of columns) {
+                        const width = widths.shift();
+                        if (width.type === "absolute") {
+                            column.widthStyle = "width:" + width.value + ";";
+                        } else {
+                            const value =
+                                ((width.value / totalOfRelativeWidths) * 100).toFixed(2) + "%";
+                            column.widthStyle = "width:" + value + ";";
+                        }
                     }
                 }
             },
@@ -649,8 +663,8 @@ export class ListRenderer extends Component {
             MonetaryField: "104px",
         };
 
-        if (column.options && column.options.width) {
-            return { type: "absolute", value: column.options.width };
+        if (column.options && column.attrs.width) {
+            return { type: "absolute", value: column.attrs.width };
         }
 
         if (column.type != "field") {

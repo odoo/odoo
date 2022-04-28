@@ -3540,7 +3540,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "width of some of the fields should be hardcoded if no data (grouped case)",
         async function (assert) {
             const assertions = [
@@ -3557,17 +3557,16 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree editable="top">' +
-                    '<field name="bar"/>' +
-                    '<field name="foo"/>' +
-                    '<field name="int_field"/>' +
-                    '<field name="qux"/>' +
-                    '<field name="date"/>' +
-                    '<field name="datetime"/>' +
-                    '<field name="amount"/>' +
-                    '<field name="currency_id" width="25px"/>' +
-                    "</tree>",
+                arch: `<tree editable="top">
+                        <field name="bar"/>
+                        <field name="foo"/>
+                        <field name="int_field"/>
+                        <field name="qux"/>
+                        <field name="date"/>
+                        <field name="datetime"/>
+                        <field name="amount"/>
+                        <field name="currency_id" width="25px"/>
+                    </tree>`,
                 groupBy: ["int_field"],
             });
 
@@ -3578,18 +3577,18 @@ QUnit.module("Views", (hooks) => {
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    $(target).find(`th[data-name="${a.field}"]`)[0].offsetWidth,
                     a.expected,
+                    target.querySelectorAll(`th[data-name="${a.field}"]`)[0].offsetWidth,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
             assert.strictEqual(
-                $(target).find('th[data-name="foo"]')[0].style.width,
+                target.querySelectorAll('th[data-name="foo"]')[0].style.width,
                 "100%",
                 "Char field should occupy the remaining space"
             );
             assert.strictEqual(
-                $(target).find('th[data-name="currency_id"]')[0].offsetWidth,
+                target.querySelectorAll('th[data-name="currency_id"]')[0].offsetWidth,
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
@@ -3616,7 +3615,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("column widths are kept when adding first record", async function (assert) {
+    QUnit.test("column widths are kept when adding first record", async function (assert) {
         assert.expect(2);
 
         serverData.models.foo.records = []; // in this scenario, we start with no records
@@ -3624,91 +3623,85 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="top">' +
-                '<field name="datetime"/>' +
-                '<field name="text"/>' +
-                "</tree>",
+            arch: `<tree editable="top">
+                    <field name="datetime"/>
+                    <field name="text"/>
+                </tree>`,
         });
 
-        var width = $(target).find('th[data-name="datetime"]')[0].offsetWidth;
+        var width = target.querySelectorAll('th[data-name="datetime"]')[0].offsetWidth;
 
         await click(target.querySelector(".o_list_button_add"));
 
         assert.containsOnce(target, ".o_data_row");
-        assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, width);
+        assert.strictEqual(
+            target.querySelectorAll('th[data-name="datetime"]')[0].offsetWidth,
+            width
+        );
     });
 
-    QUnit.skipWOWL("column widths are kept when editing a record", async function (assert) {
+    QUnit.test("column widths are kept when editing a record", async function (assert) {
         assert.expect(3);
 
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="datetime"/>' +
-                '<field name="text"/>' +
-                "</tree>",
+            arch: `<tree editable="bottom">
+                    <field name="datetime"/>
+                    <field name="text"/>
+                </tree>`,
         });
 
-        var width = $(target).find('th[data-name="datetime"]')[0].offsetWidth;
+        var width = target.querySelectorAll('th[data-name="datetime"]')[0].offsetWidth;
 
-        await click($(target).find(".o_data_row:eq(0) .o_data_cell:eq(1)"));
+        await click(target.querySelector(".o_data_row:nth-child(1) > .o_data_cell:nth-child(2)"));
         assert.containsOnce(target, ".o_selected_row");
 
         var longVal =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
             "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus " +
             "bibendum est.";
-        await editInput($(target).find(".o_field_widget[name=text]"), longVal);
-        await click(target.querySelector(".o_list_button_save"));
+        await editInput(target.querySelector(".o_field_widget[name=text]"), null, longVal);
+        await clickSave(target);
 
         assert.containsNone(target, ".o_selected_row");
-        assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, width);
+        assert.strictEqual(
+            target.querySelectorAll('th[data-name="datetime"]')[0].offsetWidth,
+            width
+        );
     });
 
-    QUnit.skipWOWL(
-        "column widths are kept when switching records in edition",
-        async function (assert) {
-            assert.expect(4);
-
-            await makeView({
-                type: "list",
-                resModel: "foo",
-                serverData,
-                arch: `<tree editable="bottom">
+    QUnit.test("column widths are kept when switching records in edition", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree editable="bottom">
                     <field name="m2o"/>
                     <field name="text"/>
                 </tree>`,
-            });
-
-            const width = $(target).find('th[data-name="m2o"]')[0].offsetWidth;
-
-            await click($(target).find(".o_data_row:first .o_data_cell:first"));
-
-            assert.hasClass($(target).find(".o_data_row:first"), "o_selected_row");
-            assert.strictEqual($(target).find('th[data-name="m2o"]')[0].offsetWidth, width);
-
-            await click($(target).find(".o_data_row:nth(1) .o_data_cell:first"));
-
-            assert.hasClass($(target).find(".o_data_row:nth(1)"), "o_selected_row");
-            assert.strictEqual($(target).find('th[data-name="m2o"]')[0].offsetWidth, width);
-        }
-    );
-
-    QUnit.skipWOWL("column widths are re-computed on window resize", async function (assert) {
-        assert.expect(2);
-
-        testUtils.mock.patch(ListRenderer, {
-            RESIZE_DELAY: 0,
         });
 
+        const width = target.querySelectorAll('th[data-name="m2o"]')[0].offsetWidth;
+
+        await click(target.querySelector(".o_data_row:nth-child(1) > .o_data_cell:nth-child(2)"));
+
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(1)"), "o_selected_row");
+        assert.strictEqual(target.querySelectorAll('th[data-name="m2o"]')[0].offsetWidth, width);
+
+        await click(target.querySelector(".o_data_row:nth-child(2) > .o_data_cell:nth-child(2)"));
+
+        assert.hasClass(target.querySelector(".o_data_row:nth-child(2)"), "o_selected_row");
+        assert.strictEqual(target.querySelectorAll('th[data-name="m2o"]')[0].offsetWidth, width);
+    });
+
+    QUnit.test("column widths are re-computed on window resize", async function (assert) {
         serverData.models.foo.records[0].text =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
             "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
             "ipsum purus bibendum est.";
+
         await makeView({
             type: "list",
             resModel: "foo",
@@ -3719,20 +3712,17 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
         });
 
-        const initialTextWidth = $(target).find('th[data-name="text"]')[0].offsetWidth;
-        const selectorWidth = $(target).find("th.o_list_record_selector")[0].offsetWidth;
+        const initialTextWidth = target.querySelectorAll('th[data-name="text"]')[0].offsetWidth;
+        const selectorWidth = target.querySelectorAll("th.o_list_record_selector")[0].offsetWidth;
 
         // simulate a window resize
-        $(target).findel.width(`${$(target).findel.width() / 2}px`);
-        core.bus.trigger("resize");
-        await testUtils.nextTick();
+        target.style.width = target.getBoundingClientRect().width / 2 + "px";
 
-        const postResizeTextWidth = $(target).find('th[data-name="text"]')[0].offsetWidth;
-        const postResizeSelectorWidth = $(target).find("th.o_list_record_selector")[0].offsetWidth;
+        const postResizeTextWidth = target.querySelectorAll('th[data-name="text"]')[0].offsetWidth;
+        const postResizeSelectorWidth = target.querySelectorAll("th.o_list_record_selector")[0]
+            .offsetWidth;
         assert.ok(postResizeTextWidth < initialTextWidth);
         assert.strictEqual(selectorWidth, postResizeSelectorWidth);
-
-        testUtils.mock.unpatch(ListRenderer);
     });
 
     QUnit.skipWOWL(
@@ -9680,7 +9670,7 @@ QUnit.module("Views", (hooks) => {
                     <tree multi_edit="1">
                         <field name="id"/>
                         <field name="foo"/>
-                        <field name="int_field" attrs=\'{"readonly": [("id", ">" , 2)]}\'/>
+                        <field name="int_field" attrs='{"readonly": [("id", ">" , 2)]}'/>
                     </tree>`,
                 mockRPC: function (route, args) {
                     if (args.method === "write") {
