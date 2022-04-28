@@ -281,12 +281,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        // the SelectCreateDialog requests the session, so intercept its custom
-        // event to specify a fake session to prevent it from crashing
-        // testUtils.mock.intercept(form, "get_session", function (event) {
-        //     event.data.callback({ user_context: {} });
-        // });
-
         assert.ok(
             !$(target).find(".o_kanban_renderer .delete_icon").length,
             "delete icon should not be visible in readonly"
@@ -432,17 +426,17 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "many2many kanban(editable): properly handle add-label node attribute",
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.records[0].timmy = [12];
+            serverData.models.partner.records[0].timmy = [12];
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="timmy" add-label="Add timmy" mode="kanban">' +
@@ -457,17 +451,18 @@ QUnit.module("Fields", (hooks) => {
                     "</kanban>" +
                     "</field>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
-            await testUtils.form.clickEdit(form);
+            await clickEdit(target);
             assert.strictEqual(
-                form.$('.o_field_many2many[name="timmy"] .o-kanban-button-new').text().trim(),
+                $(target)
+                    .find('.o_field_many2many[name="timmy"] .o-kanban-button-new')
+                    .text()
+                    .trim(),
                 "Add timmy",
                 "In M2M Kanban, Add button should have 'Add timmy' label"
             );
-
-            form.destroy();
         }
     );
 
