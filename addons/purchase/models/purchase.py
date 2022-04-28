@@ -1239,8 +1239,15 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
-        product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
-        if seller.product_name:
+
+        default_names = []
+        vendors = self.product_id._prepare_sellers({})
+        for vendor in vendors:
+            product_ctx = {'seller_id': vendor.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
+            default_names.append(self._get_product_purchase_description(self.product_id.with_context(product_ctx)))
+
+        if (self.name in default_names or not self.name):
+            product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
             self.name = self._get_product_purchase_description(self.product_id.with_context(product_ctx))
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
