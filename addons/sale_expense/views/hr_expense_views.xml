@@ -48,6 +48,18 @@
         <field name="groups_id" eval="[(6, 0, [ref('sales_team.group_sale_salesman')])]"/>
     </record>
 
+    <record id="hr_expense_split_view_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">hr.expense.split.view.inherit.sale.expense</field>
+        <field name="model">hr.expense.split.wizard</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_split"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="can_be_reinvoiced" invisible="1"/>
+                <field name="sale_order_id" force_save="1" attrs="{'readonly': [('can_be_reinvoiced', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="hr_expense_sheet_form_view_inherit_sale_expense" model="ir.ui.view">
         <field name="name">hr.expense.sheet.form.inherit.sale.expense</field>
         <field name="model">hr.expense.sheet</field>
