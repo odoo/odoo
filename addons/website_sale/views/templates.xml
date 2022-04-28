@@ -157,6 +157,7 @@
 
     <template id="products_item" name="Products item">
         <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
+        <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
 
         <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
@@ -166,7 +167,7 @@
                 <a t-att-href="product_href" class="oe_product_image_link d-block h-100 position-relative" itemprop="url" contenteditable="false">
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': 'image_1024', 'itemprop': 'image', 'class': 'h-100 w-100 position-absolute'}"
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'itemprop': 'image', 'class': 'h-100 w-100 position-absolute'}"
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
 
                     <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
