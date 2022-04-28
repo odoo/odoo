@@ -910,7 +910,6 @@ odoo.define('pos_coupon.pos', function (require) {
                         unit_price: -discountAmount,
                         quantity: 1,
                         program: program,
-                        tax_ids: [],
                         coupon_id: coupon_id,
                     }),
                 ],
