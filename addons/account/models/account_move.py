@@ -1203,12 +1203,6 @@ class AccountMove(models.Model):
                         taxes = None
                         if grouping_dict.get('tax_ids'):
                             taxes = self.env['account.tax'].browse(grouping_dict['tax_ids'][0][2])
-                        analytic_account = None
-                        if grouping_dict.get('analytic_account_id'):
-                            analytic_account = self.env['account.analytic.account'].browse(grouping_dict['analytic_account_id'])
-                        analytic_tags = None
-                        if grouping_dict.get('analytic_tag_ids'):
-                            analytic_tags = self.env['account.analytic.tag'].browse(grouping_dict['analytic_tag_ids'][0][2])
 
                         kwargs['base_lines'].append(self.env['account.tax']._convert_to_tax_base_line_dict(
                             None,
@@ -1218,8 +1212,7 @@ class AccountMove(models.Model):
                             price_unit=values['price_subtotal'],
                             quantity=1.0,
                             account=self.env['account.account'].browse(grouping_dict['account_id']),
-                            analytic_account=analytic_account,
-                            analytic_tags=analytic_tags,
+                            analytic_distribution=values.get('analytic_distribution'),
                             price_subtotal=values['price_subtotal'],
                             is_refund=move.move_type in ('out_refund', 'in_refund'),
                             handle_price_include=False,
@@ -1520,7 +1513,7 @@ class AccountMove(models.Model):
     def _inverse_partner_id(self):
         for invoice in self:
             if invoice.is_invoice(True):
-                for line in invoice.line_ids:
+                for line in invoice.line_ids + invoice.invoice_line_ids:
                     if line.partner_id != invoice.commercial_partner_id:
                         line.partner_id = invoice.commercial_partner_id
                         line._inverse_partner_id()
@@ -2789,8 +2782,7 @@ class AccountMove(models.Model):
                             'partner_id': base_line['partner'].id,
                             'currency_id': base_line['currency'].id,
                             'account_id': cash_discount_account.id,
-                            'analytic_account_id': base_line['analytic_account'].id,
-                            'analytic_tag_ids': [Command.set(base_line['analytic_tags'].ids)],
+                            'analytic_distribution': base_line['analytic_distribution'],
                         }
                         base_detail = resulting_delta_base_details.setdefault(frozendict(grouping_dict), {
                             'balance': 0.0,
@@ -2841,8 +2833,7 @@ class AccountMove(models.Model):
                         'account_id': tax_detail['account_id'],
                         'partner_id': tax_detail['partner_id'],
                         'currency_id': tax_detail['currency_id'],
-                        'analytic_account_id': tax_detail['analytic_account_id'],
-                        'analytic_tag_ids': tax_detail['analytic_tag_ids'],
+                        'analytic_distribution': tax_detail['analytic_distribution'],
                         'tax_repartition_line_id': tax_rep.id,
                         'tax_ids': tax_detail['tax_ids'],
                         'tax_tag_ids': tax_detail['tax_tag_ids'],
@@ -3245,7 +3236,7 @@ class AccountMove(models.Model):
                 move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
-        to_post.mapped('line_ids').create_analytic_lines()
+        to_post.mapped('line_ids')._create_analytic_lines()
         to_post.write({
             'state': 'posted',
             'posted_before': True,

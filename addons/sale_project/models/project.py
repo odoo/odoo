@@ -152,8 +152,7 @@ class Project(models.Model):
 
     def action_open_project_invoices(self):
         invoices = self.env['account.move'].search([
-            ('line_ids.analytic_account_id', '!=', False),
-            ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids),
+            ('line_ids.analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
             ('move_type', '=', 'out_invoice')
         ])
         action = {
@@ -446,7 +445,9 @@ class Project(models.Model):
         return buttons
 
     def action_open_project_vendor_bills(self):
-        vendor_bills = self.env['account.move'].search([('line_ids.analytic_account_id', '!=', False), ('line_ids.analytic_account_id', 'in', self.analytic_account_id.ids), ('move_type', '=', 'in_invoice')])
+        vendor_bills = self.env['account.move'].search([
+            ('line_ids.analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
+            ('move_type', '=', 'in_invoice')])
         action_window = {
             'name': _('Vendor Bills'),
             'type': 'ir.actions.act_window',

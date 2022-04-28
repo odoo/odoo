@@ -78,7 +78,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         )
         # lines
         self.check_fields_consistency('account.reconcile.model.line.template', 'account.reconcile.model.line', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'analytic_tag_ids', 'amount'])
+        self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_distribution_stored_char', 'amount'])
 
     def test_account_group_fields(self):
         '''Test fields consistency for ('account.group', 'account.group.template')

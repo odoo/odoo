@@ -42,7 +42,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             'product_id': self.product_a.id,
             'unit_amount': 350.00,
             'company_id': self.project.company_id.id,
-            'analytic_account_id': self.project.analytic_account_id.id,
+            'analytic_distribution': {self.project.analytic_account_id.id: 100},
         })
 
         expense_sheet = self.check_project_profitability_before_creating_and_approving_expense_sheet(

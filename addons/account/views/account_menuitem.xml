@@ -35,6 +35,7 @@
         <menuitem id="menu_finance_reports" name="Reporting" sequence="20" groups="account.group_account_readonly,account.group_account_invoice">
             <menuitem id="account_reports_management_menu" name="Management" sequence="4">
                 <menuitem id="menu_action_account_invoice_report_all" name="Invoice Analysis" action="action_account_invoice_report_all" sequence="1"/>
+                <menuitem id="menu_action_analytic_lines_tree" name="Analytic Items" action="analytic.account_analytic_line_action_entries" groups="analytic.group_analytic_accounting" sequence="2"/>
             </menuitem>
             <menuitem id="account_reports_legal_statements_menu" name="Statement Reports" sequence="1" groups="account.group_account_readonly"/>
         </menuitem>
@@ -63,11 +64,10 @@
                 <menuitem id="menu_product_product_categories" action="product.product_category_action_form" sequence="3"/>
                 <menuitem id="menu_action_rounding_form_view" action="rounding_list_action" groups="account.group_cash_rounding" sequence="4"/>
             </menuitem>
-            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags" sequence="6">
+            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" groups="analytic.group_analytic_accounting" sequence="6">
+                <menuitem id="menu_analytic__distribution_model" name="Analytic Distribution Models" action="analytic.action_analytic_distribution_model" groups="analytic.group_analytic_accounting" sequence="1"/>
                 <menuitem id="account_analytic_def_account" action="analytic.action_account_analytic_account_form" groups="analytic.group_analytic_accounting" sequence="1"/>
-                <menuitem id="account_analytic_group_menu" name="Analytic Account Groups" action="analytic.account_analytic_group_action" groups="analytic.group_analytic_accounting" sequence="2"/>
-                <menuitem id="account_analytic_tag_menu" name="Analytic Tags" action="analytic.account_analytic_tag_action" groups="analytic.group_analytic_tags"/>
-                <menuitem id="menu_action_analytic_lines_tree" name="Analytic Items" action="analytic.account_analytic_line_action_entries" groups="analytic.group_analytic_accounting" sequence="35"/>
+                <menuitem id="account_analytic_plan_menu" name="Analytic Plans" action="analytic.account_analytic_plan_action" groups="analytic.group_analytic_accounting" sequence="2"/>
             </menuitem>
         </menuitem>
     </menuitem>

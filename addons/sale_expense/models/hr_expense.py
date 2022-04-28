@@ -14,7 +14,6 @@ class Expense(models.Model):
         domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]",
         help="If the category has an expense policy, it will be reinvoiced on this sales order")
     can_be_reinvoiced = fields.Boolean("Can be reinvoiced", compute='_compute_can_be_reinvoiced')
-    analytic_account_id = fields.Many2one(compute='_compute_analytic_account_id', store=True, readonly=False)
 
     @api.depends('product_id.expense_policy')
     def _compute_can_be_reinvoiced(self):
@@ -26,10 +25,17 @@ class Expense(models.Model):
         for expense in self.filtered(lambda e: not e.can_be_reinvoiced):
             expense.sale_order_id = False
 
-    @api.depends('sale_order_id')
-    def _compute_analytic_account_id(self):
+    def _compute_analytic_distribution(self):
+        super(Expense, self)._compute_analytic_distribution()
         for expense in self.filtered('sale_order_id'):
-            expense.analytic_account_id = expense.sale_order_id.sudo().analytic_account_id  # `sudo` required for normal employee without sale access rights
+            if expense.sale_order_id.sudo().analytic_account_id:
+                expense.analytic_distribution = {expense.sale_order_id.sudo().analytic_account_id.id: 100}  # `sudo` required for normal employee without sale access rights
+
+    @api.onchange('sale_order_id')
+    def _onchange_sale_order_id(self):
+        to_reset = self.filtered(lambda line: not self.env.is_protected(self._fields['analytic_distribution'], line))
+        to_reset.invalidate_recordset(['analytic_distribution'])
+        self.env.add_to_compute(self._fields['analytic_distribution'], to_reset)
 
     def _get_split_values(self):
         vals = super(Expense, self)._get_split_values()
@@ -43,10 +49,10 @@ class Expense(models.Model):
             need the analytic entries to be generated, so a AA is required to reinvoice. So,
             we ensure the AA if a SO is given.
         """
-        for expense in self.filtered(lambda expense: expense.sale_order_id and not expense.analytic_account_id):
+        for expense in self.filtered(lambda expense: expense.sale_order_id and not expense.analytic_distribution):
             if not expense.sale_order_id.analytic_account_id:
                 expense.sale_order_id._create_analytic_account()
             expense.write({
-                'analytic_account_id': expense.sale_order_id.analytic_account_id.id
+                'analytic_distribution': {expense.sale_order_id.analytic_account_id.id: 100}
             })
         return super(Expense, self).action_move_create()

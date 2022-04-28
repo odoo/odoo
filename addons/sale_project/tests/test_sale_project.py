@@ -10,8 +10,13 @@ class TestSaleProject(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan Test',
+            'company_id': False,
+        })
         cls.analytic_account_sale = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet - AA',
+            'plan_id': cls.analytic_plan.id,
             'code': 'AA-2030'
         })
 

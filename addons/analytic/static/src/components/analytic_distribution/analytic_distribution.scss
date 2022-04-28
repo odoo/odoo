@@ -1,0 +1,71 @@
+.analytic_distribution {
+
+    .analytic_distribution_popup {
+        width: 400px;
+        cursor: default;
+
+        .o_input {
+            border-width: 0;
+            cursor: pointer;
+        }
+        .o_analytic_account_name {
+            width: 320px !important;
+        }
+        .o_analytic_percentage {
+            width: 45px !important;
+        }
+        .o_analytic_status_red {
+            background-color: $o-danger;
+            margin-left:8px;
+        }
+        .o_analytic_status_green {
+            background-color: $o-success;
+            margin-left:8px;
+        }
+        .o_analytic_status_orange {
+            background-color: $o-warning;
+            margin-left:8px;
+        }
+        .o_analytic_status_gray {
+            background-color: $gray-200;
+            margin-left:8px;
+        }
+        tr:hover {
+            outline: none !important;
+        }
+    }
+
+    .tag-list {
+        .badge {
+            margin: 1px 2px 1px 0;
+            border: none;
+
+            .o_delete {
+                padding-left: 4px;
+            }
+        }
+    }
+
+    .hidden-focus {
+        // focus to this element is required but we want to hide the blue outline
+        &:focus {
+            // z-index: -10;
+            outline: none;
+        }
+    }
+
+}
+.o_field_analytic_distribution {
+    &.o_field_invalid {
+        .o_tag {
+            border: 1px solid $o-danger !important;
+            background-color: white;
+            color: $o-danger;
+        }
+    }
+}
+.o_analytic_distribution_cell {
+    &.o_invalid_cell {
+        border: 1px solid $o-danger !important;
+    }
+}

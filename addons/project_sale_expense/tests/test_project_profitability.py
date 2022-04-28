@@ -16,7 +16,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
             'product_id': self.company_data['product_order_sales_price'].id,
             'unit_amount': self.company_data['product_order_sales_price'].list_price,
             'employee_id': self.expense_employee.id,
-            'analytic_account_id': self.project.analytic_account_id.id,
+            'analytic_distribution': {self.project.analytic_account_id.id: 100},
             'sale_order_id': self.sale_order.id,
         })
 

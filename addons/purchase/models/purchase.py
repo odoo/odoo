@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
-import json
 
 from markupsafe import escape, Markup
 from pytz import timezone, UTC
@@ -909,6 +908,7 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
+    _inherit = 'analytic.mixin'
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 
@@ -936,8 +936,7 @@ class PurchaseOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
-    account_analytic_id = fields.Many2one('account.analytic.account', store=True, string='Analytic Account', compute='_compute_account_analytic_id', readonly=False)
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', store=True, string='Analytic Tags', compute='_compute_analytic_tag_ids', readonly=False)
+
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', store=True)
 
@@ -1131,31 +1130,19 @@ class PurchaseOrderLine(models.Model):
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
-    @api.depends('product_id', 'date_order')
-    def _compute_account_analytic_id(self):
-        for rec in self:
-            if not rec.display_type:
-                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
-                    product_id=rec.product_id.id,
-                    partner_id=rec.order_id.partner_id.id,
-                    user_id=rec.env.uid,
-                    date=rec.date_order,
-                    company_id=rec.company_id.id,
-                )
-                rec.account_analytic_id = default_analytic_account.analytic_id
-
-    @api.depends('product_id', 'date_order')
-    def _compute_analytic_tag_ids(self):
-        for rec in self:
-            if not rec.display_type:
-                default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
-                    product_id=rec.product_id.id,
-                    partner_id=rec.order_id.partner_id.id,
-                    user_id=rec.env.uid,
-                    date=rec.date_order,
-                    company_id=rec.company_id.id,
-                )
-                rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
+    @api.depends('product_id', 'order_id.partner_id')
+    def _compute_analytic_distribution_stored_char(self):
+        for line in self:
+            if not line.display_type:
+                distribution = self.env['account.analytic.distribution.model']._get_distributionjson({
+                    "product_id": line.product_id.id,
+                    "product_categ_id": line.product_id.categ_id.id,
+                    "partner_id": line.order_id.partner_id.id,
+                    "partner_category_id": line.order_id.partner_id.category_id.ids,
+                    "company_id": line.company_id.id,
+                })
+                line.analytic_distribution_stored_char = distribution or line.analytic_distribution_stored_char
+                line._compute_analytic_distribution()
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -1352,8 +1339,7 @@ class PurchaseOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.taxes_id.ids)],
-            'analytic_account_id': self.account_analytic_id.id,
-            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'analytic_distribution': self.analytic_distribution,
             'purchase_line_id': self.id,
         }
 

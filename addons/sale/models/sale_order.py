@@ -250,7 +250,6 @@ class SaleOrder(models.Model):
     analytic_account_id = fields.Many2one(
         comodel_name='account.analytic.account',
         string="Analytic Account",
-        compute='_compute_analytic_account_id', store=True, readonly=False,
         copy=False, check_company=True,  # Unrequired company
         states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -553,18 +552,6 @@ class SaleOrder(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
-
-    @api.depends('partner_id', 'date_order')
-    def _compute_analytic_account_id(self):
-        for order in self:
-            if not order.analytic_account_id:
-                default_analytic_account = order.env['account.analytic.default'].sudo().account_get(
-                    partner_id=order.partner_id.id,
-                    user_id=order.env.uid,
-                    date=order.date_order,
-                    company_id=order.company_id.id,
-                )
-                order.analytic_account_id = default_analytic_account.analytic_id
 
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
@@ -1391,10 +1378,17 @@ class SaleOrder(models.Model):
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
+        plan = self.env['account.analytic.plan'].search(['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], limit=1)
+        if not plan:
+            plan = self.env['account.analytic.plan'].create({
+                'name': 'Default',
+                'company_id': self.company_id.id
+            })
         return {
             'name': name,
             'code': self.client_order_ref,
             'company_id': self.company_id.id,
+            'plan_id': plan.id,
             'partner_id': self.partner_id.id
         }
 

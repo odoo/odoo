@@ -16,14 +16,11 @@ class Project(models.Model):
         if not self.analytic_account_id:
             self.expenses_count = 0
             return
-        expenses_data = self.env['hr.expense']._read_group([
-            ('analytic_account_id', '!=', False),
-            ('analytic_account_id', 'in', self.analytic_account_id.ids)
-        ],
-        ['analytic_account_id'], ['analytic_account_id'])
-        mapped_data = {data['analytic_account_id'][0]: data['analytic_account_id_count'] for data in expenses_data}
         for project in self:
-            project.expenses_count = mapped_data.get(project.analytic_account_id.id, 0)
+            expenses = self.env['hr.expense'].search([
+                ('analytic_distribution_stored_char', '=ilike', f'%"{project.analytic_account_id.id}":%')
+            ])
+            project.expenses_count = len(expenses)
 
     # ----------------------------
     #  Actions
@@ -36,7 +33,7 @@ class Project(models.Model):
         action.update({
             'display_name': _('Expenses'),
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban'], [False, 'graph'], [False, 'pivot']],
-            'context': {'default_analytic_account_id': self.analytic_account_id.id},
+            'context': {'default_analytic_distribution': {self.analytic_account_id.id: 100}},
             'domain': domain or [('id', 'in', expense_ids)],
         })
         if len(expense_ids) == 1:
@@ -68,7 +65,7 @@ class Project(models.Model):
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         expenses_read_group = self.env['hr.expense'].sudo()._read_group(
-            [('analytic_account_id', 'in', self.analytic_account_id.ids),
+            [('analytic_distribution_stored_char', '=ilike', f'%"{self.analytic_account_id.id}":%'),
              ('is_refused', '=', False),
              ('state', 'in', ['approved', 'done'])],
             ['untaxed_amount', 'ids:array_agg(id)'],
@@ -92,7 +89,7 @@ class Project(models.Model):
     def _get_profitability_aal_domain(self):
         return expression.AND([
             super()._get_profitability_aal_domain(),
-            ['|', ('move_id', '=', False), ('move_id.expense_id', '=', False)],
+            ['|', ('move_line_id', '=', False), ('move_line_id.expense_id', '=', False)],
         ])
 
     def _get_profitability_items(self, with_action=True):
