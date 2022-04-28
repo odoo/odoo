@@ -92,7 +92,6 @@ class SaleOrder(models.Model):
                 if line.reward_id and line.coupon_id:
                     grouped_order_lines[(line.reward_id, line.coupon_id, line.reward_identifier_code)] |= line
             new_lines = self.env['sale.order.line']
-            lines_to_remove = self.env['sale.order.line']
             for lines in grouped_order_lines.values():
                 if lines.reward_id.reward_type != 'discount':
                     continue
@@ -111,11 +110,8 @@ class SaleOrder(models.Model):
                     'coupon_id': lines.coupon_id,
                     'reward_id': lines.reward_id,
                 })
-                lines_to_remove |= lines
             if new_lines:
                 order.website_order_line += new_lines
-            if lines_to_remove:
-                order.website_order_line -= lines_to_remove
 
     def _compute_cart_info(self):
         super(SaleOrder, self)._compute_cart_info()
