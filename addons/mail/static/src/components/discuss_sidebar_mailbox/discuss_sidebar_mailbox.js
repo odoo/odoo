@@ -7,16 +7,16 @@ const { Component } = owl;
 export class DiscussSidebarMailbox extends Component {
 
     /**
-     * @returns {Thread}
+     * @returns {DiscussSidebarMailboxView}
      */
-    get mailbox() {
-        return this.messaging.models['Thread'].get(this.props.threadLocalId);
+    get discussSidebarMailboxView() {
+        return this.messaging && this.messaging.models['DiscussSidebarMailboxView'].get(this.props.localId);
     }
 
 }
 
 Object.assign(DiscussSidebarMailbox, {
-    props: { threadLocalId: String },
+    props: { localId: String },
     template: 'mail.DiscussSidebarMailbox',
 });
 
