@@ -355,7 +355,7 @@ for (const propName of Object.keys(window.console)) {
 
 export function mockTimeout() {
     const timeouts = new Map();
-    let id = 0;
+    let id = 1;
     patchWithCleanup(browser, {
         setTimeout(fn) {
             timeouts.set(id, fn);
@@ -375,7 +375,7 @@ export function mockTimeout() {
 
 export function mockAnimationFrame() {
     const callbacks = new Map();
-    let id = 0;
+    let id = 1;
     patchWithCleanup(browser, {
         requestAnimationFrame(fn) {
             callbacks.set(id, fn);
