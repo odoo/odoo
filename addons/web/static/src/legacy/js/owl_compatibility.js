@@ -483,12 +483,9 @@ odoo.define('web.OwlCompatibility', function (require) {
      */
     class ProxyComponent extends LegacyComponent {
         setup() {
-            onMounted(() => {
-                this.props.mounted();
-            });
-            onPatched(() => {
-                this.props.patched();
-            });
+            for (const [hookName, cb] of Object.entries(this.props.hooks)) {
+                owl[hookName](cb);
+            }
             onWillUnmount(() => {
                 // The current el will be change if we remount after unmounting
                 this._handledEvents = new Set();
@@ -559,8 +556,7 @@ odoo.define('web.OwlCompatibility', function (require) {
         }
 
         _makeOwlNode() {
-            const onPatched = () => {
-                this.componentRef.comp = Object.values(this.node.children)[0].component;
+            const resolveRender = () => {
                 if (this.renderResolve) {
                     this.renderResolve();
                 }
@@ -568,8 +564,13 @@ odoo.define('web.OwlCompatibility', function (require) {
 
             const props = {
                 props: this.props,
-                mounted: onPatched,
-                patched: onPatched,
+                hooks: {
+                    onMounted: resolveRender,
+                    onPatched: resolveRender,
+                    onRendered: () => {
+                        this.componentRef.comp = Object.values(this.node.children)[0].component;
+                    },
+                },
                 Component: this.Component,
                 parentWidget: this.parentWidget,
             };
