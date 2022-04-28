@@ -104,7 +104,8 @@ class AccountJournal(models.Model):
     invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'), ('euro', 'European')], default=_default_invoice_reference_model, help="You can choose different models for each type of reference. The default one is the Odoo reference.")
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
-    currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
+    currency_id = fields.Many2one('res.currency', help="- Currency used to enter Bank or Cash statements.\n"
+                                  "- Default currency of each new move on all other journal types", string="Currency", compute='_compute_journal_currency', store=True, readonly=False, required=True, precompute=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
@@ -381,6 +382,12 @@ class AccountJournal(models.Model):
     def _compute_alias_name(self):
         for journal in self:
             journal.alias_name = journal.alias_id.alias_name
+
+    @api.depends('company_id')
+    def _compute_journal_currency(self):
+        for journal in self:
+            if not journal.currency_id:
+                journal.currency_id = journal.company_id.currency_id
 
     @api.constrains('type_control_ids')
     def _constrains_type_control_ids(self):

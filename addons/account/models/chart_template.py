@@ -386,7 +386,7 @@ class AccountChartTemplate(models.Model):
                 'name': acc['acc_name'],
                 'type': acc['account_type'],
                 'company_id': company.id,
-                'currency_id': acc.get('currency_id', self.env['res.currency']).id,
+                'currency_id': acc.get('currency_id', self.env['res.currency']).id or company.currency_id.id,
                 'sequence': 10,
             })
 

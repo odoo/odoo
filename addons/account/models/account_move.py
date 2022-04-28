@@ -132,8 +132,7 @@ class AccountMove(models.Model):
     @api.model
     def _get_default_currency(self):
         ''' Get the default currency from either the journal, either the default journal's company. '''
-        journal = self._get_default_journal()
-        return journal.currency_id or journal.company_id.currency_id
+        return self._get_default_journal().currency_id
 
     @api.model
     def _get_default_invoice_incoterm(self):
@@ -503,7 +502,7 @@ class AccountMove(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
-        if self.journal_id and self.journal_id.currency_id:
+        if self.journal_id:
             new_currency = self.journal_id.currency_id
             if new_currency != self.currency_id:
                 self.currency_id = new_currency

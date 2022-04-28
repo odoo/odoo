@@ -773,6 +773,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Shop EUR Test',
             'module_account': False,
             'journal_id': sale_journal.id,
+            'invoice_journal_id': sale_journal.id, # using the same journal because the invoice journal currency should be also EUR for this config
             'use_pricelist': True,
             'available_pricelist_ids': [(6, 0, eur_pricelist.ids)],
             'pricelist_id': eur_pricelist.id,

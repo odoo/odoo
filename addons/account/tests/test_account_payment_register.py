@@ -193,6 +193,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'writeoff_account_id': self.company_data['default_account_revenue'].id,
             'writeoff_label': 'writeoff',
             'payment_method_line_id': self.inbound_payment_method_line.id,
+            'currency_id': self.currency_data['currency'].id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
@@ -236,6 +237,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'writeoff_account_id': self.company_data['default_account_revenue'].id,
             'writeoff_label': 'writeoff',
             'payment_method_line_id': self.inbound_payment_method_line.id,
+            'currency_id': self.currency_data['currency'].id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
@@ -362,7 +364,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             .with_context(active_model='account.move', active_ids=active_ids)\
             .create({
                 'group_payment': False,
-                'amount': 1200.0
+                'amount': 1200.0,
+                'currency_id': self.currency_data['currency'].id,
             })
         self.assertRecordValues(payment_register, [{'payment_difference': 1800.0}])
         payments = payment_register._create_payments()

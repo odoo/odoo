@@ -27,9 +27,6 @@ class AccountJournal(models.Model):
         return [
             ('company_id', populate.cartesian(company_ids.ids)),
             ('type', populate.cartesian(['sale', 'purchase', 'cash', 'bank', 'general'])),
-            ('currency_id', populate.randomize(self.env['res.currency'].search([
-                ('active', '=', True),
-            ]).ids + [False])),
             ('name', populate.constant("Journal {values[type]} {counter}")),
             ('code', populate.constant("{values[type]:.2}{counter}")),
         ]

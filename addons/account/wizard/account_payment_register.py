@@ -332,7 +332,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('journal_id')
     def _compute_currency_id(self):
         for wizard in self:
-            wizard.currency_id = wizard.journal_id.currency_id or wizard.source_currency_id or wizard.company_id.currency_id
+            wizard.currency_id = wizard.journal_id.currency_id
 
     @api.depends('payment_type', 'company_id', 'can_edit_wizard')
     def _compute_available_journal_ids(self):

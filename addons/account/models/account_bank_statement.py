@@ -289,7 +289,7 @@ class AccountBankStatement(models.Model):
     def onchange_journal_id(self):
         for st_line in self.line_ids:
             st_line.journal_id = self.journal_id
-            st_line.currency_id = self.journal_id.currency_id or self.company_id.currency_id
+            st_line.currency_id = self.journal_id.currency_id
 
     def _check_balance_end_real_same_as_computed(self):
         ''' Check the balance_end_real (encoded manually by the user) is equals to the balance_end (computed by odoo).
@@ -586,7 +586,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id or company_currency
+        journal_currency = journal.currency_id
 
         if self.foreign_currency_id and journal_currency:
             currency_id = journal_currency.id
@@ -652,8 +652,8 @@ class AccountBankStatementLine(models.Model):
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id or company_currency
-        foreign_currency = self.foreign_currency_id or journal_currency or company_currency
+        journal_currency = journal.currency_id
+        foreign_currency = self.foreign_currency_id or journal_currency
         statement_line_rate = (self.amount_currency / self.amount) if self.amount else 0.0
 
         balance_to_reconcile = counterpart_vals.pop('balance', None)
@@ -851,7 +851,7 @@ class AccountBankStatementLine(models.Model):
             journal = statement.journal_id
             # Ensure the journal is the same as the statement one.
             vals['journal_id'] = journal.id
-            vals['currency_id'] = (journal.currency_id or journal.company_id.currency_id).id
+            vals['currency_id'] = journal.currency_id.id
             if 'date' not in vals:
                 vals['date'] = statement.date
 
