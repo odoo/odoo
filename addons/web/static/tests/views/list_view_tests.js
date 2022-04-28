@@ -27,6 +27,7 @@ import {
     getButtons,
     getFacetTexts,
     getPagerValue,
+    getPagerLimit,
     groupByMenu,
     pagerNext,
     pagerPrevious,
@@ -9016,39 +9017,38 @@ QUnit.module("Views", (hooks) => {
                         <field name="int_field"/>
                     </tree>`,
             });
-
-            assert.containsN(target, "o_data_row", 4);
+            assert.containsN(target, ".o_data_row", 4);
 
             await click(target.querySelector(".o_list_button_add"));
-            assert.containsN(target, "o_data_row", 5);
+            assert.containsN(target, ".o_data_row", 5);
             assert.containsOnce(target, ".o_selected_row");
 
             // do not change anything and then click outside should discard record
-            await click("body");
-            assert.containsN(target, "o_data_row", 4);
+            await click(target, ".o_list_view");
+            assert.containsN(target, ".o_data_row", 4);
             assert.containsNone(target, ".o_selected_row");
 
             await click(target.querySelector(".o_list_button_add"));
-            assert.containsN(target, "o_data_row", 5);
+            assert.containsN(target, ".o_data_row", 5);
             assert.containsOnce(target, ".o_selected_row");
 
             // do not change anything and then click save button should not allow to discard record
             await click(target.querySelector(".o_list_button_save"));
-            assert.containsN(target, "o_data_row", 5);
+            assert.containsN(target, ".o_data_row", 5);
             assert.containsOnce(target, ".o_selected_row");
 
             // selecting some other row should discard non dirty record
             await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
-            assert.containsN(target, "o_data_row", 4);
+            assert.containsN(target, ".o_data_row", 4);
             assert.containsOnce(target, ".o_selected_row");
 
             // click somewhere else to discard currently selected row
-            await click("body");
-            assert.containsN(target, "o_data_row", 4);
+            await click(target, ".o_list_view");
+            assert.containsN(target, ".o_data_row", 4);
             assert.containsNone(target, ".o_selected_row");
 
             await click(target.querySelector(".o_list_button_add"));
-            assert.containsN(target, "o_data_row", 5);
+            assert.containsN(target, ".o_data_row", 5);
             assert.containsOnce(target, ".o_selected_row");
 
             // do not change anything and press Enter key should not allow to discard record
@@ -9063,10 +9063,10 @@ QUnit.module("Views", (hooks) => {
             await click($(".o_list_button_add"));
             assert.containsOnce(target, ".o_selected_row", "row should be selected");
             await editInput(
-                target.querySelector(".o_selected_row .o_field_widget[name=int_field]"),
+                target, ".o_selected_row .o_field_widget[name=int_field]",
                 123
             );
-            await click("body");
+            await click(target, ".o_list_view");
             assert.containsOnce(target, ".o_selected_row", "row should still be selected");
         }
     );
@@ -9164,7 +9164,7 @@ QUnit.module("Views", (hooks) => {
             "o_selected_row",
             "the first row should be selected"
         );
-        await click("body");
+        await click(target, ".o_list_view");
         assert.containsNone(target, ".o_selected_row", "no row should be selected");
 
         // create a record and edit its value
@@ -9831,7 +9831,7 @@ QUnit.module("Views", (hooks) => {
             // edit a line and confirm
             await click($(target).find(".o_data_row:eq(0) .o_data_cell:eq(0)"));
             await editInput($(target).find(".o_selected_row .o_field_widget[name=foo]"), "abc");
-            await click("body");
+            await click(target, ".o_list_view");
             await click($(".modal .btn-primary"));
             // Server error: if there was a crash manager, there would be an open error at this point...
             assert.strictEqual(
@@ -10410,9 +10410,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list grouped by date:month", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("list grouped by date:month", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -10421,9 +10419,9 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["date:month"],
         });
 
-        assert.strictEqual(
-            $(target).find("tbody").text(),
-            "January 2017 (1)None (3)",
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_group_header")].map(el => el.innerText),
+            ["January 2017 (1)", "None (3)"],
             "the group names should be correct"
         );
     });
@@ -10463,9 +10461,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("grouped list view, indentation for empty group", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("grouped list view, indentation for empty group", async function (assert) {
         serverData.models.foo.fields.priority = {
             string: "Priority",
             type: "selection",
@@ -10517,12 +10513,11 @@ QUnit.module("Views", (hooks) => {
                         length: 1,
                     });
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         // open the first group
-        await click($(target).find(".o_group_header:first"));
+        await click(target.querySelector(".o_group_header"));
         assert.strictEqual(
             $(target).find("th.o_group_name").eq(1).children().length,
             1,
@@ -10597,7 +10592,7 @@ QUnit.module("Views", (hooks) => {
         delete widgetRegistryOwl.map.test;
     });
 
-    QUnit.skipWOWL("use the limit attribute in arch", async function (assert) {
+    QUnit.test("use the limit attribute in arch", async function (assert) {
         assert.expect(4);
 
         await makeView({
@@ -10606,14 +10601,13 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree limit="2"><field name="foo"/></tree>',
             mockRPC: function (route, args) {
-                assert.strictEqual(args.limit, 2, "should use the correct limit value");
-                return this._super.apply(this, arguments);
+                if (args.method === "web_search_read") {
+                    assert.strictEqual(args.kwargs.limit, 2, "should use the correct limit value");
+                }
             },
         });
-
-        assert.strictEqual(testUtils.controlPanel.getPagerValue(target), "1-2");
-        assert.strictEqual(testUtils.controlPanel.getPagerSize(target), "4");
-
+        assert.deepEqual(getPagerValue(target), [1, 2]);
+        assert.strictEqual(getPagerLimit(target), 4);
         assert.containsN(target, ".o_data_row", 2, "should display 2 data rows");
     });
 
@@ -10777,10 +10771,10 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["clear_cache"]); // triggered by the test environment on destroy
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list view move to previous page when all records from last page deleted",
         async function (assert) {
-            assert.expect(5);
+            assert.expect(8);
 
             let checkSearchRead = false;
             await makeView({
@@ -10789,45 +10783,38 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: '<tree limit="3">' + '<field name="display_name"/>' + "</tree>",
                 mockRPC: function (route, args) {
-                    if (checkSearchRead && route === "/web/dataset/search_read") {
-                        assert.strictEqual(args.limit, 3, "limit should 3");
+                    if (checkSearchRead && args.method === "web_search_read") {
+                        assert.strictEqual(args.kwargs.limit, 3, "limit should 3");
                         assert.notOk(
-                            args.offset,
+                            args.kwargs.offset,
                             "offset should not be passed i.e. offset 0 by default"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
                 actionMenus: {},
             });
 
-            assert.strictEqual(
-                $(target).find(".o_pager_counter").text().trim(),
-                "1-3 / 4",
-                "should have 2 pages and current page should be first page"
-            );
+            assert.deepEqual(getPagerValue(target), [1, 3]);
+            assert.strictEqual(getPagerLimit(target), 4);
 
             // move to next page
-            await click($(target).find(".o_pager_next"));
-            assert.strictEqual(
-                $(target).find(".o_pager_counter").text().trim(),
-                "4-4 / 4",
-                "should be on second page"
-            );
+            await pagerNext(target);
+            assert.deepEqual(getPagerValue(target), [4, 4]);
+            assert.strictEqual(getPagerLimit(target), 4);
 
             // delete a record
             await click(
-                $(target).find("tbody .o_data_row:first td.o_list_record_selector:first input")
+                target.querySelector("tbody .o_data_row td.o_list_record_selector input")
             );
             checkSearchRead = true;
-            await click($(target).find(".dropdown-toggle:contains(Action)"));
-            await click($(target).find("a:contains(Delete)"));
-            await click($("body .modal button span:contains(Ok)"));
-            assert.strictEqual(
-                $(target).find(".o_pager_counter").text().trim(),
-                "1-3 / 3",
-                "should have 1 page only"
-            );
+            await click(target.querySelector(".o_cp_action_menus .dropdown-toggle"));
+            const deleteMenuItem = [...target.querySelectorAll(".o_cp_action_menus .o_menu_item")].filter(
+                (el) => el.innerText === "Delete"
+            )[0];
+            await click(deleteMenuItem);
+            await click(target, ".modal button.btn-primary");
+            assert.deepEqual(getPagerValue(target), [1, 3]);
+            assert.strictEqual(getPagerLimit(target), 3);
         }
     );
 
