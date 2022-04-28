@@ -535,12 +535,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2many kanban: conditional create/delete actions", async function (assert) {
         assert.expect(6);
 
-        (serverData.views = {
+        serverData.views = {
             "partner_type,false,form": '<form><field name="name"/></form>',
             "partner_type,false,list": '<tree><field name="name"/></tree>',
             "partner_type,false,search": "<search/>",
-        }),
-            (serverData.models.partner.records[0].timmy = [12, 14]);
+        };
+        serverData.models.partner.records[0].timmy = [12, 14];
 
         await makeView({
             type: "form",
@@ -609,7 +609,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(
             document.body,
             ".modal .modal-footer .o_btn_remove",
-            "remove button should be visible in modal"
+            "remove button should not be visible in modal"
         );
     });
 
@@ -1076,15 +1076,20 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL("many2many list: conditional create/delete actions", async function (assert) {
+    QUnit.test("many2many list: conditional create/delete actions", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records[0].timmy = [12, 14];
+        serverData.models.partner.records[0].timmy = [12, 14];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="name"/></tree>',
+            "partner_type,false,search": "<search/>",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `
                 <form>
                     <field name="color"/>
@@ -1094,72 +1099,69 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            archs: {
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-                "partner_type,false,search": "<search/>",
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
+            resId: 1,
         });
+
+        await clickEdit(target);
 
         // color is red -> create and delete actions are available
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             "should have the 'Add an item' link"
         );
-        assert.containsN(form, ".o_list_record_remove", 2, "should have two remove icons");
+        assert.containsN(target, ".o_list_record_remove", 2, "should have two remove icons");
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
 
         assert.containsN(
-            document.body,
+            target,
             ".modal .modal-footer button",
             3,
             "there should be 3 buttons available in the modal"
         );
 
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+        await click($(".modal .modal-footer .o_form_button_cancel")[0]);
 
         // set color to black -> create and delete actions are no longer available
-        await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
+        await editSelect(target, 'div[name="color"] select', '"black"');
 
         // add a line and remove icon should still be there as they don't create/delete records,
         // but rather add/remove links
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             '"Add a line" button should still be available even after color field changed'
         );
         assert.containsN(
-            form,
+            target,
             ".o_list_record_remove",
             2,
             "should still have remove icon even after color field changed"
         );
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
         assert.containsN(
-            document.body,
+            target,
             ".modal .modal-footer button",
             2,
             '"Create" button should not be available in the modal after color field changed'
         );
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("many2many field with link/unlink options (list)", async function (assert) {
+    QUnit.test("many2many field with link/unlink options (list)", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].timmy = [12, 14];
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="name"/></tree>',
+            "partner_type,false,search": "<search/>",
+        };
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `
                 <form>
                     <field name="color"/>
@@ -1169,50 +1171,43 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            archs: {
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-                "partner_type,false,search": "<search/>",
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
+            resId: 1,
         });
+
+        await clickEdit(target);
 
         // color is red -> link and unlink actions are available
         assert.containsOnce(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             "should have the 'Add an item' link"
         );
-        assert.containsN(form, ".o_list_record_remove", 2, "should have two remove icons");
+        assert.containsN(target, ".o_list_record_remove", 2, "should have two remove icons");
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
 
         assert.containsN(
-            document.body,
+            target,
             ".modal .modal-footer button",
             3,
             "there should be 3 buttons available in the modal (Create action is available)"
         );
 
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+        await click($(".modal .modal-footer .o_form_button_cancel")[0]);
 
         // set color to black -> link and unlink actions are no longer available
-        await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
+        await editSelect(target, 'div[name="color"] select', '"black"');
 
         assert.containsNone(
-            form,
+            target,
             ".o_field_x2many_list_row_add",
             '"Add a line" should no longer be available after color field changed'
         );
         assert.containsNone(
-            form,
+            target,
             ".o_list_record_remove",
             "should no longer have remove icon after color field changed"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(
@@ -1253,7 +1248,7 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.containsN(form, ".o_list_record_remove", 2, "should have two remove icons");
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click($(target).find(".o_field_x2many_list_row_add a"));
 
             assert.containsN(
                 document.body,

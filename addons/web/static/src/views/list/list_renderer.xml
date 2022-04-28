@@ -26,7 +26,7 @@
                         <t t-set="list" t-value="props.list"/>
                     </t>
                     <t t-set="activeActions" t-value="props.activeActions" />
-                    <tr t-if="activeActions and (activeActions.canCreate or activeActions.canUnlink)">
+                    <tr t-if="activeActions and ('canLink' in activeActions ? activeActions.canLink : activeActions.canCreate)">
                         <td t-if="withHandleColumn"/>
                         <td t-att-colspan="state.columns.length + 1"
                             class="o_field_x2many_list_row_add"
@@ -176,9 +176,9 @@
             <t t-if="activeActions">
                 <t t-set="canDelete" t-value="activeActions.canDelete" />
                 <t t-set="canUnlink" t-value="activeActions.canUnlink" />
-                <td t-if="activeActions.onDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)">
+                <td t-if="'canUnlink' in activeActions ? canUnlink : canDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)">
                     <button class="fa"
-                        t-att-class="{ 'fa-trash-o': canDelete and !canUnlink , 'fa-times': canUnlink }"
+                        t-att-class="{ 'fa-trash-o': 'canUnlink' in activeActions ? false : canDelete, 'fa-times': 'canUnlink' in activeActions ? canUnlink : false }"
                         name="delete" aria-label="Delete row"/>
                 </td>
             </t>

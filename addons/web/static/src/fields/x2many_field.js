@@ -132,27 +132,13 @@ export class X2ManyField extends Component {
         let canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
         let canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
 
-        if (!this.isMany2Many) {
-            canLink = false;
-            canUnlink = false;
+        const result = { canCreate, canDelete };
+        if (this.isMany2Many) {
+            Object.assign(result, { canLink, canUnlink });
         }
-
-        if (this.viewMode !== "list") {
-            const result = { canCreate, canLink };
-            if (canDelete) {
-                result.onDelete = deleteFn;
-            }
-            return result;
-        }
-
-        // We need to compute some object used by (x2many renderers) based on that
-
-        const result = { canCreate, canDelete, canLink, canUnlink };
-
-        if (canDelete || canUnlink) {
+        if ((this.isMany2Many && canUnlink) || (!this.isMany2Many && canDelete)) {
             result.onDelete = deleteFn;
         }
-
         return result;
     }
 
@@ -203,7 +189,7 @@ export class X2ManyField extends Component {
             fields: { ...form.fields },
             views: { form },
         });
-        const onDelete = this.activeActions.onDelete;
+        const { canDelete, onDelete } = this.activeActions;
         this.addDialog(X2ManyFieldDialog, {
             archInfo: form,
             record: newRecord,
@@ -229,7 +215,7 @@ export class X2ManyField extends Component {
                 this.env._t("Open: %s"),
                 this.props.record.activeFields[this.props.name].string
             ),
-            delete: onDelete && this.viewMode === "kanban" ? () => onDelete(record) : null,
+            delete: this.viewMode === "kanban" && canDelete ? () => onDelete(record) : null,
         });
     }
 
