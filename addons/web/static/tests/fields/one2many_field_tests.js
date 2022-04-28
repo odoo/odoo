@@ -3715,7 +3715,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, "tr.o_data_row");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable one2many list, required field, pager and confirm discard",
         async function (assert) {
             assert.expect(3);
@@ -3745,8 +3745,8 @@ QUnit.module("Fields", (hooks) => {
             await addRow(target);
             await editInput(target, '.o_field_widget[name="turtle_int"] input', 4321);
 
-            // go to next page. The new record is not valid, but dirty. we should
-            // see a confirm dialog
+            // try to go to next page. The new record is not valid, but dirty so we should
+            // stay on the current page, and the record should be marked as invalid
             await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
 
             assert.strictEqual(
@@ -3758,7 +3758,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_field_widget[name=turtles] .o_pager").textContent,
                 "1-4 / 5"
             );
-            assert.containsOnce(target, ".o_field_one2many input.o_field_invalid");
+            assert.containsOnce(target, ".o_field_widget[name=turtle_foo].o_field_invalid");
         }
     );
 

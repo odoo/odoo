@@ -1354,6 +1354,18 @@ class DynamicList extends DataPoint {
         this.model.notify();
         return list;
     }
+
+    unselectRecord() {
+        const editedRecord = this.editedRecord;
+        if (editedRecord) {
+            const canBeAbandoned = editedRecord.canBeAbandoned;
+            if (!canBeAbandoned && editedRecord.checkValidity()) {
+                return editedRecord.switchMode("readonly");
+            } else if (canBeAbandoned) {
+                return this.abandonRecord(editedRecord.id);
+            }
+        }
+    }
 }
 
 DynamicList.DEFAULT_LIMIT = 80;
@@ -2749,6 +2761,19 @@ export class StaticList extends DataPoint {
             }
         }
         await Promise.all(proms);
+    }
+
+    // FIXME WOWL: factorize this (needed in both DynamicList and StaticList)
+    unselectRecord() {
+        const editedRecord = this.editedRecord;
+        if (editedRecord) {
+            const canBeAbandoned = editedRecord.canBeAbandoned;
+            if (!canBeAbandoned && editedRecord.checkValidity()) {
+                return editedRecord.switchMode("readonly");
+            } else if (canBeAbandoned) {
+                return this.abandonRecord(editedRecord.id);
+            }
+        }
     }
 }
 

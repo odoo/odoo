@@ -167,8 +167,21 @@ export class X2ManyField extends Component {
             limit: list.limit,
             total: list.count,
             onUpdate: async ({ offset, limit }) => {
-                await list.load({ limit, offset });
-                this.render();
+                const initialLimit = this.list.limit;
+                const unselected = await list.unselectRecord();
+                if (unselected) {
+                    if (initialLimit === limit && initialLimit === this.list.limit + 1) {
+                        // Unselecting the edited record might have abandonned it. If the page
+                        // size was reached before that record was created, the limit was temporarily
+                        // increased to keep that new record in the current page, and abandonning it
+                        // decreased this limit back to it's initial value, so we keep this into
+                        // account in the offset/limit update we're about to do.
+                        offset -= 1;
+                        limit -= 1;
+                    }
+                    await list.load({ limit, offset });
+                    this.render();
+                }
             },
             withAccessKey: false,
         };

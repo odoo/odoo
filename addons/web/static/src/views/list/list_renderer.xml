@@ -38,7 +38,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tfoot t-on-click="unselectRow" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                <tfoot t-on-click="() => props.list.unselectRecord()" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
                         <td t-if="props.hasSelectors"/>
                         <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">

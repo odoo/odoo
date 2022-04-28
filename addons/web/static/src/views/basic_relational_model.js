@@ -816,6 +816,21 @@ export class StaticList extends DataPoint {
         }
         await this.__syncParent(operation);
     }
+
+    async unselectRecord() {
+        const editedRecord = this.editedRecord;
+        if (editedRecord) {
+            const canBeAbandoned = editedRecord.canBeAbandoned;
+            if (!canBeAbandoned && editedRecord.checkValidity()) {
+                await editedRecord.switchMode("readonly");
+            } else if (canBeAbandoned) {
+                await this.abandonRecord(editedRecord.id);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 export class RelationalModel extends Model {

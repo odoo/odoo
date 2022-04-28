@@ -508,7 +508,7 @@ export class ListRenderer extends Component {
     }
 
     async onDeleteRecord(record) {
-        await this.unselectRow();
+        await this.props.list.unselectRecord();
         this.props.activeActions.onDelete(record);
     }
 
@@ -556,7 +556,7 @@ export class ListRenderer extends Component {
     }
 
     async toggleOptionalField(fieldName) {
-        await this.unselectRow();
+        await this.props.list.unselectRecord();
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
         this.state.columns = this.allColumns.filter(
             (col) => !col.optional || this.optionalActiveFields[col.name]
@@ -566,18 +566,6 @@ export class ListRenderer extends Component {
         );
     }
 
-    unselectRow() {
-        const editedRecord = this.props.list.editedRecord;
-        if (editedRecord) {
-            const canBeAbandoned = editedRecord.canBeAbandoned;
-            if (!canBeAbandoned && editedRecord.checkValidity()) {
-                return editedRecord.switchMode("readonly");
-            } else if (canBeAbandoned) {
-                return this.props.list.abandonRecord(editedRecord.id);
-            }
-        }
-    }
-
     onGlobalClick(ev) {
         if (!this.props.list.editedRecord) {
             return; // there's no row in edition
@@ -585,7 +573,7 @@ export class ListRenderer extends Component {
         if (this.tableRef.el.contains(ev.target)) {
             return; // ignore clicks inside the table, they are handled directly by the renderer
         }
-        this.unselectRow();
+        this.props.list.unselectRecord();
     }
 
     calculateColumnWidth(column) {
