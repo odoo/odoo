@@ -631,6 +631,38 @@ export class ListRenderer extends Component {
 
         return { type: "relative", value: 1 };
     }
+
+    get isDebugMode() {
+        return Boolean(odoo.debug);
+    }
+
+    makeTooltip(column) {
+        const info = {};
+
+        info.viewMode = "list";
+        info.resModel = this.props.list.resModel;
+
+        if (column.type === "field") {
+            const linkedField = this.props.list.fields[column.name];
+            info.field = {};
+            info.field.label = column.label;
+            info.field.name = column.name;
+            info.field.noLabel = column.noLabel;
+            info.field.help = column.options.help;
+            info.field.type = linkedField.type;
+            info.field.widget = column.FieldComponent.name;
+            info.field.widgetDescription =
+                column.FieldComponent.description || linkedField.description;
+            info.field.context = column.context;
+            info.field.domain = column.domain.toString();
+            info.field.modifiers = JSON.stringify(column.modifiers);
+            info.field.change_default = linkedField.change_default;
+            info.field.relation = linkedField.relation;
+            info.field.selection = linkedField.selection;
+        }
+
+        return JSON.stringify(info);
+    }
 }
 
 ListRenderer.template = "web.ListRenderer";

@@ -5,6 +5,7 @@ import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { tooltipService } from "../../src/core/tooltip/tooltip_service";
 import { makeFakeUserService } from "../helpers/mock_services";
 import {
     addRow,
@@ -22,6 +23,7 @@ import {
     triggerEvent,
     editSelect,
     clickDiscard,
+    getNodesTextContent,
 } from "../helpers/utils";
 import {
     getButtons,
@@ -223,6 +225,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
         setupViewRegistries();
+        serviceRegistry.add("tooltip", tooltipService), { force: true };
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
@@ -4812,7 +4815,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("display a tooltip on a field", async function (assert) {
+    QUnit.test("display a tooltip on a field", async function (assert) {
         assert.expect(4);
 
         patchWithCleanup(odoo, {
@@ -4823,22 +4826,14 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="foo"/>' +
-                '<field name="bar" widget="toggle_button"/>' +
-                "</tree>",
+            arch: `<tree>
+                    <field name="foo"/>
+                </tree>`,
         });
 
-        // this is done to force the tooltip to show immediately instead of waiting
-        // 1000 ms. not totally academic, but a short test suite is easier to sell :(
-        // $(target).find("th[data-fieldtype=foo]").tooltip("show", false);
-        const thFoo = [...target.querySelectorAll("th")].filter(
-            (el) => el.textContent === "Foo"
-        )[0];
-        mouseEnter(thFoo);
+        await mouseEnter(target.querySelector("th[data-fieldtype=foo]"));
         assert.strictEqual(
-            $(".tooltip .oe_tooltip_string").length,
+            target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
             0,
             "should not have rendered a tooltip"
         );
@@ -4846,27 +4841,28 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(odoo, {
             debug: true,
         });
+
         // it is necessary to rerender the list so tooltips can be properly created
         await reloadListView(target);
-        $(target).find("th[data-fieldtype=foo]").tooltip("show", false);
-        $(target).find("th[data-fieldtype=foo]").trigger($.Event("mouseenter"));
+        await mouseEnter(target.querySelector("th[data-fieldtype=foo]"));
+
         assert.strictEqual(
-            $(".tooltip .oe_tooltip_string").length,
+            target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
             1,
             "should have rendered a tooltip"
         );
 
-        await reloadListView(target);
-        $(target).find("th[data-fieldtype=bar]").tooltip("show", false);
-        $(target).find("th[data-fieldtype=bar]").trigger($.Event("mouseenter"));
         assert.containsOnce(
-            $,
-            '.oe_tooltip_technical>li[data-item="widget"]',
+            target,
+            '.o-tooltip--technical>li[data-item="widget"]',
             "widget should be present for this field"
         );
+
         assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
-            "Button (toggle_button)",
+            getNodesTextContent([
+                target.querySelector('.o-tooltip--technical>li[data-item="widget"]'),
+            ]),
+            "Widget:CharField", // TODO maybe we could add (default) when a widget is the default one for a field.
             "widget description should be correct"
         );
     });
