@@ -164,6 +164,12 @@ const Wysiwyg = Widget.extend({
                     return !(record.target.classList && record.target.classList.contains('o_header_standard'));
                 });
             },
+            preHistoryUndo: () => {
+                if (this.linkTools) {
+                    this.linkTools.destroy();
+                    this.linkTools = undefined;
+                }
+            },
             commands: commands,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
