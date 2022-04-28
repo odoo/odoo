@@ -9,7 +9,7 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup, makeDeferred } from "../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup, makeDeferred, mockTimeout } from "../helpers/utils";
 
 const { Component, mount, xml } = owl;
 const systrayRegistry = registry.category("systray");
@@ -439,15 +439,7 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
 QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     assert.expect(5);
 
-    let prom = makeDeferred();
-
-    patchWithCleanup(browser, {
-        setTimeout: async (handler, delay, ...args) => {
-            await prom;
-            return handler(...args);
-        },
-        clearTimeout: () => {},
-    });
+    const execRegisteredTimeouts = mockTimeout();
     class MyNavbar extends NavBar {
         async adapt() {
             assert.step("adapt NavBar");
@@ -463,13 +455,10 @@ QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     const navbar = await mount(MyNavbar, { env, target });
     assert.verifySteps(["adapt NavBar"]);
     window.dispatchEvent(new Event("resize"));
-    prom.resolve();
-    await prom;
-    prom = makeDeferred();
+    execRegisteredTimeouts();
     assert.verifySteps(["adapt NavBar"]);
     window.dispatchEvent(new Event("resize"));
     navbar.destroy();
-    prom.resolve();
-    await prom;
+    execRegisteredTimeouts();
     assert.verifySteps([]);
 });
