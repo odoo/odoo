@@ -301,14 +301,15 @@ class Lead(models.Model):
                    (not lead.partner_id or lead.partner_id.company_id != proposal):
                     proposal = False
 
-            # propose a new company based on responsible, limited by team
+            # propose a new company based on team > user (respecting context) > partner
             if not proposal:
-                if lead.user_id and lead.team_id.company_id:
+                if lead.team_id.company_id:
                     proposal = lead.team_id.company_id
                 elif lead.user_id:
-                    proposal = lead.user_id.company_id & self.env.companies
-                elif lead.team_id:
-                    proposal = lead.team_id.company_id
+                    if self.env.company in lead.user_id.company_ids:
+                        proposal = self.env.company
+                    else:
+                        proposal = lead.user_id.company_id & self.env.companies
                 elif lead.partner_id:
                     proposal = lead.partner_id.company_id
                 else:
