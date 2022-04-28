@@ -21,6 +21,7 @@ import {
     patchWithCleanup,
     triggerEvent,
     editSelect,
+    clickDiscard,
 } from "../helpers/utils";
 import {
     getButtons,
@@ -64,8 +65,7 @@ let testUtils,
     patch,
     unpatch,
     ControlPanel,
-    ListController,
-    basicFields;
+    ListController;
 
 async function reloadListView(target) {
     await click(target, "input.o_searchview_input");
@@ -11548,18 +11548,9 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_data_row:nth-child(5)"), "o_selected_row");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "add and discard a record in a multi-level grouped list view",
         async function (assert) {
-            assert.expect(7);
-
-            testUtils.mock.patch(basicFields.FieldChar, {
-                destroy: function () {
-                    assert.step("destroy");
-                    this._super.apply(this, arguments);
-                },
-            });
-
             await makeView({
                 type: "list",
                 resModel: "foo",
@@ -11576,16 +11567,12 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_data_row");
 
             // add a record to first subgroup
-            await click($(target).find(".o_group_field_row_add a"));
+            await click(target, ".o_group_field_row_add a");
             assert.containsN(target, ".o_data_row", 2);
 
             // discard
-            await click(target.querySelector(".o_list_button_discard"));
+            await clickDiscard(target);
             assert.containsOnce(target, ".o_data_row");
-
-            assert.verifySteps(["destroy"]);
-
-            testUtils.mock.unpatch(basicFields.FieldChar);
         }
     );
 
@@ -12714,9 +12701,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 3, "first group should still be open");
     });
 
-    QUnit.skipWOWL('add a new row in grouped editable="top" list', async function (assert) {
-        assert.expect(7);
-
+    QUnit.test('add a new row in grouped editable="top" list', async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -12725,40 +12710,35 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        await click($(target).find(".o_group_header:first")); // open group
-        await click($(target).find(".o_group_field_row_add a")); // add a new row
+        await click(target.querySelector(".o_group_header")); // open group "No"
+        await click(target, ".o_group_field_row_add a"); // add a new row
+        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
         assert.strictEqual(
-            $(target).find(".o_selected_row .o_input[name=foo]")[0],
+            target.querySelector(".o_selected_row [name=foo] input"),
             document.activeElement,
             "The first input of the line should have the focus"
         );
-        assert.containsN(target, "tbody:nth(1) .o_data_row", 4);
+        assert.containsN(target, ".o_data_row", 2);
 
-        await click(target.querySelector(".o_list_button_discard")); // discard new row
-        await click($(target).find(".o_group_header:eq(1)")); // open second group
-        assert.containsOnce(target, "tbody:nth(3) .o_data_row");
+        await clickDiscard(target);
+        await click(target.querySelectorAll(".o_group_header")[1]); // open second group "Yes"
+        assert.containsN(target, ".o_data_row", 4);
 
-        await click($(target).find(".o_group_field_row_add a:eq(1)")); // create row in second group
+        await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group "Yes"
         assert.strictEqual(
-            $(target).find(".o_group_name:eq(1)").text(),
-            "No (2)",
+            target.querySelectorAll(".o_group_name")[1].innerText,
+            "Yes (4)",
             "group should have correct name and count"
         );
-        assert.containsN(target, "tbody:nth(3) .o_data_row", 2);
-        assert.hasClass($(target).find(".o_data_row:nth(3)"), "o_selected_row");
+        assert.containsN(target, ".o_data_row", 5);
+        assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
 
-        await testUtils.fields.editAndTrigger(
-            $(target).find('tr.o_selected_row input[name="foo"]'),
-            "pla",
-            "input"
-        );
-        await click(target.querySelector(".o_list_button_save"));
-        assert.containsN(target, "tbody:nth(3) .o_data_row", 2);
+        await editInput(target, '.o_selected_row [name="foo"] input', "pla");
+        await clickSave(target);
+        assert.containsN(target, ".o_data_row", 5);
     });
 
-    QUnit.skipWOWL('add a new row in grouped editable="bottom" list', async function (assert) {
-        assert.expect(5);
-
+    QUnit.test('add a new row in grouped editable="bottom" list', async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -12766,25 +12746,20 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="bottom"><field name="foo" required="1"/></tree>',
             groupBy: ["bar"],
         });
+        await click(target.querySelector(".o_group_header")); // open group "No"
+        await click(target, ".o_group_field_row_add a"); // add a new row
+        assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
+        assert.containsN(target, ".o_data_row", 2);
 
-        await click($(target).find(".o_group_header:first")); // open group
-        await click($(target).find(".o_group_field_row_add a")); // add a new row
-        assert.hasClass($(target).find(".o_data_row:nth(3)"), "o_selected_row");
-        assert.containsN(target, "tbody:nth(1) .o_data_row", 4);
+        await clickDiscard(target);
+        await click(target.querySelectorAll(".o_group_header")[1]); // open second group
+        assert.containsN(target, ".o_data_row", 4);
+        await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group "Yes"
+        assert.hasClass(target.querySelectorAll(".o_data_row")[4], "o_selected_row");
 
-        await click(target.querySelector(".o_list_button_discard")); // discard new row
-        await click($(target).find(".o_group_header:eq(1)")); // open second group
-        assert.containsOnce(target, "tbody:nth(3) .o_data_row");
-        await click($(target).find(".o_group_field_row_add a:eq(1)")); // create row in second group
-        assert.hasClass($(target).find(".o_data_row:nth(4)"), "o_selected_row");
-
-        await testUtils.fields.editAndTrigger(
-            $(target).find('tr.o_selected_row input[name="foo"]'),
-            "pla",
-            "input"
-        );
-        await click(target.querySelector(".o_list_button_save"));
-        assert.containsN(target, "tbody:nth(3) .o_data_row", 2);
+        await editInput(target, '.o_selected_row [name="foo"] input', "pla");
+        await clickSave(target);
+        assert.containsN(target, ".o_data_row", 5);
     });
 
     QUnit.skipWOWL(
@@ -12840,9 +12815,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("add a new row in (selection) grouped editable list", async function (assert) {
-        assert.expect(6);
-
+    QUnit.test("add a new row in (selection) grouped editable list", async function (assert) {
         serverData.models.foo.fields.priority = {
             string: "Priority",
             type: "selection",
@@ -12883,35 +12856,31 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "onchange") {
                     assert.step(args.kwargs.context.default_priority.toString());
                 }
-                return this._super.apply(this, arguments);
             },
         });
-
-        await click($(target).find(".o_group_header:first")); // open group
-        await click($(target).find(".o_group_field_row_add a")); // add a new row
-        await editInput($(target).find('input[name="foo"]'), "xyz"); // make record dirty
-        await click($("body")); // unselect row
+        await click(target.querySelector(".o_group_header")); // open group
+        await click(target.querySelector(".o_group_field_row_add a")); // add a new row
+        await editInput(target, '[name="foo"] input', "xyz"); // make record dirty
+        await click(target, ".o_list_view"); // unselect row
         assert.verifySteps(["1"]);
         assert.strictEqual(
-            $(target).find(".o_data_row .o_data_cell:eq(1)").text(),
+            target.querySelectorAll(".o_data_row .o_data_cell")[1].textContent,
             "Low",
             "should have a column name with a value from the groupby"
         );
 
-        await click($(target).find(".o_group_header:eq(1)")); // open second group
-        await click($(target).find(".o_group_field_row_add a:eq(1)")); // create row in second group
-        await click($("body")); // unselect row
+        await click(target.querySelectorAll(".o_group_header")[1]); // open second group
+        await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group
+        await click(target, ".o_list_view"); // unselect row
         assert.strictEqual(
-            $(target).find(".o_data_row:nth(5) .o_data_cell:eq(1)").text(),
+            target.querySelectorAll(".o_data_row")[5].querySelectorAll(".o_data_cell")[1].textContent,
             "Medium",
             "should have a column name with a value from the groupby"
         );
         assert.verifySteps(["2"]);
     });
 
-    QUnit.skipWOWL("add a new row in (m2o) grouped editable list", async function (assert) {
-        assert.expect(6);
-
+    QUnit.test("add a new row in (m2o) grouped editable list", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -12923,25 +12892,23 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "onchange") {
                     assert.step(args.kwargs.context.default_m2o.toString());
                 }
-                return this._super.apply(this, arguments);
             },
         });
-
-        await click($(target).find(".o_group_header:first"));
-        await click($(target).find(".o_group_field_row_add a"));
-        await click($("body")); // unselect row
+        await click(target.querySelector(".o_group_header")); // open group
+        await click(target.querySelector(".o_group_field_row_add a")); // add a new row
+        await click(target, ".o_list_view"); // unselect row
         assert.strictEqual(
-            $(target).find("tbody:eq(1) .o_data_row:first .o_data_cell:eq(1)").text(),
+            target.querySelector(".o_data_row").querySelectorAll(".o_data_cell")[1].textContent,
             "Value 1",
             "should have a column name with a value from the groupby"
         );
         assert.verifySteps(["1"]);
 
-        await click($(target).find(".o_group_header:eq(1)")); // open second group
-        await click($(target).find(".o_group_field_row_add a:eq(1)")); // create row in second group
-        await click($("body")); // unselect row
+        await click(target.querySelectorAll(".o_group_header")[1]); // open second group
+        await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group
+        await click(target, ".o_list_view"); // unselect row
         assert.strictEqual(
-            $(target).find("tbody:eq(3) .o_data_row:first .o_data_cell:eq(1)").text(),
+            target.querySelectorAll(".o_data_row")[3].querySelectorAll(".o_data_cell")[1].textContent,
             "Value 2",
             "should have a column name with a value from the groupby"
         );

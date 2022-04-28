@@ -25,10 +25,9 @@
                     <t t-call="web.ListRenderer.Rows">
                         <t t-set="list" t-value="props.list"/>
                     </t>
-                    <tr t-if="props.activeActions">
+                    <tr t-if="props.activeActions and props.activeActions.canCreate">
                         <td t-if="withHandleColumn"/>
-                        <td t-if="props.activeActions.canCreate"
-                            t-att-colspan="state.columns.length + 1"
+                        <td t-att-colspan="state.columns.length + 1"
                             class="o_field_x2many_list_row_add"
                             >
                             <t t-foreach="creates" t-as="create" t-key="create_index">
@@ -87,6 +86,17 @@
                 <t t-if="!group.isFolded">
                     <t t-call="web.ListRenderer.Rows">
                         <t t-set="list" t-value="group.list"/>
+                    </t>
+                    <t t-if="!group.list.isGrouped and props.editable and props.activeActions['create']">
+                        <td t-if="props.hasSelectors"/>
+                        <td t-if="true"
+                            t-att-colspan="state.columns.length + 1"
+                            class="o_group_field_row_add"
+                            >
+                            <a href="#" role="button" t-on-click.stop.prevent="() => group.createRecord({}, props.editable === 'top')">
+                                Add a line
+                            </a>
+                        </td>
                     </t>
                 </t>
             </t>

@@ -262,6 +262,7 @@ class DataPoint {
         this.activeFields = params.activeFields || {};
 
         this.rawContext = params.rawContext;
+        this.defaultContext = params.defaultContext;
         this.setup(params, state);
 
         markRaw(this);
@@ -275,9 +276,9 @@ class DataPoint {
         const contexts = [];
         let rawContext = this.rawContext;
         if (!rawContext) {
-            return contexts;
+            return Object.assign({}, this.defaultContext);
         }
-        contexts.push(rawContext.make());
+        contexts.push({ ...this.defaultContext, ...rawContext.make() });
 
         while (rawContext.parent) {
             rawContext = rawContext.parent;
@@ -1175,6 +1176,7 @@ class DynamicList extends DataPoint {
         this.previousParams = state.previousParams || "[]";
 
         this.editedRecord = null;
+        this.onCreateRecord = params.onCreateRecord || (() => {});
         this.onRecordWillSwitchMode = async (record, mode) => {
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
@@ -1233,6 +1235,8 @@ class DynamicList extends DataPoint {
 
     abandonRecord(recordId) {
         // TODO
+        const record = this.records.find((r) => r.id === recordId);
+        this.removeRecord(record);
     }
 
     /**
@@ -1402,6 +1406,7 @@ export class DynamicRecordList extends DynamicList {
             activeFields: this.activeFields,
             parentActiveFields: this.activeFields,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
+            defaultContext: this.defaultContext,
             ...params,
         });
         if (this.model.useSampleModel) {
@@ -1410,6 +1415,7 @@ export class DynamicRecordList extends DynamicList {
         }
         await this.model.mutex.exec(() => newRecord.load());
         this.editedRecord = newRecord;
+        this.onCreateRecord(newRecord);
         return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
     }
 
@@ -1478,6 +1484,9 @@ export class DynamicRecordList extends DynamicList {
      */
     removeRecord(record) {
         const index = this.records.findIndex((r) => r === record);
+        if (index < 0) {
+            return;
+        }
         this.records.splice(index, 1);
         this.count--;
         if (this.editedRecord === record) {
@@ -1572,6 +1581,11 @@ export class DynamicGroupList extends DynamicList {
         this.limit =
             params.groupsLimit ||
             (this.expand ? this.constructor.DEFAULT_LOAD_LIMIT : this.constructor.DEFAULT_LIMIT);
+        this.onCreateRecord =
+            params.onCreateRecord ||
+            ((record) => {
+                this.editedRecord = record;
+            });
     }
 
     // -------------------------------------------------------------------------
@@ -1589,6 +1603,7 @@ export class DynamicGroupList extends DynamicList {
             limit: this.limitByGroup,
             groupByInfo: this.groupByInfo,
             rawContext: this.rawContext,
+            onCreateRecord: this.onCreateRecord,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
         };
     }
@@ -1753,6 +1768,18 @@ export class DynamicGroupList extends DynamicList {
         this.count--;
         this.model.notify();
         return group;
+    }
+
+    removeRecord(record) {
+        for (const group of this.groups) {
+            const removedRecord = group.list.removeRecord(record);
+            if (removedRecord) {
+                if (removedRecord === this.editedRecord) {
+                    this.editedRecord = null;
+                }
+                return removedRecord;
+            }
+        }
     }
 
     async resequence() {
@@ -1931,7 +1958,12 @@ export class Group extends DataPoint {
             fields: params.fields,
             limit: params.limit,
             groupByInfo: params.groupByInfo,
+            onCreateRecord: params.onCreateRecord,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
+            defaultContext: {
+                ...params.defaultContext,
+                [`default_${this.groupByField.name}`]: this.getServerValue(),
+            },
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
@@ -1947,6 +1979,11 @@ export class Group extends DataPoint {
         this.count++;
         this.isFolded = false;
         return this.list.addRecord(record, index);
+    }
+
+    createRecord(params = {}, atFirstPosition = false) {
+        this.count++;
+        this.list.createRecord(params, atFirstPosition);
     }
 
     async delete() {

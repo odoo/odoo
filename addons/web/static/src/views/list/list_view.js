@@ -277,10 +277,11 @@ export class ListView extends Component {
     }
 
     onClickDiscard() {
-        if (this.model.root.editedRecord.isVirtual) {
-            this.model.root.removeRecord(this.model.root.editedRecord);
+        const editedRecord = this.model.root.editedRecord;
+        if (editedRecord.isVirtual) {
+            this.model.root.removeRecord(editedRecord);
         } else {
-            this.model.root.editedRecord.discard();
+            editedRecord.discard();
         }
     }
 
