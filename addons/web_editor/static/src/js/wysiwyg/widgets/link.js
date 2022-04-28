@@ -19,6 +19,7 @@ const Link = Widget.extend({
         'input': '_onAnyChange',
         'change': '_onAnyChange',
         'input input[name="url"]': '_onURLInput',
+        'change input[name="url"]': '_onURLInputChange',
     },
 
     /**
@@ -142,6 +143,7 @@ const Link = Widget.extend({
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
             this._onURLInput();
+            this._savedURLInputOnDestroy = false;
         }
 
         this._updateOptionsUI();
@@ -151,6 +153,15 @@ const Link = Widget.extend({
         }
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy () {
+        if (this._savedURLInputOnDestroy) {
+            this._adaptPreview();
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -458,18 +469,25 @@ const Link = Widget.extend({
     /**
      * @private
      */
-    _onAnyChange: function () {
-        this._adaptPreview();
+    _onAnyChange: function (e) {
+        if (!e.target.closest('input[type="text"]')) {
+            this._adaptPreview();
+        }
     },
     /**
      * @private
      */
     _onURLInput: function () {
+        this._savedURLInputOnDestroy = true;
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
         let isLink = value.indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+    },
+    _onURLInputChange: function () {
+        this._adaptPreview();
+        this._savedURLInputOnDestroy = false;
     },
 });
 
