@@ -95,7 +95,8 @@ class Meeting(models.Model):
             'attendee_ids': attendee_commands,
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
-            'videocall_location': google_event.get_meeting_url()
+            'videocall_location': google_event.get_meeting_url(),
+            'show_as': 'free' if google_event.is_available() else 'busy'
         }
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
