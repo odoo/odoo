@@ -144,7 +144,11 @@ export class X2ManyField extends Component {
 
     get displayAddButton() {
         const { canCreate, canLink } = this.activeActions;
-        return this.viewMode === "kanban" && (canLink || canCreate) && !this.props.readonly;
+        return (
+            this.viewMode === "kanban" &&
+            (canLink !== undefined ? canLink : canCreate) &&
+            !this.props.readonly
+        );
     }
 
     get pagerProps() {
