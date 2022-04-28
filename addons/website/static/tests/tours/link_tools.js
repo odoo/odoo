@@ -57,6 +57,18 @@ tour.register('link_tools', {
         trigger: '#toolbar button[data-original-title="Link Style"]',
     },
     {
+        trigger: 'body',
+        run: () => {
+            // When doing automated testing, the link popover takes time to
+            // hide. While hidding, the editor observer is unactive in order to
+            // prevent the popover mutation to be recorded. In a manual
+            // scenario, the popover has plenty of time to be hidden and the
+            // obsever would be re-activated in time. As this problem arise only
+            // in test, we activate the observer here for the popover.
+            $('#wrapwrap').data('wysiwyg').odooEditor.observerActive('hide.bs.popover');
+        },
+    },
+    {
         content: "Click on the secondary style button.",
         trigger: '#toolbar we-button[data-value="secondary"]',
     },
