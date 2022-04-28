@@ -1,7 +1,15 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "../views/helpers";
-import { click, clickEdit, clickSave, editInput, getFixture, nextTick } from "../helpers/utils";
+import {
+    click,
+    clickEdit,
+    clickSave,
+    editInput,
+    editSelect,
+    getFixture,
+    nextTick,
+} from "../helpers/utils";
 
 // WOWL remove after adapting tests
 let createView, FormView, testUtils, cpHelpers;
@@ -524,15 +532,20 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("many2many kanban: conditional create/delete actions", async function (assert) {
+    QUnit.test("many2many kanban: conditional create/delete actions", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records[0].timmy = [12, 14];
+        (serverData.views = {
+            "partner_type,false,form": '<form><field name="name"/></form>',
+            "partner_type,false,list": '<tree><field name="name"/></tree>',
+            "partner_type,false,search": "<search/>",
+        }),
+            (serverData.models.partner.records[0].timmy = [12, 14]);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `
                 <form>
                     <field name="color"/>
@@ -549,46 +562,39 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            archs: {
-                "partner_type,false,form": '<form><field name="name"/></form>',
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-                "partner_type,false,search": "<search/>",
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
+            resId: 1,
         });
+        await clickEdit(target);
 
         // color is red
-        assert.containsOnce(form, ".o-kanban-button-new", '"Add" button should be available');
+        assert.containsOnce(target, ".o-kanban-button-new", '"Add" button should be available');
 
-        await testUtils.dom.click(form.$(".o_kanban_record:contains(silver)"));
+        await click($(target).find(".o_kanban_record:contains(silver)")[0]);
         assert.containsOnce(
             document.body,
             ".modal .modal-footer .o_btn_remove",
             "remove button should be visible in modal"
         );
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+        await click($(".modal .modal-footer .o_form_button_cancel")[0]);
 
-        await testUtils.dom.click(form.$(".o-kanban-button-new"));
+        await click($(target).find(".o-kanban-button-new")[0]);
         assert.containsN(
             document.body,
             ".modal .modal-footer button",
             3,
             "there should be 3 buttons available in the modal"
         );
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+        await click($(".modal .modal-footer .o_form_button_cancel")[0]);
 
         // set color to black
-        await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
+        await editSelect(target, 'div[name="color"] select', '"black"');
         assert.containsOnce(
-            form,
+            target,
             ".o-kanban-button-new",
             '"Add" button should still be available even after color field changed'
         );
 
-        await testUtils.dom.click(form.$(".o-kanban-button-new"));
+        await click($(target).find(".o-kanban-button-new")[0]);
         // only select and cancel button should be available, create
         // button should be removed based on color field condition
         assert.containsN(
@@ -597,16 +603,14 @@ QUnit.module("Fields", (hooks) => {
             2,
             '"Create" button should not be available in the modal after color field changed'
         );
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+        await click($(".modal .modal-footer .o_form_button_cancel")[0]);
 
-        await testUtils.dom.click(form.$(".o_kanban_record:contains(silver)"));
+        await click($(target).find(".o_kanban_record:contains(silver)")[0]);
         assert.containsNone(
             document.body,
             ".modal .modal-footer .o_btn_remove",
             "remove button should be visible in modal"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL("many2many list (non editable): edition", async function (assert) {

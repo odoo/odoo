@@ -11,7 +11,7 @@
                 <t t-if="!props.noCreate">
                     <button class="btn btn-primary" data-hotkey="c" t-on-click="createEditRecord">Create</button>
                 </t>
-                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click="close">Cancel</button>
+                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click="() => this.props.close()">Cancel</button>
             </t>
         </Dialog>
     </t>
