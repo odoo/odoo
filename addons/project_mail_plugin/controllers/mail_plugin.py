@@ -44,6 +44,8 @@ class MailPluginController(mail_plugin.MailPluginController):
                 } for task in partner_tasks if task.project_id.id in accessible_projects]
 
             contact_values['tasks'] = tasks_values
+            contact_values['can_create_project'] = request.env['project.project'].check_access_rights(
+                'create', raise_exception=False)
 
         return contact_values
 
