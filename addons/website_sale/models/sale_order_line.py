@@ -54,3 +54,7 @@ class SaleOrderLine(models.Model):
         if clear:
             self.shop_warning = ''
         return warn
+
+    def _show_in_cart(self):
+        self.ensure_one()
+        return True
