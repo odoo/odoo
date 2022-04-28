@@ -220,16 +220,13 @@ QUnit.test('add an emoji after some text', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
-    const { click, createComposerComponent, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Blabla");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Blabla");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "Blabla",
@@ -250,17 +247,14 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 
     const pyEnv = await startServer();
     const mailChanelId1 = pyEnv['mail.channel'].create();
-    const { click, createComposerComponent, messaging } = await start();
+    const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
     const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
-    await afterNextRender(() => {
-        composerTextInputTextArea.focus();
-        document.execCommand('insertText', false, "Blabla");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Blabla");
     assert.strictEqual(
         composerTextInputTextArea.value,
         "Blabla",
@@ -513,10 +507,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "bluhbluh ",
@@ -858,10 +849,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertText('.o_ComposerTextInput_textarea', "bluhbluh ");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "bluhbluh ",
@@ -1059,7 +1047,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { click, createComposerComponent, messaging } = await start({
+    const { click, createComposerComponent, insertText, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -1073,10 +1061,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
     });
     await createComposerComponent(thread.composer);
     // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "test message");
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "test message",
@@ -1563,7 +1548,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { createComposerComponent, messaging } = await start({
+    const { createComposerComponent, insertText, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -1577,10 +1562,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
     });
     await createComposerComponent(thread.composer);
     // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "test message");
 
     await afterNextRender(() => {
         document.querySelector(`.o_Composer_buttonSend`).click();

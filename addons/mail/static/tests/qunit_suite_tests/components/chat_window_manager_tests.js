@@ -906,15 +906,12 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create();
-    const { click, createMessagingMenuComponent, messaging } = await this.start();
+    const { click, createMessagingMenuComponent, insertText, messaging } = await this.start();
     const messagingMenuComponent = await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
     // Set content of the composer of the chat window
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, 'XDU for the win !');
-    });
+    await insertText('.o_ComposerTextInput_textarea', 'XDU for the win !');
     assert.containsNone(
         document.body,
         '.o_Composer .o_AttachmentCard',
@@ -1824,13 +1821,10 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
             res_id: mailChannelId1,
         });
     }
-    await this.start();
+    const { insertText } = await this.start();
 
     // Set content of the composer of the chat window
-    await afterNextRender(() => {
-        document.querySelector('.o_ComposerTextInput_textarea').focus();
-        document.execCommand('insertText', false, 'WOLOLO');
-    });
+    await insertText('.o_ComposerTextInput_textarea', 'WOLOLO');
     // Send a new message in the chatwindow to trigger the scroll
     await afterNextRender(() =>
         triggerEvent(
@@ -1859,7 +1853,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
             }],
         ],
     });
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent, insertText } = await this.start({
         env: {
             device: {
                 isMobile: true, // here isMobile is used for the small screen size, not actually for the mobile devices
@@ -1871,10 +1865,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
         document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
