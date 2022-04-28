@@ -102,7 +102,7 @@ registerModel({
             this.update({
                 audioInputDeviceId,
             });
-            this.env.services.local_storage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
+            browser.localStorage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
             await this.messaging.rtc.updateLocalAudioTrack(true);
         },
         /**
@@ -150,7 +150,7 @@ registerModel({
          */
         async setThresholdValue(voiceActivationThreshold) {
             this.update({ voiceActivationThreshold });
-            this.env.services.local_storage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold);
+            browser.localStorage.setItem('mail_user_setting_voice_threshold', voiceActivationThreshold.toString());
             await this.messaging.rtc.updateVoiceActivation();
         },
         async togglePushToTalk() {
@@ -173,10 +173,10 @@ registerModel({
          * @private
          */
         _loadLocalSettings() {
-            const voiceActivationThresholdString = this.env.services.local_storage.getItem(
+            const voiceActivationThresholdString = browser.localStorage.getItem(
                 "mail_user_setting_voice_threshold"
             );
-            const audioInputDeviceId = this.env.services.local_storage.getItem(
+            const audioInputDeviceId = browser.localStorage.getItem(
                 "mail_user_setting_audio_input_device_id"
             );
             this.update({
