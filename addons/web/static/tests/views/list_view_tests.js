@@ -360,8 +360,13 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list with export button", async function (assert) {
+    QUnit.test("list with export button", async function (assert) {
         assert.expect(5);
+
+        function hasGroup(group) {
+            return group === "base.group_allow_export";
+        }
+        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
 
         await makeView({
             type: "list",
@@ -369,29 +374,22 @@ QUnit.module("Views", (hooks) => {
             serverData,
             actionMenus: {},
             arch: '<tree><field name="foo"/></tree>',
-
-            // session: {
-            //     async user_has_group(group) {
-            //         if (group === "base.group_allow_export") {
-            //             return true;
-            //         }
-            //         return this._super(...arguments);
-            //     },
-            // },
         });
 
         assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
         assert.ok(
-            $(target).find("tbody td.o_list_record_selector").length,
+            target.querySelectorAll("tbody td.o_list_record_selector").length,
             "should have at least one record"
         );
         assert.containsOnce(target, "div.o_control_panel .o_cp_buttons .o_list_export_xlsx");
 
-        await click($(target).find("tbody td.o_list_record_selector:first input"));
+        await click(target.querySelector("tbody td.o_list_record_selector input"));
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
         await toggleActionMenu(target);
         assert.deepEqual(
-            testUtils.controlPanel.getMenuItemTexts(target),
+            Array.from(
+                target.querySelectorAll(".o_control_panel .o_cp_action_menus .o_menu_item")
+            ).map((e) => e.textContent),
             ["Export", "Delete"],
             "action menu should have Export button"
         );
@@ -434,7 +432,7 @@ QUnit.module("Views", (hooks) => {
 
         const list = await makeView({
             type: "list",
-            model: "foo",
+            resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/></tree>',
             domain: [["id", "<", 0]], // such that no record matches the domain

@@ -1,0 +1,32 @@
+.o_export_data_dialog{
+    height: 100%;
+    .modal-body {
+        display: flex;
+        margin: auto -16px;
+
+        .o_left_panel, .o_right_panel {
+            display: flex;
+            flex-flow: column nowrap;
+            height: 100%;
+
+            .o_left_field_panel, .o_right_field_panel {
+                height: 100%;
+                overflow: auto;
+
+                .o_export_tree_item {
+                    cursor: pointer;
+                    position: relative;
+                    padding-left: 20px;
+
+                    .o_inactive {
+                        opacity: 0.2;
+                    }
+                }
+
+                .o_export_field > *:not(.o_remove_field) {
+                    @include o-grab-cursor;
+                }
+            }
+        }
+    }
+}

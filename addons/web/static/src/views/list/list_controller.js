@@ -12,6 +12,7 @@ import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 const { Component, onWillStart, useSubEnv, useEffect, useRef } = owl;
 
@@ -217,9 +218,14 @@ export class ListController extends Component {
      *
      * @private
      */
-    onExportData() {
-        console.log("onExportData");
-        // this._getExportDialogWidget().open();
+    async onExportData() {
+        const resIds = await this.getSelectedResIds();
+        const dialogProps = {
+            resIds,
+            context: this.props.context,
+            root: this.model.root,
+        };
+        this.dialogService.add(ExportDataDialog, dialogProps);
     }
     /**
      * Export Records in a xls file
