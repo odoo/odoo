@@ -541,7 +541,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "m2m grouped rendering with active field and archive enabled (archivable true)",
         async (assert) => {
             assert.expect(7);
@@ -1956,9 +1956,8 @@ QUnit.module("Views", (hooks) => {
         // This can happen when the user clicks out of the input because of a race condition between
         // the focusout of the m2o and the global 'click' handler of the quick create.
         // Check odoo/odoo#61981 for more details.
-        const $body = target.querySelectorel.closest("body");
-        assert.hasClass($body, "modal-open", "modal should be opening after m2o focusout");
-        await click($body);
+        assert.hasClass(document.body, "modal-open", "modal should be opening after m2o focusout");
+        await click(document.body);
         assert.containsOnce(
             target,
             ".o_kanban_quick_create",
@@ -6729,17 +6728,17 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["bar"],
             limit: 2,
-            async mockRPC(route, args) {
-                if (args.model === "category" && args.method === "read") {
-                    assert.step(String(args.args[0]));
-                }
-                if (route === "web_search_read") {
-                    if (args.limit) {
-                        assert.strictEqual(args.limit, 2, "the limit should be correctly set");
+            async mockRPC(_route, { args, kwargs, model, method }) {
+                if (model === "category" && method === "read") {
+                    assert.step(String(args[0]));
+                } else if (method === "web_search_read") {
+                    const { limit, offset } = kwargs;
+                    if (limit) {
+                        assert.strictEqual(limit, 2, "the limit should be correctly set");
                     }
-                    if (args.offset) {
+                    if (offset) {
                         assert.strictEqual(
-                            args.offset,
+                            offset,
                             2,
                             "the offset should be correctly set at load more"
                         );
@@ -6748,25 +6747,14 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            2,
-            "there should be 2 records in the column"
-        );
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
 
         assert.verifySteps(["7"], "only the appearing category should be fetched");
 
         // load more
-        await click(
-            target.querySelector(".o_kanban_group:nth-child(2)").find(".o_kanban_load_more")
-        );
+        await loadMore(1);
 
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
-            3,
-            "there should now be 3 records in the column"
-        );
-
+        assert.containsN(getColumn(1), ".o_kanban_record", 3);
         assert.verifySteps(["6"], "the other categories should not be fetched");
     });
 
@@ -8586,17 +8574,17 @@ QUnit.module("Views", (hooks) => {
                 "</t>" +
                 "</templates>" +
                 "</kanban>",
-            async mockRPC(route, args) {
-                if (args.model === "partner" && args.method === "write") {
-                    assert.step(String(args.args[0][0]));
+            async mockRPC(_route, { model, method, args }) {
+                if (model === "partner" && method === "write") {
+                    assert.step(String(args[0][0]));
                 }
             },
         });
 
         patchWithCleanup(kanban.env.services.action, {
-            switchView(viewType, props) {
+            switchView(_viewType, { mode, resModel, res_id, view_type }) {
                 assert.deepEqual(
-                    _.pick(props, "mode", "model", "res_id", "view_type"),
+                    { mode, resModel, res_id, view_type },
                     {
                         mode: "readonly",
                         resModel: "partner",
@@ -8607,23 +8595,27 @@ QUnit.module("Views", (hooks) => {
                 );
             },
         });
-        toggleRecordDropdown(0);
-        await nextTick();
+
+        await toggleRecordDropdown(0);
         await click(getCard(0), ".oe_kanban_action");
-        await nextTick();
+
         assert.containsNone(getCard(0), "img", "Initially there is no image.");
 
         await click(document.body, ".modal img[data-id='1']");
         await click(document.body.querySelector(".modal .btn-primary"));
-        await nextTick();
+
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
-        toggleRecordDropdown(1);
-        await click(getCard(1), "[data-type=set_cover]");
+        await toggleRecordDropdown(1);
+        const coverButton = getCard(1).querySelector("a");
+        assert.strictEqual(coverButton.innerText.trim(), "Set Cover Image");
+        await click(coverButton);
         await triggerEvent(document.body, ".modal img[data-id='2']", "dblclick");
-        await nextTick();
+
         assert.containsOnce(target, 'img[data-src*="/web/image/2"]');
+
         await click(target, ".o_kanban_record:first-child .o_attachment_image");
+
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
     });
 
