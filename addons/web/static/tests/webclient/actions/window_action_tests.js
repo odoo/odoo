@@ -134,65 +134,56 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL(
-        "switching into a view with mode=edit lands in edit mode",
-        async function (assert) {
-            serverData.views["partner,1,kanban"] = `
-    <kanban on_create="quick_create" default_group_by="m2o">
-      <templates>
-        <t t-name="kanban-box">
-          <div class="oe_kanban_global_click"><field name="foo"/></div>
-        </t>
-      </templates>
-    </kanban>
-    `;
-            serverData.actions[1] = {
-                id: 1,
-                xml_id: "action_1",
-                name: "Partners Action 1 patched",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "kanban"],
-                    [false, "form"],
-                ],
-            };
-            const mockRPC = async (route, args) => {
-                assert.step((args && args.method) || route);
-            };
-            assert.expect(14);
-            const webClient = await createWebClient({ serverData, mockRPC });
-            await doAction(webClient, 1);
-            assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
-            // quick create record
-            await testUtils.dom.click(target.querySelector(".o-kanban-button-new"));
-            await testUtils.fields.editInput(
-                target.querySelector(".o_field_widget[name=display_name]"),
-                "New name"
-            );
-            await legacyExtraNextTick();
-            // edit quick-created record
-            await testUtils.dom.click(target.querySelector(".o_kanban_edit"));
-            assert.containsOnce(
-                target,
-                ".o_form_view.o_form_editable",
-                "should display the form view in edit mode"
-            );
-            assert.verifySteps([
-                "/web/webclient/load_menus",
-                "/web/action/load",
-                "get_views",
-                "web_read_group",
-                "web_search_read",
-                "web_search_read",
-                "onchange",
-                "name_create",
-                "read",
-                "onchange",
-                "read",
-            ]);
-        }
-    );
+    QUnit.test("switching into a view with mode=edit lands in edit mode", async function (assert) {
+        serverData.views["partner,1,kanban"] = `
+            <kanban on_create="quick_create" default_group_by="m2o">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click"><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`;
+        serverData.actions[1] = {
+            id: 1,
+            xml_id: "action_1",
+            name: "Partners Action 1 patched",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+        };
+        const mockRPC = async (route, args) => {
+            assert.step((args && args.method) || route);
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
+        // quick create record
+        await testUtils.dom.click(target.querySelector(".o-kanban-button-new"));
+        await editInput(target, ".o_field_widget[name=display_name] input", "New name");
+
+        // edit quick-created record
+        await testUtils.dom.click(target.querySelector(".o_kanban_edit"));
+        assert.containsOnce(
+            target,
+            ".o_form_view .o_form_editable",
+            "should display the form view in edit mode"
+        );
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "web_read_group",
+            "web_search_read",
+            "web_search_read",
+            "onchange",
+            "name_create",
+            "read",
+            "read",
+        ]);
+    });
 
     QUnit.test(
         "orderedBy in context is not propagated when executing another action",

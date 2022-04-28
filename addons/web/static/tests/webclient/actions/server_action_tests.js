@@ -91,9 +91,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 2);
     });
 
-    QUnit.skipWOWL("action with html help returned by a server action", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("action with html help returned by a server action", async function (assert) {
         serverData.actions[2].context = { someKey: 44 };
         const mockRPC = async (route, args) => {
             if (route === "/web/action/run") {

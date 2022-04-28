@@ -348,16 +348,16 @@ export class KanbanView extends Component {
                         this.model.root.offset = offset;
                         this.model.root.limit = limit;
                         await this.model.root.load();
-                        this.render();
+                        this.render(true); // FIXME WOWL reactivity
                     },
                 };
             }
         });
     }
 
-    async openRecord(record) {
+    async openRecord(record, mode) {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.props.selectRecord(record.resId, { activeIds });
+        this.props.selectRecord(record.resId, { activeIds, mode });
     }
 
     async createRecord(group) {

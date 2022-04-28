@@ -427,9 +427,9 @@ function makeActionManager(env) {
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
-            selectRecord: async (resId, { activeIds }) => {
+            selectRecord: async (resId, { activeIds, mode }) => {
                 if (_getView("form")) {
-                    await switchView("form", { resId, resIds: activeIds });
+                    await switchView("form", { mode, resId, resIds: activeIds });
                 }
             },
             createRecord: async () => {

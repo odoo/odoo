@@ -11,7 +11,7 @@
                     list="model.root"
                     archInfo="archInfo"
                     readonly="true"
-                    openRecord="record => this.openRecord(record)"
+                    openRecord.bind="openRecord"
                     noContentHelp="props.info.noContentHelp"
                 />
             </Layout>

@@ -407,7 +407,7 @@ export class KanbanRenderer extends Component {
     async validateQuickCreate(mode, group) {
         const record = await group.validateQuickCreate();
         if (mode === "edit") {
-            await this.props.openRecord(record);
+            await this.props.openRecord(record, "edit");
         } else {
             await this.quickCreate(group);
         }
