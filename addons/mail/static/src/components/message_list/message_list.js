@@ -39,7 +39,6 @@ export class MessageList extends Component {
             return {
                 componentHintList: threadView ? [...threadView.componentHintList] : [],
                 hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
-                hasScrollAdjust: this.props.hasScrollAdjust,
                 messageListView,
                 order: threadView && threadView.order,
                 orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
@@ -160,11 +159,10 @@ export class MessageList extends Component {
     _adjustScrollForExtraMessagesAtTheEnd() {
         const {
             hasAutoScrollOnMessageReceived,
-            hasScrollAdjust,
             messageListView,
             order,
         } = this._lastRenderedValues();
-        if (!messageListView.getScrollableElement() || !hasScrollAdjust) {
+        if (!messageListView.getScrollableElement() || !messageListView.hasScrollAdjust) {
             return;
         }
         if (!hasAutoScrollOnMessageReceived) {
@@ -182,13 +180,12 @@ export class MessageList extends Component {
      */
     _adjustScrollForExtraMessagesAtTheStart() {
         const {
-            hasScrollAdjust,
             messageListView,
             order,
         } = this._lastRenderedValues();
         if (
             !messageListView.getScrollableElement() ||
-            !hasScrollAdjust ||
+            !messageListView.hasScrollAdjust ||
             !this._willPatchSnapshot ||
             order === 'desc'
         ) {
@@ -203,12 +200,11 @@ export class MessageList extends Component {
      */
     _adjustScrollFromModel() {
         const {
-            hasScrollAdjust,
             messageListView,
             threadCacheInitialScrollHeight,
             threadCacheInitialScrollPosition,
         } = this._lastRenderedValues();
-        if (!messageListView.getScrollableElement() || !hasScrollAdjust) {
+        if (!messageListView.getScrollableElement() || !messageListView.hasScrollAdjust) {
             return;
         }
         if (
@@ -360,16 +356,7 @@ export class MessageList extends Component {
 
 Object.assign(MessageList, {
     components: { Transition },
-    defaultProps: {
-        hasScrollAdjust: true,
-    },
-    props: {
-        hasScrollAdjust: {
-            type: Boolean,
-            optional: true,
-        },
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.MessageList',
 });
 

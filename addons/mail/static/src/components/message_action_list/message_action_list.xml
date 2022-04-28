@@ -3,7 +3,7 @@
     <t t-name="mail.MessageActionList" owl="1">
         <t t-if="messageActionList">
             <div class="o_MessageActionList d-flex border rounded-sm bg-white" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
-                <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o p-2 o_cursor_pointer" t-att-title="ADD_A_REACTION" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
+                <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o p-2 o_cursor_pointer" t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
                 <PopoverView t-if="messageActionList.reactionPopoverView" localId="messageActionList.reactionPopoverView.localId"/>
                 <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2 o_cursor_pointer" t-att-class="{
                         'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,

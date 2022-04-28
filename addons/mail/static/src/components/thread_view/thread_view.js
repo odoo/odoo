@@ -20,13 +20,7 @@ export class ThreadView extends Component {
 }
 
 Object.assign(ThreadView, {
-    props: {
-        hasScrollAdjust: {
-            type: Boolean,
-            optional: true,
-        },
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.ThreadView',
 });
 

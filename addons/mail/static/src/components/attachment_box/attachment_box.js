@@ -13,7 +13,6 @@ export class AttachmentBox extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'AttachmentBoxView' });
-        this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -25,20 +24,6 @@ export class AttachmentBox extends Component {
      */
     get attachmentBoxView() {
         return this.messaging && this.messaging.models['AttachmentBoxView'].get(this.props.localId);
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Object} detail
-     * @param {FileList} detail.files
-     */
-    async _onDropZoneFilesDropped(detail) {
-        await this.attachmentBoxView.fileUploader.uploadFiles(detail.files);
-        this.attachmentBoxView.useDragVisibleDropZone.update({ isVisible: false });
     }
 
 }
