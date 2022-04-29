@@ -1851,56 +1851,25 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "on_close should be called only once with right parameters in js_class form view",
-        async function (assert) {
-            assert.expect(4);
-            // This test is quite specific but matches a real case in legacy: event_configurator_widget.js
-            // Clicking on form view's action button triggers its own mechanism: it saves the record and closes the dialog.
-            // Now it is possible that the dialog action wants to do something of its own at closing time, to, for instance
-            // update the main action behind it, with specific parameters.
-            // This test ensures that this flow is supported in legacy,
-            const TestCustoFormController = FormView.prototype.config.Controller.extend({
-                async saveRecord() {
-                    await this._super.apply(this, arguments);
-                    this.do_action({
-                        type: "ir.actions.act_window_close",
-                        infos: { cantaloupe: "island" },
-                    });
-                },
-            });
-            const TestCustoFormView = FormView.extend({
-                config: Object.assign({}, FormView.prototype.config, {
-                    Controller: TestCustoFormController,
-                }),
-            });
-            legacyViewRegistry.add("test_view", TestCustoFormView);
-            serverData.views["partner,3,form"] = `
-      <form js_class="test_view">
-        <field name="foo" />
-        <footer>
-          <button string="Echoes" special="save" />
-        </footer>
-      </form>`;
-            const webClient = await createWebClient({ serverData });
-            await doAction(webClient, 24); // main form view
-            await doAction(webClient, 25, {
-                // Custom jsClass form view in target new
-                onClose(infos) {
-                    assert.step("onClose");
-                    assert.deepEqual(infos, { cantaloupe: "island" });
-                },
-            });
-            // Close dialog by clicking on save button
-            await testUtils.dom.click(
-                target.querySelector(".o_dialog .modal-footer button[special=save]")
-            );
-            assert.verifySteps(["onClose"]);
-            await legacyExtraNextTick();
-            assert.containsNone(target, ".modal");
-            delete legacyViewRegistry.map.test_view;
-        }
-    );
+    QUnit.test("onClose should be called only once with right parameters", async function (assert) {
+        assert.expect(5);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 24); // main form view
+        await doAction(webClient, 25, {
+            // form view in target new
+            onClose(infos) {
+                assert.step("onClose");
+                assert.deepEqual(infos, { cantaloupe: "island" });
+            },
+        });
+        assert.containsOnce(target, ".modal");
+        await doAction(webClient, {
+            type: "ir.actions.act_window_close",
+            infos: { cantaloupe: "island" },
+        });
+        assert.verifySteps(["onClose"]);
+        assert.containsNone(target, ".modal");
+    });
 
     QUnit.test("search view should keep focus during do_search", async function (assert) {
         assert.expect(5);
