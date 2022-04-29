@@ -75,6 +75,8 @@ class StockPicking(models.Model):
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
+            if not productions_to_done:
+                continue
             production_ids_backorder = []
             if not self.env.context.get('cancel_backorder'):
                 production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
