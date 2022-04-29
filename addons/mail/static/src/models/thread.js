@@ -57,20 +57,6 @@ registerModel({
              */
             this._currentPartnerLastNotifiedIsTyping = undefined;
             /**
-             * Timer of current partner that is typing a very long text. When
-             * the other members do not receive any typing notification for a
-             * long time, they must assume that the related partner is no longer
-             * typing something (e.g. they have closed the browser tab).
-             * This is a timer to let other members know that current partner
-             * is still typing something, so that they should not assume he/she
-             * has stopped typing something.
-             */
-            this._currentPartnerLongTypingTimer = new Timer(
-                this.messaging,
-                () => this._onCurrentPartnerLongTypingTimeout(),
-                50 * 1000
-            );
-            /**
              * Determines whether the next request to notify current partner
              * typing status should always result to making RPC, regardless of
              * whether last notified current partner typing status is the same.
@@ -112,7 +98,7 @@ registerModel({
         },
         _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
-            this._currentPartnerLongTypingTimer.clear();
+            this.currentPartnerLongTypingTimer.clear();
             this._throttleNotifyCurrentPartnerTypingStatus.clear();
             for (const timer of this._otherMembersLongTypingTimers.values()) {
                 timer.clear();
@@ -991,7 +977,7 @@ registerModel({
         async registerCurrentPartnerIsTyping() {
             // Handling of typing timers.
             this._currentPartnerInactiveTypingTimer.start();
-            this._currentPartnerLongTypingTimer.start();
+            this.currentPartnerLongTypingTimer.start();
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
@@ -1089,7 +1075,7 @@ registerModel({
         async unregisterCurrentPartnerIsTyping({ immediateNotify = false } = {}) {
             // Handling of typing timers.
             this._currentPartnerInactiveTypingTimer.clear();
-            this._currentPartnerLongTypingTimer.clear();
+            this.currentPartnerLongTypingTimer.clear();
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
@@ -1177,6 +1163,17 @@ registerModel({
                 return replace(this.members[0]);
             }
             return clear();
+        },
+        /**
+         * @private
+         * @returns {Timer}
+         */
+        _computeCurrentPartnerLongTypingTimer() {
+            return new Timer(
+                this.messaging,
+                () => this._onCurrentPartnerLongTypingTimeout(),
+                50 * 1000
+            );
         },
         /**
          * @private
@@ -1708,8 +1705,8 @@ registerModel({
                         return;
                     }
                 }
-                if (isTyping && this._currentPartnerLongTypingTimer.isRunning) {
-                    this._currentPartnerLongTypingTimer.reset();
+                if (isTyping && this.currentPartnerLongTypingTimer.isRunning) {
+                    this.currentPartnerLongTypingTimer.reset();
                 }
             }
             this._forceNotifyNextCurrentPartnerTypingStatus = false;
@@ -1929,6 +1926,18 @@ registerModel({
             default: 0,
         }),
         creator: one('User'),
+        /**
+         * Timer of current partner that is typing a very long text. When
+         * the other members do not receive any typing notification for a
+         * long time, they must assume that the related partner is no longer
+         * typing something (e.g. they have closed the browser tab).
+         * This is a timer to let other members know that current partner
+         * is still typing something, so that they should not assume he/she
+         * has stopped typing something.
+         */
+        currentPartnerLongTypingTimer: attr({
+            compute: '_computeCurrentPartnerLongTypingTimer',
+        }),
         custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
