@@ -224,6 +224,15 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             return rewardUnitCost * this.get_quantity();
         }
     }
+    get_full_product_name() {
+        if (this.is_reward_line) {
+            const reward = this.order.pos.reward_by_id[this.reward_id];
+            if (reward.reward_type == "product") {
+                return super.get_full_product_name() + _t(' (free)');
+            }
+        }
+        return super.get_full_product_name();
+    }
 }
 Registries.Model.extend(Orderline, PosLoyaltyOrderline);
 
