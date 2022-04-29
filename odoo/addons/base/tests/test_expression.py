@@ -498,6 +498,24 @@ class TestExpression(SavepointCaseWithUserDemo):
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
         self.assertFalse(partners)
 
+        partners = self._search(Partner, [('child_ids.city', '!=', 'foo')])
+        self.assertTrue(partners)
+
+        # self.partners[0].child_ids[0].city = 'foo'
+        # partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
+        # self.assertTrue(partners)
+
+        # partners = self._search(Partner, [('child_ids.city', '!=', 'foo')])
+        # self.assertTrue(self.partners[0] in partners)
+
+        # self.partners[0].child_ids.city = 'foo'
+        # partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
+        # self.assertTrue(partners)
+
+        # partners = self._search(Partner, [('child_ids.city', '!=', 'foo')])
+        # # There are no child_ids of partners[0] where city is different 'foo'
+        # self.assertFalse(self.partners[0] in partners)
+
     def test_15_equivalent_one2many_1(self):
         Company = self.env['res.company']
         company3 = Company.create({'name': 'Acme 3'})

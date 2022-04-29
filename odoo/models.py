@@ -5670,7 +5670,10 @@ Fields:
                     if comparator == '=':
                         ok = value in data
                     elif comparator in ('!=', '<>'):
-                        ok = value not in data
+                        # data = ['ignored','b q'], value = 'ignored'
+                        # data = [], value = False
+                        # data = ['belgium'], value = "belgium"
+                        ok = not data or any(x != value for x in data)
                     elif comparator == '=?':
                         ok = not value or (value in data)
                     elif comparator == 'in':
