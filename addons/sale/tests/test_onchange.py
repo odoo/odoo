@@ -76,6 +76,18 @@ class TestOnchangeProductId(TransactionCase):
         partner = self.res_partner_model.create({
             'name': "George"
         })
+        tax_fixed_incl = self.tax_model.create({
+            'name': "fixed include",
+            'amount': '10.00',
+            'amount_type': 'fixed',
+            'price_include': True,
+        })
+        tax_fixed_excl = self.tax_model.create({
+            'name': "fixed exclude",
+            'amount': '10.00',
+            'amount_type': 'fixed',
+            'price_include': False,
+        })
         tax_include_src = self.tax_model.create({
             'name': "Include 21%",
             'amount': 21.00,
@@ -110,6 +122,18 @@ class TestOnchangeProductId(TransactionCase):
             'name': "Voiture",
             'list_price': 100,
             'taxes_id': [(6, 0, [tax_exclude_src.id])]
+        })
+
+        product_tmpl_c = self.product_tmpl_model.create({
+            'name': "Voiture",
+            'list_price': 100,
+            'taxes_id': [(6, 0, [tax_fixed_incl.id, tax_exclude_src.id])]
+        })
+
+        product_tmpl_d = self.product_tmpl_model.create({
+            'name': "Voiture",
+            'list_price': 100,
+            'taxes_id': [(6, 0, [tax_fixed_excl.id, tax_include_src.id])]
         })
 
         fpos_incl_incl = self.fiscal_position_model.create({
@@ -206,6 +230,32 @@ class TestOnchangeProductId(TransactionCase):
         with order_form.order_line.new() as line:
             line.name = product_tmpl_b.product_variant_id.name
             line.product_id = product_tmpl_b.product_variant_id
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 100}])
+
+        # Test Mapping (included,excluded) to (included, included)
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos_excl_incl
+        with order_form.order_line.new() as line:
+            line.name = product_tmpl_c.product_variant_id.name
+            line.product_id = product_tmpl_c.product_variant_id
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 100, 'price_subtotal': 84.91}])
+
+        # Test Mapping (excluded,included) to (excluded, excluded)
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos_incl_excl
+        with order_form.order_line.new() as line:
+            line.name = product_tmpl_d.product_variant_id.name
+            line.product_id = product_tmpl_d.product_variant_id
             line.product_uom_qty = 1.0
             line.product_uom = uom
         sale_order = order_form.save()
