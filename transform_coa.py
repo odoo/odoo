@@ -439,7 +439,7 @@ def do_module(code, module, lang):
 
     if extra_functions:
         content += (
-            "    def _get_be_chart_template_data(self, template_code, company):\n"
+            f"    def _get_{code}_chart_template_data(self, template_code, company):\n"
             "        res = self._get_chart_template_data(company)\n"
             f"        if template_code == '{code}':\n"
         )

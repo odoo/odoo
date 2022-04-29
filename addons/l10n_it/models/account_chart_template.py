@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models, Command
-
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
+
+    def _get_be_chart_template_data(self, template_code, company):
+        res = self._get_chart_template_data(company)
+        if template_code == 'it':
+            res['account.fiscal.position'] = self._get_it_fiscal_position(template_code, company)
+        return res
 
     def _get_it_template_data(self, template_code, company):
         cid = (company or self.env.company).id
@@ -39,7 +43,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp2',
+                            f'account.{cid}_tax_report_line_vp2',
                         ],
                     }),
                     Command.create({
@@ -47,7 +51,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp4',
+                            f'account.{cid}_tax_report_line_vp4',
                         ],
                     }),
                 ],
@@ -79,7 +83,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp3',
+                            f'account.{cid}_tax_report_line_vp3',
                         ],
                     }),
                     Command.create({
@@ -87,7 +91,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp5',
+                            f'account.{cid}_tax_report_line_vp5',
                         ],
                     }),
                 ],
@@ -119,7 +123,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp2',
+                            f'account.{cid}_tax_report_line_vp2',
                         ],
                     }),
                     Command.create({
@@ -127,7 +131,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp4',
+                            f'account.{cid}_tax_report_line_vp4',
                         ],
                     }),
                 ],
@@ -159,7 +163,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp3',
+                            f'account.{cid}_tax_report_line_vp3',
                         ],
                     }),
                     Command.create({
@@ -167,7 +171,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp5',
+                            f'account.{cid}_tax_report_line_vp5',
                         ],
                     }),
                 ],
@@ -199,7 +203,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp2',
+                            f'account.{cid}_tax_report_line_vp2',
                         ],
                     }),
                     Command.create({
@@ -207,7 +211,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp4',
+                            f'account.{cid}_tax_report_line_vp4',
                         ],
                     }),
                 ],
@@ -239,7 +243,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp3',
+                            f'account.{cid}_tax_report_line_vp3',
                         ],
                     }),
                     Command.create({
@@ -247,7 +251,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp5',
+                            f'account.{cid}_tax_report_line_vp5',
                         ],
                     }),
                 ],
@@ -279,7 +283,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp2',
+                            f'account.{cid}_tax_report_line_vp2',
                         ],
                     }),
                     Command.create({
@@ -287,7 +291,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_2601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp4',
+                            f'account.{cid}_tax_report_line_vp4',
                         ],
                     }),
                 ],
@@ -319,7 +323,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp3',
+                            f'account.{cid}_tax_report_line_vp3',
                         ],
                     }),
                     Command.create({
@@ -327,7 +331,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                         'account_id': f'account.{cid}_1601',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp5',
+                            f'account.{cid}_tax_report_line_vp5',
                         ],
                     }),
                 ],
@@ -391,7 +395,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp2',
+                            f'account.{cid}_tax_report_line_vp2',
                         ],
                     }),
                     Command.create({
@@ -426,7 +430,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp2',
+                            f'account.{cid}_tax_report_line_vp2',
                         ],
                     }),
                     Command.create({
@@ -461,7 +465,7 @@ class AccountChartTemplate(models.AbstractModel):
                         'factor_percent': 100,
                         'repartition_type': 'base',
                         'plus_report_line_ids': [
-                            'tax_report_line_vp3',
+                            f'account.{cid}_tax_report_line_vp3',
                         ],
                     }),
                     Command.create({
@@ -480,6 +484,18 @@ class AccountChartTemplate(models.AbstractModel):
                         'repartition_type': 'tax',
                     }),
                 ],
+            }
+        }
+
+    def _get_it_res_company(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f'base.company_{cid}': {
+                'currency_id': 'base.EUR',
+                'account_fiscal_country_id': 'base.it',
+                'account_default_pos_receivable_account_id': f'account.{cid}_1508',
+                'income_currency_exchange_account_id': f'account.{cid}_3220',
+                'expense_currency_exchange_account_id': f'account.{cid}_4920',
             }
         }
 
@@ -514,16 +530,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'auto_apply': 1,
                 'vat_required': 1,
                 'country_group_id': 'base.europe',
-            }
-        }
-
-    def _get_it_res_company(self, template_code, company):
-        cid = (company or self.env.company).id
-        return {
-            f'base.company_{cid}': {
-                'account_fiscal_country_id': 'base.it',
-                'account_default_pos_receivable_account_id': f'account.{cid}_1508',
-                'income_currency_exchange_account_id': f'account.{cid}_3220',
-                'expense_currency_exchange_account_id': f'account.{cid}_4920',
             }
         }

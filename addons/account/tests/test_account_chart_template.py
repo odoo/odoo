@@ -51,11 +51,10 @@ class AccountChartTemplateTest(TransactionCase):
         def check(template_code, data, _id=None):
             self.assertTrue(isinstance(data, dict))
             for attr in must_be_present:
-                message = (
+                self.assertTrue(attr in data, (
                     f"AccountChartTemplate({template_code}): Function '_get_{template_code}_{model}'"
                     f"does not output '{attr}'{' id=' + _id if _id else ''}"
-                )
-                self.assertTrue(attr in data, message)
+                ))
 
         for template_code, methods in self.chart_templates.items():
             method = methods.get(model, getattr(self.AccountChartTemplate, f"_get_{model}"))
