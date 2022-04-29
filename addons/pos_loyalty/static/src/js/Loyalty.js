@@ -170,8 +170,8 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             this.reward_identifier_code = json.reward_identifier_code;
             // IMPORTANT: We introduce this field to allow forcing the
             // value for points_cost, instead of being computed based on
-            // the reward object. This is used for discount rewards where
-            // they needs multiple lines to claim them.
+            // the reward object. This is used for discount rewards which
+            // needed multiple lines when claiming.
             this.force_points_cost = json.force_points_cost;
             this.giftBarcode = json.giftBarcode;
         }
@@ -196,15 +196,18 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
         return super.set_quantity(...arguments);
     }
     /**
-     * TODO-JCB: Not final. I think this will only be done for rewards with free product.
      * @override
      */
     can_be_merged_with(otherLine) {
         if (this.is_reward_line && otherLine.is_reward_line) {
-            return otherLine.product.id === this.product.id && otherLine.reward_id === this.reward_id;
-        } else {
-            return this.is_reward_line == otherLine.is_reward_line && super.can_be_merged_with(otherLine);
+            if (otherLine.reward_id == this.reward_id) {
+                const reward = this.order.pos.reward_by_id[this.reward_id];
+                if (reward && reward.reward_type == 'product') {
+                    return otherLine.product.id == this.product.id;
+                }
+            }
         }
+        return this.is_reward_line == otherLine.is_reward_line && super.can_be_merged_with(otherLine);
     }
     /**
      * Returns the points consumed by this reward line.
@@ -281,7 +284,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      */
     set_partner(partner) {
         const oldPartner = this.get_partner();
-        super.set_partner(...arguments);
+        super.set_partner(partner);
         if (oldPartner && oldPartner.loyalty_card_id && oldPartner.loyalty_card_id in this.couponPointChanges) {
             // Remove the coupon from the tracked couponPointChanges, and it will be replaced
             // with the correct one in `_updatePrograms`.
@@ -406,7 +409,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         const claimable = this._isClaimable(product);
         if (claimable) {
             const { reward, coupon_id } = claimable;
-            this._updateOptionsToBeFreeProduct(options, reward, coupon_id);
+            options = this._getFreeProductOptions(options, reward, coupon_id);
         }
         super.add_product(...arguments);
         this._updateRewards();
@@ -427,13 +430,12 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     }
 
     /**
-     * TODO-JCB: Make this function, don't mutate. Maybe rename to `_getFreeProductOptions`.
      * @param {*} options
      * @param {Reward} reward
      * @param {number} coupon_id
      */
-    _updateOptionsToBeFreeProduct(options, reward, coupon_id) {
-        Object.assign(options, {
+    _getFreeProductOptions(options, reward, coupon_id) {
+        return Object.assign(options, {
             price: 0,
             is_reward_line: true,
             reward_id: reward.id,
@@ -471,6 +473,11 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         this._updateRewards();
     }
+    /**
+     * 1. Apply/update claimable rewards that are not free products.
+     * 2. When claimable quantity of the existing free product reward is reduced,
+     *    update it's quantity. Remove it if the claimable quantity becomes zero.
+     */
     _updateRewards() {
         // Calls are not expected to take some time besides on the first load + when loyalty programs are made applicable
         if (this.pos.programs.length === 0) {
@@ -482,7 +489,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             let changed = false;
             for (const {coupon_id, reward} of claimableRewards) {
                 if (reward.reward_type !== 'product') {
-                    this._applyReward(reward, coupon_id);
+                    this._applyNonProductReward(reward, coupon_id);
                     changed = true;
                 }
             }
@@ -606,7 +613,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 !this.couponPointChanges[claimedReward.coupon_id]) {
                 continue;
             }
-            this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
+            this._applyNonProductReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     }
     /**
@@ -734,6 +741,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         let points = 0;
         Object.values(this.couponPointChanges).some((pe) => {
             if (pe.coupon_id === coupon_id) {
+                // Take into account the coupon's balance.
                 const dbCoupon = this.pos.couponCache[coupon_id];
                 if (dbCoupon) {
                     points += dbCoupon.balance;
@@ -840,8 +848,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 let orderedProductPaid = 0;
                 for (const line of orderLines) {
                     if (line.is_reward_line) {
-                        // TODO-JCB: Really?
-                        // skip reward lines.
+                        // Don't count reward lines.
                         continue;
                     }
 
@@ -960,7 +967,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     continue;
                 }
                 if (reward.reward_type === 'product' && !reward.multi_product) {
-                    // const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
                     const availableQty = this._getClaimableQty(reward, points);
                     if (availableQty <= 0) {
                         continue;
@@ -975,14 +981,21 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return result;
     }
     /**
-     * Applies a reward to the order, `_updateRewards` is expected to be called right after.
+     * Call this to apply a non-product reward. This means that this method ignores
+     * rewards that has `reward_type == 'product'`.
+     * NOTE: Free product rewards are handled differently.
      *
-     * @param {loyalty.reward} reward 
+     * @param {loyalty.reward} reward
      * @param {Integer} coupon_id
      * @param {Object} args Reward options
-     * @returns True if everything went right or an error message
+     * @returns
+     *  - true if everything went right, or
+     *  - an error message, or
+     *  - undefined if reward type is product
      */
-    _applyReward(reward, coupon_id, args) {
+    _applyNonProductReward(reward, coupon_id, args) {
+        if (reward.reward_type == 'product') return;
+
         if (this._getRealCouponPoints(coupon_id) < reward.required_points) {
             return _t("There are not enough points on the coupon to claim this reward.");
         }
@@ -1175,21 +1188,19 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return {discountable, discountablePerTax};
     }
     /**
-     * @param {Object} args See `_applyReward`
+     * @param {Object} args See `_applyNonProductReward`
      * @returns {Array} List of values to create the reward lines
      */
     _getRewardLineValues(args) {
         const reward = args['reward'];
         if (reward.reward_type === 'discount') {
             return this._getRewardLineValuesDiscount(args);
-        } else if (reward.reward_type === 'product') {
-            return this._getRewardLineValuesProduct(args);
         }
         // NOTE: we may reach this step if for some reason there is a free shipping reward
         return [];
     }
     /**
-     * @param {Object} args See `_applyReward`
+     * @param {Object} args See `_applyNonProductReward`
      * @returns {Array} List of values to create the discount lines
      */
     _getRewardLineValuesDiscount(args) {
@@ -1262,35 +1273,16 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         return result;
     }
+    /**
+     * Returns the claimable quantity for the given rewards and remaining_points.
+     * The result is a multiple of the reward's reward_product_qty.
+     * @param {Reward} reward
+     * @param {number} remaining_points
+     * @returns {number}
+     */
     _getClaimableQty(reward, remaining_points) {
         const claimableCount = Math.floor(remaining_points / reward.required_points);
         return claimableCount * reward.reward_product_qty;
-    }
-    /**
-     * @param {Object} args See `_applyReward`
-     * @returns {Array} List of values to create the reward lines
-     */
-    _getRewardLineValuesProduct(args) {
-        const reward = args['reward'];
-        const product = this.pos.db.get_product_by_id(args['product'] || reward.reward_product_ids[0]);
-        const points = this._getRealCouponPoints(args['coupon_id']);
-        const availableQty = this._getClaimableQty(reward, points);
-        if (availableQty <= 0) {
-            return _t("There are not enough products in the basket to claim this reward.");
-        }
-        const claimable_count = reward.clear_wallet ? 1 : Math.min(Math.ceil(availableQty / reward.reward_product_qty), Math.floor(points / reward.required_points));
-        const cost = reward.clear_wallet ? points : claimable_count * reward.required_points;
-        return [{
-            product,
-            price: 0,
-            // In case the reward is the product multiple times, give it as many times as possible
-            quantity: Math.min(availableQty, reward.reward_product_qty * claimable_count),
-            reward_id: reward.id,
-            is_reward_line: true,
-            coupon_id: args['coupon_id'],
-            // reward_identifier_code: _newRandomRewardCode(),
-            // merge: false,
-        }]
     }
     /**
      * Full routine for activating a code for the order.
@@ -1342,7 +1334,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
         if (claimableRewards && claimableRewards.length === 1) {
             if (claimableRewards[0].reward.reward_type !== 'product' || !claimableRewards[0].reward.multi_product) {
-                this._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
+                this._applyNonProductReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
                 this._updateRewards();
             }
         }

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Gui } from 'point_of_sale.Gui';
 import PosComponent from 'point_of_sale.PosComponent';
 import ProductScreen from 'point_of_sale.ProductScreen';
 import Registries from 'point_of_sale.Registries';
@@ -21,10 +20,9 @@ export class RewardButton extends PosComponent {
     /**
      * Applies the reward on the current order, if multiple products can be claimed opens a popup asking for which one.
      *
-     * @param {Object} reward 
-     * @param {Integer} coupon_id 
+     * @param {Object} reward
      */
-    async _applyReward(reward, coupon_id) {
+    async _applyReward(reward) {
         const order = this.env.pos.get_order();
 
         // Enable reward if disabled.
@@ -71,7 +69,7 @@ export class RewardButton extends PosComponent {
             });
             return false;
         } else if (rewards.length === 1) {
-            return this._applyReward(rewards[0].reward, rewards[0].coupon_id);
+            return this._applyReward(rewards[0].reward);
         } else {
             const rewardsList = rewards.map((reward) => ({
                 id: reward.reward.id,
@@ -83,7 +81,7 @@ export class RewardButton extends PosComponent {
                 list: rewardsList,
             });
             if (confirmed) {
-                return this._applyReward(selectedReward.reward, selectedReward.coupon_id);
+                return this._applyReward(selectedReward.reward);
             }
         }
         return false;
