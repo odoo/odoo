@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.SettingsConfirmationDialog" owl="1">
+        <Dialog size="'md'" title="props.title">
+            <t t-esc="props.body" />
+            <t t-set-slot="footer" owl="1">
+                <button class="btn btn-primary" t-on-click="_confirm">
+                    Save
+                </button>
+                <button class="btn btn-secondary" t-on-click="_cancel">
+                    Discard
+                </button>
+                <button class="btn btn-secondary" t-on-click="_stayHere">
+                    Stay Here
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

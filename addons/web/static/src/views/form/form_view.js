@@ -342,7 +342,7 @@ FormView.multiRecord = false;
 FormView.template = `web.FormView`;
 FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.display = { controlPanel: { ["top-right"]: false } };
-FormView.components = { ActionMenus, FormRenderer, Layout };
+FormView.components = { ActionMenus, Renderer: FormRenderer, Layout };
 FormView.props = {
     ...standardViewProps,
     discardRecord: { type: Function, optional: true },

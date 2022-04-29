@@ -6,7 +6,7 @@
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="layout-buttons">
                     <t t-if="footerArchInfo and env.inDialog">
-                        <FormRenderer record="model.root" archInfo="footerArchInfo"/>
+                        <Renderer record="model.root" archInfo="footerArchInfo"/>
                     </t>
                     <t t-else="">
                         <t t-call="{{ constructor.buttonTemplate }}"/>
@@ -22,8 +22,8 @@
                             resModel="model.root.resModel"/>
                     </t>
                 </t>
-                <t t-set-slot="control-panel-bottom-right"></t>
-                <FormRenderer record="model.root" archInfo="archInfo"/>
+                <t t-set-slot="control-panel-bottom-right"> </t>
+                <Renderer record="model.root" archInfo="archInfo"/>
             </Layout>
         </div>
     </t>

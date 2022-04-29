@@ -91,7 +91,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/libs/bs5_utility_classes.scss',
 
             'base/static/src/css/modules.css',
-            'base/static/src/js/res_config_settings.js',
+            'base/static/src/js/legacy/res_config_settings.js',
 
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
@@ -507,7 +507,6 @@ This module provides the core of the Odoo Web Client.
             ("include", "web.assets_backend_legacy_lazy"),
         ],
         'web.qunit_suite_tests': [
-            'base/static/tests/base_settings_tests.js',
             'web/static/tests/env_tests.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/fields/**/*.js',

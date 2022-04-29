@@ -24,7 +24,7 @@ const viewWidgetRegistry = registry.category("view_widgets");
  * @param {Element} parent
  * @param {Node | Node[] | void} node
  */
-const append = (parent, node) => {
+export const append = (parent, node) => {
     if (!node) {
         return;
     }
@@ -218,7 +218,11 @@ export class ViewCompiler {
         this.labels = {};
         /** @type {Compiler[]} */
         this.compilers = [];
+        this.encounteredFields = {};
+        this.setup(); //Used by FormCompiler, SettingsFormCompiler, ...
     }
+
+    setup() {}
 
     /**
      * @param {Element} xmlElement
@@ -260,7 +264,7 @@ export class ViewCompiler {
         }
 
         const registryCompiler = this.compilers.find(
-            (cp) => cp.tag === getTagName(node) && node.classList.contains(cp.class)
+            (cp) => cp.tag === getTagName(node) && (!cp.class || node.classList.contains(cp.class))
         );
         const compiler =
             (registryCompiler && registryCompiler.fn) ||
@@ -389,7 +393,7 @@ export class ViewCompiler {
      * @param {Element} el
      * @returns {Element}
      */
-    compileField(el) {
+    compileField(el, params) {
         const fieldName = el.getAttribute("name");
         const fieldString = el.getAttribute("string");
         const fieldId = `field_${fieldName}_${this.id++}`;
@@ -418,19 +422,36 @@ export class ViewCompiler {
         }
 
         const labels = this.getLabels(fieldName);
-        for (const label of labels) {
-            const props = [
-                ["id", `"${fieldId}"`],
-                ["fieldName", `"${fieldName}"`],
-                ["record", `record`],
-            ];
-            let labelText = label.textContent || fieldString;
-            labelText = labelText ? `"${labelText}"` : `record.fields.${fieldName}.string`;
-            props.push(["string", labelText]);
-            const formLabel = createElement("FormLabel", { "t-props": tupleArrayToExpr(props) });
+        const dynamicLabel = (label) => {
+            const formLabel = this.createLabelFromField(
+                fieldId,
+                fieldName,
+                fieldString,
+                label,
+                params
+            );
             label.replaceWith(formLabel);
+            return formLabel;
+        };
+        for (const label of labels) {
+            dynamicLabel(label);
         }
+        this.encounteredFields[fieldName] = dynamicLabel;
         return field;
+    }
+
+    createLabelFromField(fieldId, fieldName, fieldString, label, params) {
+        const props = [
+            ["id", `"${fieldId}"`],
+            ["fieldName", `"${fieldName}"`],
+            ["record", `record`],
+        ];
+        let labelText = label.textContent || fieldString;
+        labelText = labelText ? `"${labelText}"` : `record.fields.${fieldName}.string`;
+        return createElement("FormLabel", {
+            "t-props": tupleArrayToExpr(props),
+            string: labelText,
+        });
     }
 
     /**
@@ -646,12 +667,16 @@ export class ViewCompiler {
         // If it doesn't, there is no `for=`
         // Otherwise, the targetted element is somewhere else among its nextChildren
         if (forAttr) {
-            const label = createElement("label");
+            let label = createElement("label");
             const string = el.getAttribute("string");
             if (string) {
                 append(label, createTextNode(string));
             }
-            this.pushLabel(forAttr, label);
+            if (this.encounteredFields[forAttr]) {
+                label = this.encounteredFields[forAttr](label);
+            } else {
+                this.pushLabel(forAttr, label);
+            }
             return label;
         }
         return this.compileGenericNode(el, params);

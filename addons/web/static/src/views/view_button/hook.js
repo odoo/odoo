@@ -15,17 +15,32 @@ function disableButtons(el) {
     return btns;
 }
 
+function enableButtons(el, manuallyDisabledButtons) {
+    if (el) {
+        for (const btn of manuallyDisabledButtons) {
+            btn.removeAttribute("disabled");
+        }
+    }
+}
 export function useViewButtons(model, ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
     const comp = owl.useComponent();
     const env = useEnv();
-    const beforeExecuteAction = options.beforeExecuteAction || (() => {});
+    const beforeExecuteAction =
+        options.beforeExecuteAction ||
+        (() => {
+            return true;
+        });
     useSubEnv({
         async onClickViewButton({ clickParams, record }) {
             const manuallyDisabledButtons = disableButtons(getEl());
 
-            await beforeExecuteAction(clickParams);
+            const _continue = await beforeExecuteAction(clickParams);
+            if (typeof _continue !== "undefined" && !_continue) {
+                enableButtons(getEl(), manuallyDisabledButtons);
+                return;
+            }
 
             const resId = record.resId;
             const resIds = record.resIds || model.resIds;
@@ -60,21 +75,19 @@ export function useViewButtons(model, ref, options = {}) {
 
             try {
                 if (clickParams.confirm) {
-                    const dialogProps = {
-                        body: clickParams.confirm,
-                        confirm: async () => await action.doActionButton(doActionParams),
-                        cancel: () => {},
-                    };
-                    dialog.add(ConfirmationDialog, dialogProps);
+                    await new Promise((resolve) => {
+                        const dialogProps = {
+                            body: clickParams.confirm,
+                            confirm: async () => await action.doActionButton(doActionParams),
+                            cancel: () => {},
+                        };
+                        dialog.add(ConfirmationDialog, dialogProps, { onClose: resolve });
+                    });
                 } else {
                     await action.doActionButton(doActionParams);
                 }
             } finally {
-                if (getEl()) {
-                    for (const btn of manuallyDisabledButtons) {
-                        btn.removeAttribute("disabled");
-                    }
-                }
+                enableButtons(getEl(), manuallyDisabledButtons);
             }
         },
     });

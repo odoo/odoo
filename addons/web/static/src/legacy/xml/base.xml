@@ -1547,21 +1547,6 @@
     </div>
 </t>
 
-<t t-name="BaseSetting.Tabs">
-    <t t-foreach="tabItems" t-as="tab" t-key="tab_index">
-        <div class="tab" t-attf-data-key="#{tab.key}" role="tab">
-            <div class="icon d-none d-md-block" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
-        </div>
-    </t>
-</t>
-
-<t t-name="BaseSetting.SearchHeader">
-    <div class="settingSearchHeader o_hidden h4" role="search">
-        <img class="icon" t-att-src="imgurl" alt="Search"></img>
-        <span class="appName"><t t-esc="string"/></span>
-    </div>
-</t>
-
 <t t-name="AttachDocument">
     <button t-attf-class="btn o_attachment_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
         <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>

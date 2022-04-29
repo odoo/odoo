@@ -15,7 +15,7 @@ export class FormRenderer extends Component {
     setup() {
         const { arch, xmlDoc } = this.props.archInfo;
         this.state = useState({}); // Used by Form Compiler
-        this.templateId = useViewCompiler(FormCompiler, arch, xmlDoc, {
+        this.templateId = useViewCompiler(this.constructor.compiler, arch, xmlDoc, {
             className: "props.class",
         });
         useSubEnv({ model: this.props.record.model });
@@ -27,4 +27,13 @@ export class FormRenderer extends Component {
 }
 
 FormRenderer.template = xml`<t t-call="{{ templateId }}" />`;
-FormRenderer.components = { Field, FormLabel, ButtonBox, ViewButton, Notebook, OuterGroup, InnerGroup };
+FormRenderer.components = {
+    Field,
+    FormLabel,
+    ButtonBox,
+    ViewButton,
+    Notebook,
+    OuterGroup,
+    InnerGroup,
+};
+FormRenderer.compiler = FormCompiler;
