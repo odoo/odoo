@@ -34,8 +34,8 @@
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_blacklisted']" position="after">
-                <field name="mobile" class="o_force_ltr"/>
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="mobile" class="o_force_ltr" readonly="1"/>
                 <field name="phone_sanitized" invisible="1"/>
                 <field name="phone_sanitized_blacklisted"/>
             </xpath>
