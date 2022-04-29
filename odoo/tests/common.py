@@ -866,6 +866,22 @@ def fchain(future, next_callback):
 
     return new_future
 
+
+def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot'):
+    assert re.fullmatch(r'\w*_', prefix)
+    assert re.fullmatch(r'[a-z]+', extension)
+    assert re.fullmatch(r'\w+', test_name)
+    now = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    screenshots_dir = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / 'screenshots'
+    screenshots_dir.mkdir(parents=True, exist_ok=True)
+    fname = f'{prefix}{now}_{test_name}.{extension}'
+    full_path = screenshots_dir / fname
+
+    with full_path.open('wb') as f:
+        f.write(content)
+    logger.runbot(f'{document_type} in: {full_path}')
+
+
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
@@ -879,9 +895,6 @@ class ChromeBrowser:
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
 
         otc = odoo.tools.config
-        self.screenshots_dir = os.path.join(otc['screenshots'], get_db_name(), 'screenshots')
-        os.makedirs(self.screenshots_dir, exist_ok=True)
-
         self.screencasts_dir = None
         self.screencast_frames = []
         if otc['screencasts']:
@@ -1331,21 +1344,14 @@ which leads to stray network requests and inconsistencies."""))
         # endGroup, assert, profile, profileEnd, count, timeEnd
     }
 
-    def take_screenshot(self, prefix='sc_', suffix=None):
+    def take_screenshot(self, prefix='sc_'):
         def handler(f):
             base_png = f.result(timeout=0)['data']
             if not base_png:
                 self._logger.warning("Couldn't capture screenshot: expected image data, got ?? error ??")
                 return
-
             decoded = base64.b64decode(base_png, validate=True)
-            fname = '{}{:%Y%m%d_%H%M%S_%f}{}.png'.format(
-                prefix, datetime.now(),
-                suffix or '_%s' % self.test_class.__name__)
-            full_path = os.path.join(self.screenshots_dir, fname)
-            with open(full_path, 'wb') as f:
-                f.write(decoded)
-            self._logger.runbot('Screenshot in: %s', full_path)
+            save_test_file(self.test_class.__name__, decoded, prefix, logger=self._logger)
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
