@@ -1410,69 +1410,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("many2many checkboxes with default values", async function (assert) {
-        assert.expect(7);
-
-        this.data.partner.fields.turtles.default = [3];
-        this.data.partner.fields.turtles.type = "many2many";
-
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="turtles" widget="many2many_checkboxes">' +
-                "</field>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "create") {
-                    assert.deepEqual(
-                        args.args[0].turtles,
-                        [[6, false, [1]]],
-                        "correct values should have been sent to create"
-                    );
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        assert.notOk(
-            form.$(".o_form_view .custom-checkbox input").eq(0).prop("checked"),
-            "first checkbox should not be checked"
-        );
-        assert.notOk(
-            form.$(".o_form_view .custom-checkbox input").eq(1).prop("checked"),
-            "second checkbox should not be checked"
-        );
-        assert.ok(
-            form.$(".o_form_view .custom-checkbox input").eq(2).prop("checked"),
-            "third checkbox should be checked"
-        );
-
-        await testUtils.dom.click(form.$(".o_form_view .custom-checkbox input:checked"));
-        await testUtils.dom.click(form.$(".o_form_view .custom-checkbox input").first());
-        await testUtils.dom.click(form.$(".o_form_view .custom-checkbox input").first());
-        await testUtils.dom.click(form.$(".o_form_view .custom-checkbox input").first());
-
-        assert.ok(
-            form.$(".o_form_view .custom-checkbox input").eq(0).prop("checked"),
-            "first checkbox should be checked"
-        );
-        assert.notOk(
-            form.$(".o_form_view .custom-checkbox input").eq(1).prop("checked"),
-            "second checkbox should not be checked"
-        );
-        assert.notOk(
-            form.$(".o_form_view .custom-checkbox input").eq(2).prop("checked"),
-            "third checkbox should not be checked"
-        );
-
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
-    });
-
     QUnit.test("many2many list with x2many: add a record", async function (assert) {
         assert.expect(18);
 

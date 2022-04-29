@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -13,7 +13,6 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        display_name: { string: "Displayed name", type: "char" },
                         int_field: { string: "int_field", type: "integer", sortable: true },
                         timmy: { string: "pokemon", type: "many2many", relation: "partner_type" },
                         p: {
@@ -24,24 +23,13 @@ QUnit.module("Fields", (hooks) => {
                         },
                         trululu: { string: "Trululu", type: "many2one", relation: "partner" },
                     },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "first record",
-                            int_field: 10,
-                            p: [1],
-                        },
-                    ],
+                    records: [{ id: 1, int_field: 10, p: [1] }],
                     onchanges: {},
                 },
                 partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char" },
-                        color: { string: "Color index", type: "integer" },
-                    },
                     records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
+                        { id: 12, display_name: "gold" },
+                        { id: 14, display_name: "silver" },
                     ],
                 },
             },
@@ -257,7 +245,6 @@ QUnit.module("Fields", (hooks) => {
             records.push({
                 id,
                 display_name: `type ${id}`,
-                color: id % 7,
             });
         }
         serverData.models.partner_type.records = records;
@@ -316,7 +303,6 @@ QUnit.module("Fields", (hooks) => {
             records.push({
                 id,
                 display_name: `type ${id}`,
-                color: id % 7,
             });
         }
         serverData.models.partner_type.records = records;
@@ -416,5 +402,65 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".modal .o_form_button_save"));
         await click(target.querySelector(".o_form_button_save"));
+    });
+
+    QUnit.test("Many2ManyCheckBoxesField with default values", async function (assert) {
+        assert.expect(7);
+
+        serverData.models.partner.fields.timmy.default = [3];
+        serverData.models.partner.fields.timmy.type = "many2many";
+        serverData.models.partner_type.records.push({ id: 3, display_name: "bronze" });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many_checkboxes"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(
+                        args.args[0].timmy,
+                        [[6, false, [12]]],
+                        "correct values should have been sent to create"
+                    );
+                }
+            },
+        });
+
+        assert.notOk(
+            target.querySelectorAll(".o_form_view .custom-checkbox input")[0].checked,
+            "first checkbox should not be checked"
+        );
+        assert.notOk(
+            target.querySelectorAll(".o_form_view .custom-checkbox input")[1].checked,
+            "second checkbox should not be checked"
+        );
+        assert.ok(
+            target.querySelectorAll(".o_form_view .custom-checkbox input")[2].checked,
+            "third checkbox should be checked"
+        );
+
+        await click(target.querySelector(".o_form_view .custom-checkbox input:checked"));
+        await click(target.querySelector(".o_form_view .custom-checkbox input"));
+        await click(target.querySelector(".o_form_view .custom-checkbox input"));
+        await click(target.querySelector(".o_form_view .custom-checkbox input"));
+
+        assert.ok(
+            target.querySelectorAll(".o_form_view .custom-checkbox input")[0].checked,
+            "first checkbox should be checked"
+        );
+        assert.notOk(
+            target.querySelectorAll(".o_form_view .custom-checkbox input")[1].checked,
+            "second checkbox should not be checked"
+        );
+        assert.notOk(
+            target.querySelectorAll(".o_form_view .custom-checkbox input")[2].checked,
+            "third checkbox should not be checked"
+        );
+
+        await clickSave(target);
     });
 });
