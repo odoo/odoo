@@ -1982,21 +1982,9 @@ const ListUserValueWidget = UserValueWidget.extend({
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
             // Note: it's important to simplify the domain at its maximum as the
-            // rpc using it are cached. Similar domains should be written the
-            // same way for the cache to work.
-            const selectedIdsDomain = selectedIds.length ? ['id', 'not in', selectedIds] : null;
-            const selectedIdsDomainIndex = this.createWidget.options.domain.findIndex(domain => domain[0] === 'id' && domain[1] === 'not in');
-            if (selectedIdsDomainIndex > -1) {
-                if (selectedIdsDomain) {
-                    this.createWidget.options.domain[selectedIdsDomainIndex] = selectedIdsDomain;
-                } else {
-                    this.createWidget.options.domain.splice(selectedIdsDomainIndex, 1);
-                }
-            } else {
-                if (selectedIdsDomain) {
-                    this.createWidget.options.domain = [...this.createWidget.options.domain, selectedIdsDomain];
-                }
-            }
+            // rpc using it are cached. Similar domain components should be
+            // written the same way for the cache to work.
+            this.createWidget.options.domainComponents.selected = selectedIds.length ? ['id', 'not in', selectedIds] : null;
             this.createWidget.setValue('');
             this.createWidget.inputEl.value = '';
             $(this.createWidget.inputEl).trigger('input');
@@ -2493,7 +2481,11 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     }),
     // Data-attributes that will be read into `this.options` on init and not
     // transfered to inner buttons.
-    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith', 'createMethod'],
+    // `domain` is the static part of the domain used in searches, not
+    // depending on already selected ids and other filters.
+    configAttributes: [
+        'model', 'fields', 'limit', 'domain', 'callWith', 'createMethod', 'filterInModel', 'filterInField'
+    ],
 
     /**
      * @override
@@ -2521,6 +2513,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             options.fields.push('display_name');
         }
         options.domain = JSON.parse(options.domain);
+        options.domainComponents = {};
         return this._super(...arguments);
     },
     /**
@@ -2615,6 +2608,34 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * Updates the domain with defined inclusive filter to make sure that only
+     * records that are linked to specific records are retrieved.
+     * Filtering-in is configured with
+     *   * a `filterInModel` attribute, the linked model
+     *   * a `filterInField` attribute, field of the linked model holding
+     *   allowed values for this widget
+     *
+     * @param {integer[]} linkedRecordsIds
+     * @returns {Promise}
+     */
+    async setFilterInDomainIds(linkedRecordsIds) {
+        const allowedIds = new Set();
+        if (linkedRecordsIds) {
+            const parentRecordsData = await this._rpc({
+                model: this.options.filterInModel,
+                method: 'search_read',
+                fields: [this.options.filterInField],
+                domain: [['id', 'in', linkedRecordsIds]],
+            });
+            parentRecordsData.forEach(record => {
+                record[this.options.filterInField].forEach(item => allowedIds.add(item));
+            });
+        }
+        if (allowedIds.size) {
+            this.options.domainComponents.filterInModel = ['id', 'in', [...allowedIds]];
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -2643,7 +2664,9 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             method: 'name_search',
             kwargs: {
                 name: needle,
-                args: this.options.domain,
+                args: this.options.domain.concat(
+                    Object.values(this.options.domainComponents).filter(item => item !== null)
+                ),
                 operator: "ilike",
                 limit: this.options.limit + 1,
             },
@@ -2819,7 +2842,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const Many2manyUserValueWidget = UserValueWidget.extend({
-    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m'],
+    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'],
 
     /**
      * @override
@@ -2832,6 +2855,12 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
                 delete dataAttributes[attr];
             }
         });
+        this.filterIn = options.filterIn !== undefined;
+        if (this.filterIn) {
+            // Transfer filter-in values to child m2o.
+            dataAttributes.filterInModel = options.model;
+            dataAttributes.filterInField = options.m2oField;
+        }
         return this._super(...arguments);
     },
     /**
@@ -2900,6 +2929,19 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
         // the correct width
         this.listWidget.el.querySelector('we-select').style.position = 'static';
         this.el.style.position = 'relative';
+    },
+    /**
+     * Only allow to fetch/select records which are linked (via `m2oField`) to the
+     * specified records.
+     *
+     * @param {integer[]} linkedRecordsIds
+     * @returns {Promise}
+     * @see Many2oneUserValueWidget.setFilterInDomainIds
+     */
+    async setFilterInDomainIds(linkedRecordsIds) {
+        if (this.filterIn) {
+            return this.listWidget.createWidget.setFilterInDomainIds(linkedRecordsIds);
+        }
     },
     /**
      * @override
