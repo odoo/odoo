@@ -1571,28 +1571,28 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([]);
     });
 
-    QUnit.skipWOWL("onchange with 40+ commands for a many2many", async function (assert) {
+    QUnit.test("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
         // commands than the limit of the dataPoint (40 for x2many kanban)
-        assert.expect(24);
+        assert.expect(25);
 
         // create a lot of partner_types that will be linked by the onchange
         var commands = [[5]];
         for (var i = 0; i < 45; i++) {
             var id = 100 + i;
-            this.data.partner_type.records.push({ id: id, display_name: "type " + id });
+            serverData.models.partner_type.records.push({ id: id, display_name: "type " + id });
             commands.push([4, id]);
         }
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.timmy = commands;
             },
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="foo"/>' +
@@ -1607,7 +1607,7 @@ QUnit.module("Fields", (hooks) => {
                 "</kanban>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
             mockRPC: function (route, args) {
                 assert.step(args.method);
                 if (args.method === "write") {
@@ -1618,87 +1618,84 @@ QUnit.module("Fields", (hooks) => {
                         "should replace with 45 ids"
                     );
                 }
-                return this._super.apply(this, arguments);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
 
-        assert.verifySteps(["read"]);
+        await clickEdit(target);
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "trigger onchange");
+        assert.verifySteps(["get_views", "read"]);
+
+        await editInput(target, ".o_field_widget[name=foo] input", "trigger onchange");
 
         assert.verifySteps(["onchange", "read"]);
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "1-40 / 45",
             "pager should be correct"
         );
         assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+            $(target).find('.o_kanban_record:not(".o_kanban_ghost")').length,
             40,
             "there should be 40 records displayed on page 1"
         );
 
-        await testUtils.dom.click(form.$(".o_field_widget[name=timmy] .o_pager_next"));
+        await click($(target).find(".o_field_widget[name=timmy] .o_pager_next")[0]);
         assert.verifySteps(["read"]);
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "41-45 / 45",
             "pager should be correct"
         );
         assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+            $(target).find('.o_kanban_record:not(".o_kanban_ghost")').length,
             5,
             "there should be 5 records displayed on page 2"
         );
 
-        await testUtils.form.clickSave(form);
+        await clickSave(target);
 
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "1-40 / 45",
             "pager should be correct"
         );
         assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+            $(target).find('.o_kanban_record:not(".o_kanban_ghost")').length,
             40,
             "there should be 40 records displayed on page 1"
         );
 
-        await testUtils.dom.click(form.$(".o_field_widget[name=timmy] .o_pager_next"));
+        await click($(target).find(".o_field_widget[name=timmy] .o_pager_next")[0]);
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "41-45 / 45",
             "pager should be correct"
         );
         assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+            $(target).find('.o_kanban_record:not(".o_kanban_ghost")').length,
             5,
             "there should be 5 records displayed on page 2"
         );
 
-        await testUtils.dom.click(form.$(".o_field_widget[name=timmy] .o_pager_next"));
+        await click($(target).find(".o_field_widget[name=timmy] .o_pager_next")[0]);
         assert.strictEqual(
-            form.$(".o_x2m_control_panel .o_pager_counter").text().trim(),
+            $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "1-40 / 45",
             "pager should be correct"
         );
         assert.strictEqual(
-            form.$('.o_kanban_record:not(".o_kanban_ghost")').length,
+            $(target).find('.o_kanban_record:not(".o_kanban_ghost")').length,
             40,
             "there should be 40 records displayed on page 1"
         );
 
         assert.verifySteps(["write", "read", "read", "read"]);
-        form.destroy();
     });
 
-    QUnit.skipWOWL("default_get, onchange, onchange on m2m", async function (assert) {
+    QUnit.test("default_get, onchange, onchange on m2m", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.onchanges.int_field = function (obj) {
+        serverData.models.partner.onchanges.int_field = function (obj) {
             if (obj.int_field === 2) {
                 assert.deepEqual(obj.timmy, [
                     [6, false, [12]],
@@ -1708,10 +1705,10 @@ QUnit.module("Fields", (hooks) => {
             obj.timmy = [[5], [1, 12, { display_name: "gold" }]];
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 "<form>" +
                 "<sheet>" +
@@ -1725,8 +1722,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>",
         });
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=int_field]"), 2);
-        form.destroy();
+        await editInput(target, ".o_field_widget[name=int_field] input", 2);
     });
 
     QUnit.skipWOWL("widget many2many_tags", async function (assert) {
