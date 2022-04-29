@@ -15,9 +15,7 @@ class TestReports(odoo.tests.TransactionCase):
         domain = [('report_type', 'like', 'qweb')]
         for report in self.env['ir.actions.report'].search(domain):
             report_model = 'report.%s' % report.report_name
-            try:
-                self.env[report_model]
-            except KeyError:
+            if report_model not in self.env:
                 # Only test the generic reports here
                 _logger.info("testing report %s", report.report_name)
                 report_model = self.env[report.model]
@@ -29,5 +27,3 @@ class TestReports(odoo.tests.TransactionCase):
 
                 # Test report generation
                 report._render_qweb_html(report_records.ids)
-            else:
-                continue
