@@ -1075,8 +1075,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("widget many2many_tags in one2many with display_name", async function (assert) {
-        assert.expect(4);
+    QUnit.test("widget many2many_tags in one2many with display_name", async function (assert) {
         serverData.models.turtle.records[0].partner_ids = [2];
         serverData.views = {
             "partner,false,list": '<tree><field name="foo"/></tree>',
@@ -1088,64 +1087,38 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <sheet>
-                        <field name="turtles">
-                            <tree>
-                                <field name="partner_ids" widget="many2many_tags"/>
-                            </tree>
-                            <form>
-                                <sheet>
-                                <field name="partner_ids"/>
-                                </sheet>
-                            </form>
-                        </field>
-                    </sheet>
+                    <field name="turtles">
+                        <tree>
+                            <field name="partner_ids" widget="many2many_tags"/>
+                        </tree>
+                        <form>
+                            <field name="partner_ids"/>
+                        </form>
+                    </field>
                 </form>
             `,
             resId: 1,
         });
+
+        await clickEdit(target);
         assert.strictEqual(
-            target
-                .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_field_x2many_list .o_field_many2many_tags[name="partner_ids"]'
-                )
-                .textContent.replace(/\s/g, ""),
-            "secondrecordaaa",
+            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
+            "second recordaaa",
             "the tags should be correctly rendered"
         );
+
         // open the x2m form view
-        await click(
-            target.querySelector(
-                '.o_field_one2many[name="turtles"] .o_field_x2many_list td.o_data_cell'
-            )
-        );
-        await nextTick(); // wait for quick edit
+        await click(target.querySelector('.o_field_one2many[name="turtles"] .o_data_cell'));
         assert.strictEqual(
-            target.querySelector(
-                '.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_field_x2many_list .o_data_cell'
-            ).textContent,
+            getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
             "blipMy little Foo Value",
             "the list view should be correctly rendered with foo"
         );
 
         await click(target.querySelector(".modal button.o_form_button_cancel"));
         assert.strictEqual(
-            target
-                .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_field_x2many_list .o_field_many2many_tags[name="partner_ids"]'
-                )
-                .textContent.replace(/\s/g, ""),
-            "secondrecordaaa",
-            "the tags should still be correctly rendered"
-        );
-
-        assert.strictEqual(
-            target
-                .querySelector(
-                    '.o_field_one2many[name="turtles"] .o_field_x2many_list .o_field_many2many_tags[name="partner_ids"]'
-                )
-                .textContent.replace(/\s/g, ""),
-            "secondrecordaaa",
+            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
+            "second recordaaa",
             "the tags should still be correctly rendered"
         );
     });
