@@ -7,7 +7,6 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 365,
     'summary': 'Website - Payment Paypal',
-    'description': """""",
     'depends': ['website_payment', 'payment_paypal'],
     'data': [
         'views/res_config_settings_views.xml'

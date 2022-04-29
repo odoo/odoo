@@ -10,7 +10,6 @@
     'sequence': 55,
     'summary': 'Manufacturing Orders & BOMs',
     'depends': ['product', 'stock', 'resource'],
-    'description': "",
     'data': [
         'security/mrp_security.xml',
         'security/ir.model.access.csv',
@@ -53,7 +52,6 @@
     'demo': [
         'data/mrp_demo.xml',
     ],
-    'test': [],
     'application': True,
     'pre_init_hook': '_pre_init_mrp',
     'post_init_hook': '_create_warehouse_data',

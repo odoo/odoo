@@ -12,6 +12,5 @@
         'data/account_edi_data.xml',
     ],
     'installable': True,
-    'application': False,
     'license': 'LGPL-3',
 }

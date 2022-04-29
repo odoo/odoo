@@ -37,9 +37,7 @@ The following topics are covered by this module:
         'data/mail_template_data.xml',
     ],
     'demo': ['data/repair_demo.xml'],
-    'test': [],
     'installable': True,
-    'auto_install': False,
     'application': True,
     'license': 'LGPL-3',
 }

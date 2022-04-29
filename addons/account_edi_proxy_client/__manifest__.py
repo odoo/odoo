@@ -19,7 +19,6 @@ Odoo database.
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'application': False,
     'license': 'LGPL-3',
     'post_init_hook': '_create_demo_config_param',
 }

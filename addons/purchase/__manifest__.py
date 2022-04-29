@@ -7,7 +7,6 @@
     'category': 'Inventory/Purchase',
     'sequence': 35,
     'summary': 'Purchase orders, tenders and agreements',
-    'description': "",
     'website': 'https://www.odoo.com/app/purchase',
     'depends': ['account'],
     'data': [
@@ -36,7 +35,6 @@
         'data/purchase_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
     'assets': {
         'web.assets_backend': [

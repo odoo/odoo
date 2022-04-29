@@ -37,8 +37,6 @@ Dashboard / Reports for Warehouse Management includes:
         'wizard/stock_valuation_layer_revaluation_views.xml',
         'report/report_stock_forecasted.xml',
     ],
-    'test': [
-    ],
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_configure_journals',

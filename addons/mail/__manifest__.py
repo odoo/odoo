@@ -6,7 +6,6 @@
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
-    'description': "",
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [

@@ -9,7 +9,6 @@
     'version': '1.0',
     'summary': 'Event: meeting and chat rooms',
     'website': 'https://www.odoo.com/app/events',
-    'description': "",
     'depends': [
         'website_event_jitsi',
     ],
@@ -23,7 +22,6 @@
         'views/event_event_views.xml',
         'views/event_type_views.xml',
     ],
-    'application': False,
     'installable': True,
     'assets': {
         'web.assets_frontend': [

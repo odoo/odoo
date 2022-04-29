@@ -5,7 +5,6 @@
     'name': "Project Purchase",
     'version': '1.0',
     'summary': "Monitor purchase in project",
-    'description': "",
     'category': 'Services/Project',
     'depends': ['purchase', 'project'],
     'data': [
@@ -14,7 +13,6 @@
     'demo': [
         'data/project_purchase_demo.xml',
     ],
-    'application': False,
     'auto_install': True,
     'license': 'LGPL-3',
 }

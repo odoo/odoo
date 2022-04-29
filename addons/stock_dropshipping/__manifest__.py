@@ -27,6 +27,5 @@ internal transfer document is needed.
         'views/purchase_order_views.xml'
     ],
     'installable': True,
-    'auto_install': False,
     'license': 'LGPL-3',
 }

@@ -11,6 +11,5 @@
         'data/bis3_templates.xml',
     ],
     'installable': True,
-    'application': False,
     'license': 'LGPL-3',
 }

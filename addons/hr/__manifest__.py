@@ -7,7 +7,6 @@
     'category': 'Human Resources/Employees',
     'sequence': 95,
     'summary': 'Centralize employee information',
-    'description': "",
     'website': 'https://www.odoo.com/app/employees',
     'images': [
         'images/hr_department.jpeg',
@@ -47,7 +46,6 @@
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'assets': {
         'mail.assets_discuss_public': [
             'hr/static/src/models/*.js',

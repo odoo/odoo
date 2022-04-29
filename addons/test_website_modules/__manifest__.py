@@ -16,10 +16,7 @@ installed.""",
         'website_event_sale',
         'website_slides',
     ],
-    'data': [
-    ],
     'installable': True,
-    'application': False,
     'assets': {
         'web.assets_tests': [
             'test_website_modules/static/tests/**/*',

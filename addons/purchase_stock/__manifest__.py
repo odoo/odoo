@@ -7,7 +7,6 @@
     'category': 'Inventory/Purchase',
     'sequence': 60,
     'summary': 'Purchase Orders, Receipts, Vendor Bills for Stock',
-    'description': "",
     'depends': ['stock_account', 'purchase'],
     'data': [
         'security/ir.model.access.csv',

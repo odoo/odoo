@@ -7,7 +7,6 @@
     'category': 'Productivity/Discuss',
     'version': '1.0',
     'depends': ['mail_bot', 'hr'],
-    'application': False,
     'installable': True,
     'auto_install': True,
     'data': [

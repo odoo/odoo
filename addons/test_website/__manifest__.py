@@ -23,7 +23,6 @@ models which only purpose is to run tests.""",
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'application': False,
     'assets': {
         'web.assets_frontend': [
             'test_website/static/src/js/test_error.js',
