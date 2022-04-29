@@ -26,22 +26,6 @@ registerModel({
     lifecycleHooks: {
         _created() {
             /**
-             * Timer of current partner that was currently typing something, but
-             * there is no change on the input for 5 seconds. This is used
-             * in order to automatically notify other members that current
-             * partner has stopped typing something, due to making no changes
-             * on the composer for some time.
-             */
-            this._currentPartnerInactiveTypingTimer = new Timer(
-                this.messaging,
-                () => {
-                    if (this.messaging.currentPartner) {
-                        return this._onCurrentPartnerInactiveTypingTimeout();
-                    }
-                },
-                5 * 1000
-            );
-            /**
              * Last 'is_typing' status of current partner that has been notified
              * to other members. Useful to prevent spamming typing notifications
              * to other members if it hasn't changed. An exception is the
@@ -111,7 +95,7 @@ registerModel({
             );
         },
         _willDelete() {
-            this._currentPartnerInactiveTypingTimer.clear();
+            this.currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
             this._throttleNotifyCurrentPartnerTypingStatus.clear();
             for (const timer of this._otherMembersLongTypingTimers.values()) {
@@ -972,7 +956,7 @@ registerModel({
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {
-            this._currentPartnerInactiveTypingTimer.reset();
+            this.currentPartnerInactiveTypingTimer.reset();
         },
         /**
          * Called to refresh a registered other member partner that is typing
@@ -990,7 +974,7 @@ registerModel({
          */
         async registerCurrentPartnerIsTyping() {
             // Handling of typing timers.
-            this._currentPartnerInactiveTypingTimer.start();
+            this.currentPartnerInactiveTypingTimer.start();
             this._currentPartnerLongTypingTimer.start();
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
@@ -1088,7 +1072,7 @@ registerModel({
          */
         async unregisterCurrentPartnerIsTyping({ immediateNotify = false } = {}) {
             // Handling of typing timers.
-            this._currentPartnerInactiveTypingTimer.clear();
+            this.currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
@@ -1333,6 +1317,21 @@ registerModel({
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.messaging.currentPartner
+            );
+        },
+        /**
+         * @private
+         * @returns {Timer}
+         */
+        _computeCurrentPartnerInactiveTypingTimer() {
+            return new Timer(
+                this.messaging,
+                () => {
+                    if (this.messaging.currentPartner) {
+                        return this._onCurrentPartnerInactiveTypingTimeout();
+                    }
+                },
+                5 * 1000
             );
         },
         /**
@@ -1929,6 +1928,16 @@ registerModel({
             default: 0,
         }),
         creator: one('User'),
+        /**
+         * Timer of current partner that was currently typing something, but
+         * there is no change on the input for 5 seconds. This is used
+         * in order to automatically notify other members that current
+         * partner has stopped typing something, due to making no changes
+         * on the composer for some time.
+         */
+        currentPartnerInactiveTypingTimer: attr({
+            compute: '_computeCurrentPartnerInactiveTypingTimer',
+        }),
         custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
