@@ -307,6 +307,9 @@ class Website(models.Model):
 
             request.session['sale_order_id'] = sale_order.id
 
+            # The order was created with SUPERUSER_ID, revert back to request user.
+            sale_order = sale_order.with_user(self.env.user).sudo()
+
         # case when user emptied the cart
         if not request.session.get('sale_order_id'):
             request.session['sale_order_id'] = sale_order.id
