@@ -409,7 +409,7 @@ class View(models.Model):
 
     def _render_template(self, template, values=None):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        view = self._get_view(template).sudo()
+        view = self._get(template).sudo()
         view._handle_visibility(do_raise=True)
         if values is None:
             values = {}

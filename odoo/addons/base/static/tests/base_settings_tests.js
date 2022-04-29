@@ -206,11 +206,11 @@ QUnit.module('base_settings_tests', {
             await legacyExtraNextTick();
             assert.hasClass($(target).find(".o_form_view"), "o_form_editable");
             assert.verifySteps([
-                "load_views", // initial setting action
+                "get_views", // initial setting action
                 "onchange", // this is a setting view => create new record
                 "create", // when we click on action button => save
                 "read", // with save, we have a reload... (not necessary actually)
-                "load_views", // for other action in breadcrumb,
+                "get_views", // for other action in breadcrumb,
                 // with a searchread (not shown here since it is a route)
                 "onchange", // when we come back, we want to restart from scratch
             ]);

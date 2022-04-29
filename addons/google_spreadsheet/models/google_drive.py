@@ -26,8 +26,8 @@ class GoogleDrive(models.Model):
     def write_config_formula(self, attachment_id, spreadsheet_key, model, domain, groupbys, view_id):
         access_token = self.get_access_token(scope='https://www.googleapis.com/auth/spreadsheets')
 
-        fields = self.env[model].fields_view_get(view_id=view_id, view_type='tree')
-        doc = etree.XML(fields.get('arch'))
+        arch, _view = self.env[model]._get_view(view_id, 'tree')
+        doc = arch
         display_fields = []
         for node in doc.xpath("//field"):
             if node.get('modifiers'):

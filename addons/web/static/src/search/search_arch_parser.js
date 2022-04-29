@@ -36,10 +36,10 @@ function reduceType(type) {
 }
 
 export class SearchArchParser extends XMLParser {
-    constructor(searchViewDescription, searchDefaults = {}, searchPanelDefaults = {}) {
+    constructor(searchViewDescription, fields, searchDefaults = {}, searchPanelDefaults = {}) {
         super();
 
-        const { fields, irFilters, arch } = searchViewDescription;
+        const { irFilters, arch } = searchViewDescription;
 
         this.fields = fields || {};
         this.irFilters = irFilters || [];

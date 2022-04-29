@@ -18,10 +18,10 @@ class Product(models.Model):
     ]
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def get_view(self, view_id=None, view_type='form', **options):
         if self._context.get('product') == 'membership_product':
             if view_type == 'form':
                 view_id = self.env.ref('membership.membership_products_form').id
             else:
                 view_id = self.env.ref('membership.membership_products_tree').id
-        return super(Product, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        return super().get_view(view_id, view_type, **options)

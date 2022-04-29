@@ -521,10 +521,14 @@ QUnit.module('Views', {
         serverData.models.product.records = [{id: 1, name: 'Tromblon', partner_type_ids: [12,14]}];
         serverData.models.partner.records[0].product_id = 1;
 
+        // This is an old test, written before "get_views" (formerly "load_views") automatically
+        // inlines x2many subviews. As the purpose of this test is to assert that the js fetches
+        // the correct sub view when it is not inline (which can still happen in nested form views),
+        // we bypass the inline mecanism of "get_views" by setting widget="one2many" on the field.
         serverData.views = {
             'product,false,form': '<form>'+
                                         '<field name="name"/>'+
-                                        '<field name="partner_type_ids" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
+                                        '<field name="partner_type_ids" widget="one2many" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
                                     '</form>',
 
             'partner_type,false,list': '<tree>'+
@@ -539,7 +543,7 @@ QUnit.module('Views', {
         };
 
         const mockRPC = (route, args) => {
-            if (args.method === 'load_views') {
+            if (args.method === 'get_views') {
                 var context = args.kwargs.context;
                 if (args.model === 'product') {
                     assert.strictEqual(context.tree_view_ref, 'some_tree_view',
@@ -6192,7 +6196,7 @@ QUnit.module('Views', {
             "the row should contains the 2 fields defined in the form view");
         assert.strictEqual($(modal_row).text(), "gold2",
             "the value of the fields should be fetched and displayed");
-        assert.verifySteps(['read', 'read', 'load_views', 'read', 'read'],
+        assert.verifySteps(['read', 'read', 'get_views', 'read', 'read'],
             "there should be 4 read rpcs");
         form.destroy();
     });
@@ -8222,10 +8226,10 @@ QUnit.module('Views', {
         assert.verifySteps([
             "read", // main record
             "get_formview_id", // id of first form view opened in a dialog
-            "load_views", // arch of first form view opened in a dialog
+            "get_views", // arch of first form view opened in a dialog
             "read", // first dialog
             "get_formview_id", // id of second form view opened in a dialog
-            "load_views", // arch of second form view opened in a dialog
+            "get_views", // arch of second form view opened in a dialog
             "read", // second dialog
             "write", // save second dialog
             "read", // reload first dialog
@@ -8799,7 +8803,7 @@ QUnit.module('Views', {
             }
         });
 
-        assert.verifySteps(['partner_type:load_views', 'partner:read', 'partner_type:read']);
+        assert.verifySteps(['partner_type:get_views', 'partner:read', 'partner_type:read']);
 
         form.destroy();
     });

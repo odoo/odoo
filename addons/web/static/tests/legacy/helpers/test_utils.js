@@ -141,7 +141,7 @@ odoo.define('web.test_utils', async function (require) {
             patch: testUtilsMock.patch,
             patchDate: testUtilsMock.patchDate,
             unpatch: testUtilsMock.unpatch,
-            fieldsViewGet: testUtilsMock.fieldsViewGet,
+            getView: testUtilsMock.getView,
             patchSetTimeout: testUtilsMock.patchSetTimeout,
         },
         controlPanel: {
@@ -269,7 +269,7 @@ odoo.define('web.test_utils', async function (require) {
         // backward-compatibility
         addMockEnvironment: deprecated(testUtilsMock.addMockEnvironment, 'mock'),
         dragAndDrop: deprecated(testUtilsDom.dragAndDrop, 'dom'),
-        fieldsViewGet: deprecated(testUtilsMock.fieldsViewGet, 'mock'),
+        getView: deprecated(testUtilsMock.getView, 'mock'),
         intercept: deprecated(testUtilsMock.intercept, 'mock'),
         openDatepicker: deprecated(testUtilsDom.openDatepicker, 'dom'),
         patch: deprecated(testUtilsMock.patch, 'mock'),

@@ -745,11 +745,11 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'load_views', // form view in quick create
+            'get_views', // form view in quick create
             'onchange', // quick create
             'create', // should perform a create to create the record
             'read', // read the created record
-            'load_views', // form view in quick create (is actually in cache)
+            'get_views', // form view in quick create (is actually in cache)
             'onchange', // reopen the quick create automatically
         ]);
 
@@ -870,11 +870,11 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'load_views', // form view in quick create
+            'get_views', // form view in quick create
             'onchange', // quick create
             'create', // should perform a create to create the record
             'read', // read the created record
-            'load_views', // form view in quick create (is actually in cache)
+            'get_views', // form view in quick create (is actually in cache)
             'onchange', // reopen the quick create automatically
         ]);
 
@@ -934,7 +934,7 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'load_views', // form view in quick create
+            'get_views', // form view in quick create
             'onchange', // quick create
             'onchange', // onchange due to 'foo' field change
         ]);
@@ -2600,7 +2600,7 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
             async mockRPC(route, args) {
                 const result = this._super(...arguments);
-                if (args.method === 'load_views') {
+                if (args.method === 'get_views') {
                     await def;
                 }
                 return result;

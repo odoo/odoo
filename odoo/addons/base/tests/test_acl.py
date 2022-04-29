@@ -48,7 +48,7 @@ class TestACL(TransactionCaseWithUserDemo):
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
@@ -62,7 +62,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self._set_field_groups(currency, 'decimal_places', GROUP_SYSTEM)
 
         fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertNotIn('decimal_places', fields, "'decimal_places' field should be gone")
         self.assertEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
@@ -74,7 +74,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self.erp_system_group.users += self.user_demo
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
         self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")
@@ -130,7 +130,7 @@ class TestACL(TransactionCaseWithUserDemo):
         """ Test form view Create, Edit, Delete button visibility based on access right of model"""
         methods = ['create', 'edit', 'delete']
         company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
             self.assertEqual(view_arch.get(method), 'false')
@@ -140,7 +140,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self.erp_system_group.users += self.user_demo
         methods = ['create', 'edit', 'delete']
         company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         for method in methods:
             self.assertIsNone(view_arch.get(method))
@@ -149,7 +149,7 @@ class TestACL(TransactionCaseWithUserDemo):
         """ Test many2one field Create and Edit option visibility based on access rights of relation field""" 
         methods = ['create', 'write']
         company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
         self.assertTrue(len(field_node), "currency_id field should be in company from view")
@@ -161,7 +161,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self.erp_system_group.users += self.user_demo
         methods = ['create', 'write']
         company = self.env['res.company'].with_user(self.user_demo)
-        company_view = company.fields_view_get(False, 'form')
+        company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
         self.assertTrue(len(field_node), "currency_id field should be in company from view")

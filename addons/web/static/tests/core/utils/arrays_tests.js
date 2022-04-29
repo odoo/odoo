@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { cartesian, groupBy, sortBy, unique } from "@web/core/utils/arrays";
+import { cartesian, groupBy, intersection, sortBy, unique } from "@web/core/utils/arrays";
 
 QUnit.module("utils", () => {
     QUnit.module("Arrays");
@@ -151,6 +151,14 @@ QUnit.module("utils", () => {
             { x: "b" },
             { x: "a" },
         ]);
+    });
+
+    QUnit.test("intersection of arrays", function (assert) {
+        assert.deepEqual(intersection([], [1, 2]), []);
+        assert.deepEqual(intersection([1, 2], []), []);
+        assert.deepEqual(intersection([1], [2]), []);
+        assert.deepEqual(intersection([1, 2], [2, 3]), [2]);
+        assert.deepEqual(intersection([1, 2, 3], [1, 2, 3]), [1, 2, 3]);
     });
 
     QUnit.test("cartesian product of zero arrays", function (assert) {

@@ -49,7 +49,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/action/load",
-            "/web/dataset/call_kw/pony/load_views",
+            "/web/dataset/call_kw/pony/get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -80,7 +80,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "/web/dataset/call_kw/partner/load_views",
+            "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
@@ -187,11 +187,11 @@ QUnit.module("ActionManager", (hooks) => {
             assert.verifySteps([
                 "/web/webclient/load_menus",
                 "/web/action/load",
-                "load_views",
+                "get_views",
                 "read",
                 "/web/dataset/search_read",
                 "/web/action/load",
-                "load_views",
+                "get_views",
                 "/web/dataset/search_read",
             ]);
             // unblock the switch to Kanban in action 4
@@ -238,12 +238,12 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "read",
             "object",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
         // unblock the call_button request
@@ -302,11 +302,11 @@ QUnit.module("ActionManager", (hooks) => {
             assert.verifySteps([
                 "/web/webclient/load_menus",
                 "/web/action/load",
-                "load_views",
+                "get_views",
                 "/web/dataset/search_read",
                 "read",
                 "/web/action/load",
-                "load_views",
+                "get_views",
                 "/web/dataset/search_read",
             ]);
             // unblock the switch to the form view in action 3
@@ -332,12 +332,12 @@ QUnit.module("ActionManager", (hooks) => {
         const def = testUtils.makeTestPromise();
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
-            if (args && args.method === "load_views") {
+            if (args && args.method === "get_views") {
                 await def;
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
-        // execute a first action (its 'load_views' RPC is blocked)
+        // execute a first action (its 'get_views' RPC is blocked)
         doAction(webClient, 3);
         await testUtils.nextTick();
         await legacyExtraNextTick();
@@ -358,9 +358,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -395,10 +395,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -499,7 +499,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "read",
             "/web/action/load",
@@ -537,19 +537,19 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/action/load",
             "/web/dataset/search_read",
         ]);
     });
 
-    QUnit.test("switching when doing an action -- load_views slow", async function (assert) {
+    QUnit.test("switching when doing an action -- get_views slow", async function (assert) {
         assert.expect(13);
         let def;
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
-            if (args && args.method === "load_views") {
+            if (args && args.method === "get_views") {
                 return Promise.resolve(def);
             }
         };
@@ -574,10 +574,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
         ]);
     });
@@ -611,10 +611,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/action/load",
-            "load_views",
+            "get_views",
             "/web/dataset/search_read",
             "/web/dataset/search_read",
         ]);
