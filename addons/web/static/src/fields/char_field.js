@@ -2,47 +2,15 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { TranslationButton } from "./translation_button";
 
-const { Component, useComponent, useEffect, useRef } = owl;
-
-function useInputField(refName = "input") {
-    const component = useComponent();
-    const inputRef = useRef(refName);
-    let isDirty = false;
-    let lastSetValue = null;
-    function onInput(ev) {
-        isDirty = ev.target.value !== lastSetValue;
-    }
-    function onChange(ev) {
-        lastSetValue = ev.target.value;
-        isDirty = false;
-    }
-    useEffect(
-        (inputEl) => {
-            if (inputEl) {
-                inputEl.addEventListener("input", onInput);
-                inputEl.addEventListener("change", onChange);
-                return () => {
-                    inputEl.removeEventListener("input", onInput);
-                    inputEl.removeEventListener("change", onChange);
-                };
-            }
-        },
-        () => [inputRef.el]
-    );
-    useEffect(() => {
-        if (inputRef.el && !isDirty) {
-            inputRef.el.value = component.props.value || "";
-            lastSetValue = inputRef.el.value;
-        }
-    });
-}
+const { Component } = owl;
 
 export class CharField extends Component {
     setup() {
-        useInputField();
+        useInputField(() => this.props.value || "");
     }
 
     get formattedValue() {

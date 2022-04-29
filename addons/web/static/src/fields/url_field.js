@@ -2,11 +2,16 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
 export class UrlField extends Component {
+    setup() {
+        useInputField(() => this.props.value || "");
+    }
+
     get formattedHref() {
         let value = "";
         if (typeof this.props.value === "string") {

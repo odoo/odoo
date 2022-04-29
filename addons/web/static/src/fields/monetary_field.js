@@ -2,14 +2,16 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { useInputField } from "./input_field_hook";
+import { useNumpadDecimal } from "./numpad_decimal_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { session } from "@web/session";
-import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component } = owl;
 
 export class MonetaryField extends Component {
     setup() {
+        useInputField(() => this.formattedValue, "numpadDecimal");
         useNumpadDecimal();
     }
     onChange(ev) {

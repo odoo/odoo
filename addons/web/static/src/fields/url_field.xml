@@ -9,10 +9,10 @@
             <input
                 class="o_url_field o_input"
                 type="text"
-                t-att-value="props.value or ''"
                 t-att-placeholder="props.placeholder"
                 t-att-required="props.required"
                 t-on-change="onChange"
+                t-ref="input"
             />
         </t>
     </t>

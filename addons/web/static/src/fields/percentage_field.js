@@ -2,13 +2,15 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
-import { standardFieldProps } from "./standard_field_props";
+import { useInputField } from "./input_field_hook";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
 export class PercentageField extends Component {
     setup() {
+        useInputField(() => this.props.value * 100, "numpadDecimal");
         useNumpadDecimal();
     }
     /**

@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { TranslationButton } from "./translation_button";
 
@@ -10,6 +11,7 @@ const { Component, useEffect, useRef } = owl;
 export class TextField extends Component {
     setup() {
         this.textareaRef = useRef("textarea");
+        useInputField(() => this.props.value || "", "textarea");
 
         useEffect(() => {
             if (!this.props.readonly) {

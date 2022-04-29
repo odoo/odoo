@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component } = owl;
 export class FloatTimeField extends Component {
     setup() {
+        useInputField(() => this.formattedValue, "numpadDecimal");
         useNumpadDecimal();
     }
 
