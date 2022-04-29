@@ -190,7 +190,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
                 }
             });
             for (const line of linesToRemove) {
-                this.order.orderlines.remove(line);
+                this.order.remove_orderline(line);
             }
         }
         return super.set_quantity(...arguments);
@@ -466,7 +466,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         this.codeActivatedProgramRules = [];
         this.codeActivatedCoupons = [];
         this.couponPointChanges = {};
-        this.orderlines.remove(this._get_reward_lines());
+        for (const line of this._get_reward_lines()) {
+            this.remove_orderline(line);
+        }
         this._updateRewards();
     }
     _updateRewards() {
@@ -595,7 +597,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             } else {
                 claimedRewards.push(claimedReward);
             }
-            this.orderlines.remove(line);
+            this.remove_orderline(line);
         }
         claimedRewards.push(...paymentRewards);
         for (const claimedReward of claimedRewards) {
@@ -992,7 +994,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     return _t("A better global discount is already applied.");
                 } else if (rewardId != rewardId.id) {
                     for (const line of globalDiscountLines) {
-                        this.orderlines.remove(line);
+                        this.remove_orderline(line);
                     }
                 }
             }
