@@ -1965,12 +1965,12 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("many2many list add *many* records, remove, re-add", async function (assert) {
+    QUnit.test("many2many list add *many* records, remove, re-add", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.timmy.domain = [["color", "=", 2]];
-        this.data.partner.fields.timmy.onChange = true;
-        this.data.partner_type.fields.product_ids = {
+        serverData.models.partner.fields.timmy.domain = [["color", "=", 2]];
+        serverData.models.partner.fields.timmy.onChange = true;
+        serverData.models.partner_type.fields.product_ids = {
             string: "Product",
             type: "many2many",
             relation: "product",
@@ -1978,13 +1978,19 @@ QUnit.module("Fields", (hooks) => {
 
         for (var i = 0; i < 50; i++) {
             var new_record_partner_type = { id: 100 + i, display_name: "batch" + i, color: 2 };
-            this.data.partner_type.records.push(new_record_partner_type);
+            serverData.models.partner_type.records.push(new_record_partner_type);
         }
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search":
+                '<search><field name="display_name"/><field name="color"/></search>',
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy" widget="many2many">' +
@@ -1994,12 +2000,7 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
-            archs: {
-                "partner_type,false,list": '<tree><field name="display_name"/></tree>',
-                "partner_type,false,search":
-                    '<search><field name="display_name"/><field name="color"/></search>',
-            },
+            resId: 1,
             mockRPC: function (route, args) {
                 if (args.method === "get_formview_id") {
                     assert.deepEqual(
@@ -2007,63 +2008,62 @@ QUnit.module("Fields", (hooks) => {
                         [1],
                         "should call get_formview_id with correct id"
                     );
-                    return Promise.resolve(false);
+                    //return Promise.resolve(false);
                 }
-                return this._super(route, args);
             },
         });
 
         // First round: add 51 records in batch
-        await testUtils.dom.click(form.$buttons.find(".btn.btn-primary.o_form_button_edit"));
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await clickEdit(target);
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
 
         var $modal = $(".modal-lg");
 
         assert.equal($modal.length, 1, "There should be one modal");
 
-        await testUtils.dom.click($modal.find("thead input[type=checkbox]"));
+        await click($modal.find("thead input[type=checkbox]")[0]);
+        await nextTick();
 
-        await testUtils.dom.click($modal.find(".btn.btn-primary.o_select_button"));
+        await click($modal.find(".btn.btn-primary.o_select_button")[0]);
 
         assert.strictEqual(
-            form.$(".o_data_row").length,
+            $(target).find(".o_data_row").length,
             51,
             "We should have added all the records present in the search view to the m2m field"
         ); // the 50 in batch + 'gold'
 
-        await testUtils.dom.click(form.$buttons.find(".btn.btn-primary.o_form_button_save"));
+        await clickSave(target);
 
         // Secound round: remove one record
-        await testUtils.dom.click(form.$buttons.find(".btn.btn-primary.o_form_button_edit"));
-        var trash_buttons = form.$(
-            ".o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_list_record_remove"
+        await clickEdit(target);
+        var trash_buttons = $(target).find(
+            ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_list_record_remove"
         );
 
-        await testUtils.dom.click(trash_buttons.first());
+        await click(trash_buttons.first()[0]);
 
-        var pager_limit = form.$(
-            ".o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit"
+        var pager_limit = $(target).find(
+            ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_pager_limit"
         );
         assert.equal(pager_limit.text(), "50", "We should have 50 records in the m2m field");
 
         // Third round: re-add 1 records
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
 
         $modal = $(".modal-lg");
 
         assert.equal($modal.length, 1, "There should be one modal");
 
-        await testUtils.dom.click($modal.find("thead input[type=checkbox]"));
+        await click($modal.find("thead input[type=checkbox]")[0]);
+        await nextTick();
 
-        await testUtils.dom.click($modal.find(".btn.btn-primary.o_select_button"));
+        await click($modal.find(".btn.btn-primary.o_select_button")[0]);
 
         assert.strictEqual(
-            form.$(".o_data_row").length,
+            $(target).find(".o_data_row").length,
             51,
             "We should have 51 records in the m2m field"
         );
-
-        form.destroy();
     });
 
     QUnit.skipWOWL(
