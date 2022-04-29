@@ -154,6 +154,13 @@ registerModel({
             return this.isOpen ? insertAndReplace() : clear();
         },
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeViewId() {
+            return _.uniqueId('o_messagingMenu_');
+        },
+        /**
          * Closes the menu when clicking outside, if appropriate.
          *
          * @private
@@ -230,6 +237,14 @@ registerModel({
         pinnedAndUnreadChannels: many('Thread', {
             inverse: 'messagingMenuAsPinnedAndUnreadChannel',
             readonly: true,
+        }),
+        /**
+         * global JS generated ID for this record view. Useful to provide a
+         * custom class to autocomplete input, so that click in an autocomplete
+         * item is not considered as a click away from messaging menu in mobile.
+         */
+        viewId: attr({
+            compute: '_computeViewId',
         }),
     },
 });

@@ -53,6 +53,21 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeCustomClass() {
+            if (this.discussSidebarCategoryOwnerAsAddingItem) {
+                if (this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel) {
+                    return 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions';
+                }
+            }
+            if (this.messagingMenuOwnerAsMobileNewMessageInput) {
+                return this.messagingMenuOwnerAsMobileNewMessageInput.viewId + '_mobileNewMessageInputAutocomplete';
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computePlaceholder() {
@@ -79,6 +94,10 @@ registerModel({
         chatWindowOwnerAsNewMessage: one('ChatWindow', {
             inverse: 'newMessageAutocompleteInputView',
             readonly: true,
+        }),
+        customClass: attr({
+            compute: '_computeCustomClass',
+            default: '',
         }),
         discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', {
             inverse: 'addingItemAutocompleteInputView',

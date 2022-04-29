@@ -37,8 +37,8 @@ export class AutocompleteInput extends Component {
             html: this.autocompleteInputView.isHtml,
         };
 
-        if (this.props.customClass) {
-            args.classes = { 'ui-autocomplete': this.props.customClass };
+        if (this.autocompleteInputView.customClass) {
+            args.classes = { 'ui-autocomplete': this.autocompleteInputView.customClass };
         }
 
         const autoCompleteElem = $(this.root.el).autocomplete(args);
@@ -82,10 +82,10 @@ export class AutocompleteInput extends Component {
         if (this.root.el.contains(node)) {
             return true;
         }
-        if (!this.props.customClass) {
+        if (!this.autocompleteInputView.customClass) {
             return false;
         }
-        const element = document.querySelector(`.${this.props.customClass}`);
+        const element = document.querySelector(`.${this.autocompleteInputView.customClass}`);
         if (!element) {
             return false;
         }
@@ -159,10 +159,6 @@ export class AutocompleteInput extends Component {
 
 Object.assign(AutocompleteInput, {
     props: {
-        customClass: {
-            type: String,
-            optional: true,
-        },
         focus: {
             type: Function,
             optional: true,

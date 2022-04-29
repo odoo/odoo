@@ -37,7 +37,7 @@
                         <div>
                             An error occurred while fetching messages.
                         </div>
-                        <button class="o_MessageList_alertLoadingFailedRetryButton btn btn-link" t-on-click="_onClickRetryLoadMoreMessages">
+                        <button class="o_MessageList_alertLoadingFailedRetryButton btn btn-link" t-on-click="messageListView.onClickRetryLoadMoreMessages">
                             Click here to retry
                         </button>
                     </div>
@@ -81,7 +81,7 @@
             </div>
         </t>
         <t t-elif="!messageListView.threadViewOwner.threadCache.isAllHistoryLoaded and !messageListView.threadViewOwner.thread.isTemporary">
-            <a class="o_MessageList_item o_MessageList_loadMore align-self-center" href="#" t-on-click="_onClickLoadMore" t-ref="loadMore">
+            <a class="o_MessageList_item o_MessageList_loadMore align-self-center" href="#" t-on-click="messageListView.onClickLoadMore" t-ref="loadMore">
                 Load more
             </a>
         </t>

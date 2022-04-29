@@ -121,10 +121,25 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        historyView: one('DiscussSidebarMailboxView', {
+            default: insertAndReplace(),
+            inverse: 'discussViewOwnerAsHistory',
+            isCausal: true,
+        }),
+        inboxView: one('DiscussSidebarMailboxView', {
+            default: insertAndReplace(),
+            inverse: 'discussViewOwnerAsInbox',
+            isCausal: true,
+        }),
         /**
          * Reference of the quick search input. Useful to filter channels and
          * chats based on this input content.
          */
         quickSearchInputRef: attr(),
+        starredView: one('DiscussSidebarMailboxView', {
+            default: insertAndReplace(),
+            inverse: 'discussViewOwnerAsStarred',
+            isCausal: true,
+        }),
     },
 });
