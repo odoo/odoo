@@ -50,6 +50,10 @@ class CustomerPortal(portal.CustomerPortal):
         if not order_line or order_line.order_id != order_sudo:
             return False
 
+        if not order_line.sale_order_option_ids:
+            # Do not allow updating non optional lines from a quotation
+            return False
+
         if input_quantity is not False:
             quantity = input_quantity
         else:
