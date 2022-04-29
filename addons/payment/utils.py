@@ -156,3 +156,16 @@ def split_partner_name(partner_name):
 
 def get_customer_ip_address():
     return request and request.httprequest.remote_addr or ''
+
+
+def check_rights_on_recordset(recordset):
+    """ Ensure that the user has the rights to write on the record.
+
+    Call this method to check the access rules and rights before doing any operation that is
+    callable by RPC and that requires to be executed in sudo mode.
+
+    :param recordset: The recordset for which the rights should be checked.
+    :return: None
+    """
+    recordset.check_access_rights('write')
+    recordset.check_access_rule('write')

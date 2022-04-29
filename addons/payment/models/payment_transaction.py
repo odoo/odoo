@@ -298,16 +298,20 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be captured."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_capture_request()
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_capture_request()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be voided."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_void_request()
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_void_request()
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.

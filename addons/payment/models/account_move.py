@@ -2,6 +2,8 @@
 
 from odoo import api, fields, models
 
+from odoo.addons.payment import utils as payment_utils
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -26,10 +28,16 @@ class AccountMove(models.Model):
         return self.with_context(active_test=False).transaction_ids._get_last()
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids.action_capture()
+        """ Capture all transactions linked to this invoice. """
+        payment_utils.check_rights_on_recordset(self)
+        # In sudo mode because we need to be able to read on acquirer fields.
+        self.authorized_transaction_ids.sudo().action_capture()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids.action_void()
+        """ Void all transactions linked to this invoice. """
+        payment_utils.check_rights_on_recordset(self)
+        # In sudo mode because we need to be able to read on acquirer fields.
+        self.authorized_transaction_ids.sudo().action_void()
 
     def action_view_payment_transactions(self):
         action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')
