@@ -199,6 +199,7 @@ var SnippetEditor = Widget.extend({
      */
     removeSnippet: async function () {
         this.toggleFocus(false);
+        this.trigger_up('will_remove_snippet', {$target: this.$target});
 
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {

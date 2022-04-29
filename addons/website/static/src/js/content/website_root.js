@@ -19,6 +19,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'ready_to_clean_for_save': '_onWidgetsStopRequest',
+        'will_remove_snippet': '_onWidgetsStopRequest',
         seo_object_request: '_onSeoObjectRequest',
     }),
 
