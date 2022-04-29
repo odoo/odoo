@@ -160,7 +160,9 @@ export class FormView extends Component {
         this.cpButtonsRef = useRef("cpButtons");
 
         useEffect(() => {
-            this.router.pushState({ id: this.model.root.resId || undefined });
+            if (!this.env.inDialog) {
+                this.router.pushState({ id: this.model.root.resId || undefined });
+            }
         });
 
         // enable the archive feature in Actions menu only if the active field is in the view
