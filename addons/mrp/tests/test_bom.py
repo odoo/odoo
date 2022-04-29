@@ -538,15 +538,15 @@ class TestBoM(TestMrpCommon):
 
         for component_line in report_values['lines']['components']:
             # standard price * bom line quantity * current quantity / bom finished product quantity
-            if component_line['prod_id'] == butter.id:
+            if component_line['product'].id == butter.id:
                 # 5 kg of butter at 7.01$ for 11kg of crumble -> 35.05$
-                self.assertEqual(float_compare(component_line['total'], (7.01 * 5), precision_digits=2), 0)
-            if component_line['prod_id'] == biscuit.id:
+                self.assertEqual(float_compare(component_line['bom_cost'], (7.01 * 5), precision_digits=2), 0)
+            if component_line['product'].id == biscuit.id:
                 # 6 kg of biscuits at 1.50$ for 11kg of crumble -> 9$
-                self.assertEqual(float_compare(component_line['total'], (1.5 * 6), precision_digits=2), 0)
+                self.assertEqual(float_compare(component_line['bom_cost'], (1.5 * 6), precision_digits=2), 0)
         # total price = 35.05 + 9 + operation_cost(23.84) = 67.89
-        self.assertEqual(float_compare(report_values['lines']['total'], 67.89, precision_digits=2), 0, 'Product Bom Price is not correct')
-        self.assertEqual(float_compare(report_values['lines']['total'] / 11.0, 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
+        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 67.89, precision_digits=2), 0, 'Product Bom Price is not correct')
+        self.assertEqual(float_compare(report_values['lines']['bom_cost'] / 11.0, 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
 
         # TEST BOM STRUCTURE VALUE BY UNIT
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=1, searchVariant=False)
@@ -558,14 +558,14 @@ class TestBoM(TestMrpCommon):
 
         for component_line in report_values['lines']['components']:
             # standard price * bom line quantity * current quantity / bom finished product quantity
-            if component_line['prod_id'] == butter.id:
+            if component_line['product'].id == butter.id:
                 # 5 kg of butter at 7.01$ for 11kg of crumble -> / 11 for price per unit (3.19)
-                self.assertEqual(float_compare(component_line['total'], (7.01 * 5) * (1 / 11), precision_digits=2), 0)
-            if component_line['prod_id'] == biscuit.id:
+                self.assertEqual(float_compare(component_line['bom_cost'], (7.01 * 5) * (1 / 11), precision_digits=2), 0)
+            if component_line['product'].id == biscuit.id:
                 # 6 kg of biscuits at 1.50$ for 11kg of crumble -> / 11 for price per unit (0.82)
-                self.assertEqual(float_compare(component_line['total'], (1.5 * 6) * (1 / 11), precision_digits=2), 0)
+                self.assertEqual(float_compare(component_line['bom_cost'], (1.5 * 6) * (1 / 11), precision_digits=2), 0)
         # total price = 3.19 + 0.82 + operation_cost(0.83 + 0.83 + 0.5 = 2.16) = 6,17
-        self.assertEqual(float_compare(report_values['lines']['total'], 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
+        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
 
         # TEST OPERATION COST WHEN PRODUCED QTY > BOM QUANTITY
         report_values_12 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=12, searchVariant=False)
@@ -628,15 +628,15 @@ class TestBoM(TestMrpCommon):
 
         for component_line in report_values['lines']['components']:
             # standard price * bom line quantity * current quantity / bom finished product quantity
-            if component_line['prod_id'] == cream.id:
+            if component_line['product'].id == cream.id:
                 # 3 liter of cream at 5.17$ for 60 unit of cheese cake -> 15.51$
-                self.assertEqual(float_compare(component_line['total'], (3 * 5.17), precision_digits=2), 0)
-            if component_line['prod_id'] == crumble.id:
+                self.assertEqual(float_compare(component_line['bom_cost'], (3 * 5.17), precision_digits=2), 0)
+            if component_line['product'].id == crumble.id:
                 # 5.4 kg of crumble at the cost of a batch.
-                crumble_cost = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['total']
-                self.assertEqual(float_compare(component_line['total'], crumble_cost, precision_digits=2), 0)
+                crumble_cost = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['bom_cost']
+                self.assertEqual(float_compare(component_line['bom_cost'], crumble_cost, precision_digits=2), 0)
         # total price = Cream (15.51€) + crumble_cost (34.63 €) + operation_cost(208,33) = 258.47€
-        self.assertEqual(float_compare(report_values['lines']['total'], 258.47, precision_digits=2), 0, 'Product Bom Price is not correct')
+        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 258.47, precision_digits=2), 0, 'Product Bom Price is not correct')
 
     def test_bom_report_dozens(self):
         """ Simulate a drawer bom with dozens as bom units
@@ -863,39 +863,36 @@ class TestBoM(TestMrpCommon):
 
         # 10l of blue paint
         blue_paint = self.paint._get_variant_for_combination(self.paint_color_blue)
-        self.assertEqual(blue_paint.id, report_values['lines']['components'][0]['prod_id'])
-        self.assertEqual(report_values['lines']['components'][0]['prod_qty'], 10)
+        self.assertEqual(blue_paint.id, report_values['lines']['components'][0]['product'].id)
+        self.assertEqual(report_values['lines']['components'][0]['quantity'], 10)
         # 1 blue dashboard with GPS
         blue_dashboard_gps = self.dashboard._get_variant_for_combination(self.dashboard_color_blue + self.dashboard_gps_yes)
-        self.assertEqual(blue_dashboard_gps.id, report_values['lines']['components'][1]['prod_id'])
-        self.assertEqual(report_values['lines']['components'][1]['prod_qty'], 1)
-        component = report_values['lines']['components'][1]
-        report_values_dashboad = self.env['report.mrp.report_bom_structure']._get_bom(
-            component['child_bom'], component['prod_id'], component['prod_qty'],
-            component['line_id'], component['level'] + 1)
+        self.assertEqual(blue_dashboard_gps.id, report_values['lines']['components'][1]['product'].id)
+        self.assertEqual(report_values['lines']['components'][1]['quantity'], 1)
+        report_values_dashboad = report_values['lines']['components'][1]
 
         self.assertEqual(len(report_values_dashboad['components']), 2)
-        self.assertEqual(blue_paint.id, report_values_dashboad['components'][0]['prod_id'])
-        self.assertEqual(self.gps.id, report_values_dashboad['components'][1]['prod_id'])
+        self.assertEqual(blue_paint.id, report_values_dashboad['components'][0]['product'].id)
+        self.assertEqual(self.gps.id, report_values_dashboad['components'][1]['product'].id)
 
         # 0.5l of paint at price of 20$/litre -> 10$
-        self.assertEqual(report_values_dashboad['components'][0]['total'], 10)
+        self.assertEqual(report_values_dashboad['components'][0]['bom_cost'], 10)
         # GPS 700$
-        self.assertEqual(report_values_dashboad['components'][1]['total'], 700)
+        self.assertEqual(report_values_dashboad['components'][1]['bom_cost'], 700)
 
         # Dashboard blue with GPS should have a BoM cost of 710$
-        self.assertEqual(report_values['lines']['components'][1]['total'], 710)
+        self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 710)
         # 10l of paint at price of 20$/litre -> 200$
-        self.assertEqual(report_values['lines']['components'][0]['total'], 200)
+        self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 200)
 
         # Total cost of blue car with GPS: 10 + 700 + 200 = 910
-        self.assertEqual(report_values['lines']['total'], 910)
+        self.assertEqual(report_values['lines']['bom_cost'], 910)
 
         red_car_without_gps = self.car._get_variant_for_combination(self.car_color_red + self.car_gps_no)
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=red_car_without_gps.id)
         # Same math than before but without GPS
-        self.assertEqual(report_values['lines']['total'], 210)
+        self.assertEqual(report_values['lines']['bom_cost'], 210)
 
     def test_22_bom_report_recursive_bom(self):
         """ Test report with recursive BoM and different quantities.
@@ -981,7 +978,7 @@ class TestBoM(TestMrpCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
-        self.assertAlmostEqual(report_values['lines']['total'], 0.58)
+        self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.92)
 
     def test_validate_no_bom_line_with_same_product(self):
         """
