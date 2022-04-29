@@ -1009,13 +1009,17 @@ export class RelationalModel extends Model {
     }
     async updateRecord(list, record, params = { isM2M: false }) {
         let operation;
-        if (!params.isM2M) {
+        const isM2M = params.isM2M;
+        if (!isM2M) {
             operation = { operation: "UPDATE", id: record.__bm_handle__ };
         } else {
-            await record.save();
+            await record.save({ noReload: true });
             operation = { operation: "TRIGGER_ONCHANGE" };
         }
         await list.__syncParent(operation);
+        if (isM2M) {
+            await record.load();
+        }
     }
 
     /**

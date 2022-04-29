@@ -10,9 +10,10 @@ import {
     getFixture,
     nextTick,
 } from "../helpers/utils";
+import { editSearch, validateSearch } from "../search/helpers";
 
 // WOWL remove after adapting tests
-let createView, FormView, testUtils, cpHelpers;
+let createView, FormView, testUtils;
 
 QUnit.module("Fields", (hooks) => {
     let target;
@@ -1495,51 +1496,53 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("many2many with a domain", async function (assert) {
+    QUnit.test("many2many with a domain", async function (assert) {
         // The domain specified on the field should not be replaced by the potential
         // domain the user writes in the dialog, they should rather be concatenated
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.views = {
+            "partner_type,false,list": "<tree>" + '<field name="display_name"/>' + "</tree>",
+            "partner_type,false,search":
+                "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<field name=\"timmy\" domain=\"[['display_name', '=', 'gold']]\"/>" +
                 "</form>",
-            res_id: 1,
-            archs: {
-                "partner_type,false,list": "<tree>" + '<field name="display_name"/>' + "</tree>",
-                "partner_type,false,search":
-                    "<search>" + '<field name="display_name" string="Name"/>' + "</search>",
-            },
-            viewOptions: {
-                mode: "edit",
-            },
+            resId: 1,
         });
+        await clickEdit(target);
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.strictEqual($(".modal .o_data_row").length, 1, "should contain only one row (gold)");
 
         const modal = document.body.querySelector(".modal");
-        await cpHelpers.editSearch(modal, "s");
-        await cpHelpers.validateSearch(modal);
+        await editSearch(modal, "s");
+        await validateSearch(modal);
 
         assert.strictEqual($(".modal .o_data_row").length, 0, "should contain no row");
-
-        form.destroy();
     });
 
-    QUnit.skipWOWL("many2many list with onchange and edition of a record", async function (assert) {
-        assert.expect(8);
+    QUnit.test("many2many list with onchange and edition of a record", async function (assert) {
+        assert.expect(11);
 
-        this.data.partner.fields.turtles.type = "many2many";
-        this.data.partner.onchanges.turtles = function () {};
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.fields.turtles.type = "many2many";
+        serverData.models.partner.onchanges.turtles = function () {};
+
+        serverData.views = {
+            "turtle,false,form": '<form string="Turtle Power"><field name="turtle_bar"/></form>',
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="turtles">' +
@@ -1548,37 +1551,24 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 1,
-            archs: {
-                "turtle,false,form":
-                    '<form string="Turtle Power"><field name="turtle_bar"/></form>',
-            },
+            resId: 1,
             mockRPC: function (route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
+        assert.verifySteps(["get_views", "read", "read"]);
 
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$("td.o_data_cell:first"));
+        await clickEdit(target);
+        await click($(target).find("td.o_data_cell:first")[0]);
+        assert.verifySteps(["read"]);
 
-        await testUtils.dom.click($('.modal-body input[type="checkbox"]'));
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary").first());
+        await click($('.modal-body input[type="checkbox"]')[0]);
+        await click($(".modal .modal-footer .btn-primary").first()[0]);
+        assert.verifySteps(["write", "onchange", "read"]);
 
         // there is nothing left to save -> should not do a 'write' RPC
-        await testUtils.form.clickSave(form);
-
-        assert.verifySteps([
-            "read", // read initial record (on partner)
-            "read", // read many2many turtles
-            "get_views", // load arch of turtles form view
-            "read", // read missing field when opening record in modal form view
-            "write", // when saving the modal
-            "onchange", // onchange should be triggered on partner
-            "read", // reload many2many
-        ]);
-
-        form.destroy();
+        await clickSave(target);
+        assert.verifySteps([]);
     });
 
     QUnit.skipWOWL("onchange with 40+ commands for a many2many", async function (assert) {
