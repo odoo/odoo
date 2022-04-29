@@ -101,7 +101,7 @@ class ProductProduct(models.Model):
             product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
             flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
             flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
-            taxes_before_included = any(tax.price_include for tax in flattened_taxes_before_fp)
+            taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
                 taxes_res = flattened_taxes_before_fp.compute_all(
