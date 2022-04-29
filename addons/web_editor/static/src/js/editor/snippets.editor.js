@@ -405,6 +405,9 @@ var SnippetEditor = Widget.extend({
         if (this.$target.parent('.row').length) {
             return _t("Column");
         }
+        if (this.$target.is('#wrapwrap > main')) {
+            return _t("Page Options");
+        }
         return _t("Block");
     },
     /**
