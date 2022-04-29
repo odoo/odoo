@@ -35,10 +35,16 @@ registerModel({
             });
             this.messaging.device.start();
             const discuss = this.messaging.discuss;
-            const data = await this.async(() => this.messaging.rpc({
+            const data = await this.messaging.rpc({
                 route: '/mail/init_messaging',
-            }, { shadow: true }));
-            await this.async(() => this._init(data));
+            }, { shadow: true });
+            if (!this.exists()) {
+                return;
+            }
+            await this._init(data);
+            if (!this.exists()) {
+                return;
+            }
             if (discuss.discussView) {
                 discuss.openInitThread();
             }
@@ -110,7 +116,10 @@ registerModel({
                 this._initCommands();
             }
             // channels when the rest of messaging is ready
-            await this.async(() => this._initChannels(channels));
+            await this._initChannels(channels);
+            if (!this.exists()) {
+                return;
+            }
             discuss.update({ menu_id });
             // company related data
             this.messaging.update({ companyName });

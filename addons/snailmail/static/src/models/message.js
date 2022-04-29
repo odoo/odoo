@@ -12,11 +12,11 @@ addRecordMethods('Message', {
      */
     async cancelLetter() {
         // the result will come from longpolling: message_notification_update
-        await this.async(() => this.messaging.rpc({
+        await this.messaging.rpc({
             model: 'mail.message',
             method: 'cancel_letter',
             args: [[this.id]],
-        }));
+        });
     },
     /**
      * Opens the action about 'snailmail.letter' format error.
@@ -35,11 +35,11 @@ addRecordMethods('Message', {
      * Opens the action about 'snailmail.letter' missing fields.
      */
     async openMissingFieldsLetterAction() {
-        const letterIds = await this.async(() => this.messaging.rpc({
+        const letterIds = await this.messaging.rpc({
             model: 'snailmail.letter',
             method: 'search',
             args: [[['message_id', '=', this.id]]],
-        }));
+        });
         this.env.bus.trigger('do-action', {
             action: 'snailmail.snailmail_letter_missing_required_fields_action',
             options: {
@@ -54,10 +54,10 @@ addRecordMethods('Message', {
      */
     async resendLetter() {
         // the result will come from longpolling: message_notification_update
-        await this.async(() => this.messaging.rpc({
+        await this.messaging.rpc({
             model: 'mail.message',
             method: 'send_letter',
             args: [[this.id]],
-        }));
+        });
     },
 });

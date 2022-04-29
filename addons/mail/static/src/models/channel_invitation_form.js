@@ -40,12 +40,14 @@ registerModel({
                      * A smoother transfer would be moving the RTC sessions from one channel to
                      * the other (server-side too), but it would be considerably more complex.
                      */
-                    await this.async(() => channel.toggleCall({
+                    await channel.toggleCall({
                         startWithVideo: !!this.thread.rtc.videoTrack,
                         videoType: this.thread.rtc.sendUserVideo ? 'user-video' : 'display',
-                    }));
+                    });
                 }
-                channel.open();
+                if (channel.exists()) {
+                    channel.open();
+                }
             } else {
                 await this.messaging.rpc(({
                     model: 'mail.channel',

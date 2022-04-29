@@ -106,11 +106,14 @@ registerModel({
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.async(() => this.messaging.rpc({
+            await this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'unlink',
                 args: [[this.id]],
-            }));
+            });
+            if (!this.exists()) {
+                return;
+            }
             this.delete();
         },
         /**
@@ -167,7 +170,8 @@ registerModel({
          */
         async markAsDone({ attachments = [], feedback = false }) {
             const attachmentIds = attachments.map(attachment => attachment.id);
-            await this.async(() => this.messaging.rpc({
+            const thread = this.thread;
+            await this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
                 args: [[this.id]],
@@ -175,8 +179,13 @@ registerModel({
                     attachment_ids: attachmentIds,
                     feedback,
                 },
-            }));
-            this.thread.fetchData(['attachments', 'messages']);
+            });
+            if (thread.exists()) {
+                thread.fetchData(['attachments', 'messages']);
+            }
+            if (!this.exists()) {
+                return;
+            }
             this.delete();
         },
         /**
@@ -185,15 +194,19 @@ registerModel({
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.async(() => this.messaging.rpc({
+            const thread = this.thread;
+            const action = await this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_feedback_schedule_next',
                 args: [[this.id]],
                 kwargs: { feedback },
-            }));
-            this.thread.fetchData(['activities', 'attachments', 'messages']);
-            const thread = this.thread;
-            this.delete();
+            });
+            if (thread.exists()) {
+                thread.fetchData(['activities', 'attachments', 'messages']);
+            }
+            if (this.exists()) {
+                this.delete();
+            }
             if (!action) {
                 return;
             }
@@ -201,6 +214,9 @@ registerModel({
                 action,
                 options: {
                     on_close: () => {
+                        if (!thread.exists()) {
+                            return;
+                        }
                         thread.fetchData(['activities']);
                     },
                 },

@@ -40,12 +40,10 @@ registerModel({
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
-                const channel = await this.async(() =>
-                    this.messaging.models['Thread'].performRpcCreateChannel({
-                        name,
-                        privacy: ui.item.special === 'private' ? 'private' : 'groups',
-                    })
-                );
+                const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
+                    name,
+                    privacy: ui.item.special === 'private' ? 'private' : 'groups',
+                });
                 channel.open();
             } else {
                 const channel = this.messaging.models['Thread'].insert({

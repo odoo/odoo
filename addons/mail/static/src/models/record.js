@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { RecordDeletedError } from '@mail/model/model_errors';
 import { one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
@@ -147,35 +146,6 @@ registerModel({
         },
     },
     recordMethods: {
-        /**
-         * Perform an async function and wait until it is done. If the record
-         * is deleted, it raises a RecordDeletedError.
-         *
-         * @param {function} func an async function
-         * @throws {RecordDeletedError} in case the current record is not alive
-         *   at the end of async function call, whether it's resolved or
-         *   rejected.
-         * @throws {any} forwards any error in case the current record is still
-         *   alive at the end of rejected async function call.
-         * @returns {any} result of resolved async function.
-         */
-        async async(func) {
-            return new Promise((resolve, reject) => {
-                Promise.resolve(func()).then(result => {
-                    if (this.exists()) {
-                        resolve(result);
-                    } else {
-                        reject(new RecordDeletedError(this.localId));
-                    }
-                }).catch(error => {
-                    if (this.exists()) {
-                        reject(error);
-                    } else {
-                        reject(new RecordDeletedError(this.localId));
-                    }
-                });
-            });
-        },
         /**
          * This method deletes this record.
          */

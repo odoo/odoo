@@ -74,7 +74,10 @@ registerModel({
          */
         async getChat() {
             if (!this.partner) {
-                await this.async(() => this.fetchPartner());
+                await this.fetchPartner();
+                if (!this.exists()) {
+                    return;
+                }
             }
             if (!this.partner) {
                 // This user has been deleted from the server or never existed:
@@ -97,11 +100,12 @@ registerModel({
             if (!chat || !chat.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
-                chat = await this.async(() =>
-                    this.messaging.models['Thread'].performRpcCreateChat({
-                        partnerIds: [this.partner.id],
-                    })
-                );
+                chat = await this.messaging.models['Thread'].performRpcCreateChat({
+                    partnerIds: [this.partner.id],
+                });
+                if (!this.exists()) {
+                    return;
+                }
             }
             if (!chat) {
                 this.messaging.notify({
@@ -121,11 +125,14 @@ registerModel({
          * @returns {Thread|undefined}
          */
         async openChat(options) {
-            const chat = await this.async(() => this.getChat());
-            if (!chat) {
+            const chat = await this.getChat();
+            if (!this.exists() || !chat) {
                 return;
             }
-            await this.async(() => chat.open(options));
+            await chat.open(options);
+            if (!this.exists() || !chat.exists()) {
+                return;
+            }
             return chat;
         },
         /**
@@ -137,7 +144,10 @@ registerModel({
          */
         async openProfile() {
             if (!this.partner) {
-                await this.async(() => this.fetchPartner());
+                await this.fetchPartner();
+                if (!this.exists()) {
+                    return;
+                }
             }
             if (!this.partner) {
                 // This user has been deleted from the server or never existed:
