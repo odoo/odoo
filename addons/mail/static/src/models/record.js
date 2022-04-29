@@ -27,19 +27,6 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         /**
-         * This function is called during the create cycle, when the record has
-         * already been created, but its values have not yet been assigned.
-         *
-         * It is usually preferable to use @see `_created`.
-         *
-         * The main use case is to prepare the record for the assignation of its
-         * values, for example if a computed field relies on the record to have
-         * some purely technical property correctly set.
-         *
-         * @private
-         */
-        _willCreate() {},
-        /**
          * This function is called after the record has been created, more
          * precisely at the end of the update cycle (which means all implicit
          * changes such as computes have been applied too).

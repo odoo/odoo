@@ -14,25 +14,10 @@ registerModel({
     name: 'ComposerView',
     identifyingFields: [['threadView', 'messageViewInEditing', 'chatter']],
     lifecycleHooks: {
-        _willCreate() {
-            /**
-             * Determines whether there is a mention RPC currently in progress.
-             * Useful to queue a new call if there is already one pending.
-             */
-            this._hasMentionRpcInProgress = false;
-            /**
-             * Determines the next function to execute after the current mention
-             * RPC is done, if any.
-             */
-            this._nextMentionRpcFunction = undefined;
-        },
         _created() {
             document.addEventListener('click', this.onClickCaptureGlobal, true);
         },
         _willDelete() {
-            // Clears the mention queue on deleting the record to prevent
-            // unnecessary RPC.
-            this._nextMentionRpcFunction = undefined;
             document.removeEventListener('click', this.onClickCaptureGlobal, true);
         },
     },
@@ -1133,17 +1118,19 @@ registerModel({
          * @param {function} func
          */
         async _executeOrQueueFunction(func) {
-            if (this._hasMentionRpcInProgress) {
-                this._nextMentionRpcFunction = func;
+            if (this.hasMentionRpcInProgress) {
+                this.update({ nextMentionRpcFunction: func });
                 return;
             }
-            this._hasMentionRpcInProgress = true;
-            this._nextMentionRpcFunction = undefined;
+            this.update({
+                hasMentionRpcInProgress: true,
+                nextMentionRpcFunction: clear(),
+            });
             await func();
             if (this.exists()) {
-                this._hasMentionRpcInProgress = false;
-                if (this._nextMentionRpcFunction) {
-                    this._executeOrQueueFunction(this._nextMentionRpcFunction);
+                this.update({ hasMentionRpcInProgress: false });
+                if (this.nextMentionRpcFunction) {
+                    this._executeOrQueueFunction(this.nextMentionRpcFunction);
                 }
             }
         },
@@ -1501,6 +1488,13 @@ registerModel({
         hasHeader: attr({
             compute: '_computeHasHeader',
         }),
+        /**
+         * Determines whether there is a mention RPC currently in progress.
+         * Useful to queue a new call if there is already one pending.
+         */
+        hasMentionRpcInProgress: attr({
+            default: false,
+        }),
         hasMentionSuggestionsBelowPosition: attr({
             compute: '_computeHasMentionSuggestionsBelowPosition',
             default: false,
@@ -1574,6 +1568,11 @@ registerModel({
          * properly without flicker.
          */
         mirroredTextareaRef: attr(),
+        /**
+         * Determines the next function to execute after the current mention
+         * RPC is done, if any.
+         */
+        nextMentionRpcFunction: attr(),
         /**
          * Determines the label on the send button of this composer view.
          */
