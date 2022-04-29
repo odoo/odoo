@@ -750,7 +750,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("DateField: hit enter should update value", async function (assert) {
-        assert.expect(2);
+        patchTimeZone(120);
 
         await makeView({
             type: "form",

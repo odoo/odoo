@@ -669,7 +669,7 @@ QUnit.module("Views", (hooks) => {
         };
 
         const mockRPC = (route, args) => {
-            if (args.method === "load_views") {
+            if (args.method === "get_views") {
                 var context = args.kwargs.context;
                 if (args.model === "product") {
                     assert.strictEqual(
@@ -2928,6 +2928,42 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["onchange"]);
         }
     );
+
+    QUnit.skipWOWL("remove default value in subviews", async function (assert) {
+        // assert.expect(2);
+        // this.data.product.onchanges = {}
+        // this.data.product.onchanges.name = function () {};
+        // var form = await createView({
+        //     View: FormView,
+        //     model: 'partner',
+        //     data: this.data,
+        //     viewOptions: {
+        //         context: {default_state: "ab"}
+        //     },
+        //     arch: '<form string="Partners">' +
+        //             '<field name="product_ids" context="{\'default_product_uom_qty\': 68}">' +
+        //               '<tree editable="top">' +
+        //                 '<field name="name"/>' +
+        //               '</tree>' +
+        //             '</field>' +
+        //           '</form>',
+        //     mockRPC: function (route, args) {
+        //         if (route === "/web/dataset/call_kw/partner/onchange") {
+        //             assert.deepEqual(args.kwargs.context, {
+        //                 default_state: 'ab',
+        //             })
+        //         }
+        //         else if (route === "/web/dataset/call_kw/product/onchange") {
+        //             assert.deepEqual(args.kwargs.context, {
+        //                 default_product_uom_qty: 68,
+        //             })
+        //         }
+        //         return this._super.apply(this, arguments);
+        //     },
+        // });
+        // await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        // form.destroy();
+    });
 
     QUnit.skipWOWL("reference field in one2many list", async function (assert) {
         assert.expect(1);
@@ -6966,7 +7002,7 @@ QUnit.module("Views", (hooks) => {
             "the value of the fields should be fetched and displayed"
         );
         assert.verifySteps(
-            ["read", "read", "load_views", "read", "read"],
+            ["read", "read", "get_views", "read", "read"],
             "there should be 4 read rpcs"
         );
     });
@@ -9458,10 +9494,10 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "read", // main record
             "get_formview_id", // id of first form view opened in a dialog
-            "load_views", // arch of first form view opened in a dialog
+            "get_views", // arch of first form view opened in a dialog
             "read", // first dialog
             "get_formview_id", // id of second form view opened in a dialog
-            "load_views", // arch of second form view opened in a dialog
+            "get_views", // arch of second form view opened in a dialog
             "read", // second dialog
             "write", // save second dialog
             "read", // reload first dialog
@@ -10083,7 +10119,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.verifySteps(["partner_type:load_views", "partner:read", "partner_type:read"]);
+            assert.verifySteps(["partner_type:get_views", "partner:read", "partner_type:read"]);
         }
     );
 

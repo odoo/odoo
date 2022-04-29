@@ -8699,6 +8699,46 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(allNames, ["Value 1", "Value 2", "USD", "Value 2", "Value 3"]);
     });
 
+    QUnit.skipWOWL("multi edit in view grouped by field not in view", async function (assert) {
+        // assert.expect(3);
+        // this.data.foo.records = [
+        //     // group 1
+        //     {id: 1, foo: '1', m2o: 1},
+        //     {id: 3, foo: '2', m2o: 1},
+        //     //group 2
+        //     {id: 2, foo: '1', m2o: 2},
+        //     {id: 4, foo: '2', m2o: 2},
+        //     // group 3
+        //     {id: 5, foo: '2', m2o: 3},
+        // ];
+        // const list = await createView({
+        //     View: ListView,
+        //     model: 'foo',
+        //     data: this.data,
+        //     arch: `<tree expand="1" multi_edit="1">
+        //            <field name="foo"/>
+        //        </tree>`,
+        //     groupBy: ['m2o'],
+        // });
+        // // Select items from the first group
+        // await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:eq(0)'));
+        // await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:eq(1)'));
+        // await testUtils.dom.click(list.$('.o_list_char:eq(0)'));
+        // await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'test');
+        // assert.containsOnce(document.body, '.modal');
+        // await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        // assert.containsNone(document.body, '.modal');
+        // const allNames = [...document.querySelectorAll('.o_data_cell')].map(n => n.textContent);
+        // assert.deepEqual(allNames, [
+        //     'test',
+        //     'test',
+        //     '1',
+        //     '2',
+        //     '2',
+        // ]);
+        // list.destroy();
+    });
+
     QUnit.skipWOWL("multi edit reference field batched in grouped list", async function (assert) {
         assert.expect(18);
 
@@ -9062,10 +9102,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_list_button_discard"));
             await click($(".o_list_button_add"));
             assert.containsOnce(target, ".o_selected_row", "row should be selected");
-            await editInput(
-                target, ".o_selected_row .o_field_widget[name=int_field]",
-                123
-            );
+            await editInput(target, ".o_selected_row .o_field_widget[name=int_field]", 123);
             await click(target, ".o_list_view");
             assert.containsOnce(target, ".o_selected_row", "row should still be selected");
         }
@@ -10420,7 +10457,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_group_header")].map(el => el.innerText),
+            [...target.querySelectorAll(".o_group_header")].map((el) => el.innerText),
             ["January 2017 (1)", "None (3)"],
             "the group names should be correct"
         );
@@ -10803,14 +10840,12 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(getPagerLimit(target), 4);
 
             // delete a record
-            await click(
-                target.querySelector("tbody .o_data_row td.o_list_record_selector input")
-            );
+            await click(target.querySelector("tbody .o_data_row td.o_list_record_selector input"));
             checkSearchRead = true;
             await click(target.querySelector(".o_cp_action_menus .dropdown-toggle"));
-            const deleteMenuItem = [...target.querySelectorAll(".o_cp_action_menus .o_menu_item")].filter(
-                (el) => el.innerText === "Delete"
-            )[0];
+            const deleteMenuItem = [
+                ...target.querySelectorAll(".o_cp_action_menus .o_menu_item"),
+            ].filter((el) => el.innerText === "Delete")[0];
             await click(deleteMenuItem);
             await click(target, ".modal button.btn-primary");
             assert.deepEqual(getPagerValue(target), [1, 3]);
@@ -12860,7 +12895,8 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group
         await click(target, ".o_list_view"); // unselect row
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row")[5].querySelectorAll(".o_data_cell")[1].textContent,
+            target.querySelectorAll(".o_data_row")[5].querySelectorAll(".o_data_cell")[1]
+                .textContent,
             "Medium",
             "should have a column name with a value from the groupby"
         );
@@ -12895,7 +12931,8 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_group_field_row_add a")[1]); // create row in second group
         await click(target, ".o_list_view"); // unselect row
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row")[3].querySelectorAll(".o_data_cell")[1].textContent,
+            target.querySelectorAll(".o_data_row")[3].querySelectorAll(".o_data_cell")[1]
+                .textContent,
             "Value 2",
             "should have a column name with a value from the groupby"
         );
