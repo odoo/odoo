@@ -9,15 +9,18 @@ class IrActionsReport(models.Model):
         if account_move.company_id.country_id.code != 'PT':
             return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
         run_script = """
-            // Constants in 10*mm (for A4 format)
+            // Constants for A4 paper size
             const pageHeight = 2970;
-            const firstHeaderHeight = 1200;
-            const headerHeight = 500;
-            const footerHeight = 400;
-            const carryOverHeight = 200;
+            const firstHeaderHeight = 1150;
+            const headerHeight = 450;
+            const footerHeight = 300;
+            const carryOverHeight = 140;
+            const theadHeight = 140;
             
-            const firstBodyHeight = pageHeight - firstHeaderHeight - footerHeight - carryOverHeight;
-            const bodyHeight = pageHeight - headerHeight - footerHeight - carryOverHeight;
+            const firstBodyHeight = pageHeight - firstHeaderHeight - footerHeight - carryOverHeight - theadHeight;
+            const bodyHeight = pageHeight - headerHeight - footerHeight - carryOverHeight - theadHeight;
+            console.log("firstBodyHeight: " + firstBodyHeight);
+            console.log("bodyHeight: " + bodyHeight);
             
             // Parse main table informations into a list of dicts representing the smaller tables (one per page)
             const rows = document.querySelectorAll("tr");
@@ -32,10 +35,12 @@ class IrActionsReport(models.Model):
                 tables[tables.length-1].carrying += parseFloat(amounts[i - 1].innerText.split(",").join(""));
                 tables[tables.length-1].rows.push(i);
                 
-                const bottom = rows[i].getBoundingClientRect().bottom;
-                const firstPageEnd = pageHeight + firstBodyHeight;
-                if ((tables.length == 1 && bottom > firstPageEnd) || //First page
-                    (tables.length > 1  && bottom > firstPageEnd + firstHeaderHeight - headerHeight + (tables.length-1) * bodyHeight)) { //Other pages
+                const rowBottom = rows[i].getBoundingClientRect().bottom;
+                rows[i].querySelector("td") != undefined ? rows[i].querySelector("td").innerText += " (b: " + rowBottom + ")" : null; // TO REMOVE
+
+                const firstPageBottom = pageHeight + firstBodyHeight;
+                if ((tables.length == 1 && rowBottom > firstPageBottom) ||
+                    (tables.length >  1 && rowBottom > firstPageBottom + (tables.length-1) * bodyHeight)) {
                     tables.push({
                         rows: [],
                         carrying: tables[tables.length-1].carrying,
@@ -43,15 +48,15 @@ class IrActionsReport(models.Model):
                 }
             }
             
-            // Delete the old mainTable (but remember its header to reuse later)
+            // Delete the old unique table (but remember its header to reuse later)
+            const theadElement = document.querySelector("thead");
             const tableElement = document.querySelector("table");
-            const theadElement = document.querySelector("thead").cloneNode();
             tableElement.parentNode.removeChild(tableElement);
             
             // Function to create the div containing the carry over in the beggining/end of the page
             function carryValueElement(amount) {
                 return "<div class='text-bold text-right'>" + 
-                            "Valor acumulado: " + amount.toFixed(2) + "&euro;" + 
+                            "Valor acumulado: " + amount.toFixed(2).replace(".", ",") + "&euro;" + 
                        "</div>"
             }
             
