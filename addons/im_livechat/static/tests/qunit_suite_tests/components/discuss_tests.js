@@ -28,7 +28,6 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     assert.containsOnce(document.body, '.o_Discuss_sidebar',
         "should have a sidebar section"
@@ -84,7 +83,6 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
     });
     await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -113,7 +111,6 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     assert.containsNone(
         document.body,
@@ -161,7 +158,6 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     assert.containsNone(
         document.body,
@@ -217,7 +213,6 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     assert.containsNone(
         document.body,
@@ -286,7 +281,6 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     ]);
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     const livechat11 = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -358,7 +352,6 @@ QUnit.test('invite button should be present on livechat', async function (assert
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -389,7 +382,6 @@ QUnit.test('call buttons should not be present on livechat', async function (ass
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsNone(
         document.body,

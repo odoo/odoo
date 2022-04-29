@@ -189,7 +189,7 @@ QUnit.test('view attachments', async function (assert) {
             res_model: 'res.partner',
         },
     ]);
-    const { click, createChatterContainerComponent, messaging } = await start({ hasDialog: true });
+    const { click, createChatterContainerComponent, messaging } = await start();
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: resPartnerId1,
@@ -253,7 +253,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, createChatterContainerComponent } = await start({ hasDialog: true });
+    const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: resPartnerId1,

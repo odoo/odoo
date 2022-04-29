@@ -365,7 +365,7 @@ QUnit.test('switch tab', async function (assert) {
 QUnit.test('new message', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessagingMenuComponent } = await start({ hasChatWindow: true });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
@@ -390,7 +390,6 @@ QUnit.test('no new message when discuss is open', async function (assert) {
 
     const { click, discussWidget, createMessagingMenuComponent } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     await createMessagingMenuComponent();
 
@@ -672,7 +671,7 @@ QUnit.test('open chat window from preview', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create();
-    const { click, createMessagingMenuComponent } = await start({ hasChatWindow: true });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);

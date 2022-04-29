@@ -270,7 +270,6 @@ QUnit.test('No Price Available', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { createThreadViewComponent, messaging } = await start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
@@ -365,7 +364,6 @@ QUnit.test('Credit Error', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { createThreadViewComponent, messaging } = await start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);
@@ -465,7 +463,6 @@ QUnit.test('Trial Error', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const { createThreadViewComponent, messaging } = await start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (args.method === 'send_letter' && args.model === 'mail.message' && args.args[0][0] === mailMessageId1) {
                 assert.step(args.method);

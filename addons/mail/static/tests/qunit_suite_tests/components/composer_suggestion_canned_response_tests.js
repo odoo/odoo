@@ -21,7 +21,6 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', ":hello");
@@ -47,7 +46,6 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', ":hello");
@@ -88,7 +86,6 @@ QUnit.test('canned response suggestion active', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', ":hello");

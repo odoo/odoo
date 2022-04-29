@@ -40,7 +40,6 @@ QUnit.test('rendering of visitor banner', async function (assert) {
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -140,7 +139,6 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -184,7 +182,6 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -218,7 +215,6 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -244,7 +240,6 @@ QUnit.test('non-livechat channel should not show visitor banner', async function
                 active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,

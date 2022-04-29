@@ -30,7 +30,7 @@ QUnit.test('closing a chat window with no message from admin side unpins it', as
             uuid: 'channel-10-uuid',
         },
     );
-    const { createMessagingMenuComponent, messaging } = await start({ hasChatWindow: true });
+    const { createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());

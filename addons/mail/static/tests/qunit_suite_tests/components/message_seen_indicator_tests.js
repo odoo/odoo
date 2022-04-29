@@ -55,7 +55,6 @@ QUnit.test('rendering when just one has received the message', async function (a
                 default_active_id: `mail.channel_${mailChannelId}`,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     assert.containsOnce(
@@ -106,7 +105,6 @@ QUnit.test('rendering when everyone have received the message', async function (
                 default_active_id: `mail.channel_${mailChannelId}`,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     assert.containsOnce(
@@ -161,7 +159,6 @@ QUnit.test('rendering when just one has seen the message', async function (asser
                 default_active_id: `mail.channel_${mailChannelId}`,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     assert.containsOnce(
@@ -213,7 +210,6 @@ QUnit.test('rendering when just one has seen & received the message', async func
                 default_active_id: `mail.channel_${mailChannelId}`,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     assert.containsOnce(
@@ -265,7 +261,6 @@ QUnit.test('rendering when just everyone has seen the message', async function (
                 default_active_id: `mail.channel_${mailChannelId}`,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     assert.containsOnce(

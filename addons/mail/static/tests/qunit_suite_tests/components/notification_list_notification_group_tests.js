@@ -156,7 +156,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     ]);
-    const { click, createNotificationListComponent } = await start({ hasChatWindow: true });
+    const { click, createNotificationListComponent } = await start();
     await createNotificationListComponent();
 
     assert.containsOnce(
@@ -336,10 +336,7 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
             notification_type: 'email',
         },
     ]);
-    const { createNotificationListComponent } = await start({
-        // needed to assert thread.open
-        hasChatWindow: true,
-    });
+    const { createNotificationListComponent } = await start();
     await createNotificationListComponent();
     assert.containsN(
         document.body,

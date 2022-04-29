@@ -69,7 +69,6 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         message_follower_ids: [followerId],
     });
     const { click } = await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,
@@ -143,7 +142,6 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         message_follower_ids: [followerId],
     });
     const { click } = await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,
@@ -197,7 +195,6 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         message_follower_ids: [followerId],
     });
     const { click, messaging } = await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,
