@@ -13,12 +13,6 @@ export class MessagingMenu extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'MessagingMenu' });
-        /**
-         * global JS generated ID for this component. Useful to provide a
-         * custom class to autocomplete input, so that click in an autocomplete
-         * item is not considered as a click away from messaging menu in mobile.
-         */
-        this.id = _.uniqueId('o_messagingMenu_');
     }
 
     //--------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Follower',
@@ -165,6 +165,22 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeFollowedThreadAsFollowerOfCurrentPartner() {
+            if (!this.followedThread) {
+                return clear();
+            }
+            if (!this.messaging.currentPartner) {
+                return clear();
+            }
+            if (this.partner === this.messaging.currentPartner) {
+                return replace(this.followedThread);
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsEditable() {
@@ -175,6 +191,10 @@ registerModel({
     fields: {
         followedThread: one('Thread', {
             inverse: 'followers',
+        }),
+        followedThreadAsFollowerOfCurrentPartner: one('Thread', {
+            compute: '_computeFollowedThreadAsFollowerOfCurrentPartner',
+            inverse: 'followerOfCurrentPartner',
         }),
         followerSubtypeListDialog: one('Dialog', {
             inverse: 'followerOwnerAsSubtypeList',

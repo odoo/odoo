@@ -17,6 +17,23 @@ registerModel({
             }
             return this.component.root.el;
         },
+        onClickRetryLoadMoreMessages() {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.cache.update({ hasLoadingFailed: false });
+            this.thread.cache.loadMoreMessages();
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickLoadMore(ev) {
+            ev.preventDefault();
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.cache.loadMoreMessages();
+        },
         /**
          * @private
          * @returns {boolean|FieldCommand}
@@ -73,6 +90,9 @@ registerModel({
         }),
         scrollHeight: attr(),
         scrollTop: attr(),
+        thread: one('Thread', {
+            related: 'threadViewOwner.thread',
+        }),
         threadViewOwner: one('ThreadView', {
             inverse: 'messageListView',
             readonly: true,

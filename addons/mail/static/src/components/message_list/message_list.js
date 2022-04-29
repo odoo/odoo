@@ -271,31 +271,6 @@ export class MessageList extends Component {
 
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickLoadMore(ev) {
-        ev.preventDefault();
-        const { threadCache } = this._lastRenderedValues();
-        if (!threadCache || !threadCache.exists()) {
-            return;
-        }
-        threadCache.loadMoreMessages();
-    }
-
-    /**
-     * @private
-     */
-    _onClickRetryLoadMoreMessages() {
-        const { threadCache } = this._lastRenderedValues();
-        if (!threadCache || !threadCache.exists()) {
-            return;
-        }
-        threadCache.update({ hasLoadingFailed: false });
-        threadCache.loadMoreMessages();
-    }
-
-    /**
-     * @private
      * @param {ScrollEvent} ev
      */
     onScroll(ev) {
