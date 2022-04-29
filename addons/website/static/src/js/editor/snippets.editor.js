@@ -54,6 +54,43 @@ weSnippetEditor.SnippetsMenu.include({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds the "customize_show" templates to the options page of the editor
+     * panel.
+     *
+     * @override
+     */
+    async loadSnippets() {
+        const viewName = $(this.options.wysiwyg.odooEditor.document.documentElement).data('view-xmlid');
+        const snippets = await this._super(...arguments);
+        if (!viewName) {
+            return snippets;
+        }
+        const $snippets = $(snippets);
+        return this._rpc({
+            route: '/website/get_switchable_related_views',
+            params: {
+                key: viewName,
+            },
+        }).then(function (result) {
+            _.each(result, view => {
+                $snippets.siblings('#snippet_options').append($(`
+                    <div data-selector="#wrapwrap > main" data-page-options="true" data-no-check="true">
+                        <we-checkbox string="${view.name}"
+                                    data-customize-website-views="${view.key}"
+                                    data-no-preview="true"
+                                    data-reload="/"/>
+                    </div>
+                `));
+            });
+            return $('<div>').append($snippets).html();
+        });
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
