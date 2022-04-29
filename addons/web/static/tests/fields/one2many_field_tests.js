@@ -11,6 +11,7 @@ import {
     clickM2OHighlightedItem,
     clickOpenedDropdownItem,
     clickOpenM2ODropdown,
+    dragAndDrop,
     editInput,
     editSelect,
     getFixture,
@@ -1076,63 +1077,61 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("onchange for embedded one2many with handle widget", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("onchange for embedded one2many with handle widget", async function (assert) {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
-        var partnerOnchange = 0;
+        let partnerOnchange = 0;
         serverData.models.partner.onchanges = {
             turtles: function () {
                 partnerOnchange++;
             },
         };
-        var turtleOnchange = 0;
+        let turtleOnchange = 0;
         serverData.models.turtle.onchanges = {
             turtle_int: function () {
                 turtleOnchange++;
             },
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `
                 <form>
-                    <sheet>
-                        <notebook>
-                            <page string="P page">
-                                <field name="turtles">
-                                    <tree default_order="turtle_int">
-                                        <field name="turtle_int" widget="handle"/>
-                                        <field name="turtle_foo"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                    <field name="turtles">
+                        <tree default_order="turtle_int">
+                            <field name="turtle_int" widget="handle"/>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
                 </form>`,
             resId: 1,
         });
 
         await clickEdit(target);
 
-        // Drag and drop the second line in first position
-        await testUtils.dom.dragAndDrop(
-            form.$(".ui-sortable-handle").eq(1),
-            form.$("tbody tr").first(),
-            { position: "top" }
+        assert.deepEqual(
+            [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                (el) => el.innerText
+            ),
+            ["yop", "blip", "kawa"]
         );
+        // Drag and drop the second line in first position
+        await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
 
+        assert.deepEqual(
+            [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                (el) => el.innerText
+            ),
+            ["blip", "yop", "kawa"]
+        );
         assert.strictEqual(turtleOnchange, 2, "should trigger one onchange per line updated");
         assert.strictEqual(partnerOnchange, 1, "should trigger only one onchange on the parent");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange for embedded one2many with handle widget using same sequence",
         async function (assert) {
-            assert.expect(4);
-
             serverData.models.turtle.records[0].turtle_int = 1;
             serverData.models.turtle.records[1].turtle_int = 1;
             serverData.models.turtle.records[2].turtle_int = 1;
@@ -1144,24 +1143,18 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: `
                     <form>
-                        <sheet>
-                            <notebook>
-                                <page string="P page">
-                                    <field name="turtles">
-                                        <tree default_order="turtle_int">
-                                            <field name="turtle_int" widget="handle"/>
-                                            <field name="turtle_foo"/>
-                                        </tree>
-                                    </field>
-                                </page>
-                            </notebook>
-                        </sheet>
+                        <field name="turtles">
+                            <tree default_order="turtle_int">
+                                <field name="turtle_int" widget="handle"/>
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
                     </form>`,
                 resId: 1,
                 mockRPC(route, args) {
@@ -1176,29 +1169,26 @@ QUnit.module("Fields", (hooks) => {
                             "should change all lines that have changed (the first one doesn't change because it has the same sequence)"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await clickEdit(target);
 
-            assert.strictEqual(
-                form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-                "yopblipkawa",
-                "should have the 3 rows in the correct order"
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                    (el) => el.innerText
+                ),
+                ["yop", "blip", "kawa"]
             );
 
             // Drag and drop the second line in first position
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle").eq(1),
-                form.$("tbody tr").first(),
-                { position: "top" }
-            );
+            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
 
-            assert.strictEqual(
-                form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-                "blipyopkawa",
-                "should still have the 3 rows in the correct order"
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                    (el) => el.innerText
+                ),
+                ["blip", "yop", "kawa"]
             );
             assert.strictEqual(turtleOnchange, 3, "should update all lines");
 

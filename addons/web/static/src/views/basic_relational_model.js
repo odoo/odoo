@@ -462,9 +462,13 @@ export class Record extends DataPoint {
                         data[fieldName] = this.data[fieldName];
                         data[fieldName].__syncData();
                     } else {
+                        const { viewMode, views } = this.activeFields[fieldName];
+                        const handleField =
+                            (views && views[viewMode] && views[viewMode].handleField) || null;
                         data[fieldName] = new StaticList(this.model, {
                             handle: data[fieldName].id,
-                            viewType: this.activeFields[fieldName].viewMode,
+                            handleField,
+                            viewType: viewMode,
                             __syncParent: async (value) => {
                                 await this.model.__bm__.save(this.__bm_handle__, {
                                     savePoint: true,
@@ -654,6 +658,8 @@ export class StaticList extends DataPoint {
         /** @type {Record[]} */
         this.records = [];
 
+        this.handleField = params.handleField;
+
         // this.views = legDP.fieldsInfo;
         // this.viewMode = legDP.viewType;
 
@@ -834,8 +840,8 @@ export class StaticList extends DataPoint {
         await this.__syncParent(operation);
     }
 
-    async resequence(movedId, targetId, options = {}) {
-        const handleField = options.handleField || "sequence";
+    async resequence(movedId, targetId) {
+        const handleField = this.handleField || "sequence";
         const fromIndex = this.records.findIndex((r) => r.id === movedId);
         const toIndex = targetId ? this.records.findIndex((r) => r.id === targetId) : 0;
 
@@ -877,7 +883,7 @@ export class StaticList extends DataPoint {
             records.reverse();
         }
 
-        const sequences = records.filter((r) => Boolean(r.resId)).map((r) => r[handleField]);
+        const sequences = records.filter((r) => Boolean(r.resId)).map((r) => r.data[handleField]);
         const offset = Math.min(...sequences);
 
         const operations = records.map((record, i) => ({
@@ -885,7 +891,20 @@ export class StaticList extends DataPoint {
             id: record.__bm_handle__,
             data: { [handleField]: offset + i },
         }));
-        await Promise.all(operations.map(this.__syncParent));
+        const lastOperation = operations.pop();
+
+        const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
+
+        await Promise.all(
+            operations.map((op) => {
+                this.model.__bm__.notifyChanges(
+                    parentID,
+                    { [this.__fieldName__]: op },
+                    { notifyChange: false }
+                );
+            })
+        );
+        await this.model.__bm__.notifyChanges(parentID, { [this.__fieldName__]: lastOperation });
         this.model.notify();
     }
 
