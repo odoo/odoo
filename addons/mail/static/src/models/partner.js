@@ -299,14 +299,17 @@ registerModel({
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.async(() => this.messaging.rpc({
+            const userIds = await this.messaging.rpc({
                 model: 'res.users',
                 method: 'search',
                 args: [[['partner_id', '=', this.id]]],
                 kwargs: {
                     context: { active_test: false },
                 },
-            }, { shadow: true }));
+            }, { shadow: true });
+            if (!this.exists()) {
+                return;
+            }
             this.update({ hasCheckedUser: true });
             if (userIds.length > 0) {
                 this.update({ user: insert({ id: userIds[0] }) });
@@ -321,7 +324,10 @@ registerModel({
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
-                await this.async(() => this.checkIsUser());
+                await this.checkIsUser();
+                if (!this.exists()) {
+                    return;
+                }
             }
             // prevent chatting with non-users
             if (!this.user) {
@@ -343,11 +349,14 @@ registerModel({
          * @returns {Thread|undefined}
          */
         async openChat(options) {
-            const chat = await this.async(() => this.getChat());
-            if (!chat) {
+            const chat = await this.getChat();
+            if (!this.exists() || !chat) {
                 return;
             }
-            await this.async(() => chat.open(options));
+            await chat.open(options);
+            if (!this.exists()) {
+                return;
+            }
             return chat;
         },
         /**

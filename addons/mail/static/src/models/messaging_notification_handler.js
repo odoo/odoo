@@ -124,7 +124,7 @@ registerModel({
                     }
                 }
             });
-            await this.async(() => Promise.all(proms));
+            await Promise.all(proms);
         },
         /**
          * @abstract
@@ -244,9 +244,11 @@ registerModel({
             // "required" by the rest of the code and is necessary for some
             // features such as chat windows.
             if (!channel) {
-                channel = (await this.async(() =>
-                    this.messaging.models['Thread'].performRpcChannelInfo({ ids: [channelId] })
-                ))[0];
+                const res = await this.messaging.models['Thread'].performRpcChannelInfo({ ids: [channelId] });
+                if (!this.exists()) {
+                    return;
+                }
+                channel = res[0];
             }
             if (!channel.isPinned) {
                 channel.pin();
@@ -656,8 +658,8 @@ registerModel({
             const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
             this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
-            const chat = await this.async(() => this.messaging.getChat({ partnerId }));
-            if (!chat || this.messaging.device.isSmall) {
+            const chat = await this.messaging.getChat({ partnerId });
+            if (!this.exists() || !chat || this.messaging.device.isSmall) {
                 return;
             }
             this.messaging.chatWindowManager.openThread(chat);

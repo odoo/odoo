@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
@@ -240,12 +239,7 @@ registerModel({
             if (this.messaging.currentGuest) {
                 return;
             }
-            this.thread.markAsSeen(this.thread.lastNonTransientMessage).catch(e => {
-                // prevent crash when executing compute during destroy
-                if (!(e instanceof RecordDeletedError)) {
-                    throw e;
-                }
-            });
+            this.thread.markAsSeen(this.thread.lastNonTransientMessage);
         },
         /**
          * @private
@@ -275,11 +269,13 @@ registerModel({
             if (this.threadCache && this.threadCache.isLoading) {
                 if (!this.isLoading && !this.isPreparingLoading) {
                     this.update({ isPreparingLoading: true });
-                    this.async(() =>
-                        new Promise(resolve => {
+                    (new Promise(resolve => {
                             this.update({ loaderTimeout: this.messaging.browser.setTimeout(resolve, this.messaging.loadingBaseDelayDuration) });
                         }
                     )).then(() => {
+                        if (!this.exists()) {
+                            return;
+                        }
                         const isLoading = this.threadCache
                             ? this.threadCache.isLoading
                             : false;

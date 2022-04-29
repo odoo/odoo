@@ -263,14 +263,20 @@ registerModel({
                 }
                 audioTrack.addEventListener('ended', async () => {
                     // this mostly happens when the user retracts microphone permission.
-                    await this.async(() => this.updateLocalAudioTrack(false));
+                    await this.updateLocalAudioTrack(false);
+                    if (!this.exists()) {
+                        return;
+                    }
                     this.currentRtcSession.updateAndBroadcast({ isSelfMuted: true });
-                    await this.async(() => this._updateLocalAudioTrackEnabledState());
+                    await this._updateLocalAudioTrackEnabledState();
                 });
                 this.currentRtcSession.updateAndBroadcast({ isSelfMuted: false });
                 audioTrack.enabled = !this.currentRtcSession.isMute && this.currentRtcSession.isTalking;
                 this.update({ audioTrack });
-                await this.async(() => this.updateVoiceActivation());
+                await this.updateVoiceActivation();
+                if (!this.exists()) {
+                    return;
+                }
                 for (const rtcSession of this.connectedRtcSessions) {
                     await this._updateRemoteTrack(rtcSession.rtcPeerConnection.peerConnection, 'audio', { token: rtcSession.id });
                 }
@@ -1014,9 +1020,7 @@ registerModel({
             const videoTrack = videoStream ? videoStream.getVideoTracks()[0] : undefined;
             if (videoTrack) {
                 videoTrack.addEventListener('ended', async () => {
-                    await this.async(() =>
-                        this._toggleVideoBroadcast({ force: false, type })
-                    );
+                    await this._toggleVideoBroadcast({ force: false, type });
                 });
             }
             this.update({

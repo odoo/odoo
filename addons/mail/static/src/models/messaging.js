@@ -80,11 +80,14 @@ registerModel({
          * @returns {Thread|undefined}
          */
         async openChat(person, options) {
-            const chat = await this.async(() => this.getChat(person));
-            if (!chat) {
+            const chat = await this.getChat(person);
+            if (!this.exists() || !chat) {
                 return;
             }
-            await this.async(() => chat.open(options));
+            await chat.open(options);
+            if (!this.exists()) {
+                return;
+            }
             return chat;
         },
         /**
@@ -129,9 +132,11 @@ registerModel({
             if (model === 'mail.channel') {
                 let channel = this.messaging.models['Thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
                 if (!channel) {
-                    channel = (await this.async(() =>
-                        this.messaging.models['Thread'].performRpcChannelInfo({ ids: [id] })
-                    ))[0];
+                    const res = await this.messaging.models['Thread'].performRpcChannelInfo({ ids: [id] });
+                    if (!this.exists()) {
+                        return;
+                    }
+                    channel = res[0];
                 }
                 if (!channel) {
                     this.messaging.notify({

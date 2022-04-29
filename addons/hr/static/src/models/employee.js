@@ -104,7 +104,10 @@ registerModel({
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
-                await this.async(() => this.checkIsUser());
+                await this.checkIsUser();
+            }
+            if (!this.exists()) {
+                return;
             }
             // prevent chatting with non-users
             if (!this.user) {
@@ -126,11 +129,17 @@ registerModel({
          * @returns {Thread|undefined}
          */
         async openChat(options) {
-            const chat = await this.async(() => this.getChat());
+            const chat = await this.getChat();
+            if (!this.exists()) {
+                return;
+            }
             if (!chat) {
                 return;
             }
-            await this.async(() => chat.open(options));
+            await chat.open(options);
+            if (!this.exists()) {
+                return;
+            }
             return chat;
         },
         /**
