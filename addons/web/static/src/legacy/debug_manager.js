@@ -116,6 +116,7 @@ class SetDefaultDialog extends Dialog {
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
                     fieldsInfo[fieldName].options.isPassword ||
+                    fieldInfo.depends === undefined ||
                     fieldInfo.depends.length !== 0
                 ) {
                     return false;
