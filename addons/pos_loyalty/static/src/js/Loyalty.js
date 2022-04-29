@@ -240,6 +240,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     constructor() {
         super(...arguments);
         this._initializePrograms({});
+        // Always start with invalid coupons so that coupon for this
+        // order is properly assigned. @see _checkMissingCoupons
+        this.invalidCoupons = true;
     }
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
@@ -269,7 +272,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         this.disabledRewards = json.disabledRewards;
         this.codeActivatedProgramRules = json.codeActivatedProgramRules;
         this.codeActivatedCoupons = json.codeActivatedCoupons;
-        this.invalidCoupons = true;
     }
     /**
      * We need to update the rewards upon changing the partner as it may impact the points available
@@ -280,6 +282,11 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     set_partner(partner) {
         const oldPartner = this.get_partner();
         super.set_partner(...arguments);
+        if (oldPartner && oldPartner.loyalty_card_id && oldPartner.loyalty_card_id in this.couponPointChanges) {
+            // Remove the coupon from the tracked couponPointChanges, and it will be replaced
+            // with the correct one in `_updatePrograms`.
+            delete this.couponPointChanges[oldPartner.loyalty_card_id];
+        }
         if (oldPartner !== this.get_partner()) {
             this._updateRewards();
         }
@@ -434,7 +441,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         });
     }
 
-    async _initializePrograms() {
+    _initializePrograms() {
         // When deleting a reward line, a popup will be displayed if the reward was automatic,
         //  if confirmed the reward is added to this list and will not be claimed automatically again.
         if (!this.disabledRewards) {
@@ -485,6 +492,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         })}).catch(() => {/* catch the reject of dp when calling `add` to avoid unhandledrejection */});
     }
     async _updateLoyaltyPrograms() {
+        if (this.partner && !(this.partner.loyalty_card_id in this.pos.couponCache)) {
+            await this.pos.fetchCoupons([['id', 'in', [this.partner.loyalty_card_id]]], 1);
+        }
         await this._checkMissingCoupons();
         await this._updatePrograms();
     }
@@ -510,7 +520,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 await this.pos.fetchCoupons([['id', 'in', couponsToFetch]], couponsToFetch.length);
                 // Remove coupons that could not be loaded from the db
                 this.codeActivatedCoupons = this.codeActivatedCoupons.filter((coupon) => this.pos.couponCache[coupon.id]);
-                this.couponPointChanges = Object.fromEntries(Object.entries(this.couponPointChanges).filter((k, pe) => this.pos.couponCache[pe.coupon_id]));
+                this.couponPointChanges = Object.fromEntries(Object.entries(this.couponPointChanges).filter(([k, pe]) => this.pos.couponCache[pe.coupon_id]));
             }
         });
     }
