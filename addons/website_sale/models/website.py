@@ -311,6 +311,8 @@ class Website(models.Model):
             sale_order_sudo = SaleOrder.with_user(SUPERUSER_ID).create(so_data)
 
             request.session['sale_order_id'] = sale_order_sudo.id
+            # The order was created with SUPERUSER_ID, revert back to request user.
+            sale_order_sudo = sale_order_sudo.with_user(self.env.user).sudo()
             return sale_order_sudo
 
         # Existing Cart:
