@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import { loadAssets } from "@web/core/assets";
+import { loadJS, loadCSS, fetchAndProcessTemplates } from "@web/core/assets";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 
 QUnit.module("utils", () => {
     QUnit.module("Assets");
 
-    QUnit.test("loadAssets: load invalid JS lib", function (assert) {
+    QUnit.test("loadJS: load invalid JS lib", function (assert) {
         assert.rejects(
-            loadAssets({ jsLibs: ["/some/invalid/file.js"] }),
+            loadJS("/some/invalid/file.js"),
             new RegExp("The loading of /some/invalid/file.js failed"),
             "Trying to load an invalid file rejects the promise"
         );
@@ -19,9 +19,9 @@ QUnit.module("utils", () => {
         );
     });
 
-    QUnit.test("loadAssets: load invalid CSS lib", function (assert) {
+    QUnit.test("loadCSS: load invalid CSS lib", function (assert) {
         assert.rejects(
-            loadAssets({ cssLibs: ["/some/invalid/file.css"] }),
+            loadCSS("/some/invalid/file.css"),
             new RegExp("The loading of /some/invalid/file.css failed"),
             "Trying to load an invalid file rejects the promise"
         );
@@ -31,7 +31,7 @@ QUnit.module("utils", () => {
         );
     });
 
-    QUnit.test("loadAssets: load invalid bundle", function (assert) {
+    QUnit.test("fetchAndProcessTemplates: load invalid bundle", function (assert) {
         let lastFetchedURL;
         patchWithCleanup(browser, {
             fetch: function (url) {
@@ -40,11 +40,7 @@ QUnit.module("utils", () => {
             },
         });
         assert.rejects(
-            loadAssets({
-                bundles: {
-                    "web.some_invalid_bundle": { templates: true },
-                },
-            }),
+            fetchAndProcessTemplates("web.some_invalid_bundle"),
             "Trying to load an invalid bundle rejects the promise"
         );
         assert.ok(

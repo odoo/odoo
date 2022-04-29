@@ -1,6 +1,6 @@
 /**@odoo-module */
 
-import { loadAssets } from "@web/core/assets";
+import { loadCSS, loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 
@@ -33,21 +33,16 @@ export class OnboardingBanner extends Component {
         }
 
         const banner = new DOMParser().parseFromString(response.html, "text/html");
-        const assets = {
-            jsLibs: [],
-            cssLibs: [],
-        };
-        banner
-            .querySelectorAll(`link[rel="stylesheet"] , script[type="text/javascript"]`)
-            .forEach((elem) => {
-                if (elem.tagName === "SCRIPT") {
-                    assets.jsLibs.push(elem.src);
-                } else if (elem.tagName === "LINK") {
-                    assets.cssLibs.push(elem.href);
-                }
-                elem.remove();
-            });
-        await loadAssets(assets);
+        await Promise.all([
+            ...[...banner.querySelectorAll(`script[type="text/javascript"]`)].map((el) => {
+                el.remove();
+                return loadJS(el.getAttribute("src"));
+            }),
+            ...[...banner.querySelectorAll(`link[rel="stylesheet"]`)].map((el) => {
+                el.remove();
+                return loadCSS(el.getAttribute("href"));
+            }),
+        ]);
         return markup(new XMLSerializer().serializeToString(banner));
     }
 }

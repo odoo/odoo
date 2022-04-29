@@ -21,7 +21,7 @@ import {
 } from "../../utils";
 import { standaloneAdapter } from "web.OwlCompatibility";
 
-import { loadBundleTemplates } from "@web/core/assets";
+import { fetchAndProcessTemplates } from "@web/core/assets";
 import { makeEnv, startServices } from "@web/env";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
@@ -405,7 +405,7 @@ export async function createPublicRoot(RootWidget) {
 
     const wowlEnv = makeEnv();
 
-    const templates = await loadBundleTemplates("web.assets_frontend");
+    const templates = await fetchAndProcessTemplates("web.assets_frontend");
     window.__OWL_TEMPLATES__ = templates;
     await startServices(wowlEnv);
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
