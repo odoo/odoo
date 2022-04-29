@@ -711,6 +711,11 @@
                             </div>
                             <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
                             </div>
+                            <hr />
+                            <!-- inner content is accessible for inside the product details of the shop page -->
+                            <section class="container" id="inner_content_snippets">
+                                <div class="s_products_inner_content_accessible"/>
+                            </section>
                         </div>
                     </div>
                 </section>
@@ -721,7 +726,7 @@
     </template>
 
     <template id="product_custom_text" inherit_id="website_sale.product" active="True" customize_show="True" name="Terms and Conditions" priority="21">
-        <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
+        <xpath expr="//section[@id='inner_content_snippets']" position="before">
             <p class="text-muted mb-0">
                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
                 30-day money-back guarantee<br/>
