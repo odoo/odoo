@@ -40,6 +40,8 @@ class MailMessageSubtype(models.Model):
     default = fields.Boolean('Default', default=True, help="Activated by default when subscribing.")
     sequence = fields.Integer('Sequence', default=1, help="Used to order subtypes.")
     hidden = fields.Boolean('Hidden', help="Hide the subtype in the follower options")
+    track_recipients = fields.Boolean('Track Recipients',
+                                      help="Whether to display all the recipients or only the important ones.")
 
     @api.model_create_multi
     def create(self, vals_list):
