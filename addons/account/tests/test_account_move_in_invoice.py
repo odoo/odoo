@@ -756,10 +756,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_in_invoice_line_onchange_taxes_1(self):
+        purchase_armagedon_tax = self.tax_armageddon.copy()
+        purchase_armagedon_tax.children_tax_ids.type_tax_use = 'purchase'
+        purchase_armagedon_tax.type_tax_use = 'purchase'
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 960
-            line_form.tax_ids.add(self.tax_armageddon)
+            line_form.tax_ids.add(purchase_armagedon_tax)
         move_form.save()
 
         child_tax_1 = self.tax_armageddon.children_tax_ids[0]
@@ -771,7 +774,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_unit': 960.0,
                 'price_subtotal': 800.0,
                 'price_total': 1176.0,
-                'tax_ids': (self.tax_purchase_a + self.tax_armageddon).ids,
+                'tax_ids': (self.tax_purchase_a + purchase_armagedon_tax).ids,
             },
             self.product_line_vals_2,
             self.tax_line_vals_1,

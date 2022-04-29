@@ -4452,6 +4452,14 @@ class AccountMoveLine(models.Model):
             if common_tags:
                 raise ValidationError(_("Taxes exigible on payment and on invoice cannot be mixed on the same journal item if they share some tag."))
 
+    @api.constrains('tax_ids')
+    def _check_tax_usage_consistency(self):
+        for line in self:
+            if {'sale', 'purchase'}.issubset(set(line.tax_ids.mapped('type_tax_use'))):
+                raise UserError(
+                    _('You cannot use a sale tax and a purchase tax on the same journal item. (entry: (%s), line: (%s))') % (line.move_id.name, line.name)
+                )
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
