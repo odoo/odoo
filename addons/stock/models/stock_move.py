@@ -1321,7 +1321,7 @@ class StockMove(models.Model):
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'.'))
-        moves_to_cancel = self.filtered(lambda m: m.state != 'cancel')
+        moves_to_cancel = self.filtered(lambda m: m.state != 'cancel' and not (m.state == 'done' and m.scrapped))
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
         moves_to_cancel._do_unreserve()
@@ -1336,7 +1336,7 @@ class StockMove(models.Model):
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
                     move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
-        self.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)]})
+        moves_to_cancel.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)]})
         return True
 
     def _prepare_extra_move_vals(self, qty):
