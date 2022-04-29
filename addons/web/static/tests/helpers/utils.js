@@ -593,14 +593,18 @@ const getDifferentParents = (n1, n2) => {
  * target list) or moving it at the position of another element, effectively
  * placing the first element before the second (toSelector = other element).
  *
+ * A position can be given to drop the first element above, below, or on the
+ * side of the second (default is inside, as specified above).
+ *
  * Note that only the last event is awaited, since all the others are
  * considered to be synchronous.
  *
  * @param {string} fromSelector
  * @param {string} toSelector
+ * @param {string} [position] "top" | "bottom" | "left" | "right"
  * @returns {Promise<void>}
  */
-export const dragAndDrop = async (fromSelector, toSelector) => {
+export const dragAndDrop = async (fromSelector, toSelector, position) => {
     const fixture = getFixture();
     const from = fixture.querySelector(fromSelector);
     const to = fixture.querySelector(toSelector);
@@ -619,6 +623,24 @@ export const dragAndDrop = async (fromSelector, toSelector) => {
         clientX: toRect.x + toRect.width - 1,
         clientY: toRect.y + toRect.height - 1,
     };
+    switch (position) {
+        case "top": {
+            toPos.clientY -= toRect.height;
+            break;
+        }
+        case "bottom": {
+            toPos.clientY += 2;
+            break;
+        }
+        case "left": {
+            toPos.clientX -= toRect.width;
+            break;
+        }
+        case "right": {
+            toPos.clientX += 2;
+            break;
+        }
+    }
 
     // Move, enter and drop the element on the target
     triggerEvent(window, null, "mousemove", toPos);
