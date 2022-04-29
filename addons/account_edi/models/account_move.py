@@ -159,6 +159,7 @@ class AccountMove(models.Model):
                 tax_details['base_amount_currency'] += tax_values['base_amount_currency']
         tax_details['tax_amount'] += tax_values['tax_amount']
         tax_details['tax_amount_currency'] += tax_values['tax_amount_currency']
+        tax_details['exemption_reason'] = tax_values['tax_id'].name
         tax_details['group_tax_details'].append(tax_values)
 
     def _prepare_edi_tax_details(self, filter_to_apply=None, filter_invl_to_apply=None, grouping_key_generator=None, compute_mode='tax_details'):
@@ -616,9 +617,9 @@ class AccountMove(models.Model):
     # Business operations
     ####################################################
 
-    def action_process_edi_web_services(self):
+    def action_process_edi_web_services(self, with_commit=True):
         docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
-        docs._process_documents_web_services()
+        docs._process_documents_web_services(with_commit=with_commit)
 
     def _retry_edi_documents_error_hook(self):
         ''' Hook called when edi_documents are retried. For example, when it's needed to clean a field.
@@ -662,7 +663,9 @@ class AccountMoveLine(models.Model):
             'price_subtotal_unit': self.currency_id.round(self.price_subtotal / self.quantity) if self.quantity else 0.0,
             'price_total_unit': self.currency_id.round(self.price_total / self.quantity) if self.quantity else 0.0,
             'price_discount': gross_price_subtotal - self.price_subtotal,
+            'price_discount_unit': (gross_price_subtotal - self.price_subtotal) / self.quantity if self.quantity else 0.0,
             'gross_price_total_unit': self.currency_id.round(gross_price_subtotal / self.quantity) if self.quantity else 0.0,
+            'unece_uom_code': self.product_id.product_tmpl_id.uom_id._get_unece_code(),
         }
         return res
 

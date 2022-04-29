@@ -140,6 +140,12 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Complete Recipient E-mail",
             trigger: '[data-field-name="email_to"] input',
             run: 'text_blur test@test.test',
+        }, {
+            content: 'Edit the Phone Number field',
+            trigger: 'input[name="phone"]',
+        }, {
+            content: 'Change the label position of the phone field',
+            trigger: 'we-button[data-select-label-position="right"]',
         },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
 
@@ -300,20 +306,48 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
             run: () => null,
         },
-        // Save the page
+        // Add a default value to a auto-fillable field.
         {
-            trigger: 'body',
-            run: function () {
-                $('body').append('<div id="completlyloaded"></div>');
-            },
+            content: 'Select the name field',
+            trigger: '.s_website_form_field:eq(0)',
+        }, {
+            content: 'Set a default value to the name field',
+            trigger: 'we-input[data-attribute-name="value"] input',
+            run: 'text John Smith',
         },
         {
             content:  "Save the page",
             trigger:  "button[data-action=save]",
         },
         {
-            content:  "Wait reloading...",
-            trigger:  "html:not(:has(#completlyloaded)) div",
+            content: 'Verify value attribute and property',
+            trigger: '.s_website_form_field:eq(0) input[value="John Smith"]:propValue("Mitchell Admin")',
+        },
+        {
+            content: 'Verify that phone field is still auto-fillable',
+            trigger: '.s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
+        },
+        // Check that if we edit again and save again the default value is not deleted.
+        {
+            content: 'Enter in edit mode again',
+            trigger: 'a[data-action="edit"]',
+            run: 'click',
+        },
+        {
+            content: 'Edit the form',
+            trigger: '.s_website_form_field:eq(0) input',
+            extra_trigger: 'button[data-action="save"]',
+            run: 'click',
+        },
+        ...addCustomField('many2one', 'select', 'Select Field', true),
+        {
+            content: 'Save the page',
+            trigger: 'button[data-action=save]',
+            run: 'click',
+        },
+        {
+            content: 'Verify that the value has not been deleted',
+            trigger: '.s_website_form_field:eq(0) input[value="John Smith"]',
         }
     ]);
 
@@ -321,7 +355,7 @@ odoo.define('website.tour.form_editor', function (require) {
         test: true,
     },[
         {
-            content:  "Try to send empty form",
+            content:  "Try to send the form with some required fields not filled in",
             extra_trigger:  "form[data-model_name='mail.mail']" +
                             "[data-success-page='/contactus-thank-you']" +
                             ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
@@ -349,7 +383,7 @@ odoo.define('website.tour.form_editor', function (require) {
         {
             content:  "Check if required fields were detected and complete the Subject field",
             extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
-                            ":has(.s_website_form_field:has(label:contains('Your Name')).o_has_error)" +
+                            ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                             ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
                             ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
                             ":has(.s_website_form_field:has(label:contains('Subject')).o_has_error)" +
@@ -369,7 +403,7 @@ odoo.define('website.tour.form_editor', function (require) {
         {
             content:  "Check if required fields were detected and complete the Message field",
             extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
-                            ":has(.s_website_form_field:has(label:contains('Your Name')).o_has_error)" +
+                            ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                             ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
                             ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
                             ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +
@@ -389,7 +423,7 @@ odoo.define('website.tour.form_editor', function (require) {
         {
             content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
             extra_trigger:  "form:has(#s_website_form_result.text-danger)" +
-                            ":has(.s_website_form_field:has(label:contains('Your Name')).o_has_error)" +
+                            ":has(.s_website_form_field:has(label:contains('Your Name')):not(.o_has_error))" +
                             ":has(.s_website_form_field:has(label:contains('Email')).o_has_error)" +
                             ":has(.s_website_form_field:has(label:contains('Your Question')).o_has_error)" +
                             ":has(.s_website_form_field:has(label:contains('Subject')):not(.o_has_error))" +

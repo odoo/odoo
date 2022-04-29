@@ -201,21 +201,23 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                             'total': lines[i].price_total,
                         };
                     }
+                    let down_payment_product = this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0])
+                    let down_payment_tax = this.env.pos.taxes_by_id[down_payment_product.taxes_id]
+                    let down_payment = down_payment_tax.price_include ? sale_order.amount_total : sale_order.amount_untaxed;
 
-                    let down_payment = sale_order.amount_total;
                     const { confirmed, payload } = await this.showPopup('NumberPopup', {
                         title: sprintf(this.env._t("Percentage of %s"), this.env.pos.format_currency(sale_order.amount_total)),
                         startingValue: 0,
                     });
                     if (confirmed){
-                        down_payment = sale_order.amount_total * parse.float(payload) / 100;
+                        down_payment = down_payment * parse.float(payload) / 100;
                     }
 
 
                     let new_line = new models.Orderline({}, {
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
-                        product: this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0]),
+                        product: down_payment_product,
                         price: down_payment,
                         price_manually_set: true,
                         sale_order_origin_id: clickedOrder,

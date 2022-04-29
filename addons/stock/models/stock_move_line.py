@@ -207,6 +207,7 @@ class StockMoveLine(models.Model):
                 packaging=self.move_id.product_packaging_id)
 
     def _apply_putaway_strategy(self):
+        self = self.with_context(do_not_unreserve=True)
         for package, smls in groupby(self, lambda sml: sml.result_package_id):
             smls = self.env['stock.move.line'].concat(*smls)
             excluded_smls = smls
