@@ -199,3 +199,6 @@ class GoogleEvent(abc.Set):
             return False
         video_meeting = list(filter(lambda entryPoints: entryPoints['entryPointType'] == 'video', self.conferenceData['entryPoints']))
         return video_meeting[0]['uri'] if video_meeting else False
+
+    def is_available(self):
+        return self.transparency == 'transparent'
