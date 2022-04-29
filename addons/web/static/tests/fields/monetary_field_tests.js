@@ -2,6 +2,7 @@
 
 import { makeView, setupViewRegistries } from "../views/helpers";
 import {
+    addRow,
     click,
     clickEdit,
     clickSave,
@@ -11,10 +12,8 @@ import {
 } from "../helpers/utils";
 import { session } from "@web/session";
 
-let serverData, target;
-
-// WOWL remove after adapting tests
-let testUtils;
+let serverData;
+let target;
 
 function getFieldArch(fieldName, widget) {
     return `<field name="${fieldName}" ` + (widget ? `widget="${widget}"` : "") + `/>`;
@@ -538,9 +537,9 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
-                        <field name=\"float_field\" options=\"{'currency_field': 'company_currency_id'}\"/>
+                        <field name="float_field" options="{'currency_field': 'company_currency_id'}"/>
                         <field name="company_currency_id"/>
                     </sheet>
                 </form>`,
@@ -554,175 +553,155 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "should keep the focus when being edited in x2many lists",
-        async function (assert) {
-            assert.expect(6);
+    QUnit.test("should keep the focus when being edited in x2many lists", async function (assert) {
+        serverData.models.partner.fields.currency_id.default = 1;
+        serverData.models.partner.fields.m2m = {
+            string: "m2m",
+            type: "many2many",
+            relation: "partner",
+            default: [[6, false, [2]]],
+        };
+        serverData.views = {
+            "partner,false,list": `
+                <tree editable="bottom">
+                    <field name="float_field" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>`,
+        };
 
-            serverData.models.partner.fields.currency_id.default = 1;
-            serverData.models.partner.fields.m2m = {
-                string: "m2m",
-                type: "many2many",
-                relation: "partner",
-                default: [[6, false, [2]]],
-            };
-            serverData.views = {
-                "partner,false,list":
-                    '<tree editable="bottom">' +
-                    '<field name="float_field" widget="monetary"/>' +
-                    '<field name="currency_id" invisible="1"/>' +
-                    "</tree>",
-            };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p"/>
+                        <field name="m2m"/>
+                    </sheet>
+                </form>`,
+        });
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                    <form string="Partners">
-                        <sheet>
-                            <field name="p"/>
-                            <field name="m2m"/>
-                        </sheet>
-                    </form>`,
-                session: {
-                    currencies: _.indexBy(serverData.models.currency.records, "id"),
-                },
-            });
+        // test the monetary field inside the one2many
+        await addRow(target.querySelector(".o_field_widget[name=p]"));
+        await editInput(target, ".o_field_widget[name=float_field] input", "22");
 
-            // test the monetary field inside the one2many
-            var $o2m = form.$(".o_field_widget[name=p]");
-            await testUtils.dom.click($o2m.find(".o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput($o2m.find(".o_field_widget input"), "22");
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_field_widget[name=float_field] input"),
+            "the focus should still be on the input"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=float_field] input").value,
+            "22.00",
+            "the value should have been formatted on field change"
+        );
 
-            assert.strictEqual(
-                $o2m.find(".o_field_widget input").get(0),
-                document.activeElement,
-                "the focus should still be on the input"
-            );
-            assert.strictEqual(
-                $o2m.find(".o_field_widget input").val(),
-                "22",
-                "the value should not have been formatted yet"
-            );
+        await click(target);
 
-            await testUtils.dom.click(form.$el);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=p] .o_field_widget[name=float_field] span")
+                .innerHTML,
+            "$&nbsp;22.00"
+        );
 
-            assert.strictEqual(
-                $o2m.find(".o_field_widget[name=float_field]").html(),
-                "$&nbsp;22.00",
-                "the value should have been formatted after losing the focus"
-            );
+        // test the monetary field inside the many2many
+        await click(target.querySelector(".o_field_widget[name=m2m] .o_data_cell"));
+        await editInput(target, ".o_field_widget[name=float_field] input", "22");
 
-            // test the monetary field inside the many2many
-            var $m2m = form.$(".o_field_widget[name=m2m]");
-            await testUtils.dom.click($m2m.find(".o_data_row td:first"));
-            await testUtils.fields.editInput($m2m.find(".o_field_widget input"), "22");
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_field_widget[name=float_field] input"),
+            "the focus should still be on the input"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=float_field] input").value,
+            "22.00",
+            "the value should have been formatted on field change"
+        );
 
-            assert.strictEqual(
-                $m2m.find(".o_field_widget input").get(0),
-                document.activeElement,
-                "the focus should still be on the input"
-            );
-            assert.strictEqual(
-                $m2m.find(".o_field_widget input").val(),
-                "22",
-                "the value should not have been formatted yet"
-            );
+        await click(target);
 
-            await testUtils.dom.click(form.$el);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=m2m] .o_field_widget[name=float_field] span")
+                .innerHTML,
+            "22.00&nbsp;€"
+        );
+    });
 
-            assert.strictEqual(
-                $m2m.find(".o_field_widget[name=float_field]").html(),
-                "22.00&nbsp;€",
-                "the value should have been formatted after losing the focus"
-            );
-
-            form.destroy();
-        }
-    );
-
-    QUnit.skipWOWL("MonetaryField with currency set by an onchange", async function (assert) {
+    QUnit.test("MonetaryField with currency set by an onchange", async function (assert) {
         // this test ensures that the monetary field can be re-rendered with and
         // without currency (which can happen as the currency can be set by an
         // onchange)
-        assert.expect(8);
-
         serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 obj.currency_id = obj.int_field ? 2 : null;
             },
         };
 
-        var list = await makeView({
+        await makeView({
             type: "list",
             resModel: "partner",
             serverData,
-            arch:
-                '<tree editable="top">' +
-                '<field name="int_field"/>' +
-                '<field name="float_field" widget="monetary"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</tree>",
-            session: {
-                currencies: _.indexBy(serverData.models.currency.records, "id"),
-            },
+            arch: `
+                <tree editable="top">
+                    <field name="int_field"/>
+                    <field name="float_field" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>`,
         });
 
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_add"));
+        await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(
-            list,
-            "div.o_field_widget[name=float_field] input",
+            target,
+            ".o_selected_row .o_field_widget[name=float_field] input",
             "monetary field should have been rendered correctly (without currency)"
         );
         assert.containsNone(
-            list,
-            ".o_field_widget[name=float_field] span",
+            target,
+            ".o_selected_row .o_field_widget[name=float_field] span",
             "monetary field should have been rendered correctly (without currency)"
         );
 
         // set a value for int_field -> should set the currency and re-render float_field
-        await testUtils.fields.editInput(list.$(".o_field_widget[name=int_field]"), "7");
+        await editInput(target, ".o_field_widget[name=int_field] input", "7");
         assert.containsOnce(
-            list,
-            "div.o_field_widget[name=float_field] input",
+            target,
+            ".o_selected_row .o_field_widget[name=float_field] input",
             "monetary field should have been re-rendered correctly (with currency)"
         );
         assert.strictEqual(
-            list.$(".o_field_widget[name=float_field] span:contains(€)").length,
-            1,
+            target.querySelector(".o_selected_row .o_field_widget[name=float_field] span")
+                .innerText,
+            "€",
             "monetary field should have been re-rendered correctly (with currency)"
         );
-        var $float_fieldInput = list.$(".o_field_widget[name=float_field] input");
-        await testUtils.dom.click($float_fieldInput);
+        await click(target.querySelector(".o_field_widget[name=float_field] input"));
         assert.strictEqual(
             document.activeElement,
-            $float_fieldInput[0],
+            target.querySelector(".o_field_widget[name=float_field] input"),
             "focus should be on the float_field field's input"
         );
 
         // unset the value of int_field -> should unset the currency and re-render float_field
-        await testUtils.dom.click(list.$(".o_field_widget[name=int_field]"));
-        await testUtils.fields.editInput(list.$(".o_field_widget[name=int_field]"), "0");
-        $float_fieldInput = list.$("div.o_field_widget[name=float_field] input");
-        assert.strictEqual(
-            $float_fieldInput.length,
-            1,
+        await click(target.querySelector(".o_field_widget[name=int_field]"));
+        await editInput(target, ".o_field_widget[name=int_field] input", "0");
+        assert.containsOnce(
+            target,
+            ".o_selected_row .o_field_widget[name=float_field] input",
             "monetary field should have been re-rendered correctly (without currency)"
         );
         assert.containsNone(
-            list,
-            ".o_field_widget[name=float_field] span",
+            target,
+            ".o_selected_row .o_field_widget[name=float_field] span",
             "monetary field should have been re-rendered correctly (without currency)"
         );
-        await testUtils.dom.click($float_fieldInput);
+        await click(target.querySelector(".o_field_widget[name=float_field] input"));
         assert.strictEqual(
             document.activeElement,
-            $float_fieldInput[0],
+            target.querySelector(".o_field_widget[name=float_field] input"),
             "focus should be on the float_field field's input"
         );
-
-        list.destroy();
     });
 
     QUnit.test("float field with monetary widget and decimal precision", async function (assert) {
@@ -753,9 +732,9 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
-                        <field name="float_field" widget="monetary" options="{\'field_digits\': True}"/>
+                        <field name="float_field" widget="monetary" options="{'field_digits': True}"/>
                         <field name="currency_id" invisible="1"/>
                     </sheet>
                 </form>`,
