@@ -6233,7 +6233,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.owlCompatibilityExtraNextTick();
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet)");
-            assert.verifySteps(['load_views', 'read', 'onchange']);
+            assert.verifySteps(['get_views', 'read', 'onchange']);
 
             // fill turtle_foo field
             await testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
@@ -7964,7 +7964,7 @@ QUnit.module('fields', {}, function () {
             // swap 2 lines in the one2many
             await testUtils.dom.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
                 { position: 'top' });
-            assert.verifySteps(['load_views', 'read', 'read', 'onchange', 'onchange']);
+            assert.verifySteps(['get_views', 'read', 'read', 'onchange', 'onchange']);
             form.destroy();
         });
 
@@ -8004,7 +8004,7 @@ QUnit.module('fields', {}, function () {
                 "should have triggered the onchange");
 
             assert.verifySteps([
-                'load_views', // load sub list
+                'get_views', // load sub list
                 'onchange', // main record
                 'onchange', // sub record
                 'onchange', // edition of display_name of sub record

@@ -23,17 +23,20 @@ odoo.define('web.data_manager_tests', function (require) {
         const server = new MockServer(data, { archs });
 
         const serverMethods = {
-            async load_views({ kwargs, model }) {
-                const { options, views } = kwargs;
-                const fields = server.fieldsGet(model);
-                const fields_views = {};
-                for (const [viewId, viewType] of views) {
+            async get_views({ kwargs, model }) {
+                const models = {};
+                models[model] = server.fieldsGet(model);
+                const views = {};
+                for (const [viewId, viewType] of kwargs.views) {
                     const arch = archs[[model, viewId || false, viewType].join()];
-                    fields_views[viewType] = server.fieldsViewGet({ arch, model, viewId });
+                    views[viewType] = server.getView({ arch, model, viewId });
+                    for (const modelName of views[viewType].models) {
+                        models[modelName] = server.fieldsGet(modelName);
+                    }
                 }
-                const result = { fields, fields_views };
-                if (options.load_filters) {
-                    result.filters = data['ir.filters'].records.filter(r => r.model_id === model);
+                const result = { models, views };
+                if (kwargs.options.load_filters && views.search) {
+                    views.search.filters = data['ir.filters'].records.filter(r => r.model_id === model);
                 }
                 return result;
             },
@@ -133,7 +136,7 @@ odoo.define('web.data_manager_tests', function (require) {
                 "query with same params and options should yield the same results");
             assert.deepEqual(firstLoad.search.favoriteFilters, filters,
                 "load filters should yield the same result as the first load_views' filters");
-            assert.verifySteps(['oui.load_views'],
+            assert.verifySteps(['oui.get_views'],
                 "only load once when not in assets debugging");
         });
 
@@ -165,8 +168,8 @@ odoo.define('web.data_manager_tests', function (require) {
             assert.deepEqual(firstLoad.search.favoriteFilters, filters,
                 "load filters should yield the same result as the first load_views' filters");
             assert.verifySteps([
-                'oui.load_views',
-                'oui.load_views',
+                'oui.get_views',
+                'oui.get_views',
                 'ir.filters.get_filters',
             ], "reload each time when in assets debugging");
         });
@@ -228,7 +231,7 @@ odoo.define('web.data_manager_tests', function (require) {
                 "Filters loaded by the load_views should be equal to the result of a load_filters");
 
             assert.verifySteps([
-                'oui.load_views',
+                'oui.get_views',
                 'ir.filters.create_or_replace',
                 'ir.filters.get_filters',
                 'ir.filters.unlink',

@@ -424,9 +424,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         # mimic UI behaviour, so we get subfields
         # (we need at least subfield: 'important_emails.important')
-        view_info = self.Discussion.fields_view_get(
-            view_id=self.env.ref('test_new_api.discussion_form').id,
-            view_type='form')
+        view_info = self.Discussion.get_view(self.env.ref('test_new_api.discussion_form').id, 'form')
         field_onchange = self.Discussion._onchange_spec(view_info=view_info)
         self.assertEqual(field_onchange.get('messages'), '1')
 

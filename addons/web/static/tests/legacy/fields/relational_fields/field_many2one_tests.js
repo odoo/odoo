@@ -629,7 +629,7 @@ QUnit.module('fields', {}, function () {
 
             // save the modal and make sure an onchange is triggered
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
-            assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'read', 'onchange']);
+            assert.verifySteps(['read', 'get_formview_id', 'get_views', 'read', 'write', 'read', 'onchange']);
 
             // save the main record, and check that no extra rpcs are done (record
             // is not dirty, only a related record was modified)
@@ -3117,7 +3117,7 @@ QUnit.module('fields', {}, function () {
             assert.verifySteps([
                 'onchange',
                 'name_search', // to display results in the dropdown
-                'load_views', // list view in dialog
+                'get_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog
             ]);
 
@@ -3173,7 +3173,7 @@ QUnit.module('fields', {}, function () {
                 'name_search', // empty search, triggered when the user clicks in the input
                 'name_search', // to display results in the dropdown
                 'name_search', // to get preselected ids matching the search
-                'load_views', // list view in dialog
+                'get_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog
                 '/web/dataset/search_read', // after removal of dynamic filter
             ]);
@@ -3339,7 +3339,7 @@ QUnit.module('fields', {}, function () {
             assert.verifySteps([
                 'onchange',
                 'name_search', // to display results in the dropdown
-                'load_views', // list view in dialog
+                'get_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog
                 '/web/dataset/resequence', // resequencing lines
                 'read',

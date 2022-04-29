@@ -145,6 +145,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_service_provider.js',
             'web/static/src/legacy/legacy_client_actions.js',
             'web/static/src/legacy/legacy_dialog.js',
+            'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_views.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',

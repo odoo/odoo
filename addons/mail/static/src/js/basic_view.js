@@ -4,6 +4,8 @@ import BasicView from 'web.BasicView';
 
 const mailWidgets = ['kanban_activity'];
 
+const chatterFields = ["message_ids", "message_follower_ids", "activity_ids"];
+
 BasicView.include({
     init: function () {
         this._super.apply(this, arguments);
@@ -61,5 +63,30 @@ BasicView.include({
      */
     _hasField(fieldName) {
         return !!this.fieldsInfo[this.viewType][fieldName];
+    },
+    /**
+     * Override to mark chatter fields inside the "oe_chatter" div such that we
+     * don't fetch their sub views, as we don't need them. Without this, those
+     * subviews would be loaded as there is no "widget" set on those fields.
+     *
+     * @override
+     */
+    _processNode(node, fv) {
+        if (node.tag === "div" && node.attrs.class && node.attrs.class.includes("oe_chatter")) {
+            const viewType = fv.type;
+            const fieldsInfo = fv.fieldsInfo[viewType];
+            const fields = fv.viewFields;
+            for (const child of node.children) {
+                if (child.tag === 'field' && chatterFields.includes(child.attrs.name)) {
+                    const attrs = { ...child.attrs, modifiers: {}, __no_fetch: true };
+                    const fieldName = attrs.name;
+                    fieldsInfo[fieldName] = this._processField(viewType, fields[fieldName], attrs);
+                } else {
+                    this._processNode(child, fv);
+                }
+            }
+            return false;
+        }
+        return this._super(...arguments);
     },
 });

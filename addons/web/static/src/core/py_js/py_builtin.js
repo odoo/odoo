@@ -58,4 +58,7 @@ export const BUILTINS = {
     },
 
     relativedelta: PyRelativeDelta,
+
+    true: true,
+    false: false,
 };

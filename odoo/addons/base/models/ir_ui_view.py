@@ -34,6 +34,23 @@ _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 
+ref_re = re.compile(r"""
+# first match 'form_view_ref' key, backrefs are used to handle single or
+# double quoting of the value
+(['"])(?P<view_type>\w+_view_ref)\1
+# colon separator (with optional spaces around)
+\s*:\s*
+# open quote for value
+(['"])
+(?P<view_id>
+    # we'll just match stuff which is normally part of an xid:
+    # word and "." characters
+    [.\w]+
+)
+# close with same quote as opening
+\3
+""", re.VERBOSE)
+
 
 def quick_eval(expr, globals_dict):
     """ Functionally identical to safe_eval(), but optimized with special-casing. """
@@ -967,12 +984,26 @@ actual arch.
                     del node.attrib['attrs']    # avoid making field visible later
             del node.attrib['groups']
 
+    def _get_view_refs(self, node):
+        """ Extract the `[view_type]_view_ref` keys and values from the node context attribute,
+        giving the views to use for a field node.
+
+        :param node: the field node as an etree
+        :return: a dictonary mapping the `[view_type]_view_ref` key to the xmlid of the view to use for that view type.
+        """
+        if not node.get('context'):
+            return {}
+        return {
+            m.group('view_type'): m.group('view_id')
+            for m in ref_re.finditer(node.get('context'))
+        }
+
     #------------------------------------------------------
     # Postprocessing: translation, groups and modifiers
     #------------------------------------------------------
     # TODO: remove group processing from ir_qweb
     #------------------------------------------------------
-    def postprocess_and_fields(self, node, model=None):
+    def postprocess_and_fields(self, node, model=None, **options):
         """ Return an architecture and a description of all the fields.
 
         The field description combines the result of fields_get() and
@@ -987,12 +1018,18 @@ actual arch.
         """
         self and self.ensure_one()      # self is at most one view
 
-        name_manager = self._postprocess_view(node, model or self.model)
+        name_manager = self._postprocess_view(node, model or self.model, **options)
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
-        return arch, dict(name_manager.available_fields)
 
-    def _postprocess_view(self, node, model_name, editable=True):
+        models = set()
+        name_managers = [name_manager]
+        for name_manager in name_managers:
+            models.add(name_manager.model._name)
+            name_managers.extend(name_manager.children)
+        return arch, models
+
+    def _postprocess_view(self, node, model_name, editable=True, parent_name_manager=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
 
@@ -1010,7 +1047,12 @@ actual arch.
 
         self._postprocess_on_change(root, model)
 
-        name_manager = NameManager(model)
+        name_manager = NameManager(model, parent=parent_name_manager)
+
+        root_info = {
+            'view_type': root.tag,
+            'mobile': options.get('mobile'),
+        }
 
         # use a stack to recursively traverse the tree
         stack = [(root, editable)]
@@ -1020,10 +1062,7 @@ actual arch.
             # compute default
             tag = node.tag
             parent = node.getparent()
-            node_info = {
-                'modifiers': {},
-                'editable': editable and self._editable_node(node, name_manager),
-            }
+            node_info = dict(root_info, modifiers={}, editable=editable and self._editable_node(node, name_manager))
 
             # tag-specific postprocessing
             postprocessor = getattr(self, f"_postprocess_tag_{tag}", None)
@@ -1120,21 +1159,41 @@ actual arch.
                     node.getparent().remove(node)
                     # no point processing view-level ``groups`` anymore, return
                     return
-                views = {}
+                if (
+                    node_info.get('view_type') == 'form'
+                    and field.type in ('one2many', 'many2many')
+                    and not node.get('widget')
+                    and not node.get('invisible')
+                    and not name_manager.parent
+                ):
+                    # Embed kanban/tree/form views for visible x2many fields in form views
+                    # if no widget or the widget requires it.
+                    # So the web client doesn't have to call `get_views` for x2many fields not embedding their view
+                    # in the main form view.
+                    current_view_types = [el.tag for el in node.xpath("./*[descendant::field]")]
+                    missing_view_types = []
+                    if 'form' not in current_view_types:
+                        missing_view_types.append('form')
+                    if not any(view_type in current_view_types for view_type in node.get('mode', 'kanban,tree').split(',')):
+                        missing_view_types.append(
+                            node.get('mode', 'kanban' if node_info.get('mobile') else 'tree').split(',')[0]
+                        )
+                    if missing_view_types:
+                        comodel = self.env[field.comodel_name].sudo(False)
+                        refs = self._get_view_refs(node)
+                        if refs:
+                            comodel = comodel.with_context(**refs)
+                        for view_type in missing_view_types:
+                            subarch, _subview = comodel._get_view(view_type=view_type)
+                            node.append(subarch)
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
-                        node.remove(child)
-                        sub_name_manager = self.with_context(
+                        node_info['children'] = []
+                        self.with_context(
                             base_model_name=name_manager.model._name,
                         )._postprocess_view(
-                            child, field.comodel_name, editable=node_info['editable'],
+                            child, field.comodel_name, editable=node_info['editable'], parent_name_manager=name_manager,
                         )
-                        xarch = etree.tostring(child, encoding="unicode").replace('\t', '')
-                        views[child.tag] = {
-                            'arch': xarch,
-                            'fields': dict(sub_name_manager.available_fields),
-                        }
-                attrs['views'] = views
                 if field.type in ('many2one', 'many2many'):
                     comodel = self.env[field.comodel_name].sudo(False)
                     can_create = comodel.check_access_rights('create', raise_exception=False)
@@ -1160,19 +1219,11 @@ actual arch.
         field = name_manager.model._fields.get(name)
         if not field or not field.comodel_name:
             return
-        # move all children nodes into a new node <groupby>
-        groupby_node = E.groupby(*node)
         # post-process the node as a nested view, and associate it to the field
-        sub_name_manager = self.with_context(
+        self.with_context(
             base_model_name=name_manager.model._name,
-        )._postprocess_view(groupby_node, field.comodel_name, editable=False)
-        xarch = etree.tostring(groupby_node, encoding="unicode").replace('\t', '')
-        name_manager.has_field(name, {'views': {
-            'groupby': {
-                'arch': xarch,
-                'fields': dict(sub_name_manager.available_fields),
-            }
-        }})
+        )._postprocess_view(node, field.comodel_name, editable=False, parent_name_manager=name_manager)
+        name_manager.has_field(name)
 
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if node.get('for'):
@@ -1186,7 +1237,7 @@ actual arch.
             self.with_context(
                 base_model_name=name_manager.model._name,
             )._postprocess_view(
-                searchpanel[0], name_manager.model._name, editable=False,
+                searchpanel[0], name_manager.model._name, editable=False, parent_name_manager=name_manager
             )
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']
 
@@ -1839,7 +1890,7 @@ actual arch.
         return res_id
 
     @api.model
-    def _get_view(self, view_ref):
+    def _get(self, view_ref):
         """ Return the view corresponding to ``view_ref``, which may be a
         view ID or an XML ID.
         """
@@ -1933,7 +1984,7 @@ actual arch.
 
     @api.model
     def render_public_asset(self, template, values=None):
-        template_sudo = self._get_view(template).sudo()
+        template_sudo = self._get(template).sudo()
         template_sudo._check_view_access()
         return self.env['ir.qweb'].sudo()._render(template, values)
 
@@ -2129,7 +2180,7 @@ class ResetViewArchWizard(models.TransientModel):
 class NameManager:
     """ An object that manages all the named elements in a view. """
 
-    def __init__(self, model):
+    def __init__(self, model, parent=None):
         self.model = model
         self.available_fields = collections.defaultdict(dict)   # {field_name: field_info}
         self.available_actions = set()
@@ -2137,6 +2188,10 @@ class NameManager:
         self.mandatory_fields = dict()          # {field_name: use}
         self.mandatory_parent_fields = dict()   # {field_name: use}
         self.mandatory_names = dict()           # {name: use}
+        self.parent = parent
+        self.children = []
+        if self.parent:
+            self.parent.children.append(self)
 
     @lazy_property
     def field_info(self):

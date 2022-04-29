@@ -154,7 +154,7 @@ odoo.define('web.basic_model_tests', function (require) {
             });
 
             assert.verifySteps([
-                'load_views',
+                'get_views',
                 'onchange',
             ]);
             assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');

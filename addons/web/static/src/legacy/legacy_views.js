@@ -116,6 +116,7 @@ function registerView(name, LegacyView) {
             this.viewInfo = Object.assign({}, fieldsInfo, {
                 fields: result.fields,
                 viewFields: fieldsInfo.fields,
+                type: this.props.type,
             });
             let controlPanelFieldsView;
             if (result.fields_views.search) {

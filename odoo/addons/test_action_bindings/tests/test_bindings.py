@@ -53,19 +53,19 @@ class TestBindingViewFilters(common.TransactionCase):
     def test_act_window(self):
         A = self.env['tab.a']
 
-        form_act = A.fields_view_get(toolbar=True)['toolbar']['action']
+        form_act = A.get_view(toolbar=True)['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in form_act],
             ['Action 1', 'Action 2', 'Action 3'],
             "forms should have all actions")
 
-        list_act = A.fields_view_get(view_type='tree', toolbar=True)['toolbar']['action']
+        list_act = A.get_view(view_type='tree', toolbar=True)['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in list_act],
             ['Action 1', 'Action 3'],
             "lists should not have the form-only action")
 
-        kanban_act = A.fields_view_get(view_type='kanban', toolbar=True)['toolbar']['action']
+        kanban_act = A.get_view(view_type='kanban', toolbar=True)['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in kanban_act],
             ['Action 1'],
@@ -74,19 +74,19 @@ class TestBindingViewFilters(common.TransactionCase):
     def test_act_record(self):
         B = self.env['tab.b']
 
-        form_act = B.fields_view_get(toolbar=True)['toolbar']['action']
+        form_act = B.get_view(toolbar=True)['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in form_act],
             ['Record 1', 'Record 2', 'Record 3'],
             "forms should have all actions")
 
-        list_act = B.fields_view_get(view_type='tree', toolbar=True)['toolbar']['action']
+        list_act = B.get_view(view_type='tree', toolbar=True)['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in list_act],
             ['Record 1', 'Record 3'],
             "lists should not have the form-only action")
 
-        kanban_act = B.fields_view_get(view_type='kanban', toolbar=True)['toolbar']['action']
+        kanban_act = B.get_view(view_type='kanban', toolbar=True)['toolbar']['action']
         self.assertEqual(
             [a['name'] for a in kanban_act],
             ['Record 1'],

@@ -6,6 +6,7 @@ complete) intended for properly validating business "view" flows (onchanges,
 readonly, required, ...) and make it easier to generate sensible & coherent
 business objects.
 """
+from lxml import etree
 from operator import itemgetter
 
 from odoo.tests.common import TransactionCase, Form
@@ -324,19 +325,18 @@ class TestO2M(TransactionCase):
         delegating to a separate form view
         """
         f = Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_parent_ed')
-        custom_tree = self.env.ref('test_testing_utilities.editable_external').id
+        custom_tree = self.env.ref('test_testing_utilities.editable_external')
 
-        subs_field = f._view['fields']['subs']
-        tree_view = subs_field['views']['tree']
-        self.assertEqual(tree_view['type'], 'tree')
         self.assertEqual(
-            tree_view['view_id'], custom_tree,
+            [el.get('name') for el in f._view['tree'].xpath('//field[@name="subs"]/tree//field')],
+            [el.get('name') for el in etree.fromstring(custom_tree['arch']).xpath('//field')],
             'check that the tree view is the one referenced by tree_view_ref'
         )
-        self.assertIs(subs_field['views']['edition'], tree_view, "check that the edition view is the tree view")
+        subs_field = f._view['fields']['subs']
+        self.assertIs(subs_field['edition_view']['tree'], f._view['tree'].xpath('//field[@name="subs"]/tree')[0], "check that the edition view is the tree view")
         self.assertEqual(
-            subs_field['views']['edition']['view_id'],
-            custom_tree
+            [el.get('name') for el in subs_field['edition_view']['tree'].xpath('.//field')],
+            [el.get('name') for el in etree.fromstring(custom_tree['arch']).xpath('//field')],
         )
 
         with f.subs.new() as s:

@@ -5,7 +5,7 @@ var config = require('web.config');
 var core = require('web.core');
 var rpc = require('web.rpc');
 var session = require('web.session');
-var utils = require('web.utils');
+const { generateLegacyLoadViewsResult } = require("@web/legacy/legacy_load_views");
 
 return core.Class.extend({
     init: function () {
@@ -89,15 +89,20 @@ return core.Class.extend({
         if (shouldLoadViews) {
             // Views info should be loaded
             options.load_filters = shouldLoadFilters;
+            if (config.device.isMobile) {
+                options.mobile = config.device.isMobile;
+            }
             this._cache.views[viewsKey] = rpc.query({
                 args: [],
                 kwargs: { context, options, views: views_descr },
                 model,
-                method: 'load_views',
+                method: 'get_views',
             }).then(result => {
+                const { models, views } = result;
+                result = generateLegacyLoadViewsResult(model, views, models);
                 // Freeze the fields dict as it will be shared between views and
                 // no one should edit it
-                utils.deepFreeze(result.fields);
+                // utils.deepFreeze(result.fields); // OWL issue regarding proxies and frozen objects https://github.com/odoo/owl/issues/1158
                 for (const [ /* viewId */ , viewType] of views_descr) {
                     const fvg = result.fields_views[viewType];
                     fvg.viewFields = fvg.fields;

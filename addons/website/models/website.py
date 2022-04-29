@@ -1090,7 +1090,7 @@ class Website(models.Model):
     def get_template(self, template):
         if isinstance(template, str) and '.' not in template:
             template = 'website.%s' % template
-        view = self.env['ir.ui.view']._get_view(template).sudo()
+        view = self.env['ir.ui.view']._get(template).sudo()
         if not view:
             raise NotFound
         return view

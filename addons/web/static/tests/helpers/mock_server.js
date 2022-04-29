@@ -3,6 +3,8 @@
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { deepCopy } from "@web/core/utils/objects";
+import { intersection } from "@web/core/utils/arrays";
 import { registry } from "@web/core/registry";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
@@ -10,6 +12,9 @@ import { parseDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 const serviceRegistry = registry.category("services");
+
+const domParser = new DOMParser();
+const xmlSerializer = new XMLSerializer();
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -19,197 +24,6 @@ function traverseElementTree(tree, cb) {
     if (cb(tree)) {
         Array.from(tree.children).forEach((c) => traverseElementTree(c, cb));
     }
-}
-
-export function _fieldsViewGet(params) {
-    let processedNodes = params.processedNodes || [];
-    const { arch, context, fields, modelName } = params;
-    function isNodeProcessed(node) {
-        return processedNodes.findIndex((n) => n.isSameNode(node)) > -1;
-    }
-    const modifiersNames = ["invisible", "readonly", "required"];
-    const onchanges = params.models[modelName].onchanges || {};
-    const fieldNodes = {};
-    const groupbyNodes = {};
-    let doc;
-    if (typeof arch === "string") {
-        const domParser = new DOMParser();
-        doc = domParser.parseFromString(arch, "text/xml").documentElement;
-    } else {
-        doc = arch;
-    }
-    const inTreeView = doc.tagName === "tree";
-    // mock _postprocess_access_rights
-    const isBaseModel = !context.base_model_name || modelName === context.base_model_name;
-    const views = ["kanban", "tree", "form", "gantt", "activity"];
-    if (isBaseModel && views.indexOf(doc.tagName) !== -1) {
-        for (const action of ["create", "delete", "edit", "write"]) {
-            if (!doc.getAttribute(action) && action in context && !context[action]) {
-                doc.setAttribute(action, "false");
-            }
-        }
-    }
-
-    traverseElementTree(doc, (node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-            return false;
-        }
-        const modifiers = {};
-        const isField = node.tagName === "field";
-        const isGroupby = node.tagName === "groupby";
-        if (isField) {
-            const fieldName = node.getAttribute("name");
-            fieldNodes[fieldName] = node;
-            // 'transfer_field_to_modifiers' simulation
-            const field = fields[fieldName];
-            if (!field) {
-                throw new Error("Field " + fieldName + " does not exist");
-            }
-            const defaultValues = {};
-            const stateExceptions = {}; // what is this ?
-            modifiersNames.forEach((attr) => {
-                stateExceptions[attr] = [];
-                defaultValues[attr] = !!field[attr];
-            });
-            // LPE: what is this ?
-            /*                _.each(field.states || {}, function (modifs, state) {
-                        _.each(modifs, function (modif) {
-                            if (defaultValues[modif[0]] !== modif[1]) {
-                                stateExceptions[modif[0]].append(state);
-                            }
-                        });
-                    });*/
-            Object.entries(defaultValues).forEach(([attr, defaultValue]) => {
-                if (stateExceptions[attr].length) {
-                    modifiers[attr] = [
-                        ["state", defaultValue ? "not in" : "in", stateExceptions[attr]],
-                    ];
-                } else {
-                    modifiers[attr] = defaultValue;
-                }
-            });
-        } else if (isGroupby && !isNodeProcessed(node)) {
-            const groupbyName = node.getAttribute("name");
-            fieldNodes[groupbyName] = node;
-            groupbyNodes[groupbyName] = node;
-        }
-        // 'transfer_node_to_modifiers' simulation
-        let attrs = node.getAttribute("attrs");
-        if (attrs) {
-            attrs = evaluateExpr(attrs);
-            Object.assign(modifiers, attrs);
-        }
-        const states = node.getAttribute("states");
-        if (states) {
-            if (!modifiers.invisible) {
-                modifiers.invisible = [];
-            }
-            modifiers.invisible.push(["state", "not in", states.split(",")]);
-        }
-        const inListHeader = inTreeView && node.closest("header");
-        modifiersNames.forEach((attr) => {
-            const mod = node.getAttribute(attr);
-            if (mod) {
-                // TODO
-                // const pyevalContext = window.py.dict.fromJSON(context || {});
-                // var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true : false;
-                console.info(
-                    "MockServer: naive parse of modifier value in",
-                    QUnit.config.current.testName
-                );
-                const v = JSON.parse(mod);
-                if (inTreeView && !inListHeader && attr === "invisible") {
-                    modifiers.column_invisible = v;
-                } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
-                    modifiers[attr] = v;
-                }
-            }
-        });
-        modifiersNames.forEach((attr) => {
-            if (
-                attr in modifiers &&
-                (!!modifiers[attr] === false ||
-                    (Array.isArray(modifiers[attr]) && !modifiers[attr].length))
-            ) {
-                delete modifiers[attr];
-            }
-        });
-        if (Object.keys(modifiers).length) {
-            node.setAttribute("modifiers", JSON.stringify(modifiers));
-        }
-        if (isGroupby && !isNodeProcessed(node)) {
-            return false;
-        }
-        return !isField;
-    });
-    let relModel, relFields;
-    Object.entries(fieldNodes).forEach(([name, node]) => {
-        const field = fields[name];
-        if (field.type === "many2one" || field.type === "many2many") {
-            const canCreate = node.getAttribute("can_create");
-            node.setAttribute("can_create", canCreate || "true");
-            const canWrite = node.getAttribute("can_write");
-            node.setAttribute("can_write", canWrite || "true");
-        }
-        if (field.type === "one2many" || field.type === "many2many") {
-            field.views = {};
-            Array.from(node.children).forEach((children) => {
-                if (children.tagName) {
-                    // skip text nodes
-                    relModel = field.relation;
-                    relFields = Object.assign({}, params.models[relModel].fields);
-                    field.views[children.tagName] = _fieldsViewGet({
-                        models: params.models,
-                        arch: children,
-                        modelName: relModel,
-                        fields: relFields,
-                        context: Object.assign({}, context, { base_model_name: modelName }),
-                        processedNodes,
-                    });
-                }
-            });
-        }
-        // add onchanges
-        if (name in onchanges) {
-            node.setAttribute("on_change", "1");
-        }
-    });
-    Object.entries(groupbyNodes).forEach(([name, node]) => {
-        const field = fields[name];
-        if (field.type !== "many2one") {
-            throw new Error("groupby can only target many2one");
-        }
-        field.views = {};
-        relModel = field.relation;
-        relFields = Object.assign({}, params.models[relModel].fields);
-        processedNodes.push(node);
-        // postprocess simulation
-        field.views.groupby = _fieldsViewGet({
-            models: params.models,
-            arch: node,
-            modelName: relModel,
-            fields: relFields,
-            context,
-            processedNodes,
-        });
-        while (node.firstChild) {
-            node.removeChild(node.firstChild);
-        }
-    });
-    const xmlSerializer = new XMLSerializer();
-    const processedArch = xmlSerializer.serializeToString(doc);
-    const fieldsInView = {};
-    Object.entries(fields).forEach(([fname, field]) => {
-        if (fname in fieldNodes) {
-            fieldsInView[fname] = field;
-        }
-    });
-    return {
-        arch: processedArch,
-        fields: fieldsInView,
-        model: modelName,
-        type: doc.tagName === "tree" ? "list" : doc.tagName,
-    };
 }
 
 // -----------------------------------------------------------------------------
@@ -298,7 +112,7 @@ export class MockServer {
         // def.abort = abort;
     }
 
-    fieldsViewGet(modelName, args, kwargs) {
+    getView(modelName, args, kwargs) {
         if (!(modelName in this.models)) {
             throw new Error(`Model ${modelName} was not defined in mock server data`);
         }
@@ -331,7 +145,7 @@ export class MockServer {
             fields[fieldName].name = fieldName;
         }
         // var viewOptions = params.viewOptions || {};
-        const fvg = _fieldsViewGet({
+        const view = this._getView({
             arch,
             modelName,
             fields,
@@ -339,13 +153,231 @@ export class MockServer {
             models: this.models,
         });
         if (kwargs.options.toolbar) {
-            fvg.toolbar = this.models[modelName].toolbar || {};
+            view.toolbar = this.models[modelName].toolbar || {};
         }
         if (viewId !== undefined) {
-            fvg.view_id = viewId;
-            fvg.name = key;
+            view.id = viewId;
         }
-        return fvg;
+        return view;
+    }
+
+    _getView(params) {
+        let processedNodes = params.processedNodes || [];
+        const { arch, context, modelName } = params;
+        const level = params.level || 0;
+        const fields = deepCopy(params.fields);
+        function isNodeProcessed(node) {
+            return processedNodes.findIndex((n) => n.isSameNode(node)) > -1;
+        }
+        const modifiersNames = ["invisible", "readonly", "required"];
+        const onchanges = params.models[modelName].onchanges || {};
+        const fieldNodes = {};
+        const groupbyNodes = {};
+        const relatedModels = new Set([modelName]);
+        let doc;
+        if (typeof arch === "string") {
+            doc = domParser.parseFromString(arch, "text/xml").documentElement;
+        } else {
+            doc = arch;
+        }
+        const inTreeView = doc.tagName === "tree";
+        const inFormView = doc.tagName === "form";
+        // mock _postprocess_access_rights
+        const isBaseModel = !context.base_model_name || modelName === context.base_model_name;
+        const views = ["kanban", "tree", "form", "gantt", "activity"];
+        if (isBaseModel && views.indexOf(doc.tagName) !== -1) {
+            for (const action of ["create", "delete", "edit", "write"]) {
+                if (!doc.getAttribute(action) && action in context && !context[action]) {
+                    doc.setAttribute(action, "false");
+                }
+            }
+        }
+
+        traverseElementTree(doc, (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return false;
+            }
+            const modifiers = {};
+            const isField = node.tagName === "field";
+            const isGroupby = node.tagName === "groupby";
+            if (isField) {
+                const fieldName = node.getAttribute("name");
+                fieldNodes[fieldName] = node;
+                // 'transfer_field_to_modifiers' simulation
+                const field = fields[fieldName];
+                if (!field) {
+                    throw new Error("Field " + fieldName + " does not exist");
+                }
+                const defaultValues = {};
+                const stateExceptions = {}; // what is this ?
+                modifiersNames.forEach((attr) => {
+                    stateExceptions[attr] = [];
+                    defaultValues[attr] = !!field[attr];
+                });
+                // LPE: what is this ?
+                /*                _.each(field.states || {}, function (modifs, state) {
+                            _.each(modifs, function (modif) {
+                                if (defaultValues[modif[0]] !== modif[1]) {
+                                    stateExceptions[modif[0]].append(state);
+                                }
+                            });
+                        });*/
+                Object.entries(defaultValues).forEach(([attr, defaultValue]) => {
+                    if (stateExceptions[attr].length) {
+                        modifiers[attr] = [
+                            ["state", defaultValue ? "not in" : "in", stateExceptions[attr]],
+                        ];
+                    } else {
+                        modifiers[attr] = defaultValue;
+                    }
+                });
+            } else if (isGroupby && !isNodeProcessed(node)) {
+                const groupbyName = node.getAttribute("name");
+                fieldNodes[groupbyName] = node;
+                groupbyNodes[groupbyName] = node;
+            }
+            // 'transfer_node_to_modifiers' simulation
+            let attrs = node.getAttribute("attrs");
+            if (attrs) {
+                attrs = evaluateExpr(attrs);
+                Object.assign(modifiers, attrs);
+            }
+            const states = node.getAttribute("states");
+            if (states) {
+                if (!modifiers.invisible) {
+                    modifiers.invisible = [];
+                }
+                modifiers.invisible.push(["state", "not in", states.split(",")]);
+            }
+            const inListHeader = inTreeView && node.closest("header");
+            modifiersNames.forEach((attr) => {
+                const mod = node.getAttribute(attr);
+                if (mod) {
+                    const v = evaluateExpr(mod, { context }) ? true : false;
+                    if (inTreeView && !inListHeader && attr === "invisible") {
+                        modifiers.column_invisible = v;
+                    } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
+                        modifiers[attr] = v;
+                    }
+                }
+            });
+            modifiersNames.forEach((attr) => {
+                if (
+                    attr in modifiers &&
+                    (!!modifiers[attr] === false ||
+                        (Array.isArray(modifiers[attr]) && !modifiers[attr].length))
+                ) {
+                    delete modifiers[attr];
+                }
+            });
+            if (Object.keys(modifiers).length) {
+                node.setAttribute("modifiers", JSON.stringify(modifiers));
+            }
+            if (isGroupby && !isNodeProcessed(node)) {
+                return false;
+            }
+            return !isField;
+        });
+        let relModel, relFields;
+        Object.entries(fieldNodes).forEach(([name, node]) => {
+            const field = fields[name];
+            if (field.type === "many2one" || field.type === "many2many") {
+                const canCreate = node.getAttribute("can_create");
+                node.setAttribute("can_create", canCreate || "true");
+                const canWrite = node.getAttribute("can_write");
+                node.setAttribute("can_write", canWrite || "true");
+            }
+            if (field.type === "one2many" || field.type === "many2many") {
+                relModel = field.relation;
+                relatedModels.add(relModel);
+                // inline subviews: in forms if field is visible and has no widget (1st level only)
+                if (
+                    inFormView &&
+                    level === 0 &&
+                    !node.getAttribute("widget") &&
+                    !node.getAttribute("invisible")
+                ) {
+                    const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
+                    const missingViewtypes = inlineViewTypes.includes("form") ? [] : ["form"];
+                    const mode = node.getAttribute("mode") || "kanban,tree";
+                    if (!intersection(inlineViewTypes, mode.split(",")).length) {
+                        // TODO: use a kanban view by default in mobile
+                        missingViewtypes.push((node.getAttribute("mode") || "list").split(",")[0]);
+                    }
+                    for (let type of missingViewtypes) {
+                        type = type === "tree" ? "list" : type;
+                        let key = `${field.relation},false,${type}`;
+                        if (!this.archs[key]) {
+                            const regexp = new RegExp(`${field.relation},[a-z._0-9]+,${type}`);
+                            key = Object.keys(this.archs).find((k) => regexp.test(k));
+                        }
+                        // in a lot of tests, we don't need the form view, so it doesn't even exist
+                        const arch = this.archs[key] || (type === "form" ? "<form/>" : null);
+                        if (!arch) {
+                            throw new Error(`Can't find ${type} view to inline`);
+                        }
+                        node.appendChild(
+                            domParser.parseFromString(arch, "text/xml").documentElement
+                        );
+                    }
+                }
+                Array.from(node.children).forEach((childNode) => {
+                    if (childNode.tagName) {
+                        relFields = Object.assign({}, params.models[relModel].fields);
+                        // this is hackhish, but _getView modifies the subview document in place,
+                        // especially to generate the "modifiers" attribute
+                        const { models } = this._getView({
+                            models: params.models,
+                            arch: childNode,
+                            modelName: relModel,
+                            fields: relFields,
+                            context,
+                            processedNodes,
+                            level: level + 1,
+                        });
+                        [...models].forEach((modelName) => relatedModels.add(modelName));
+                    }
+                });
+            }
+            // add onchanges
+            if (name in onchanges) {
+                node.setAttribute("on_change", "1");
+            }
+        });
+        Object.entries(groupbyNodes).forEach(([name, node]) => {
+            const field = fields[name];
+            if (field.type !== "many2one") {
+                throw new Error("groupby can only target many2one");
+            }
+            field.views = {};
+            relModel = field.relation;
+            relatedModels.add(relModel);
+            relFields = Object.assign({}, params.models[relModel].fields);
+            processedNodes.push(node);
+            // postprocess simulation
+            const { models } = this._getView({
+                models: params.models,
+                arch: node,
+                modelName: relModel,
+                fields: relFields,
+                context,
+                processedNodes,
+            });
+            [...models].forEach((modelName) => relatedModels.add(modelName));
+        });
+        const processedArch = xmlSerializer.serializeToString(doc);
+        const fieldsInView = {};
+        Object.entries(fields).forEach(([fname, field]) => {
+            if (fname in fieldNodes) {
+                fieldsInView[fname] = field;
+            }
+        });
+        return {
+            arch: processedArch,
+            model: modelName,
+            type: doc.tagName === "tree" ? "list" : doc.tagName,
+            models: relatedModels,
+        };
     }
 
     /**
@@ -419,8 +451,8 @@ export class MockServer {
                 return this.mockCreate(args.model, args.args[0]);
             case "fields_get":
                 return this.mockFieldsGet(args.model);
-            case "load_views":
-                return this.mockLoadViews(args.model, args.kwargs);
+            case "get_views":
+                return this.mockGetViews(args.model, args.kwargs);
             case "name_create":
                 return this.mockNameCreate(args.model, args.args[0]);
             case "name_get":
@@ -536,19 +568,20 @@ export class MockServer {
         return menus;
     }
 
-    mockLoadViews(modelName, kwargs) {
-        const fieldsViews = {};
+    mockGetViews(modelName, kwargs) {
+        const views = {};
+        const models = {};
+        models[modelName] = this.mockFieldsGet(modelName);
         kwargs.views.forEach(([viewId, viewType]) => {
-            fieldsViews[viewType] = this.fieldsViewGet(modelName, [viewId, viewType], kwargs);
+            views[viewType] = this.getView(modelName, [viewId, viewType], kwargs);
+            if (kwargs.options.load_filters && viewType === "search") {
+                views[viewType].filters = this.models[modelName].filters || [];
+            }
+            for (const modelName of views[viewType].models) {
+                models[modelName] = models[modelName] || this.mockFieldsGet(modelName);
+            }
         });
-        const result = {
-            fields: this.mockFieldsGet(modelName),
-            fields_views: fieldsViews,
-        };
-        if (kwargs.options.load_filters) {
-            result.filters = this.models[modelName].filters || [];
-        }
-        return result;
+        return { models, views };
     }
 
     /**
