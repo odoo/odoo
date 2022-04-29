@@ -395,7 +395,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([]);
     });
 
-    QUnit.test('breadcrumbs of actions in target="new"', async function (assert) {
+    QUnit.skipWOWL('breadcrumbs of actions in target="new"', async function (assert) {
         const webClient = await createWebClient({ serverData });
 
         // execute an action in target="current"
