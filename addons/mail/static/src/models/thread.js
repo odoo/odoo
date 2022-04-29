@@ -42,21 +42,6 @@ registerModel({
                 5 * 1000
             );
             /**
-             * Last 'is_typing' status of current partner that has been notified
-             * to other members. Useful to prevent spamming typing notifications
-             * to other members if it hasn't changed. An exception is the
-             * current partner long typing scenario where current partner has
-             * to re-send the same typing notification from time to time, so
-             * that other members do not assume he/she is no longer typing
-             * something from not receiving any typing notifications for a
-             * very long time.
-             *
-             * Supported values: true/false/undefined.
-             * undefined makes only sense initially and during current partner
-             * long typing timeout flow.
-             */
-            this._currentPartnerLastNotifiedIsTyping = undefined;
-            /**
              * Timer of current partner that is typing a very long text. When
              * the other members do not receive any typing notification for a
              * long time, they must assume that the related partner is no longer
@@ -1695,7 +1680,7 @@ registerModel({
         async _notifyCurrentPartnerTypingStatus({ isTyping }) {
             if (
                 this._forceNotifyNextCurrentPartnerTypingStatus ||
-                isTyping !== this._currentPartnerLastNotifiedIsTyping
+                isTyping !== this.currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
                     await this.messaging.rpc({
@@ -1713,7 +1698,7 @@ registerModel({
                 }
             }
             this._forceNotifyNextCurrentPartnerTypingStatus = false;
-            this._currentPartnerLastNotifiedIsTyping = isTyping;
+            this.update({ currentPartnerLastNotifiedIsTyping: isTyping });
         },
         /**
          * @private
@@ -1929,6 +1914,21 @@ registerModel({
             default: 0,
         }),
         creator: one('User'),
+        /**
+         * Last 'is_typing' status of current partner that has been notified
+         * to other members. Useful to prevent spamming typing notifications
+         * to other members if it hasn't changed. An exception is the
+         * current partner long typing scenario where current partner has
+         * to re-send the same typing notification from time to time, so
+         * that other members do not assume he/she is no longer typing
+         * something from not receiving any typing notifications for a
+         * very long time.
+         *
+         * Supported values: true/false/undefined.
+         * undefined makes only sense initially and during current partner
+         * long typing timeout flow.
+         */
+        currentPartnerLastNotifiedIsTyping: attr(),
         custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
