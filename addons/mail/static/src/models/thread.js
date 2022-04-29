@@ -24,25 +24,11 @@ registerModel({
     name: 'Thread',
     identifyingFields: ['model', 'id'],
     lifecycleHooks: {
-        _created() {
-            /**
-             * Registry of timers of partners currently typing in the thread,
-             * excluding current partner. This is useful in order to
-             * automatically unregister typing members when not receive any
-             * typing notification after a long time. Timers are internally
-             * indexed by partner records as key. The current partner is
-             * ignored in this registry of timers.
-             *
-             * @see registerOtherMemberTypingMember
-             * @see unregisterOtherMemberTypingMember
-             */
-            this._otherMembersLongTypingTimers = new Map();
-        },
         _willDelete() {
             this.currentPartnerInactiveTypingTimer.clear();
             this.currentPartnerLongTypingTimer.clear();
             this.throttleNotifyCurrentPartnerTypingStatus.clear();
-            for (const timer of this._otherMembersLongTypingTimers.values()) {
+            for (const timer of this.otherMembersLongTypingTimers.values()) {
                 timer.clear();
             }
             if (this.isTemporary) {
@@ -909,7 +895,7 @@ registerModel({
          * @param {Partner} partner
          */
         refreshOtherMemberTypingMember(partner) {
-            this._otherMembersLongTypingTimers.get(partner).reset();
+            this.otherMembersLongTypingTimers.get(partner).reset();
         },
         /**
          * Called when current partner is inserting some input in composer.
@@ -944,7 +930,7 @@ registerModel({
                 () => this._onOtherMemberLongTypingTimeout(partner),
                 60 * 1000
             );
-            this._otherMembersLongTypingTimers.set(partner, timer);
+            this.otherMembersLongTypingTimers.set(partner, timer);
             timer.start();
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== partner.localId);
@@ -1039,8 +1025,8 @@ registerModel({
          * @param {Partner} partner
          */
         unregisterOtherMemberTypingMember(partner) {
-            this._otherMembersLongTypingTimers.get(partner).clear();
-            this._otherMembersLongTypingTimers.delete(partner);
+            this.otherMembersLongTypingTimers.get(partner).clear();
+            this.otherMembersLongTypingTimers.delete(partner);
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== partner.localId);
             this.update({
@@ -1564,6 +1550,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Map}
+         */
+        _computeOtherMembersLongTypingTimers() {
+            return new Map();
+        },
+        /**
+         * @private
          * @returns {Activity[]}
          */
         _computeOverdueActivities() {
@@ -1852,7 +1845,7 @@ registerModel({
          */
         async _onOtherMemberLongTypingTimeout(partner) {
             if (!this.typingMembers.includes(partner)) {
-                this._otherMembersLongTypingTimers.delete(partner);
+                this.otherMembersLongTypingTimers.delete(partner);
                 return;
             }
             this.unregisterOtherMemberTypingMember(partner);
@@ -2316,6 +2309,20 @@ registerModel({
         originThreadAttachments: many('Attachment', {
             inverse: 'originThread',
             isCausal: true,
+        }),
+        /**
+         * Registry of timers of partners currently typing in the thread,
+         * excluding current partner. This is useful in order to
+         * automatically unregister typing members when not receive any
+         * typing notification after a long time. Timers are internally
+         * indexed by partner records as key. The current partner is
+         * ignored in this registry of timers.
+         *
+         * @see registerOtherMemberTypingMember
+         * @see unregisterOtherMemberTypingMember
+         */
+        otherMembersLongTypingTimers: attr({
+            compute: '_computeOtherMembersLongTypingTimers',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
