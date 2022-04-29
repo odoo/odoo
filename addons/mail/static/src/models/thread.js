@@ -71,15 +71,6 @@ registerModel({
                 50 * 1000
             );
             /**
-             * Determines whether the next request to notify current partner
-             * typing status should always result to making RPC, regardless of
-             * whether last notified current partner typing status is the same.
-             * Most of the time we do not want to notify if value hasn't
-             * changed, exception being the long typing scenario of current
-             * partner.
-             */
-            this._forceNotifyNextCurrentPartnerTypingStatus = false;
-            /**
              * Registry of timers of partners currently typing in the thread,
              * excluding current partner. This is useful in order to
              * automatically unregister typing members when not receive any
@@ -1694,7 +1685,7 @@ registerModel({
          */
         async _notifyCurrentPartnerTypingStatus({ isTyping }) {
             if (
-                this._forceNotifyNextCurrentPartnerTypingStatus ||
+                this.forceNotifyNextCurrentPartnerTypingStatus ||
                 isTyping !== this._currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
@@ -1712,7 +1703,7 @@ registerModel({
                     this._currentPartnerLongTypingTimer.reset();
                 }
             }
-            this._forceNotifyNextCurrentPartnerTypingStatus = false;
+            this.update({ forceNotifyNextCurrentPartnerTypingStatus: false });
             this._currentPartnerLastNotifiedIsTyping = isTyping;
         },
         /**
@@ -1860,7 +1851,7 @@ registerModel({
          * @private
          */
         async _onCurrentPartnerLongTypingTimeout() {
-            this._forceNotifyNextCurrentPartnerTypingStatus = true;
+            this.update({ forceNotifyNextCurrentPartnerTypingStatus: true });
             this._throttleNotifyCurrentPartnerTypingStatus.clear();
             await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
         },
@@ -1964,6 +1955,17 @@ registerModel({
         }),
         followers: many('Follower', {
             inverse: 'followedThread',
+        }),
+        /**
+         * Determines whether the next request to notify current partner
+         * typing status should always result to making RPC, regardless of
+         * whether last notified current partner typing status is the same.
+         * Most of the time we do not want to notify if value hasn't
+         * changed, exception being the long typing scenario of current
+         * partner.
+         */
+        forceNotifyNextCurrentPartnerTypingStatus: attr({
+            default: false,
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
