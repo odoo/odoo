@@ -4,10 +4,37 @@
         <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
           <attribute name='t-att-data-max'>max(product.sudo().free_qty - product.cart_qty, 1) if handle_stock and product.type == "product" and not product.allow_out_of_stock_order else None</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('css_quantity')]" position="after">
+        <xpath expr="//div[@id='product_configurator_quantity']" position="after">
           <t t-if="handle_stock">
             <div class='availability_messages'/>
           </t>
         </xpath>
+    </template>
+
+    <template id="website_sale_stock_product_configurator_configure_optional_product" inherit_id="sale_product_configurator.configure_optional_products">
+      <xpath expr="//td[hasclass('td-qty')]/t" position="before">
+        <t t-set="error_message" t-value=""/>
+        <t t-if="request.is_frontend">
+          <t t-set="cart_qty" t-value="product.cart_qty if 'cart_qty' in product.fields_get() else product.product_variant_ids[:1].cart_qty"/>
+          <t t-set="free_qty" t-value="product.with_context(warehouse=website._get_warehouse_available()).sudo().qty_available - cart_qty"/>
+          <t t-if="product.type == 'product'">
+            <t t-if="free_qty &lt;= 0 and not cart_qty">
+              <t t-set="error_message">Out of stock.</t>
+            </t>
+            <t t-elif="(free_qty - (cart_qty + 1)) &lt;= 0">
+              <t t-set="error_message">All items selected.</t>
+            </t>
+            <t t-elif="product.show_availability and free_qty &lt;= product.available_threshold">
+              <t t-set="error_message" t-value="'Only ' + str(int(free_qty) if free_qty.is_integer() else free_qty) + ' ' + product.uom_name + ' left in stock.'"/>
+            </t>
+            <t t-if="(free_qty - cart_qty) &lt;= 0" t-set="product_quantity_config_classes" t-value="'d-none'"/>
+          </t>
+        </t>
+      </xpath>
+      <xpath expr="//td[hasclass('td-qty')]" position="inside">
+        <p t-att-class="'text-warning p-2' + (not error_message and ' d-none' or '')">
+          <t t-esc="error_message"/>
+        </p>
+      </xpath>
     </template>
 </odoo>

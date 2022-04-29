@@ -673,7 +673,8 @@
                                         </t>
                                     </t>
                                     <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
+                                    <t t-set="display_add_to_cart" t-value="True"/>
+                                    <div id="o_wsale_cta_wrapper" t-attf-class="{{'d-flex' if display_add_to_cart else 'd-none'}} flex-wrap align-items-center">
                                         <t t-set="hasQuantities" t-value="false"/>
                                         <t t-set="hasBuyNow" t-value="false"/>
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>

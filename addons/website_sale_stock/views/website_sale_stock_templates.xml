@@ -30,8 +30,33 @@
     </template>
 
   <template id="website_sale_stock_product" inherit_id="website_sale.product" priority="4">
-    <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
-      <div class="availability_messages o_not_editable"/>
+      <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
+      <div class="availability_messages o_not_editable">
+        <t t-if="product.type == 'product'"><!-- show out_of_stock_message whatever the show_availability - pde's spec-->
+            <div id="out_of_stock_message" t-if="free_qty &lt;= 0 and not cart_qty" t-attf-class="availability_message_#{product_template} text-danger font-weight-bold">
+                <t t-out='product.out_of_stock_message'/>
+                <t t-if="not product.allow_out_of_stock_order">Out of Stock.</t>
+            </div>
+            <div id="threshold_message" t-elif="product.show_availability and free_qty &lt;= product.available_threshold" t-attf-class="availability_message_#{product_template} text-warning font-weight-bold">
+                Only <t t-esc='int(free_qty) if free_qty.is_integer() else free_qty'/> <t t-esc="product.uom_name" /> left in stock.
+            </div>
+
+            <div t-if="not product.allow_out_of_stock_order and product.show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
+                <t t-if='not free_qty'>
+                    You already added all the available product in your cart.
+                </t>
+                <t t-else=''>
+                You already added <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
+                </t>
+            </div>
+        </t>
+      </div>
+    </xpath>
+      <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
+          <t t-set="cart_qty" t-value="product.cart_qty if 'cart_qty' in product else product.product_variant_ids[:1].cart_qty"/>
+          <!-- FIXME : Use _get_cart_qty() in master -->
+          <t t-set="free_qty" t-value="product.with_context(warehouse=website._get_warehouse_available()).sudo().qty_available - cart_qty"/>
+          <t t-set="display_add_to_cart" t-value="display_add_to_cart and free_qty &gt;= 1"/>
     </xpath>
   </template>
 

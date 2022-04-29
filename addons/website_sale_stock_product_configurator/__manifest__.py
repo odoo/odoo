@@ -13,5 +13,10 @@
     'data': [
         'views/product_configurator_templates.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'website_sale_stock_product_configurator/static/src/js/**/*',
+        ],
+    },
     'license': 'LGPL-3',
 }
