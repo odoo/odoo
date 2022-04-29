@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewComponentsBlock" owl="1">
+        <t name="components" t-if="hasComponents">
+            <t t-foreach="data.components" t-as="line" t-key="line.index">
+                <BomOverviewLine
+                    bus="props.bus"
+                    isFolded="state[getIdentifier(line)]"
+                    parentId="identifier"
+                    showOptions="props.showOptions"
+                    data="line"/>
+
+                <t t-if="!state[getIdentifier(line)] &amp;&amp; hasComponents">
+                    <BomOverviewComponentsBlock
+                        bus="props.bus"
+                        unfoldAll="state.unfoldAll"
+                        showOptions="props.showOptions"
+                        currentWarehouseId="props.currentWarehouseId"
+                        data="line"/>
+                </t>
+            </t>
+        </t>
+        <t name="operations" t-if="showOperations &amp;&amp; !!data.operations &amp;&amp; data.operations.length > 0">
+            <BomOverviewExtraBlock
+                bus="props.bus"
+                unfoldAll="state.unfoldAll"
+                type="'operations'"
+                showOptions="props.showOptions"
+                data="data"/>
+        </t>
+        <t name="byproducts" t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0">
+            <BomOverviewExtraBlock
+                bus="props.bus"
+                unfoldAll="state.unfoldAll"
+                type="'byproducts'"
+                showOptions="props.showOptions"
+                data="data"/>
+        </t>
+    </t>
+
+</templates>

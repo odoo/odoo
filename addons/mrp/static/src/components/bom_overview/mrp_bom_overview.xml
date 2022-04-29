@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="mrp.BomOverviewComponent" class="o_action" owl="1">
+        <BomOverviewControlPanel
+            bus="bus"
+            bomQuantity="state.bomQuantity"
+            uomName="uomName"
+            variants="variants"
+            showOptions="state.showOptions"
+            showVariants="showVariants"
+            currentWarehouse="state.currentWarehouse"
+            warehouses="warehouses"/>
+
+        <BomOverviewTable
+            bus="bus"
+            uomName="uomName"
+            showOptions="state.showOptions"
+            currentWarehouseId="state.currentWarehouse.id"
+            data="state.bomData"/>
+    </div>
+
+</templates>
