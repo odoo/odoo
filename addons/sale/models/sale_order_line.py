@@ -47,7 +47,7 @@ class SaleOrderLine(models.Model):
     order_partner_id = fields.Many2one(
         related='order_id.partner_id',
         string="Customer",
-        store=True, precompute=True)
+        store=True, index=True, precompute=True)
     salesman_id = fields.Many2one(
         related='order_id.user_id',
         string="Salesperson",
