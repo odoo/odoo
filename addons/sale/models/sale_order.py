@@ -10,6 +10,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
+from odoo.addons.payment import utils as payment_utils
 
 class SaleOrder(models.Model):
     _name = "sale.order"
@@ -1056,10 +1057,16 @@ class SaleOrder(models.Model):
                 line.qty_to_invoice = 0
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids.action_capture()
+        """ Capture all transactions linked to this sale order. """
+        payment_utils.check_rights_on_recordset(self)
+        # In sudo mode because we need to be able to read on acquirer fields.
+        self.authorized_transaction_ids.sudo().action_capture()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids.action_void()
+        """ Void all transactions linked to this sale order. """
+        payment_utils.check_rights_on_recordset(self)
+        # In sudo mode because we need to be able to read on acquirer fields.
+        self.authorized_transaction_ids.sudo().action_void()
 
     def get_portal_last_transaction(self):
         self.ensure_one()
