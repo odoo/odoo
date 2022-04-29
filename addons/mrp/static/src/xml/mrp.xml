@@ -1,45 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="mrp.button">
-        <div class="o_list_buttons o_mrp_bom_report_buttons">
-            <button type="button" class="btn btn-primary o_mrp_bom_print">Print</button>
-            <t t-if="is_variant_applied">
-                <button type="button" class="btn btn-primary o_mrp_bom_print_all_variants">Print All Variants</button>
-            </t>
-            <button type="button" class="btn btn-primary o_mrp_bom_unfold_all">Unfold</button>
-        </div>
-    </t>
-
-    <form class="container-fluid w-lg-75 w-xl-auto pt-lg-3 me-0" t-name="mrp.report_bom_search">
-        <div class="row gap-3">
-            <div class="col-12 col-md">
-                <div class="row">
-                    <label class="col-3 col-xl flex-grow-0">Quantity:</label>
-                    <input type="number" step="any" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty col"/>
-                    <div t-if="is_uom_applied" class="col" t-out="bom_uom_name"/>
-                </div>
-            </div>
-            <div t-if="is_variant_applied" class="col-12 col-md">
-                <div class="row">
-                    <label class="col-3 col-xl flex-grow-0">Variant:</label>
-                    <select class="o_input o_mrp_bom_report_variants col">
-                        <option t-foreach="variants" t-as="variant" t-att-value="variant">
-                            <t t-esc="variants[variant]"/>
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div t-attf-class="col-12 col-xl">
-                <div class="row">
-                    <label class="col-3 col-xl flex-grow-0">Report:</label>
-                    <select class="o_input o_mrp_bom_report_type col">
-                        <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
-                        <option t-att-data-type="'bom_structure'">BoM Structure</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </form>
 
     <div t-name="mrp.workorderPopover">
         <t t-foreach="infos" t-as="info">
