@@ -190,7 +190,7 @@ function assertIsFunction(toAssert) {
  * @throws {Error} if name is not an existing hook name.
  */
 function assertIsValidHookName(name) {
-    const validHookNames = new Set(['_created', '_willCreate', '_willDelete']);
+    const validHookNames = new Set(['_created', '_willDelete']);
     if (!validHookNames.has(name)) {
         throw new Error("invalid hook name.");
     }

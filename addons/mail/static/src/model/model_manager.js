@@ -710,15 +710,6 @@ export class ModelManager {
             record[methodName] = record[methodName].bind(record);
         }
         /**
-         * Invoke the life-cycle hook `_willCreate.`
-         * After this step the record is in a functioning state and it is
-         * considered existing.
-         */
-        const lifecycleHooks = registry.get(model.name).get('lifecycleHooks');
-        if (lifecycleHooks.has('_willCreate')) {
-            lifecycleHooks.get('_willCreate').call(record);
-        }
-        /**
          * Register post processing operation that are to be delayed at
          * the end of the update cycle.
          */
