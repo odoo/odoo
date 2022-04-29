@@ -242,6 +242,32 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     unpatch(browser, "mock.xhr");
 });
 
+QUnit.test(
+    "check trigger RPC:REQUEST and RPC:RESPONSE for a rpc returning an error",
+    async (assert) => {
+        let MockXHR = makeMockXHR("non jsonparsable string", null, null, true);
+        patch(browser, "mock.xhr", { XMLHttpRequest: MockXHR }, { pure: true });
+
+        const env = await makeTestEnv({
+            serviceRegistry,
+        });
+        env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
+            assert.step("RPC:REQUEST");
+        });
+        env.bus.addEventListener("RPC:RESPONSE", (rpcId) => {
+            assert.step("RPC:RESPONSE");
+        });
+        try {
+            await env.services.rpc("/test/");
+        } catch (e) {
+            assert.step("error");
+        }
+        assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE", "error"]);
+
+        unpatch(browser, "mock.xhr");
+    }
+);
+
 QUnit.test("check connection aborted", async (assert) => {
     const def = makeDeferred();
     let MockXHR = makeMockXHR({}, () => {}, def);
