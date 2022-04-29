@@ -8817,6 +8817,7 @@ QUnit.module("Views", (hooks) => {
                 },
             ],
         };
+        patchTimeZone(360);
 
         await makeView({
             type: "list",
@@ -8834,13 +8835,6 @@ QUnit.module("Views", (hooks) => {
                         { date_start: "2017-01-16", date_end: "2017-02-12" },
                     ]);
                 }
-                return this._super(...arguments);
-            },
-            session: {
-                // see #tzoffset_daterange
-                getTZOffset: function () {
-                    return 360;
-                },
             },
         });
 
@@ -10849,10 +10843,10 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "grouped list view move to previous page of group when all records from last page deleted",
         async function (assert) {
-            assert.expect(7);
+            assert.expect(9);
 
             let checkSearchRead = false;
             await makeView({
@@ -10861,14 +10855,13 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: '<tree limit="2">' + '<field name="display_name"/>' + "</tree>",
                 mockRPC: function (route, args) {
-                    if (checkSearchRead && route === "/web/dataset/search_read") {
-                        assert.strictEqual(args.limit, 2, "limit should 2");
+                    if (checkSearchRead && args.method === "web_search_read") {
+                        assert.strictEqual(args.kwargs.limit, 2, "limit should 2");
                         assert.notOk(
-                            args.offset,
+                            args.kwargs.offset,
                             "offset should not be passed i.e. offset 0 by default"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
                 actionMenus: {},
                 groupBy: ["m2o"],
@@ -10884,30 +10877,24 @@ QUnit.module("Views", (hooks) => {
                 1,
                 "Value 2 should contain 1 record"
             );
-
-            await click($(target).find("th.o_group_name:nth(0)"));
-            assert.strictEqual(
-                $(target).find("th.o_group_name:eq(0) .o_pager_counter").text().trim(),
-                "1-2 / 3",
-                "should have 2 pages and current page should be first page"
-            );
+            const groupheader = target.querySelector(".o_group_header")
+            await click(groupheader);
+            assert.deepEqual(getPagerValue(groupheader), [1, 2])
+            assert.strictEqual(getPagerLimit(groupheader), 3)
 
             // move to next page
-            await click($(target).find(".o_group_header .o_pager_next"));
-            assert.strictEqual(
-                $(target).find("th.o_group_name:eq(0) .o_pager_counter").text().trim(),
-                "3-3 / 3",
-                "should be on second page"
-            );
+            await pagerNext(groupheader);
+            assert.deepEqual(getPagerValue(groupheader), [3, 3])
+            assert.strictEqual(getPagerLimit(groupheader), 3)
 
             // delete a record
             await click(
-                $(target).find("tbody .o_data_row:first td.o_list_record_selector:first input")
+                target.querySelector(".o_data_row .o_list_record_selector input")
             );
             checkSearchRead = true;
-            await click($(target).find(".dropdown-toggle:contains(Action)"));
-            await click($(target).find("a:contains(Delete)"));
-            await click($("body .modal button span:contains(Ok)"));
+            await click(target, ".o_cp_action_menus .dropdown-toggle")
+            await click([...target.querySelectorAll(".dropdown-item")].filter(el => el.innerText === "Delete")[0]);
+            await click(target, ".modal .btn-primary");
 
             assert.strictEqual(
                 $(target).find("th.o_group_name:eq(0) .o_pager_counter").text().trim(),

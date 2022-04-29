@@ -1719,6 +1719,13 @@ export class DynamicGroupList extends DynamicList {
         }
     }
 
+    async deleteRecords() {
+        for (const group of this.groups) {
+            group.list.deleteRecords();
+        }
+
+    }
+
     exportState() {
         return {
             ...super.exportState(),
