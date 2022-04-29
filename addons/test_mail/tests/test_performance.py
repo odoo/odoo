@@ -360,7 +360,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(__system__=43, employee=51):
+        with self.assertQueryCount(__system__=44, employee=52):
             composer._action_send_mail()
 
         # notifications
@@ -469,7 +469,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(__system__=40, employee=46):
+        with self.assertQueryCount(__system__=41, employee=47):
             composer._action_send_mail()
 
         # notifications
@@ -501,7 +501,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(__system__=52, employee=69):
+        with self.assertQueryCount(__system__=53, employee=70):
             composer._action_send_mail()
 
         # notifications
@@ -1153,7 +1153,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
         ]
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(employee=67):
+        with self.assertQueryCount(employee=68):
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record_container.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',

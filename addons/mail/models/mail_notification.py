@@ -113,10 +113,14 @@ class MailNotification(models.Model):
 
     def _filtered_for_web_client(self):
         """Returns only the notifications to show on the web client."""
-        return self.filtered(lambda n:
-            n.notification_type != 'inbox' and
-            (n.notification_status in ['bounce', 'exception', 'canceled'] or n.res_partner_id.partner_share)
-        )
+        def _filter_unimportant_notifications(notif):
+            if notif.notification_status in ['bounce', 'exception', 'canceled'] \
+                    or notif.res_partner_id.partner_share:
+                return True
+            subtype = notif.mail_message_id.subtype_id
+            return not subtype or subtype.track_recipients
+
+        return self.filtered(_filter_unimportant_notifications)
 
     def _notification_format(self):
         """Returns the current notifications in the format expected by the web
