@@ -700,7 +700,7 @@
               </t>
               <t t-if="version">
                 <h1><t t-esc="res_company.name"/>
-                    <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
+                    <small>Odoo Version <t t-esc="version.get('server_version')"/></small>
                 </h1>
                 <p>
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
@@ -716,12 +716,12 @@
                 <dl class="dl-horizontal" t-foreach="apps" t-as="app">
                     <dt>
                         <a t-att-href="app.website" t-if="app.website">
-                            <t t-raw="app.shortdesc"/>
+                            <t t-esc="app.shortdesc"/>
                         </a>
-                        <span t-raw="app.shortdesc" t-if="not app.website"/>
+                        <span t-esc="app.shortdesc" t-if="not app.website"/>
                     </dt>
                     <dd>
-                        <span t-raw="app.summary"/>
+                        <span t-esc="app.summary"/>
                     </dd><dd class="text-muted" groups='base.group_no_one'>
                         Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                     </dd>
@@ -731,12 +731,12 @@
                     <h2 class='mt32'>Installed Localizations / Account Charts</h2>
                     <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
                         <dt>
-                            <a t-attf-href="https://www.odoo.com/page/accounting/#{app.name}">
-                                <t t-raw="app.shortdesc"/>
+                            <a t-att-href="app.website or 'https://www.odoo.com/page/accounting/' + app.name">
+                                <t t-esc="app.shortdesc"/>
                             </a>
                         </dt>
                         <dd>
-                            <span t-raw="app.summary"/>
+                            <span t-esc="app.summary"/>
                         </dd><dd class="text-muted" groups='base.group_no_one'>
                             Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                         </dd>
