@@ -358,6 +358,8 @@ options.registry.DesignTab = options.Class.extend({
                         }
                         if (params.cssProperty === 'font-weight') {
                             res = parseInt(res) >= 600 ? 'bolder' : '';
+                        } else if (res === 'auto') {
+                            res = '100%';
                         }
                     }
                     fakeElement.remove();
