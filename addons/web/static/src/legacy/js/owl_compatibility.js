@@ -636,9 +636,6 @@ odoo.define('web.OwlCompatibility', function (require) {
         }
 
         render() {
-            if (this.status !== "mounted") {
-                return;
-            }
             if (this.renderProm) {
                 this.node.render(true);
                 return this.renderProm;
