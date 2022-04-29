@@ -93,8 +93,11 @@ insertRecords('mail.activity.type', [
 ]);
 insertRecords('mail.message.subtype', [
     { default: false, internal: true, name: "Activities", sequence: 90, subtype_xmlid: 'mail.mt_activities' },
-    { default: false, internal: true, name: "Note", sequence: 100, subtype_xmlid: 'mail.mt_note' },
-    { name: "Discussions", sequence: 0, subtype_xmlid: 'mail.mt_comment' },
+    {
+        default: false, internal: true, name: "Note", sequence: 100, subtype_xmlid: 'mail.mt_note',
+        track_recipients: true
+    },
+    { name: "Discussions", sequence: 0, subtype_xmlid: 'mail.mt_comment', track_recipients: true },
 ]);
 insertRecords('res.company', [{ id: 1 }]);
 insertRecords('res.users', [

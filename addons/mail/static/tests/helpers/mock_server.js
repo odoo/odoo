@@ -1630,14 +1630,17 @@ patch(MockServer.prototype, 'mail', {
     _mockMailNotification_FilteredForWebClient(ids) {
         const notifications = this.getRecords('mail.notification', [
             ['id', 'in', ids],
-            ['notification_type', '!=', 'inbox'],
         ]);
         return notifications.filter(notification => {
             const partner = this.getRecords('res.partner', [['id', '=', notification.res_partner_id]])[0];
-            return Boolean(
-                ['bounce', 'exception', 'canceled'].includes(notification.notification_status) ||
-                (partner && partner.partner_share)
-            );
+            if (['bounce', 'exception', 'canceled'].includes(notification.notification_status) ||
+                (partner && partner.partner_share)) {
+                return true;
+            }
+            const message = this.getRecords('mail.message', [['id', '=', notification.mail_message_id]])[0];
+            const subtypes = (message.subtype_id) ?
+                this.getRecords('mail.message.subtype', [['id', '=', message.subtype_id]]) : [];
+            return (subtypes.length == 0) || subtypes[0].track_recipients;
         });
     },
     /**
