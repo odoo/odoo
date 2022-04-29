@@ -289,7 +289,8 @@ odoo.define('web.OwlCompatibility', function (require) {
         }
     }
 
-    function standaloneAdapter(props) {
+    const bodyRef = { get el() { return document.body } };
+    function standaloneAdapter(props = {}, ref=bodyRef) {
         const env = owl.Component.env;
         const app = new App(null, {
             templates: window.__OWL_TEMPLATES__,
@@ -298,8 +299,16 @@ odoo.define('web.OwlCompatibility', function (require) {
             translatableAttributes: ["data-tooltip"],
             translateFn: env._t,
         });
-        const node = app.makeNode(ComponentAdapter, props);
-        return node.component;
+        if (!("Component" in props)) {
+            props.Component = owl.Component;
+        }
+        const component = app.makeNode(ComponentAdapter, props).component;
+        Object.defineProperty(component, "el", {
+            get() {
+                return ref.el;
+            }
+        });
+        return component;
     }
 
     /**
