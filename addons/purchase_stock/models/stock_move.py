@@ -29,34 +29,44 @@ class StockMove(models.Model):
     def _get_in_svl_vals(self, forced_quantity):
         svl_vals_list = []
         # Before define the incoming SVL values, checks if some quantities has
-        # already been invoiced and still waiting to be receipt.
-        # In such case, gets back the price from these waiting invoice lines.
+        # already been invoiced and still waiting to be receive.
+        # In such case, get back the price from these waiting invoice lines.
+        remainging_moves = self.env['stock.move']
         for move in self:
             product = move.product_id
-            po_line = move.purchase_line_id
             # Take invoice lines about the current product and who have waiting quantities.
-            invoice_lines = po_line.invoice_lines.filtered(lambda l: l.product_id == product and l.qty_waiting_for_receipt > 0)
+            invoice_lines = move.purchase_line_id.invoice_lines.filtered(lambda l: l.product_id == product and l.qty_waiting_for_receipt > 0)
             if not invoice_lines:
+                remainging_moves |= move
                 continue
             quantity_received = 0
-            waiting_invoiced_qty = sum(invoice_lines.mapped('qty_waiting_for_receipt'))
             # Gets values for each of those invoice lines.
             # TODO: checks what happens when receive less qty than already invoiced.
             for line in invoice_lines:
-                qty_to_process = min(move.quantity_done, line.qty_waiting_for_receipt)
+                same_uom = move.product_uom == line.product_uom_id
+                line_qty = line.qty_waiting_for_receipt
+                unit_cost = line.price_unit
+                if not same_uom:
+                    line_qty = line.product_uom_id._compute_quantity(line.qty_waiting_for_receipt, move.product_uom)
+                    unit_cost = line.product_uom_id._compute_price(line.price_unit, move.product_uom)
+                qty_to_process = min(move.quantity_done, line_qty)
                 quantity_received += qty_to_process
-                line.qty_waiting_for_receipt -= qty_to_process
-                waiting_invoiced_qty -= qty_to_process
+
+                if same_uom:
+                    line.qty_waiting_for_receipt -= qty_to_process
+                else:  # Not the same UoM: reconverts the qty before decreases invoice wainting qty.
+                    line.qty_waiting_for_receipt -= move.product_uom._compute_quantity(qty_to_process, line.product_uom_id)
+
                 svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
-                svl_vals[0]['unit_cost'] = line.price_unit
-                svl_vals[0]['value'] = (qty_to_process * line.price_unit)
+                svl_vals[0]['unit_cost'] = unit_cost
+                svl_vals[0]['value'] = qty_to_process * unit_cost
                 svl_vals[0]['description'] = move.picking_id.name
                 svl_vals_list += svl_vals
                 # If product cost method is AVCO, updates the standard price.
                 # if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 if product.cost_method == 'average':
                     # TODO: checks with differents UoM for the move line and the invoice line.
-                    unit_price_diff = line.price_unit - product.standard_price
+                    unit_price_diff = unit_cost - product.standard_price
                     svl_qty = svl_vals[0]['quantity']
                     qty_delta = 1
                     if product.qty_available > 0:
@@ -70,7 +80,7 @@ class StockMove(models.Model):
                 svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
                 svl_vals[0]['description'] = move.picking_id.name
                 svl_vals_list += svl_vals
-        return svl_vals_list or super()._get_in_svl_vals(forced_quantity)
+        return svl_vals_list + super(StockMove, remainging_moves)._get_in_svl_vals(forced_quantity)
 
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
