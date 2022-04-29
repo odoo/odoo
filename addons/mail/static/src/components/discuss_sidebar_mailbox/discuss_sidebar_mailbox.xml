@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarMailbox" owl="1">
-        <div class="o_DiscussSidebarMailbox"
+        <button class="o_DiscussSidebarMailbox btn d-flex align-items-center py-1 px-0 border-0 rounded-0 font-weight-normal text-dark"
             t-att-class="{
-                'o-active': discussSidebarMailboxView.mailbox === messaging.discuss.thread,
+                'bg-100': discussSidebarMailboxView.mailbox !== messaging.discuss.thread,
+                'o-active bg-200': discussSidebarMailboxView.mailbox === messaging.discuss.thread,
                 'o-starred-box': discussSidebarMailboxView.mailbox === messaging.starred,
             }" t-attf-class="{{ className }}" t-on-click="discussSidebarMailboxView.mailbox.onClick" t-att-data-thread-local-id="discussSidebarMailboxView.mailbox.localId" t-att-data-thread-name="discussSidebarMailboxView.mailbox.displayName"
             t-ref="root"
         >
-            <ThreadIcon className="'o_DiscussSidebarMailbox_item'" thread="discussSidebarMailboxView.mailbox"/>
-            <div class="o_DiscussSidebarMailbox_item o_DiscussSidebarMailbox_name">
+            <ThreadIcon className="'o_DiscussSidebarMailbox_item ms-4 me-2'" thread="discussSidebarMailboxView.mailbox"/>
+            <div class="o_DiscussSidebarMailbox_item o_DiscussSidebarMailbox_name me-2 text-truncate">
                 <t t-esc="discussSidebarMailboxView.mailbox.displayName"/>
             </div>
-            <div class="o-autogrow o_DiscussSidebarMailbox_item"/>
+            <div t-attf-class="o-autogrow o_DiscussSidebarMailbox_item {{ discussSidebarMailboxView.mailbox.counter === 0 ? 'me-3': '' }}"/>
             <t t-if="discussSidebarMailboxView.mailbox.counter > 0">
-                <div class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge badge-pill">
+                <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge badge-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'badge-primary' }} ms-1 me-3 border-0">
                     <t t-esc="discussSidebarMailboxView.mailbox.counter"/>
                 </div>
             </t>
-        </div>
+        </button>
     </t>
 </templates>
