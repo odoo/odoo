@@ -657,16 +657,14 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "input field: change value before pending onchange returns",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.onchanges = {
                 product_id() {},
             };
 
-            const def = makeDeferred();
+            let def;
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -684,17 +682,14 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>
                 `,
-                async mockRPC(route, { method }, performRPC) {
-                    const result = performRPC(...arguments);
+                async mockRPC(route, { method }) {
                     if (method === "onchange") {
                         await def;
                     }
-                    return result;
                 },
             });
 
             await click(target, ".o_form_button_edit");
-
             await click(target, ".o_field_x2many_list_row_add a");
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name='foo'] input").value,
@@ -702,6 +697,7 @@ QUnit.module("Fields", (hooks) => {
                 "should contain the default value"
             );
 
+            def = makeDeferred();
             await click(target, ".o-autocomplete--input");
             await click(target.querySelector(".o-autocomplete--dropdown-item"));
 
@@ -724,21 +720,19 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "input field: change value before pending onchange returns (with fieldDebounce)",
+    QUnit.test(
+        "input field: change value before pending onchange returns (2)",
         async function (assert) {
-            // this test is exactly the same as the previous one, except that we set
-            // here a fieldDebounce to accurately reproduce what happens in practice:
-            // the field doesn't notify the changes on 'input', but on 'change' event.
-            assert.expect(5);
-
+            // this test is exactly the same as the previous one, except that in
+            // this scenario the onchange return *before* we validate the change
+            // on the input field (before the "change" event is triggered).
             serverData.models.partner.onchanges = {
                 product_id(obj) {
                     obj.int_field = obj.product_id ? 7 : false;
                 },
             };
 
-            const def = makeDeferred();
+            let def;
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -754,14 +748,11 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>
                 `,
-                async mockRPC(route, { method }, performRPC) {
-                    const result = performRPC(...arguments);
+                async mockRPC(route, { method }) {
                     if (method === "onchange") {
                         await def;
                     }
-                    return result;
                 },
-                // fieldDebounce: 5000,
             });
 
             await click(target, ".o_field_x2many_list_row_add a");
@@ -771,11 +762,13 @@ QUnit.module("Fields", (hooks) => {
                 "should contain the default value"
             );
 
+            def = makeDeferred();
             await click(target, ".o-autocomplete--input");
             await click(target.querySelector(".o-autocomplete--dropdown-item"));
 
             // set foo before onchange
-            await editInput(target, ".o_field_widget[name='foo'] input", "tralala");
+            target.querySelector(".o_field_widget[name='foo'] input").value = "tralala";
+            await triggerEvent(target, ".o_field_widget[name='foo'] input", "input");
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name='foo'] input").value,
                 "tralala",
@@ -802,11 +795,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "input field: change value before pending onchange renaming",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.onchanges = {
                 product_id(obj) {
                     obj.foo = "on change value";
@@ -827,12 +818,10 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>
                 `,
-                async mockRPC(route, { method }, performRPC) {
-                    const result = performRPC(...arguments);
+                async mockRPC(route, { method }) {
                     if (method === "onchange") {
                         await def;
                     }
-                    return result;
                 },
             });
 
@@ -970,28 +959,23 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>
                 `,
-                async mockRPC(route, { method }, performRPC) {
-                    const result = await performRPC(...arguments);
-                    if (method === "onchange") {
-                        await Promise.resolve();
-                    }
-                    return result;
-                },
-                // fieldDebounce: 1000, // needed to accurately mock what really happens
             });
 
             await click(target, ".o_field_x2many_list_row_add a");
-            assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "");
-            // FIXME WOWL: this doesn't reproduce what was tested before (I think in the orignal
-            // scenario, the model wasn't notified of the field change (at least for "test"))
-            await editInput(target, ".o_field_widget[name='foo'] input", "test"); // set value for foo
-            await editInput(target, ".o_field_widget[name='foo'] input", ""); // remove value for foo
+            assert.strictEqual(target.querySelector(".o_field_widget[name=foo] input").value, "");
+
+            // set value for foo
+            target.querySelector(".o_field_widget[name=foo] input").value = "test";
+            await triggerEvent(target, ".o_field_widget[name=foo] input", "input");
+            // remove value for foo
+            target.querySelector(".o_field_widget[name=foo] input").value = "";
+            await triggerEvent(target, ".o_field_widget[name=foo] input", "input");
 
             // trigger the onchange by setting a product
             await click(target, ".o-autocomplete--input");
             await click(target.querySelector(".o-autocomplete--dropdown-item"));
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name='foo'] input").value,
+                target.querySelector(".o_field_widget[name=foo] input").value,
                 "onchange value",
                 "input should contain correct value after onchange"
             );

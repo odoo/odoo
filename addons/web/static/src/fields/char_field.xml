@@ -9,11 +9,11 @@
             <input
                 class="o-char-field o_input"
                 t-att-type="props.isPassword ? 'password' : 'text'"
-                t-att-value="props.value or ''"
                 t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
                 t-att-maxlength="props.maxLength > 0 and props.maxLength"
                 t-att-placeholder="props.placeholder"
                 t-on-change="onChange"
+                t-ref="input"
             />
             <t t-if="props.isTranslatable">
                 <TranslationButton
