@@ -12,6 +12,5 @@
     * Any new All Users Lock Date must be posterior (or equal) to the previous one.
     """,
     'depends': ['account'],
-    'data': [],
     'license': 'LGPL-3',
 }

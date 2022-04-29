@@ -11,7 +11,6 @@
         the questions and answers linked to the registrations.
     """,
     'depends': ['website_event_crm', 'website_event_questions'],
-    'data': [],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

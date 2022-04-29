@@ -7,7 +7,6 @@
     'category': 'Human Resources/Recruitment',
     'sequence': 90,
     'summary': 'Track your recruitment pipeline',
-    'description': "",
     'website': 'https://www.odoo.com/app/recruitment',
     'depends': [
         'hr',
@@ -39,7 +38,6 @@
         'data/hr_recruitment_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
     'assets': {
         'web.assets_backend': [

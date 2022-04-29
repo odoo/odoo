@@ -4,7 +4,6 @@
 {
     'name': 'SMS Marketing',
     'summary': 'Design, send and track SMS',
-    'description': '',
     'version': '1.0',
     'category': 'Marketing/Email Marketing',
     'sequence': 245,

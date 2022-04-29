@@ -15,9 +15,7 @@ The module adds the possibility to display data from Odoo in Google Spreadsheets
         'views/google_spreadsheet_views.xml',
         'views/res_config_settings_views.xml',
     ],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'google_spreadsheet/static/src/**/*.js',

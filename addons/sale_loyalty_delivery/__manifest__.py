@@ -7,8 +7,6 @@
     'category': 'Sales/Sales',
     'version': '1.0',
     'depends': ['sale_loyalty', 'loyalty_delivery'],
-    'data': [
-    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }

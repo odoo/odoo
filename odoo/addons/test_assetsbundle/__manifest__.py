@@ -10,7 +10,6 @@
         "data/ir_asset.xml",
         "views/views.xml",
     ],
-    'auto_install': False,
 
     'assets': {
         'test_assetsbundle.bundle2': [

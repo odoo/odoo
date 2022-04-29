@@ -33,7 +33,6 @@
     'demo': [
         'demo/demo_company.xml',
     ],
-    'auto_install': False,
     'installable': True,
     'license': 'LGPL-3',
 }

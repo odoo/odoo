@@ -120,8 +120,6 @@ Master Data:
         'demo/account_supplier_refund_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
-    'application': False,
     'assets': {
         'web.assets_backend': [
             'l10n_ar/static/src/**/*',

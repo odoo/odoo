@@ -6,7 +6,6 @@
     'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
     'version': '1.3',
-    'description': "",
     'depends': ['website_event'],
     'data': [
         'security/ir.model.access.csv',

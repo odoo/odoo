@@ -11,7 +11,6 @@
         'views/barcodes_view.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',

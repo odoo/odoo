@@ -16,6 +16,5 @@
             'test_sale_product_configurators/static/tests/tours/**/*',
         ],
     },
-    'application': False,
     'license': 'OEEL-1',
 }

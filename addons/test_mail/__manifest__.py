@@ -17,8 +17,6 @@ tests independently to functional aspects of other models. """,
         'data/mail_template_data.xml',
         'data/subtype_data.xml',
     ],
-    'demo': [
-    ],
     'assets': {
         'web.qunit_suite_tests': [
             'test_mail/static/tests/*',
@@ -28,6 +26,5 @@ tests independently to functional aspects of other models. """,
         ],
     },
     'installable': True,
-    'application': False,
     'license': 'LGPL-3',
 }

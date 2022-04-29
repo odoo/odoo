@@ -6,7 +6,6 @@
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Integrate your POS with an Adyen payment terminal',
-    'description': '',
     'data': [
         'views/pos_config_views.xml',
         'views/pos_payment_method_views.xml',

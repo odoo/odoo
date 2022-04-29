@@ -23,7 +23,6 @@ The check settings are located in the accounting journals configuration page.
         'wizard/print_prenumbered_checks_views.xml'
     ],
     'installable': True,
-    'auto_install': False,
     'post_init_hook': 'create_check_sequence_on_bank_journals',
     'license': 'LGPL-3',
 }

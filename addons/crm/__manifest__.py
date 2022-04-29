@@ -8,7 +8,6 @@
     'category': 'Sales/CRM',
     'sequence': 15,
     'summary': 'Track leads and close opportunities',
-    'description': "",
     'website': 'https://www.odoo.com/app/crm',
     'depends': [
         'base_setup',
@@ -71,7 +70,6 @@
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'assets': {
         'web.assets_qweb': [
             'crm/static/src/xml/forecast_kanban.xml',

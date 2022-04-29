@@ -34,7 +34,5 @@ For the creation of API username and password please ref this document: <https:/
     ],
     "installable": True,
     # only applicable for taxpayers turnover higher than Rs.50 crore so auto_install is False
-    "auto_install": False,
-    "application": False,
     "license": "LGPL-3",
 }

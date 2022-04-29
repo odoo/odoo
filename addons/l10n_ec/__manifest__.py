@@ -76,6 +76,4 @@ Master Data:
         "demo/demo_company.xml",
     ],
     "installable": True,
-    "auto_install": False,
-    "application": False,
 }

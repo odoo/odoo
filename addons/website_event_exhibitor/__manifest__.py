@@ -8,7 +8,6 @@
     'version': '1.1',
     'summary': 'Event: manage sponsors and exhibitors',
     'website': 'https://www.odoo.com/app/events',
-    'description': "",
     'depends': [
         'website_event_jitsi',
     ],
@@ -30,7 +29,6 @@
         'data/event_demo.xml',
         'data/event_sponsor_demo.xml',
     ],
-    'application': False,
     'installable': True,
     'assets': {
         'web.assets_frontend': [
