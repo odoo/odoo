@@ -125,7 +125,7 @@ class Partner(models.Model):
         return partners_format
 
     def _message_fetch_failed(self):
-        """Returns all messages, sent by the current partner, that have errors, in
+        """Returns first 100 messages, sent by the current partner, that have errors, in
         the format expected by the web client."""
         self.ensure_one()
         messages = self.env['mail.message'].search([
@@ -134,7 +134,7 @@ class Partner(models.Model):
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
-        ])
+        ], limit=100)
         return messages._message_notification_format()
 
     def _get_channels_as_member(self):
