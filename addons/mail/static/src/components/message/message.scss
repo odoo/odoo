@@ -6,12 +6,7 @@
 // will be done, we could use BS5 classes to handle the position values
 // (eg. position-absolute top-0 end-0 mt-n3)
 .o_Message_actionListContainer {
-    @include o-position-absolute($top: - map-get($spacers, 3), $right: 0);
     z-index: 10; // Place the element in front of the Composer when they overlap
-    
-    &.o-squashed {
-        @include o-position-absolute($top: - map-get($spacers, 4), $right: 0);
-    }
 }
 
 .o_Message_authorAvatar {

@@ -26,9 +26,6 @@
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" localId="messageView.messageInReplyToView.localId"/>
-                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
-                    <MessageActionList localId="messageView.messageActionList.localId"/>
-                </div>
                 <div class="d-flex flex-shrink-0">
                     <div class="o_Message_highlightIndicator h-100" t-att-class="{ 'o-active bg-primary': messageView.message.isHighlighted or messageView.isHighlighted }"/>
                     <div class="o_Message_sidebar d-flex justify-content-center flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
@@ -64,7 +61,7 @@
                     </div>
                     <div class="o_Message_core flex-grow-1 me-4">
                         <t t-if="!messageView.isSquashed">
-                            <div class="o_Message_header d-flex flex-wrap align-items-baseline ml-2">
+                            <div class="o_Message_header d-flex flex-nowrap align-items-baseline mx-2">
                                 <t t-if="messageView.message.author">
                                     <strong class="o_Message_authorName o_Message_authorRedirect o_redirect o_cursor_pointer text-truncate" t-on-click="messageView.onClickAuthorName" title="Open profile">
                                         <t t-if="messageView.message.originThread">
@@ -93,7 +90,7 @@
                                     </strong>
                                 </t>
                                 <t t-if="messageView.message.date">
-                                    <small class="o_Message_date o_Message_headerDate text-500" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }" t-att-title="messageView.message.datetime">
+                                    <small class="o_Message_date o_Message_headerDate text-500 text-truncate" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }" t-att-title="messageView.message.datetime">
                                         - <t t-esc="messageView.message.dateFromNow"/>
                                     </small>
                                 </t>
@@ -101,7 +98,7 @@
                                     <MessageSeenIndicator className="'o_Message_seenIndicator'" localId="messageView.messageSeenIndicatorView.localId"/>
                                 </t>
                                 <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread !== messageView.threadView.thread">
-                                    <small class="o_Message_originThread" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
+                                    <small class="o_Message_originThread text-truncate" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
                                         <t t-if="messageView.message.originThread.model === 'mail.channel'">
                                             (from <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
                                         </t>
@@ -112,13 +109,13 @@
                                 </t>
                                 <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread === messageView.threadView.thread and messageView.message.notifications.length > 0">
                                     <t t-if="messageView.message.failureNotifications.length > 0">
-                                        <span class="o_Message_notificationIconClickable o-error o_cursor_pointer text-danger" t-on-click="messageView.onClickFailure">
+                                        <span class="o_Message_notificationIconClickable o-error o_cursor_pointer text-danger text-truncate" t-on-click="messageView.onClickFailure">
                                             <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
                                         </span>
                                     </t>
                                     <t t-else="">
                                         <Popover>
-                                            <span class="o_Message_notificationIconClickable o_cursor_pointer text-600">
+                                            <span class="o_Message_notificationIconClickable o_cursor_pointer text-600 text-truncate">
                                                 <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                             </span>
                                             <t t-set-slot="opened">
@@ -127,6 +124,10 @@
                                         </Popover>
                                     </t>
                                 </t>
+                                <div class="o_Message_actionList_flexgrow flex-grow-1"/>
+                                <div class="o_Message_actionListContainer flex-shrink-0">
+                                    <MessageActionList localId="messageView.messageActionList.localId"/>
+                                </div>
                             </div>
                         </t>
                         <t t-if="messageView.message.subject and !messageView.message.isSubjectSimilarToOriginThreadName">
@@ -134,7 +135,17 @@
                         </t>
                         <div class="o_Message_content mx-2 text-break" t-ref="content">
                             <t t-if="!messageView.composerViewInEditing">
-                                <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- messageView.message.prettyBody is inserted here from _update() -->
+                                <t t-if="messageView.isSquashed">
+                                    <div class="o_Message_actionList_Container d-flex">
+                                        <div class="o_Message_actionList_autogrow flex-grow-1"/>
+                                        <div class="o_Message_actionListContainer flex-shrink-0">
+                                            <MessageActionList localId="messageView.messageActionList.localId"/>
+                                        </div>
+                                    </div>
+                                </t>
+                                <div class="o_Message_actionList_Container d-flex">
+                                    <div class="o_Message_prettyBody text-wrap" t-ref="prettyBody"/><!-- messageView.message.prettyBody is inserted here from _update() -->
+                                </div>
                             </t>
                             <t t-if="messageView.composerViewInEditing">
                                 <Composer
