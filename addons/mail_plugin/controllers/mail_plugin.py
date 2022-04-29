@@ -144,7 +144,7 @@ class MailPluginController(http.Controller):
             return {'error': _('You need to specify at least the partner_id or the name and the email')}
 
         if partner_id:
-            partner = request.env['res.partner'].browse(partner_id)
+            partner = request.env['res.partner'].browse(partner_id).exists()
             return self._get_contact_data(partner)
 
         normalized_email = tools.email_normalize(email)
@@ -184,11 +184,10 @@ class MailPluginController(http.Controller):
         search on.
         The method returns an array containing the dicts of the matched contacts.
         """
-
         normalized_email = tools.email_normalize(search_term)
 
         if normalized_email:
-            filter_domain = [('email_normalized', '=', search_term)]
+            filter_domain = [('email_normalized', 'ilike', search_term)]
         else:
             filter_domain = ['|', '|', ('display_name', 'ilike', search_term), ('ref', '=', search_term),
                              ('email', 'ilike', search_term)]

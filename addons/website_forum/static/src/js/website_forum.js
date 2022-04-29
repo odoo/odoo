@@ -358,7 +358,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                this.displayNotification({
+                self.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
                     sticky: false,

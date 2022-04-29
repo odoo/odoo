@@ -207,6 +207,7 @@ export class OdooEditor extends EventTarget {
                 onChange: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
+                direction: 'ltr',
                 _t: string => string,
                 allowCommandVideo: true,
             },
@@ -270,6 +271,7 @@ export class OdooEditor extends EventTarget {
         this._idToNodeMap.set(1, editable);
         this.editable = this.options.toSanitize ? sanitize(editable) : editable;
         this.editable.classList.add("odoo-editor-editable");
+        this.editable.setAttribute('dir', this.options.direction);
 
         // Set contenteditable before clone as FF updates the content at this point.
         this._activateContenteditable();
@@ -1655,7 +1657,7 @@ export class OdooEditor extends EventTarget {
             focusNode: sel.focusNode,
             focusOffset: sel.focusOffset,
         };
-        if (this._isSelectionInEditable(sel)) {
+        if (!sel.isCollapsed && this.isSelectionInEditable(sel)) {
             this._latestComputedSelectionInEditable = this._latestComputedSelection;
         }
         return this._latestComputedSelection;
@@ -1838,6 +1840,15 @@ export class OdooEditor extends EventTarget {
                     this.commandbarTablePicker.show();
                 },
             },
+            {
+                groupName: 'Basic blocks',
+                title: this.options._t('Switch direction'),
+                description: this.options._t('Switch the text\'s direction.'),
+                fontawesome: 'fa-exchange',
+                callback: () => {
+                    this.execCommand('switchDirection');
+                },
+            },
         ];
         this.commandBar = new Powerbox({
             editable: this.editable,
@@ -1938,7 +1949,7 @@ export class OdooEditor extends EventTarget {
             const selectionStartStyle = getComputedStyle(closestStartContainer);
 
             // queryCommandState does not take stylesheets into account
-            for (const format of ['bold', 'italic', 'underline', 'strikeThrough']) {
+            for (const format of ['bold', 'italic', 'underline', 'strikeThrough', 'switchDirection']) {
                 const formatButton = this.toolbar.querySelector(`#${format.toLowerCase()}`);
                 if (formatButton) {
                     formatButton.classList.toggle('active', isSelectionFormat(this.editable, format));
@@ -2470,7 +2481,7 @@ export class OdooEditor extends EventTarget {
         this._computeHistorySelection();
 
         const selection = this.document.getSelection();
-        this._updateToolbar(this._isSelectionInEditable(selection));
+        this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
@@ -2487,13 +2498,12 @@ export class OdooEditor extends EventTarget {
     /**
      * Returns true if the current selection is inside the editable.
      *
-     * @private
-     * @param {Object} selection
+     * @param {Object} [selection]
      * @returns {boolean}
      */
-    _isSelectionInEditable(selection) {
-        return !selection.isCollapsed &&
-            this.editable.contains(selection.anchorNode) &&
+    isSelectionInEditable(selection) {
+        selection = selection || this.document.getSelection()
+        return selection && selection.anchorNode && this.editable.contains(selection.anchorNode) &&
             this.editable.contains(selection.focusNode);
     }
 
@@ -2786,7 +2796,7 @@ export class OdooEditor extends EventTarget {
         const node = ev.target;
         // handle checkbox lists
         if (node.tagName == 'LI' && getListMode(node.parentElement) == 'CL') {
-            const beforStyle = window.getComputedStyle(node, 'before');
+            const beforStyle = window.getComputedStyle(node, ':before');
             const style1 = {
                 left: parseInt(beforStyle.getPropertyValue('left'), 10),
                 top: parseInt(beforStyle.getPropertyValue('top'), 10),
@@ -2943,6 +2953,7 @@ export class OdooEditor extends EventTarget {
             const linkAttributes = this.options.defaultLinkAttributes || {};
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
 
+            this.historyPauseSteps("_onPaste");
             for (let i = 0; i < splitAroundUrl.length; i++) {
                 const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                     ? splitAroundUrl[i]
@@ -3097,6 +3108,7 @@ export class OdooEditor extends EventTarget {
                     }
                 }
             }
+            this.historyUnpauseSteps("_onPaste");
             this.historyStep();
         }
     }
