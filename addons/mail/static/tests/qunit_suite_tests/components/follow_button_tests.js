@@ -43,7 +43,6 @@ QUnit.test('base rendering not editable', async function (assert) {
 
     const pyEnv = await startServer();
     await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,
@@ -88,7 +87,6 @@ QUnit.test('hover following button', async function (assert) {
         message_follower_ids: [followerId],
     });
     await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,
@@ -160,7 +158,6 @@ QUnit.test('click on "follow" button', async function (assert) {
 
     const pyEnv = await startServer();
     const { click } = await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,
@@ -226,7 +223,6 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         message_follower_ids: [followerId],
     });
     const { click } = await this.createView({
-        hasDialog: true,
         hasView: true,
         // View params
         View: FormView,

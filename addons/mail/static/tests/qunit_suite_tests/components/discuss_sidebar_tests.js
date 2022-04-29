@@ -24,7 +24,6 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     const searchReadDef = makeDeferred();
     const { click } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
             if (args.method === 'search_read') {
@@ -78,7 +77,6 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
     const searchReadDef = makeDeferred();
     const { click } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
             if (args.method === 'search_read') {
@@ -129,7 +127,6 @@ QUnit.test('sidebar channels should be ordered case insensitive alphabetically',
     ]);
     await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     const results = document.querySelectorAll('.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem_name');
     assert.deepEqual(

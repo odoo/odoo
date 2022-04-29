@@ -22,7 +22,6 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@demo");
@@ -49,7 +48,6 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@demo");
@@ -96,7 +94,6 @@ QUnit.test('partner mention suggestion active', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "@demo");

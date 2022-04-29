@@ -609,7 +609,6 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -634,7 +633,6 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -1092,7 +1090,6 @@ QUnit.test('composer with thread typing notification status', async function (as
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
 
     assert.containsOnce(
@@ -1121,7 +1118,6 @@ QUnit.test('current partner notify is typing to other thread members', async fun
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
                 assert.step(`notify_typing:${args.kwargs.is_typing}`);
@@ -1151,7 +1147,6 @@ QUnit.test('current partner is typing should not translate on textual typing sta
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1190,7 +1185,6 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {
@@ -1228,7 +1222,6 @@ QUnit.test('current partner notify is typing again to other members every 50s of
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
         hasTimeControl: true,
         async mockRPC(route, args) {
             if (args.method === 'notify_typing') {

@@ -21,7 +21,6 @@ QUnit.module('discuss_tests.js', {
         this.start = async params => {
             return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
-                hasDiscuss: true,
             }));
         };
     },

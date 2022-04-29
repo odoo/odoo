@@ -23,7 +23,6 @@ QUnit.test('[technical] messaging not created', async function (assert) {
 
     const messagingBeforeCreationDeferred = makeDeferred();
     await start({
-        hasDialog: true,
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
@@ -47,7 +46,7 @@ QUnit.test('[technical] messaging not created', async function (assert) {
 QUnit.test('initial mount', async function (assert) {
     assert.expect(1);
 
-    await start({ hasDialog: true });
+    await start();
     assert.containsOnce(
         document.body,
         '.o_DialogManager',

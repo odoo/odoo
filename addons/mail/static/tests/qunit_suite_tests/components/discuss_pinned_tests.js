@@ -17,7 +17,6 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -43,7 +42,6 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
 
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
@@ -73,7 +71,6 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     });
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
         async mockRPC(route, args) {
             if (args.method === 'action_unfollow') {
                 assert.step('action_unfollow');
@@ -120,7 +117,6 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const { click, env, messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -191,7 +187,6 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,

@@ -924,7 +924,7 @@ QUnit.test("delete all attachments of message without content should no longer d
             res_id: mailChannelId1,
         }
     );
-    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ hasDialog: true });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -977,7 +977,7 @@ QUnit.test('delete all attachments of a message with some text content should st
         model: "mail.channel",
         res_id: mailChannelId1,
     });
-    const { afterEvent, click, createThreadViewComponent, messaging } = await start({ hasDialog: true });
+    const { afterEvent, click, createThreadViewComponent, messaging } = await start();
     const threadViewer = messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),

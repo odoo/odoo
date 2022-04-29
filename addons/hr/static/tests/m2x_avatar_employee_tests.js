@@ -41,7 +41,6 @@ QUnit.module('hr', {}, function () {
             { employee_id: hrEmployeePublicId1 },
         ]);
         const { widget: list } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.employee',
@@ -213,7 +212,6 @@ QUnit.module('hr', {}, function () {
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
         const { widget: form } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.employee',
@@ -271,7 +269,6 @@ QUnit.module('hr', {}, function () {
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
         const { widget: list } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.employee',
@@ -405,7 +402,6 @@ QUnit.module('hr', {}, function () {
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
         const { widget: form } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.employee',

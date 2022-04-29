@@ -13,7 +13,6 @@ QUnit.module('discuss_sidebar_category_tests.js', {
         this.start = async params => {
             return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
-                hasDiscuss: true,
             }));
         };
     },

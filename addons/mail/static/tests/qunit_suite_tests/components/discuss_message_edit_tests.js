@@ -23,7 +23,6 @@ QUnit.test('click on message edit button should open edit composer', async funct
                 default_active_id: `mail.channel_${mailChannelId1}`,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await click('.o_Message');

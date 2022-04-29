@@ -14,16 +14,7 @@ const { triggerEvent } = dom;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('chat_window_manager_tests.js', {
-    beforeEach() {
-        this.start = async params => {
-            return start(Object.assign(
-                { hasChatWindow: true },
-                params,
-            ));
-        };
-    },
-});
+QUnit.module('chat_window_manager_tests.js');
 
 QUnit.test('[technical] messaging not created', async function (assert) {
     /**
@@ -37,7 +28,7 @@ QUnit.test('[technical] messaging not created', async function (assert) {
     assert.expect(2);
 
     const messagingBeforeCreationDeferred = makeDeferred();
-    await this.start({
+    await start({
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
@@ -61,7 +52,7 @@ QUnit.test('[technical] messaging not created', async function (assert) {
 QUnit.test('initial mount', async function (assert) {
     assert.expect(1);
 
-    await this.start();
+    await start();
     assert.containsOnce(
         document.body,
         '.o_ChatWindowManager',
@@ -72,7 +63,7 @@ QUnit.test('initial mount', async function (assert) {
 QUnit.test('chat window new message: basic rendering', async function (assert) {
     assert.expect(10);
 
-    const { click, createMessagingMenuComponent } = await this.start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
@@ -131,7 +122,7 @@ QUnit.test('chat window new message: basic rendering', async function (assert) {
 QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async function (assert) {
     assert.expect(2);
 
-    const { click, createMessagingMenuComponent } = await this.start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
@@ -149,7 +140,7 @@ QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async fun
 QUnit.test('chat window new message: close', async function (assert) {
     assert.expect(1);
 
-    const { click, createMessagingMenuComponent } = await this.start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
@@ -164,7 +155,7 @@ QUnit.test('chat window new message: close', async function (assert) {
 QUnit.test('chat window new message: fold', async function (assert) {
     assert.expect(6);
 
-    const { click, createMessagingMenuComponent } = await this.start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_newMessageButton`);
@@ -242,7 +233,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
         },
     ]);
     const imSearchDef = makeDeferred();
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             browser: {
                 innerWidth: 1920,
@@ -355,7 +346,7 @@ QUnit.test('new message chat window should close on selecting the user if chat w
         name: "Partner 131",
         public: 'private',
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await this.start();
+    const { afterEvent, click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     // open "new message" chat window
@@ -397,7 +388,7 @@ QUnit.test('new message autocomplete should automatically select first result', 
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Partner 131" });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const imSearchDef = makeDeferred();
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
             if (args.method === 'im_search') {
@@ -435,7 +426,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { click, createMessagingMenuComponent, messaging } = await this.start();
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);
@@ -521,7 +512,7 @@ QUnit.test('chat window: fold', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({});
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:${args.method}/${args.kwargs.state}`);
@@ -573,7 +564,7 @@ QUnit.test('chat window: open / close', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create({});
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
@@ -637,7 +628,7 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
             }],
         ],
     });
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             device: {
                 isMobile: true,
@@ -672,7 +663,7 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
             }],
         ],
     });
-    const { click, createMessagingMenuComponent } = await this.start({
+    const { click, createMessagingMenuComponent } = await start({
         env: {
             device: {
                 isMobile: true,
@@ -719,7 +710,7 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
             uuid: 'channel-10-uuid',
         },
     ];
-    const { messaging } = await this.start({
+    const { messaging } = await start({
         env: {
             device: {
                 isMobile: true,
@@ -759,7 +750,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
             }],
         ],
     });
-    const { click, insertText } = await this.start({
+    const { click, insertText } = await start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
                 assert.step(`rpc:channel_fold/${args.kwargs.state}`);
@@ -866,7 +857,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
             ],
         },
     ]);
-    await this.start({
+    await start({
         env: {
             browser: {
                 innerWidth: 1920,
@@ -906,7 +897,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create();
-    const { click, createMessagingMenuComponent, insertText, messaging } = await this.start();
+    const { click, createMessagingMenuComponent, insertText, messaging } = await start();
     const messagingMenuComponent = await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
@@ -977,7 +968,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await this.start();
+    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
@@ -1052,7 +1043,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
-    const { click, createMessagingMenuComponent, messaging } = await this.start({
+    const { click, createMessagingMenuComponent, messaging } = await start({
         env: {
             browser: {
                 innerWidth: 1920, // enough to fit at least 2 chat windows
@@ -1167,7 +1158,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
 
     const pyEnv = await startServer();
     pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
-    const { click, createMessagingMenuComponent } = await this.start();
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     await click('.o_MessagingMenu_toggler');
@@ -1281,7 +1272,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
         channel_type: "chat",
     };
     pyEnv['mail.channel'].create([channel, chat]);
-    const { click } = await this.start({
+    const { click } = await start({
         env: {
             browser: {
                 innerWidth: 900,
@@ -1394,7 +1385,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         { name: 'mailChannel2' },
         { name: 'mailChannel3' },
     ]);
-    const { click, createMessagingMenuComponent, messaging } = await this.start({
+    const { click, createMessagingMenuComponent, messaging } = await start({
         env: {
             browser: {
                 innerWidth: 900, // enough to fit 2 chat windows but not 3
@@ -1523,7 +1514,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'channel1' }, { name: 'channel2' }]);
-    const { click, createMessagingMenuComponent, messaging } = await this.start();
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);
@@ -1653,7 +1644,7 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
             ],
         },
     ]);
-    await this.start({
+    await start({
         env: {
             browser: {
                 innerWidth: 1920,
@@ -1733,7 +1724,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent } = await this.start();
+    const { afterEvent, click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
@@ -1821,7 +1812,7 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
             res_id: mailChannelId1,
         });
     }
-    const { insertText } = await this.start();
+    const { insertText } = await start();
 
     // Set content of the composer of the chat window
     await insertText('.o_ComposerTextInput_textarea', 'WOLOLO');
@@ -1853,7 +1844,7 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
             }],
         ],
     });
-    const { click, createMessagingMenuComponent, insertText } = await this.start({
+    const { click, createMessagingMenuComponent, insertText } = await start({
         env: {
             device: {
                 isMobile: true, // here isMobile is used for the small screen size, not actually for the mobile devices
@@ -1889,7 +1880,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await this.start();
+    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
@@ -1959,7 +1950,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await this.start();
+    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
@@ -2069,7 +2060,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
             name: "Channel #12",
         },
     ]);
-    const { click, messaging } = await this.start({
+    const { click, messaging } = await start({
         env: {
             browser: {
                 innerWidth: 900,
@@ -2163,7 +2154,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { messaging } = await this.start();
+    const { messaging } = await start();
 
     // simulate receiving a message
     await afterNextRender(async () => messaging.rpc({
@@ -2208,7 +2199,7 @@ QUnit.test('new message separator is not shown in a chat window of a chat on rec
         channel_type: "chat",
         uuid: 'channel-10-uuid',
     });
-    const { messaging } = await this.start();
+    const { messaging } = await start();
 
     // simulate receiving a message
     await afterNextRender(async () => messaging.rpc({
@@ -2251,7 +2242,7 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { afterEvent, messaging } = await this.start();
+    const { afterEvent, messaging } = await start();
 
     // simulate receiving a message
     await afterNextRender(() => messaging.rpc({
@@ -2310,7 +2301,7 @@ QUnit.test('Textual representations of shift previous/next operations are correc
             ],
         },
     ]);
-    await this.start();
+    await start();
 
     assert.strictEqual(
         document.querySelector('.o_ChatWindowHeader_commandShiftPrev').title,
@@ -2346,7 +2337,7 @@ QUnit.test('Textual representations of shift previous/next operations are correc
             ],
         },
     ]);
-    await this.start({
+    await start({
         env: {
             _t: Object.assign((s => s), {
                 database: {
@@ -2393,7 +2384,7 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
         channel_type: 'chat',
         uuid: 'channel11uuid',
     });
-    const { messaging } = await this.start();
+    const { messaging } = await start();
 
     // simulate receiving the first message on channel 11
     await afterNextRender(() => messaging.rpc({
@@ -2435,7 +2426,7 @@ QUnit.test('chat window should remain folded when new message is received', asyn
         uuid: 'channel-10-uuid',
     });
 
-    const { messaging } = await this.start();
+    const { messaging } = await start();
     // simulate receiving a new message
     await afterNextRender(async () => messaging.rpc({
         route: '/mail/chat_post',
@@ -2474,7 +2465,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel1' }]);
-    const { click, createMessagingMenuComponent, messaging } = await this.start({
+    const { click, createMessagingMenuComponent, messaging } = await start({
         env: {
             browser: {
                 innerWidth: 600, // enough to fit 1 chat window + hidden menu
@@ -2563,7 +2554,7 @@ QUnit.skip('chat window scroll position should remain the same after switching p
             res_id: mailChannelId2,
         });
     }
-    const { afterEvent, createMessagingMenuComponent, messaging } = await this.start();
+    const { afterEvent, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     const thread1LocalId = messaging.models['Thread'].findFromIdentifyingData({
@@ -2640,7 +2631,7 @@ QUnit.skip('chat window scroll position should remain the same after switching n
             res_id: mailChannelId2,
         });
     }
-    const { afterEvent, createMessagingMenuComponent, messaging } = await this.start();
+    const { afterEvent, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     const thread1LocalId = messaging.models['Thread'].findFromIdentifyingData({

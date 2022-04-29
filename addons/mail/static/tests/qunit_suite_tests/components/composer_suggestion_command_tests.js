@@ -17,7 +17,6 @@ QUnit.test('command suggestion displayed', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "/who");
@@ -39,7 +38,6 @@ QUnit.test('command suggestion correct data', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "/who");
@@ -76,7 +74,6 @@ QUnit.test('command suggestion active', async function (assert) {
                 default_active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await openDiscuss();
     await insertText('.o_ComposerTextInput_textarea', "/who");
