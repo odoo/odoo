@@ -464,6 +464,16 @@ registerModel({
             return this.recipients.includes(this.messaging.currentPartner);
         },
         /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsDiscussionOrNotification() {
+            if (this.is_discussion || this.is_notification) {
+                return true;
+            }
+            return clear();
+        },
+        /**
          * The method does not attempt to cover all possible cases of empty
          * messages, but mostly those that happen with a standard flow. Indeed
          * it is preferable to be defensive and show an empty message sometimes
@@ -799,6 +809,10 @@ registerModel({
          */
         isBodyEqualSubtypeDescription: attr({
             compute: '_computeIsBodyEqualSubtypeDescription',
+            default: false,
+        }),
+        isDiscussionOrNotification: attr({
+            compute: '_computeIsDiscussionOrNotification',
             default: false,
         }),
         /**
