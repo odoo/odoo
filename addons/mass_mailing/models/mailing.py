@@ -744,7 +744,9 @@ class MassMailing(models.Model):
             SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
               FROM mailing_trace s
               JOIN %(target)s t ON (s.res_id = t.id)
+              %(join_domain)s
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+              %(where_domain)s                               
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
@@ -755,7 +757,9 @@ class MassMailing(models.Model):
                   FROM mailing_trace s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
+                  %(join_domain)s                  
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+                  %(where_domain)s 
             """
         elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
@@ -777,13 +781,17 @@ class MassMailing(models.Model):
                AND s.mass_mailing_id = %%(mailing_id)s
                AND s.model = %%(target_model)s;
             """
-        query = query % {'target': target._table, 'mail_field': mail_field}
+        join_domain, where_domain = self._get_seen_list_extra()
+        query = query % {'target': target._table, 'mail_field': mail_field, 'join_domain': join_domain, 'where_domain': where_domain}
         params = {'mailing_id': self.id, 'mailing_campaign_id': self.campaign_id.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)
         seen_list = set(m[0] for m in self._cr.fetchall())
         _logger.info(
             "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
         return seen_list
+
+    def _get_seen_list_extra(self):
+        return ('', '')
 
     def _get_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
