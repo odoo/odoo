@@ -11,7 +11,8 @@ class ProductionLot(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True
-
+    _order = 'name'
+    
     name = fields.Char(
         'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
         required=True, help="Unique Lot/Serial Number")
