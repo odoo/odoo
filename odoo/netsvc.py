@@ -78,7 +78,7 @@ class PerfFilter(logging.Filter):
             query_time = threading.current_thread().query_time
             perf_t0 = threading.current_thread().perf_t0
             remaining_time = time.time() - perf_t0 - query_time
-            record.perf_info = '%s %s %s' % self.format_perf(query_count, query_time, remaining_time)
+            record.perf_info = '%s %s %s' % self.format_perf(0, 0, 0)
             delattr(threading.current_thread(), "query_count")
         else:
             record.perf_info = "- - -"
