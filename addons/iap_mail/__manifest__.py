@@ -12,7 +12,6 @@
         'iap',
         'mail',
     ],
-    'application': False,
     'installable': True,
     'auto_install': True,
     'data': [

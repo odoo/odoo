@@ -10,8 +10,6 @@
         'data/loyalty_delivery_data.xml',
         'views/loyalty_reward_views.xml',
     ],
-    'assets': {
-    },
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

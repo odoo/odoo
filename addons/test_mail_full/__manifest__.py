@@ -28,9 +28,6 @@ real applications. """,
         'security/ir.model.access.csv',
         'security/ir_rule_data.xml',
     ],
-    'demo': [
-    ],
     'installable': True,
-    'application': False,
     'license': 'LGPL-3',
 }

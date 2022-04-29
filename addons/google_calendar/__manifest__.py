@@ -5,7 +5,6 @@
     'name': 'Google Calendar',
     'version': '1.0',
     'category': 'Productivity',
-    'description': "",
     'depends': ['google_account', 'calendar'],
     'data': [
         'data/google_calendar_data.xml',
@@ -15,9 +14,7 @@
         'views/res_users_views.xml',
         'views/google_calendar_views.xml',
         ],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'google_calendar/static/src/js/google_calendar_popover.js',

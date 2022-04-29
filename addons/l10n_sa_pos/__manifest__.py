@@ -13,8 +13,6 @@ K.S.A. POS Localization
         'l10n_gcc_pos',
         'l10n_sa',
     ],
-    'data': [
-    ],
     'assets': {
         'web.assets_qweb': [
             'l10n_sa_pos/static/src/xml/OrderReceipt.xml',

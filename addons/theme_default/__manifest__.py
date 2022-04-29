@@ -8,7 +8,6 @@
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website'],
-    'data': [],
     'images': [
         'static/description/cover.png',
         'static/description/theme_default_screenshot.jpg',
@@ -20,7 +19,5 @@
         'pricing': ['s_comparisons'],
         'privacy_policy': ['s_faq_collapse'],
     },
-    'application': False,
-    'auto_install': False,
     'license': 'LGPL-3',
 }

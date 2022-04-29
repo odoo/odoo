@@ -21,8 +21,6 @@ by external providers and will automatically generate purchase orders directed t
         'views/sale_order_views.xml',
         'views/purchase_order_views.xml',
     ],
-    'demo': [
-    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }

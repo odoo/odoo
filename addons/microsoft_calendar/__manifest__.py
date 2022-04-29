@@ -5,7 +5,6 @@
     'name': 'Outlook Calendar',
     'version': '1.0',
     'category': 'Productivity',
-    'description': "",
     'depends': ['microsoft_account', 'calendar'],
     'data': [
         'data/microsoft_calendar_data.xml',
@@ -15,9 +14,7 @@
         'views/res_users_views.xml',
         'views/microsoft_calendar_views.xml',
         ],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
     'post_init_hook': 'init_initiating_microsoft_uuid',
     'assets': {
         'web.assets_backend': [

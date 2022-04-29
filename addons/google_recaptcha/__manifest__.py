@@ -12,7 +12,6 @@
     'data': [
         'views/res_config_settings_view.xml',
     ],
-    'auto_install': False,
     'assets': {
         'web.assets_frontend': [
             'google_recaptcha/static/src/scss/recaptcha.scss',

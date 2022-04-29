@@ -9,7 +9,6 @@
     'version': '1.0',
     'summary': 'Quizzes on tracks',
     'website': 'https://www.odoo.com/app/events',
-    'description': "",
     'depends': [
         'website_profile',
         'website_event_track',
@@ -30,7 +29,6 @@
     'demo': [
         'data/quiz_demo.xml',
     ],
-    'application': False,
     'installable': True,
     'assets': {
         'web.assets_frontend': [

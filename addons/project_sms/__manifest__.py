@@ -14,7 +14,6 @@
         'security/ir.model.access.csv',
         'security/project_sms_security.xml',
     ],
-    'application': False,
     'auto_install': True,
     'license': 'LGPL-3',
 }

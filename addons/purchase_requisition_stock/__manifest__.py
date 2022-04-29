@@ -6,8 +6,6 @@
     'version': '1.2',
     'category': 'Inventory/Purchase',
     'sequence': 70,
-    'summary': '',
-    'description': "",
     'depends': ['purchase_requisition', 'purchase_stock'],
     'demo': [
         'data/purchase_requisition_stock_demo.xml'

@@ -8,7 +8,6 @@
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
-    'description': "",
     'depends': ['website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest'],
     'data': [
         'security/ir.model.access.csv',

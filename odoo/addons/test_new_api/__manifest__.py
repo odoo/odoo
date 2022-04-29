@@ -8,14 +8,11 @@
     'description': """A module to test the API.""",
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,
-    'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
         'security/test_new_api_security.xml',
         'views/test_new_api_views.xml',
         'data/test_new_api_data.xml',
-    ],
-    'demo': [
     ],
     'assets': {
         'web.assets_tests': [

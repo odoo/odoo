@@ -7,7 +7,6 @@
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Adds American style tipping to Adyen',
-    'description': '',
     'depends': ['pos_adyen', 'pos_restaurant', 'payment_adyen'],
     'data': [
         'views/pos_payment_method_views.xml',

@@ -5,7 +5,6 @@
     'name': 'Notes',
     'version': '1.0',
     'category': 'Productivity/Notes',
-    'description': "",
     'website': 'https://www.odoo.com/app/notes',
     'summary': 'Organize your work with memos',
     'sequence': 260,
@@ -23,11 +22,8 @@
     'demo': [
         'data/note_demo.xml',
     ],
-    'test': [
-    ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'note/static/src/scss/note.scss',

@@ -8,7 +8,6 @@
     'sequence': 140,
     'summary': 'Publish events, sell tickets',
     'website': 'https://www.odoo.com/app/events',
-    'description': "",
     'depends': [
         'event',
         'website',

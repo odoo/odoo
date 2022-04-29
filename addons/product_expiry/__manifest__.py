@@ -3,7 +3,6 @@
     'name': 'Products Expiration Date',
     'category': 'Inventory/Inventory',
     'depends': ['stock'],
-    'demo': [],
     'description': """
 Track different dates on products and production lots.
 ======================================================

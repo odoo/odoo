@@ -12,7 +12,5 @@
     'data': [
         'views/stock_move_views.xml',
     ],
-    'demo': [],
     'auto_install': True,
-    'application': False,
 }

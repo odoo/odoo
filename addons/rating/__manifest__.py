@@ -18,7 +18,6 @@ This module allows a customer to give rating.
         'security/ir.model.access.csv'
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'rating/static/src/scss/rating_rating_views.scss',

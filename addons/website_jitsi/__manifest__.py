@@ -17,7 +17,6 @@
         'views/chat_room_views.xml',
         'security/ir.model.access.csv',
     ],
-    'application': False,
     'assets': {
         'web.assets_frontend': [
             'website_jitsi/static/src/css/chat_room.css',

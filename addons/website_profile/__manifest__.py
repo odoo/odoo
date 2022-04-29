@@ -17,7 +17,6 @@
         'views/website_profile.xml',
         'security/ir.model.access.csv',
     ],
-    'auto_install': False,
     'assets': {
         'web.assets_frontend': [
             'website_profile/static/src/scss/website_profile.scss',

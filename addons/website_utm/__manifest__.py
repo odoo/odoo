@@ -2,8 +2,6 @@
 {
     'name': "Website UTM glue code",
     'summary': "Technical module adding utm compatibility to website.",
-    'description': "",
-    'author': "Odoo S.A.",
     'website': "https://www.odoo.com",
     'category': 'Hidden',
     'version': '1.0',

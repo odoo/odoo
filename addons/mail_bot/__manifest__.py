@@ -6,12 +6,10 @@
     'version': '1.2',
     'category': 'Productivity/Discuss',
     'summary': 'Add OdooBot in discussions',
-    'description': "",
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['mail'],
     'auto_install': True,
     'installable': True,
-    'application': False,
     'data': [
         'views/res_users_views.xml',
         'data/mailbot_data.xml',

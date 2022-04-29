@@ -20,7 +20,6 @@ This application allows you to integrate time off in payslips.
     ],
     'demo': ['data/hr_payroll_holidays_demo.xml'],
     'installable': True,
-    'application': False,
     'auto_install': True,
     'post_init_hook': '_validate_existing_work_entry',
     'license': 'LGPL-3',

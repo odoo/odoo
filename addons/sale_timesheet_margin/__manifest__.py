@@ -11,8 +11,6 @@ Allows to compute accurate margin for Service sales.
 """,
     'category': 'Hidden',
     'depends': ['sale_margin', 'sale_timesheet'],
-    'demo': [],
-    'data': [],
     'auto_install': True,
     'license': 'LGPL-3',
 }

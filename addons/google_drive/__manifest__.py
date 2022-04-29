@@ -6,7 +6,6 @@
     'version': '0.2',
     'category': 'Productivity',
     'installable': True,
-    'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
         'data/google_drive_data.xml',

@@ -42,8 +42,6 @@ up a management by affair.
         'data/hr_timesheet_demo.xml',
     ],
     'installable': True,
-    'application': False,
-    'auto_install': False,
     'post_init_hook': 'create_internal_project',
     'uninstall_hook': '_uninstall_hook',
     'assets': {

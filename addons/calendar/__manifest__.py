@@ -36,7 +36,6 @@ If you need to manage your meetings, you should install the CRM module.
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'calendar/static/src/models/*.js',

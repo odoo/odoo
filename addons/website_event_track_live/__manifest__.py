@@ -9,7 +9,6 @@
     'version': '1.0',
     'summary': 'Support live tracks: streaming, participation, youtube',
     'website': 'https://www.odoo.com/app/events',
-    'description': "",
     'depends': [
         'website_event_track',
     ],
@@ -21,7 +20,6 @@
     'demo': [
         'data/event_track_demo.xml'
     ],
-    'application': False,
     'installable': True,
     'assets': {
         'web.assets_frontend': [

@@ -19,7 +19,6 @@
         'web_tour',
         'digest',
     ],
-    'description': "",
     'data': [
         'security/project_security.xml',
         'security/ir.model.access.csv',
@@ -55,10 +54,7 @@
         'data/mail_template_demo.xml',
         'data/project_demo.xml',
     ],
-    'test': [
-    ],
     'installable': True,
-    'auto_install': False,
     'application': True,
     'post_init_hook': '_project_post_init',
     'assets': {

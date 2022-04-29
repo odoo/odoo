@@ -20,6 +20,5 @@
         'data/survey_demo.xml',
         'data/hr_job_demo.xml',
     ],
-    'auto_install': False,
     'license': 'LGPL-3',
 }

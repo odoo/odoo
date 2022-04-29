@@ -16,11 +16,6 @@
         'mail_bot',
         'website_livechat',
     ],
-    'data': [
-    ],
-    'demo': [
-    ],
     'installable': True,
-    'application': False,
     'license': 'LGPL-3',
 }

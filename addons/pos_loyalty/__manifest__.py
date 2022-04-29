@@ -7,7 +7,6 @@
     'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Use Coupons, Gift Cards and Loyalty programs in Point of Sale',
-    'description': '',
     'depends': ['loyalty', 'point_of_sale'],
     'data': [
         'security/ir.model.access.csv',

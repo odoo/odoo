@@ -28,7 +28,6 @@ This module adds several features to the Point of Sale that are specific to rest
         'data/pos_restaurant_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'assets': {
         'point_of_sale.assets': [
             'pos_restaurant/static/lib/js/jquery.ui.touch-punch.js',

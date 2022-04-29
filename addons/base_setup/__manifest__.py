@@ -17,9 +17,7 @@ Shows you a list of applications features to install from.
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         ],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
 
     'assets': {
         'web.assets_backend': [

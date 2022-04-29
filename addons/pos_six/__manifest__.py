@@ -6,10 +6,9 @@
     'category': 'Sales/Point Of Sale',
     'sequence': 6,
     'summary': 'Integrate your POS with a Six payment terminal',
-    'description': '',
     'data': [
         'views/pos_payment_method_views.xml',
-        ],
+    ],
     'depends': ['point_of_sale'],
     'installable': True,
     'license': 'LGPL-3',

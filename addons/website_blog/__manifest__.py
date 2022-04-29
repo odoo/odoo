@@ -8,7 +8,6 @@
     'website': 'https://www.odoo.com/app/blog',
     'summary': 'Publish blog posts, announces, news',
     'version': '1.1',
-    'description': "",
     'depends': ['website_mail', 'website_partner'],
     'data': [
         'data/mail_data.xml',
@@ -26,8 +25,6 @@
     ],
     'demo': [
         'data/website_blog_demo.xml'
-    ],
-    'test': [
     ],
     'installable': True,
     'application': True,

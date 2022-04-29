@@ -14,7 +14,6 @@
         'views/maintenance_views.xml',
         'views/hr_views.xml',
     ],
-    'demo': [],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

@@ -7,7 +7,6 @@
     'category': 'Accounting/Payment Acquirers',
     'sequence': 365,
     'summary': 'Website - Payment Authorize',
-    'description': """""",
     'depends': ['website_payment', 'payment_authorize'],
     'data': [
         'views/res_config_settings_views.xml'

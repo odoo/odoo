@@ -60,7 +60,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'assets': {
         'mail.assets_discuss_public': [
             'hr_holidays/static/src/components/*/*',

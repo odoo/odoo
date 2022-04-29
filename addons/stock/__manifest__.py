@@ -5,7 +5,6 @@
     'name': 'Inventory',
     'version': '1.1',
     'summary': 'Manage your stock and logistics activities',
-    'description': "",
     'website': 'https://www.odoo.com/app/inventory',
     'depends': ['product', 'barcodes_gs1_nomenclature', 'digest'],
     'category': 'Inventory/Inventory',
@@ -90,7 +89,6 @@
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'pre_init_hook': 'pre_init_hook',
     'post_init_hook': '_assign_default_mail_template_picking_id',
     'assets': {

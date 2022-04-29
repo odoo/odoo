@@ -6,7 +6,6 @@
     'description': """A module to test HTTP""",
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,
-    'auto_install': False,
     'data': [
         'data.xml',
         'ir.model.access.csv',

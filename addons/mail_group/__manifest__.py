@@ -12,7 +12,6 @@
         'mail',
         'portal',
     ],
-    'auto_install': False,
     'data': [
         'data/ir_cron_data.xml',
         'data/mail_templates.xml',
