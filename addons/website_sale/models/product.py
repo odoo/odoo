@@ -478,3 +478,7 @@ class Product(models.Model):
         # [1:] to remove the main image from the template, we only display
         # the template extra images here
         return variant_images + self.product_tmpl_id._get_images()[1:]
+
+    def _is_add_to_cart_allowed(self):
+        self.ensure_one()
+        return self.user_has_groups('base.group_system') or (self.sale_ok and self.website_published)
