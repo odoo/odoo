@@ -168,10 +168,7 @@ class ProductTemplate(models.Model):
         sales_prices = pricelist._get_products_price(self, 1.0)
         show_discount = pricelist.discount_policy == 'without_discount'
 
-        base_sales_prices = None
-        if show_discount:
-            base_sales_prices = self.price_compute(
-                'list_price', currency=pricelist.currency_id)
+        base_sales_prices = self.price_compute('list_price', currency=pricelist.currency_id)
 
         res = {}
         for template in self:
@@ -189,14 +186,24 @@ class ProductTemplate(models.Model):
             template_price_vals = {
                 'price_reduce': price_reduce
             }
+            base_price = None
+            price_list_contains_template = price_reduce != base_sales_prices[template.id]
 
-            if show_discount:
+            if template.compare_list_price:
+                # The base_price becomes the compare list price and the price_reduce becomes the price
+                base_price = template.compare_list_price
+                if not price_list_contains_template:
+                    price_reduce = base_sales_prices[template.id]
+                    template_price_vals.update(price_reduce=price_reduce)
+            elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
-                if base_price != price_reduce:
-                    base_price = self.env['account.tax']._fix_tax_included_price_company(
-                        base_price, product_taxes, taxes, self.env.company)
-                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
-                    template_price_vals['base_price'] = base_price
+
+            if base_price and base_price != price_reduce:
+                base_price = self.env['account.tax']._fix_tax_included_price_company(
+                    base_price, product_taxes, taxes, self.env.company)
+                base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
+                    tax_display]
+                template_price_vals['base_price'] = base_price
 
             res[template.id] = template_price_vals
 
