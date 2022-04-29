@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { loadAssets } from "../assets";
+import { loadJS } from "../assets";
 import { isBrowserChrome } from "../browser/feature_detection";
 
 /**
@@ -49,9 +49,7 @@ export function formatTraceback(error) {
 export async function annotateTraceback(error) {
     const traceback = formatTraceback(error);
     try {
-        await loadAssets({
-            jsLibs: ["/web/static/lib/stacktracejs/stacktrace.js"],
-        });
+        await loadJS("/web/static/lib/stacktracejs/stacktrace.js");
     } catch (_e) {
         return traceback;
     }

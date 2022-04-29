@@ -3,7 +3,7 @@
 import { makeEnv, startServices } from "./env";
 import { legacySetupProm } from "./legacy/legacy_setup";
 import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
-import { processTemplates } from "./core/assets";
+import { processTemplates, loadBundle } from "./core/assets";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
 import { renderToString } from "./core/utils/render";
@@ -47,6 +47,7 @@ export async function startWebClient(Webclient) {
         translateFn: env._t,
     });
     renderToString.app = app;
+    loadBundle.app = app;
     const root = await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {

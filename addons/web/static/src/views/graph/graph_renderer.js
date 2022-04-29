@@ -5,10 +5,10 @@ import { BORDER_WHITE, DEFAULT_BG, getColor, hexToRGBA } from "./colors";
 import { formatFloat } from "@web/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
-import { useAssets } from "@web/core/assets";
+import { loadJS } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 
-const { Component, onWillUnmount, useEffect, useRef } = owl;
+const { Component, onWillUnmount, useEffect, useRef, onWillStart } = owl;
 
 const NO_DATA = _lt("No data");
 
@@ -50,7 +50,7 @@ export class GraphRenderer extends Component {
         this.tooltip = null;
         this.legendTooltip = null;
 
-        useAssets({ jsLibs: ["/web/static/lib/Chart/Chart.js"] });
+        onWillStart(() => loadJS(["/web/static/lib/Chart/Chart.js"]));
 
         useEffect(() => this.renderChart());
         onWillUnmount(this.onWillUnmount);
