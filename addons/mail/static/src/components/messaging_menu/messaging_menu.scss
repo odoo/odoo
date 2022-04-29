@@ -3,24 +3,7 @@
 // ------------------------------------------------------------------
 
 .o_MessagingMenu_dropdownMenu {
-    display: flex;
-    flex-flow: column;
-    padding-top: map-get($spacers, 0);
-    padding-bottom: map-get($spacers, 0);
-    overflow-y: auto;
-    /**
-     * Override from bootstrap .dropdown-menu to fix top alignment with other
-     * systray menu.
-     */
-    margin-top: map-get($spacers, 0);
-
-    &.o-messaging-not-initialized {
-        align-items: center;
-        justify-content: center;
-    }
-
     &:not(.o-isDeviceSmall) {
-        flex: 0 1 auto;
         width: 450px;
         min-height: 50px;
         /**
@@ -31,48 +14,22 @@
         * As a result, Min() is ignored by SCSS while CSS interprets as its min() function.
         */
         max-height: Min(calc(100vh - 140px), 630px);
-        z-index: 1050; // on top of chat windows
+        z-index: $zindex-modal; // on top of chat windows
     }
 
     &.o-isDeviceSmall {
-        flex: 1 1 auto;
-        position: fixed;
         top: $o-mail-chat-window-header-height-mobile;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: map-get($sizes, 100);
-        margin: 0;
         max-height: none;
     }
 }
 
-.o_MessagingMenu_dropdownMenuHeader {
-
-    &:not(.o-isDeviceSmall) {
-        display: flex;
-        flex-shrink: 0; // Forces Safari to not shrink below fit content
-    }
-
-    &.o-isDeviceSmall {
-        display: grid;
-        grid-template-areas:
-            "top"
-            "bottom";
-        grid-template-rows: auto auto;
-        padding: map-get($spacers, 2);
-    }
-}
-
-.o_MessagingMenu_dropdownLoadingIcon {
-    margin-right: map-get($spacers, 1);
-}
-
-.o_MessagingMenu_loading {
-    font-size: small;
-    position: absolute;
-    bottom: 50%;
-    right: 0;
+.o_MessagingMenu_dropdownMenuHeader.o-isDeviceSmall {
+    // Could be replaced by "d-grid" after the migration to BS5.
+    display: grid;
+    grid-template-areas:
+        "top"
+        "bottom";
+    grid-template-rows: auto auto;
 }
 
 .o_MessagingMenu_newMessageButton.o-isDeviceSmall {
@@ -82,28 +39,11 @@
 
 .o_MessagingMenu_mobileNewMessageInput {
     grid-area: bottom;
-    padding: map-get($spacers, 2);
-    margin-top: map-get($spacers, 2);
 }
-
-.o_MessagingMenu_notificationList.o-isDeviceSmall {
-    flex: 1 1 auto;
-    overflow-y: auto;
-}
-
 
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
-
-// Make hightlight more consistent, due to messaging menu looking quite similar to discuss app in mobile
-.o_MessagingMenu.show {
-    background-color: rgba($black, 0.1);
-}
-
-.o_MessagingMenu_dropdownMenu.o-isDeviceSmall {
-    border: 0;
-}
 
 .o_MessagingMenu_dropdownMenuHeader {
     z-index: 1;
@@ -111,7 +51,4 @@
 
 .o_MessagingMenu_mobileNewMessageInput {
     appearance: none;
-    border: $border-width solid gray('400');
-    border-radius: 5px;
-    outline: none;
 }
