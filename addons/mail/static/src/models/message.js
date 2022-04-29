@@ -612,38 +612,40 @@ registerModel({
          * @returns {Object[]}
          */
         _computeTrackingValues() {
-            return this.tracking_value_ids.map(trackingValue => {
-                const value = Object.assign({}, trackingValue);
-                value.changed_field = sprintf(this.env._t("%s:"), value.changed_field);
-                /**
-                 * Maps tracked field type to a JS formatter. Tracking values are
-                 * not always stored in the same field type as their origin type.
-                 * Field types that are not listed here are not supported by
-                 * tracking in Python. Also see `create_tracking_values` in Python.
-                 */
-                const fieldType = ['many2one', 'selection'].includes(value.field_type) ? 'char' : value.field_type;
-                // If the formatter is not found in the registry, search on the legacy fieldUtils.format.
-                // This must be removed when all the formatters will be on the registry
-                let formatFn = formatters.get(fieldType, null) || format[fieldType];
-                const options = {};
-                switch (value.field_type) {
-                    case 'boolean':
-                        value.old_value = value.old_value ? this.env._t('Yes') : this.env._t('No');
-                        value.new_value = value.new_value ? this.env._t('Yes') : this.env._t('No');
-                        return value;
-                    case 'date':
-                    case 'datetime':
-                        value.old_value = value.old_value && parsers.get(fieldType)(value.old_value);
-                        value.new_value = value.new_value && parsers.get(fieldType)(value.new_value);
-                        break;
-                    case 'monetary':
-                        options['currencyId'] = value.currency_id;
-                        break;
-                }
-                value.old_value = formatFn(value.old_value, options);
-                value.new_value = formatFn(value.new_value, options);
-                return value;
-            });
+            try {
+                return this.tracking_value_ids.map(trackingValue => {
+                    const value = Object.assign({}, trackingValue);
+                    value.changed_field = sprintf(this.env._t("%s:"), value.changed_field);
+                    /**
+                     * Maps tracked field type to a JS formatter. Tracking values are
+                     * not always stored in the same field type as their origin type.
+                     * Field types that are not listed here are not supported by
+                     * tracking in Python. Also see `create_tracking_values` in Python.
+                     */
+                    const fieldType = ['many2one', 'selection'].includes(value.field_type) ? 'char' : value.field_type;
+                    // If the formatter is not found in the registry, search on the legacy fieldUtils.format.
+                    // This must be removed when all the formatters will be on the registry
+                    let formatFn = formatters.get(fieldType, null) || format[fieldType];
+                    const options = {};
+                    switch (value.field_type) {
+                        case 'boolean':
+                            value.old_value = value.old_value ? this.env._t('Yes') : this.env._t('No');
+                            value.new_value = value.new_value ? this.env._t('Yes') : this.env._t('No');
+                            return value;
+                        case 'date':
+                        case 'datetime':
+                            value.old_value = value.old_value && parsers.get(fieldType)(value.old_value);
+                            value.new_value = value.new_value && parsers.get(fieldType)(value.new_value);
+                            break;
+                        case 'monetary':
+                            options['currencyId'] = value.currency_id;
+                            break;
+                    }
+                    value.old_value = formatFn(value.old_value, options);
+                    value.new_value = formatFn(value.new_value, options);
+                    return value;
+                });
+            } catch(e) { console.log(e) };
         },
     },
     fields: {
