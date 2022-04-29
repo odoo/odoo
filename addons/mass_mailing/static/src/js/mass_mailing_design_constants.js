@@ -26,8 +26,8 @@ export const PRIORITY_STYLES = {
     'h3': ['font-family'],
     'p': ['font-family'],
     'a:not(.btn)': [],
-    'a.btn-primary': [],
-    'a.btn-secondary': [],
+    'a.btn.btn-primary': [],
+    'a.btn.btn-secondary': [],
     'hr': [],
 };
 export const RE_CSS_TEXT_MATCH = /([^{]+)([^}]+)/;
