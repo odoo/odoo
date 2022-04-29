@@ -190,7 +190,7 @@ export class FormView extends Component {
         useSetupView({
             beforeLeave: () => {
                 if (this.model.root.isDirty) {
-                    return this.model.root.save();
+                    return this.model.root.save({ noReload: true, stayInEdition: true });
                 }
             },
             getLocalState: () => {

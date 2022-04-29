@@ -1632,8 +1632,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view");
     });
 
-    QUnit.skipWOWL("execute action from dirty, new record, and come back", async function (assert) {
-        assert.expect(18);
+    QUnit.test("execute action from dirty, new record, and come back", async function (assert) {
         serverData.models.partner.fields.bar.default = 1;
         serverData.views["partner,false,form"] = `
             <form>
