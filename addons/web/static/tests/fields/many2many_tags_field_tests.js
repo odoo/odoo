@@ -21,6 +21,9 @@ import { makeView, setupViewRegistries } from "../views/helpers";
 let serverData;
 let target;
 
+// WOWL remove after adapting tests
+let createView, FormView, testUtils;
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -1146,5 +1149,426 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
         await selectDropdownItem(target, "timmy", "silver");
         assert.verifySteps(["world"]);
+    });
+
+    QUnit.skipWOWL("widget many2many_tags", async function (assert) {
+        assert.expect(1);
+        serverData.models.turtle.records[0].partner_ids = [2];
+
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            serverData,
+            arch:
+                '<form string="Turtles">' +
+                "<sheet>" +
+                '<field name="display_name"/>' +
+                '<field name="partner_ids" widget="many2many_tags"/>' +
+                "</sheet>" +
+                "</form>",
+            resId: 1,
+        });
+
+        assert.deepEqual(
+            $(target)
+                .find(".o_field_many2manytags.o_field_widget .badge .o_badge_text")
+                .attr("title"),
+            "second record",
+            "the title should be filled in"
+        );
+    });
+
+    QUnit.skipWOWL("many2many tags widget: select multiple records", async function (assert) {
+        assert.expect(5);
+        for (var i = 1; i <= 10; i++) {
+            this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i });
+        }
+        var form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                '<field name="display_name"/>' +
+                '<field name="timmy" widget="many2many_tags"/>' +
+                "</form>",
+            res_id: 1,
+            archs: {
+                "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+                "partner_type,false,search": '<search><field name="display_name"/></search>',
+            },
+        });
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.many2one.clickOpenDropdown("timmy");
+        await testUtils.fields.many2one.clickItem("timmy", "Search More");
+        assert.ok($(".modal .o_list_view"), "should have open the modal");
+
+        // + 1 for the select all
+        assert.containsN(
+            $(document),
+            ".modal .o_list_view .o_list_record_selector input",
+            this.data.partner_type.records.length + 1,
+            "Should have record selector checkboxes to select multiple records"
+        );
+        //multiple select tag
+        await testUtils.dom.click($(".modal .o_list_view thead .o_list_record_selector input"));
+        assert.ok(
+            !$(".modal .o_select_button").prop("disabled"),
+            "select button should be enabled"
+        );
+        await testUtils.dom.click($(".o_select_button"));
+        assert.containsNone($(document), ".modal .o_list_view", "should have closed the modal");
+        assert.containsN(
+            form,
+            '.o_field_many2manytags[name="timmy"] .badge',
+            this.data.partner_type.records.length,
+            "many2many tag should now contain 12 records"
+        );
+        form.destroy();
+    });
+
+    QUnit.skipWOWL(
+        "many2many tags widget: select multiple records doesn't show already added tags",
+        async function (assert) {
+            assert.expect(5);
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i });
+            }
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                    "</form>",
+                res_id: 1,
+                archs: {
+                    "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+                    "partner_type,false,search": '<search><field name="display_name"/></search>',
+                },
+            });
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.many2one.clickOpenDropdown("timmy");
+            await testUtils.fields.many2one.clickItem("timmy", "Partner1");
+
+            await testUtils.fields.many2one.clickOpenDropdown("timmy");
+            await testUtils.fields.many2one.clickItem("timmy", "Search More");
+            assert.ok($(".modal .o_list_view"), "should have open the modal");
+
+            // -1 for the one that is already on the form & +1 for the select all,
+            assert.containsN(
+                $(document),
+                ".modal .o_list_view .o_list_record_selector input",
+                this.data.partner_type.records.length - 1 + 1,
+                "Should have record selector checkboxes to select multiple records"
+            );
+            //multiple select tag
+            await testUtils.dom.click($(".modal .o_list_view thead .o_list_record_selector input"));
+            assert.ok(
+                !$(".modal .o_select_button").prop("disabled"),
+                "select button should be enabled"
+            );
+            await testUtils.dom.click($(".o_select_button"));
+            assert.containsNone($(document), ".modal .o_list_view", "should have closed the modal");
+            assert.containsN(
+                form,
+                '.o_field_many2manytags[name="timmy"] .badge',
+                this.data.partner_type.records.length,
+                "many2many tag should now contain 12 records"
+            );
+            form.destroy();
+        }
+    );
+
+    QUnit.skipWOWL(
+        "many2many tags widget: save&new in edit mode doesn't close edit window",
+        async function (assert) {
+            assert.expect(5);
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i });
+            }
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                    "</form>",
+                res_id: 1,
+                archs: {
+                    "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+                    "partner_type,false,search": '<search><field name="display_name"/></search>',
+                    "partner_type,false,form": '<form><field name="display_name"/></form>',
+                },
+            });
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.many2one.createAndEdit("timmy", "Ralts");
+            assert.containsOnce($(document), ".modal .o_form_view", "should have opened the modal");
+
+            // Create multiple records with save & new
+            await testUtils.fields.editInput($(".modal input:first"), "Ralts");
+            await testUtils.dom.click($(".modal .btn-primary:nth-child(2)"));
+            assert.containsOnce($(document), ".modal .o_form_view", "modal should still be open");
+            assert.equal($(".modal input:first")[0].value, "", "input should be empty");
+
+            // Create another record and click save & close
+            await testUtils.fields.editInput($(".modal input:first"), "Pikachu");
+            await testUtils.dom.click($(".modal .btn-primary:first"));
+            assert.containsNone($(document), ".modal .o_list_view", "should have closed the modal");
+            assert.containsN(
+                form,
+                '.o_field_many2manytags[name="timmy"] .badge',
+                2,
+                "many2many tag should now contain 2 records"
+            );
+
+            form.destroy();
+        }
+    );
+
+    QUnit.skipWOWL(
+        "many2many tags widget: make tag name input field blank on Save&New",
+        async function (assert) {
+            assert.expect(4);
+
+            let onchangeCalls = 0;
+            const form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+                archs: {
+                    "partner_type,false,form": '<form><field name="name"/></form>',
+                },
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === "onchange") {
+                        if (onchangeCalls === 0) {
+                            assert.deepEqual(
+                                args.kwargs.context,
+                                { default_name: "hello" },
+                                "context should have default_name with 'hello' as value"
+                            );
+                        }
+                        if (onchangeCalls === 1) {
+                            assert.deepEqual(
+                                args.kwargs.context,
+                                {},
+                                "context should have default_name with false as value"
+                            );
+                        }
+                        onchangeCalls++;
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.editInput($(".o_field_widget input"), "hello");
+            await testUtils.fields.many2one.clickItem("timmy", "Create and Edit");
+            assert.strictEqual(
+                document.querySelector(".modal .o_form_view input").value,
+                "hello",
+                "should contain the 'hello' in the tag name input field"
+            );
+
+            // Create record with save & new
+            await testUtils.dom.click(document.querySelector(".modal .btn-primary:nth-child(2)"));
+            assert.strictEqual(
+                document.querySelector(".modal .o_form_view input").value,
+                "",
+                "should display the blank value in the tag name input field"
+            );
+
+            form.destroy();
+        }
+    );
+
+    QUnit.skipWOWL(
+        "many2many_tags widget: conditional create/delete actions",
+        async function (assert) {
+            assert.expect(10);
+
+            this.data.turtle.records[0].partner_ids = [2];
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner.records.push({ id: 100 + i, display_name: "Partner" + i });
+            }
+
+            const form = await createView({
+                View: FormView,
+                model: "turtle",
+                data: this.data,
+                arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="turtle_bar"/>
+                    <field name="partner_ids" options="{'create': [('turtle_bar', '=', True)], 'delete': [('turtle_bar', '=', True)]}" widget="many2many_tags"/>
+                </form>`,
+                archs: {
+                    "partner,false,list": '<tree><field name="name"/></tree>',
+                    "partner,false,search": "<search/>",
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
+
+            // turtle_bar is true -> create and delete actions are available
+            assert.containsOnce(
+                form,
+                ".o_field_many2manytags.o_field_widget .badge .o_delete",
+                "X icon on badges should not be available"
+            );
+
+            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+
+            const $dropdown1 = form.$(".o_field_many2one input").autocomplete("widget");
+            assert.containsOnce(
+                $dropdown1,
+                "li.o_m2o_start_typing:contains(Start typing...)",
+                "autocomplete should contain Start typing..."
+            );
+
+            await testUtils.fields.many2one.clickItem("partner_ids", "Search More");
+
+            assert.containsN(
+                document.body,
+                ".modal .modal-footer button",
+                3,
+                "there should be 3 buttons (Select, Create and Cancel) available in the modal footer"
+            );
+
+            await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+
+            // type something that doesn't exist
+            await testUtils.fields.editAndTrigger(
+                form.$(".o_field_many2one input"),
+                "Something that does not exist",
+                "keydown"
+            );
+            // await testUtils.nextTick();
+            assert.containsN(
+                form.$(".o_field_many2one input").autocomplete("widget"),
+                "li.o_m2o_dropdown_option",
+                2,
+                "autocomplete should contain Create and Create and Edit... options"
+            );
+
+            // set turtle_bar false -> create and delete actions are no longer available
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtle_bar"] input').first());
+
+            // remove icon should still be there as it doesn't delete records but rather remove links
+            assert.containsOnce(
+                form,
+                ".o_field_many2manytags.o_field_widget .badge .o_delete",
+                "X icon on badge should still be there even after turtle_bar is not checked"
+            );
+
+            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+            const $dropdown2 = form.$(".o_field_many2one input").autocomplete("widget");
+
+            // only Search More option should be available
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option",
+                "autocomplete should contain only one option"
+            );
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option:contains(Search More)",
+                "autocomplete option should be Search More"
+            );
+
+            await testUtils.fields.many2one.clickItem("partner_ids", "Search More");
+
+            assert.containsN(
+                document.body,
+                ".modal .modal-footer button",
+                2,
+                "there should be 2 buttons (Select and Cancel) available in the modal footer"
+            );
+
+            await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+
+            // type something that doesn't exist
+            await testUtils.fields.editAndTrigger(
+                form.$(".o_field_many2one input"),
+                "Something that does not exist",
+                "keyup"
+            );
+            // await testUtils.nextTick();
+
+            // only Search More option should be available
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option",
+                "autocomplete should contain only one option"
+            );
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option:contains(Search More)",
+                "autocomplete option should be Search More"
+            );
+
+            form.destroy();
+        }
+    );
+
+    QUnit.skipWOWL("failing many2one quick create in a many2many_tags", async function (assert) {
+        assert.expect(5);
+
+        var form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            mockRPC(route, args) {
+                if (args.method === "name_create") {
+                    return Promise.reject();
+                }
+                if (args.method === "create") {
+                    assert.deepEqual(args.args[0], {
+                        color: 8,
+                        name: "new partner",
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            archs: {
+                "partner_type,false,form": `
+                    <form>
+                        <field name="name"/>
+                        <field name="color"/>
+                    </form>`,
+            },
+        });
+
+        assert.containsNone(form, ".o_field_many2manytags .badge");
+
+        // try to quick create a record
+        await testUtils.dom.triggerEvent(form.$(".o_field_many2one input"), "focus");
+        await testUtils.fields.many2one.searchAndClickItem("timmy", {
+            search: "new partner",
+            item: "Create",
+        });
+
+        // as the quick create failed, a dialog should be open to 'slow create' the record
+        assert.containsOnce(document.body, ".modal .o_form_view");
+        assert.strictEqual($(".modal .o_field_widget[name=name]").val(), "new partner");
+
+        await testUtils.fields.editInput($(".modal .o_field_widget[name=color]"), 8);
+        await testUtils.modal.clickButton("Save & Close");
+
+        assert.containsOnce(form, ".o_field_many2manytags .badge");
+
+        form.destroy();
     });
 });
