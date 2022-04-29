@@ -38,12 +38,15 @@ registerModel({
          * @param {Activity} activity
          */
         async send(activity) {
-            await this.async(() => this.messaging.rpc({
+            const thread = activity.thread;
+            await this.messaging.rpc({
                 model: activity.thread.model,
                 method: 'activity_send_mail',
                 args: [[activity.thread.id], this.id],
-            }));
-            activity.thread.fetchData(['attachments', 'messages']);
+            });
+            if (thread.exists()) {
+                thread.fetchData(['attachments', 'messages']);
+            }
         },
     },
     fields: {

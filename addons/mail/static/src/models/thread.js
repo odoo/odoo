@@ -34,11 +34,11 @@ registerModel({
              */
             this._currentPartnerInactiveTypingTimer = new Timer(
                 this.messaging,
-                () => this.async(() => {
+                () => {
                     if (this.messaging.currentPartner) {
                         return this._onCurrentPartnerInactiveTypingTimeout();
                     }
-                }),
+                },
                 5 * 1000
             );
             /**
@@ -67,7 +67,7 @@ registerModel({
              */
             this._currentPartnerLongTypingTimer = new Timer(
                 this.messaging,
-                () => this.async(() => this._onCurrentPartnerLongTypingTimeout()),
+                () => this._onCurrentPartnerLongTypingTimeout(),
                 50 * 1000
             );
             /**
@@ -104,7 +104,9 @@ registerModel({
              */
             this._throttleNotifyCurrentPartnerTypingStatus = throttle(
                 this.messaging,
-                ({ isTyping }) => this.async(() => this._notifyCurrentPartnerTypingStatus({ isTyping })),
+                ({ isTyping }) => {
+                    this._notifyCurrentPartnerTypingStatus({ isTyping });
+                },
                 2.5 * 1000
             );
         },
@@ -669,24 +671,27 @@ registerModel({
          * Add current user to provided thread's followers.
          */
         async follow() {
-            await this.async(() => this.messaging.rpc({
+            await this.messaging.rpc({
                 model: this.model,
                 method: 'message_subscribe',
                 args: [[this.id]],
                 kwargs: {
                     partner_ids: [this.messaging.currentPartner.id],
                 },
-            }));
+            });
+            if (!this.exists()) {
+                return;
+            }
             this.fetchData(['followers', 'suggestedRecipients']);
         },
         /**
          * Performs the rpc to leave the rtc call of the channel.
          */
         async performRpcLeaveCall() {
-            await this.async(() => this.messaging.rpc({
+            await this.messaging.rpc({
                 route: '/mail/rtc/channel/leave_call',
                 params: { channel_id: this.id },
-            }, { shadow: true }));
+            }, { shadow: true });
         },
         /**
          * Leaves the current call if there is one, joins the call if the user was
@@ -723,13 +728,13 @@ registerModel({
                 });
                 return;
             }
-            const { rtcSessions, iceServers, sessionId, invitedPartners, invitedGuests } = await this.async(() => this.messaging.rpc({
+            const { rtcSessions, iceServers, sessionId, invitedPartners, invitedGuests } = await this.messaging.rpc({
                 route: '/mail/rtc/channel/join_call',
                 params: {
                     channel_id: this.id,
                     check_rtc_session_ids: this.rtcSessions.map(rtcSession => rtcSession.id),
                 },
-            }, { shadow: true }));
+            }, { shadow: true });
             if (!this.exists()) {
                 return;
             }
@@ -740,13 +745,16 @@ registerModel({
                 invitedGuests,
                 invitedPartners,
             });
-            await this.async(() => this.messaging.rtc.initSession({
+            await this.messaging.rtc.initSession({
                 currentSessionId: sessionId,
                 iceServers,
                 startWithAudio: true,
                 startWithVideo,
                 videoType,
-            }));
+            });
+            if (!this.exists()) {
+                return;
+            }
             this.messaging.soundEffects.channelJoin.play();
         },
         /**
@@ -810,11 +818,11 @@ registerModel({
          * Mark the specified conversation as fetched.
          */
         async markAsFetched() {
-            await this.async(() => this.messaging.rpc({
+            await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetched',
                 args: [[this.id]],
-            }, { shadow: true }));
+            }, { shadow: true });
         },
         /**
          * Mark the specified conversation as read/seen.
@@ -847,9 +855,7 @@ registerModel({
          * Marks as read all needaction messages with this thread as origin.
          */
         async markNeedactionMessagesAsOriginThreadAsRead() {
-            await this.async(() =>
-                this.messaging.models['Message'].markAsRead(this.needactionMessagesAsOriginThread)
-            );
+            await this.messaging.models['Message'].markAsRead(this.needactionMessagesAsOriginThread);
         },
         /**
          * Notifies the server of new fold state. Useful for initial,
@@ -1007,7 +1013,7 @@ registerModel({
         registerOtherMemberTypingMember(partner) {
             const timer = new Timer(
                 this.messaging,
-                () => this.async(() => this._onOtherMemberLongTypingTimeout(partner)),
+                () => this._onOtherMemberLongTypingTimeout(partner),
                 60 * 1000
             );
             this._otherMembersLongTypingTimers.set(partner, timer);
@@ -1057,7 +1063,7 @@ registerModel({
             const currentPartnerFollower = this.followers.find(
                 follower => follower.partner === this.messaging.currentPartner
             );
-            await this.async(() => currentPartnerFollower.remove());
+            await currentPartnerFollower.remove();
         },
         /**
          * Unpin this thread and notify server of the change.
@@ -1096,9 +1102,7 @@ registerModel({
             if (immediateNotify) {
                 this._throttleNotifyCurrentPartnerTypingStatus.clear();
             }
-            await this.async(
-                () => this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: false })
-            );
+            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
         },
         /**
          * Called to unregister an other member partner that is no longer typing
@@ -1694,12 +1698,15 @@ registerModel({
                 isTyping !== this._currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
-                    await this.async(() => this.messaging.rpc({
+                    await this.messaging.rpc({
                         model: 'mail.channel',
                         method: 'notify_typing',
                         args: [this.id],
                         kwargs: { is_typing: isTyping },
-                    }, { shadow: true }));
+                    }, { shadow: true });
+                    if (!this.exists()) {
+                        return;
+                    }
                 }
                 if (isTyping && this._currentPartnerLongTypingTimer.isRunning) {
                     this._currentPartnerLongTypingTimer.reset();
@@ -1773,8 +1780,11 @@ registerModel({
                 action,
                 options: {
                     on_close: async () => {
-                       await this.async(() => this.fetchData(['followers']));
-                       this.env.bus.trigger('Thread:promptAddFollower-closed');
+                        if (!this.exists()) {
+                            return;
+                        } 
+                        await this.fetchData(['followers']);
+                        this.env.bus.trigger('Thread:promptAddFollower-closed');
                     },
                 },
             });
@@ -1841,7 +1851,7 @@ registerModel({
          * @private
          */
         async _onCurrentPartnerInactiveTypingTimeout() {
-            await this.async(() => this.unregisterCurrentPartnerIsTyping());
+            await this.unregisterCurrentPartnerIsTyping();
         },
         /**
          * Called when current partner has been typing for a very long time.
@@ -1852,9 +1862,7 @@ registerModel({
         async _onCurrentPartnerLongTypingTimeout() {
             this._forceNotifyNextCurrentPartnerTypingStatus = true;
             this._throttleNotifyCurrentPartnerTypingStatus.clear();
-            await this.async(
-                () => this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true })
-            );
+            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
         },
         /**
          * @private

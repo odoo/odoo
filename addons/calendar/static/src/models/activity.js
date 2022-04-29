@@ -30,11 +30,14 @@ patchRecordMethods('Activity', {
         if (!this.calendar_event_id){
             await this._super();
         } else {
-            await this.async(() => this.messaging.rpc({
+            await this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'unlink_w_meeting',
                 args: [[this.id]],
-            }));
+            });
+            if (!this.exists()) {
+                return;
+            }
             this.delete();
         }
     },
@@ -47,11 +50,11 @@ patchRecordMethods('Activity', {
         if (!this.calendar_event_id){
             this._super();
         } else {
-            const action = await this.async(() => this.messaging.rpc({
+            const action = await this.messaging.rpc({
                 model: 'mail.activity',
                 method: 'action_create_calendar_event',
                 args: [[this.id]],
-            }));
+            });
             this.env.bus.trigger('do-action', {
                 action
             });

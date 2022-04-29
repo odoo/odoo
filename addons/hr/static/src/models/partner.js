@@ -11,11 +11,14 @@ addRecordMethods('Partner', {
      * applicable.
      */
     async checkIsEmployee() {
-        await this.async(() => this.messaging.models['Employee'].performRpcSearchRead({
+        await this.messaging.models['Employee'].performRpcSearchRead({
             context: { active_test: false },
             domain: [['user_partner_id', '=', this.id]],
             fields: ['user_id', 'user_partner_id'],
-        }));
+        });
+        if (!this.exists()) {
+            return;
+        }
         this.update({ hasCheckedEmployee: true });
     },
 });
@@ -31,7 +34,10 @@ patchRecordMethods('Partner', {
         // limitation of patch, `this._super` becomes unavailable after `await`
         const _super = this._super.bind(this, ...arguments);
         if (!this.employee && !this.hasCheckedEmployee) {
-            await this.async(() => this.checkIsEmployee());
+            await this.checkIsEmployee();
+        }
+        if (!this.exists()) {
+            return;
         }
         if (this.employee) {
             return this.employee.openProfile();

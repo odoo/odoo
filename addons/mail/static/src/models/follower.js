@@ -79,14 +79,19 @@ registerModel({
         async remove() {
             const partner_ids = [];
             partner_ids.push(this.partner.id);
-            await this.async(() => this.messaging.rpc({
+            const followedThread = this.followedThread;
+            await this.messaging.rpc({
                 model: this.followedThread.model,
                 method: 'message_unsubscribe',
                 args: [[this.followedThread.id], partner_ids]
-            }));
-            const followedThread = this.followedThread;
+            });
+            if (followedThread.exists()) {
+                followedThread.fetchData(['suggestedRecipients']);
+            }
+            if (!this.exists()) {
+                return;
+            }
             this.delete();
-            followedThread.fetchData(['suggestedRecipients']);
         },
         /**
          * @param {FollowerSubtype} subtype
@@ -100,10 +105,13 @@ registerModel({
          * Show (editable) list of subtypes of this follower.
          */
         async showSubtypes() {
-            const subtypesData = await this.async(() => this.messaging.rpc({
+            const subtypesData = await this.messaging.rpc({
                 route: '/mail/read_subscription_data',
                 params: { follower_id: this.id },
-            }));
+            });
+            if (!this.exists()) {
+                return;
+            }
             this.update({ subtypes: clear() });
             for (const data of subtypesData) {
                 const subtype = this.messaging.models['FollowerSubtype'].insert(
@@ -139,12 +147,15 @@ registerModel({
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
                 }
-                await this.async(() => this.messaging.rpc({
+                await this.messaging.rpc({
                     model: this.followedThread.model,
                     method: 'message_subscribe',
                     args: [[this.followedThread.id]],
                     kwargs,
-                }));
+                });
+                if (!this.exists()) {
+                    return;
+                }
                 this.messaging.notify({
                     type: 'success',
                     message: this.env._t("The subscription preferences were successfully applied."),
