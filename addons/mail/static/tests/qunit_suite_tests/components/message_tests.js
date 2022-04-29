@@ -630,7 +630,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
@@ -804,7 +804,7 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    const { click, createMessageComponent, messaging } = await start({ hasChatWindow: true });
+    const { click, createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         author: insert({ id: resPartnerId1 }),
         id: 10,
@@ -840,7 +840,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    const { click, createMessageComponent, messaging } = await start({ hasChatWindow: true });
+    const { click, createMessageComponent, messaging } = await start();
     const message = messaging.models['Message'].create({
         author: insert({ id: resPartnerId1, im_status: 'online' }),
         id: 10,
@@ -890,7 +890,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
         model: 'mail.channel',
         res_id: mailChannelId1,
     });
-    const { createThreadViewComponent, messaging } = await start({ hasChatWindow: true });
+    const { createThreadViewComponent, messaging } = await start();
     const correspondent = messaging.models['Partner'].insert({ id: resPartnerId1 });
     const thread = await correspondent.getChat();
     const threadViewer = messaging.models['ThreadViewer'].create({

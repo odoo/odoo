@@ -169,7 +169,7 @@ QUnit.test('layout with card details and filename and extension', async function
 QUnit.test('view attachment', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start();
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
@@ -205,7 +205,7 @@ QUnit.test('view attachment', async function (assert) {
 QUnit.test('close attachment viewer', async function (assert) {
     assert.expect(3);
 
-    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start();
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
@@ -245,7 +245,6 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     assert.expect(2);
 
     const { click, createMessageComponent, messaging } = await start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
                 assert.step('attachment_unlink');
@@ -293,7 +292,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
      */
     assert.expect(1);
 
-    const { click, createMessageComponent, messaging } = await start({ hasDialog: true });
+    const { click, createMessageComponent, messaging } = await start();
     const attachment = messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,

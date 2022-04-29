@@ -26,7 +26,6 @@ QUnit.test('mark as read', async function (assert) {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -87,7 +86,6 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -168,7 +166,6 @@ QUnit.test('click on expand from chat window should close the chat window and op
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
         env: { bus },
-        hasChatWindow: true,
     });
     await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
@@ -229,7 +226,6 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
-        hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
                 const message = "should not call channel_fold when opening a non-channel chat window";
@@ -295,7 +291,7 @@ QUnit.test('preview should display last needaction message preview even if there
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, createMessagingMenuComponent } = await start({ hasChatWindow: true });
+    const { afterEvent, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
@@ -336,7 +332,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, createMessagingMenuComponent } = await start({ hasChatWindow: true });
+    const { afterEvent, click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',

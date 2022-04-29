@@ -194,7 +194,6 @@ QUnit.test('click on edit follower', async function (assert) {
         res_model: 'res.partner',
     });
     const { click, messaging, widget } = await start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -237,7 +236,6 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
     const { click, messaging, widget } = await start({
-        hasDialog: true,
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');

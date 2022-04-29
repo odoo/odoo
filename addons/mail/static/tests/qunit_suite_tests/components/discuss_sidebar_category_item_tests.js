@@ -20,7 +20,6 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
 
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
 
     const channelItem = document.querySelector(`
@@ -52,7 +51,6 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
 
     const channelItemAvatar = document.querySelector(`
@@ -100,7 +98,6 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
     });
     const { messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
 
     const chatItem = document.querySelector(`
@@ -148,7 +145,6 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     ]);
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
-        hasDiscuss: true,
     });
 
     const chat1 = messaging.models['Thread'].findFromIdentifyingData({

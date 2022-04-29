@@ -30,7 +30,6 @@ QUnit.test('mark as read', async function (assert) {
     pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: mailMessageId1 });
 
     const { click, createMessagingMenuComponent } = await start({
-        hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('set_last_seen_message')) {
                 assert.step('set_last_seen_message');

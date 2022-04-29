@@ -24,7 +24,6 @@ QUnit.test('select another mailbox', async function (assert) {
                 isMobile: true,
             },
         },
-        hasDiscuss: true,
     });
     assert.containsOnce(
         document.body,
@@ -91,7 +90,6 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
                 isMobile: true,
             },
         },
-        hasDiscuss: true,
     });
     assert.hasClass(
         document.querySelector('.o_MobileMessagingNavbar_tab[data-tab-id="channel"]'),

@@ -72,21 +72,14 @@ function _createFakeDataTransfer(files) {
  * @param {function[]} callbacks.return
  * @param {Object) params
  * @param {function) params.afterNextRender
- * @returns {Object} update callbacks
  */
 function _useChatWindow(callbacks, { afterNextRender }) {
-    const {
-        mount: prevMount,
-        destroy: prevDestroy,
-    } = callbacks;
-    return Object.assign({}, callbacks, {
-        mount: prevMount.concat(async () => {
-            // trigger mounting of chat window manager
-            await afterNextRender(() => Component.env.services['chat_window']._onWebClientReady());
-        }),
-        destroy: prevDestroy.concat(() => {
-            Component.env.services['chat_window'].destroy();
-        }),
+    callbacks.mount.push(async () => {
+        // trigger mounting of chat window manager
+        await afterNextRender(() => Component.env.services['chat_window']._onWebClientReady());
+    });
+    callbacks.destroy.push(() => {
+        Component.env.services['chat_window'].destroy();
     });
 }
 
@@ -99,63 +92,15 @@ function _useChatWindow(callbacks, { afterNextRender }) {
  * @param {function[]} callbacks.return
  * @param {Object) params
  * @param {function) params.afterNextRender
- * @returns {Object} update callbacks
  */
 function _useDialog(callbacks, { afterNextRender }) {
-    const {
-        mount: prevMount,
-        destroy: prevDestroy,
-    } = callbacks;
-    return Object.assign({}, callbacks, {
-        mount: prevMount.concat(async () => {
-            // trigger mounting of dialog manager
-            await afterNextRender(() => Component.env.services['dialog']._onWebClientReady());
-        }),
-        destroy: prevDestroy.concat(() => {
-            Component.env.services['dialog'].destroy();
-        }),
+    callbacks.mount.push(async () => {
+        // trigger mounting of dialog manager
+        await afterNextRender(() => Component.env.services['dialog']._onWebClientReady());
     });
-}
-
-/**
- * @private
- * @param {Object} callbacks
- * @param {function[]} callbacks.init
- * @param {function[]} callbacks.mount
- * @param {function[]} callbacks.destroy
- * @param {function[]} callbacks.return
- * @param {Object) params
- * @param {function) params.afterNextRender
- * @return {Object} update callbacks
- */
-function _useDiscuss(callbacks, { afterNextRender }) {
-    const {
-        init: prevInit,
-        mount: prevMount,
-        return: prevReturn,
-    } = callbacks;
-    let discussWidget;
-    const state = {
-        discussData: {},
-    };
-    return Object.assign({}, callbacks, {
-        init: prevInit.concat(params => {
-            const {
-                discuss: discussData = state.discussData
-            } = params;
-            Object.assign(state, { discussData });
-            delete params.discuss;
-        }),
-        mount: prevMount.concat(async params => {
-            const { selector, widget } = params;
-            DiscussWidget.prototype._pushStateActionManager = () => {};
-            discussWidget = new DiscussWidget(widget, state.discussData);
-            await discussWidget.appendTo($(selector));
-        }),
-        return: prevReturn.concat(result => {
-            Object.assign(result, { discussWidget });
-        }),
-    });
+    callbacks.destroy.push(() => {
+        Component.env.services['dialog'].destroy();
+    })
 }
 
 //------------------------------------------------------------------------------
@@ -583,8 +528,11 @@ function getCreateThreadViewComponent({ afterEvent, env, widget }) {
     };
 }
 
-function getOpenDiscuss({ afterNextRender, discussWidget }) {
+function getOpenDiscuss({ afterNextRender, discuss, selector, widget }) {
     return async function openDiscuss() {
+        DiscussWidget.prototype._pushStateActionManager = () => {};
+        const discussWidget = new DiscussWidget(widget, discuss);
+        await discussWidget.appendTo($(selector));
         await afterNextRender(() => discussWidget.on_attach_callback());
         // Some changes in the models are made on mount, but these changes don't
         // cause a rerender directly, they cause the model to fetch more data
@@ -596,6 +544,7 @@ function getOpenDiscuss({ afterNextRender, discussWidget }) {
         await afterNextRender(() => {
             discussWidget.app.root.render();
         });
+        return discussWidget;
     };
 }
 
@@ -606,23 +555,18 @@ function getOpenDiscuss({ afterNextRender, discussWidget }) {
  * @param {string} [param0.arch] makes only sense when `param0.hasView` is set:
  *   the arch to use in createView.
  * @param {Object} [param0.archs]
- * @param {boolean} [param0.autoOpenDiscuss=false] makes only sense when
- *   `param0.hasDiscuss` is set: determine whether mounted discuss should be
+ * @param {boolean} [param0.autoOpenDiscuss=false] determine whether mounted discuss should be
  *   open initially. Deprecated, call openDiscuss() instead.
  * @param {boolean} [param0.debug=false]
  * @param {Object} [param0.data] makes only sense when `param0.hasView` is set:
  *   the data to use in createView.
- * @param {Object} [param0.discuss={}] makes only sense when `param0.hasDiscuss`
- *   is set: provide data that is passed to discuss widget (= client action) as
- *   2nd positional argument.
+ * @param {Object} [param0.discuss={}] provide data that is passed to discuss widget
+ * (= client action) as 2nd positional argument.
  * @param {Object} [param0.env={}]
  * @param {function} [param0.mockFetch]
  * @param {function} [param0.mockRPC]
  * @param {boolean} [param0.hasWebClient=false] if set, use
  *   createWebClient
- * @param {boolean} [param0.hasChatWindow=false] if set, mount chat window
- *   service.
- * @param {boolean} [param0.hasDiscuss=false] if set, mount discuss app.
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time
  *   with `env.browser.setTimeout` are fully controlled by test itself.
  *     @see addTimeControlToEnv that adds `advanceTime` function in
@@ -681,11 +625,9 @@ async function start(param0 = {}) {
     };
     const {
         autoOpenDiscuss = false,
+        discuss = {},
         env: providedEnv,
         hasWebClient = false,
-        hasChatWindow = false,
-        hasDialog = false,
-        hasDiscuss = false,
         hasTimeControl = false,
         hasView = false,
         loadingBaseDelayDuration = 0,
@@ -700,20 +642,11 @@ async function start(param0 = {}) {
     delete param0.autoOpenDiscuss;
     delete param0.env;
     delete param0.hasWebClient;
-    delete param0.hasChatWindow;
-    delete param0.hasDiscuss;
     delete param0.hasTimeControl;
     delete param0.hasView;
     delete param0.target;
-    if (hasChatWindow) {
-        callbacks = _useChatWindow(callbacks, { afterNextRender });
-    }
-    if (hasDialog) {
-        callbacks = _useDialog(callbacks, { afterNextRender });
-    }
-    if (hasDiscuss) {
-        callbacks = _useDiscuss(callbacks, { afterNextRender });
-    }
+    _useChatWindow(callbacks, { afterNextRender });
+    _useDialog(callbacks, { afterNextRender });
     const messagingBus = new EventBus();
     const {
         init: initCallbacks,
@@ -931,9 +864,10 @@ async function start(param0 = {}) {
         await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
     }
     returnCallbacks.forEach(callback => callback(result));
-    const openDiscuss = getOpenDiscuss({ afterNextRender, discussWidget: result.discussWidget });
+    const openDiscuss = getOpenDiscuss({ afterNextRender, discuss, selector, widget });
     if (autoOpenDiscuss) {
-        await openDiscuss();
+        const discussWidget = await openDiscuss();
+        result['discussWidget'] = discussWidget;
     }
     await waitUntilEventPromise;
     return {

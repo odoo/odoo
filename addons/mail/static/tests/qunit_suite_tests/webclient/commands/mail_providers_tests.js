@@ -40,7 +40,6 @@ QUnit.module('mail', {}, function () {
 
         const target = getFixture();
         await start({
-            hasChatWindow: true,
             hasWebClient: true,
             target,
         });
@@ -75,7 +74,6 @@ QUnit.module('mail', {}, function () {
         });
         const target = getFixture();
         await start({
-            hasChatWindow: true,
             hasWebClient: true,
             target,
         });

@@ -20,7 +20,6 @@ QUnit.test('should open chat window on send chat request to website visitor', as
         display_name: "Visitor #11",
     });
     const { env, widget } = await start({
-        hasChatWindow: true,
         hasView: true,
         // View params
         View: FormView,

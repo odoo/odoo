@@ -33,7 +33,6 @@ QUnit.module('mail', {}, function () {
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
         pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
         const { widget: list } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.user',
@@ -59,7 +58,6 @@ QUnit.module('mail', {}, function () {
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
         const { widget: form } = await start({
-            hasChatWindow: true,
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.user',

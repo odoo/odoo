@@ -33,7 +33,6 @@ QUnit.test('should display the channel invitation form after clicking on the inv
                 active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await click(`.o_ThreadViewTopbar_inviteButton`);
     assert.containsOnce(
@@ -72,7 +71,6 @@ QUnit.test('should be able to search for a new user to invite from an existing c
                 active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
     await click(`.o_ThreadViewTopbar_inviteButton`);
     await insertText('.o_ChannelInvitationForm_searchInput', "TestPartner2");
@@ -112,7 +110,6 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
                 active_id: mailChannelId1,
             },
         },
-        hasDiscuss: true,
     });
 
     await click(`.o_ThreadViewTopbar_inviteButton`);
