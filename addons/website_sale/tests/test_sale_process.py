@@ -59,7 +59,11 @@ class TestWebsiteSaleCheckoutAddress(odoo.tests.TransactionCase):
             'partner_id': partner_id,
             'website_id': self.website.id,
             'order_line': [(0, 0, {
-                'product_id': self.env['product.product'].create({'name': 'Product A', 'list_price': 100}).id,
+                'product_id': self.env['product.product'].create({
+                    'name': 'Product A',
+                    'list_price': 100,
+                    'website_published': True,
+                    'sale_ok': True}).id,
                 'name': 'Product A',
             })]
         })
