@@ -22,6 +22,10 @@
         <field name="name">Contract For Mitchell Admin</field>
         <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
         <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_admin').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_admin').department_id.id"/>
         <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="notes">This is Mitchell Admin's contract</field>
