@@ -91,29 +91,11 @@ registerModel({
              * @see unregisterOtherMemberTypingMember
              */
             this._otherMembersLongTypingTimers = new Map();
-
-            /**
-             * Clearable and cancellable throttled version of the
-             * `_notifyCurrentPartnerTypingStatus` method.
-             * This is useful when the current partner posts a message and
-             * types something else afterwards: it must notify immediately that
-             * he/she is typing something, instead of waiting for the throttle
-             * internal timer.
-             *
-             * @see _notifyCurrentPartnerTypingStatus
-             */
-            this._throttleNotifyCurrentPartnerTypingStatus = throttle(
-                this.messaging,
-                ({ isTyping }) => {
-                    this._notifyCurrentPartnerTypingStatus({ isTyping });
-                },
-                2.5 * 1000
-            );
         },
         _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
-            this._throttleNotifyCurrentPartnerTypingStatus.clear();
+            this.throttleNotifyCurrentPartnerTypingStatus.clear();
             for (const timer of this._otherMembersLongTypingTimers.values()) {
                 timer.clear();
             }
@@ -1002,7 +984,7 @@ registerModel({
                 typingMembers: link(currentPartner),
             });
             // Notify typing status to other members.
-            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
+            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
         },
         /**
          * Called to register a new other member partner that is typing
@@ -1100,9 +1082,9 @@ registerModel({
             });
             // Notify typing status to other members.
             if (immediateNotify) {
-                this._throttleNotifyCurrentPartnerTypingStatus.clear();
+                this.throttleNotifyCurrentPartnerTypingStatus.clear();
             }
-            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
+            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
         },
         /**
          * Called to unregister an other member partner that is no longer typing
@@ -1612,6 +1594,17 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Throttle}
+         */
+        _computeThrottleNotifyCurrentPartnerTypingStatus() {
+            return throttle(
+                this.messaging,
+                ({ isTyping }) => this._notifyCurrentPartnerTypingStatus({ isTyping }),
+                2.5 * 1000
+            );
+        },
+        /**
+         * @private
          * @returns {Activity[]}
          */
         _computeTodayActivities() {
@@ -1861,8 +1854,8 @@ registerModel({
          */
         async _onCurrentPartnerLongTypingTimeout() {
             this._forceNotifyNextCurrentPartnerTypingStatus = true;
-            this._throttleNotifyCurrentPartnerTypingStatus.clear();
-            await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
+            this.throttleNotifyCurrentPartnerTypingStatus.clear();
+            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
         },
         /**
          * @private
@@ -2397,6 +2390,19 @@ registerModel({
         }),
         threadViews: many('ThreadView', {
             inverse: 'thread',
+        }),
+        /**
+         * Clearable and cancellable throttled version of the
+         * `_notifyCurrentPartnerTypingStatus` method.
+         * This is useful when the current partner posts a message and
+         * types something else afterwards: it must notify immediately that
+         * he/she is typing something, instead of waiting for the throttle
+         * internal timer.
+         *
+         * @see _notifyCurrentPartnerTypingStatus
+         */
+        throttleNotifyCurrentPartnerTypingStatus: attr({
+            compute: '_computeThrottleNotifyCurrentPartnerTypingStatus',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due
