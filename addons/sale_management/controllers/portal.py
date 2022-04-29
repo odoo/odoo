@@ -45,8 +45,9 @@ class CustomerPortal(portal.CustomerPortal):
 
         if order_sudo.state not in ('draft', 'sent'):
             return False
-        order_line = request.env['sale.order.line'].sudo().browse(int(line_id))
-        if order_line.order_id != order_sudo:
+
+        order_line = request.env['sale.order.line'].sudo().browse(int(line_id)).exists()
+        if not order_line or order_line.order_id != order_sudo:
             return False
 
         if input_quantity is not False:
