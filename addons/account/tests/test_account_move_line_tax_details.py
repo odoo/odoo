@@ -3,7 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import Command
-
+from odoo.tests.common import Form
 
 @tagged('post_install', '-at_install')
 class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
@@ -1296,3 +1296,54 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                         for amount in amounts],
                     )
                     self.assertTotalAmounts(invoice, tax_details)
+
+    def test_tax_details_query_should_handle_misc_entry_with_2_opposite_lines(self):
+        tax = self.env['account.tax'].create({
+            'name': "tax",
+            'amount_type': 'percent',
+            'amount': 25.0,
+        })
+
+        move_form = Form(self.env['account.move']\
+                    .with_company(self.env.company)\
+                    .with_context(default_move_type='entry', account_predictive_bills_disable_prediction=True))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = '2019-01-01'
+        move_form.date = move_form.invoice_date
+
+        for name, account_id, debit, credit, tax in (
+            ("invoice line in entry", self.company_data['default_account_revenue'], 0.0, 200.0, tax),
+            ("refund line in entry", self.company_data['default_account_revenue'], 100.0, 0.0, tax),
+            ("Receivable line in entry", self.company_data['default_account_receivable'], 125.0, 0.0, None),
+        ):
+            with move_form.line_ids.new() as line_form:
+                line_form.name = name
+                line_form.account_id = account_id
+                line_form.debit = debit
+                line_form.credit = credit
+                if tax:
+                    line_form.tax_ids.clear()
+                    line_form.tax_ids.add(tax)
+
+        move = move_form.save()
+        move.action_post()
+
+        _, tax_lines = self._dispatch_move_lines(move)
+        tax_details = self._get_tax_details(extra_domain=[('move_id', '=', move.id)])
+
+        self.assertTaxDetailsValues(
+            tax_details,
+            [
+                {
+                    'tax_line_id': tax_lines[0].id,
+                    'base_amount': -200,
+                    'tax_amount': -50,
+                },
+                {
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': 100,
+                    'tax_amount': 25,
+                },
+            ],
+        )
+        self.assertTotalAmounts(move, tax_details)

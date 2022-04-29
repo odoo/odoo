@@ -70,6 +70,7 @@ class AccountMoveLine(models.Model):
                     tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
                 JOIN account_move_line base_line ON
                     base_line.id = tax_rel.account_move_line_id
+                    AND base_line.tax_tag_invert = account_move_line.tax_tag_invert
                     AND base_line.tax_repartition_line_id IS NULL
                     AND base_line.move_id = account_move_line.move_id
                     AND base_line.currency_id = account_move_line.currency_id
@@ -167,6 +168,7 @@ class AccountMoveLine(models.Model):
                     base_line.id = tax_rel.account_move_line_id
                     AND base_line.tax_repartition_line_id IS NULL
                     AND base_line.move_id = account_move_line.move_id
+                    AND base_line.tax_tag_invert = account_move_line.tax_tag_invert
                     AND COALESCE(base_line.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
                     AND base_line.currency_id = account_move_line.currency_id
                     AND (
