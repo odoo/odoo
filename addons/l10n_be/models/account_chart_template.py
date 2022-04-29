@@ -4158,7 +4158,6 @@ class AccountChartTemplate(models.AbstractModel):
         cid = (company or self.env.company).id
         return {
             f'base.company_{cid}': {
-                'currency_id': 'base.EUR',
                 'account_fiscal_country_id': 'base.be',
                 'account_default_pos_receivable_account_id': f'account.{cid}_a4001',
                 'income_currency_exchange_account_id': f'account.{cid}_a754',

@@ -518,9 +518,9 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     def _get_it_res_company(self, template_code, company):
-        company, cid = (company or self.env.company), company.id
+        cid = (company or self.env.company).id
         return {
-            company.get_external_id()[cid]: {
+            f'base.company_{cid}': {
                 'account_fiscal_country_id': 'base.it',
                 'account_default_pos_receivable_account_id': f'account.{cid}_1508',
                 'income_currency_exchange_account_id': f'account.{cid}_3220',
