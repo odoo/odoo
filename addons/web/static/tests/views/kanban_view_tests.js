@@ -27,7 +27,7 @@ import { indexBy } from "@web/core/utils/arrays";
 import { nbsp } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
-import { KanbanView } from "@web/views/kanban/kanban_view";
+import { kanbanView } from "@web/views/kanban/kanban_view";
 
 const { Component, markup } = owl;
 
@@ -4085,7 +4085,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("kanban view not groupable", async (assert) => {
         assert.expect(3);
 
-        patchWithCleanup(KanbanView, { searchMenuTypes: ["filter", "favorite"] });
+        patchWithCleanup(kanbanView, { searchMenuTypes: ["filter", "favorite"] });
 
         serverData.views["partner,false,search"] = /* xml */ `
             <search>

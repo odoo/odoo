@@ -6,7 +6,7 @@
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="layout-buttons">
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
-                        <t t-call="{{ constructor.buttonTemplate }}"/>
+                        <t t-call="{{ props.buttonTemplate }}"/>
                     </div>
                 </t>
                 <t t-set-slot="control-panel-bottom-left">
@@ -19,7 +19,7 @@
                             resModel="model.root.resModel"/>
                     </t>
                 </t>
-                <ListRenderer list="model.root" activeActions="activeActions" archInfo="archInfo" hasSelectors="props.hasSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp"/>
+                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" hasSelectors="props.hasSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp"/>
             </Layout>
         </div>
     </t>

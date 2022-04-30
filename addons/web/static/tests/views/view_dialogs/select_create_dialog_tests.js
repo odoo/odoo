@@ -8,7 +8,7 @@ import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
-import { ListView } from "@web/views/list/list_view";
+import { listView } from "@web/views/list/list_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import {
     editFavoriteName,
@@ -384,7 +384,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             `,
         };
 
-        patchWithCleanup(ListView.prototype, {
+        patchWithCleanup(listView.Controller.prototype, {
             setup() {
                 this._super(...arguments);
                 useSetupAction({

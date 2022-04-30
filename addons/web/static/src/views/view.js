@@ -294,10 +294,15 @@ export class View extends Component {
             viewProps.info.noContentHelp = noContentHelp;
         }
 
+        const searchMenuTypes =
+            this.props.searchMenuTypes || descr.searchMenuTypes || this.constructor.searchMenuTypes;
+        viewProps.searchMenuTypes = searchMenuTypes;
+
         const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
         // prepare the WithSearch component props
         this.withSearchProps = {
             ...toRaw(this.props),
+            searchMenuTypes,
             Component: descr.Controller,
             SearchModel: descr.SearchModel,
             componentProps: finalProps,
@@ -314,21 +319,11 @@ export class View extends Component {
             this.withSearchProps.irFilters = irFilters;
         }
 
-        if (!this.withSearchProps.searchMenuTypes) {
-            this.withSearchProps.searchMenuTypes =
-                this.props.searchMenuTypes ||
-                descr.searchMenuTypes ||
-                this.constructor.searchMenuTypes;
-        }
-        if (!("searchMenuTypes" in viewProps)) {
-            viewProps.searchMenuTypes = this.withSearchProps.searchMenuTypes;
-        }
-
-        if (ViewClass.display) {
+        if (descr.display) {
             // FIXME: there's something inelegant here: display might come from
             // the View's defaultProps, in which case, modifying it in place
             // would have unwanted effects.
-            const viewDisplay = deepCopy(ViewClass.display);
+            const viewDisplay = deepCopy(descr.display);
             const display = { ...this.withSearchProps.display };
             for (const key in viewDisplay) {
                 if (typeof display[key] === "object") {

@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/views/debug_items";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
-import { ListView } from "@web/views/list/list_view";
+import { listView } from "@web/views/list/list_view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import testUtils from "web.test_utils";
 import { session } from "@web/session";
@@ -1448,7 +1448,7 @@ QUnit.module("ActionManager", (hooks) => {
             views: [[false, "list"]],
         };
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
-        patchWithCleanup(ListView.prototype, {
+        patchWithCleanup(listView.Controller.prototype, {
             setup() {
                 this._super(...arguments);
                 useSetupAction({

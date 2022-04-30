@@ -1,14 +1,14 @@
 
 /** @odoo-module **/
 
-import { CRMKanbanView } from "@crm/js/crm_kanban";
+import { crmKanbanView } from "@crm/js/crm_kanban";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ListView } from "@web/views/list/list_view";
+import { listView } from "@web/views/list/list_view";
 
 const { onWillStart } = owl;
 
-export class LeadMiningRequestListView extends ListView {
+class LeadMiningRequestListController extends listView.Controller {
     setup() {
         super.setup();
 
@@ -30,9 +30,13 @@ export class LeadMiningRequestListView extends ListView {
     }
 }
 
-LeadMiningRequestListView.buttonTemplate = "crm_iap_mine.ListView.Buttons";
+const leadMiningRequestListView = {
+    ...listView,
+    Controller: LeadMiningRequestListController,
+    buttonTemplate: "crm_iap_mine.ListView.Buttons",
+};
 
-export class LeadMiningRequestKanbanView extends CRMKanbanView {
+class LeadMiningRequestKanbanController extends crmKanbanView.Controller {
     setup() {
         super.setup();
 
@@ -55,9 +59,14 @@ export class LeadMiningRequestKanbanView extends CRMKanbanView {
     }
 }
 
-LeadMiningRequestKanbanView.buttonTemplate = "crm_iap_mine.KanbanView.Buttons";
+const leadMiningRequestKanbanView = {
+    ...listView,
+    Controller: LeadMiningRequestKanbanController,
+    buttonTemplate: "crm_iap_mine.KanbanView.Buttons",
+};
+
 
 registry
     .category("views")
-    .add("crm_iap_lead_mining_request_tree", LeadMiningRequestListView)
-    .add("crm_iap_lead_mining_request_kanban", LeadMiningRequestKanbanView);
+    .add("crm_iap_lead_mining_request_tree", leadMiningRequestListView)
+    .add("crm_iap_lead_mining_request_kanban", leadMiningRequestKanbanView);

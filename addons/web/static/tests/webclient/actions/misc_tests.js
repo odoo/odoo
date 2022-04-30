@@ -21,7 +21,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import * as cpHelpers from "@web/../tests/search/helpers";
-import { ListView } from "@web/views/list/list_view";
+import { listView } from "@web/views/list/list_view";
 
 let serverData;
 let target;
@@ -456,7 +456,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(3);
         let list;
-        patchWithCleanup(ListView.prototype, {
+        patchWithCleanup(listView.Controller.prototype, {
             setup() {
                 this._super(...arguments);
                 list = this;

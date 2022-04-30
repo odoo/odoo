@@ -7,13 +7,12 @@ import { FormLabelHighlightText } from "./highlight_text/form_label_highlight_te
 import { HighlightText } from "./highlight_text/highlight_text";
 import { SettingsApp } from "./settings/settings_app";
 import { SettingsPage } from "./settings/settings_page";
-import { SettingsFormCompiler } from "./settings_form_compiler";
 
 const { useState } = owl;
 
 const fieldRegistry = registry.category("fields");
 
-export class SettingsFormRender extends FormRenderer {
+export class SettingsFormRenderer extends FormRenderer {
     setup() {
         this.labels = [];
         this.compileParams = {
@@ -43,11 +42,10 @@ export class SettingsFormRender extends FormRenderer {
         }
     }
 }
-SettingsFormRender.components = {
+SettingsFormRenderer.components = {
     ...FormRenderer.components,
     SettingsPage,
     SettingsApp,
     HighlightText,
     FormLabel: FormLabelHighlightText,
 };
-SettingsFormRender.compiler = SettingsFormCompiler;

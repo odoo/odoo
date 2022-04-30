@@ -3,10 +3,8 @@ odoo.define('base.settings', function (require) {
 
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
-var FormView = require('web.FormView');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
-var view_registry = require('web.view_registry');
 const Dialog = require('web.Dialog');
 
 var QWeb = core.qweb;
@@ -450,17 +448,17 @@ const BaseSettingsModel = BasicModel.extend({
     },
 });
 
-var BaseSettingView = FormView.extend({
-    jsLibs: [],
+// var BaseSettingView = FormView.extend({
+//     jsLibs: [],
 
-    config: _.extend({}, FormView.prototype.config, {
-        Model: BaseSettingsModel,
-        Renderer: BaseSettingRenderer,
-        Controller: BaseSettingController,
-    }),
-});
+//     config: _.extend({}, FormView.prototype.config, {
+//         Model: BaseSettingsModel,
+//         Renderer: BaseSettingRenderer,
+//         Controller: BaseSettingController,
+//     }),
+// });
 
-view_registry.add('base_settings', BaseSettingView);
+// view_registry.add('base_settings', BaseSettingView);
 
 return {
     Model: BaseSettingsModel,

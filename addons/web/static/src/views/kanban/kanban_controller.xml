@@ -5,11 +5,11 @@
         <div t-att-class="props.className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''">
                 <t t-set-slot="layout-buttons">
-                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                    <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
-                <KanbanRenderer
+                <t t-component="props.Renderer"
                     list="model.root"
-                    archInfo="archInfo"
+                    archInfo="props.archInfo"
                     readonly="true"
                     openRecord.bind="openRecord"
                     noContentHelp="props.info.noContentHelp"

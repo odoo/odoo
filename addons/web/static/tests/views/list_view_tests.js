@@ -1735,14 +1735,21 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("opening records when clicking on record", async function (assert) {
         assert.expect(6);
 
-        const ListView = registry.category("views").get("list");
-        class ListViewCustom extends ListView {
+        const listView = registry.category("views").get("list");
+        class ListViewCustom extends listView.Controller {
             openRecord(record) {
                 assert.step("openRecord");
                 assert.strictEqual(record.resId, 2);
             }
         }
-        registry.category("views").add("list", ListViewCustom, { force: true });
+        registry.category("views").add(
+            "list",
+            {
+                ...listView,
+                Controller: ListViewCustom,
+            },
+            { force: true }
+        );
 
         serverData.models.foo.fields.foo.sortable = true;
 

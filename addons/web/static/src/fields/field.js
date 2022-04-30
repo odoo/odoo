@@ -15,7 +15,13 @@ const fieldRegistry = registry.category("fields");
 class DefaultField extends Component {}
 DefaultField.template = xml``;
 
-function getFieldClassFromRegistry(viewType, fieldType, widget) {
+function getFieldClassFromRegistry(viewType, fieldType, widget, jsClass) {
+    if (jsClass && widget) {
+        const name = `${jsClass}.${widget}`;
+        if (fieldRegistry.contains(name)) {
+            return fieldRegistry.get(name);
+        }
+    }
     if (viewType && widget) {
         const name = `${viewType}.${widget}`;
         if (fieldRegistry.contains(name)) {
@@ -68,7 +74,7 @@ export class Field extends Component {
     setup() {
         this.FieldComponent = this.props.record.activeFields[this.props.name].FieldComponent;
         if (!this.FieldComponent) {
-            this.FieldComponent = getFieldClassFromRegistry(null, this.type, this.props.name);
+            this.FieldComponent = getFieldClassFromRegistry(null, this.type, this.props.name, null);
         }
     }
 
@@ -218,7 +224,7 @@ const EXCLUDED_ATTRS = [
     "on_change",
 ];
 
-Field.parseFieldNode = function (node, fields, viewType) {
+Field.parseFieldNode = function (node, fields, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const field = fields[name];
@@ -231,7 +237,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         widget,
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: isTruthy(node.getAttribute("on_change")),
-        FieldComponent: getFieldClassFromRegistry(viewType, fields[name].type, widget),
+        FieldComponent: getFieldClassFromRegistry(viewType, fields[name].type, widget, jsClass),
         decorations: {}, // populated below
         noLabel: isTruthy(node.getAttribute("nolabel"), true),
         props: {},
