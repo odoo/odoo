@@ -268,16 +268,20 @@
 
                         var index = vars['webpage'].split('.', 4)[3];
                         var header = document.getElementById('minimal_layout_report_headers');
-                        if(header){
+                        if(header &amp;&amp; index in header.children){
                             var companyHeader = header.children[index];
                             header.textContent = '';
                             header.appendChild(companyHeader);
+                        } else if (header) {
+                            header.textContent = '';
                         }
                         var footer = document.getElementById('minimal_layout_report_footers');
-                        if(footer){
+                        if(footer &amp;&amp; index in footer.children){
                             var companyFooter = footer.children[index];
                             footer.textContent = '';
                             footer.appendChild(companyFooter);
+                        } else if (footer) {
+                            footer.textContent = '';
                         }
                     }
                 </script>
