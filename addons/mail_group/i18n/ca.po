@@ -56,6 +56,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola,<br/><br/>\n"
+"                Ha sol·licitat ser subscrit a la llista de correu<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Per confirmar, si us plau visiti el següent enllaç:<strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"               Si ha estat un error o no ha sol·licitat aquesta acció, si us plau ignori aquest missatge.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -70,6 +79,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola,<br/><br/>\n"
+"                Heu sol·licitat que es cancel·li la subscripció a la llista de correu<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Per confirmar, si us plau visiti el següent enllaç: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Si ha estat un error o no ha sol·licitat aquesta acció, si us plau ignori aquest missatge.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -81,6 +99,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hola<t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Si us plau trobeu a sota de les directrius de {{ object.mail_group_id.name }} llista de correu.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -398,7 +422,7 @@ msgstr "Pot gestionar els membres"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
 msgid "Childs"
-msgstr ""
+msgstr "per nens"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -735,7 +759,7 @@ msgstr "Grup de correu: Cancel·lació de la llista de correu"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr ""
+msgstr "Grup de correu: Envia les guies"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
@@ -812,7 +836,7 @@ msgstr "Recompte de membres"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members of this group"
-msgstr ""
+msgstr "Membres d'aquest grup"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
@@ -889,13 +913,13 @@ msgstr "Comptador de correus moderats"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderated emails in this group"
-msgstr ""
+msgstr "Correus electrònics moderats en aquest grup"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Moderated group must have moderators."
-msgstr ""
+msgstr "El grup moderat ha de tenir moderadors."
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
@@ -1002,12 +1026,15 @@ msgstr "Nombre de missatges en aquest grup"
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
 msgstr ""
+"Només un administrador o un moderador poden enviar directrius als membres "
+"del grup."
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Only members can send email to the mailing list."
 msgstr ""
+"Només els membres poden enviar correu electrònic a la llista de correu."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1059,7 +1086,7 @@ msgstr "Empresa"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr ""
+msgstr "Socis Membre"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
@@ -1219,7 +1246,7 @@ msgstr "Enviar correu"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Send Guidelines"
-msgstr ""
+msgstr "Envia les línies"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
@@ -1229,7 +1256,7 @@ msgstr "Envia un correu electrònic a l'autor del missatge"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new subscribers"
-msgstr ""
+msgstr "Envia les directrius als subscriptors nous"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1265,6 +1292,9 @@ msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has"
 " been sent. Please contact an administrator to fix this issue."
 msgstr ""
+"Plantilla \"mail_group.mail_template_guidelines\" no s'ha trobat. No s'ha "
+"enviat cap correu electrònic. Contacteu amb un administrador per solucionar "
+"aquest problema."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1275,7 +1305,7 @@ msgstr "Gràcies!"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The \"Authorized Group\" is missing."
-msgstr ""
+msgstr "Falta el \"Grupo Autorizado\"."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription

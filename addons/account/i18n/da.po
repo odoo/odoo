@@ -53,7 +53,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr "%(lock_type)s låsedatoen er sat til %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -163,12 +163,12 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted Entries Only"
-msgstr ""
+msgstr "- Kun bogførte posteringer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted and Draft Entries"
-msgstr ""
+msgstr "- Bogførte og kladde posteringer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -642,7 +642,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "<span class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_td_label\">Afstem faktura med</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1211,6 +1211,7 @@ msgstr "En bankopgørelse er en finansiel transaktion på en bankkonto"
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
 msgstr ""
+"En finansposition med et udenlandsk VAT eksisterer allerede i denne region."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1863,7 +1864,7 @@ msgstr "Aktiver for at oprette indkøbs kvittering"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create sale receipt"
-msgstr ""
+msgstr "Aktivér for at oprette salgskvitteringer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -2510,6 +2511,8 @@ msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
+"Der skete en fejl under beregningen er uforanderligheden. Ikke muligt at "
+"indhente den unikke tidligere journalpostering."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2814,7 +2817,7 @@ msgstr "Tilgængelig Journal"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr ""
+msgstr "Tilgængelig Partner Bank"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3969,7 +3972,7 @@ msgstr "Virksomhed"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "Virksomhed Bankkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -4369,7 +4372,7 @@ msgstr "Opret en ny moms"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_group
 msgid "Create a new tax group"
-msgstr ""
+msgstr "Opret en ny momsgruppe"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4642,6 +4645,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
+"Kreditnota_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -5195,6 +5200,14 @@ msgid ""
 " 10 with an existing carryover of 50 will create a new carryover line of "
 "-40, so that the total carryover becomes 10."
 msgstr ""
+"Definerer hvordan denne rapportlinje oprette overførselslinjer under "
+"momsafslutning. Hvis sand, vil mængderne der bliver overført altid adderes "
+"med hinanden. For eksempel: En rapportlinje med en saldo på 10, med en "
+"eksisterende overførsel på 50, vil de 10 blive adderet ved afslutning, for "
+"en samlet overførsel på 60. Hvis falsk, vil den samlede overførte mængde "
+"blive tvunget til den samlede saldo for denne rapportlinje: En rapportlinje "
+"med en saldo på 10 med en eksisterende overførsel på 50 vil oprette en ny "
+"overførsel linje på -40, så den samlede overførsel bliver 10."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -6292,7 +6305,7 @@ msgstr "Fra"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "From :"
-msgstr ""
+msgstr "Fra :"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6753,6 +6766,9 @@ msgid ""
 " balance in the report. This means that the carryover could affect other "
 "lines if they are using this one in their computation."
 msgstr ""
+"Hvis angivet, vil overførselsbeløbet for denne linje blive brugt til at "
+"udregne saldo i rapporten. Dette betyder, at overførslen ville kunne påvirke"
+" andre linjer, hvis de gør brug af denne i deres udregning."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7142,7 +7158,7 @@ msgstr "Installer flere pakker"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Install new module"
-msgstr ""
+msgstr "Installér nyt modul"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__transfer_account_id
@@ -7395,6 +7411,7 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Faktura- og kreditnotaopdeling skal have mindst én skatteopdelingslinje."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7453,6 +7470,8 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
+"Faktura_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7526,13 +7545,13 @@ msgstr "Fakturaer uden betaling"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices/Bills Partial Match if Underpaid"
-msgstr ""
+msgstr "Faktura/Leverandørfaktura Delvis Match hvis underbetalt"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Invoices/Bills Perfect Match"
-msgstr ""
+msgstr "Faktura/Leverandørregning Perfekt Match"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -7900,7 +7919,7 @@ msgstr "Journalposter, hvor matchende nummer ikke er angivet"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr ""
+msgstr "Journal bør være den samme type som den tilbageførte postering."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -8313,7 +8332,7 @@ msgstr "Lad stå tom for at tildele fakturaens salgsperson."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr ""
+msgstr "Lad være tom for at anvende den standard udestående konto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -8532,6 +8551,10 @@ msgid ""
 "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuel: Bliv betal via enhver metode udenfor Odoo.\n"
+"Betalingsmodtagere: Hver betalingsmodtager har deres egen Betalingsmetode. Anmod om en transaktion til/fra et kreditkort, takket være en betalings-token gemt af partneren ved køb eller abonnering online.\n"
+"Batchbetaling: Indsaml flere kunders checks på én gang, og generere en samlet indbetaling til din bank. Modulet account_batch_payment er påkrævet.\n"
+"SEPA Direkte Debit: Bliv betalt i SEPA zonen takket være et mandat din partner har tildelt dig. Modulet account_sepa er påkrævet.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -9015,6 +9038,8 @@ msgid ""
 "No tax template found for this country. Please install the corresponding "
 "localization module."
 msgstr ""
+"Ingen moms skabelon fundet for dette land. Vær venlig at installere det "
+"tilsvarende lokaliseringsmodul."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -9547,6 +9572,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Valgfri oversættelses sprog (ISO kode) til valg ved afsending af en email. "
+"Hvis ikke angivet, vil den engelske udgave blive anvendt. Dette bør "
+"normaltvis være et pladsholder-udtryk der angiver det passende sprog, f.eks."
+" {{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -10341,7 +10370,7 @@ msgstr ""
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr ""
+msgstr "Vær venlig at opdatere Faktureringsmodulet før du fortsætter."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -10424,7 +10453,7 @@ msgstr "Posteret Før"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Posted Entries only"
-msgstr ""
+msgstr "Kun bogførte posteringer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10439,7 +10468,7 @@ msgstr "Registrerede journal bilag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Posted and Draft Entries"
-msgstr ""
+msgstr "Bogførte og kladde posteringer"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10528,7 +10557,7 @@ msgstr "Forhåndsvis som en PDF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Preview invoice"
-msgstr ""
+msgstr "Forhåndsvis Faktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__previous_statement_id
@@ -13502,6 +13531,8 @@ msgid ""
 "The accounting date being set prior to the %(lock_type)s lock date "
 "%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
 msgstr ""
+"Regnskabsdatoen er sat forud for %(lock_type)s låsedaten %(lock_date)s, den "
+"vil blive ændret til %(accounting_date)s ved postering."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13746,12 +13777,13 @@ msgstr ""
 #, python-format
 msgid "The date of some related entries is protected by a lock date"
 msgstr ""
+"Dato for visse af de relaterede posteringer er beskyttet af en låsedato"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr ""
+msgstr "Den valgte dato er beskyttet af en låsedato"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -13892,7 +13924,7 @@ msgstr "Den udenlandske finansposition denne overførsel er lavet for."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__group_tax_id
 msgid "The group of taxes that generated this tax line"
-msgstr ""
+msgstr "Gruppen af moms der oprettede denne momslinje"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14878,7 +14910,7 @@ msgstr "Til"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "To :"
-msgstr ""
+msgstr "Til :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -15718,6 +15750,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced trough this field"
 msgstr ""
+"Når en intern overførsel posteres, oprettes en parret betaling. De kryds-"
+"refereres gennem dette felt"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16162,6 +16196,9 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"Du kan ikke slette denne postering, eftersom den allerede har forbrugt et "
+"sekvensnummer, og ikke er den sidste i kæden. Du bør formentlig tilbageføre "
+"den i stedet"
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -16766,7 +16803,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "moms"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -16820,7 +16857,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr ""
+msgstr "bruger"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16839,18 +16876,21 @@ msgstr "med en PDF af faktura som vedhæftelse."
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','-') }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Kreditnota (Reference {{ object.name or 'n/a' "
+"}})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Faktura (Reference {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -16858,6 +16898,8 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
+"{{ object.company_id.name }} Betalingskvittering (Reference {{ object.name "
+"or 'n/a' }})"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

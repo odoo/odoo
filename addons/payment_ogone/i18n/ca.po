@@ -25,12 +25,12 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "API User ID"
-msgstr ""
+msgstr "ID d'usuari de l'API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
 msgid "API User Password"
-msgstr ""
+msgstr "Contrasenya de l'usuari de l'API"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
@@ -53,7 +53,7 @@ msgstr "Ogone"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "PSPID"
-msgstr ""
+msgstr "PSPID"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
@@ -93,44 +93,50 @@ msgid ""
 "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
+"Dades rebudes amb signatura no vàlida. esperada: %(exp)s ; rebut: %(rec)s ; dades:\n"
+"%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received feedback data with unknown type: %s"
-msgstr ""
+msgstr "Dades de retroacció rebudes amb tipus desconegut:%s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "Clau SHA IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "Clau SHA OUT"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been archived."
 msgstr ""
+"Els mètodes de pagament desats no es poden restaurar una vegada que s'hagin "
+"arxivat."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"L'emmagatzematge de les seves dades de pagament és necessari per al seu ús "
+"futur."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "L'ID només utilitzat per identificar l'usuari de l'API amb Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "L'ID només s'utilitza per identificar el compte amb Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
@@ -143,13 +149,13 @@ msgstr ""
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
 #, python-format
 msgid "The communication with the API failed."
-msgstr ""
+msgstr "La comunicació amb l'API ha fallat."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "El pagament ha estat rebutjat: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
