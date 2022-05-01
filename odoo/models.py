@@ -2802,11 +2802,6 @@ class BaseModel(metaclass=MetaModel):
             )
             return '"%s"."%s"' % (rel_alias, field.column2)
 
-        elif (field.translate) and not self.env.context.get('field_json', False):
-            if self.env.lang and self.env.lang != 'en_US':
-                return 'COALESCE("%s"."%s"->>\'%s\', "%s"."%s"->>\'en_US\')' % (alias, fname, self.env.lang, alias, fname)
-            else:
-                return '"%s"."%s"->>\'en_US\'' % (alias, fname)
         else:
             return '"%s"."%s"' % (alias, fname)
 
@@ -3421,6 +3416,7 @@ class BaseModel(metaclass=MetaModel):
         # determine columns fields and those with their own read() method
         column_fields = []
         other_fields = []
+        translated_field_names = []
         for name in field_names:
             if name == 'id':
                 continue
@@ -3433,6 +3429,8 @@ class BaseModel(metaclass=MetaModel):
             elif field.store and not field.column_type:
                 # non-column fields: for the sake of simplicity, we ignore inherited fields
                 other_fields.append(field)
+            if field.base_field.store and field.base_field.translate:
+                translated_field_names.append(field.name)
 
         if column_fields:
             cr, context = self.env.cr, self.env.context
@@ -3441,6 +3439,7 @@ class BaseModel(metaclass=MetaModel):
             # an impact on checking security rules, as they are injected into
             # the query.  However, we don't need to flush the fields to fetch,
             # as explained below when putting values in cache.
+
             self._flush_search([], order='id')
 
             # make a query object for selecting ids, and apply security rules to it
@@ -3932,6 +3931,8 @@ class BaseModel(metaclass=MetaModel):
                     # forcing its value to be recomputed once dependencies are
                     # up-to-date.
                     protected.update(self.pool.field_computed.get(field, [field]))
+            if field.translate:
+                self.mapped(fname)
             if fname == 'company_id' or (field.relational and field.check_company):
                 check_company = True
 
@@ -4046,8 +4047,7 @@ class BaseModel(metaclass=MetaModel):
 
         # determine SQL values
         columns = []
-        params  = []
-        sync_lang = []
+        params = []
 
         for name, val in sorted(vals.items()):
             if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
@@ -4055,50 +4055,8 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields[name]
             assert field.store
             assert field.column_type
-            if field.translate:
-                # TODO VSC: we should accept to write strings and dict in translatable fields:
-                # string means either current language or en_us (if there is no current language)
-                # dict means replace the current json (replace all translations)
-                if callable(field.translate):
-                    for sub_ids in cr.split_for_in_conditions(self._ids):
-                        cr.execute(f'SELECT id, "{name}" FROM "{self._table}" WHERE id IN %s', (sub_ids,))
-                        for tid, tfield in cr.fetchall():
-                            # TODO VSC: the base language isn't always en_US, it might be specified in website --> no we want en_US as base
-                            src = tfield['en_US']
-                            if self.env.lang != 'en_US':
-                                # src: <form><h1>First</h1><h2>Second</h2></form>
-                                # tfield.get(lang): <form><h1>Premier</h1><h2>Deuxième</h2></form>
-                                # val: <form><h1>Première</h1><h3>Deuxième</h3></form>
-                                val = field.translate(tfield.get(self.env.lang), src, val)
-                                # val: <form><h1>Première</h1><h3>Second</h3></form>
-                            for lang in tfield.keys():
-                                # FP TODO 7: speed optimization: don't parse en_US for each lang
-                                #            first, replace transalte=_xml_translate -> translate=True
-                                tfield[lang] = field.translate(src, tfield.get(lang), val)
-                            # tfield = {
-                            #     'en_US': <form><h1>Première</h1><h3>Second</h3></form>
-                            #     'fr_FR': <form><h1>Première</h1><h3>Deuxième</h3></form>
-                            #     'nl_NL': <form><h1>Première</h1><h3>Twede</h3></form>
-                            # }
-                            #
-                            # TODO RCO: this does not look correct; what do we actually expect?
-                    columns.append(f'"{name}" = %s')
-                    params.append(Json(tfield))
-                else:
-                    # TODO VSC: how to you append null (to nullify a value of a language)
-                    # TODO VSC : this could be moved inside the fields in field.py:_write of the String fields
-                    assert isinstance(val, str) or val is None
-                    columns.append(f'"{name}" = "{name}" || %s')
-                    # TODO VSC RCO : at this point self.env.lang might not be the one the user wrote:
-                        #record.with_context(lang='fr_FR').name = "Tralala"
-                        # -> put "Tralala" in record.env.all.towrite
-                        #record.with_context(lang='en_US').flush()
-                        # -> put {"en_US": "Tralala"} in the table
-
-                    params.append(Json({(self.env.lang or 'en_US'): val}))
-            else:
-                columns.append(f'"{name}" = %s')
-                params.append(val)
+            columns.append(f'"{name}" = %s')
+            params.append(val)
 
         # update columns
         if columns:
@@ -4366,12 +4324,6 @@ class BaseModel(metaclass=MetaModel):
                     for stored, row in zip(stored_list, rows):
                         if fname in stored:
                             colval = field.convert_to_column(stored[fname], self, stored)
-                            # TODO VSC : move this inside convert_to_column of _String
-                            if field.translate:
-                                d = {'en_US': colval}
-                                if self.env.lang:
-                                    d[self.env.lang] = colval
-                                colval = Json(d)
                             row.append(colval)
                         else:
                             row.append(SQL_DEFAULT)
@@ -4415,13 +4367,15 @@ class BaseModel(metaclass=MetaModel):
                 # + avoid the fetch of fields which are False. e.g. if a boolean field is not passed in vals and as no default set in the field attributes,
                 # then we know it can be set to False in the cache in the case of a create.
                 elif field.name not in set_vals and not field.compute:
-                    self.env.cache.set(record, field, field.convert_to_cache(None, record))
+                    # Use empty recordset to prevent fetching translated fields when cache miss
+                    self.env.cache.set(record, field, field.convert_to_cache(None, record.browse() if field.translate else record))
             for fname, value in vals.items():
                 field = self._fields[fname]
                 if field.type in ('one2many', 'many2many'):
                     cachetoclear.append((record, field))
                 else:
-                    cache_value = field.convert_to_cache(value, record)
+                    # Use empty recordset to prevent fetching translated fields when cache miss
+                    cache_value = field.convert_to_cache(value, record.browse() if field.translate else record)
                     self.env.cache.set(record, field, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
@@ -4479,6 +4433,7 @@ class BaseModel(metaclass=MetaModel):
         if not self._parent_store:
             return
 
+        self.invalidate_recordset(['parent_path'])
         query = """
             UPDATE {0} node
             SET parent_path=concat((SELECT parent.parent_path FROM {0} parent
@@ -4711,11 +4666,11 @@ class BaseModel(metaclass=MetaModel):
 
         :return: the qualified field name (or expression) to use for ``field``
         """
-        if self.env.lang:
-            self.flush_model([field])
-            # TODO VSC check the quoting, check also 'en' vs 'en_US'
-            # TODO VSC there is a big discution about the fallback language, for now we use en_US
-            return 'COALESCE("%s"."%s"->>"%s", "%s"."%s"->>"en_US")' % (table_alias, field, self.env.lang, table_alias, field)
+        # # TODO CWG: check if this method is dead code
+        # if self.env.lang:
+        #     # TODO VSC check the quoting, check also 'en' vs 'en_US'
+        #     # TODO VSC there is a big discution about the fallback language, for now we use en_US
+        #     return 'COALESCE("%s"."%s"->>"%s", "%s"."%s"->>"en_US")' % (table_alias, field, self.env.lang, table_alias, field)
         return '"%s"."%s"' % (table_alias, field)
 
     @api.model
@@ -4787,6 +4742,9 @@ class BaseModel(metaclass=MetaModel):
                     qualifield_name = self._inherits_join_calc(alias, order_field, query)
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
+                    if field.translate:
+                        lang = self.env.lang or 'en_US'
+                        qualifield_name = "COALESCE(NULLIF(%s->>'%s', ''), %s->>'en_US')" % (qualifield_name, lang, qualifield_name)
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
                 else:
                     _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
@@ -5011,7 +4969,9 @@ class BaseModel(metaclass=MetaModel):
         #   to avoid modifying the context
         # TODO VSC: copy_data MUST return the entire translation for each translated fields and create MUST accept it.
         #   use lang="ALL" here or inside copy_data, also lang in the context is used by the cache to discriminate
-        vals = self.with_context(active_test=False, lang="ALL").copy_data(default)[0]
+        # vals = self.with_context(active_test=False, lang="ALL").copy_data(default)[0]
+
+        vals = self.with_context(active_test=False).copy_data(default)[0]
         return self.create(vals)
 
     @api.returns('self')
@@ -5849,8 +5809,11 @@ class BaseModel(metaclass=MetaModel):
                         f"    Context: {self.env.context}\n" \
                         f"    Cache: {self.env.cache!r}"
                     for record, value in zip(records, values):
-                        value = field.convert_to_write(value, record)
-                        value = field.convert_to_column(value, record)
+                        if not field.translate:
+                            value = field.convert_to_write(value, record)
+                            value = field.convert_to_column(value, record)
+                        else:
+                            value = Json(value)
                         id_vals[record.id][field.name] = value
                 process(model, id_vals)
 

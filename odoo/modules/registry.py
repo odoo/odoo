@@ -474,24 +474,22 @@ class Registry(Mapping):
             columnname = field.name
             index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing:
-                method = 'btree'
-                operator = ''
-                where = ''
-                if index == 'btree_not_null':
-                    where = f'"{columnname}" IS NOT NULL'
-                elif index == 'trigram' and self.has_trigram:
+            if index and indexname not in existing and \
+                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
+
+                if index == 'trigram':
+                    if not field.translate:
+                        expression = f'"{columnname}" gin_trgm_ops'
+                    else:  # field.translate == True
+                        # TODO VSC : see if we can simplify the index so it doesn't contain the [ and " and spaces, only values
+                        # TODO CWG: also check logic for inactive languages
+                        expression = f'(jsonb_path_query_array("{columnname}", \'$.*\'::jsonpath)::text) gin_trgm_ops'
                     method = 'gin'
-                    operator = 'gin_trgm_ops'
-                # TODO VSC : rewrite and simplify the chain of conditions
-                if field.translate and field.index:
-                    # if method != 'gin':
-                    #     raise Exception("FUCK OFF WITH YOUR SHITTY INDEX, dev, fix it, it has to be trigram for translated fields!")
-                    # method = 'gin'
-                    # TODO VSC : see if we can simplify the index so it doesn't contain the [ and " and spaces, only values
-                    expression = f'(jsonb_path_query_array("{columnname}", \'$.*\'::jsonpath)::text) {operator}'
-                else:
-                    expression = f'"{columnname}" {operator}'
+                    where = ''
+                else:  # index in ['btree', 'btree_not_null'， True]
+                    expression = f'"{columnname}"'
+                    method = 'btree'
+                    where = f'"{columnname}" IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
                     with cr.savepoint(flush=False):
                         sql.create_index(cr, indexname, tablename, [expression], method, where)

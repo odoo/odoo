@@ -286,44 +286,35 @@ def serialize_html(node):
 # FP TODO 4: remove xml_translate & html_translate and implement at field level
 #            we should only keep translate=True
 # TODO VSC: create a new field type XML, move this code and adapt in write of both field.html and field.xml
-def xml_translate(src, dest, newval):
+def xml_translate(callback, value):
     """ Translate an XML value (string), using `callback` for translating text
         appearing in `value`.
     """
-    if not newval:
-        return newval
+    if not value:
+        return value
+
     try:
-        src_terms = []
-        translate_xml_node(parse_xml(src), src_terms.append, parse_xml, serialize_xml)
-
-        dest_terms = []
-        if dest:
-            translate_xml_node(parse_xml(dest), dest_terms.append, parse_xml, serialize_xml)
-
-        terms = dict(zip(src_terms, dest_terms))
-        result = translate_xml_node(parse_xml(newval), lambda x: terms.get(x), parse_xml, serialize_xml)
+        root = parse_xml(value)
+        result = translate_xml_node(root, callback, parse_xml, serialize_xml)
         return serialize_xml(result)
     except etree.ParseError:
-        return html_translate(src, dest, newval)
+        # fallback for translated terms: use an HTML parser and wrap the term
+        root = parse_html(u"<div>%s</div>" % value)
+        result = translate_xml_node(root, callback, parse_xml, serialize_xml)
+        # remove tags <div> and </div> from result
+        return serialize_xml(result)[5:-6]
 
-def html_translate(src, dest, newval):
+def html_translate(callback, value):
     """ Translate an HTML value (string), using `callback` for translating text
         appearing in `value`.
     """
-    if not newval:
-        return newval
+    if not value:
+        return value
+
     try:
-        r = lambda x: parse_html("<div>%s</div>" % value)
-        src_terms = []
-        translate_xml_node(parse_html("<div>%s</div>" % src), src_terms.append, parse_html, serialize_html)
-
-        dest_terms = []
-        if dest:
-            translate_xml_node(parse_html("<div>%s</div>" % dest), dest_terms.append, parse_html, serialize_html)
-
-        terms = dict(zip(src_terms, dest_terms))
-        result = translate_xml_node(parse_html("<div>%s</div>" % newval), lambda x: terms.get(x), parse_html, serialize_html)
-
+        # value may be some HTML fragment, wrap it into a div
+        root = parse_html("<div>%s</div>" % value)
+        result = translate_xml_node(root, callback, parse_html, serialize_html)
         # remove tags <div> and </div> from result
         value = serialize_html(result)[5:-6]
     except ValueError:
@@ -356,15 +347,8 @@ def translate(cr, name, source_type, lang, source=None):
 
 def translate_sql_constraint(cr, key, lang):
     cr.execute("""
-        SELECT COALESCE(t.value, c.message) as message
+        SELECT COALESCE(NULLIF(c.message->>%s, ''), c.message->>'en_US') as message
         FROM ir_model_constraint c
-        LEFT JOIN
-        (SELECT res_id, value FROM ir_translation
-         WHERE type='model'
-           AND name='ir.model.constraint,message'
-           AND lang=%s
-           AND value!='') AS t
-        ON c.id=t.res_id
         WHERE name=%s and type='u'
         """, (lang, key))
     return cr.fetchone()[0]
@@ -1198,7 +1182,7 @@ def trans_load_data(cr, fileobj, fileformat, lang,
                 # translate_xml_node(parse_xml(obj[fname]), lambda x: terms.get(x), parse_xml, serialize_xml)
                 value = obj[fname].replace(term['src'], value)
             if res_id and value:
-                obj._write({fname: value})
+                obj.write({fname: value})
 
         if verbose:
             _logger.info("translation file loaded successfully")
