@@ -47,7 +47,7 @@
                                 <t t-esc="assignedUserText"/>
                             </div>
                         </t>
-                        <a class="o_Activity_detailsButton btn btn-link" t-on-click="_onClickDetailsButton" role="button">
+                        <a href="#" class="o_Activity_detailsButton btn btn-link" t-att-aria-expanded="state.areDetailsVisible ? 'true' : 'false'" t-on-click="_onClickDetailsButton" role="button">
                             <i class="fa fa-info-circle" role="img" title="Info"/>
                         </a>
                     </div>
