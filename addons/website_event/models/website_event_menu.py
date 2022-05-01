@@ -7,6 +7,7 @@ from odoo import fields, models
 class EventMenu(models.Model):
     _name = "website.event.menu"
     _description = "Website Event Menu"
+    _rec_name = "menu_id"
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
     event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
