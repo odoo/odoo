@@ -9,6 +9,7 @@
 # M Palau <mpalau@tda.ad>, 2020
 # jabelchi, 2021
 # Harcogourmet, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Harcogourmet, 2022\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr "<span> ;  Longitud:  </span>"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
@@ -51,11 +52,13 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
+"Cal una clau API per a GeoCoding (Places).\n"
+"Visiteu https://developers.google.com/maps/documentation/geocoding/get-api-key per a més informació."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr ""
+msgstr "API:"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -92,12 +95,12 @@ msgstr "Error amb el servidor de geolocalització:"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr ""
+msgstr "Còdec Geo"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
-msgstr ""
+msgstr "Proveïdor Geo"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -118,7 +121,7 @@ msgstr "Data de Geolocalització"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr ""
+msgstr "Clau de l'API de Google Maps"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
@@ -129,7 +132,7 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr ""
+msgstr "Clau:"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
@@ -168,7 +171,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Tech Name"
-msgstr ""
+msgstr "Nom tècnic"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
@@ -182,6 +185,13 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
+"Incapaç de geolocalitzar, s'ha rebut un error:\n"
+"%s\n"
+"\n"
+"Google va fer d'això una característica de pagament.\n"
+"Primer hauries d'habilitar la facturació al teu compte de Google.\n"
+"Després, ves a la Consola de Desenvolupadors i activa les APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
@@ -189,3 +199,5 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
 " for more information."
 msgstr ""
+"Visita https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key for more information."
