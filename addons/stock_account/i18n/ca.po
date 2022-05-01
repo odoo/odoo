@@ -322,6 +322,8 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"A causa d'un canvi de categoria de producte (de %s a %s), el mètode de cost "
+"ha canviat per a la plantilla de producte %s:de %sa %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -886,6 +888,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"En fer la valoració automatitzada de l'inventari, els articles del diari de contrapartida per a tots els moviments d'estoc sortint es publicaran en aquest compte,\n"
+"                A menys que hi hagi un compte de valoració específic establert a la ubicació de destinació. Aquest és el valor per defecte per a tots els productes d'aquesta categoria.\n"
+"               També es pot establir directament en cada producte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -893,11 +898,16 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"En realitzar la valoració automatitzada de l'inventari, aquest és el Diari "
+"de Comptabilitat en el qual les entrades es publicaran automàticament quan "
+"es processin els moviments d'estoc."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr ""
+"Model d'assistent per a reavaluar un inventari d'existències per a un "
+"producte"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -961,6 +971,7 @@ msgstr ""
 #, python-format
 msgid "You must set a counterpart account on your product category."
 msgstr ""
+"Heu d'establir un compte de contrapartida a la categoria del producte."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

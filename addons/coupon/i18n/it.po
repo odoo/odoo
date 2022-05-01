@@ -303,13 +303,13 @@ msgid ""
 "Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
-"Applicato automaticamente - Non è richiesto alcun codice. Se le regole del programma sono rispettate, viene applicato il riconoscimento (ad eccezione degli sconti globali o delle spedizioni gratuite, che non sono cumulativi)\n"
-"Utilizzo di un codice - Se le regole del programma sono rispettate, per applicare il riconoscimento è obbligatorio un codice valido.\n"
+"Applicato automaticamente - Non è richiesto alcun codice. Se le regole del programma sono rispettate viene applicato il premio (ad eccezione degli sconti globali o delle spedizioni gratuite, che non sono cumulativi)\n"
+"Utilizzo di un codice - Se le regole del programma sono rispettate, per applicare il premio è obbligatorio un codice valido.\n"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Barcode"
-msgstr "Barcode"
+msgstr "Codice a barre"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
@@ -419,7 +419,7 @@ msgstr "Programmi buoni sconto"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr "Riconoscimento buono sconto"
+msgstr "Premio buono sconto"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -531,9 +531,9 @@ msgid ""
 "Free Product - Free product will be provide as reward \n"
 "Free Shipping - Free shipping will be provided as reward (Need delivery module)"
 msgstr ""
-"Sconto - Riconoscimento fornito come sconto.\n"
-"Prodotto gratuito - Come riconoscimento viene fornito un prodotto gratuito\n"
-"Spedizione gratuita - Come riconoscimento viene offerta la spedizione gratuita (richiesto modulo Consegna)"
+"Sconto - Premio fornito come sconto.\n"
+"Prodotto gratuito - Come premio viene fornito un prodotto gratuito\n"
+"Spedizione gratuita - Come premio viene offerta la spedizione gratuita (è richiesto il modulo Consegna)"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
@@ -739,8 +739,8 @@ msgstr "Importo massimo di sconti che possono essere offerti"
 #: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum number of sales orders in which reward can be provided"
 msgstr ""
-"Numero massimo di ordini di vendita nei quali può essere messo a "
-"disposizione un riconoscimento"
+"Numero massimo di ordini di vendita per i quali può essere messo a "
+"disposizione un premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -769,13 +769,13 @@ msgstr "La quantità minima deve essere maggiore di 0"
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_minimum_amount
 msgid "Minimum required amount to get the reward"
-msgstr "Importo minimo richiesto per ottenere il riconoscimento"
+msgstr "Importo minimo richiesto per ottenere il premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
 msgid "Minimum required product quantity to get the reward"
-msgstr "Quantità minima di prodotto richiesta per ottenere il riconoscimento"
+msgstr "Quantità minima di prodotto richiesta per ottenere il premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__name
@@ -829,8 +829,7 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_products_domain
 msgid "On Purchase of selected product, reward will be given"
-msgstr ""
-"Viene assegnato un riconoscimento all'acquisto del prodotto selezionato"
+msgstr "Viene assegnato un premio all'acquisto del prodotto selezionato"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
@@ -871,7 +870,7 @@ msgid ""
 msgstr ""
 "Prodotto utilizzato per applicare lo sconto nell'ordine di vendita. Ciascun "
 "programma buono sconto possiede, a scopo informativo, il proprio prodotto "
-"riconoscimento"
+"premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
@@ -939,43 +938,43 @@ msgstr "Quantità"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_id
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Reward"
-msgstr "Riconoscimento"
+msgstr "Premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
 msgid "Reward Description"
-msgstr "Descrizione riconoscimento"
+msgstr "Descrizione premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr "Prodotto riga riconoscimento"
+msgstr "Prodotto riga premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr "Prodotto riconoscimento"
+msgstr "Prodotto premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr "Tipo di riconoscimento"
+msgstr "Tipo di premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr "Quantità prodotto riconoscimento"
+msgstr "Quantità prodotto premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Rewards"
-msgstr "Riconoscimenti"
+msgstr "Premi"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
@@ -1017,7 +1016,7 @@ msgstr "Seleziona prodotti"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select reward product"
-msgstr "Seleziona prodotto riconoscimento"
+msgstr "Seleziona prodotto premio"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
