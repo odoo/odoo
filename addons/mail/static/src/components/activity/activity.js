@@ -164,7 +164,8 @@ class Activity extends Component {
     /**
      * @private
      */
-    _onClickDetailsButton() {
+    _onClickDetailsButton(ev) {
+        ev.preventDefault();
         this.state.areDetailsVisible = !this.state.areDetailsVisible;
     }
 
