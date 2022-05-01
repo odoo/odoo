@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
+# Eric Geens <ericgeens@yahoo.com>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Wynand Tastenhoye <wta@odoo.com>, 2019
+# Volluta <volluta@tutanota.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-#
+# Martin Trigaux, 2022
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
@@ -41,13 +46,17 @@ msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Terug naar bewerken"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgid ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 msgstr "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Vorige\" title=\"Vorige\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Volgende\" title=\"Volgende\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Volgende\" "
+"title=\"Volgende\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -60,9 +69,21 @@ msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> Bewerk"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+msgstr "<i title=\"Documentatie\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. <br/>Please contact us directly for this operation.</small>"
-msgstr "<small class=\"form-text text-muted\">Het wijzigen van de bedrijfsnaam of het btw-nummer is niet toegestaan zodra document(en) zijn uitgegeven voor je account. <br/>Neem voor deze operatie rechtstreeks contact met ons op.</small>"
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
+msgstr ""
+"<small class=\"form-text text-muted\">Het wijzigen van de bedrijfsnaam of "
+"het btw-nummer is niet toegestaan zodra document(en) zijn uitgegeven voor je"
+" account. <br/>Neem voor deze operatie rechtstreeks contact met ons "
+"op.</small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -247,6 +268,13 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "API Key Ready"
+msgstr "API Key Gereed"
+
+#. module: portal
+#. openerp-web
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
@@ -286,6 +314,11 @@ msgid "Add extra content to display in the email"
 msgstr "Voeg extra inhoud toe om weer te geven in de e-mail"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Added On"
+msgstr "Toegevoegd op"
+
+#. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
@@ -315,13 +348,23 @@ msgstr "Wijzig wachtwoord"
 #: code:addons/portal/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
-msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Het wijzigen van een BTW nummer is niet toegestaan zodra documenten zijn uitgegeven voor je account. Neem direct contact met ons op voor deze bewerking."
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Het wijzigen van een BTW nummer is niet toegestaan zodra documenten zijn "
+"uitgegeven voor je account. Neem direct contact met ons op voor deze "
+"bewerking."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
-msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
-msgstr "Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document(en) voor je account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze bewerking."
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document(en) voor "
+"je account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze "
+"bewerking."
 
 #. module: portal
 #. openerp-web
@@ -343,8 +386,11 @@ msgid "Click here to see your document."
 msgstr "Klik hier om je document te bekijken."
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, python-format
 msgid "Close"
 msgstr "Sluiten"
 
@@ -352,6 +398,18 @@ msgstr "Sluiten"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
 msgstr "Bedrijfsnaam"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Bevestigen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -420,15 +478,28 @@ msgstr "Aangemaakt op"
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
-msgstr "Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te beperken tot interne werknemers."
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+"Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te"
+" beperken tot interne werknemers."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
-msgstr "Momenteel beperkt tot interne werknemers. Klik om het beschikbaar te maken voor iedereen die dit document bekijkt."
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+"Momenteel beperkt tot interne werknemers. Klik om het beschikbaar te maken "
+"voor iedereen die dit document bekijkt."
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
+msgid "Customer API Keys"
+msgstr "Klant API Keys"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -448,10 +519,27 @@ msgid "Delete"
 msgstr "Verwijderen"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Details"
 msgstr "Details"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Developer API Keys"
+msgstr "Ontwikkelaar API sleutels"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#, python-format
+msgid "Discard"
+msgstr "Negeren"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
@@ -501,6 +589,13 @@ msgstr "Alleen werknemers"
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
+msgid "Enter a description of and purpose for the key."
+msgstr "Voer een beschrijving en het doel van de sleutel in."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
 msgid "Forgot password?"
 msgstr "Wachtwoord vergeten?"
 
@@ -526,6 +621,17 @@ msgid "HTTP Routing"
 msgstr "HTTP routing"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"Here is your new API key, use it instead of a password for RPC access.\n"
+"                Your login is still necessary for interactive usage."
+msgstr ""
+"Hier is je nieuwe API-sleutel, gebruik deze in plaats van een wachtwoord voor RPC-toegang.\n"
+"               Je login is nog steeds nodig voor interactief gebruik."
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
 msgstr "Home"
@@ -538,9 +644,30 @@ msgid "ID"
 msgstr "ID"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Important:"
+msgstr "Belangrijk:"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Internal User"
 msgstr "Interne gebruiker"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "Interne notitie"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -568,6 +695,17 @@ msgstr "Is intern"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
 msgstr "Is portaal"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"It is very important that this description be clear\n"
+"                and complete,"
+msgstr ""
+"Het is erg belangrijk dat deze beschrijving duidelijk\n"
+"en compleet is,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -603,6 +741,11 @@ msgid "Leave a comment"
 msgstr "Schrijf een reactie"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+msgid "Let your customers create developer API keys"
+msgstr "Laat uw klanten API-sleutels voor ontwikkelaars maken"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
 msgstr "Link"
@@ -620,8 +763,12 @@ msgstr "Bericht"
 #. module: portal
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
-msgid "Model %(model_name)s does not support token signature, as it does not have %(field_name)s field."
-msgstr "Model %(model_name)s ondersteunt geen tokenhandtekening, aangezien het geen %(field_name)s veld heeft."
+msgid ""
+"Model %(model_name)s does not support token signature, as it does not have "
+"%(field_name)s field."
+msgstr ""
+"Model %(model_name)s ondersteunt geen tokenhandtekening, aangezien het geen "
+"%(field_name)s veld heeft."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -640,12 +787,28 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Name your key"
+msgstr "Geef je sleutel een naam"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal.js:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, python-format
+msgid "New API Key"
+msgstr "Nieuwe API sleutel"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
 msgstr "Nieuw wachtwoord:"
 
 #. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
@@ -663,11 +826,19 @@ msgid "Odoo Logo"
 msgstr "Odoo logo"
 
 #. module: portal
+#: code:addons/portal/models/res_users_apikeys_description.py:0
+#, python-format
+msgid "Only internal and portal users can create API keys"
+msgstr "Alleen interne en portalgebruikers kunnen API-sleutels maken"
+
+#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr "Oeps! Er is iets mis gegaan. Probeer de pagina te herladen en terug in te loggen."
+msgstr ""
+"Oeps! Er is iets mis gegaan. Probeer de pagina te herladen en terug in te "
+"loggen."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -694,7 +865,9 @@ msgstr "Telefoon"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr "Voer je wachtwoord in om te bevestigen dat je de eigenaar bent van dit account"
+msgstr ""
+"Voer je wachtwoord in om te bevestigen dat je de eigenaar bent van dit "
+"account"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -741,6 +914,7 @@ msgstr "Vorige"
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
 msgstr "Vorige"
@@ -781,6 +955,11 @@ msgstr "Gerelateerde documentmodel"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
 msgstr "Toegang intrekken"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+msgid "Scope"
+msgstr "Bereik"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -843,8 +1022,12 @@ msgstr "Aanmelden"
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
-msgid "Some fields are required. Please make sure to write a message or attach a document"
-msgstr "Sommige velden zijn verplicht. Zorg ervoor dat je een bericht schrijft of een document bijvoegt"
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
+msgstr ""
+"Sommige velden zijn verplicht. Zorg ervoor dat je een bericht schrijft of "
+"een document bijvoegt"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -873,24 +1056,31 @@ msgstr "Bedankt!"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr "De bijlage %s kan niet verwijderd worden omdat het niet gekoppeld is aan een bericht."
+msgstr ""
+"De bijlage %s kan niet verwijderd worden omdat het niet gekoppeld is aan een"
+" bericht."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The attachment %s cannot be removed because it is not in a pending state."
-msgstr "De bijlage %s kan niet verwijderd worden omdat het niet in een in afwachting fase zit."
+msgid ""
+"The attachment %s cannot be removed because it is not in a pending state."
+msgstr ""
+"De bijlage %s kan niet verwijderd worden omdat het niet in een in afwachting"
+" fase zit."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
-msgid "The attachment %s does not exist or you do not have the rights to access it."
+msgid ""
+"The attachment %s does not exist or you do not have the rights to access it."
 msgstr "De bijlage %s bestaat niet of je hebt geen rechten om ze te bekijken."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The attachment does not exist or you do not have the rights to access it."
+msgid ""
+"The attachment does not exist or you do not have the rights to access it."
 msgstr "De bijlage bestaat niet of je hebt geen rechten om ze te bekijken."
 
 #. module: portal
@@ -903,13 +1093,23 @@ msgstr "De contactpersoon \"%s\" heeft geen geldig e-mailadres."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email has an existing user (%s)."
-msgstr "Het contact \"%s\" heeft hetzelfde e-mailadres en heeft een bestaande gebruiker (%s)."
+msgstr ""
+"Het contact \"%s\" heeft hetzelfde e-mailadres en heeft een bestaande "
+"gebruiker (%s)."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The document does not exist or you do not have the rights to access it."
+msgid ""
+"The document does not exist or you do not have the rights to access it."
 msgstr "Het document bestaat niet of je hebt geen rechten om het te bekijken."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "The key cannot be retrieved later and provides"
+msgstr "De sleutel kan later niet worden opgehaald en biedt"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -920,8 +1120,11 @@ msgstr "Het nieuwe wachtwoord en haar bevestiging moeten identiek zijn."
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid "The old password you provided is incorrect, your password was not changed."
-msgstr "Het oude wachtwoord wat je hebt ingevoerd is niet correct. Jouw wachtwoord is niet gewijzigd."
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
+msgstr ""
+"Het oude wachtwoord wat je hebt ingevoerd is niet correct. Jouw wachtwoord "
+"is niet gewijzigd."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -938,8 +1141,12 @@ msgstr "De relatie \"%s\" heeft geen toegang tot het portaal."
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid "The template \"Portal: new user\" not found for sending email to the portal user."
-msgstr "De sjabloon \"Portaal: nieuwe gebruiker\" niet gevonden voor het verzenden van e-mail naar de portaalgebruiker."
+msgid ""
+"The template \"Portal: new user\" not found for sending email to the portal "
+"user."
+msgstr ""
+"De sjabloon \"Portaal: nieuwe gebruiker\" niet gevonden voor het verzenden "
+"van e-mail naar de portaalgebruiker."
 
 #. module: portal
 #. openerp-web
@@ -961,18 +1168,27 @@ msgstr "Dit is een voorbeeld van het klantenportaal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This partner is linked to an internal User and already has access to the Portal."
-msgstr "Deze relatie is gekoppeld aan een interne Gebruiker en heeft al toegang tot het portaal."
+msgid ""
+"This partner is linked to an internal User and already has access to the "
+"Portal."
+msgstr ""
+"Deze relatie is gekoppeld aan een interne Gebruiker en heeft al toegang tot "
+"het portaal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-msgid "This text is included at the end of the email sent to new portal users."
-msgstr "Deze tekst staat aan het einde van de e-mail die naar nieuwe portaalgebruikers wordt verzonden."
+msgid ""
+"This text is included at the end of the email sent to new portal users."
+msgstr ""
+"Deze tekst staat aan het einde van de e-mail die naar nieuwe "
+"portaalgebruikers wordt verzonden."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "Deze tekst wordt toegevoegd aan de e-mail, welke wordt verzonden aan nieuwe gebruikers van het portaal."
+msgstr ""
+"Deze tekst wordt toegevoegd aan de e-mail, welke wordt verzonden aan nieuwe "
+"gebruikers van het portaal."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1082,6 +1298,13 @@ msgid "Website communication history"
 msgstr "Website communicatie geschiedenis"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "What's this key for?"
+msgstr "Waar is deze sleutel voor?"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
 msgstr "Wizard"
@@ -1094,6 +1317,14 @@ msgid "Write a message..."
 msgstr "Schrijf een reactie..."
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Write down your key"
+msgstr "Schrijf je sleutel op"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_share.py:0
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
@@ -1161,6 +1392,24 @@ msgstr "opmerkingen"
 
 #. module: portal
 #. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "full access"
+msgstr "volledige toegang"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid ""
+"it will be the only way to\n"
+"                identify the key once created"
+msgstr ""
+"het zal de enige manier zijn om\n"
+"               de sleutel te identificeren zodra deze is gemaakt"
+
+#. module: portal
+#. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
@@ -1177,6 +1426,11 @@ msgid "password"
 msgstr "wachtwoord"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_users_apikeys_description
+msgid "res.users.apikeys.description"
+msgstr "res.users.apikeys.description"
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "select..."
 msgstr "selecteer..."
@@ -1187,3 +1441,11 @@ msgstr "selecteer..."
 #, python-format
 msgid "to post a comment."
 msgstr "om een reactie te plaatsen."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "to your user account, it is very important to store it securely."
+msgstr ""
+"aan je gebruikersaccount, is het erg belangrijk om deze veilig op te slaan."

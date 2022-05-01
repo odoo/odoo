@@ -27,22 +27,22 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "Número d'encaminament ABA"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "Clau del client de l'API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "ID d'inici de sessió de l'API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "Clau de signatura de l'API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -57,19 +57,19 @@ msgstr "Número de compte"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
 msgid "Allow Payments From"
-msgstr ""
+msgstr "Permet pagaments des de"
 
 #. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "An error occurred when displayed this payment form."
-msgstr ""
+msgstr "S'ha produït un error en mostrar aquest formulari de pagament."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_currency_id
 msgid "Authorize Currency"
-msgstr ""
+msgstr "Autoritza la moneda"
 
 #. module: payment_authorize
 #: model:account.payment.method,name:payment_authorize.payment_method_authorize
@@ -80,12 +80,12 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
 msgid "Authorize.Net Payment Type"
-msgstr ""
+msgstr "Autoritza.Tipus de pagament net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "Autoritza.Identificador del perfil de xarxa"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
@@ -112,7 +112,7 @@ msgstr "Nom del Banc "
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Business Checking"
-msgstr ""
+msgstr "Comprovació de negocis"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -144,7 +144,7 @@ msgstr "Targeta de crèdit"
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid "Credit Card (powered by Authorize)"
-msgstr ""
+msgstr "Targeta de crèdit (activada per Authorize)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
@@ -179,7 +179,7 @@ msgstr "Genera la clau del client"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Com pagar amb Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -220,12 +220,12 @@ msgstr "Transacció de pagament"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Checking"
-msgstr ""
+msgstr "Comprovació personal"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Savings"
-msgstr ""
+msgstr "Desaments personals"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -236,19 +236,21 @@ msgstr "Proveïdor"
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
-msgstr ""
+msgstr "Dades rebudes amb codi d'estat \"%(status)s\"i codi d'error \"%(error)s\""
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "S'han rebut dades de sol·licitud de pagament manipulades."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been deleted."
 msgstr ""
+"Els mètodes de pagament desats no es poden restaurar una vegada que s'hagin "
+"eliminat."
 
 #. module: payment_authorize
 #. openerp-web
@@ -262,12 +264,12 @@ msgstr "Error del servidor"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Estableix la moneda del compte"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
-msgstr ""
+msgstr "L'ID només s'utilitza per identificar el compte amb Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__provider
@@ -282,6 +284,8 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"La clau pública del client. Per a generar directament des de Odoo o des del "
+"backend d'Authorize.net."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
@@ -300,6 +304,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"La referència única per a la combinació soci/token al backend "
+"d'Authorize.net."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0
@@ -309,6 +315,9 @@ msgid ""
 "method type, please disable the acquirer and duplicate it. Then, change the "
 "payment method type on the duplicated acquirer."
 msgstr ""
+"Hi ha fitxes actives vinculades a aquest adquirent. Per canviar el tipus de "
+"mètode de pagament, inhabiliteu l'adquirent i duplica'l. Després, canvieu el"
+" tipus de mètode de pagament en l'adquirent duplicat."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0

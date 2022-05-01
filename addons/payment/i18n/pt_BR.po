@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-15 12:07+0000\n"
+"POT-Creation-Date: 2022-04-27 13:30+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: grazziano <gra.negocia@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -803,14 +803,10 @@ msgid "Full Only"
 msgstr ""
 
 #. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Gerar Link de Pagament"
-
-#. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
-msgid "Generate Sales Payment Link"
-msgstr "Gerar o link de Pagamento"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
@@ -2201,6 +2197,12 @@ msgstr ""
 #: code:addons/payment/models/ir_ui_view.py:0
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "You do not have access to this payment token."
 msgstr ""
 
 #. module: payment
