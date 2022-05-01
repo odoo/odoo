@@ -21,7 +21,20 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
     def save_timesheet(self):
         # Deprecated the method in hr_timesheet and overridden in timesheet_grid as config has moved to timesheet_grid.
         # Move the whole wizard to timesheet_grid in master.
-        return self.env['account.analytic.line']
+        values = {
+            'task_id': self.task_id.id,
+            'project_id': self.task_id.project_id.id,
+            'date': fields.Date.context_today(self),
+            'name': self.description,
+            'user_id': self.env.uid,
+            'unit_amount': self.time_spent,
+        }
+        self.task_id.write({
+            'timesheet_timer_start': False,
+            'timesheet_timer_pause': False,
+            'timesheet_timer_last_stop': fields.datetime.now(),
+        })
+        return self.env['account.analytic.line'].create(values)
 
     def action_delete_timesheet(self):
         # Deprecated the method in hr_timesheet and overridden in timesheet_grid as timer mixin has moved to enterprise.
