@@ -81,20 +81,10 @@ export const viewService = {
                     .then((result) => {
                         const { models, views } = result;
                         const modelsCopy = deepCopy(models); // for legacy views
-                        const fields = models[resModel];
-                        // add relatedFields for relational fields in view
-                        function setRelatedFields(fields, models) {
-                            for (const field of Object.values(fields)) {
-                                if (field.relation && !field.relatedFields) {
-                                    field.relatedFields = models[field.relation] || {};
-                                    setRelatedFields(field.relatedFields, models);
-                                }
-                            }
-                        }
-                        setRelatedFields(models[resModel], models);
                         const viewDescriptions = {
                             __legacy__: generateLegacyLoadViewsResult(resModel, views, modelsCopy),
-                            fields,
+                            fields: models[resModel],
+                            relatedModels: models,
                             views: {},
                         };
                         for (const viewType in views) {
