@@ -2,12 +2,12 @@
 <odoo>
 
 <template id="s_showcase" name="Showcase">
-    <div class="s_showcase pt48 pb48 o_mail_snippet_general" data-snippet="s_showcase">
-        <!-- TODO: (below) issue with height: `fit-content` is not supported, can we calculate it in px in translation ? 
+    <div class="s_showcase o_mail_snippet_general pt48 pb48">
+        <!-- TODO: (below) issue with height: `fit-content` is not supported, can we calculate it in px in translation ?
         empty div height is 0 unless table has defined height (div.col-1 > div.w-50.h100.border-right)-->
         <div class="container" style="height: fit-content;">
             <div class="row no-gutters s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
-                <div class="col-lg-5 text-right pb24" align="right">
+                <div class="col-lg-5 pb24" style="text-align: right;" align="right">
                     <div class="mb-2">
                         <h3 class="d-inline-block">First feature</h3>
                         <i class="fa fa-2x fa-desktop text-secondary ml-3"/>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="row no-gutters s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
-                <div class="col-lg-5 text-right" align="right">
+                <div class="col-lg-5" style="text-align: right;" align="right">
                     <div class="mb-2">
                         <h3 class="d-inline-block">Second feature</h3>
                         <i class="fa fa-2x fa-paint-brush text-secondary ml-3"/>
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="container text-center pt32" align="center">
+        <div class="container pt32" style="text-align: center;" align="center">
             <a href="#" class="btn btn-primary">Discover all the features</a>
         </div>
     </div>
