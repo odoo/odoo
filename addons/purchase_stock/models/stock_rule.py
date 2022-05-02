@@ -272,10 +272,7 @@ class StockRule(models.Model):
         params values: values of procurements
         params origins: procuremets origins to write on the PO
         """
-        dates = [fields.Datetime.from_string(value['date_planned']) for value in values]
-
-        procurement_date_planned = min(dates)
-        supplier_delay = max([int(value['supplier'].delay) for value in values])
+        purchase_date = min([fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from
@@ -283,7 +280,6 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].name
-        purchase_date = procurement_date_planned - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
 
