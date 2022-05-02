@@ -132,3 +132,10 @@ class TestHttp(http.Controller):
     def touch(self):
         request.session.touch()
         return ''
+
+    # =====================================================
+    # Errors
+    # =====================================================
+    @http.route('/test_http/json_value_error', type='json', auth='none')
+    def json_value_error(self):
+        raise ValueError('Unknown destination')
