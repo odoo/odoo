@@ -98,6 +98,14 @@ class SaleOrder(models.Model):
         action['context'] = {
             'search_default_billable_timesheet': True
         }  # erase default filters
+        if self.order_line:
+            tasks = self.order_line.task_id._filter_access_rules_python('write')
+            if tasks:
+                action['context']['default_task_id'] = tasks[0].id
+            else:
+                projects = self.order_line.project_id._filter_access_rules_python('write')
+                if projects:
+                    action['context']['default_project_id'] = projects[0].id
         if self.timesheet_count > 0:
             action['domain'] = [('so_line', 'in', self.order_line.ids)]
         else:
