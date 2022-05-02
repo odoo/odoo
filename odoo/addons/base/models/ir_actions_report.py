@@ -255,7 +255,6 @@ class IrActionsReport(models.Model):
         if run_script:
             command_args.extend(['--run-script', run_script])
             command_args.extend(['--debug-javascript'])
-            #command_args.extend(['--javascript-delay', '1000'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:

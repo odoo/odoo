@@ -10,17 +10,18 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
         run_script = """
             // Constants for A4 paper size
-            const pageHeight = 2970;
-            const firstHeaderHeight = 1150;
-            const headerHeight = 450;
-            const footerHeight = 300;
-            const carryOverHeight = 140;
-            const theadHeight = 140;
-            
-            const firstBodyHeight = pageHeight - firstHeaderHeight - footerHeight - carryOverHeight - theadHeight;
-            const bodyHeight = pageHeight - headerHeight - footerHeight - carryOverHeight - theadHeight;
-            console.log("firstBodyHeight: " + firstBodyHeight);
-            console.log("bodyHeight: " + bodyHeight);
+            const tableWidth = "18cm";
+            const firstPageEnd = 3050;
+            const bodyHeight = 600;
+
+            // Force the HTML and the PDF table (and its columns) to have the same width across all pages
+            // (because the table header will be copied for each of the future tables)
+            // This is necessary to correctly determine which row belongs to which page
+            document.querySelector("table").style.width = tableWidth;
+            const ths = document.querySelectorAll("th");
+            for (var i = 0; i < ths.length; i++) {
+                ths[i].style.width = ths[i].getBoundingClientRect().width + "px";
+            }
             
             // Parse main table informations into a list of dicts representing the smaller tables (one per page)
             const rows = document.querySelectorAll("tr");
@@ -32,15 +33,11 @@ class IrActionsReport(models.Model):
             for (var i = 1; i < rows.length; i++) {
                 if (amounts[i - 1] === undefined)   // i-1 because offset with header which has no amount,
                     continue                        // might be undefined if the row is a total row
+                
                 tables[tables.length-1].carrying += parseFloat(amounts[i - 1].innerText.split(",").join(""));
                 tables[tables.length-1].rows.push(i);
                 
-                const rowBottom = rows[i].getBoundingClientRect().bottom;
-                rows[i].querySelector("td") != undefined ? rows[i].querySelector("td").innerText += " (b: " + rowBottom + ")" : null; // TO REMOVE
-
-                const firstPageBottom = pageHeight + firstBodyHeight;
-                if ((tables.length == 1 && rowBottom > firstPageBottom) ||
-                    (tables.length >  1 && rowBottom > firstPageBottom + (tables.length-1) * bodyHeight)) {
+                if (rows[i].getBoundingClientRect().bottom > firstPageEnd + (tables.length-1) * bodyHeight) {
                     tables.push({
                         rows: [],
                         carrying: tables[tables.length-1].carrying,
@@ -65,7 +62,7 @@ class IrActionsReport(models.Model):
                 var html = "";
                 if (i != 0) 
                     html += carryValueElement(tables[i-1].carrying);
-                html += "<table class='table table-sm o_main_table' name='invoice_line_table'>";
+                html += "<table class='table table-sm o_main_table' name='invoice_line_table' style='width: " + tableWidth + "'>";
                 html +=     theadElement.outerHTML;
                 html += "   <tobdy>";
                 for (var j = 0; j < tables[i].rows.length; j++){
