@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import patch
+
+from psycopg2 import IntegrityError
+
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import mute_logger
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user
-from psycopg2 import IntegrityError
 
 
 class TranslationToolsTestCase(BaseCase):
@@ -242,6 +245,28 @@ class TranslationToolsTestCase(BaseCase):
         self.assertEqual(result, """<p>A <i class="fa-check"/> B</p>""")
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
+
+
+class TestLanguageInstall(TransactionCase):
+    def test_language_install(self):
+        fr = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
+        self.assertTrue(fr)
+        wizard = self.env['base.language.install'].create({'lang_ids': fr.ids})
+        wizard.flush()
+
+        # running the wizard calls _load_module_terms() to load PO files
+        loaded = []
+
+        def _load_module_terms(self, modules, langs, overwrite=False):
+            loaded.append((modules, langs, overwrite))
+
+        with patch('odoo.addons.base.models.ir_translation.IrTranslation._load_module_terms', _load_module_terms):
+            wizard.lang_install()
+
+        # _load_module_terms is called once with lang='fr_FR' and overwrite=True
+        self.assertEqual(len(loaded), 1)
+        self.assertEqual(loaded[0][1], ['fr_FR'])
+        self.assertEqual(loaded[0][2], True)
 
 
 class TestTranslation(TransactionCase):
