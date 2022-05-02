@@ -68,6 +68,7 @@
             'knowledge/static/src/js/tools/tree_panel_mixin.js',
         ],
         'web_editor.assets_wysiwyg': [
+            'knowledge/static/src/js/wysiwyg/knowledge_article_link.js',
             'knowledge/static/src/js/wysiwyg.js',
             'knowledge/static/src/js/knowledge_toolbars_edit.js',
             'knowledge/static/src/js/knowledge_clipboard_whitelist.js'
