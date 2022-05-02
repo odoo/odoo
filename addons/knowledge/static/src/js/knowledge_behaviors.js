@@ -1,6 +1,9 @@
 /** @odoo-module */
 
 import Class from 'web.Class';
+import core from 'web.core';
+import Dialog from "web.Dialog";
+const _t = core._t;
 
 /**
  * Behavior to be injected through @see FieldHtmlInjector to @see OdooEditor
@@ -81,8 +84,83 @@ const ContentsContainerBehavior = KnowledgeBehavior.extend({
         }
     },
 });
+/**
+ * A behavior for the /article command @see Wysiwyg
+ */
+const ArticleBehavior = KnowledgeBehavior.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this.busy = false;
+        this.linkClickHandler = async function (ev) {
+            if (this.busy) {
+                ev.preventDefault();
+                ev.stopPropagation();
+            } else {
+                this.busy = true;
+                await this._onLinkClick(ev);
+                this.busy = false;
+            }
+        }.bind(this);
+        this.linkDblClickHandler = function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        };
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    applyAttributes: function () {
+        this._super.apply(this, arguments);
+        if (this.mode === 'edit') {
+            this.anchor.setAttribute('contenteditable', 'false');
+        }
+    },
+    /**
+     * @override
+     */
+    applyListeners: function () {
+        this._super.apply(this, arguments);
+        this.anchor.addEventListener("click", this.linkClickHandler);
+        this.anchor.addEventListener("dblclick", this.linkDblClickHandler);
+    },
+    /**
+     * @override
+     */
+    disableListeners: function () {
+        this.anchor.removeEventListener("click", this.linkClickHandler);
+        this.anchor.removeEventListener("dblclick", this.linkDblClickHandler);
+    },
+    /**
+     * When the user clicks on an article link, we can directly open the
+     * article in the current view without having to reload the page.
+     *
+     * @param {Event} event
+     */
+    _onLinkClick: async function (event) {
+        const res_id = parseInt(event.currentTarget.dataset.res_id);
+        if (res_id) {
+            event.stopPropagation();
+            event.preventDefault();
+            const actionPromise = this.handler.do_action('knowledge.ir_actions_server_knowledge_home_page', {
+                additional_context: {
+                    res_id: res_id
+                }
+            });
+            await actionPromise.catch(() => {
+                Dialog.alert(this,
+                    _t("This article was deleted or you don't have the rights to access it."), {
+                    title: _t('Error'),
+                });
+            });
+        }
+    },
+});
 
 export {
     KnowledgeBehavior,
     ContentsContainerBehavior,
+    ArticleBehavior,
 };
