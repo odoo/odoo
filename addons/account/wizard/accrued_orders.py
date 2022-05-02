@@ -58,7 +58,7 @@ class AccruedExpenseRevenue(models.TransientModel):
     def _compute_display_amount(self):
         single_order = len(self._context['active_ids']) == 1
         for record in self:
-            preview_data = json.loads(self.preview_data)
+            preview_data = json.loads(record.preview_data)
             lines = preview_data.get('groups_vals', [])[0].get('items_vals', [])
             record.display_amount = record.amount or (single_order and not lines)
 
@@ -184,7 +184,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
         orders.order_line.invalidate_cache(ids=orders.order_line.ids)
         orders.invalidate_cache(ids=orders.ids)
-        self.invalidate_cache(fnames=['display_amount', 'preview_data'], ids=self.ids)
+        self.invalidate_cache(fnames=['preview_data'], ids=self.ids)
 
         if not self.company_id.currency_id.is_zero(total_balance):
             # globalized counterpart for the whole orders selection
