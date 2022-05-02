@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -10,6 +11,19 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "../views/view_dialogs/select_create_dialog";
 
 const { Component, onWillDestroy, onWillUpdateProps, useState } = owl;
+
+class CreateConfirmationDialog extends Component {
+    get title() {
+        return sprintf(this.env._t("New: %s"), this.props.name);
+    }
+
+    async onCreate() {
+        await this.props.create();
+        this.props.close();
+    }
+}
+CreateConfirmationDialog.components = { Dialog };
+CreateConfirmationDialog.template = "web.Many2OneField.CreateConfirmationDialog";
 
 export class Many2OneField extends Component {
     setup() {
@@ -177,8 +191,18 @@ export class Many2OneField extends Component {
             })
         );
     }
-    onCreate({ inputValue }) {
-        this.props.update([false, inputValue]);
+    onCreate({ inputValue, triggeredOnBlur }) {
+        if (triggeredOnBlur) {
+            this.dialog.add(CreateConfirmationDialog, {
+                value: inputValue.trim(),
+                name: this.props.string,
+                create: () => {
+                    return this.props.update([false, inputValue]);
+                },
+            });
+        } else {
+            this.props.update([false, inputValue]);
+        }
     }
     onCreateEdit() {
         this.onSearchMore();
@@ -219,6 +243,7 @@ Many2OneField.props = {
     canCreateEdit: { type: Boolean, optional: true },
     searchLimit: { type: Number, optional: true },
     relation: String,
+    string: { type: String, optional: true },
 };
 Many2OneField.defaultProps = {
     canOpen: true,
@@ -227,6 +252,7 @@ Many2OneField.defaultProps = {
     canQuickCreate: true,
     canCreateEdit: true,
     searchLimit: 7,
+    string: "",
 };
 Many2OneField.components = {
     AutoComplete,
@@ -249,6 +275,7 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
         canQuickCreate: canCreate && !noQuickCreate,
         canCreateEdit: canCreate && !noCreateEdit,
         relation: record.fields[fieldName].relation,
+        string: attrs.string || record.fields[fieldName].string,
     };
 };
 

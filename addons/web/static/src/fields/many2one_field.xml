@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <t t-name="web.Many2OneField.CreateConfirmationDialog" owl="1">
+        <Dialog title="title" size="'md'">
+            <div>
+                Create <strong t-esc="props.value"/> as a new <t t-esc="props.name"/>?
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onCreate">Create</button>
+                <button class="btn" t-on-click="() => props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
     <t t-name="web.Many2OneField" owl="1">
         <t t-if="props.readonly">
             <t t-if="!props.canOpen">
@@ -33,8 +45,8 @@
                         value="displayName"
                         placeholder="props.placeholder"
                         sources="sources"
-                        onSelect.bind="onSelect"
                         autoSelect="true"
+                        onSelect.bind="onSelect"
                         onInput.bind="onInput"
                         onChange.bind="onChange"
                     />

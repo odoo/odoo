@@ -14,7 +14,6 @@ export class AutoComplete extends Component {
 
         this.state = useState({
             optionsRev: 0,
-            valueRev: 0,
             open: false,
             activeSourceOption: null,
         });
@@ -115,14 +114,14 @@ export class AutoComplete extends Component {
             this.state.activeSourceOption[1] === optionIndex
         );
     }
-    selectOption(indices) {
+    selectOption(indices, params = {}) {
         const option = this.sources[indices[0]].options[indices[1]];
         if (option.unselectable) {
             return;
         }
 
-        this.state.valueRev++;
         this.props.onSelect(option, {
+            ...params,
             inputValue: this.inputRef.el.value.trim(),
         });
         this.close();
@@ -201,7 +200,7 @@ export class AutoComplete extends Component {
         const value = this.inputRef.el.value;
 
         if (this.props.autoSelect && this.state.activeSourceOption && value.length > 0) {
-            this.selectOption(this.state.activeSourceOption);
+            this.selectOption(this.state.activeSourceOption, { triggeredOnBlur: true });
         } else {
             this.props.onBlur({
                 inputValue: value,

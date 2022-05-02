@@ -540,7 +540,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_form_button_edit");
-        const input = target.querySelector("input");
+        const input = target.querySelector(".o_field_widget input");
 
         assert.strictEqual(input.value, "aaa");
         assert.strictEqual(
@@ -548,8 +548,7 @@ QUnit.module("Fields", (hooks) => {
             "<span>AAA</span><br><span>Record</span>"
         );
 
-        input.value = "first record";
-        await triggerEvent(input, null, "input");
+        await editInput(input, null, "first record");
         await click(document.body.querySelector(".dropdown-menu li"));
 
         assert.strictEqual(input.value, "first record");
@@ -558,8 +557,7 @@ QUnit.module("Fields", (hooks) => {
             "<span>First</span><br><span>Record</span>"
         );
 
-        input.value = "second record";
-        await triggerEvent(input, null, "input");
+        await editInput(input, null, "second record");
         await click(document.body.querySelector(".dropdown-menu li"));
 
         assert.strictEqual(input.value, "second record");
@@ -569,10 +567,10 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "show_address works in a view embedded in a view of another type",
         async function (assert) {
-            assert.expect(2);
+            assert.expect(1);
 
             serverData.models.turtle.records[1].turtle_trululu = 2;
             serverData.views = {
@@ -615,23 +613,17 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_data_row td.o_data_cell");
 
             assert.strictEqual(
-                document.body.querySelector('[name="turtle_trululu"] .o_input').value,
-                "second record",
-                "many2one value should be displayed in input"
-            );
-            assert.strictEqual(
-                document.body.querySelector('[name="turtle_trululu"] .o_field_many2one_extra')
-                    .textContent,
-                "rue morgueparis 75013",
+                document.body.querySelector('[name="turtle_trululu"]').textContent,
+                "second recordrue morgueparis 75013",
                 "The partner's address should be displayed"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "many2one data is reloaded if there is a context to take into account",
         async function (assert) {
-            assert.expect(2);
+            assert.expect(1);
 
             serverData.models.turtle.records[1].turtle_trululu = 2;
             serverData.views = {
@@ -672,17 +664,11 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
             // click the turtle field, opens a modal with the turtle form view
-            await click(target, ".o_data_row");
+            await click(target.querySelector(".o_data_row td.o_data_cell"));
 
             assert.strictEqual(
-                document.body.querySelector('.modal [name="turtle_trululu"] .o_input').value,
-                "second record",
-                "many2one value should be displayed in input"
-            );
-            assert.strictEqual(
-                document.body.querySelector(".modal [name=turtle_trululu] .o_field_many2one_extra")
-                    .textContent,
-                "rue morgueparis 75013",
+                document.body.querySelector('.modal [name="turtle_trululu"]').textContent,
+                "second recordrue morgueparis 75013",
                 "The partner's address should be displayed"
             );
         }
@@ -1589,7 +1575,7 @@ QUnit.module("Fields", (hooks) => {
     //     assert.strictEqual(target.querySelectorAll('input').eq(1).value, 'xphone', "onchange should have been applied");
     // });
 
-    QUnit.skipWOWL("form: quick create then save directly", async function (assert) {
+    QUnit.test("form: quick create then save directly", async function (assert) {
         assert.expect(5);
 
         const def = makeDeferred();
@@ -1604,13 +1590,13 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" />
                 </form>
             `,
-            mockRPC(route, { args, method }, performRPC) {
+            async mockRPC(route, { args, method }, performRPC) {
                 if (method === "name_create") {
                     assert.step("name_create");
-                    return def.then(performRPC(...arguments)).then((nameGet) => {
-                        newRecordId = nameGet[0];
-                        return nameGet;
-                    });
+                    await def;
+                    const nameGet = await performRPC(...arguments);
+                    newRecordId = nameGet[0];
+                    return nameGet;
                 }
                 if (method === "create") {
                     assert.step("create");
@@ -1622,7 +1608,9 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "b" });
+
+        await editInput(target, ".o_field_widget[name=trululu] input", "b");
+        await click(target.querySelector(".ui-menu-item"));
         await click(target, ".o_form_button_save");
 
         assert.verifySteps(
@@ -1630,7 +1618,7 @@ QUnit.module("Fields", (hooks) => {
             "should wait for the name_create before creating the record"
         );
 
-        await def.resolve();
+        def.resolve();
         await nextTick();
 
         assert.verifySteps(["create"]);
@@ -1659,10 +1647,12 @@ QUnit.module("Fields", (hooks) => {
                     }
                 },
             });
-            await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "beam" });
+
+            await editInput(target, ".o_field_widget[name=trululu] input", "beam");
+            await click(target.querySelector(".ui-menu-item"));
             assert.verifySteps(["name_create"], "attempt to name_create");
             assert.strictEqual(
-                target.querySelectorAll(".o_input_dropdown input").value,
+                target.querySelector(".o_input_dropdown input").value,
                 "",
                 "the input should contain no text after search and click"
             );
@@ -2946,7 +2936,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("quick create on a many2one", async function (assert) {
+    QUnit.test("quick create on a many2one", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -2967,20 +2957,15 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await testUtils.dom.triggerEvent(
-            target.querySelectorAll(".o_field_many2one input"),
-            "focus"
-        );
-        await testUtils.fields.editAndTrigger(
-            target.querySelectorAll(".o_field_many2one input"),
-            "new partner",
-            ["keyup", "blur"]
-        );
-        await click(document.body, ".modal .modal-footer .btn-primary");
+        await triggerEvent(target, ".o_field_many2one input", "focus");
+        await editInput(target, ".o_field_many2one input", "new partner");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+
         assert.strictEqual(
             document.body.querySelector(".modal .modal-body").textContent.trim(),
             "Create new partner as a new Product?"
         );
+        await click(document.body, ".modal .modal-footer .btn-primary");
     });
 
     QUnit.skipWOWL("failing quick create on a many2one", async function (assert) {
