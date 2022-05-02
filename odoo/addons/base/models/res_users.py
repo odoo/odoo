@@ -1578,6 +1578,15 @@ class UsersView(models.Model):
                         'exportable': False,
                         'selectable': False,
                     }
+        # add self readable/writable fields
+        missing = set(self.SELF_WRITEABLE_FIELDS).union(self.SELF_READABLE_FIELDS).difference(res.keys())
+        if allfields:
+            missing = missing.intersection(allfields)
+        if missing:
+            res.update({
+                key: dict(values, readonly=key not in self.SELF_WRITEABLE_FIELDS, searchable=False)
+                for key, values in super(UsersView, self.sudo()).fields_get(missing, attributes).items()
+            })
         return res
 
 class CheckIdentity(models.TransientModel):
