@@ -44,8 +44,8 @@
                 <group name="first" position="after">
                     <group name="account_property" >
                         <group string="Account Properties" groups="account.group_account_user">
-                            <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
-                            <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
+                            <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False),('internal_group', '=', 'income')]"/>
+                            <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False),('internal_group', '=', 'expense')]"/>
                         </group>
                     </group>
                 </group>
