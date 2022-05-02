@@ -82,8 +82,8 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
     }
 
     class Check {
-        hasRewardLine(rewardName, amount) {
-            return [
+        hasRewardLine(rewardName, amount, qty) {
+            const steps = [
                 {
                     content: 'check if reward line is there',
                     trigger: `.orderline.program-reward span.product-name:contains("${rewardName}")`,
@@ -95,6 +95,14 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                     run: function () {},
                 },
             ];
+            if (qty) {
+                steps.push({
+                    content: 'check if the reward qty is correct',
+                    trigger: `.order .orderline.program-reward .product-name:contains("${rewardName}") ~ .info-list em:contains("${qty}")`,
+                    run: function () {},
+                })
+            }
+            return steps;
         }
         orderTotalIs(total_str) {
             return [

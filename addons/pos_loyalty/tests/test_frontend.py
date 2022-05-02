@@ -135,7 +135,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         # check coupon usage
-        self.assertEqual(self.coupon1.points, 0, 'The coupon should have consumed its points.')
+        self.assertEqual(self.coupon1.points, 3.0, 'The coupon should have consumed 1.5 points.')
         self.assertEqual(self.coupon2.points, 4.5, 'The coupon was used but never validated.')
         # check pos_order_count in each program
         self.assertEqual(self.auto_promo_program_current.pos_order_count, 3)

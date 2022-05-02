@@ -40,7 +40,8 @@ PosLoyalty.exec.removeRewardLine('90% on the cheapest product');
 PosLoyalty.check.orderTotalIs('45.90');
 PosLoyalty.do.enterCode('invalid_code', false);
 PosLoyalty.do.enterCode('1234');
-PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-15.30');
+PosLoyalty.do.claimReward('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00');
 PosLoyalty.exec.finalizeOrder('Cash', '50');
 
 // Use coupon but eventually remove the reward
@@ -51,10 +52,15 @@ ProductScreen.exec.addOrderline('Desk Organizer', '9');
 PosLoyalty.check.hasRewardLine('90% on the cheapest product', '-4.75');
 PosLoyalty.check.orderTotalIs('62.27');
 PosLoyalty.do.enterCode('5678');
-PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-15.30');
-PosLoyalty.check.orderTotalIs('46.97');
-PosLoyalty.exec.removeRewardLine('Free Product');
-PosLoyalty.check.orderTotalIs('62.27');
+// Clicked product becomes a reward line since it's a claimable reward.
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '2.00');
+PosLoyalty.exec.removeRewardLine('Desk Organizer (free)');
+// Add new product to change the order total. Important to avoid random runbot error.
+ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
+PosLoyalty.check.orderTotalIs('67.34');
 PosLoyalty.exec.finalizeOrder('Cash', '90');
 
 // specific product discount
@@ -110,17 +116,24 @@ PosLoyalty.check.hasRewardLine('10% on your order', '-5.15');
 // the discount should change after having free products
 // it should go back to cheapest discount as it is higher
 PosLoyalty.do.enterCode('5678');
-PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-20.40');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '1.00');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '2.00');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '3.00');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '4.00');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
 PosLoyalty.check.hasRewardLine('90% on the cheapest product', '-4.59');
 // set quantity to 18
 // free qty stays the same since the amount of points on the card only allows for 4 free products
-ProductScreen.do.pressNumpad('Backspace 8')
-PosLoyalty.check.hasRewardLine('10% on your order', '-6.68');
-PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-20.40');
-// scan the code again and check notification
-PosLoyalty.do.enterCode('5678');
-PosLoyalty.check.orderTotalIs('60.13');
-PosLoyalty.exec.finalizeOrder('Cash', '65');
+ProductScreen.do.pressNumpad('1 8')
+// At this point, the number of free products didn't change.
+// TODO: Should the coupon reward (free product) be removed after changing the quantity?
+PosLoyalty.check.hasRewardLine('10% on your order', '-8.72');
+PosLoyalty.check.orderTotalIs('78.49');
+PosLoyalty.exec.finalizeOrder('Cash', '80');
 
 // Specific products discount (with promocode) and free product (1357)
 // Applied programs:
@@ -132,9 +145,12 @@ PosLoyalty.exec.removeRewardLine('90% on the cheapest product');
 PosLoyalty.do.enterCode('promocode', false);
 PosLoyalty.check.hasRewardLine('50% on specific products', '-15.30');
 PosLoyalty.do.enterCode('1357');
-PosLoyalty.check.hasRewardLine('Free Product - Desk Organizer', '-10.20');
-PosLoyalty.check.hasRewardLine('50% on specific products', '-10.20');
-PosLoyalty.check.orderTotalIs('10.20');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '1.00');
+ProductScreen.do.clickDisplayedProduct('Desk Organizer');
+PosLoyalty.check.hasRewardLine('Desk Organizer (free)', '0.00', '2.00');
+PosLoyalty.check.hasRewardLine('50% on specific products', '-15.30');
+PosLoyalty.check.orderTotalIs('15.30');
 PosLoyalty.exec.finalizeOrder('Cash', '20');
 
 // Check reset program
