@@ -821,7 +821,7 @@
                     </div>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
                             <field name="rating_count" string="Rating" widget="statinfo"/>
                         </button>
