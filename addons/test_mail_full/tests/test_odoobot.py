@@ -29,7 +29,7 @@ class TestOdoobot(TestMailCommon, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_fetch_listener(self):
-        channel = self.env['mail.channel'].with_user(self.user_employee).init_odoobot()
+        channel = self.user_employee.with_user(self.user_employee)._init_odoobot()
         partners = self.env['mail.channel'].channel_fetch_listeners(channel.uuid)
         odoobot = self.env.ref("base.partner_root")
         odoobot_in_fetch_listeners = [partner for partner in partners if partner['id'] == odoobot.id]
@@ -55,7 +55,7 @@ class TestOdoobot(TestMailCommon, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_onboarding_flow(self):
         kwargs = self.message_post_default_kwargs.copy()
-        channel = self.env['mail.channel'].with_user(self.user_employee).init_odoobot()
+        channel = self.user_employee.with_user(self.user_employee)._init_odoobot()
 
         kwargs['body'] = 'tagada 😊'
         last_message = self.assertNextMessage(

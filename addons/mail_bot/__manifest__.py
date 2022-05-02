@@ -20,18 +20,8 @@
         'data/mailbot_demo.xml',
     ],
     'assets': {
-        'mail.assets_discuss_public': [
-            'mail_bot/static/src/models/*.js',
-        ],
         'web.assets_backend': [
-            'mail_bot/static/src/models/*.js',
             'mail_bot/static/src/scss/odoobot_style.scss',
-        ],
-        'web.tests_assets': [
-            'mail_bot/static/tests/helpers/*.js',
-        ],
-        'web.qunit_suite_tests': [
-            'mail_bot/static/tests/*.js',
         ],
     },
     'license': 'LGPL-3',
