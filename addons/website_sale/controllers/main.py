@@ -441,9 +441,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
+        redirect_url = request.httprequest.referrer
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
-            redirect_url = request.httprequest.referrer
             if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
                 decoded_url = url_parse(redirect_url)
                 args = url_decode(decoded_url.query)
