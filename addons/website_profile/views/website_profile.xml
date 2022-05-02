@@ -339,9 +339,15 @@
                     <span t-else="" t-field="user.rank_id.name"/>
                 </h4>
                 <small>
-                    <span class="font-weight-bold text-primary" t-field="user.karma"/> /
-                    <span t-if="next_rank_id" class="font-weight-bold" t-field="next_rank_id.karma_min"/>
-                    <span t-else="" class="font-weight-bold" t-field="user.rank_id.karma_min"/>
+                    <span class="font-weight-bold text-primary"
+                        t-field="user.karma"
+                        t-options="{'format_decimalized_number': True, 'precision_digits': 2}"/> /
+                    <span t-if="next_rank_id" class="font-weight-bold"
+                        t-field="next_rank_id.karma_min"
+                        t-options="{'format_decimalized_number': True, 'precision_digits': 2}"/>
+                    <span t-else="" class="font-weight-bold"
+                        t-field="user.rank_id.karma_min"
+                        t-options="{'format_decimalized_number': True, 'precision_digits': 2}"/>
                      xp
                 </small>
             </div>
