@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 
@@ -52,10 +54,15 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         is_project_manager = self.user_has_groups('project.group_project_manager')
+        projects = self.env['project.project'].search([('sale_order_id', 'in', self.ids)])
+        projects_per_so = defaultdict(lambda: self.env['project.project'])
+        for project in projects:
+            projects_per_so[project.sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
             projects |= order.project_id
+            projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
                 projects = projects._filter_access_rules('read')
             order.project_ids = projects

@@ -99,13 +99,24 @@ class TestProjectCommon(TransactionCase):
 class TestProjectBase(TestProjectCommon):
 
     def test_delete_project_with_tasks(self):
-        """User should never be able to delete a project with tasks"""
+        """Test all tasks linked to a project are removed when the user removes this project. """
+        task_type = self.env['project.task.type'].create({'name': 'Won', 'sequence': 1, 'fold': True})
+        project_unlink = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'rev',
+            'privacy_visibility': 'employees',
+            'alias_name': 'rev',
+            'partner_id': self.partner_1.id,
+            'type_ids': task_type,
+        })
 
-        with self.assertRaises(UserError):
-            self.project_pigs.unlink()
+        self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Pigs UserTask',
+            'user_ids': self.user_projectuser,
+            'project_id': project_unlink.id,
+            'stage_id': task_type.id})
 
-        # click on the archive button
-        self.project_pigs.write({'active': False})
+        task_count = len(project_unlink.tasks)
+        self.assertEqual(task_count, 1, "The project should have 1 task")
 
-        with self.assertRaises(UserError):
-            self.project_pigs.unlink()
+        project_unlink.unlink()
+        self.assertNotEqual(task_count, 0, "The all tasks linked to project should be deleted when user delete the project")

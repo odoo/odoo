@@ -47,7 +47,6 @@
         'data/mail_data.xml',
         'data/mail_template_data.xml',
         'data/project_data.xml',
-        'wizard/project_delete_wizard_views.xml',
         'wizard/project_task_type_delete_views.xml',
         'wizard/project_milestone_reach_wizard.xml',
     ],
