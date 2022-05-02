@@ -7,15 +7,16 @@
                 The preview template is used by the discuss in mobile, and by the systray
                 menu in order to show preview of threads.
             -->
-            <div class="o_ThreadPreview" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }" t-attf-class="{{ className }}" t-on-click="threadPreviewView.onClick" t-att-data-thread-local-id="threadPreviewView.thread.localId" t-ref="root">
-                <div class="o_ThreadPreview_sidebar">
-                    <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">
-                        <img class="o_ThreadPreview_image rounded-circle" t-att-src="image()" alt="Thread Image"/>
+            <div class="o_NotificationListItem o_ThreadPreview d-flex flex-shrink-0 align-items-center p-1 o_cursor_pointer" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }" t-attf-class="{{ className }}" t-on-click="threadPreviewView.onClick" t-att-data-thread-local-id="threadPreviewView.thread.localId" t-ref="root">
+                <div class="o_NotificationListItem_sidebar o_ThreadPreview_sidebar m-1">
+                    <div class="o_NotificationListItem_imageContainer o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem position-relative">
+                        <img class="o_NotificationListItem_image o_ThreadPreview_image w-100 h-100 rounded-circle" t-att-src="image()" alt="Thread Image"/>
                         <t t-if="threadPreviewView.thread.correspondent and threadPreviewView.thread.correspondent.im_status">
                             <PartnerImStatusIcon
-                                className="'o_ThreadPreview_partnerImStatusIcon'"
+                                className="'o_NotificationListItem_partnerImStatusIcon o_ThreadPreview_partnerImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
                                 classNameObj="{
                                     'o-isDeviceSmall': messaging.device.isSmall,
+                                    'small': !messaging.device.isSmall,
                                     'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0,
                                 }"
                                 partner="threadPreviewView.thread.correspondent"
@@ -23,13 +24,13 @@
                         </t>
                     </div>
                 </div>
-                <div class="o_ThreadPreview_content">
-                    <div class="o_ThreadPreview_header align-items-baseline">
-                        <span class="o_ThreadPreview_name text-truncate" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                <div class="o_NotificationListItem_content o_ThreadPreview_content d-flex flex-column flex-grow-1 align-self-start m-2">
+                    <div class="o_NotificationListItem_header o_ThreadPreview_header d-flex align-items-baseline">
+                        <span class="o_NotificationListItem_name o_ThreadPreview_name text-truncate font-weight-bold" t-att-class="{ 'o-isDeviceSmall fs-5': messaging.device.isSmall, 'o-muted text-600': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
                             <t t-esc="threadPreviewView.thread.displayName"/>
                         </span>
                         <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 1">
-                            <span class="o_ThreadPreview_counter">
+                            <span class="o_NotificationListItem_counter o_ThreadPreview_counter mx-1 font-weight-bold">
                                 (<t t-esc="threadPreviewView.thread.localMessageUnreadCounter"/>)
                             </span>
                         </t>
@@ -38,13 +39,13 @@
                         </t>
                         <span class="o-autogrow"/>
                         <t t-if="threadPreviewView.thread.lastMessage and threadPreviewView.thread.lastMessage.date">
-                            <span class="o_ThreadPreview_date" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                            <small class="o_NotificationListItem_date o_ThreadPreview_date flex-shrink-0 text-500" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
                                 <t t-esc="threadPreviewView.thread.lastMessage.date.fromNow()"/>
-                            </span>
+                            </small>
                         </t>
                     </div>
                     <div class="o_ThreadPreview_core d-flex align-items-baseline">
-                        <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ThreadPreview_coreItem o_ThreadPreview_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
                             <t t-if="threadPreviewView.messageAuthorPrefixView">
                                 <MessageAuthorPrefix record="threadPreviewView.messageAuthorPrefixView"/>
                             </t>
@@ -52,7 +53,7 @@
                         </span>
                         <span class="o-autogrow"/>
                         <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 0">
-                            <span class="o_ThreadPreview_coreItem o_ThreadPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click="threadPreviewView.onClickMarkAsRead" t-ref="markAsRead"/>
+                            <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_ThreadPreview_coreItem o_ThreadPreview_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Mark as Read" t-on-click="threadPreviewView.onClickMarkAsRead" t-ref="markAsRead"/>
                         </t>
                     </div>
                 </div>
