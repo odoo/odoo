@@ -137,6 +137,7 @@ const Wysiwyg = Widget.extend({
             autohideToolbar: !!this.options.autohideToolbar,
             isRootEditable: this.options.isRootEditable,
             placeholder: this.options.placeholder,
+            powerboxFilters: this.options.powerboxFilters || [],
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
@@ -1157,8 +1158,9 @@ const Wysiwyg = Widget.extend({
      * @param {object} params
      * @param {Node} [params.node] Optionnal
      * @param {Node} [params.htmlClass] Optionnal
+     * @param {Class} MediaDialog Optionnal
      */
-    openMediaDialog(params = {}) {
+    openMediaDialog(params = {}, MediaDialog = weWidgets.MediaDialog) {
         const sel = this.odooEditor.document.getSelection();
         const fontawesomeIcon = getInSelection(this.odooEditor.document, '.fa');
         if (fontawesomeIcon && sel.toString().trim() === "") {
@@ -1190,26 +1192,15 @@ const Wysiwyg = Widget.extend({
             domain: $editable.data('oe-media-domain'),
             useMediaLibrary: field && (model === 'ir.ui.view' && field === 'arch' || type === 'html'),
         }, this.options.mediaModalParams, params);
-        const mediaDialog = new weWidgets.MediaDialog(this, mediaParams, $node);
+        const mediaDialog = new MediaDialog(this, mediaParams, $node);
         mediaDialog.open();
 
-        mediaDialog.on('save', this, function (element) {
-            if (!element) {
-                return;
-            }
-            // restore saved html classes
-            if (params.htmlClass) {
-                element.className += " " + params.htmlClass;
-            }
-            restoreSelection();
-            if (wysiwygUtils.isImg($node[0]) || wasFontAwesome) {
-                $node.replaceWith(element);
-                this.odooEditor.unbreakableStepUnactive();
-                this.odooEditor.historyStep();
-            } else if (element) {
-                this.odooEditor.execCommand('insertHTML', element.outerHTML);
-            }
-        });
+        mediaDialog.on('save', this, this._onMediaDialogSave.bind(this, {
+            $node: $node,
+            wasFontAwesome: wasFontAwesome,
+            htmlClass: params.htmlClass,
+            restoreSelection: restoreSelection,
+        }));
         mediaDialog.on('closed', this, function () {
             // if the mediaDialog content has been saved
             // the previous selection in not relevant anymore
@@ -1217,6 +1208,31 @@ const Wysiwyg = Widget.extend({
                 restoreSelection();
             }
         });
+    },
+    /**
+     * Detached function to allow overriding.
+     *
+     * @param {Object} params binded @see openMediaDialog
+     * @param {Element} element provided by the dialog
+     */
+    _onMediaDialogSave: function (params, element) {
+        if (!element) {
+            return;
+        }
+        // restore saved html classes
+        if (params.htmlClass) {
+            element.className += " " + params.htmlClass;
+        }
+        params.restoreSelection();
+        if (wysiwygUtils.isImg(params.$node[0]) || params.wasFontAwesome) {
+            params.$node.replaceWith(element);
+            this.odooEditor.unbreakableStepUnactive();
+            this.odooEditor.historyStep();
+        } else if (element) {
+            const fragment = new DocumentFragment();
+            fragment.append(element);
+            return this.odooEditor.execCommand('insertFragment', fragment);
+        }
     },
 
     //--------------------------------------------------------------------------
