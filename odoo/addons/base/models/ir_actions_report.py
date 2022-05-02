@@ -255,6 +255,7 @@ class IrActionsReport(models.Model):
         if run_script:
             command_args.extend(['--run-script', run_script])
             command_args.extend(['--debug-javascript'])
+            command_args.extend(['--disable-smart-shrinking'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:
@@ -624,7 +625,7 @@ class IrActionsReport(models.Model):
         writer.write(result_stream)
         return result_stream
 
-    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None):
+    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None, run_script=None):
         self.ensure_one()
         if not data:
             data = {}
@@ -713,6 +714,7 @@ class IrActionsReport(models.Model):
                 landscape=self._context.get('landscape'),
                 specific_paperformat_args=specific_paperformat_args,
                 set_viewport_size=self._context.get('set_viewport_size'),
+                run_script=run_script,
             )
             pdf_content_stream = io.BytesIO(pdf_content)
 
@@ -781,7 +783,7 @@ class IrActionsReport(models.Model):
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
             return self_sudo._render_qweb_html(res_ids, data=data)
 
-        collected_streams = self._render_qweb_pdf_prepare_streams(data, res_ids=res_ids)
+        collected_streams = self._render_qweb_pdf_prepare_streams(data, res_ids=res_ids, run_script=run_script)
 
         # Generate the ir.attachment if needed.
         if self.attachment:

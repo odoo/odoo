@@ -9,9 +9,9 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
-    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None):
+    def _render_qweb_pdf_prepare_streams(self, data, res_ids=None, run_script=None):
         # EXTENDS base
-        collected_streams = super()._render_qweb_pdf_prepare_streams(data, res_ids=res_ids)
+        collected_streams = super()._render_qweb_pdf_prepare_streams(data, res_ids=res_ids, run_script=run_script)
 
         if collected_streams \
                 and res_ids \
