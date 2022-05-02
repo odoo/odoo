@@ -11,7 +11,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'RtcCallViewer',
-    identifyingFields: ['threadView'],
+    identifyingFields: ['RtcCallViewer/threadView'],
     lifecycleHooks: {
         _created() {
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
@@ -395,11 +395,11 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['threadView.thread.rtc'],
+            dependencies: ['RtcCallViewer/threadView.ThreadView/thread.Thread/rtc'],
             methodName: '_onChangeRtcChannel',
         }),
         new OnChange({
-            dependencies: ['threadView.thread.videoCount'],
+            dependencies: ['RtcCallViewer/threadView.ThreadView/thread.Thread/videoCount'],
             methodName: '_onChangeVideoCount',
         }),
     ],

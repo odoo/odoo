@@ -6,7 +6,7 @@ import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
-    identifyingFields: ['id'],
+    identifyingFields: ['Attachment/id'],
     modelMethods: {
         /**
          * @static

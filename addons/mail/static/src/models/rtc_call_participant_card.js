@@ -8,7 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'RtcCallParticipantCard',
-    identifyingFields: ['relationalId'],
+    identifyingFields: ['RtcCallParticipantCard/relationalId'],
     recordMethods: {
         /**
          * @param {Event} ev

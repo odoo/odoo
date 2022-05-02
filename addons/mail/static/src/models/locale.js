@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 
 registerModel({
     name: 'Locale',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     recordMethods: {
         /**
          * @private

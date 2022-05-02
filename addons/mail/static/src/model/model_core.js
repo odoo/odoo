@@ -10,7 +10,7 @@
  */
 
 export const registry = new Map();
-
+export const modelFieldSeparator = '/';
 
 /**
  * Concats `contextMessage` at the beginning of any error raising when calling
@@ -41,11 +41,12 @@ export function addFields(modelName, fields) {
         throw new Error(`Cannot add fields to model "${modelName}": model must be registered before fields can be added.`);
     }
     const definition = registry.get(modelName);
-    for (const [fieldName, field] of Object.entries(fields)) {
+    for (const [legacyFieldName, field] of Object.entries(fields)) {
+        const fieldName = legacyFieldName.includes(modelFieldSeparator) ? legacyFieldName : `${modelName}${modelFieldSeparator}${legacyFieldName}`;
         addContextToErrors(() => {
             assertNameIsAvailableOnRecords(fieldName, definition);
         }, `Cannot add field "${fieldName}" to model "${modelName}": `);
-        definition.get('fields').set(fieldName, field);
+        definition.get('fields').set(fieldName, formatFieldDefinition(modelName, fieldName, field));
     }
 }
 
@@ -248,6 +249,25 @@ function assertNameIsAvailableOnRecords(name, modelDefinition) {
     if (['fields', 'recordGetters', 'recordMethods'].some(x => modelDefinition.get(x).has(name))) {
         throw new Error(`there is already a key with this name on the records.`);
     }
+}
+
+/**
+ * Formats the given fieldDefinition to the format expected by the model
+ * manager.
+ *
+ * In particular field names should be complete (including model name).
+ *
+ * @param {string} modelName
+ * @param {string} fieldName
+ * @param {Object} fieldDefinition
+ * @returns {Object}
+ */
+function formatFieldDefinition(modelName, fieldName, fieldDefinition) {
+    const res = { ...fieldDefinition };
+    if (res.inverse && !res.inverse.includes(modelFieldSeparator)) {
+        res.inverse = `${res.to}${modelFieldSeparator}${res.inverse}`;
+    }
+    return res;
 }
 
 /**

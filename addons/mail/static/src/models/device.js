@@ -6,7 +6,7 @@ import { browser } from "@web/core/browser/browser";
 
 registerModel({
     name: 'Device',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     lifecycleHooks: {
         _created() {
             this._refresh();

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from '@mail/model/model_core';
+import { modelFieldSeparator, registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { RelationSet } from '@mail/model/model_field_relation_set';
@@ -651,6 +651,30 @@ export class ModelManager {
     /**
      * @private
      * @param {Object} model
+     * @param {Object|Object[]} legacyData
+     * @returns {Object}
+     */
+    _convertLegacyFieldName(model, legacyData) {
+        const isMulti = typeof legacyData[Symbol.iterator] === 'function';
+        const data2 = [];
+        for (const data of (isMulti ? legacyData : [legacyData])) {
+            const res = {};
+            for (const [fieldName, value] of Object.entries(data)) {
+                const finalFieldName = fieldName === 'messaging'
+                    ? 'Record/messaging'
+                    : fieldName.includes(modelFieldSeparator)
+                        ? fieldName
+                        : `${model.name}${modelFieldSeparator}${fieldName}`;
+                res[finalFieldName] = value;
+            }
+            data2.push(res);
+        }
+        return isMulti ? data2 : data2[0];
+    }
+
+    /**
+     * @private
+     * @param {Object} model
      * @param {string} localId
      * @returns {Record}
      */
@@ -962,10 +986,11 @@ export class ModelManager {
      * Returns an index on the given model for the given data.
      *
      * @param {Object} model
-     * @param {Object|Record} data insert data or record
+     * @param {Object|Record} legacyData insert data or record
      * @returns {string}
      */
-    _getRecordIndex(model, data) {
+    _getRecordIndex(model, legacyData) {
+        const data = legacyData.modelManager ? legacyData : this._convertLegacyFieldName(model, legacyData);
         return `${model.name}(${model.__identifyingFields.map(identifyingElement => {
             const fieldName = typeof identifyingElement === 'string'
                 ? identifyingElement
@@ -1015,11 +1040,12 @@ export class ModelManager {
     /**
      * @private
      * @param {Object} model
-     * @param {Object[]} dataList
+     * @param {Object[]} legacyDataList
      * @returns {Record[]}
      */
-    _insert(model, dataList) {
+    _insert(model, legacyDataList) {
         this._ensureNoLockingListener();
+        const dataList = this._convertLegacyFieldName(model, legacyDataList);
         const records = [];
         for (const data of dataList) {
             const localId = this._getRecordIndex(model, data);
@@ -1038,15 +1064,16 @@ export class ModelManager {
     /**
      * @private
      * @param {Object} model
+     * @param {Object} relatedModel
      * @param {ModelField} field
      * @returns {ModelField}
      */
-    _makeInverseRelationField(model, field) {
+    _makeInverseRelationField(model, relatedModel, field) {
         const inverseField = new ModelField(Object.assign(
             {},
             ModelField.many(model.name, { inverse: field.fieldName }),
             {
-                fieldName: `_inverse_${model}/${field.fieldName}`,
+                fieldName: `${relatedModel.name}${modelFieldSeparator}_inverse_${field.fieldName}`,
                 // Allows the inverse of an identifying field to be
                 // automatically generated.
                 isCausal: model.__identifyingFieldsFlattened.has(field.fieldName),
@@ -1190,7 +1217,7 @@ export class ModelManager {
                     continue;
                 }
                 const relatedModel = this.models[field.to];
-                const inverseField = this._makeInverseRelationField(model, field);
+                const inverseField = this._makeInverseRelationField(model, relatedModel, field);
                 field.inverse = inverseField.fieldName;
                 relatedModel.fields[inverseField.fieldName] = inverseField;
             }
@@ -1261,6 +1288,13 @@ export class ModelManager {
                         return field.get(this);
                     },
                 });
+                const [, ...rest] = field.fieldName.split(modelFieldSeparator);
+                const legacyFieldName = rest.join(modelFieldSeparator);
+                Object.defineProperty(model.prototype, legacyFieldName, {
+                    get: function getLegacyFieldValue() { // this is bound to record
+                        return this[field.fieldName];
+                    },
+                });
             }
             delete model.__combinedFields;
         }
@@ -1269,16 +1303,17 @@ export class ModelManager {
     /**
      * @private
      * @param {Record} record
-     * @param {Object} data
+     * @param {Object} legacyData
      * @param {Object} [options]
      * @param [options.allowWriteReadonly=false]
      * @returns {boolean} whether any value changed for the current record
      */
-    _update(record, data, options = {}) {
+    _update(record, legacyData, options = {}) {
         this._ensureNoLockingListener();
         if (!record.exists()) {
             throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
+        const data = this._convertLegacyFieldName(record.constructor, legacyData);
         const { allowWriteReadonly = false } = options;
         const model = record.constructor;
         let hasChanged = false;

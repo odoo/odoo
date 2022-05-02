@@ -5,7 +5,7 @@ import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'MailTemplate',
-    identifyingFields: ['id'],
+    identifyingFields: ['MailTemplate/id'],
     recordMethods: {
         /**
          * @param {Activity} activity

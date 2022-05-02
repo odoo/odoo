@@ -6,7 +6,7 @@ import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model
 
 registerModel({
     name: 'Follower',
-    identifyingFields: ['id'],
+    identifyingFields: ['Follower/id'],
     modelMethods: {
         /**
          * @param {Object} data

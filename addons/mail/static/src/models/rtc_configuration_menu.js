@@ -7,7 +7,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcConfigurationMenu',
-    identifyingFields: ['userSetting'],
+    identifyingFields: ['RtcConfigurationMenu/userSetting'],
     lifecycleHooks: {
         _created() {
             browser.addEventListener('keydown', this._onKeyDown);

@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussView',
-    identifyingFields: ['discuss'],
+    identifyingFields: ['DiscussView/discuss'],
     recordMethods: {
         /**
          * Handles click on the mobile "new channel" button.

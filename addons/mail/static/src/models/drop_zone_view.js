@@ -6,7 +6,7 @@ import { decrement, increment } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DropZoneView',
-    identifyingFields: [['attachmentBoxViewOwner', 'composerViewOwner']],
+    identifyingFields: [['DropZoneView/attachmentBoxViewOwner', 'DropZoneView/composerViewOwner']],
     recordMethods: {
         /**
          * Shows a visual drop effect when dragging inside the dropzone.

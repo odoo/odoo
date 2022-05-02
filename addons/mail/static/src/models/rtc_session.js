@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcSession',
-    identifyingFields: ['id'],
+    identifyingFields: ['RtcSession/id'],
     lifecycleHooks: {
         _willDelete() {
             this.reset();

@@ -7,7 +7,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChatWindow',
-    identifyingFields: ['manager', ['thread', 'managerAsNewMessage']],
+    identifyingFields: ['ChatWindow/manager', ['ChatWindow/thread', 'ChatWindow/managerAsNewMessage']],
     recordMethods: {
         /**
          * Close this chat window.
@@ -731,7 +731,7 @@ registerModel({
          * States the `ThreadView` displaying `this.thread`.
          */
         threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
+            related: 'ChatWindow/threadViewer.ThreadViewer/threadView',
         }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.

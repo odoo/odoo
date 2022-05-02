@@ -13,5 +13,5 @@ addFields('DiscussSidebarCategory', {
 });
 
 patchIdentifyingFields('DiscussSidebarCategory', identifyingFields => {
-    identifyingFields[0].push('discussAsLivechat');
+    identifyingFields[0].push('DiscussSidebarCategory/discussAsLivechat');
 });

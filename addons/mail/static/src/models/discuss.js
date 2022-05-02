@@ -7,7 +7,7 @@ import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Discuss',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     recordMethods: {
         clearIsAddingItem() {
             this.update({
@@ -462,7 +462,7 @@ registerModel({
          * States the `ThreadView` displaying `this.thread`.
          */
         threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
+            related: 'Discuss/threadViewer.ThreadViewer/threadView',
         }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.

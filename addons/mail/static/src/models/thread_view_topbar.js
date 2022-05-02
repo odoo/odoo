@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewTopbar',
-    identifyingFields: ['threadView'],
+    identifyingFields: ['ThreadViewTopbar/threadView'],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -677,7 +677,7 @@ registerModel({
          * States the thread that is displayed by this top bar.
          */
         thread: one('Thread', {
-            related: 'threadView.thread',
+            related: 'ThreadViewTopbar/threadView.ThreadView/thread',
         }),
         /**
          * States the OWL ref of the "thread name" input of this top bar.

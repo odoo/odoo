@@ -6,7 +6,7 @@ import { one } from '@mail/model/model_field';
 import '@mail/models/clock_watcher';
 
 patchIdentifyingFields('ClockWatcher', identifyingFields => {
-    identifyingFields[0].push('qunitTestOwner');
+    identifyingFields[0].push('ClockWatcher/qunitTestOwner');
 });
 
 addFields('ClockWatcher', {

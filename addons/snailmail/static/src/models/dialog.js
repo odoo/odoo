@@ -7,7 +7,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 import '@mail/models/dialog';
 
 patchIdentifyingFields('Dialog', identifyingFields => {
-    identifyingFields[0].push('messageViewOwnerAsSnailmailError');
+    identifyingFields[0].push('Dialog/messageViewOwnerAsSnailmailError');
 });
 
 addFields('Dialog', {

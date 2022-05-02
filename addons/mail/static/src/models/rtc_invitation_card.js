@@ -5,7 +5,7 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcInvitationCard',
-    identifyingFields: ['thread'],
+    identifyingFields: ['RtcInvitationCard/thread'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

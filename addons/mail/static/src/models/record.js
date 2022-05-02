@@ -24,7 +24,7 @@ registerModel({
      * and each element of the same sub-list will be parsed as "or". If there
      * is no identifying fields, this model generates a singleton.
      */
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     lifecycleHooks: {
         /**
          * This function is called after the record has been created, more
@@ -245,9 +245,9 @@ registerModel({
          * States the messaging singleton. Automatically assigned by the model
          * manager at creation.
          */
-        messaging: one('Messaging', {
+        'Record/messaging': one('Messaging', {
             default: insertAndReplace(),
-            inverse: 'allRecords',
+            inverse: 'Messaging/allRecords',
             readonly: true,
             required: true,
         }),

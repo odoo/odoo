@@ -13,5 +13,5 @@ addFields('ThreadViewer', {
 });
 
 patchIdentifyingFields('ThreadViewer', identifyingFields => {
-    identifyingFields[0].push('qunitTest');
+    identifyingFields[0].push('ThreadViewer/qunitTest');
 });

@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageListView',
-    identifyingFields: ['threadViewOwner'],
+    identifyingFields: ['MessageListView/threadViewOwner'],
     recordMethods: {
         /**
          * @returns {Element|undefined}

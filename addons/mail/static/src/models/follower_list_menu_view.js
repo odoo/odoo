@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowerListMenuView',
-    identifyingFields: [['chatterOwner']],
+    identifyingFields: [['FollowerListMenuView/chatterOwner']],
     recordMethods: {
         hide() {
             this.update({ isDropdownOpen: false });

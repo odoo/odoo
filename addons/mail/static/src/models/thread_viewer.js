@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewer',
-    identifyingFields: [['chatter', 'chatWindow', 'discuss', 'discussPublicView']],
+    identifyingFields: [['ThreadViewer/chatter', 'ThreadViewer/chatWindow', 'ThreadViewer/discuss', 'ThreadViewer/discussPublicView']],
     recordMethods: {
         /**
          * @param {integer} scrollHeight
@@ -133,7 +133,7 @@ registerModel({
          * States the `ThreadCache` that should be displayed by `this`.
          */
         threadCache: one('ThreadCache', {
-            related: 'thread.cache',
+            related: 'ThreadViewer/thread.Thread/cache',
         }),
         /**
          * Determines the initial scroll height of thread caches, which is the

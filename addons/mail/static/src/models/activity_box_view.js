@@ -6,7 +6,7 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityBoxView',
-    identifyingFields: ['chatter'],
+    identifyingFields: ['ActivityBoxView/chatter'],
     recordMethods: {
         /**
          * Handles click on activity box title.

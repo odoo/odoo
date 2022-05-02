@@ -13,7 +13,7 @@ const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
 registerModel({
     name: 'MessagingNotificationHandler',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     lifecycleHooks: {
         _willDelete() {
             if (this.env.services['bus_service']) {

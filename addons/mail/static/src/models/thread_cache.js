@@ -7,7 +7,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ThreadCache',
-    identifyingFields: ['thread'],
+    identifyingFields: ['ThreadCache/thread'],
     recordMethods: {
         async loadMoreMessages() {
             if (this.isAllHistoryLoaded || this.isLoading) {
@@ -415,15 +415,15 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],
+            dependencies: ['ThreadCache/hasLoadingFailed', 'ThreadCache/isCacheRefreshRequested', 'ThreadCache/isLoaded', 'ThreadCache/isLoading', 'ThreadCache/thread.Thread/isTemporary', 'ThreadCache/threadViews'],
             methodName: '_onChangeForHasToLoadMessages',
         }),
         new OnChange({
-            dependencies: ['isLoaded', 'isLoading', 'isMarkAllAsReadRequested', 'thread.isTemporary', 'thread.model', 'threadViews'],
+            dependencies: ['ThreadCache/isLoaded', 'ThreadCache/isLoading', 'ThreadCache/isMarkAllAsReadRequested', 'ThreadCache/thread.Thread/isTemporary', 'ThreadCache/thread.Thread/model', 'ThreadCache/threadViews'],
             methodName: '_onChangeMarkAllAsRead',
         }),
         new OnChange({
-            dependencies: ['hasToLoadMessages'],
+            dependencies: ['ThreadCache/hasToLoadMessages'],
             methodName: '_onHasToLoadMessagesChanged',
         }),
     ],

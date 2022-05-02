@@ -6,7 +6,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'VolumeSetting',
-    identifyingFields: ['id'],
+    identifyingFields: ['VolumeSetting/id'],
     recordMethods: {
         /**
          * @private
@@ -48,7 +48,7 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['volume'],
+            dependencies: ['VolumeSetting/volume'],
             methodName: '_onChangeVolume',
         }),
     ],

@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'FollowerSubtypeList',
-    identifyingFields: ['dialogOwner'],
+    identifyingFields: ['FollowerSubtypeList/dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this follower subtype list.
@@ -49,7 +49,7 @@ registerModel({
          */
         _sortFollowerSubtypeViews() {
             return [
-                ['smaller-first', 'subtype.id'],
+                ['smaller-first', 'FollowerSubtypeView/subtype.FollowerSubtype/id'],
             ];
         },
     },
@@ -67,7 +67,7 @@ registerModel({
             readonly: true,
         }),
         follower: one('Follower', {
-            related: 'dialogOwner.followerOwnerAsSubtypeList',
+            related: 'FollowerSubtypeList/dialogOwner.Dialog/followerOwnerAsSubtypeList',
             required: true,
         }),
         followerSubtypeViews: many('FollowerSubtypeView', {

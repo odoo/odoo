@@ -12,7 +12,7 @@ addFields('NotificationListView', {
 });
 
 patchIdentifyingFields('NotificationListView', identifyingFields => {
-    identifyingFields[0].push('qunitTestOwner');
+    identifyingFields[0].push('NotificationListView/qunitTestOwner');
 });
 
 patchRecordMethods('NotificationListView', {

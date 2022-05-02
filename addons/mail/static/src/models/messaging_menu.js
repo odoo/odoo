@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingMenu',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     recordMethods: {
         /**
          * Close the messaging menu. Should reset its internal state.

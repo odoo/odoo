@@ -7,7 +7,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'DiscussSidebarCategory',
-    identifyingFields: [['discussAsChannel', 'discussAsChat']],
+    identifyingFields: [['DiscussSidebarCategory/discussAsChannel', 'DiscussSidebarCategory/discussAsChat']],
     modelMethods: {
         /**
          * Performs the `set_res_users_settings` RPC on `res.users.settings`.
@@ -104,17 +104,17 @@ registerModel({
             switch (this.sortComputeMethod) {
                 case 'name':
                     return [
-                        ['defined-first', 'channel'],
-                        ['defined-first', 'channel.displayName'],
-                        ['case-insensitive-asc', 'channel.displayName'],
-                        ['smaller-first', 'channel.id'],
+                        ['defined-first', 'DiscussSidebarCategoryItem/channel'],
+                        ['defined-first', 'DiscussSidebarCategoryItem/channel.Thread/displayName'],
+                        ['case-insensitive-asc', 'DiscussSidebarCategoryItem/channel.Thread/displayName'],
+                        ['smaller-first', 'DiscussSidebarCategoryItem/channel.Thread/id'],
                     ];
                 case 'last_action':
                     return [
-                        ['defined-first', 'channel'],
-                        ['defined-first', 'channel.lastInterestDateTime'],
-                        ['greater-first', 'channel.lastInterestDateTime'],
-                        ['greater-first', 'channel.id'],
+                        ['defined-first', 'DiscussSidebarCategoryItem/channel'],
+                        ['defined-first', 'DiscussSidebarCategoryItem/channel.Thread/lastInterestDateTime'],
+                        ['greater-first', 'DiscussSidebarCategoryItem/channel.Thread/lastInterestDateTime'],
+                        ['greater-first', 'DiscussSidebarCategoryItem/channel.Thread/id'],
                     ];
             }
         },
@@ -236,7 +236,7 @@ registerModel({
         counter: attr({
             default: 0,
             readonly: true,
-            sum: 'categoryItems.categoryCounterContribution',
+            sum: 'DiscussSidebarCategory/categoryItems.DiscussSidebarCategoryItem/categoryCounterContribution',
         }),
         discussAsChannel: one('Discuss', {
             inverse: 'categoryChannel',
@@ -322,7 +322,7 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['isServerOpen'],
+            dependencies: ['DiscussSidebarCategory/isServerOpen'],
             methodName: ['_onIsServerOpenChanged'],
         }),
     ],

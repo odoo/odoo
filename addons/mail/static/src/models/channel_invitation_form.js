@@ -7,7 +7,7 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChannelInvitationForm',
-    identifyingFields: [['chatWindow', 'popoverViewOwner']],
+    identifyingFields: [['ChannelInvitationForm/chatWindow', 'ChannelInvitationForm/popoverViewOwner']],
     recordMethods: {
         /**
          * Handles click on the "copy" button.

@@ -7,10 +7,10 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'AutocompleteInputView',
     identifyingFields: [[
-        'chatWindowOwnerAsNewMessage',
-        'discussSidebarCategoryOwnerAsAddingItem',
-        'discussViewOwnerAsMobileAddItemHeader',
-        'messagingMenuOwnerAsMobileNewMessageInput',
+        'AutocompleteInputView/chatWindowOwnerAsNewMessage',
+        'AutocompleteInputView/discussSidebarCategoryOwnerAsAddingItem',
+        'AutocompleteInputView/discussViewOwnerAsMobileAddItemHeader',
+        'AutocompleteInputView/messagingMenuOwnerAsMobileNewMessageInput',
     ]],
     recordMethods: {
         /**

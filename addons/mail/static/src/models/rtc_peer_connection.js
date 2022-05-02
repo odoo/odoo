@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcPeerConnection',
-    identifyingFields: ['rtcSession'],
+    identifyingFields: ['RtcPeerConnection/rtcSession'],
     lifecycleHooks: {
         _willDelete() {
             this.peerConnection.close();

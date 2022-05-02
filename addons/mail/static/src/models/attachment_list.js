@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'AttachmentList',
-    identifyingFields: [['composerViewOwner', 'messageViewOwner', 'attachmentBoxViewOwner']],
+    identifyingFields: [['AttachmentList/composerViewOwner', 'AttachmentList/messageViewOwner', 'AttachmentList/attachmentBoxViewOwner']],
     recordMethods: {
         /**
          * Select the next attachment.

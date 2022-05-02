@@ -5,7 +5,7 @@ import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'ActivityType',
-    identifyingFields: ['id'],
+    identifyingFields: ['ActivityType/id'],
     fields: {
         activities: many('Activity', {
             inverse: 'type',

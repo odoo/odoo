@@ -6,7 +6,7 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChannelCommand',
-    identifyingFields: ['name'],
+    identifyingFields: ['ChannelCommand/name'],
     modelMethods: {
         /**
          * Fetches channel commands matching the given search term to extend the

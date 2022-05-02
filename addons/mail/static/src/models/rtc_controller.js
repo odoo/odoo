@@ -6,7 +6,7 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcController',
-    identifyingFields: ['callViewer'],
+    identifyingFields: ['RtcController/callViewer'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

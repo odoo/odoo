@@ -5,7 +5,7 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiListView',
-    identifyingFields: ['popoverViewOwner'],
+    identifyingFields: ['EmojiListView/popoverViewOwner'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

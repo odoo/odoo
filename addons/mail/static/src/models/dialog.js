@@ -7,11 +7,11 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 registerModel({
     name: 'Dialog',
     identifyingFields: [[
-        'attachmentCardOwnerAsAttachmentDeleteConfirm',
-        'attachmentImageOwnerAsAttachmentDeleteConfirm',
-        'attachmentListOwnerAsAttachmentView',
-        'followerOwnerAsSubtypeList',
-        'messageActionListOwnerAsDeleteConfirm',
+        'Dialog/attachmentCardOwnerAsAttachmentDeleteConfirm',
+        'Dialog/attachmentImageOwnerAsAttachmentDeleteConfirm',
+        'Dialog/attachmentListOwnerAsAttachmentView',
+        'Dialog/followerOwnerAsSubtypeList',
+        'Dialog/messageActionListOwnerAsDeleteConfirm',
     ]],
     lifecycleHooks: {
         _created() {

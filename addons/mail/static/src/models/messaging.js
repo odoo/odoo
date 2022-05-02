@@ -272,8 +272,8 @@ registerModel({
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
          */
-        allRecords: many('Record', {
-            inverse: 'messaging',
+        'Messaging/allRecords': many('Record', {
+            inverse: 'Record/messaging',
             isCausal: true,
         }),
         /**
@@ -427,11 +427,11 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['ringingThreads'],
+            dependencies: ['Messaging/ringingThreads'],
             methodName: '_onChangeRingingThreads',
         }),
         new OnChange({
-            dependencies: ['focusedRtcSession'],
+            dependencies: ['Messaging/focusedRtcSession'],
             methodName: '_onChangeFocusedRtcSession',
         }),
     ],

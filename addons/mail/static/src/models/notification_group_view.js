@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'NotificationGroupView',
-    identifyingFields: ['notificationListViewOwner', 'notificationGroup'],
+    identifyingFields: ['NotificationGroupView/notificationListViewOwner', 'NotificationGroupView/notificationGroup'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

@@ -7,7 +7,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageSeenIndicator',
-    identifyingFields: ['thread', 'message'],
+    identifyingFields: ['MessageSeenIndicator/thread', 'MessageSeenIndicator/message'],
     recordMethods: {
         /**
          * Manually called as not always called when necessary

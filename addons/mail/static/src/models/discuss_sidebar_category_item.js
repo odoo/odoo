@@ -8,7 +8,7 @@ import Dialog from 'web.Dialog';
 
 registerModel({
     name: 'DiscussSidebarCategoryItem',
-    identifyingFields: ['category', 'channel'],
+    identifyingFields: ['DiscussSidebarCategoryItem/category', 'DiscussSidebarCategoryItem/channel'],
     recordMethods: {
         /**
          * @private
@@ -279,7 +279,7 @@ registerModel({
          * Type of the related channel thread.
          */
         channelType: attr({
-            related: 'channel.channel_type',
+            related: 'DiscussSidebarCategoryItem/channel.Thread/channel_type',
         }),
     },
 });

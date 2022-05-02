@@ -7,7 +7,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageView',
-    identifyingFields: [['threadView', 'deleteMessageConfirmViewOwner'], 'message'],
+    identifyingFields: [['MessageView/threadView', 'MessageView/deleteMessageConfirmViewOwner'], 'MessageView/message'],
     recordMethods: {
         /**
          * Briefly highlights the message.

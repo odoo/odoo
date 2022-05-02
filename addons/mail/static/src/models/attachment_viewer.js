@@ -5,7 +5,7 @@ import { attr, many, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'AttachmentViewer',
-    identifyingFields: ['dialogOwner'],
+    identifyingFields: ['AttachmentViewer/dialogOwner'],
     recordMethods: {
         /**
          * Close the dialog with this attachment viewer.
@@ -222,14 +222,14 @@ registerModel({
             default: 0,
         }),
         attachment: one('Attachment', {
-            related: 'attachmentList.selectedAttachment',
+            related: 'AttachmentViewer/attachmentList.AttachmentList/selectedAttachment',
         }),
         attachmentList: one('AttachmentList', {
-            related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
+            related: 'AttachmentViewer/dialogOwner.Dialog/attachmentListOwnerAsAttachmentView',
             required: true,
         }),
         attachments: many('Attachment', {
-            related: 'attachmentList.viewableAttachments',
+            related: 'AttachmentViewer/attachmentList.AttachmentList/viewableAttachments',
         }),
         /**
          * States the OWL component of this attachment viewer.

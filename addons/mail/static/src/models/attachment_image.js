@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'AttachmentImage',
-    identifyingFields: ['attachmentList', 'attachment'],
+    identifyingFields: ['AttachmentImage/attachmentList', 'AttachmentImage/attachment'],
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.

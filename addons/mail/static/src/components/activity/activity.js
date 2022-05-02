@@ -13,7 +13,7 @@ export class Activity extends LegacyComponent {
      */
      setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'ActivityView' });
+        useComponentToModel({ fieldName: 'ActivityView/component', modelName: 'ActivityView' });
     }
 
     /**

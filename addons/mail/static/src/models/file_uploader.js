@@ -16,7 +16,7 @@ const getAttachmentNextTemporaryId = (function () {
 
 registerModel({
     name: 'FileUploader',
-    identifyingFields: [['activityView', 'attachmentBoxView', 'composerView']],
+    identifyingFields: [['FileUploader/activityView', 'FileUploader/attachmentBoxView', 'FileUploader/composerView']],
     recordMethods: {
         openBrowserFileUploader() {
             this.fileInput.click();

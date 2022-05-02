@@ -5,7 +5,7 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ThreadPartnerSeenInfo',
-    identifyingFields: ['thread', 'partner'],
+    identifyingFields: ['ThreadPartnerSeenInfo/thread', 'ThreadPartnerSeenInfo/partner'],
     fields: {
         lastFetchedMessage: one('Message'),
         lastSeenMessage: one('Message'),

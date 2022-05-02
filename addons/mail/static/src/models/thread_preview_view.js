@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadPreviewView',
-    identifyingFields: ['notificationListViewOwner', 'thread'],
+    identifyingFields: ['ThreadPreviewView/notificationListViewOwner', 'ThreadPreviewView/thread'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

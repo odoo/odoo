@@ -6,7 +6,7 @@ import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Employee',
-    identifyingFields: ['id'],
+    identifyingFields: ['Employee/id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -163,7 +163,7 @@ registerModel({
          */
         partner: one('Partner', {
             inverse: 'employee',
-            related: 'user.partner',
+            related: 'Employee/user.User/partner',
         }),
         /**
          * User related to this employee.

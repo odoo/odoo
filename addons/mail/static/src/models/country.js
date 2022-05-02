@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Country',
-    identifyingFields: ['id'],
+    identifyingFields: ['Country/id'],
     recordMethods: {
         /**
          * @private

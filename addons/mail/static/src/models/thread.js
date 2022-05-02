@@ -22,7 +22,7 @@ const getSuggestedRecipientInfoNextTemporaryId = (function () {
 
 registerModel({
     name: 'Thread',
-    identifyingFields: ['model', 'id'],
+    identifyingFields: ['Thread/model', 'Thread/id'],
     lifecycleHooks: {
         _created() {
             /**
@@ -1619,7 +1619,7 @@ registerModel({
          */
         _computeTypingStatusText() {
             if (this.orderedOtherTypingMembers.length === 0) {
-                return this.constructor.fields.typingStatusText.default;
+                return clear();
             }
             if (this.orderedOtherTypingMembers.length === 1) {
                 return sprintf(
@@ -1785,8 +1785,8 @@ registerModel({
          */
         _sortGuestMembers() {
             return [
-                ['defined-first', 'name'],
-                ['case-insensitive-asc', 'name'],
+                ['defined-first', 'Guest/name'],
+                ['case-insensitive-asc', 'Guest/name'],
             ];
         },
         /**
@@ -1795,8 +1795,8 @@ registerModel({
          */
         _sortPartnerMembers() {
             return [
-                ['defined-first', 'nameOrDisplayName'],
-                ['case-insensitive-asc', 'nameOrDisplayName'],
+                ['defined-first', 'Partner/nameOrDisplayName'],
+                ['case-insensitive-asc', 'Partner/nameOrDisplayName'],
             ];
         },
         /**
@@ -1952,7 +1952,7 @@ registerModel({
             compute: '_computeFetchMessagesUrl',
         }),
         followersPartner: many('Partner', {
-            related: 'followers.partner',
+            related: 'Thread/followers.Follower/partner',
         }),
         followers: many('Follower', {
             inverse: 'followedThread',
@@ -2443,15 +2443,15 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['lastSeenByCurrentPartnerMessageId'],
+            dependencies: ['Thread/lastSeenByCurrentPartnerMessageId'],
             methodName: '_onChangeLastSeenByCurrentPartnerMessageId',
         }),
         new OnChange({
-            dependencies: ['isServerPinned'],
+            dependencies: ['Thread/isServerPinned'],
             methodName: '_onIsServerPinnedChanged',
         }),
         new OnChange({
-            dependencies: ['serverFoldState'],
+            dependencies: ['Thread/serverFoldState'],
             methodName: '_onServerFoldStateChanged',
         }),
     ],

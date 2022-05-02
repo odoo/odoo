@@ -6,7 +6,7 @@ import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'User',
-    identifyingFields: ['id'],
+    identifyingFields: ['User/id'],
     modelMethods: {
         /**
          * @param {Object} data

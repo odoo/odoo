@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'DiscussPublicView',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     recordMethods: {
         /**
          * Creates and displays the thread view and clears the welcome view.
@@ -74,7 +74,7 @@ registerModel({
          */
         threadView: one('ThreadView', {
             readonly: true,
-            related: 'threadViewer.threadView',
+            related: 'DiscussPublicView/threadViewer.ThreadViewer/threadView',
         }),
         /**
          * States the thread viewer linked to this discuss public view.

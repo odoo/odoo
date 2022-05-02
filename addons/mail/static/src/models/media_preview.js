@@ -5,7 +5,7 @@ import { registerModel } from '@mail/model/model_core';
 
 registerModel({
     name: 'MediaPreview',
-    identifyingFields: ['welcomeView'],
+    identifyingFields: ['MediaPreview/welcomeView'],
     modelMethods: {
         /**
          * Iterates tracks of the provided MediaStream, calling the `stop`

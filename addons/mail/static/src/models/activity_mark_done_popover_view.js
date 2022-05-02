@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ActivityMarkDonePopoverView',
-    identifyingFields: ['activityViewOwner'],
+    identifyingFields: ['ActivityMarkDonePopoverView/activityViewOwner'],
     recordMethods: {
         /**
          * Handles blur on this feedback textarea.

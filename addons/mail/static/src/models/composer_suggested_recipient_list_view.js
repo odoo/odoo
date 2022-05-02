@@ -6,7 +6,7 @@ import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ComposerSuggestedRecipientListView',
-    identifyingFields: ['composerViewOwner'],
+    identifyingFields: ['ComposerSuggestedRecipientListView/composerViewOwner'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

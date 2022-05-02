@@ -7,7 +7,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'NotificationGroup',
-    identifyingFields: ['res_model', 'res_id', 'notification_type'],
+    identifyingFields: ['NotificationGroup/res_model', 'NotificationGroup/res_id', 'NotificationGroup/notification_type'],
     recordMethods: {
         /**
          * Cancel notifications of the group.
@@ -147,7 +147,7 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['notifications'],
+            dependencies: ['NotificationGroup/notifications'],
             methodName: '_onChangeNotifications',
         }),
     ],

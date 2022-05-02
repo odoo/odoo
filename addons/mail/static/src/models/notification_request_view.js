@@ -5,7 +5,7 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'NotificationRequestView',
-    identifyingFields: ['notificationListViewOwner'],
+    identifyingFields: ['NotificationRequestView/notificationListViewOwner'],
     fields: {
         notificationListViewOwner: one('NotificationListView', {
             inverse: 'notificationRequestView',

@@ -7,7 +7,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Composer',
-    identifyingFields: [['thread', 'messageViewInEditing']],
+    identifyingFields: [['Composer/thread', 'Composer/messageViewInEditing']],
     recordMethods: {
         /**
          * @private

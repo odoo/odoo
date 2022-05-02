@@ -8,7 +8,7 @@ const { markup } = owl;
 
 registerModel({
     name: 'Activity',
-    identifyingFields: ['id'],
+    identifyingFields: ['Activity/id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -17,83 +17,83 @@ registerModel({
         convertData(data) {
             const data2 = {};
             if ('activity_category' in data) {
-                data2.category = data.activity_category;
+                data2['Activity/category'] = data.activity_category;
             }
             if ('can_write' in data) {
-                data2.canWrite = data.can_write;
+                data2['Activity/canWrite'] = data.can_write;
             }
             if ('create_date' in data) {
-                data2.dateCreate = data.create_date;
+                data2['Activity/dateCreate'] = data.create_date;
             }
             if ('date_deadline' in data) {
-                data2.dateDeadline = data.date_deadline;
+                data2['Activity/dateDeadline'] = data.date_deadline;
             }
             if ('chaining_type' in data) {
-                data2.chaining_type = data.chaining_type;
+                data2['Activity/chaining_type'] = data.chaining_type;
             }
             if ('icon' in data) {
-                data2.icon = data.icon;
+                data2['Activity/icon'] = data.icon;
             }
             if ('id' in data) {
-                data2.id = data.id;
+                data2['Activity/id'] = data.id;
             }
             if ('note' in data) {
-                data2.note = data.note;
+                data2['Activity/note'] = data.note;
             }
             if ('state' in data) {
-                data2.state = data.state;
+                data2['Activity/state'] = data.state;
             }
             if ('summary' in data) {
-                data2.summary = data.summary;
+                data2['Activity/summary'] = data.summary;
             }
 
             // relation
             if ('activity_type_id' in data) {
                 if (!data.activity_type_id) {
-                    data2.type = clear();
+                    data2['Activity/type'] = clear();
                 } else {
-                    data2.type = insert({
-                        displayName: data.activity_type_id[1],
-                        id: data.activity_type_id[0],
+                    data2['Activity/type'] = insert({
+                        'ActivityType/displayName': data.activity_type_id[1],
+                        'ActivityType/id': data.activity_type_id[0],
                     });
                 }
             }
             if ('create_uid' in data) {
                 if (!data.create_uid) {
-                    data2.creator = clear();
+                    data2['Activity/creator'] = clear();
                 } else {
-                    data2.creator = insert({
-                        id: data.create_uid[0],
-                        display_name: data.create_uid[1],
+                    data2['Activity/creator'] = insert({
+                        'User/id': data.create_uid[0],
+                        'User/display_name': data.create_uid[1],
                     });
                 }
             }
             if ('mail_template_ids' in data) {
-                data2.mailTemplates = insert(data.mail_template_ids);
+                data2['Activity/mailTemplates'] = insert(data.mail_template_ids);
             }
             if ('res_id' in data && 'res_model' in data) {
-                data2.thread = insert({
-                    id: data.res_id,
-                    model: data.res_model,
+                data2['Activity/thread'] = insert({
+                    'Thread/id': data.res_id,
+                    'Thread/model': data.res_model,
                 });
             }
             if ('user_id' in data) {
                 if (!data.user_id) {
-                    data2.assignee = clear();
+                    data2['Activity/assignee'] = clear();
                 } else {
-                    data2.assignee = insert({
-                        id: data.user_id[0],
-                        display_name: data.user_id[1],
+                    data2['Activity/assignee'] = insert({
+                        'User/id': data.user_id[0],
+                        'User/display_name': data.user_id[1],
                     });
                 }
             }
             if ('request_partner_id' in data) {
                 if (!data.request_partner_id) {
-                    data2.requestingPartner = clear();
+                    data2['Activity/requestingPartner'] = clear();
                 } else {
-                    data2.requestingPartner = insert({
-                        id: data.request_partner_id[0],
-                        display_name: data.request_partner_id[1],
+                    data2['Activity/requestingPartner'] = insert({
+                        'Partner/id': data.request_partner_id[0],
+                        'Partner/display_name': data.request_partner_id[1],
                     });
                 }
             }
@@ -106,10 +106,10 @@ registerModel({
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.async(() => this.messaging.rpc({
+            await this.async(() => this['Record/messaging'].rpc({
                 model: 'mail.activity',
                 method: 'unlink',
-                args: [[this.id]],
+                args: [[this['Activity/id']]],
             }));
             this.delete();
         },
@@ -126,10 +126,10 @@ registerModel({
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
+                    default_res_id: this['Activity/thread']['Thread/id'],
+                    default_res_model: this['Activity/thread']['Thread/model'],
                 },
-                res_id: this.id,
+                res_id: this['Activity/id'],
             };
             this.env.bus.trigger('do-action', {
                 action,
@@ -137,10 +137,10 @@ registerModel({
             });
         },
         async fetchAndUpdate() {
-            const [data] = await this.messaging.rpc({
+            const [data] = await this['Record/messaging'].rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
-                args: [this.id],
+                args: [this['Activity/id']],
             }, { shadow: true }).catch(e => {
                 const errorName = e.message && e.message.data && e.message.data.name;
                 if (errorName === 'odoo.exceptions.MissingError') {
@@ -155,7 +155,7 @@ registerModel({
             } else {
                 shouldDelete = true;
             }
-            this.thread.fetchData(['activities', 'attachments', 'messages']);
+            this['Activity/thread'].fetchData(['activities', 'attachments', 'messages']);
             if (shouldDelete) {
                 this.delete();
             }
@@ -166,17 +166,17 @@ registerModel({
          * @param {string|boolean} [param0.feedback=false]
          */
         async markAsDone({ attachments = [], feedback = false }) {
-            const attachmentIds = attachments.map(attachment => attachment.id);
-            await this.async(() => this.messaging.rpc({
+            const attachmentIds = attachments.map(attachment => attachment['Attachment.id']);
+            await this.async(() => this['Record/messaging'].rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
-                args: [[this.id]],
+                args: [[this['Activity/id']]],
                 kwargs: {
                     attachment_ids: attachmentIds,
                     feedback,
                 },
             }));
-            this.thread.fetchData(['attachments', 'messages']);
+            this['Activity/thread'].fetchData(['attachments', 'messages']);
             this.delete();
         },
         /**
@@ -185,14 +185,14 @@ registerModel({
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.async(() => this.messaging.rpc({
+            const action = await this.async(() => this['Record/messaging'].rpc({
                 model: 'mail.activity',
                 method: 'action_feedback_schedule_next',
-                args: [[this.id]],
+                args: [[this['Activity/id']]],
                 kwargs: { feedback },
             }));
-            this.thread.fetchData(['activities', 'attachments', 'messages']);
-            const thread = this.thread;
+            this['Activity/thread'].fetchData(['activities', 'attachments', 'messages']);
+            const thread = this['Activity/thread'];
             this.delete();
             if (!action) {
                 return;
@@ -211,10 +211,14 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAssignee() {
-            if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
+            if (
+                !this['Activity/assignee'] ||
+                !this['Activity/assignee']['User/partner'] ||
+                !this['Record/messaging']['Messaging/currentPartner']
+            ) {
                 return false;
             }
-            return this.assignee.partner === this.messaging.currentPartner;
+            return this['Activity/assignee']['User/partner'] === this['Record/messaging']['Messaging/currentPartner'];
         },
         /**
          * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
@@ -225,55 +229,55 @@ registerModel({
          * @returns {string|undefined}
          */
         _computeNote() {
-            if (this.note === '<p><br></p>') {
+            if (this['Activity/note'] === '<p><br></p>') {
                 return clear();
             }
-            return this.note;
+            return this['Activity/note'];
         },
         /**
          * @private
          * @returns {Markup}
          */
         _computeNoteAsMarkup() {
-            return markup(this.note);
+            return markup(this['Activity/note']);
         },
     },
     fields: {
-        activityViews: many('ActivityView', {
-            inverse: 'activity',
+        'Activity/activityViews': many('ActivityView', {
+            inverse: 'ActivityView/activity',
             isCausal: true,
         }),
-        assignee: one('User'),
-        attachments: many('Attachment', {
+        'Activity/assignee': one('User'),
+        'Activity/attachments': many('Attachment', {
             inverse: 'activities',
         }),
-        canWrite: attr({
+        'Activity/canWrite': attr({
             default: false,
         }),
-        category: attr(),
-        creator: one('User'),
-        dateCreate: attr(),
-        dateDeadline: attr(),
+        'Activity/category': attr(),
+        'Activity/creator': one('User'),
+        'Activity/dateCreate': attr(),
+        'Activity/dateDeadline': attr(),
         /**
          * Backup of the feedback content of an activity to be marked as done in the popover.
          * Feature-specific to restoring the feedback content when component is re-mounted.
          * In all other cases, this field value should not be trusted.
          */
-        feedbackBackup: attr(),
-        chaining_type: attr({
+        'Activity/feedbackBackup': attr(),
+        'Activity/chaining_type': attr({
             default: 'suggest',
         }),
-        icon: attr(),
-        id: attr({
+        'Activity/icon': attr(),
+        'Activity/id': attr({
             readonly: true,
             required: true,
         }),
-        isCurrentPartnerAssignee: attr({
+        'Activity/isCurrentPartnerAssignee': attr({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,
         }),
-        mailTemplates: many('MailTemplate', {
-            inverse: 'activities',
+        'Activity/mailTemplates': many('MailTemplate', {
+            inverse: 'MailTemplate/activities',
         }),
         /**
          * This value is meant to be returned by the server
@@ -281,10 +285,10 @@ registerModel({
          * Do not use this value in a 't-raw' if the activity has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        note: attr({
+        'Activity/note': attr({
             compute: '_computeNote',
         }),
-        noteAsMarkup: attr({
+        'Activity/noteAsMarkup': attr({
             compute: '_computeNoteAsMarkup',
         }),
         /**
@@ -294,18 +298,18 @@ registerModel({
          * Also, be useful when the assigned user is different from the
          * "source" or "requesting" partner.
          */
-        requestingPartner: one('Partner'),
-        state: attr(),
-        summary: attr(),
+        'Activity/requestingPartner': one('Partner'),
+        'Activity/state': attr(),
+        'Activity/summary': attr(),
         /**
          * Determines to which "thread" (using `mail.activity.mixin` on the
          * server) `this` belongs to.
          */
-        thread: one('Thread', {
-            inverse: 'activities',
+        'Activity/thread': one('Thread', {
+            inverse: 'Thread/activities',
         }),
-        type: one('ActivityType', {
-            inverse: 'activities',
+        'Activity/type': one('ActivityType', {
+            inverse: 'ActivityType/activities',
         }),
     },
 });

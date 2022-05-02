@@ -6,7 +6,7 @@ import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'SnailmailErrorView',
-    identifyingFields: ['dialogOwner'],
+    identifyingFields: ['SnailmailErrorView/dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this snailmail error view.

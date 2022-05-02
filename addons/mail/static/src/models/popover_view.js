@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: [['composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
+    identifyingFields: [['PopoverView/composerViewOwnerAsEmoji', 'PopoverView/messageActionListOwnerAsReaction', 'PopoverView/threadViewTopbarOwnerAsInvite']],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);

@@ -9,7 +9,7 @@ import { OnChange } from '@mail/model/model_onchange';
  */
 registerModel({
     name: 'Clock',
-    identifyingFields: ['frequency'],
+    identifyingFields: ['Clock/frequency'],
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearInterval(this.tickInterval);
@@ -68,7 +68,7 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['watchers'],
+            dependencies: ['Clock/watchers'],
             methodName: '_onChangeWatchers',
         }),
     ],

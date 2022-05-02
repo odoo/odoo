@@ -13,7 +13,10 @@ import { sprintf } from '@web/core/utils/strings';
  */
 registerModel({
     name: 'ComposerSuggestion',
-    identifyingFields: [['composerViewOwnerAsExtraSuggestion', 'composerViewOwnerAsMainSuggestion'], ['cannedResponse', 'channelCommand', 'partner', 'thread']],
+    identifyingFields: [
+        ['ComposerSuggestion/composerViewOwnerAsExtraSuggestion', 'ComposerSuggestion/composerViewOwnerAsMainSuggestion'],
+        ['ComposerSuggestion/cannedResponse', 'ComposerSuggestion/channelCommand', 'ComposerSuggestion/partner', 'ComposerSuggestion/thread'],
+    ],
     recordMethods: {
         /**
          * @param {Event} ev

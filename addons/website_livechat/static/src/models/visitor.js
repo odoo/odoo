@@ -6,7 +6,7 @@ import { clear, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Visitor',
-    identifyingFields: ['id'],
+    identifyingFields: ['Visitor/id'],
     modelMethods: {
         convertData(data) {
             const data2 = {};

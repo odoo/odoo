@@ -6,7 +6,7 @@ import { clear, insert, insertAndReplace } from '@mail/model/model_field_command
 
 registerModel({
     name: 'Notification',
-    identifyingFields: ['id'],
+    identifyingFields: ['Notification/id'],
     modelMethods: {
         /**
          * @param {Object} data

@@ -12,7 +12,7 @@ import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ComposerView',
-    identifyingFields: [['threadView', 'messageViewInEditing', 'chatter']],
+    identifyingFields: [['ComposerView/threadView', 'ComposerView/messageViewInEditing', 'ComposerView/chatter']],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this.onClickCaptureGlobal, true);
@@ -1639,15 +1639,15 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['composer'],
+            dependencies: ['ComposerView/composer'],
             methodName: '_onChangeComposer',
         }),
         new OnChange({
-            dependencies: ['composer.textInputContent', 'composer.textInputCursorEnd', 'composer.textInputCursorStart'],
+            dependencies: ['ComposerView/composer.Composer/textInputContent', 'ComposerView/composer.Composer/textInputCursorEnd', 'ComposerView/composer.Composer/textInputCursorStart'],
             methodName: '_onChangeDetectSuggestionDelimiterPosition',
         }),
         new OnChange({
-            dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'composer.activeThread'],
+            dependencies: ['ComposerView/suggestionDelimiterPosition', 'ComposerView/suggestionModelName', 'ComposerView/suggestionSearchTerm', 'ComposerView/composer.Composer/activeThread'],
             methodName: '_onChangeUpdateSuggestionList',
         }),
     ],

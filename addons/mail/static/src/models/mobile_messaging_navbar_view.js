@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MobileMessagingNavbarView',
-    identifyingFields: [['discuss', 'messagingMenu']],
+    identifyingFields: [['MobileMessagingNavbarView/discuss', 'MobileMessagingNavbarView/messagingMenu']],
     recordMethods: {
         /**
          * @param {string} tabId

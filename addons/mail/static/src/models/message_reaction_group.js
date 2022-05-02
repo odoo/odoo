@@ -8,7 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageReactionGroup',
-    identifyingFields: ['message', 'content'],
+    identifyingFields: ['MessageReactionGroup/message', 'MessageReactionGroup/content'],
     recordMethods: {
         /**
          * Handles click on the reaction group.

@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcOptionList',
-    identifyingFields: ['rtcController'],
+    identifyingFields: ['RtcOptionList/rtcController'],
     recordMethods: {
         /**
          * Creates and download a file that contains the logs of the current RTC call.

@@ -8,7 +8,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'UserSetting',
-    identifyingFields: ['id'],
+    identifyingFields: ['UserSetting/id'],
     lifecycleHooks: {
         _created() {
             this._loadLocalSettings();

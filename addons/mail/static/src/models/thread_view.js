@@ -8,7 +8,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ThreadView',
-    identifyingFields: ['threadViewer'],
+    identifyingFields: ['ThreadView/threadViewer'],
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearTimeout(this.loaderTimeout);
@@ -355,7 +355,7 @@ registerModel({
             isCausal: true,
         }),
         compact: attr({
-            related: 'threadViewer.compact',
+            related: 'ThreadView/threadViewer.ThreadViewer/compact',
         }),
         /**
          * List of component hints. Hints contain information that help
@@ -387,14 +387,14 @@ registerModel({
          * Determines which extra class this thread view component should have.
          */
         extraClass: attr({
-            related: 'threadViewer.extraClass',
+            related: 'ThreadView/threadViewer.ThreadViewer/extraClass',
         }),
         /**
          * Determines whether this thread viewer has a member list.
          * Only makes sense if thread.hasMemberListFeature is true.
          */
         hasMemberList: attr({
-            related: 'threadViewer.hasMemberList',
+            related: 'ThreadView/threadViewer.ThreadViewer/hasMemberList',
         }),
         /**
          * Determines whether this thread view should squash close messages.
@@ -408,10 +408,10 @@ registerModel({
          * Determines whether this thread view has a top bar.
          */
         hasTopbar: attr({
-            related: 'threadViewer.hasTopbar',
+            related: 'ThreadView/threadViewer.ThreadViewer/hasTopbar',
         }),
         isComposerFocused: attr({
-            related: 'composerView.isFocused',
+            related: 'ThreadView/composerView.ComposerView/isFocused',
         }),
         /**
          * States whether `this.threadCache` is currently loading messages.
@@ -470,7 +470,7 @@ registerModel({
          * Last message in the context of the currently displayed thread cache.
          */
         lastMessage: one('Message', {
-            related: 'thread.lastMessage',
+            related: 'ThreadView/thread.Thread/lastMessage',
         }),
         lastMessageView: one('MessageView', {
             compute: '_computeLastMessageView',
@@ -489,7 +489,7 @@ registerModel({
             isCausal: true,
         }),
         messages: many('Message', {
-            related: 'threadCache.messages',
+            related: 'ThreadView/threadCache.ThreadCache/messages',
         }),
         /**
          * States the message views used to display this messages.
@@ -504,7 +504,7 @@ registerModel({
          * Either 'asc', or 'desc'.
          */
         order: attr({
-            related: 'threadViewer.order',
+            related: 'ThreadView/threadViewer.ThreadViewer/order',
         }),
         /**
          * Determines the message that's currently being replied to.
@@ -525,7 +525,7 @@ registerModel({
         thread: one('Thread', {
             inverse: 'threadViews',
             readonly: true,
-            related: 'threadViewer.thread',
+            related: 'ThreadView/threadViewer.ThreadViewer/thread',
         }),
         /**
          * States the `ThreadCache` currently displayed by `this`.
@@ -533,7 +533,7 @@ registerModel({
         threadCache: one('ThreadCache', {
             inverse: 'threadViews',
             readonly: true,
-            related: 'threadViewer.threadCache',
+            related: 'ThreadView/threadViewer.ThreadViewer/threadCache',
         }),
         threadCacheInitialScrollHeight: attr({
             compute: '_computeThreadCacheInitialScrollHeight',
@@ -546,14 +546,14 @@ registerModel({
          */
         threadCacheInitialScrollHeights: attr({
             default: {},
-            related: 'threadViewer.threadCacheInitialScrollHeights',
+            related: 'ThreadView/threadViewer.ThreadViewer/threadCacheInitialScrollHeights',
         }),
         /**
          * List of saved initial scroll positions of thread caches.
          */
         threadCacheInitialScrollPositions: attr({
             default: {},
-            related: 'threadViewer.threadCacheInitialScrollPositions',
+            related: 'ThreadView/threadViewer.ThreadViewer/threadCacheInitialScrollPositions',
         }),
         /**
          * Determines the `ThreadViewer` currently managing `this`.
@@ -575,15 +575,15 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['threadCache'],
+            dependencies: ['ThreadView/threadCache'],
             methodName: '_onThreadCacheChanged',
         }),
         new OnChange({
-            dependencies: ['threadCache.isLoading'],
+            dependencies: ['ThreadView/threadCache.ThreadCache/isLoading'],
             methodName: '_onThreadCacheIsLoadingChanged',
         }),
         new OnChange({
-            dependencies: ['isComposerFocused', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
+            dependencies: ['ThreadView/isComposerFocused', 'ThreadView/lastMessage', 'ThreadView/thread.Thread/lastNonTransientMessage', 'ThreadView/lastVisibleMessage', 'ThreadView/threadCache'],
             methodName: '_computeThreadShouldBeSetAsSeen',
         }),
     ],

@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'NotificationListView',
-    identifyingFields: [['discussOwner', 'messagingMenuOwner']],
+    identifyingFields: [['NotificationListView/discussOwner', 'NotificationListView/messagingMenuOwner']],
     recordMethods: {
         /**
          * @private

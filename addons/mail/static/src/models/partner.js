@@ -7,7 +7,7 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'Partner',
-    identifyingFields: ['id'],
+    identifyingFields: ['Partner/id'],
     modelMethods: {
         /**
          * @param {Object} data

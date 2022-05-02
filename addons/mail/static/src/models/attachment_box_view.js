@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentBoxView',
-    identifyingFields: ['chatter'],
+    identifyingFields: ['AttachmentBoxView/chatter'],
     recordMethods: {
         /**
          * Handles click on the "add attachment" button.

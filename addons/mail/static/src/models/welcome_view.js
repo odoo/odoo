@@ -11,7 +11,7 @@ const getNextGuestNameInputId = (function () {
 
 registerModel({
     name: 'WelcomeView',
-    identifyingFields: ['discussPublicView'],
+    identifyingFields: ['WelcomeView/discussPublicView'],
     recordMethods: {
         /**
          * Updates guest if needed then displays the thread view instead of the

@@ -7,7 +7,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'SuggestedRecipientInfo',
-    identifyingFields: ['id'],
+    identifyingFields: ['SuggestedRecipientInfo/id'],
     recordMethods: {
         /**
          * @private

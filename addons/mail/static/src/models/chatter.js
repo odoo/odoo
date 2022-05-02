@@ -23,7 +23,7 @@ const getMessageNextTemporaryId = (function () {
 
 registerModel({
     name: 'Chatter',
-    identifyingFields: ['id'],
+    identifyingFields: ['Chatter/id'],
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearTimeout(this.attachmentsLoaderTimeout);
@@ -398,7 +398,7 @@ registerModel({
          * States the `ThreadView` displaying `this.thread`.
          */
         threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
+            related: 'Chatter/threadViewer.ThreadViewer/threadView',
         }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
@@ -413,11 +413,11 @@ registerModel({
     },
     onChanges: [
         new OnChange({
-            dependencies: ['threadId', 'threadModel'],
+            dependencies: ['Chatter/threadId', 'Chatter/threadModel'],
             methodName: '_onThreadIdOrThreadModelChanged',
         }),
         new OnChange({
-            dependencies: ['thread.isLoadingAttachments'],
+            dependencies: ['Chatter/thread.Thread/isLoadingAttachments'],
             methodName: '_onThreadIsLoadingAttachmentsChanged',
         }),
     ],

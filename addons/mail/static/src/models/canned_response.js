@@ -6,7 +6,7 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'CannedResponse',
-    identifyingFields: ['id'],
+    identifyingFields: ['CannedResponse/id'],
     modelMethods: {
         /**
          * Fetches canned responses matching the given search term to extend the

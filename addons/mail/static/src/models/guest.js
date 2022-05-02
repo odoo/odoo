@@ -5,7 +5,7 @@ import { registerModel } from '@mail/model/model_core';
 
 registerModel({
     name: 'Guest',
-    identifyingFields: ['id'],
+    identifyingFields: ['Guest/id'],
     modelMethods: {
         /**
          * @param {Object} param0

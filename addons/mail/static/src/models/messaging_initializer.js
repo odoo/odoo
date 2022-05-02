@@ -6,7 +6,7 @@ import { link, insert, insertAndReplace, replace } from '@mail/model/model_field
 
 registerModel({
     name: 'MessagingInitializer',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['Record/messaging'],
     recordMethods: {
         /**
          * Fetch messaging data initially to populate the store specifically for

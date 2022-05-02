@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ActivityView',
-    identifyingFields: ['activityBoxView', 'activity'],
+    identifyingFields: ['ActivityView/activityBoxView', 'ActivityView/activity'],
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.

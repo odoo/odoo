@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageAuthorPrefixView',
-    identifyingFields: [['threadNeedactionPreviewViewOwner', 'threadPreviewViewOwner']],
+    identifyingFields: [['MessageAuthorPrefixView/threadNeedactionPreviewViewOwner', 'MessageAuthorPrefixView/threadPreviewViewOwner']],
     recordMethods: {
         /**
          * @private

@@ -5,7 +5,7 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ChatWindowHeaderView',
-    identifyingFields: ['chatWindowOwner'],
+    identifyingFields: ['ChatWindowHeaderView/chatWindowOwner'],
     fields: {
         chatWindowOwner: one('ChatWindow', {
             inverse: 'chatWindowHeaderView',

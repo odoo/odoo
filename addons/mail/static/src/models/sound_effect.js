@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 
 registerModel({
     name: 'SoundEffect',
-    identifyingFields: ['path', 'filename'],
+    identifyingFields: ['SoundEffect/path', 'SoundEffect/filename'],
     recordMethods: {
         /**
          * @param {Object} param0

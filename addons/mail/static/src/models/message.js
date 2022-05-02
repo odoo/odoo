@@ -16,7 +16,7 @@ const { markup } = owl;
 
 registerModel({
     name: 'Message',
-    identifyingFields: ['id'],
+    identifyingFields: ['Message/id'],
     modelMethods: {
         /**
          * @param {Object} data

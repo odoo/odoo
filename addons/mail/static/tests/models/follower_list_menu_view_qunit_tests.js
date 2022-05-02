@@ -13,5 +13,5 @@ addFields('FollowerListMenuView', {
 });
 
 patchIdentifyingFields('FollowerListMenuView', identifyingFields => {
-    identifyingFields[0].push('qunitTest');
+    identifyingFields[0].push('FollowerListMenuView/qunitTest');
 });

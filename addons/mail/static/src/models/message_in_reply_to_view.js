@@ -7,7 +7,7 @@ import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageInReplyToView',
-    identifyingFields: ['messageView'],
+    identifyingFields: ['MessageInReplyToView/messageView'],
     recordMethods: {
         /**
          * @private

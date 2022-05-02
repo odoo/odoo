@@ -13,5 +13,5 @@ addFields('MessageView', {
 });
 
 patchIdentifyingFields('MessageView', identifyingFields => {
-    identifyingFields[0].push('qunitTest');
+    identifyingFields[0].push('MessageView/qunitTest');
 });

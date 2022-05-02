@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcLayoutMenu',
-    identifyingFields: ['callViewer'],
+    identifyingFields: ['RtcLayoutMenu/callViewer'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev

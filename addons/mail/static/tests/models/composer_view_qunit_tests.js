@@ -23,5 +23,5 @@ addFields('ComposerView', {
 });
 
 patchIdentifyingFields('ComposerView', identifyingFields => {
-    identifyingFields[0].push('qunitTest');
+    identifyingFields[0].push('ComposerView/qunitTest');
 });

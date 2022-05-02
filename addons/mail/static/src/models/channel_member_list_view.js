@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMemberListView',
-    identifyingFields: [['chatWindowOwner', 'threadViewOwner']],
+    identifyingFields: [['ChannelMemberListView/chatWindowOwner', 'ChannelMemberListView/threadViewOwner']],
     recordMethods: {
         /**
          * @private
