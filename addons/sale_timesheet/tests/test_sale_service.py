@@ -607,11 +607,12 @@ class TestSaleService(TestCommonSaleTimesheet):
             'gram': 0.0,
         }
 
+        project = self.project_global.copy({'tasks': False})
         Product = self.env['product.product']
         product_vals = {
             'type': 'service',
             'service_type': 'timesheet',
-            'project_id': self.project_global.id,
+            'project_id': project.id,
             'service_tracking': 'task_global_project',
         }
 
@@ -622,7 +623,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
         }
 
-        self.project_global.task_ids = False
         for uom_name in planned_hours_for_uom:
             uom_id = self.env.ref('uom.product_uom_%s' % uom_name)
 
@@ -642,11 +642,11 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         self.sale_order.action_confirm()
 
-        tasks = self.project_global.task_ids
+        tasks = project.task_ids
         for task in tasks:
             self.assertEqual(task.planned_hours, planned_hours_for_uom[task.sale_line_id.name])
 
-        project_updates_data = self.project_global._get_sold_items()['data']
+        project_updates_data = project._get_sold_items()['data']
         for datum in project_updates_data:
             # A datum looks like this: {'name': 'day', 'value': '0.0 / 8.0 Hours',...}
             uom_in = datum['name']
