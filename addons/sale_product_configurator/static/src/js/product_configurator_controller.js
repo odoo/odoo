@@ -129,7 +129,8 @@ var ProductConfiguratorFormController = FormController.extend({
                 ),
                 product_no_variant_attribute_value_ids: changed ? [] : this._getAttributeValueIds(
                     data.product_no_variant_attribute_value_ids
-                )
+                ),
+                context: this.getSession().user_context,
             }
         }).then(function (configurator) {
             self.renderer.configuratorHtml = configurator;
