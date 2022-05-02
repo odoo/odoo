@@ -132,6 +132,14 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 },
             ];
         }
+        customerIs(name) {
+            return [
+                {
+                    trigger: `.actionpad button.set-partner:contains("${name}")`,
+                    run: function () {},
+                }
+            ]
+        }
     }
 
     class Execute {
