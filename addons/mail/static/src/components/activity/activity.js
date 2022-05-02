@@ -23,6 +23,10 @@ export class Activity extends LegacyComponent {
         return this.messaging && this.messaging.models['ActivityView'].get(this.props.localId);
     }
 
+    get(name) {
+        return this.activityView.get(name);
+    }
+
 }
 
 Object.assign(Activity, {

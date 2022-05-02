@@ -191,6 +191,15 @@ registerModel({
             return this.modelManager.exists(this.constructor, this);
         },
         /**
+         * Gets the value of the given fieldName.
+         *
+         * @param {string} fieldName
+         * @returns {any}
+         */
+        get(fieldName) {
+            return this[fieldName];
+        },
+        /**
          * Returns a string representation of this record.
          */
         toString() {

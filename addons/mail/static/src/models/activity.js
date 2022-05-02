@@ -106,10 +106,10 @@ registerModel({
          * Delete the record from database and locally.
          */
         async deleteServerRecord() {
-            await this.async(() => this['Record/messaging'].rpc({
+            await this.async(() => this.get('Record/messaging').rpc({
                 model: 'mail.activity',
                 method: 'unlink',
-                args: [[this['Activity/id']]],
+                args: [[this.get('Activity/id')]],
             }));
             this.delete();
         },
@@ -126,10 +126,10 @@ registerModel({
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: this['Activity/thread']['Thread/id'],
-                    default_res_model: this['Activity/thread']['Thread/model'],
+                    default_res_id: this.get('Activity/thread').get('Thread/id'),
+                    default_res_model: this.get('Activity/thread').get('Thread/model'),
                 },
-                res_id: this['Activity/id'],
+                res_id: this.get('Activity/id'),
             };
             this.env.bus.trigger('do-action', {
                 action,
@@ -137,10 +137,10 @@ registerModel({
             });
         },
         async fetchAndUpdate() {
-            const [data] = await this['Record/messaging'].rpc({
+            const [data] = await this.get('Record/messaging').rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
-                args: [this['Activity/id']],
+                args: [this.get('Activity/id')],
             }, { shadow: true }).catch(e => {
                 const errorName = e.message && e.message.data && e.message.data.name;
                 if (errorName === 'odoo.exceptions.MissingError') {
@@ -155,7 +155,7 @@ registerModel({
             } else {
                 shouldDelete = true;
             }
-            this['Activity/thread'].fetchData(['activities', 'attachments', 'messages']);
+            this.get('Activity/thread').fetchData(['activities', 'attachments', 'messages']);
             if (shouldDelete) {
                 this.delete();
             }
@@ -166,17 +166,17 @@ registerModel({
          * @param {string|boolean} [param0.feedback=false]
          */
         async markAsDone({ attachments = [], feedback = false }) {
-            const attachmentIds = attachments.map(attachment => attachment['Attachment.id']);
-            await this.async(() => this['Record/messaging'].rpc({
+            const attachmentIds = attachments.map(attachment => attachment.get('Attachment/id'));
+            await this.async(() => this.get('Record/messaging').rpc({
                 model: 'mail.activity',
                 method: 'action_feedback',
-                args: [[this['Activity/id']]],
+                args: [[this.get('Activity/id')]],
                 kwargs: {
                     attachment_ids: attachmentIds,
                     feedback,
                 },
             }));
-            this['Activity/thread'].fetchData(['attachments', 'messages']);
+            this.get('Activity/thread').fetchData(['attachments', 'messages']);
             this.delete();
         },
         /**
@@ -185,14 +185,14 @@ registerModel({
          * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
-            const action = await this.async(() => this['Record/messaging'].rpc({
+            const action = await this.async(() => this.get('Record/messaging').rpc({
                 model: 'mail.activity',
                 method: 'action_feedback_schedule_next',
-                args: [[this['Activity/id']]],
+                args: [[this.get('Activity/id')]],
                 kwargs: { feedback },
             }));
-            this['Activity/thread'].fetchData(['activities', 'attachments', 'messages']);
-            const thread = this['Activity/thread'];
+            this.get('Activity/thread').fetchData(['activities', 'attachments', 'messages']);
+            const thread = this.get('Activity/thread');
             this.delete();
             if (!action) {
                 return;
@@ -212,13 +212,13 @@ registerModel({
          */
         _computeIsCurrentPartnerAssignee() {
             if (
-                !this['Activity/assignee'] ||
-                !this['Activity/assignee']['User/partner'] ||
-                !this['Record/messaging']['Messaging/currentPartner']
+                !this.get('Activity/assignee') ||
+                !this.get('Activity/assignee').get('User/partner') ||
+                !this.get('Record/messaging').get('Messaging/currentPartner')
             ) {
                 return false;
             }
-            return this['Activity/assignee']['User/partner'] === this['Record/messaging']['Messaging/currentPartner'];
+            return this.get('Activity/assignee').get('User/partner') === this.get('Record/messaging').get('Messaging/currentPartner');
         },
         /**
          * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
@@ -229,17 +229,17 @@ registerModel({
          * @returns {string|undefined}
          */
         _computeNote() {
-            if (this['Activity/note'] === '<p><br></p>') {
+            if (this.get('Activity/note') === '<p><br></p>') {
                 return clear();
             }
-            return this['Activity/note'];
+            return this.get('Activity/note');
         },
         /**
          * @private
          * @returns {Markup}
          */
         _computeNoteAsMarkup() {
-            return markup(this['Activity/note']);
+            return markup(this.get('Activity/note'));
         },
     },
     fields: {
