@@ -141,6 +141,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                     account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'))
                 move_lines.append(Command.create(values))
+                orders_with_entries.append(order)
             else:
                 other_currency = self.company_id.currency_id != order.currency_id
                 rate = order.currency_id._get_rates(self.company_id, self.date).get(order.currency_id.id) if other_currency else 1.0
@@ -163,6 +164,9 @@ class AccruedExpenseRevenue(models.TransientModel):
                         precision_rounding=l.product_uom.rounding,
                     ) == 1
                 )
+                if not lines:
+                    continue
+                orders_with_entries.append(order)
                 for order_line in lines:
                     if is_purchase:
                         account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
@@ -213,7 +217,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         for order in orders_with_entries:
             body = _('Accrual entry created on %s: <a href=# data-oe-model=account.move data-oe-id=%d>%s</a>.\
                     And its <a href=# data-oe-model=account.move data-oe-id=%d>reverse entry</a>.') % (
-                self.date,
+                format_date(self.env, self.date),
                 move.id,
                 move.name,
                 reverse_move.id,
