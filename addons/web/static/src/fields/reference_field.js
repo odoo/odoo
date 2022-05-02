@@ -11,13 +11,6 @@ export class ReferenceField extends Component {
         this.state = useState({
             resModel: this.props.value && this.props.value.resModel,
         });
-
-        // owl.onWillUpdateProps((nextProps) => {
-        //     const modelInfo = nextProps.record.preloadedData[nextProps.name];
-        //     if (modelInfo && modelInfo.hasChanged && modelInfo.modelName !== this.state.resModel) {
-        //         return this.updateModel(modelInfo.modelName);
-        //     }
-        // });
     }
 
     get m2oProps() {
@@ -36,9 +29,7 @@ export class ReferenceField extends Component {
     }
 
     get relation() {
-        if (this.modelInfo) {
-            return this.modelInfo.modelName;
-        } else if (this.props.value) {
+        if (this.props.value && this.props.value.resModel) {
             return this.props.value.resModel;
         } else {
             return this.state.resModel;
@@ -51,6 +42,9 @@ export class ReferenceField extends Component {
     }
 
     updateM2O(value) {
+        if (!this.state.resModel) {
+            this.state.resModel = this.relation;
+        }
         this.props.update(
             value && {
                 resModel: this.state.resModel,
@@ -85,8 +79,21 @@ ReferenceField.props = {
 };
 
 ReferenceField.extractProps = (fieldName, record, attrs) => {
+    let charProps = {};
+    if (record.fields[fieldName].type === "char") {
+        const preloadedData = record.preloadedData[fieldName];
+        charProps = {
+            value: {
+                resModel: preloadedData.model,
+                resId: preloadedData.data.id,
+                displayName: preloadedData.data.display_name,
+            },
+        };
+    }
+
     return {
         canSelectModel: !attrs.options.model_field,
+        ...charProps,
     };
 };
 
