@@ -560,3 +560,61 @@ class TestHttpSession(TestHttpBase):
             res.raise_for_status()
             self.assertEqual(res.text, str(GEOIP_ODOO_FARM_2))
             mock_resolve.assert_called_once()
+
+class TestHttpJsonError(TestHttpBase):
+
+    jsonrpc_error_structure = {
+        'error': {
+            'code': ...,
+            'data': {
+                'arguments': ...,
+                'context': ...,
+                'debug': ...,
+                'message': ...,
+                'name': ...,
+            },
+            'message': ...,
+        },
+        'id': ...,
+        'jsonrpc': ...,
+    }
+
+    def assertIsErrorPayload(self, payload):
+        self.assertEqual(
+            set(payload),
+            set(self.jsonrpc_error_structure),
+        )
+        self.assertEqual(
+            set(payload['error']),
+            set(self.jsonrpc_error_structure['error']),
+        )
+        self.assertEqual(
+            set(payload['error']['data']),
+            set(self.jsonrpc_error_structure['error']['data']),
+        )
+
+
+    @mute_logger('odoo.http')
+    def test_errorjson0_value_error(self):
+        res = self.db_url_open('/test_http/json_value_error',
+            data=json.dumps({'jsonrpc': '2.0', 'id': 1234, 'params': {}}),
+            headers=CT_JSON
+        )
+        res.raise_for_status()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.headers.get('Content-Type', ''), 'application/json')
+
+        payload = res.json()
+        self.assertIsErrorPayload(payload)
+
+        error_data = payload['error']['data']
+        self.assertEqual(error_data['name'], 'builtins.ValueError')
+        self.assertEqual(error_data['message'], 'Unknown destination')
+        self.assertEqual(error_data['arguments'], ['Unknown destination'])
+        self.assertEqual(error_data['context'], {})
+
+    @mute_logger('odoo.http')
+    def test_errorjson1_dev_mode_werkzeug(self):
+        with patch.object(config, 'options', {**config.options, 'dev_mode': 'werkzeug'}):
+            self.test_errorjson0_value_error()
