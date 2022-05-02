@@ -129,9 +129,9 @@ class Website(main.Website):
         return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
 
     @http.route()
-    def toggle_switchable_view(self, view_key):
-        super(Website, self).toggle_switchable_view(view_key)
-        if view_key in ('website_sale.products_list_view', 'website_sale.add_grid_or_list_option'):
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
+        super(Website, self).theme_customize_data(is_view_data, enable, disable, reset_view_arch)
+        if is_view_data and set((enable or []) + (disable or [])).intersection(('website_sale.products_list_view', 'website_sale.add_grid_or_list_option')):
             request.session.pop('website_sale_shop_layout_mode', None)
 
     @http.route()
