@@ -25,8 +25,9 @@ class AccountAnalyticDefault(models.Model):
     @api.constrains('analytic_id', 'analytic_tag_ids')
     def _check_account_or_tags(self):
         if any(not default.analytic_id
-               and not default.analytic_tag_ids
-               or not any(tag.analytic_distribution_ids for tag in default.analytic_tag_ids) for default in self):
+               and not any(tag.analytic_distribution_ids for tag in default.analytic_tag_ids)
+               for default in self
+               ):
             raise ValidationError(_('An analytic default requires an analytic account or an analytic tag used for analytic distribution.'))
 
     @api.model
