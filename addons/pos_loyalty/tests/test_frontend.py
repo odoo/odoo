@@ -4,6 +4,7 @@
 from datetime import date, timedelta
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 
 
@@ -208,3 +209,57 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyValidity2",
             login="accountman",
         )
+
+    def test_loyalty_free_product_rewards(self):
+        free_product = self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1 desk_organizer',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.desk_organizer,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.desk_organizer.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+        })
+        free_other_product = self.env['loyalty.program'].create({
+            'name': 'Buy 3 magnetic_board, Take 1 whiteboard_pen',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.magnetic_board,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_qty': 1,
+                'required_points': 3,
+            })],
+        })
+        self.main_pos_config.write({
+            'promo_program_ids': [Command.set([free_product.id, free_other_product.id])]
+        })
+        # First tour check that the promotion is not applied
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyFreeProductTour",
+            login="accountman",
+        )
+
+        # Keep the tour to generate 4 orders.
+        # 2 of them don't use a program.
+        # 1 uses free_product.
+        # 1 uses free_other_product.
+        # This is to take into account the fact that during tours, we can't test the "non-occurence" of something.
+        # It would be nice to have a check like: Validate that a reward is "not" there.
+        self.assertEqual(free_product.pos_order_count, 1)
+        self.assertEqual(free_other_product.pos_order_count, 1)
