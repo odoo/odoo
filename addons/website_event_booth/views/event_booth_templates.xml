@@ -13,24 +13,6 @@
 
                     <div class="container d-flex flex-column flex-grow-1">
                         <h1 class="text-white my-5">Get A Booth</h1>
-                        <div t-if="event.is_finished" class="alert alert-info">
-                            <span>This event is finished. It's no longer possible to book a booth.</span>
-                        </div>
-                        <div t-elif="not event_booths" class="alert alert-info">
-                            <span>This event is not open to exhibitors registration,
-                                <span t-if="request.env.user.has_group('event.group_event_manager')">
-                                    you can
-                                    <a class="text-nowrap" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
-                                        <i class="fa fa-gear mr-1" role="img" aria-label="Configure" title="Configure event booths"/><em>Configure Booths</em>
-                                    </a>
-                                    for this event.
-                                </span>
-                                <span t-else="">
-                                    check our <a href="/event">list of future events</a>.
-                                </span>
-                            </span>
-                        </div>
-
                     </div>
                 </t>
                 <section class="mt-n5">
@@ -40,6 +22,23 @@
                         </div>
                     </div>
                 </section>
+                <div t-if="event.is_finished" class="container d-flex flex-column flex-grow-1">
+                    <span class="alert alert-info">This event is finished. It's no longer possible to book a booth.</span>
+                </div>
+                <div t-elif="not event_booths" class="container d-flex flex-column flex-grow-1">
+                    <span class="alert alert-info">This event is not open to exhibitors registration,
+                        <span t-if="request.env.user.has_group('event.group_event_manager')">
+                            you can
+                            <a class="text-nowrap" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+                                <i class="fa fa-gear mr-1" role="img" aria-label="Configure" title="Configure event booths"/><em>Configure Booths</em>
+                            </a>
+                            for this event.
+                        </span>
+                        <span t-else="">
+                            check our <a href="/event">list of future events</a>.
+                        </span>
+                    </span>
+                </div>
             </div>
         </t>
     </template>

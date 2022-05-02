@@ -92,13 +92,6 @@
         .o_wevent_online_badge_unpublished{
             opacity: 0.4;
         }
-
-        &.o_wevent_online_bg {
-            @if (color('body') == $o-portal-default-body-bg) {
-                @extend .bg-100;
-            }
-        }
-
         // background color-based for new styling
         .event_color_0 {
             // bg-100 background but DO NOT extend bg-100 as it messes with text-muted colors
