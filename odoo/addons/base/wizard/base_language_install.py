@@ -36,13 +36,11 @@ class BaseLanguageInstall(models.TransientModel):
     def lang_install(self):
         self.ensure_one()
         mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        lang_ids = self.lang_ids
-        langs_to_activate = lang_ids.filtered(lambda l: not l.active)
-        langs_to_activate.toggle_active()
-        mods._update_translations(lang_ids.mapped('code'), self.overwrite)
+        self.lang_ids.active = True
+        mods._update_translations(self.lang_ids.mapped('code'), self.overwrite)
         self.env.cr.execute('ANALYZE ir_translation')
 
-        if len(lang_ids) == 1:
+        if len(self.lang_ids) == 1:
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'base.language.install',
