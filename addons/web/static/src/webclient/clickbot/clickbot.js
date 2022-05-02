@@ -346,7 +346,7 @@
         let isModal = false;
         return waitForCondition(function () {
             // sometimes, the app is just a modal that needs to be closed
-            const $modal = $('.modal[role="dialog"][open="open"]');
+            const $modal = $('.modal[role="dialog"]');
             if ($modal.length > 0) {
                 const closeButton = document.querySelector("header > button.close");
                 if (closeButton) {
