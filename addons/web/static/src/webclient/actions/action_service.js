@@ -185,7 +185,11 @@ function makeActionManager(env) {
      * with a unique jsId.
      */
     function _preprocessAction(action, context = {}) {
-        action._originalAction = JSON.stringify(action);
+        try {
+            action._originalAction = JSON.stringify(action);
+        } catch (_e) {
+            // do nothing, the action might simply not be serializable
+        }
         action.context = makeContext([context, action.context], env.services.user.context);
         if (action.domain) {
             const domain = action.domain || [];
@@ -669,7 +673,10 @@ function makeActionManager(env) {
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
                     pushState(controller);
                     this.titleService.setParts({ action: controller.displayName });
-                    browser.sessionStorage.setItem("current_action", action._originalAction);
+                    browser.sessionStorage.setItem(
+                        "current_action",
+                        action._originalAction || "{}"
+                    );
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));

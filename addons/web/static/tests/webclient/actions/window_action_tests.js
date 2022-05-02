@@ -640,7 +640,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click($(target).find(".o_form_view button:contains(Execute action)"));
         await legacyExtraNextTick();
         assert.containsN(target, ".o_control_panel .breadcrumb li", 3);
-        var $previousBreadcrumb = $(target).find(".o_control_panel .breadcrumb li.active").prev();
+        let $previousBreadcrumb = $(target).find(".o_control_panel .breadcrumb li.active").prev();
         assert.strictEqual(
             $previousBreadcrumb.attr("accesskey"),
             "b",
@@ -649,7 +649,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click($previousBreadcrumb);
         await legacyExtraNextTick();
         assert.containsN(target, ".o_control_panel .breadcrumb li", 2);
-        var $previousBreadcrumb = $(target).find(".o_control_panel .breadcrumb li.active").prev();
+        $previousBreadcrumb = $(target).find(".o_control_panel .breadcrumb li.active").prev();
         assert.strictEqual(
             $previousBreadcrumb.attr("accesskey"),
             "b",
@@ -1605,23 +1605,37 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("current act_window action is stored in session_storage", async function (assert) {
-        assert.expect(1);
-        const expectedAction = serverData.actions[3];
-        patchWithCleanup(browser, {
-            sessionStorage: Object.assign(Object.create(sessionStorage), {
-                setItem(k, value) {
-                    assert.deepEqual(
-                        JSON.parse(value),
-                        expectedAction,
-                        "should store the executed action in the sessionStorage"
-                    );
-                },
-            }),
-        });
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 3);
-    });
+    QUnit.test(
+        "current act_window action is stored in session_storage if possible",
+        async function (assert) {
+            let expectedAction;
+            patchWithCleanup(browser, {
+                sessionStorage: Object.assign(Object.create(sessionStorage), {
+                    setItem(k, value) {
+                        assert.deepEqual(JSON.parse(value), expectedAction);
+                    },
+                }),
+            });
+            const webClient = await createWebClient({ serverData });
+
+            // execute an action that can be stringified -> should be stored
+            expectedAction = serverData.actions[3];
+            await doAction(webClient, 3);
+            assert.containsOnce(target, ".o_list_view");
+
+            // execute an action that can't be stringified -> should not crash
+            expectedAction = {};
+            const x = {};
+            x.y = x;
+            await doAction(webClient, {
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [[false, "kanban"]],
+                flags: { x },
+            });
+            assert.containsOnce(target, ".o_kanban_view");
+        }
+    );
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
         assert.expect(6);
