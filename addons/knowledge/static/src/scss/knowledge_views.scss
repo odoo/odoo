@@ -271,3 +271,21 @@
         }
     }
 }
+
+// Knowledge Toolbars
+
+.o_knowledge_toolbar {
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+    button {
+        font-family: $font-family-base !important;
+        font-weight: $font-weight-bold;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .o_knowledge_toolbar_button_text {
+        display: none;
+    }
+}

@@ -195,7 +195,7 @@
                                                     <!-- Article body -->
                                                     <div class="o_knowledge_editor d-flex flex-grow-1">
                                                         <field name="body" widget="html" no_label="1" default_focus="1"
-                                                            options="{'resizable': False}"
+                                                            options="{'resizable': False, 'knowledge_commands': true}"
                                                             attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}"/>
                                                     </div>
                                                 </div>
