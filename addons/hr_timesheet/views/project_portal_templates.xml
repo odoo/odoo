@@ -3,12 +3,12 @@
 
     <template id="portal_my_task" inherit_id="project.portal_my_task" name="Portal: My Task with Timesheets">
         <xpath expr="//li[@id='task-nav']" position="before">
-            <li t-if="timesheets and allow_timesheets" class="list-group-item flex-grow-1" id='nav-report'>
+            <li t-if="timesheets and allow_timesheets" class="list-group-item flex-grow-1 d-flex flex-wrap justify-content-center align-items-center" id='nav-report'>
                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                    <div class="btn-group flex-grow-1 me-1 mb-1">
+                    <div class="btn-group flex-grow-1 me-1">
                         <a class="btn btn-secondary btn-block o_download_btn" t-att-href="task.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
                     </div>
-                    <div class="btn-group flex-grow-1 mb-1">
+                    <div class="btn-group flex-grow-1">
                         <a class="btn btn-secondary btn-block o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
 
     <template id="portal_my_task_planned_hours_template">
         <t t-if="is_uom_day and timesheets._convert_hours_to_days(task.planned_hours) > 0">
-            <strong>Planned Days:</strong> <span t-esc="timesheets._convert_hours_to_days(task.planned_hours)" t-options='{"widget": "timesheet_uom"}'/>
+            <strong>Allocated Days:</strong> <span t-esc="timesheets._convert_hours_to_days(task.planned_hours)" t-options='{"widget": "timesheet_uom"}'/>
         </t>
         <t t-if="not is_uom_day and task.planned_hours > 0" t-call="project.portal_my_task_planned_hours_template"></t>
     </template>

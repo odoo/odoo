@@ -205,7 +205,7 @@
 
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                            <li id="task-nav" class="list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
+                            <li id="task-nav" class="list-group-item ps-0 flex-grow-1 d-flex align-items-center" t-ignore="true" role="complementary">
                                 <ul class="nav flex-column">
                                     <li class="nav-item" id="nav-header">
                                         <a class="nav-link ps-3" href="#card_header" style="max-width: 200px;">
@@ -219,7 +219,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li id="task-links" t-if="task_link_section" class="list-group-item ps-0 flex-grow-1" t-ignore="true" role="complementary">
+                            <li id="task-links" t-if="task_link_section" class="list-group-item ps-0 flex-grow-1 d-flex align-items-center" t-ignore="true" role="complementary">
                                 <ul class="nav flex-column">
                                     <t t-foreach="task_link_section" t-as="task_link">
                                         <li class="nav-item">
@@ -339,6 +339,6 @@
     </template>
 
     <template id="portal_my_task_planned_hours_template">
-        <strong>Planned Hours:</strong> <span t-esc="task.planned_hours" t-options='{"widget": "float_time"}'/>
+        <strong>Allocated Hours:</strong> <span t-esc="task.planned_hours" t-options='{"widget": "float_time"}'/>
     </template>
 </odoo>

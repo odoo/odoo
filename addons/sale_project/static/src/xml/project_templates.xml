@@ -8,7 +8,7 @@
                     (<t t-esc="100 * milestone.quantity_percentage"/>%)
                 </span>
             </span>
-            <span t-if="milestone.allow_billable" class="fst-italic text-muted">
+            <span t-if="milestone.allow_billable" t-attf-class="fst-italic {{state.colorClass || 'text-muted'}}">
                 <t t-if="milestone.sale_line_name" t-esc="milestone.sale_line_name"/> 
                 <span t-if="milestone.quantity_percentage &amp;&amp; milestone.sale_line_name">
                     (<t t-esc="100 * milestone.quantity_percentage"/>%)

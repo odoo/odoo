@@ -433,7 +433,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" class="o_form_project_project" delete="0" js_class="form_description_expander">
+                <form string="Project" class="o_form_project_project" js_class="form_description_expander">
                     <header>
                         <button name="%(project.project_share_wizard_action)d" string="Share Readonly" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
@@ -696,7 +696,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" delete="0" multi_edit="1" sample="1">
+                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1">
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -803,6 +803,9 @@
                     <field name="commercial_partner_id"/>
                     <field name="color"/>
                     <field name="task_count"/>
+                    <field name="milestone_count_reached"/>
+                    <field name="milestone_count"/>
+                    <field name="allow_milestones"/>
                     <field name="label_tasks"/>
                     <field name="alias_id"/>
                     <field name="alias_name"/>
@@ -900,12 +903,21 @@
                                 </div>
                                 <div class="o_kanban_record_bottom mt-3">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="o_project_kanban_boxes">
+                                        <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
                                                     <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                                     <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
                                                 </div>
+                                            </a>
+                                            <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"
+                                                class="o_kanban_inline_block text-muted small"
+                                                name="action_get_list_view"
+                                                type="object"
+                                                t-attf-title="#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
+                                            >
+                                                <span class="fa fa-check-square-o me-1"/>
+                                                <t t-out="record.milestone_count_reached.value"/>/<t t-out="record.milestone_count.value"/>
                                             </a>
                                         </div>
                                         <field name="activity_ids" widget="kanban_activity"/>
@@ -1342,23 +1354,15 @@
             <field name="binding_view_types">form</field>
         </record>
 
-        <record id="unlink_project_action" model="ir.actions.server">
-            <field name="name">Delete</field>
-            <field name="model_id" ref="project.model_project_project"/>
-            <field name="binding_model_id" ref="project.model_project_project"/>
-            <field name="binding_view_types">form,list</field>
-            <field name="state">code</field>
-            <field name="code">action = records.action_unlink()</field>
-        </record>
-
         <record id="quick_create_task_form" model="ir.ui.view">
             <field name="name">project.task.form.quick_create</field>
             <field name="model">project.task</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <form>
+                <form class="o_form_project_tasks">
                     <group>
                         <field name="name" string = "Task Title" placeholder="e.g. Send Invitations"/>
+                        <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)" placeholder="Private" class="o_project_task_project_field"/>
                         <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
                             widget="many2many_tags"/>
                         <field name="company_id" invisible="1"/>
@@ -1496,8 +1500,8 @@
                     <field name="milestone_id" attrs="{'invisible': [('allow_milestones', '=', False)]}" context="{'default_project_id': project_id}" groups="project.group_project_milestone"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
-                    <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]" options='{"no_quick_create": True}'/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show" readonly="True"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
@@ -1509,7 +1513,7 @@
                     <field name="legend_normal" invisible="1"/>
                     <field name="legend_done" invisible="1"/>
                     <field name="legend_blocked" invisible="1"/>
-                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
+                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1" required="0"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="not context.get('default_project_id')"/>
                     <field name="recurrence_id" invisible="1" />
                 </tree>
