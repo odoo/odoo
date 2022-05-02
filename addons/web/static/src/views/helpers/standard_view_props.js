@@ -24,6 +24,7 @@ export const standardViewProps = {
     context: { type: Object },
     domain: { type: Array },
     fields: { type: Object, elements: Object },
+    relatedModels: { type: Object, elements: Object, optional: 1 },
     groupBy: { type: Array, elements: String },
     limit: { type: Number, optional: 1 },
     orderBy: { type: Array, elements: String },

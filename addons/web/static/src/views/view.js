@@ -95,6 +95,7 @@ const STANDARD_PROPS = [
 
     "arch",
     "fields",
+    "relatedModels",
     "viewId",
     "actionMenus",
     "loadActionMenus",
@@ -188,7 +189,15 @@ export class View extends Component {
 
         // prepare view description
         const { context, resModel, loadActionMenus, loadIrFilters } = this.props;
-        let { arch, fields, searchViewArch, searchViewFields, irFilters, actionMenus } = this.props;
+        let {
+            arch,
+            fields,
+            relatedModels,
+            searchViewArch,
+            searchViewFields,
+            irFilters,
+            actionMenus,
+        } = this.props;
 
         let loadView = !arch || (!actionMenus && loadActionMenus);
         let loadSearchView =
@@ -220,6 +229,7 @@ export class View extends Component {
             }
             this.env.config.views = views;
             fields = fields || result.fields;
+            relatedModels = relatedModels || result.relatedModels;
         }
 
         if (!arch) {
@@ -255,6 +265,7 @@ export class View extends Component {
             info: { actionMenus, mode: this.props.display.mode },
             arch,
             fields,
+            relatedModels,
             resModel,
             useSampleModel: false,
             className: `${this.props.className} o_view_controller o_${this.env.config.viewType}_view`,
