@@ -651,6 +651,7 @@ export class ListRenderer extends Component {
             info.field.help = column.options.help;
             info.field.type = linkedField.type;
             info.field.widget = column.FieldComponent.name;
+            info.field.widgetXMLName = column.FieldComponent.XMLName;
             info.field.widgetDescription =
                 column.FieldComponent.description || linkedField.description;
             info.field.context = column.context;

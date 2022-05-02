@@ -4832,6 +4832,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await mouseEnter(target.querySelector("th[data-fieldtype=foo]"));
+        await nextTick(); // GES: see next nextTick comment
         assert.strictEqual(
             target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
             0,
@@ -4845,6 +4846,7 @@ QUnit.module("Views", (hooks) => {
         // it is necessary to rerender the list so tooltips can be properly created
         await reloadListView(target);
         await mouseEnter(target.querySelector("th[data-fieldtype=foo]"));
+        await nextTick(); // GES: I had once an indetermist failure because of no tooltip, so for safety I add a nextTick.
 
         assert.strictEqual(
             target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
@@ -4862,7 +4864,7 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent([
                 target.querySelector('.o-tooltip--technical>li[data-item="widget"]'),
             ]),
-            "Widget:CharField", // TODO maybe we could add (default) when a widget is the default one for a field.
+            "Widget:CharField (char)",
             "widget description should be correct"
         );
     });
@@ -5243,7 +5245,7 @@ QUnit.module("Views", (hooks) => {
 
         await testUtils.fields.triggerKeydown(document.activeElement, "tab");
 
-        assert.containsNone(document.body, ".oe_tooltip_string");
+        assert.containsNone(document.body, ".o-tooltip--string");
 
         // From column header
         target.querySelector(':scope th[data-fieldtype="foo"]').focus();
@@ -10877,23 +10879,25 @@ QUnit.module("Views", (hooks) => {
                 1,
                 "Value 2 should contain 1 record"
             );
-            const groupheader = target.querySelector(".o_group_header")
+            const groupheader = target.querySelector(".o_group_header");
             await click(groupheader);
-            assert.deepEqual(getPagerValue(groupheader), [1, 2])
-            assert.strictEqual(getPagerLimit(groupheader), 3)
+            assert.deepEqual(getPagerValue(groupheader), [1, 2]);
+            assert.strictEqual(getPagerLimit(groupheader), 3);
 
             // move to next page
             await pagerNext(groupheader);
-            assert.deepEqual(getPagerValue(groupheader), [3, 3])
-            assert.strictEqual(getPagerLimit(groupheader), 3)
+            assert.deepEqual(getPagerValue(groupheader), [3, 3]);
+            assert.strictEqual(getPagerLimit(groupheader), 3);
 
             // delete a record
-            await click(
-                target.querySelector(".o_data_row .o_list_record_selector input")
-            );
+            await click(target.querySelector(".o_data_row .o_list_record_selector input"));
             checkSearchRead = true;
-            await click(target, ".o_cp_action_menus .dropdown-toggle")
-            await click([...target.querySelectorAll(".dropdown-item")].filter(el => el.innerText === "Delete")[0]);
+            await click(target, ".o_cp_action_menus .dropdown-toggle");
+            await click(
+                [...target.querySelectorAll(".dropdown-item")].filter(
+                    (el) => el.innerText === "Delete"
+                )[0]
+            );
             await click(target, ".modal .btn-primary");
 
             assert.strictEqual(

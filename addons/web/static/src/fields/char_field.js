@@ -63,5 +63,6 @@ CharField.extractProps = (fieldName, record, attrs) => {
         placeholder: attrs.placeholder,
     };
 };
+CharField.XMLName = "char";
 
-registry.category("fields").add("char", CharField);
+registry.category("fields").add(CharField.XMLName, CharField);

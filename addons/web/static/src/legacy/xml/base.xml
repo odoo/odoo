@@ -455,11 +455,9 @@
             </li>
             <li t-if="info.field.widget" data-item="widget">
                 <span class="o-tooltip--technical--title">Widget:</span>
+                <t t-esc="info.field.widget"/> <t t-if="info.field.widgetXMLName">(<t t-esc="info.field.widgetXMLName"/>)</t>
                 <t t-if="info.field.widgetDescription">
-                    <t t-esc="info.field.widgetDescription"/> (<t t-esc="info.field.widget"/>)
-                </t>
-                <t t-else="">
-                    <t t-esc="info.field.widget"/>
+                    <t t-esc="info.field.widgetDescription"/>
                 </t>
             </li>
             <li t-if="info.field.context" data-item="context">
