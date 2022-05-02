@@ -67,23 +67,12 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
 
     const { messaging } = await start({ data: this.data });
-    const existingChat = messaging.models['Thread'].find(thread =>
-        thread.channel_type === 'chat' &&
-        thread.correspondent &&
-        thread.correspondent.id === resPartnerId1 &&
-        thread.model === 'mail.channel' &&
-        thread.public === 'private'
-    );
+    const partner = messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 });
+    const existingChat = partner ? partner.dmChatWithCurrentPartner : undefined;
     assert.notOk(existingChat, 'a chat should not exist with the target partner initially');
 
     await messaging.openChat({ partnerId: resPartnerId1 });
-    const chat = messaging.models['Thread'].find(thread =>
-        thread.channel_type === 'chat' &&
-        thread.correspondent &&
-        thread.correspondent.id === resPartnerId1 &&
-        thread.model === 'mail.channel' &&
-        thread.public === 'private'
-    );
+    const chat = messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).dmChatWithCurrentPartner;
     assert.ok(chat, 'a chat should exist with the target partner');
     assert.strictEqual(chat.threadViews.length, 1, 'the chat should be displayed in a `ThreadView`');
 });
@@ -103,13 +92,7 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
         public: 'private',
     });
     const { messaging } = await start();
-    const existingChat = messaging.models['Thread'].find(thread =>
-        thread.channel_type === 'chat' &&
-        thread.correspondent &&
-        thread.correspondent.id === resPartnerId1 &&
-        thread.model === 'mail.channel' &&
-        thread.public === 'private'
-    );
+    const existingChat = messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).dmChatWithCurrentPartner;
     assert.ok(existingChat, 'a chat should initially exist with the target partner');
     assert.strictEqual(existingChat.threadViews.length, 0, 'the chat should not be displayed in a `ThreadView`');
 

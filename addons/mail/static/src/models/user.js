@@ -88,12 +88,7 @@ registerModel({
                 return;
             }
             // in other cases a chat would be valid, find it or try to create it
-            let chat = this.messaging.models['Thread'].find(thread =>
-                thread.channel_type === 'chat' &&
-                thread.correspondent === this.partner &&
-                thread.model === 'mail.channel' &&
-                thread.public === 'private'
-            );
+            let chat = this.partner.dmChatWithCurrentPartner;
             if (!chat || !chat.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc

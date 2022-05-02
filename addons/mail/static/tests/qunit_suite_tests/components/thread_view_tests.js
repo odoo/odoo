@@ -1527,6 +1527,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // send a command that leads to receiving a transient message
     await insertText('.o_ComposerTextInput_textarea', "/who");
     await click('.o_Composer_buttonSend');
+    const transientMessage = threadViewer.threadView.messageViews[0].message;
 
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
@@ -1555,7 +1556,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     assert.containsOnce(
         document.body,
         `.o_Message[data-message-local-id="${
-            messaging.models['Message'].find(m => m.isTransient).localId
+            transientMessage.localId
         }"] + .o_MessageList_separatorNewMessages`,
         "separator should be shown just after transient message"
     );

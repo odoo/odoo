@@ -1178,6 +1178,21 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeCorrespondentOfDmChat() {
+            if (
+                this.channel_type === 'chat' &&
+                this.correspondent &&
+                this.model === 'mail.channel' &&
+                this.public === 'private'
+            ) {
+                return replace(this.correspondent);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeDiscussSidebarCategoryItem() {
             if (this.model !== 'mail.channel') {
                 return clear();
@@ -1916,6 +1931,10 @@ registerModel({
         }),
         correspondent: one('Partner', {
             compute: '_computeCorrespondent',
+        }),
+        correspondentOfDmChat: one('Partner', {
+            compute: '_computeCorrespondentOfDmChat',
+            inverse: 'dmChatWithCurrentPartner',
         }),
         counter: attr({
             default: 0,
