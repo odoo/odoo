@@ -223,7 +223,6 @@ class AccruedExpenseRevenue(models.TransientModel):
                 reverse_move.id,
             )
             order.message_post(body=body)
-        self.preview_data = False
         return {
             'name': _('Accrual Moves'),
             'type': 'ir.actions.act_window',
