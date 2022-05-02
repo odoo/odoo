@@ -389,6 +389,7 @@ class Project(models.Model):
     last_update_color = fields.Integer(compute='_compute_last_update_color')
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
+    milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
 
     _sql_constraints = [
@@ -459,6 +460,17 @@ class Project(models.Model):
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
         for project in self:
             project.milestone_count = mapped_count.get(project.id, 0)
+
+    @api.depends('milestone_ids.is_reached')
+    def _compute_milestone_reached_count(self):
+        read_group = self.env['project.milestone']._read_group(
+            [('project_id', 'in', self.ids), ('is_reached', '=', True)],
+            ['project_id'],
+            ['project_id'],
+        )
+        mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
+        for project in self:
+            project.milestone_count_reached = mapped_count.get(project.id, 0)
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
     def _compute_is_milestone_exceeded(self):
@@ -632,36 +644,15 @@ class Project(models.Model):
             analytic_account_to_update.write({'name': self.name})
         return res
 
-    def action_unlink(self):
-        wizard = self.env['project.delete.wizard'].create({
-            'project_ids': self.ids
-        })
-
-        return {
-            'name': _('Confirmation'),
-            'view_mode': 'form',
-            'res_model': 'project.delete.wizard',
-            'views': [(self.env.ref('project.project_delete_wizard_form').id, 'form')],
-            'type': 'ir.actions.act_window',
-            'res_id': wizard.id,
-            'target': 'new',
-            'context': self.env.context,
-        }
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_contains_tasks(self):
-        # Check project is empty
-        for project in self.with_context(active_test=False):
-            if project.tasks:
-                raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
-
     def unlink(self):
         # Delete the empty related analytic account
         analytic_accounts_to_delete = self.env['account.analytic.account']
+        tasks = self.with_context(active_test=False).tasks
         for project in self:
             if project.analytic_account_id and not project.analytic_account_id.line_ids:
                 analytic_accounts_to_delete |= project.analytic_account_id
         result = super(Project, self).unlink()
+        tasks.unlink()
         analytic_accounts_to_delete.unlink()
         return result
 
