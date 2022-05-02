@@ -55,6 +55,7 @@ var VariantMixin = {
 
         const $parent = $(ev.target).closest('.js_product');
         const combination = this.getSelectedVariantValues($parent);
+        const context = this.context ? this.context : this.getSession() ? this.getSession().user_context : {};
         let parentCombination;
 
         if ($parent.hasClass('main_product')) {
@@ -72,6 +73,7 @@ var VariantMixin = {
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
                     'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    'context': context,
                 }).then((combinationData) => {
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
                     this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
@@ -90,6 +92,7 @@ var VariantMixin = {
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            'context': context,
         }).then((combinationData) => {
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination, combinationData.parent_exclusions);
