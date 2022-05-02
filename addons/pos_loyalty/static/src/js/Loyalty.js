@@ -674,7 +674,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         // Also remove coupons from codeActivatedCoupons if their program applies_on current orders and the program does not give any points
         this.codeActivatedCoupons = this.codeActivatedCoupons.filter((coupon) => {
             const program = this.pos.program_by_id[coupon.program_id];
-            if (program.applies_on === 'current' && pointsAddedPerProgram[program.id].length === 0) {
+            if (program.applies_on === 'current' && pointsAddedPerProgram[program.id].length === 0 && program.rules.length > 0) {
                 return false;
             }
             return true;
@@ -739,13 +739,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      */
     _getRealCouponPoints(coupon_id, dontClear=false) {
         let points = 0;
+        // Take into account the coupon's balance.
+        const dbCoupon = this.pos.couponCache[coupon_id];
+        if (dbCoupon) {
+            points += dbCoupon.balance;
+        }
         Object.values(this.couponPointChanges).some((pe) => {
             if (pe.coupon_id === coupon_id) {
-                // Take into account the coupon's balance.
-                const dbCoupon = this.pos.couponCache[coupon_id];
-                if (dbCoupon) {
-                    points += dbCoupon.balance;
-                }
                 if (this.pos.program_by_id[pe.program_id].applies_on !== 'future') {
                     points += pe.points;
                 }

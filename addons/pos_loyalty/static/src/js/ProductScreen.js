@@ -64,13 +64,16 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
             }
             if (!selectedLine) return;
             if (selectedLine.is_reward_line && val === 'remove') {
-                this.currentOrder.disabledRewards.push(selectedLine.reward_id);
                 const coupon = this.env.pos.couponCache[selectedLine.coupon_id];
                 if (coupon && coupon.id > 0 && this.currentOrder.codeActivatedCoupons.find((c) => c.code === coupon.code)) {
                     delete this.env.pos.couponCache[selectedLine.coupon_id];
                     this.currentOrder.codeActivatedCoupons.splice(this.currentOrder.codeActivatedCoupons.findIndex((coupon) => {
                         return coupon.id === selectedLine.coupon_id;
                     }), 1);
+                } else {
+                    // Only add to disabledRewards when not from coupon.
+                    // This is because deleting coupon rewards fully deactivates the program.
+                    this.currentOrder.disabledRewards.push(selectedLine.reward_id);
                 }
             }
             if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === 'remove')) {
