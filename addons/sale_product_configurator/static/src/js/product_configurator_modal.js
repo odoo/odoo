@@ -79,11 +79,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
             variant_values: self.rootProduct.variant_values,
             pricelist_id: self.pricelistId || false,
             add_qty: self.rootProduct.quantity,
-            kwargs: {
-                context: _.extend({
-                    'quantity': self.rootProduct.quantity
-                }, this.context),
-            }
+            context: _.extend({'quantity': self.rootProduct.quantity}, this.context),
         })
         .then(function (modalContent) {
             if (modalContent) {
