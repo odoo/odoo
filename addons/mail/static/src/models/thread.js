@@ -1060,10 +1060,7 @@ registerModel({
          * Unfollow current partner from this thread.
          */
         async unfollow() {
-            const currentPartnerFollower = this.followers.find(
-                follower => follower.partner === this.messaging.currentPartner
-            );
-            await currentPartnerFollower.remove();
+            await this.followerOfCurrentPartner.remove();
         },
         /**
          * Unpin this thread and notify server of the change.
@@ -1958,6 +1955,9 @@ registerModel({
         }),
         fetchMessagesUrl: attr({
             compute: '_computeFetchMessagesUrl',
+        }),
+        followerOfCurrentPartner: one('Follower', {
+            inverse: 'followedThreadAsFollowerOfCurrentPartner',
         }),
         followersPartner: many('Partner', {
             related: 'followers.partner',
