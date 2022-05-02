@@ -8545,7 +8545,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getCard(0).innerText, "LOADEDLOADEDLOADEDLOADED");
     });
 
-    QUnit.skipWOWL("set cover image", async (assert) => {
+    QUnit.test("set cover image", async (assert) => {
         assert.expect(7);
 
         serviceRegistry.add("dialog", dialogService, { force: true });
