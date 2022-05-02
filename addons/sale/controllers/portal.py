@@ -127,10 +127,15 @@ class CustomerPortal(portal.CustomerPortal):
             if session_obj_date != today:
                 # store the date as a string in the session to allow serialization
                 request.session['view_quote_%s' % order_sudo.id] = today
+                # The "Quotation viewed by customer" log note is an information
+                # dedicated to the salesman and shouldn't be translated in the customer/website lgg
+                context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
+                msg = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                del context
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
-                    message=_('Quotation viewed by customer %s', order_sudo.partner_id.name),
+                    message=msg,
                     token=order_sudo.access_token,
                     message_type="notification",
                     subtype_xmlid="mail.mt_note",
