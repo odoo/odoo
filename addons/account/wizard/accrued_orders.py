@@ -54,7 +54,7 @@ class AccruedExpenseRevenue(models.TransientModel):
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
 
-    @api.depends('date', 'amount')
+    @api.depends('date', 'amount', 'preview_data')
     def _compute_display_amount(self):
         single_order = len(self._context['active_ids']) == 1
         for record in self:
@@ -130,7 +130,6 @@ class AccruedExpenseRevenue(models.TransientModel):
             raise UserError(_('Entries can only be created for a single company at a time.'))
 
         orders_with_entries = []
-        fnames = []
         total_balance = 0.0
         for order in orders:
             if len(orders) == 1 and self.amount:
@@ -169,19 +168,19 @@ class AccruedExpenseRevenue(models.TransientModel):
                         account = order_line.product_id.property_account_expense_id or order_line.product_id.categ_id.property_account_expense_categ_id
                         amount = self.company_id.currency_id.round(order_line.qty_to_invoice * order_line.price_unit / rate)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
-                        fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                         label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     else:
                         account = order_line.product_id.property_account_income_id or order_line.product_id.categ_id.property_account_income_categ_id
                         amount = self.company_id.currency_id.round(order_line.untaxed_amount_to_invoice / rate)
                         amount_currency = order_line.untaxed_amount_to_invoice
-                        fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
                         label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     values = _get_aml_vals(order, amount, amount_currency, account.id, label=label)
                     move_lines.append(Command.create(values))
                     total_balance += amount
-                # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
-                order.order_line.invalidate_cache(fnames=fnames)
+        # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
+        orders.order_line.invalidate_cache(ids=orders.order_line.ids)
+        orders.invalidate_cache(ids=orders.ids)
+        self.invalidate_cache(fnames=['display_amount', 'preview_data'], ids=self.ids)
 
         if not self.company_id.currency_id.is_zero(total_balance):
             # globalized counterpart for the whole orders selection
@@ -220,6 +219,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                 reverse_move.id,
             )
             order.message_post(body=body)
+        self.preview_data = False
         return {
             'name': _('Accrual Moves'),
             'type': 'ir.actions.act_window',
