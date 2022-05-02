@@ -167,7 +167,7 @@ QUnit.module(
             );
 
             await editSearch(target, "bx");
-            await nextTick(); // WOWL : Why to ticks ? maybe we need to change something -- not visible
+            await nextTick();
             assert.isVisible(
                 target.querySelector(".o_nocontent_help"),
                 "record not found message shown"

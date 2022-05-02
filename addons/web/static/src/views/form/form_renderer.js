@@ -17,6 +17,7 @@ export class FormRenderer extends Component {
         this.state = useState({}); // Used by Form Compiler
         this.templateId = useViewCompiler(this.constructor.compiler, arch, xmlDoc, {
             className: "props.class",
+            ...this.compileParams,
         });
         useSubEnv({ model: this.props.record.model });
     }

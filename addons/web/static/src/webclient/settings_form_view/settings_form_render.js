@@ -15,10 +15,19 @@ const fieldRegistry = registry.category("fields");
 
 export class SettingsFormRender extends FormRenderer {
     setup() {
+        this.labels = [];
+        this.compileParams = {
+            labels: this.labels,
+            getFieldExpr: this.getFieldExpr,
+            record: this.record,
+        };
         super.setup();
         this.searchValue = useState(this.env.searchValue);
     }
-    search(labels) {
+    search(kind, value) {
+        const labels = this.labels
+            .filter((x) => x[kind] === value)
+            .map((x) => [x.label, x.groupName]);
         return labels.join().match(new RegExp(`(${escapeRegExp(this.searchValue.value)})`, "ig"));
     }
     getFieldExpr(fieldName, fieldWidget) {

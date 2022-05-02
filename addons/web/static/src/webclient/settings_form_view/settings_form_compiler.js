@@ -8,8 +8,6 @@ function compileSettingsPage(el, params) {
     const settings = createElement("SettingsPage");
     settings.setAttribute("t-slot-scope", "settings");
 
-    //TODO: check if we cannot use a "registry" to make the if one the upper componenets (including the noContent)
-
     //props
     const modules = [];
 
@@ -22,6 +20,7 @@ function compileSettingsPage(el, params) {
                 notApp: child.classList.value.includes("o_not_app"),
             };
             params.module = module;
+            params.config = {};
             if (!child.classList.value.includes("o_not_app")) {
                 modules.push(module);
                 append(settings, this.compileNode(child, params));
@@ -44,89 +43,97 @@ function compileSettingsApp(el, params) {
     settingsBlock.setAttribute("t-props", JSON.stringify(params.module));
     settingsBlock.setAttribute("selectedTab", "settings.selectedTab");
 
-    params.appLabels = [];
-    params.group = {};
+    params.config.app = el.getAttribute("data-key");
+    params.config.groupName = undefined;
+    params.config.groupTitle = undefined;
+    params.config.container = undefined;
+    params.config.settingBox = undefined;
+
     for (const child of el.children) {
         append(settingsBlock, this.compileNode(child, params));
     }
 
-    if (params.appLabels) {
-        const labelExpr = `[${params.appLabels.join(",")}]`;
-        settingsBlock.setAttribute("t-if", `!searchValue or search(${labelExpr})`);
-    }
+    settingsBlock.setAttribute(
+        "t-if",
+        `!searchValue.value or search("app", "${el.getAttribute("data-key")}")`
+    );
 
     return settingsBlock;
 }
 
+let groupTitleId = 0;
+
 function compileSettingsGroupTitle(el, params) {
+    groupTitleId++;
     const res = this.compileGenericNode(el, params);
+    const groupName = res.textContent;
+
+    params.config.groupTitle = groupTitleId;
+    params.config.groupName = groupName;
+    params.config.container = undefined;
+    params.config.settingBox = undefined;
     //HighlightText
     const highlight = createElement("HighlightText");
-    const groupName = res.textContent;
     highlight.setAttribute("originalText", `\`${groupName}\``);
     append(res, highlight);
     res.firstChild.remove();
-    params.appLabels.push(`\`${groupName.trim()}\``);
-    res.setAttribute("t-if", `!searchValue or search([\`${groupName.trim()}\`])`);
-    params.group = { name: groupName, el: res };
+
+    params.labels.push({
+        label: groupName.trim(),
+        ...params.config,
+    });
+
+    res.setAttribute("t-if", `!searchValue.value or search("groupTitle", ${groupTitleId})`);
     return res;
 }
+
+let containerId = 0;
 
 function compileSettingsContainer(el, params) {
+    containerId++;
+    params.config.container = containerId;
+    params.config.settingBox = undefined;
     params.containerLabels = [];
     const res = this.compileGenericNode(el, params);
-    if (params.containerLabels) {
-        if (params.group.name) {
-            params.containerLabels.push(`"${params.group.name}"`);
-        }
-        const labelExpr = `[${params.containerLabels.join(",")}]`;
-        res.setAttribute("t-if", `!searchValue or search(${labelExpr})`);
-    }
+    res.setAttribute("t-if", `!searchValue.value or search("container", ${containerId})`);
     return res;
 }
 
+let settingBoxId = 0;
+
 function compileSettingBox(el, params) {
-    params.labels = [];
+    settingBoxId++;
+    params.config.settingBox = settingBoxId;
     const res = this.compileGenericNode(el, params);
-    if (params.labels) {
-        if (params.containerLabels) {
-            params.containerLabels.push(params.labels);
-        }
-        params.appLabels.push(params.labels);
-        if (params.group.name) {
-            params.labels.push(`"${params.group.name}"`); // search in h2
-            //Here
-            const attr = params.group.el.getAttribute("t-if");
-            const groupLabelsStrings = attr.substring(attr.indexOf("[") + 1, attr.lastIndexOf("]"));
-            const groupLabels = groupLabelsStrings.split(",");
-            groupLabels.push(params.labels);
-            params.group.el.removeAttribute("t-if");
-            const labelExpr = `[${groupLabels.join(",")}]`;
-            params.group.el.setAttribute("t-if", `!searchValue or search(${labelExpr})`);
-        }
-        const labelExpr = `[${params.labels.join(",")}]`;
-        res.setAttribute("t-if", `!searchValue or search(${labelExpr})`);
-    }
+    res.setAttribute("t-if", `!searchValue.value or search("settingBox", ${settingBoxId})`);
     return res;
 }
 
 function compileField(el, params) {
+    const res = this.compileField(el, params);
     let widgetName;
     if (el.hasAttribute("widget")) {
         widgetName = el.getAttribute("widget");
     }
-    if (params.labels) {
-        params.labels.push(`getFieldExpr("${el.getAttribute("name")}", "${widgetName}")`);
+    if (params.getFieldExpr) {
+        const label = params.getFieldExpr(el.getAttribute("name"), widgetName);
+        if (label) {
+            params.labels.push({
+                label,
+                ...params.config,
+            });
+        }
     }
-    return this.compileField(el, params);
+    return res;
 }
 
 function compileLabel(el, params) {
     const res = this.compileLabel(el, params);
     if (res.textContent && res.tagName !== "FormLabel") {
-        if (params.labels) {
-            params.labels.push(`\`${res.textContent.trim()}\``);
-        }
+        params.labels.push({
+            label: res.textContent.trim(),
+            ...params.config,
+        });
         //HighlightText
         const highlight = createElement("HighlightText");
         highlight.setAttribute("originalText", `\`${res.textContent}\``);
@@ -139,9 +146,10 @@ function compileLabel(el, params) {
 function compileGenericLabel(el, params) {
     const res = this.compileGenericNode(el, params);
     if (res.textContent) {
-        if (params.labels) {
-            params.labels.push(`\`${res.textContent.trim()}\``);
-        }
+        params.labels.push({
+            label: res.textContent.trim(),
+            ...params.config,
+        });
         //HighlightText
         const highlight = createElement("HighlightText");
         highlight.setAttribute("originalText", `\`${res.textContent}\``);
@@ -202,10 +210,15 @@ export class SettingsFormCompiler extends FormCompiler {
             }
         );
     }
-    //JPP: pas fan de ceci ....
     createLabelFromField(fieldId, fieldName, fieldString, label, params) {
         const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
-        params.labels.push(res.getAttribute("string"));
+        let labelText = label.textContent || fieldString;
+        labelText = labelText ? labelText : params.record.fields[fieldName].string;
+
+        params.labels.push({
+            label: labelText,
+            ...params.config,
+        });
         return res;
     }
 }
