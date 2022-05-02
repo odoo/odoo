@@ -66,6 +66,7 @@ class CrmTeam(models.Model):
                 team = default_team
             else:
                 team = filtered_teams[:1]
+
         # 2- any of my teams
         if not team:
             if default_team and default_team in teams:
