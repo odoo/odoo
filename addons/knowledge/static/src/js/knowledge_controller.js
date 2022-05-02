@@ -28,7 +28,23 @@ const KnowledgeArticleFormController = FormController.extend({
         emoji_click: '_onEmojiClick',
     }),
 
+    /**
+     * Register the fact that the current @see FormController is one from
+     * Knowledge in order not to try and search for a matching record for
+     * @see KnowledgeService .
+     *
+     * @override
+     */
     init: function (parent, model, renderer, params) {
+        /**
+         * This property is used to specify that the current form view will
+         * get/use records stored in the @see KnowledgeService instead of
+         * replacing them (default). TODO ABD: maybe set this as an option of
+         * the form view (XML) so that other form views can easily specify that
+         * they will get/use records from the KnowledgeService instead of
+         * providing them.
+         */
+        this.ignoreKnowledgeRecordSearch = true;
         this.renderer = renderer;
         this._super.apply(this, arguments);
         this.onFieldSavedListeners = new Map();
