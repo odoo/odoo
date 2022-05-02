@@ -224,3 +224,25 @@ class TestAnalyticAccount(TransactionCase):
         # Check that the AA lines are recreated correctly if we delete the AA, save the MO, and assign a new one
         mo.analytic_account_id = self.analytic_account
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
+
+    def test_use_analytic_account_without_company_in_mo(self):
+        """ check the use of an analytical account without a company
+            in a manufacturing order.
+        """
+        # create a mo
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        # Remove the analytics account company
+        self.analytic_account.company_id = False
+        mo_form.analytic_account_id = self.analytic_account
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
+        # Mark as done
+        wizard_dict = mo.button_mark_done()
+        Form(self.env[(wizard_dict.get('res_model'))].with_context(wizard_dict['context'])).save().process()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)

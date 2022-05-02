@@ -5,6 +5,7 @@ from ast import literal_eval
 
 from odoo import api, fields, models, _
 from odoo.tools import float_is_zero, float_round
+from odoo.exceptions import ValidationError
 
 
 class MrpProductionWorkcenterLineTime(models.Model):
@@ -22,6 +23,7 @@ class MrpProduction(models.Model):
         'account.analytic.account', 'Analytic Account', copy=True,
         help="Analytic account in which cost and revenue entries will take\
         place for financial management of the manufacturing order.",
+        domain="[('company_id', 'in', [company_id, False])]",
         compute='_compute_analytic_account_id', store=True, readonly=False)
 
     def _compute_show_valuation(self):
@@ -32,6 +34,12 @@ class MrpProduction(models.Model):
     def _compute_analytic_account_id(self):
         if self.bom_id.analytic_account_id:
             self.analytic_account_id = self.bom_id.analytic_account_id
+
+    @api.constrains('analytic_account_id', 'company_id')
+    def _check_analytic_account_id(self):
+        for production in self:
+            if production.company_id and production.analytic_account_id.company_id and production.company_id != production.analytic_account_id.company_id:
+                raise ValidationError(_('The selected account belongs to another company than the MO for the product: %s', production.product_id.display_name))
 
     def write(self, vals):
         origin_analytic_account = {production: production.analytic_account_id for production in self}
