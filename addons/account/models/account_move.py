@@ -40,6 +40,7 @@ class AccountMove(models.Model):
     _sequence_index = "journal_id"
 
     def init(self):
+        super().init()
         self.env.cr.execute("""
             CREATE INDEX IF NOT EXISTS account_move_to_check_idx
             ON account_move(journal_id) WHERE to_check = true;
