@@ -49,6 +49,7 @@ class ReportProjectTaskUser(models.Model):
         column1='project_task_id', column2='project_tags_id',
         string='Tags', readonly=True)
     parent_id = fields.Many2one('project.task', string='Parent Task', readonly=True)
+    ancestor_id = fields.Many2one('project.task', string="Ancestor Task", readonly=True)
     # We are explicitly not using a related field in order to prevent the recomputing caused by the depends as the model is a report.
     rating_last_text = fields.Selection(RATING_TEXT, string="Rating Last Text", compute="_compute_rating_last_text", search="_search_rating_last_text")
     personal_stage_type_ids = fields.Many2many('project.task.type', relation='project_task_user_rel',
@@ -82,6 +83,7 @@ class ReportProjectTaskUser(models.Model):
                 t.company_id,
                 t.partner_id,
                 t.parent_id as parent_id,
+                t.ancestor_id as ancestor_id,
                 t.stage_id as stage_id,
                 t.is_closed as is_closed,
                 t.kanban_state as state,
@@ -107,6 +109,7 @@ class ReportProjectTaskUser(models.Model):
                 t.date_last_stage_update,
                 t.date_deadline,
                 t.project_id,
+                t.ancestor_id,
                 t.priority,
                 t.name,
                 t.company_id,
