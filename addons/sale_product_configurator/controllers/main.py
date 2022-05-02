@@ -61,9 +61,6 @@ class ProductConfiguratorController(http.Controller):
         combination = request.env['product.template.attribute.value'].browse(variant_values)
         add_qty = int(kw.get('add_qty', 1))
 
-        if 'kwargs' in kw and 'context' in kw['kwargs']:
-            product = product.with_context(**kw['kwargs']['context'])
-
         no_variant_attribute_values = combination.filtered(
             lambda product_template_attribute_value: product_template_attribute_value.attribute_id.create_variant == 'no_variant'
         )
