@@ -41,6 +41,12 @@ registerModel({
             }
             this.discuss.threadView.topbar.openInvitePopoverView();
         },
+        onHideMobileAddItemHeader() {
+            if (!this.exists()) {
+                return;
+            }
+            this.discuss.clearIsAddingItem();
+        },
         /**
          * @param {KeyboardEvent} ev
          */

@@ -14,7 +14,6 @@ export class Discuss extends LegacyComponent {
         // bind since passed as props
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
-        this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
     }
 
     _update() {
@@ -81,16 +80,6 @@ export class Discuss extends LegacyComponent {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onHideMobileAddItemHeader() {
-        if (!this.discussView) {
-            return;
-        }
-        this.discussView.discuss.clearIsAddingItem();
-    }
 
     /**
      * @private
