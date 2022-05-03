@@ -8,7 +8,6 @@ import { createElement } from "@web/core/utils/xml";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { forcedActiveFieldSymbol } from "@web/views/basic_relational_model";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
@@ -97,13 +96,6 @@ export class FormController extends Component {
 
         this.archInfo = this.props.archInfo;
         const activeFields = this.archInfo.activeFields;
-        if (!activeFields.display_name) {
-            activeFields.display_name = {
-                name: "display_name",
-                type: "char",
-                [forcedActiveFieldSymbol]: true,
-            };
-        }
         let resId;
         if ("resId" in this.props) {
             resId = this.props.resId; // could be false, for "create" mode

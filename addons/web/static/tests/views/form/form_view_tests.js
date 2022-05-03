@@ -2912,7 +2912,6 @@ QUnit.module("Views", (hooks) => {
                         assert.deepEqual(
                             args.args[3],
                             {
-                                display_name: "",
                                 p: "",
                                 "p.foo": "1",
                             },
@@ -4769,27 +4768,25 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2, "The other line should not have been deleted.");
     });
 
-    QUnit.skipWOWL("properly apply onchange on many2many fields", async function (assert) {
-        assert.expect(14);
+    QUnit.test("properly apply onchange on many2many fields", async function (assert) {
+        assert.expect(15);
 
         serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.timmy = [[5], [4, 12], [4, 14]];
             },
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/></group>' +
-                '<field name="timmy">' +
-                "<tree>" +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="timmy">
+                        <tree><field name="display_name"/></tree>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "read" && args.model === "partner_type") {
@@ -4802,83 +4799,75 @@ QUnit.module("Views", (hooks) => {
                         "should correctly save the changed m2m values"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 2,
         });
 
         assert.containsNone(
-            form,
+            target,
             ".o_field_many2many .o_data_row",
             "there should be no many2many record linked at first"
         );
 
         // switch to edit mode
-        await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(
-            form.el.querySelector(".o_field_widget[name=foo] input"),
-            "let us trigger an onchange"
-        );
-        var $m2m = form.el.querySelector(".o_field_many2many");
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=foo] input", "let us trigger an onchange");
+        assert.containsN(target, ".o_data_row", 2, "there should be two linked records");
         assert.strictEqual(
-            $m2m.find(".o_data_row").length,
-            2,
-            "there should be two linked records"
-        );
-        assert.strictEqual(
-            $m2m.find(".o_data_row:first td:first").innerText,
+            target.querySelector(".o_data_row td").innerText,
             "gold",
             "the 'display_name' of the first m2m record should be correctly displayed"
         );
         assert.strictEqual(
-            $m2m.find(".o_data_row:nth(1) td:first").innerText,
+            target.querySelectorAll(".o_data_row")[1].querySelector("td").innerText,
             "silver",
             "the 'display_name' of the second m2m record should be correctly displayed"
         );
 
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
 
-        assert.verifySteps(["read", "onchange", "read", "write", "read", "read"]);
+        assert.verifySteps(["get_views", "read", "onchange", "read", "write", "read", "read"]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "form with domain widget: opening a many2many form and save should not crash",
         async function (assert) {
             assert.expect(0);
 
             // We just test that there is no crash in this situation
             serverData.models.partner.records[0].timmy = [12];
-            const form = await makeView({
+            await makeView({
                 type: "form",
-                model: "partner",
+                resModel: "partner",
                 serverData,
-                arch: `<form>
-                    <group>
-                        <field name="foo" widget="domain"/>
-                    </group>
-                    <field name="timmy">
-                        <tree>
-                            <field name="display_name"/>
-                        </tree>
-                        <form>
-                            <field name="name"/>
-                            <field name="color"/>
-                        </form>
-                    </field>
-                </form>`,
-                res_id: 1,
+                arch: `
+                    <form>
+                        <group>
+                            <field name="foo" widget="domain"/>
+                        </group>
+                        <field name="timmy">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                            <form>
+                                <field name="name"/>
+                                <field name="color"/>
+                            </form>
+                        </field>
+                    </form>`,
+                resId: 1,
             });
 
             // switch to edit mode
-            await click(form.el.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_form_button_edit"));
 
             // open a form view and save many2many record
-            await click(form.el.querySelector(".o_data_row .o_data_cell:first"));
-            await click($(".modal-dialog footer button:first-child"));
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            await click(target.querySelector(".modal-dialog footer .btn-primary"));
         }
     );
 
-    QUnit.skipWOWL("display_name not sent for onchanges if not in view", async function (assert) {
+    QUnit.test("display_name not sent for onchanges if not in view", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.records[0].timmy = [12];
@@ -4888,26 +4877,24 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner_type.onchanges = {
             name: function () {},
         };
-        var readInModal = false;
-        const form = await makeView({
+        let readInModal = false;
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                '<field name="timmy">' +
-                "<tree>" +
-                '<field name="name"/>' +
-                "</tree>" +
-                "<form>" +
-                '<field name="name"/>' +
-                '<field name="color"/>' +
-                "</form>" +
-                "</field>" +
-                "</group>" +
-                "</form>",
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo"/>
+                        <field name="timmy">
+                            <tree><field name="name"/></tree>
+                            <form>
+                                <field name="name"/>
+                                <field name="color"/>
+                            </form>
+                        </field>
+                    </group>
+                </form>`,
             mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner") {
                     assert.deepEqual(
@@ -4926,7 +4913,7 @@ QUnit.module("Views", (hooks) => {
                     } else {
                         assert.deepEqual(
                             args.args[1],
-                            ["name", "color", "display_name"],
+                            ["color", "display_name"],
                             "should read display_name when opening the subrecord"
                         );
                     }
@@ -4971,21 +4958,19 @@ QUnit.module("Views", (hooks) => {
                         "only the fields in the view should be in the onchange spec"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
+        await click(target.querySelector(".o_form_button_edit"));
+
         // trigger the onchange
-        await editInput(form.el, ".o_field_widget[name=foo]", "coucou");
+        await editInput(target, ".o_field_widget[name=foo] input", "coucou");
 
         // open a subrecord and trigger an onchange
         readInModal = true;
-        await click(form.el.querySelector(".o_data_row .o_data_cell:first"));
-        await testUtils.fields.editInput($(".modal .o_field_widget[name=name]"), "new name");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".modal .o_field_widget[name=name] input", "new name");
     });
 
     QUnit.skipWOWL("onchanges on date(time) fields", async function (assert) {
