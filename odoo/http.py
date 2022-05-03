@@ -1573,7 +1573,10 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    dbs = odoo.service.db.list_dbs(force)
+    try:
+        dbs = odoo.service.db.list_dbs(force)
+    except psycopg2.OperationalError:
+        return []
     return db_filter(dbs, httprequest=httprequest)
 
 def db_filter(dbs, httprequest=None):
