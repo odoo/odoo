@@ -1288,13 +1288,22 @@ class Website(models.Model):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
+    def get_client_action_url(self, url, mode_edit=False):
+        action_params = {
+            "action": "website.website_preview",
+            "path": url,
+        }
+        if mode_edit:
+            action_params["enable_editor"] = 1
+        return "/web#" + urls.url_encode(action_params)
+
     def button_go_website(self, path='/', mode_edit=False):
         self._force()
         if mode_edit:
             # If the user gets on a translated page (e.g /fr) the editor will
             # never start. Forcing the default language fixes this issue.
             path = url_for(path, self.default_lang_id.url_code)
-            path += '?enable_editor=1'
+            path = self.get_client_action_url(path, True)
         return {
             'type': 'ir.actions.act_url',
             'url': path,

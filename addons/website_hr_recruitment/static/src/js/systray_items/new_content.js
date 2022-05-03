@@ -13,6 +13,6 @@ patch(NewContentModal.prototype, 'website_hr_recruitment_new_content', {
     },
 
     createNewJob() {
-        this.website.goToWebsite({ path: '/jobs/add' });
+        window.location.replace('/jobs/add');
     }
 });
