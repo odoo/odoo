@@ -1887,7 +1887,7 @@ class BaseModel(metaclass=MetaModel):
         :param str order: sort string
         :param bool count: if True, only counts and returns the number of matching records (default: False)
         :returns: at most ``limit`` records matching the search criteria
-        :raise AccessError: * if user tries to bypass access rules for read on the requested object.
+        :raise AccessError: if user is not allowed to access requested information
         """
         res = self._search(domain, offset=offset, limit=limit, order=order, count=count)
         return res if count else self.browse(res)
@@ -2527,8 +2527,8 @@ class BaseModel(metaclass=MetaModel):
                 Each element is either 'field' (field name, using the default aggregation),
                 or 'field:agg' (aggregate field with aggregation function 'agg'),
                 or 'name:agg(field)' (aggregate field with 'agg' and return it as 'name').
-                The possible aggregation functions are the ones provided by PostgreSQL
-                (https://www.postgresql.org/docs/current/static/functions-aggregate.html)
+                The possible aggregation functions are the ones provided by
+                `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_
                 and 'count_distinct', with the expected meaning.
         :param list groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
@@ -2553,8 +2553,7 @@ class BaseModel(metaclass=MetaModel):
                         a dictionary with keys: "from" (inclusive) and "to" (exclusive)
                         mapping to a string representation of the temporal bounds of the group
         :rtype: [{'field_name_1': value, ...}, ...]
-        :raise AccessError: * if user has no read rights on the requested object
-                            * if user tries to bypass access rules for read on the requested object
+        :raise AccessError: if user is not allowed to access requested information
         """
         result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
@@ -3190,7 +3189,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
-        """ fields_get([fields][, attributes])
+        """ fields_get([allfields][, attributes])
 
         Return the definition of each field.
 
@@ -3198,8 +3197,10 @@ class BaseModel(metaclass=MetaModel):
         dictionaries. The _inherits'd fields are included. The string, help,
         and selection (if present) attributes are translated.
 
-        :param allfields: list of fields to document, all if empty or not provided
-        :param attributes: list of description attributes to return for each field, all if empty or not provided
+        :param list allfields: fields to document, all if empty or not provided
+        :param list attributes: attributes to return for each field, all if empty or not provided
+        :return: dictionary mapping field names to a dictionary mapping attributes to values.
+        :rtype: dict
         """
         res = {}
         for fname, field in self._fields.items():
@@ -3215,20 +3216,29 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def get_empty_list_help(self, help):
-        """ Generic method giving the help message displayed when having
-            no result to display in a list or kanban view. By default it returns
-            the help given in parameter that is generally the help message
-            defined in the action.
+        """ Hook method to customize the help message in empty list/kanban views.
+
+        By default, it returns the help received as parameter.
+
+        :param str help: ir.actions.act_window help content
+        :return: help message displayed when there is no result to display
+          in a list/kanban view (by default, it returns the action help)
+        :rtype: str
         """
         return help
 
     @api.model
     def check_field_access_rights(self, operation, fields):
-        """
-        Check the user access rights on the given fields. This raises Access
-        Denied if the user does not have the rights. Otherwise it returns the
-        fields (as is if the fields is not falsy, or the readable/writable
-        fields if fields is falsy).
+        """Check the user access rights on the given fields.
+
+        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :param fields: names of the fields
+        :type fields: list or None
+        :return: provided fields if fields is truthy (or the fields
+          readable by the current user).
+        :rtype: list
+        :raise AccessDenied: if the user is not allowed to access
+          the provided fields.
         """
         if self.env.su:
             return fields or list(self._fields)
@@ -3307,15 +3317,16 @@ Fields:
         """ read([fields])
 
         Reads the requested fields for the records in ``self``, low-level/RPC
-        method. In Python code, prefer :meth:`~.browse`.
+        method.
 
-        :param fields: list of field names to return (default is all fields)
-        :param load: loading mode, currently the only option is to set to
+        :param list fields: field names to return (default is all fields)
+        :param str load: loading mode, currently the only option is to set to
             ``None`` to avoid loading the ``name_get`` of m2o fields
         :return: a list of dictionaries mapping field names to their values,
                  with one dictionary per record
-        :raise AccessError: if user has no read rights on some of the given
-                records
+        :rtype: list
+        :raise AccessError: if user is not allowed to access requested information
+        :raise ValueError: if a requested field does not exist
         """
         fields = self.check_field_access_rights('read', fields)
 
@@ -3524,15 +3535,13 @@ Fields:
         return res
 
     def get_base_url(self):
-        """
-        Returns rooturl for a specific given record.
+        """ Return rooturl for a specific record.
 
         By default, it returns the ir.config.parameter of base_url
         but it can be overridden by model.
 
         :return: the base url for this record
-        :rtype: string
-
+        :rtype: str
         """
         if len(self) > 1:
             raise ValueError("Expected singleton or no record: %s" % self)
@@ -3639,18 +3648,22 @@ Fields:
 
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
-        """ Verifies that the operation given by ``operation`` is allowed for
-            the current user according to the access rights.
+        """ Verify that the given operation is allowed for the current user accord to ir.model.access.
+
+        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :param bool raise_exception: whether an exception should be raise if operation is forbidden
+        :return: whether the operation is allowed
+        :rtype: bool
+        :raise AccessError: if the operation is forbidden and raise_exception is True
         """
         return self.env['ir.model.access'].check(self._name, operation, raise_exception)
 
     def check_access_rule(self, operation):
-        """ Verifies that the operation given by ``operation`` is allowed for
-            the current user according to ir.rules.
+        """ Verify that the given operation is allowed for the current user according to ir.rules.
 
-           :param operation: one of ``write``, ``unlink``
-           :raise UserError: * if current ``ir.rules`` do not permit this operation.
-           :return: None if the operation is allowed
+        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :return: None if the operation is allowed
+        :raise UserError: if current ``ir.rules`` do not permit this operation.
         """
         if self.env.su:
             return
@@ -3719,10 +3732,8 @@ Fields:
 
         Deletes the records in ``self``.
 
-        :raise AccessError: * if user has no unlink rights on the requested object
-                            * if user tries to bypass access rules for unlink on the requested object
+        :raise AccessError: if the user is not allowed to delete all the given records
         :raise UserError: if the record is default property for other records
-
         """
         if not self:
             return True
@@ -3816,16 +3827,9 @@ Fields:
 
         Updates all records in ``self`` with the provided values.
 
-        :param dict vals: fields to update and the value to set on them e.g::
-
-                {'foo': 1, 'bar': "Qux"}
-
-            will set the field ``foo`` to ``1`` and the field ``bar`` to
-            ``"Qux"`` if those are valid (otherwise it will trigger an error).
-
-        :raise AccessError: * if user has no write rights on the requested object
-                            * if user tries to bypass access rules for write on the requested object
-        :raise ValidationError: if user tries to enter invalid value for a field that is not in selection
+        :param dict vals: fields to update and the value to set on them
+        :raise AccessError: if user is not allowed to modify the specified records/fields
+        :raise ValidationError: if invalid values are specified for selection fields
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
         * For numeric fields (:class:`~odoo.fields.Integer`,
@@ -3838,21 +3842,7 @@ Fields:
           :class:`python:int`)
         * For :class:`~odoo.fields.Many2one`, the value should be the
           database identifier of the record to set
-        * Other non-relational fields use a string for value
-
-          .. danger::
-
-              for historical and compatibility reasons,
-              :class:`~odoo.fields.Date` and
-              :class:`~odoo.fields.Datetime` fields use strings as values
-              (written and read) rather than :class:`~python:datetime.date` or
-              :class:`~python:datetime.datetime`. These date strings are
-              UTC-only and formatted according to
-              :const:`odoo.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
-              :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
-        * .. _openerp/models/relationals/format:
-
-          The expected value of a :class:`~odoo.fields.One2many` or
+        * The expected value of a :class:`~odoo.fields.One2many` or
           :class:`~odoo.fields.Many2many` relational field is a list of
           :class:`~odoo.fields.Command` that manipulate the relation the
           implement. There are a total of 7 commands:
@@ -3863,7 +3853,18 @@ Fields:
           :meth:`~odoo.fields.Command.link`,
           :meth:`~odoo.fields.Command.clear`, and
           :meth:`~odoo.fields.Command.set`.
-          """
+        * For :class:`~odoo.fields.Date` and `~odoo.fields.Datetime`,
+          the value should be either a date(time), or a string.
+
+          .. warning::
+
+            If a string is provided for Date(time) fields,
+            it must be UTC-only and formatted according to
+            :const:`odoo.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
+            :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
+
+        * Other non-relational fields use a string for value
+        """
         if not self:
             return True
 
@@ -4080,10 +4081,11 @@ Fields:
             see :meth:`~.write` for details
 
         :return: the created records
-        :raise AccessError: * if user has no create rights on the requested object
-                            * if user tries to bypass access rules for create on the requested object
-        :raise ValidationError: if user tries to enter invalid value for a field that is not in selection
-        :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
+        :raise AccessError: if the current user is not allowed to create records of the specified model
+        :raise ValidationError: if user tries to enter invalid value for a selection field
+        :raise ValueError: if a field name specified in the create values does not exist.
+        :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation
+          (such as setting an object as its own parent)
         """
         if not vals_list:
             return self.browse()
