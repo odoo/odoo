@@ -739,13 +739,22 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      */
     _getRealCouponPoints(coupon_id, dontClear=false) {
         let points = 0;
-        // Take into account the coupon's balance.
+        // Immediately take into account the coupon's balance.
+        // But only if the program is not loyalty. Loyalty programs are
+        // taken into account in couponPointChanges.
         const dbCoupon = this.pos.couponCache[coupon_id];
         if (dbCoupon) {
-            points += dbCoupon.balance;
+            const program = this.pos.program_by_id[dbCoupon.program_id];
+            if (program.program_type != 'loyalty') {
+                points += dbCoupon.balance;
+            }
         }
         Object.values(this.couponPointChanges).some((pe) => {
             if (pe.coupon_id === coupon_id) {
+                const program = this.pos.program_by_id[pe.program_id];
+                if (dbCoupon && program.program_type == 'loyalty') {
+                    points += dbCoupon.balance;
+                }
                 if (this.pos.program_by_id[pe.program_id].applies_on !== 'future') {
                     points += pe.points;
                 }
