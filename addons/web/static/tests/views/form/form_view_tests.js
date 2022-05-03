@@ -7,6 +7,7 @@ import {
     click,
     editInput,
     getFixture,
+    getNodesTextContent,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
@@ -4494,25 +4495,23 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(document.body, ".o_notification");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "do nothing if add a line in one2many result in a onchange with a warning",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.onchanges = { foo: true };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    '<field name="p">' +
-                    '<tree editable="top">' +
-                    '<field name="foo"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
                 resId: 2,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
@@ -4524,20 +4523,14 @@ QUnit.module("Views", (hooks) => {
                             },
                         });
                     }
-                    return this._super.apply(this, arguments);
-                },
-                intercepts: {
-                    warning: function () {
-                        assert.step("should have triggered a warning");
-                    },
                 },
             });
 
             // go to edit mode, click to add a record in the o2m
-            await click(form.el.querySelector(".o_form_button_edit"));
-            await click(form.el.querySelector(".o_field_x2many_list_row_add a"));
-            assert.containsNone(form, "tr.o_data_row", "should not have added a line");
-            assert.verifySteps(["should have triggered a warning"]);
+            await click(target.querySelector(".o_form_button_edit"));
+            await click(target.querySelector(".o_field_x2many_list_row_add a"));
+            assert.containsNone(target, "tr.o_data_row", "should not have added a line");
+            assert.containsOnce(target, ".o_notification .text-warning");
         }
     );
 
@@ -4696,9 +4689,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.debug("update many2many value in one2many after onchange", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("update many2many value in one2many after onchange", async function (assert) {
         serverData.models.partner.records[1].p = [4];
         serverData.models.partner.onchanges = {
             foo: function (obj) {
@@ -4715,82 +4706,68 @@ QUnit.module("Views", (hooks) => {
                 ];
             },
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="foo"/>' +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                "<field name=\"display_name\" attrs=\"{'readonly': [('timmy', '=', false)]}\"/>" +
-                '<field name="timmy"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="display_name" attrs="{'readonly': [('timmy', '=', false)]}"/>
+                            <field name="timmy"/>
+                        </tree>
+                    </field>
+                </form>`,
             resId: 2,
         });
         assert.strictEqual(
-            $('.o_field_widget[name="p"] .o_data_row td').innerText.trim(),
+            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
             "aaaNo records",
             "should have proper initial content"
         );
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
-        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
+        await editInput(target, ".o_field_widget[name=foo] input", "tralala");
 
         assert.strictEqual(
-            $('.o_field_widget[name="p"] .o_data_row td').innerText.trim(),
+            getNodesTextContent(target.querySelectorAll(".o_data_cell")),
             "goldNo records",
             "should have proper initial content"
         );
     });
 
-    QUnit.skipWOWL(
-        "delete a line in a one2many while editing another line",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("delete a line in a one2many while editing another line", async function (assert) {
+        serverData.models.partner.records[0].p = [1, 2];
 
-            serverData.models.partner.records[0].p = [1, 2];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" required="True"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            resId: 1,
+        });
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name" required="True"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
-                resId: 1,
-            });
+        await click(target.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_field_widget[name=display_name] input", "");
+        await click(target.querySelectorAll(".fa-trash-o")[1]);
 
-            await click(form.el.querySelector(".o_form_button_edit"));
-            await click(form.el.querySelector(".o_data_cell").first());
-            await editInput(form.el, ".o_field_widget[name=display_name] input", "");
-            await click(form.el.querySelector(".fa-trash-o").eq(1));
-
-            // use of owlCompatibilityExtraNextTick because there are two sequential updates of the
-            // control panel (which is written in owl): each of them waits for the next animation frame
-            // to complete
-            await testUtils.owlCompatibilityExtraNextTick();
-            assert.hasClass(
-                form.el.querySelector(".o_data_cell").first(),
-                "o_invalid_cell",
-                "Cell should be invalidated."
-            );
-            assert.containsN(
-                form,
-                ".o_data_row",
-                2,
-                "The other line should not have been deleted."
-            );
-        }
-    );
+        assert.hasClass(
+            target.querySelector(".o_data_cell"),
+            "o_invalid_cell",
+            "Cell should be invalidated."
+        );
+        assert.containsN(target, ".o_data_row", 2, "The other line should not have been deleted.");
+    });
 
     QUnit.skipWOWL("properly apply onchange on many2many fields", async function (assert) {
         assert.expect(14);

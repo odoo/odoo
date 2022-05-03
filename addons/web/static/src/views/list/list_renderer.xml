@@ -150,12 +150,12 @@
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
                 <t t-if="column.type === 'field'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column)" t-att-title="getCellTitle(column, record)" t-on-click="() => this.onCellClicked(record, column)">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-att-title="getCellTitle(column, record)" t-on-click="() => this.onCellClicked(record, column)">
                         <Field t-if="!evalModifier(column.modifiers.invisible, record)" name="column.name" record="record" type="column.widget" />
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
                                 className="button.className"

@@ -364,7 +364,7 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
-    getCellClass(column) {
+    getCellClass(column, record) {
         if (!this.cellClassByColumn[column.id]) {
             const classNames = ["o_data_cell"];
             if (column.type === "button_group") {
@@ -384,7 +384,11 @@ export class ListRenderer extends Component {
             }
             this.cellClassByColumn[column.id] = classNames;
         }
-        return this.cellClassByColumn[column.id].join(" ");
+        const classNames = [...this.cellClassByColumn[column.id]];
+        if (column.type === "field" && record.isRequired(column.name)) {
+            classNames.push("o_invalid_cell");
+        }
+        return classNames.join(" ");
     }
 
     getCellTitle(column, record) {
@@ -538,7 +542,13 @@ export class ListRenderer extends Component {
     }
 
     async onDeleteRecord(record) {
-        await this.props.list.unselectRecord();
+        const editedRecord = this.props.list.editedRecord;
+        if (editedRecord && editedRecord !== record) {
+            const unselected = await this.props.list.unselectRecord();
+            if (!unselected) {
+                return;
+            }
+        }
         this.props.activeActions.onDelete(record);
     }
 
