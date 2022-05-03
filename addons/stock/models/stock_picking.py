@@ -1210,7 +1210,7 @@ class Picking(models.Model):
         """
         for (parent, responsible), rendering_context in documents.items():
             note = render_method(rendering_context)
-            parent.activity_schedule(
+            parent.sudo().activity_schedule(
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,

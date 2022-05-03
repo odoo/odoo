@@ -683,7 +683,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         })
         product = self.env['product.template'].create({
             'name': 'P1',
-            'type': 'product',
+            'type': 'consu',
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': product_attribut.id,
                 'value_ids': [(6, 0, [a1.id])],
