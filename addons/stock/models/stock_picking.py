@@ -577,18 +577,6 @@ class Picking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
-    @api.onchange('location_id', 'location_dest_id', 'picking_type_id')
-    def onchange_locations(self):
-        from_wh = self.location_id.get_warehouse()
-        to_wh = self.location_dest_id.get_warehouse()
-        is_immediate = self.immediate_transfer if self.id else self._context.get('default_immediate_transfer')
-        if self.picking_type_id.code == 'internal' and not is_immediate and from_wh and to_wh and from_wh != to_wh:
-            return {'warning': {
-                'title': _("Warning"),
-                'message': _("You should not use a planned internal transfer to move some products between two warehouses. "
-                             "Instead, use an immediate internal transfer or the resupply route.")
-            }}
-
     @api.model
     def create(self, vals):
         defaults = self.default_get(['name', 'picking_type_id'])
