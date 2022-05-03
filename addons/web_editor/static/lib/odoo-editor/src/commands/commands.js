@@ -409,15 +409,17 @@ export function toggleFormat(editor, format) {
     if (isAlreadyFormatted && style.name === 'textDecorationLine') {
         const decoratedPairs = new Set(selectedTextNodes.map(n => [closestElement(n, `[style*="text-decoration-line: ${style.value}"]`), n]));
         for (const [closestDecorated, textNode] of decoratedPairs) {
-            const splitResult = splitAroundUntil(textNode, closestDecorated);
-            const decorationToRemove = splitResult[0] || splitResult[1] || closestDecorated;
-            decorationToRemove.style.removeProperty('text-decoration-line');
-            if (!decorationToRemove.style.cssText) {
-                for (const child of decorationToRemove.childNodes) {
-                    decorationToRemove.before(child);
-                    changedElements.push(child);
+            if (closestDecorated) {
+                const splitResult = splitAroundUntil(textNode, closestDecorated);
+                const decorationToRemove = splitResult[0] || splitResult[1] || closestDecorated;
+                decorationToRemove.style.removeProperty('text-decoration-line');
+                if (!decorationToRemove.style.cssText) {
+                    for (const child of decorationToRemove.childNodes) {
+                        decorationToRemove.before(child);
+                        changedElements.push(child);
+                    }
+                    decorationToRemove.remove();
                 }
-                decorationToRemove.remove();
             }
         }
         if (wasCollapsed) {
