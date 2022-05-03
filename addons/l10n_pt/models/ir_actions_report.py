@@ -12,7 +12,7 @@ class IrActionsReport(models.Model):
             // Constants for A4 paper size
             const tableWidth = "17.65cm";
             const firstPageEnd = 3050;
-            const bodyHeight = 600;
+            const bodyHeight = 580;
 
             // Force the HTML and the PDF table (and its columns) to have the same width across all pages
             // (because the table header will be copied for each of the future tables)
