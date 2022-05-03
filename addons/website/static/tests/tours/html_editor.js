@@ -212,6 +212,11 @@ tour.register('test_html_editor_scss', {
             trigger: ".o_ace_view_editor button[data-action=save]",
         },
         {
+            content: "wait for reload",
+            trigger: ":not(.o_ace_view_editor)",
+            run: function () {}, // it's a check
+        },
+        {
             content: "reset view (after reload, html editor should have been reopened where it was)",
             trigger: '#ace-view-id button[data-action="reset"]',
         },
