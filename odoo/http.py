@@ -324,6 +324,35 @@ def db_filter(dbs, host=None):
 
     return list(dbs)
 
+class exceptions_as_404:
+    """
+    Hide some exceptions behind a fake HTTP 404 - Page not Found error.
+    Can be used as an endpoint decorator or as a context manager.
+
+    :param exceptions: the exceptions to intercept and replace by a fake
+        :class:`~werkzeug.exceptions.NotFound` error.
+    """
+    def __init__(self, exceptions):
+        if not isinstance(exceptions, collections.abc.Iterable):
+            exceptions = (exceptions,)
+        self.exceptions = exceptions
+
+    def __call__(self, endpoint):
+        @functools.wraps(endpoint)
+        def exceptions_as_404(*args, **kwargs):
+            try:
+                return endpoint(*args, **kwargs)
+            except self.exceptions as exc:
+                raise NotFound() from exc
+        return exceptions_as_404
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is not None and exc_type in self.exceptions:
+            raise NotFound() from exc_value
+
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 

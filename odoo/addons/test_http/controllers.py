@@ -3,7 +3,7 @@ import json
 import logging
 import werkzeug
 from odoo import http
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 
 from odoo.addons.web.controllers.utils import ensure_db
@@ -141,3 +141,22 @@ class TestHttp(http.Controller):
     def touch(self):
         request.session.touch()
         return ''
+
+    # =====================================================
+    # Error
+    # =====================================================
+    @http.route('/test_http/hide_errors/decorator', type='http', auth='none')
+    @http.exceptions_as_404(AccessError)
+    def hide_errors_deco(self, error):
+        if error == 'AccessError':
+            raise AccessError("Wrong iris code")
+        if error == 'UserError':
+            raise UserError("Walter is AFK")
+
+    @http.route('/test_http/hide_errors/context-manager', type='http', auth='none')
+    def hide_errors_cm(self, error):
+        with http.exceptions_as_404(AccessError):
+            if error == 'AccessError':
+                raise AccessError("Wrong iris code")
+            if error == 'UserError':
+                raise UserError("Walter is AFK")
