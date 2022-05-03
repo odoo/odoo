@@ -35,14 +35,38 @@ class ProjectShareWizard(models.TransientModel):
             else:
                 wizard.resource_ref = None
 
+    def action_send_mail_post_warning(self):
+        self.ensure_one()
+        portal_partners = self.partner_ids.filtered('user_ids')
+        note = self._get_note()
+        non_portal_partners = self.partner_ids - portal_partners
+
+        self.resource_ref._add_collaborators(self.partner_ids)
+        self._send_public_link(note, portal_partners)
+        self._send_signup_link(note, partners=non_portal_partners)
+        self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
+        return {'type': 'ir.actions.act_window_close'}
+
     def action_send_mail(self):
         self.ensure_one()
         if self.access_mode == 'edit':
             portal_partners = self.partner_ids.filtered('user_ids')
-            note = self._get_note()
-            self.resource_ref._add_collaborators(self.partner_ids)
-            self._send_public_link(note, portal_partners)
-            self._send_signup_link(note, partners=self.partner_ids - portal_partners)
-            self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
-            return {'type': 'ir.actions.act_window_close'}
+            non_portal_partners = self.partner_ids - portal_partners
+
+            if len(non_portal_partners) > 0:
+                warning = self.env['project.share.warning.wizard'].create({
+                    'project_share_id': self.id,
+                    'non_portal_partner_ids': non_portal_partners
+                })
+
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'project.share.warning.wizard',
+                    'views': [(self.env.ref('project.project_share_warning_wizard_view_form').id, 'form')],
+                    'res_id': warning.id,
+                    'target': 'new',
+                    'context': self.env.context,
+                }
+            return self.action_send_mail_post_warning()
+
         return super().action_send_mail()

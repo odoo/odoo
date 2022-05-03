@@ -32,6 +32,7 @@
         'views/project_update_views.xml',
         'views/project_update_templates.xml',
         'views/project_project_stage_views.xml',
+        'wizard/project_share_warning_wizard_views.xml',
         'wizard/project_share_wizard_views.xml',
         'views/project_collaborator_views.xml',
         'wizard/project_report_wizard_views.xml',
