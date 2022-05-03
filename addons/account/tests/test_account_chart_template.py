@@ -28,6 +28,10 @@ class AccountChartTemplateTest(TransactionCase):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
         cls.company = cls.env['res.company'].create({'name': "company_1"})
+        cls.env['ir.model.data']._update_xmlids([{
+            'xml_id': f"base.company_{cls.company.id}",
+            'record': cls.company,
+        }])
         cls.env.user.company_ids |= cls.company
 
         cls.AccountChartTemplate = cls.env['account.chart.template']
