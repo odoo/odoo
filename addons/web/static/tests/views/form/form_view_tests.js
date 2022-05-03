@@ -4583,9 +4583,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("properly apply onchange on one2many fields", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("properly apply onchange on one2many fields", async function (assert) {
         serverData.models.partner.records[0].p = [4];
         serverData.models.partner.onchanges = {
             foo: function (obj) {
@@ -4596,128 +4594,109 @@ QUnit.module("Views", (hooks) => {
                 ];
             },
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/></group>' +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <group><field name="foo"/></group>
+                    <field name="p">
+                        <tree><field name="display_name"/></tree>
+                    </field>
+                </form>`,
             resId: 1,
         });
 
         assert.containsOnce(
-            form,
+            target,
             ".o_field_one2many .o_data_row",
             "there should be one one2many record linked at first"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_one2many .o_data_row td:first").innerText,
+            target.querySelector(".o_field_one2many .o_data_row td").innerText,
             "aaa",
             "the 'display_name' of the one2many record should be correct"
         );
 
         // switch to edit mode
-        await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(
-            form.el.querySelector(".o_field_widget[name=foo] input"),
-            "let us trigger an onchange"
-        );
-        var $o2m = form.el.querySelector(".o_field_one2many");
-        assert.strictEqual($o2m.find(".o_data_row").length, 2, "there should be two linked record");
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=foo] input", "let us trigger an onchange");
+        assert.containsN(target, ".o_data_row", 2, "there should be two linked record");
         assert.strictEqual(
-            $o2m.find(".o_data_row:first td:first").innerText,
+            target.querySelector(".o_data_row .o_data_cell").innerText,
             "updated record",
             "the 'display_name' of the first one2many record should have been updated"
         );
         assert.strictEqual(
-            $o2m.find(".o_data_row:nth(1) td:first").innerText,
+            target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell").innerText,
             "created record",
             "the 'display_name' of the second one2many record should be correct"
         );
     });
 
-    QUnit.skipWOWL(
-        "properly apply onchange on one2many fields direct click",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("properly apply onchange on one2many fields direct click", async function (assert) {
+        const def = makeDeferred();
 
-            var def = testUtils.makeTestPromise();
+        serverData.views = {
+            "partner,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="int_field"/>
+                    </form>`,
+        };
+        serverData.models.partner.records[0].p = [2, 4];
+        serverData.models.partner.onchanges = {
+            int_field: function (obj) {
+                obj.p = [
+                    [5],
+                    [1, 2, { display_name: "updated record 1", int_field: obj.int_field }],
+                    [1, 4, { display_name: "updated record 2", int_field: obj.int_field * 2 }],
+                ];
+            },
+        };
 
-            serverData.models.partner.records[0].p = [2, 4];
-            serverData.models.partner.onchanges = {
-                int_field: function (obj) {
-                    obj.p = [
-                        [5],
-                        [1, 2, { display_name: "updated record 1", int_field: obj.int_field }],
-                        [1, 4, { display_name: "updated record 2", int_field: obj.int_field * 2 }],
-                    ];
-                },
-            };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="int_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            async mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    await def;
+                }
+            },
+        });
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    '<field name="int_field"/>' +
-                    "</group>" +
-                    '<field name="p">' +
-                    "<tree>" +
-                    '<field name="display_name"/>' +
-                    '<field name="int_field"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
-                resId: 1,
-                mockRPC(route, args) {
-                    if (args.method === "onchange") {
-                        var self = this;
-                        var my_args = arguments;
-                        var my_super = this._super;
-                        return def.then(() => {
-                            return my_super.apply(self, my_args);
-                        });
-                    }
-                    return this._super.apply(this, arguments);
-                },
-                archs: {
-                    "partner,false,form":
-                        '<form><group><field name="display_name"/><field name="int_field"/></group></form>',
-                },
-                viewOptions: {
-                    mode: "edit",
-                },
-            });
-            // Trigger the onchange
-            await editInput(form.el, ".o_field_widget[name=int_field] input", "2");
+        await click(target.querySelector(".o_form_button_edit"));
+        // Trigger the onchange
+        await editInput(target, ".o_field_widget[name=int_field] input", "2");
+        // Open first record in one2many
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsNone(target, ".modal");
 
-            // Open first record in one2many
-            await click(form.el.querySelector(".o_data_row:first"));
+        def.resolve();
+        await nextTick();
 
-            assert.containsNone(document.body, ".modal");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=int_field] input").value,
+            "2"
+        );
+    });
 
-            def.resolve();
-            await testUtils.nextTick();
-
-            assert.containsOnce(document.body, ".modal");
-            assert.strictEqual(
-                $(".modal").find(".o_field_widget[name=int_field] input").value,
-                "2"
-            );
-        }
-    );
-
-    QUnit.skipWOWL("update many2many value in one2many after onchange", async function (assert) {
+    QUnit.debug("update many2many value in one2many after onchange", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[1].p = [4];

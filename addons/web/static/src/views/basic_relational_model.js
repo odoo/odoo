@@ -961,6 +961,9 @@ export class RelationalModel extends Model {
         const fieldsInfo = mapViews(params.views);
         const handle = record.__bm_handle__;
 
+        // Sync with the mutex to wait for potential onchanges
+        await bm.mutex.getUnlockedDef();
+
         await bm.addFieldsInfo(handle, {
             fields: params.fields,
             viewType: params.viewMode,
