@@ -4,6 +4,7 @@ import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import wUtils from 'website.utils';
 
 const { Component, xml, useState, onWillStart } = owl;
 
@@ -141,8 +142,7 @@ export class NewContentModal extends Component {
         this.dialogs.add(AddPageDialog, {
             addPage: async (name, addMenu) => {
                 const url = `/website/add/${encodeURIComponent(name)}`;
-                const res = await this.website.sendRequest(url, { add_menu: addMenu || '' });
-                this.website.goToWebsite({ path: res });
+                wUtils.sendRequest(url, { add_menu: addMenu || '' });
             },
         });
     }

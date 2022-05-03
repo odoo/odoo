@@ -1155,7 +1155,7 @@ class WebsiteSale(http.Controller):
             'public_categ_ids': category,
             'website_id': request.website.id,
         })
-        return "%s?enable_editor=1" % product.product_tmpl_id.website_url
+        return self.env["website"].get_client_action_url(product.product_tmpl_id.website_url, True)
 
     @http.route(['/shop/config/product'], type='json', auth='user')
     def change_product_config(self, product_id, **options):

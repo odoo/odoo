@@ -1247,7 +1247,7 @@ class WebsiteSlides(WebsiteProfile):
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if slide.slide_category == 'article':
-            redirect_url += "?enable_editor=1"
+            redirect_url += self.env["website"].get_client_action_url(redirect_url, True)
         elif slide.slide_category == 'quiz':
             redirect_url += "?quiz_quick_create"
         elif channel.channel_type == "training":

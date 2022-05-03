@@ -125,7 +125,7 @@ class Page(models.Model):
                 # If the page being cloned has a menu, clone it too
                 menu.copy({'url': new_page.url, 'name': new_page.name, 'page_id': new_page.id})
 
-        return new_page.url + '?enable_editor=1'
+        return new_page.url
 
     def unlink(self):
         # When a website_page is deleted, the ORM does not delete its

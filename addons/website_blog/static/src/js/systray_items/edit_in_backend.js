@@ -22,7 +22,6 @@ patch(EditInBackendSystray.prototype, 'website_blog_edit_in_backend', {
 
     async duplicate() {
         const { metadata: { mainObject } } = this.websiteService.currentWebsite;
-        const duplicateUrl = await wUtils.sendRequest('/blog/post_duplicate', { blog_post_id: mainObject.id });
-        this.websiteService.goToWebsite({ path: duplicateUrl });
+        wUtils.sendRequest('/blog/post_duplicate', { blog_post_id: mainObject.id });
     }
 });

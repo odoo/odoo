@@ -200,9 +200,10 @@ class WebsitePublishedMixin(models.AbstractModel):
         return self.write({'website_published': not self.website_published})
 
     def open_website_url(self):
+        url = self.env['website'].get_client_action_url(self.website_url)
         return {
             'type': 'ir.actions.act_url',
-            'url': self.website_url,
+            'url': url,
             'target': 'self',
         }
 
@@ -282,9 +283,11 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             return is_published
 
     def open_website_url(self):
+        url = url_join(self.website_id.domain, self.website_url) if self.website_id.domain else self.website_url
+        url = self.env['website'].get_client_action_url(url)
         return {
             'type': 'ir.actions.act_url',
-            'url': url_join(self.website_id.domain, self.website_url) if self.website_id.domain else self.website_url,
+            'url': url,
             'target': 'self',
         }
 

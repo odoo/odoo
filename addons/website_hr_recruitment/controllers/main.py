@@ -78,7 +78,7 @@ class WebsiteHrRecruitment(http.Controller):
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
             'name': _('Job Title'),
         })
-        return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))
+        return request.redirect(request.env["website"].get_client_action_url(f"/jobs/detail/{slug(job)}", True))
 
     @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_detail(self, job, **kwargs):
