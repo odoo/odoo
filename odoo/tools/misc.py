@@ -25,7 +25,7 @@ import types
 import unicodedata
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
-from contextlib import contextmanager
+from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import wraps
 from itertools import islice, groupby as itergroupby
@@ -1260,6 +1260,47 @@ def ignore(*exc):
         yield
     except exc:
         pass
+
+class replace_exceptions(ContextDecorator):
+    """
+    Hide some exceptions behind another error. Can be used as a function
+    decorator or as a context manager.
+
+    .. code-block:
+
+        @route('/super/secret/route', auth='public')
+        @replace_exceptions(AccessError, by=NotFound())
+        def super_secret_route(self):
+            if not request.session.uid:
+                raise AccessError("Route hidden to non logged-in users")
+            ...
+
+        def some_util():
+            ...
+            with replace_exceptions(ValueError, by=UserError("Invalid argument")):
+                ...
+            ...
+
+    :param exceptions: the exception classes to catch and replace.
+    :param by: the exception to raise instead.
+    """
+    def __init__(self, *exceptions, by):
+        if not exceptions:
+            raise ValueError("Missing exceptions")
+
+        wrong_exc = next((exc for exc in exceptions if not issubclass(exc, Exception)), None)
+        if wrong_exc:
+            raise TypeError(f"{wrong_exc} is not an exception class.")
+
+        self.exceptions = exceptions
+        self.by = by
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is not None and issubclass(exc_type, self.exceptions):
+            raise self.by from exc_value
 
 html_escape = markupsafe.escape
 
