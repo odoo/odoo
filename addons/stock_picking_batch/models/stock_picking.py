@@ -127,6 +127,13 @@ class StockPicking(models.Model):
 
         return res
 
+    def action_cancel(self):
+        res = super().action_cancel()
+        for picking in self:
+            if picking.batch_id and any(picking.state != 'cancel' for picking in picking.batch_id.picking_ids):
+                picking.batch_id = None
+        return res
+
     def _should_show_transfers(self):
         if len(self.batch_id) == 1 and self == self.batch_id.picking_ids:
             return False
