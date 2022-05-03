@@ -137,7 +137,9 @@ class Lead(models.Model):
                                                groups="crm.group_use_recurring_revenues")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
-    date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
+    date_closed = fields.Datetime(
+        'Closed Date', compute='_compute_date_closed', readonly=True, store=True, copy=False,
+        help="Date when the lead was won or lost")
     date_action_last = fields.Datetime('Last Action', readonly=True)
     date_open = fields.Datetime(
         'Assignment Date', compute='_compute_date_open', readonly=True, store=True)
@@ -270,6 +272,15 @@ class Lead(models.Model):
     def _compute_date_last_stage_update(self):
         for lead in self:
             lead.date_last_stage_update = fields.Datetime.now()
+
+    @api.depends('active', 'probability')
+    def _compute_date_closed(self):
+        # reset the date for pending leads
+        pending_leads = self.filtered(lambda i: i.active and 0 < i.probability < 100)
+        pending_leads.date_closed = False
+        # set the date (if not already set) for other leads
+        for lead in self - pending_leads:
+            lead.date_closed = lead.date_closed or fields.Datetime.now()
 
     @api.depends('create_date', 'date_open')
     def _compute_day_open(self):
@@ -580,17 +591,11 @@ class Lead(models.Model):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
 
-        # stage change: update date_last_stage_update
+        # stage change: update probability
         if 'stage_id' in vals:
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])
             if stage_id.is_won:
                 vals.update({'probability': 100, 'automated_probability': 100})
-
-        # stage change with new stage: update probability and date_closed
-        if vals.get('probability', 0) >= 100 or not vals.get('active', True):
-            vals['date_closed'] = fields.Datetime.now()
-        elif tools.float_compare(vals.get('probability', 0), 0, precision_digits=2) > 0:
-            vals['date_closed'] = False
 
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
