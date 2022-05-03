@@ -184,10 +184,6 @@ Object.assign(AutocompleteInput, {
             type: Function,
             optional: true,
         },
-        placeholder: {
-            type: String,
-            optional: true,
-        },
         select: {
             type: Function,
             optional: true,
