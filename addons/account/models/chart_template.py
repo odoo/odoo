@@ -8,6 +8,7 @@ from collections import defaultdict
 from odoo import SUPERUSER_ID, Command, _, api, models
 from odoo.addons.base.models.ir_translation import IrTranslationImport
 from odoo.modules import get_resource_path
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ TEMPLATES = {
     'fr': {'name': 'FR', 'country': 'base.fr', 'modules': ['l10n_fr']},
     'ch': {'name': 'CH', 'country': 'base.ch', 'modules': ['l10n_ch']},
     'de': {'name': 'DE', 'country': 'base.de', 'modules': ['l10n_de']},
+    'ae': {'name': 'AE', 'country': 'base.ae', 'modules': ['l10n_ae']},
 }
 
 class AccountChartTemplateDataError(Exception):
@@ -64,10 +66,11 @@ class AccountChartTemplate(models.AbstractModel):
         # TODO: one country can have multiple CoAs
         # TODO: also fix account/populate/res_company.py then
         company = company or self.env.company
+        country = company.country_id
         default = 'generic_coa'
         if not company.country_id:
             return default
-        country_code = company.country_id.get_metadata()[0]['xmlid']
+        country_code = country.get_external_id()[country.id]
         return next((key for key, template in TEMPLATES.items() if template['country'] == country_code), default)
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
@@ -80,10 +83,15 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo (bool): whether or not we should load demo data right after loading the
             chart template.
         """
-        if company and isinstance(company, int):
+        # do not use `request.env` here, it can cause deadlocks
+        if not company:
+            if request and hasattr(request, 'allowed_company_ids'):
+                company = self.env['res.company'].browse(request.allowed_company_ids[0])
+            else:
+                company = self.env.company
+        elif isinstance(company, int):
             company = self.env['res.company'].browse([company])
-        else:
-            company = company or self.env.company
+
         template_code = template_code or company and self._guess_chart_template(company)
         module_names = TEMPLATES[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
@@ -91,18 +99,21 @@ class AccountChartTemplate(models.AbstractModel):
             module_ids.sudo().button_immediate_install()
             self.env.reset()
 
-        with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
         # If we don't have any chart of account on this company, install this chart of account
-        if not company.existing_accounting():
+        if not company.chart_template and not company.existing_accounting():
+            with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
             xml_id = company.get_metadata()[0]['xmlid']
             if not xml_id:
                 xml_id = f"base.company_{company.id}"
                 with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': company}])
+
             data = with_company._get_chart_template_data(template_code, company)
             with_company._load_data(data)
             with_company._post_load_data(template_code, company)
+
             company.flush()
             with_company.env.cache.invalidate()
+
             # Install the demo data when the first localization is instanciated on the company
             if install_demo and with_company.env.ref('base.module_account').demo:
                 try:
@@ -112,6 +123,7 @@ class AccountChartTemplate(models.AbstractModel):
                 except Exception:
                     # Do not rollback installation of CoA if demo data failed
                     _logger.exception('Error while loading accounting demo data')
+            company.chart_template = template_code
 
     def _load_data(self, data):
         def deref(values, model):
@@ -158,6 +170,7 @@ class AccountChartTemplate(models.AbstractModel):
             _logger.debug("Loading model %s ...", model)
             translate_vals = defaultdict(list)
             create_vals = []
+
             for xml_id, record in data.items():
                 xml_id = f"{'account.' if '.' not in xml_id else ''}{xml_id}"
                 for translate, value in list(record.items()):
@@ -181,9 +194,11 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
+
             _logger.debug('Loading records for model %s...', model)
             created = self.env[model].sudo()._load_records(create_vals)
             _logger.debug('Loaded records for model %s', model)
+
             for vals, record in zip(create_vals, created):
                 for translation in translate_vals[vals['xml_id']]:
                     irt_cursor.push({**translation, 'res_id': record.id})
@@ -315,7 +330,6 @@ class AccountChartTemplate(models.AbstractModel):
         if not func:
             func = getattr(self, f"_get_{name}", None)
         return func and func(template_code, company) or {}
-
 
     def _post_load_data(self, template_code, company):
         company = (company or self.env.company)
@@ -468,7 +482,6 @@ class AccountChartTemplate(models.AbstractModel):
         cid = (company or self.env.company).id
         return {
             company.get_external_id()[cid]: {
-                'currency_id': 'base.USD',
                 'account_fiscal_country_id': 'base.us',
                 'account_default_pos_receivable_account_id': f'account.{cid}_pos_receivable',
                 'income_currency_exchange_account_id': f'account.{cid}_income_currency_exchange',

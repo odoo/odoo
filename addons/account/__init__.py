@@ -9,8 +9,12 @@ from . import report
 from . import populate
 
 from odoo import api, SUPERUSER_ID
+from odoo.addons.account.models.chart_template import TEMPLATES
 
-SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']
+SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE',
+                  'CD', 'SN', 'TD', 'TG']
+VAT_LIST = ['AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL',
+            'NO', 'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN']
 
 def _set_fiscal_country(env):
     """ Sets the fiscal country on existing companies when installing the module.
@@ -23,16 +27,18 @@ def _set_fiscal_country(env):
 
 def _auto_install_l10n(env):
     # Check the country of the main company (only) and eventually load some module needed in that country
-    env['account.chart.template'].try_loading()
     country_code = env.company.country_id.code
     if country_code:
+
+        Chart = env['account.chart.template']
+        template_code = Chart._guess_chart_template(env.company)
+        if template_code != "generic_coa":
+            Chart.try_loading(template_code, env.company)
         module_list = []
+
         if country_code in ['US', 'CA']:
             module_list.append('account_check_printing')
-        if country_code in SYSCOHADA_LIST + [
-            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO',
-            'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN'
-            ]:
+        if country_code in SYSCOHADA_LIST + VAT_LIST:
             module_list.append('base_vat')
 
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])

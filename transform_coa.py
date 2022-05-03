@@ -422,7 +422,13 @@ def do_module(code, module, lang):
     for model, function_name in mapping.items():
         for model_name in (model, model + '.template'):
             one_level = model_name == 'account.chart.template'
-            content = convert_records_to_function(all_records, model_name, function_name, one_level=one_level)
+            set_company = model_name == 'res.company'
+            content = convert_records_to_function(
+                all_records,
+                model_name,
+                function_name,
+                set_company=set_company,
+                one_level=one_level)
             if content:
                 contents[function_name] = contents.get(function_name, "") + content
                 if model not in ("account.chart.template", "account.tax", "res.company"):
@@ -440,12 +446,12 @@ def do_module(code, module, lang):
     if extra_functions:
         content += (
             f"    def _get_{code}_chart_template_data(self, template_code, company):\n"
-            "        res = self._get_chart_template_data(company)\n"
-            f"        if template_code == '{code}':\n"
+             "        return {\n"
+             "            **self._get_chart_template_data(company),\n"
         )
         for model, function_name in extra_functions:
-            content += f"            res['{model}'] = self.{function_name}(template_code, company)\n"
-        content += "        return res\n\n"
+            content += f"            '{model}': self.{function_name}(template_code, company),\n"
+        content += "        }\n"
 
     if contents:
         content += "\n".join(contents.values())
@@ -454,7 +460,7 @@ def do_module(code, module, lang):
     with open(str(path), 'w', encoding="utf-8") as outfile:
         outfile.write(content)
 
-def convert_records_to_function(all_records, model, function_name, cid=True, one_level=False):
+def convert_records_to_function(all_records, model, function_name, set_company=False, one_level=False):
     """
         Convert a set of Records to a Python function.
     """
@@ -464,7 +470,8 @@ def convert_records_to_function(all_records, model, function_name, cid=True, one
 
     stream = io.StringIO()
     stream.write(indent(1, f"def {function_name}(self, template_code, company):\n") +
-                 (cid and indent(2, "cid = (company or self.env.company).id\n")) +
+                 (set_company and indent(2, "company = (company or self.env.company)\n")) +
+                 indent(2, "cid = (company or self.env.company).id\n") +
                  indent(2, "return "))
 
     if one_level:
