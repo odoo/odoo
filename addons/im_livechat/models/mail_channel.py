@@ -41,8 +41,8 @@ class MailChannel(models.Model):
         """
         notifications = super()._channel_message_notifications(message=message, message_format=message_format)
         for channel in self:
-            # add uuid for private livechat channels to allow anonymous to listen
-            if channel.channel_type == 'livechat' and channel.public == 'private':
+            # add uuid to allow anonymous to listen
+            if channel.channel_type == 'livechat':
                 notifications.append([channel.uuid, 'mail.channel/new_message', notifications[0][2]])
         if not message.author_id:
             unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
