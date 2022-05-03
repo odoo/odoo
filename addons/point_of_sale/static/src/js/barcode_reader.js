@@ -19,6 +19,7 @@ var BarcodeReader = core.Class.extend({
     init: function (attributes) {
         this.mutex = new Mutex();
         this.pos = attributes.pos;
+        this.pos.show_barcode_error_modal = true;
         this.action_callbacks = {};
         this.exclusive_callbacks = {};
         this.proxy = attributes.proxy;
@@ -114,10 +115,16 @@ var BarcodeReader = core.Class.extend({
         if (! Array.isArray(parsed_results)) {
             parsed_results = [parsed_results];
         }
-        for (const parsed_result of parsed_results) {
+        parsed_results_loop:
+        for (const [index, parsed_result] of parsed_results.entries()) {
+            let is_last_index = index + 1 === parsed_results.length;
+            this.pos.show_barcode_error_modal = is_last_index;
             if (callbacks[parsed_result.type]) {
                 for (const cb of callbacks[parsed_result.type]) {
-                    await cb(parsed_result);
+                    let result_callback = await cb(parsed_result);
+                    if (result_callback) {
+                        break parsed_results_loop;
+                    }
                 }
             } else if (callbacks.error) {
                 [...callbacks.error].map(cb => cb(parsed_result));
