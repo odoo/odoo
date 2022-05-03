@@ -28,6 +28,7 @@
                         <t t-if="notificationView.constructor.name === 'NotificationGroupView'">
                             <NotificationGroup
                                 className="'o_NotificationList_group'"
+                                classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
                                 record="notificationView"
                             />
                         </t>
