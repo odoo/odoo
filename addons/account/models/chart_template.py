@@ -104,8 +104,10 @@ class AccountChartTemplate(models.AbstractModel):
             with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
             xml_id = company.get_metadata()[0]['xmlid']
             if not xml_id:
-                xml_id = f"base.company_{company.id}"
-                with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': company}])
+                with_company.env['ir.model.data']._update_xmlids([{
+                    'xml_id': f"base.company_{company.id}",
+                    'record': company
+                }])
 
             data = with_company._get_chart_template_data(template_code, company)
             with_company._load_data(data)
@@ -135,12 +137,13 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model._fields[field].type in ('one2many', 'many2many'):
                     if value and isinstance(value[0], (list, tuple)):
                         for command in value:
+                            idx = len(command) - 1
                             if command[0] in (Command.CREATE, Command.UPDATE):
-                                deref(command[2], self.env[model._fields[field].comodel_name])
+                                deref(command[idx], self.env[model._fields[field].comodel_name])
                             if command[0] == Command.SET:
-                                for i, subvalue in enumerate(command[2]):
-                                    if isinstance(value, str):
-                                        command[2][i] = self.env.ref(subvalue).id
+                                for i, subvalue in enumerate(command[idx]):
+                                    if isinstance(subvalue, str):
+                                        command[idx][i] = self.env.ref(subvalue).id
             return values
 
         def defer(all_data):
