@@ -104,6 +104,25 @@ registerModel({
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
         },
+        /**
+         * Called when selecting an item in the autocomplete input of the
+         * 'new_message' chat window.
+         *
+         * @param {Event} ev
+         * @param {Object} ui
+         * @param {Object} ui.item
+         * @param {integer} ui.item.id
+         */
+        async onAutocompleteSelect(ev, ui) {
+            const chat = await this.messaging.getChat({ partnerId: ui.item.id });
+            if (!chat) {
+                return;
+            }
+            this.messaging.chatWindowManager.openThread(chat, {
+                makeActive: true,
+                replaceNewMessage: true,
+            });
+        },
         onClickFromChatWindowHiddenMenu() {
             this.makeActive();
             this.manager.closeHiddenMenu();

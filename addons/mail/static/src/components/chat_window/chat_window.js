@@ -20,7 +20,6 @@ export class ChatWindow extends Component {
          */
         this._inputRef = { el: null };
         // the following are passed as props to children
-        this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
     }
 
@@ -61,27 +60,6 @@ export class ChatWindow extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Called when selecting an item in the autocomplete input of the
-     * 'new_message' chat window.
-     *
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    async _onAutocompleteSelect(ev, ui) {
-        const chat = await this.messaging.getChat({ partnerId: ui.item.id });
-        if (!chat) {
-            return;
-        }
-        this.messaging.chatWindowManager.openThread(chat, {
-            makeActive: true,
-            replaceNewMessage: true,
-        });
-    }
 
     /**
      * Called when typing in the autocomplete input of the 'new_message' chat
