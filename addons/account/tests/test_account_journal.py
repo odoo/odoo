@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import odoo.tools
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError, ValidationError
@@ -82,3 +83,22 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         # Assigning both should be allowed
         self.company_data['default_journal_misc'].account_control_ids = \
             self.company_data['default_account_revenue'] + self.company_data['default_account_expense']
+
+    @odoo.tools.mute_logger('odoo.addons.account.models.account_journal')
+    def test_account_journal_alias_name(self):
+        journal = self.company_data['default_journal_misc']
+        self.assertEqual(journal._get_alias_values(journal.type)['alias_name'], 'Miscellaneous Operations-company_1_data')
+        self.assertEqual(journal._get_alias_values(journal.type, 'ぁ')['alias_name'], 'MISC-company_1_data')
+        journal.name = 'ぁ'
+        self.assertEqual(journal._get_alias_values(journal.type)['alias_name'], 'MISC-company_1_data')
+        journal.code = 'ぁ'
+        self.assertEqual(journal._get_alias_values(journal.type)['alias_name'], 'general-company_1_data')
+
+        self.company_data_2['company'].name = 'ぁ'
+        company_2_id = str(self.company_data_2['company'].id)
+        journal_2 = self.company_data_2['default_journal_sale']
+        self.assertEqual(journal_2._get_alias_values(journal_2.type)['alias_name'], 'Customer Invoices-' + company_2_id)
+        journal_2.name = 'ぁ'
+        self.assertEqual(journal_2._get_alias_values(journal_2.type)['alias_name'], 'INV-' + company_2_id)
+        journal_2.code = 'ぁ'
+        self.assertEqual(journal_2._get_alias_values(journal_2.type)['alias_name'], 'sale-' + company_2_id)
