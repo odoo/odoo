@@ -758,7 +758,7 @@ registerModel({
                 }
                 const Model = this.messaging.models[this.suggestionModelName];
                 const searchTerm = this.suggestionSearchTerm;
-                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread }));
+                await Model.fetchSuggestions(searchTerm, { thread: this.composer.activeThread });
                 if (!this.exists()) {
                     return;
                 }
