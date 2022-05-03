@@ -109,7 +109,13 @@ function bootstrapToTable($editable) {
     const editable = $editable.get(0);
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {
-        _wrap(rowInColumn, 'div', 'o_fake_table');
+        const previous = rowInColumn.previousElementSibling;
+        if (previous && previous.classList.contains('o_fake_table')) {
+            // If a container was already created there, append to it.
+            previous.append(rowInColumn);
+        } else {
+            _wrap(rowInColumn, 'div', 'o_fake_table');
+        }
     }
 
     // These containers from the mass mailing masonry snippet require full
@@ -126,9 +132,16 @@ function bootstrapToTable($editable) {
         masonryRow.parentElement.style.setProperty('height', '100%');
     }
 
+    const containers = editable.querySelectorAll('.container, .container-fluid, .o_fake_table');
+    // Capture the widths of the containers before manipulating it.
+    for (const container of containers) {
+        container.setAttribute('o-temp-width', _getWidth(container));
+    }
     // Now convert all containers with rows to tables.
-    for (const container of [...editable.querySelectorAll('.container, .container-fluid, .o_fake_table')].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
-        const containerWidth = _getWidth(container);
+    for (const container of [...containers].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
+        // The width of the table was stored in a temporary attribute. Fetch it
+        // for use in `_applyColspan` and remove the attribute at the end.
+        const containerWidth = container.getAttribute('o-temp-width');
 
         // TABLE
         const table = _createTable(container.attributes);
@@ -255,6 +268,9 @@ function bootstrapToTable($editable) {
             }
             tr.remove(); // row was cloned and inserted already
         }
+    }
+    for (const table of editable.querySelectorAll('table')) {
+        table.removeAttribute('o-temp-width');
     }
 }
 /**
@@ -404,10 +420,31 @@ function enforceTablesResponsivity(editable) {
     for (const tr of editable.querySelectorAll('tr')) {
         tr.style.setProperty('width', '100%');
     }
-    for (const td of editable.querySelectorAll('td[style*="max-width"]')) {
+    for (const td of editable.querySelectorAll('td[colspan]')) {
         td.setAttribute('width', '100%');
         td.style.setProperty('width', '100%');
-        td.style.setProperty('display', 'inline-block');
+        td.style.setProperty('display', 'inline-block'); // Allow cells to wrap.
+    }
+    // Masonry has crazy nested tables that require some extra treatment.
+    for (const td of editable.querySelectorAll('.s_masonry_block td')) {
+        td.classList.toggle('o_desktop_h100', true);
+        td.style.setProperty('height', '100%');
+        if ([...td.children].map(child => child.nodeName.toLowerCase()).includes('table')) {
+            td.style.setProperty('height', _getHeight(td.parentElement) + 'px');
+        } else {
+            // Hack that makes vertical-align possible within an inline-block.
+            const wrapper = document.createElement('div');
+            wrapper.style.setProperty('display', 'inline-block');
+            for (const child of [...td.childNodes]) {
+                wrapper.append(child);
+            }
+            td.append(wrapper);
+            const centeringSpan = document.createElement('span');
+            centeringSpan.style.setProperty('height', '100%');
+            centeringSpan.style.setProperty('display', 'inline-block');
+            centeringSpan.style.setProperty('vertical-align', 'middle');
+            td.prepend(centeringSpan);
+        }
     }
 }
 /**
