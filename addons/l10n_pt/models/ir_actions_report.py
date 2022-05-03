@@ -16,35 +16,23 @@ class IrActionsReport(models.Model):
 
             // Force the HTML and the PDF table (and its columns) to have the same width across all pages
             // (because the table header will be copied for each of the future tables)
-            // This is necessary to correctly determine which row belongs to which page
-            document.querySelector("table").style.width = tableWidth;
-            const ths = document.querySelectorAll("th");
+            // This is necessary to correctly determine which table row belongs to which page
+            const originalTable = document.querySelector("table");
+            originalTable.style.width = tableWidth;
+            const ths = originalTable.querySelectorAll("th");
             for (var i = 0; i < ths.length; i++) {
                 ths[i].style.width = ths[i].getBoundingClientRect().width + "px";
             }
             
-            // Function to parse the amount displayed in HTML into a number
-            function parseAmount(amountElement) {
-                const amountText = amountElement.innerText;
-                if (amountText.indexOf(".") !== -1)   //US-formatted amount
-                    return parseFloat(amountText.split(",").join(""));
-                return parseFloat(amountText.replace(",", ".")); //European-formatted amount
-            }
-            
             // Parse main table informations into a list of dicts representing the smaller tables (one per page)
-            const rows = document.querySelectorAll("tr");
-            const amounts = document.querySelectorAll("span.oe_currency_value");
+            const rows = originalTable.querySelectorAll("tbody>tr");
             var tables = [{
                 rows: [],
                 carrying: 0.0,
             }]
-            for (var i = 1; i < rows.length; i++) {
-                if (amounts[i - 1] === undefined)   // i-1 because offset with header which has no amount,
-                    continue                        // might be undefined if the row is a total row
-                
-                tables[tables.length-1].carrying += parseAmount(amounts[i - 1]);
+            for (var i = 0; i < rows.length; i++) {
                 tables[tables.length-1].rows.push(i);
-                
+                tables[tables.length-1].carrying += parseFloat(rows[i].querySelector("span[data-amount]").getAttribute("data-amount"));
                 if (rows[i].getBoundingClientRect().bottom > firstPageEnd + (tables.length-1) * bodyHeight) {
                     tables.push({
                         rows: [],
@@ -53,10 +41,9 @@ class IrActionsReport(models.Model):
                 }
             }
             
-            // Delete the old unique table (but remember its header to reuse later)
+            // Delete the old unique table (but remember its header to reuse it later)
             const theadElement = document.querySelector("thead");
-            const tableElement = document.querySelector("table");
-            tableElement.parentNode.removeChild(tableElement);
+            originalTable.parentNode.removeChild(originalTable);
             
             // Function to create the div containing the carry over in the beggining/end of the page
             function carryValueElement(amount) {

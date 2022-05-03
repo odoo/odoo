@@ -256,7 +256,6 @@ class IrActionsReport(models.Model):
             command_args.extend(['--run-script', run_script])
             command_args.extend(['--disable-smart-shrinking'])
             command_args.extend(['--debug-javascript'])
-            command_args.extend(['--log-level', 'warn'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:
