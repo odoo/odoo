@@ -76,6 +76,21 @@ registerModel({
             }
         },
         /**
+         * @param {Object} req
+         * @param {string} req.term
+         * @param {function} res
+         */
+        _onMobileAddItemHeaderInputSource(req, res) {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.discuss.isAddingChannel) {
+                this.discuss.handleAddChannelAutocompleteSource(req, res);
+            } else {
+                this.discuss.handleAddChatAutocompleteSource(req, res);
+            }
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */

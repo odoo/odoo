@@ -12,7 +12,6 @@ export class Discuss extends LegacyComponent {
     setup() {
         this._updateLocalStoreProps();
         // bind since passed as props
-        this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
         this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
     }
@@ -90,23 +89,6 @@ export class Discuss extends LegacyComponent {
             return;
         }
         this.discussView.discuss.clearIsAddingItem();
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onMobileAddItemHeaderInputSource(req, res) {
-        if (!this.discussView) {
-            return;
-        }
-        if (this.discussView.discuss.isAddingChannel) {
-            this.discussView.discuss.handleAddChannelAutocompleteSource(req, res);
-        } else {
-            this.discussView.discuss.handleAddChatAutocompleteSource(req, res);
-        }
     }
 
 }
