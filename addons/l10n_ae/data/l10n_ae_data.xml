@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <menuitem id="account_reports_ae_statements_menu"
+        name="UAE"
+        parent="account.menu_finance_reports"
+        sequence="0"
+        groups="account.group_account_readonly"/>
+
     <!-- set VAT label to show on invoice report -->
     <record id="base.ae" model="res.country">
         <field name="vat_label">VAT</field>

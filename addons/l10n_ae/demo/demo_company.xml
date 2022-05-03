@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_ae.uae_chart_template_standard')]"/>
-        <value model="res.company" eval="obj().env.ref('l10n_ae.demo_company_ae')"/>
+        <value eval="[]"/>
+        <value name="template_code">ae</value>
+        <value name="company" model="res.company" eval="ref('l10n_ae.demo_company_ae')"/>
     </function>
 </odoo>
