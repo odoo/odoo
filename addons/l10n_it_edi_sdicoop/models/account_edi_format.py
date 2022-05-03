@@ -169,7 +169,14 @@ class AccountEdiFormat(models.Model):
             try:
                 responses = self._l10n_it_edi_upload([i['data'] for i in to_send.values()], proxy_user)
             except AccountEdiProxyError as e:
-                return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
+                return {
+                    invoice: {
+                        'attachment' : invoice.l10n_it_edi_attachment_id,
+                        'error': e.message,
+                        'blocking_level': 'error'
+                    }
+                    for invoice in invoices
+                }
 
         for filename, response in responses.items():
             invoice = to_send[filename]['invoice']
@@ -177,6 +184,7 @@ class AccountEdiFormat(models.Model):
             if 'id_transaction' in response:
                 invoice.l10n_it_edi_transaction = response['id_transaction']
                 to_return[invoice].update({
+                    'attachment' : invoice.l10n_it_edi_attachment_id,
                     'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
                     'blocking_level': 'info',
                 })
