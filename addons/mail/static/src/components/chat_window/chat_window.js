@@ -21,7 +21,6 @@ export class ChatWindow extends Component {
         this._inputRef = { el: null };
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
-        this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -80,32 +79,6 @@ export class ChatWindow extends Component {
         this.messaging.chatWindowManager.openThread(chat, {
             makeActive: true,
             replaceNewMessage: true,
-        });
-    }
-
-    /**
-     * Called when typing in the autocomplete input of the 'new_message' chat
-     * window.
-     *
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onAutocompleteSource(req, res) {
-        this.messaging.models['Partner'].imSearch({
-            callback: (partners) => {
-                const suggestions = partners.map(partner => {
-                    return {
-                        id: partner.id,
-                        value: partner.nameOrDisplayName,
-                        label: partner.nameOrDisplayName,
-                    };
-                });
-                res(_.sortBy(suggestions, 'label'));
-            },
-            keyword: _.escape(req.term),
-            limit: 10,
         });
     }
 

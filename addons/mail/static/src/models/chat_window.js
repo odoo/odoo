@@ -104,6 +104,30 @@ registerModel({
             const lastVisible = this.manager.lastVisible;
             this.manager.swap(this, lastVisible);
         },
+        /**
+         * Called when typing in the autocomplete input of the 'new_message' chat
+         * window.
+         *
+         * @param {Object} req
+         * @param {string} req.term
+         * @param {function} res
+         */
+        onAutocompleteSource(req, res) {
+            this.messaging.models['Partner'].imSearch({
+                callback: (partners) => {
+                    const suggestions = partners.map(partner => {
+                        return {
+                            id: partner.id,
+                            value: partner.nameOrDisplayName,
+                            label: partner.nameOrDisplayName,
+                        };
+                    });
+                    res(_.sortBy(suggestions, 'label'));
+                },
+                keyword: _.escape(req.term),
+                limit: 10,
+            });
+        },
         onClickFromChatWindowHiddenMenu() {
             this.makeActive();
             this.manager.closeHiddenMenu();
