@@ -11,6 +11,7 @@ import {
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
+    patchTimeZone,
     patchWithCleanup,
     selectDropdownItem,
 } from "@web/../tests/helpers/utils";
@@ -29,7 +30,6 @@ let createView,
     mapLegacyEnvToWowlEnv,
     makeTestEnv,
     makeTestEnvironment,
-    concurrency,
     _t,
     ViewDialogs,
     clickFirst,
@@ -4973,8 +4973,8 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".modal .o_field_widget[name=name] input", "new name");
     });
 
-    QUnit.skipWOWL("onchanges on date(time) fields", async function (assert) {
-        assert.expect(6);
+    QUnit.test("onchanges on date(time) fields", async function (assert) {
+        patchTimeZone(120);
 
         serverData.models.partner.onchanges = {
             foo: function (obj) {
@@ -4982,266 +4982,196 @@ QUnit.module("Views", (hooks) => {
                 obj.datetime = "2021-12-12 10:55:05";
             },
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                '<field name="date"/>' +
-                '<field name="datetime"/>' +
-                "</group>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </form>`,
             resId: 1,
-            session: {
-                getTZOffset: function () {
-                    return 120;
-                },
-            },
         });
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=date]").innerText,
-            "01/25/2017",
-            "the initial date should be correct"
+            target.querySelector(".o_field_widget[name=date]").innerText,
+            "01/25/2017"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=datetime]").innerText,
-            "12/12/2016 12:55:05",
-            "the initial datetime should be correct"
+            target.querySelector(".o_field_widget[name=datetime]").innerText,
+            "12/12/2016 12:55:05"
         );
 
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=date] input").value,
-            "01/25/2017",
-            "the initial date should be correct in edit"
+            target.querySelector(".o_field_widget[name=date] input").value,
+            "01/25/2017"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=datetime] input").value,
-            "12/12/2016 12:55:05",
-            "the initial datetime should be correct in edit"
+            target.querySelector(".o_field_widget[name=datetime] input").value,
+            "12/12/2016 12:55:05"
         );
 
         // trigger the onchange
-        await editInput(form.el, '.o_field_widget[name="foo"]', "coucou");
+        await editInput(target, '.o_field_widget[name="foo"] input', "coucou");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=date] input").value,
-            "12/12/2021",
-            "the initial date should be correct in edit"
+            target.querySelector(".o_field_widget[name=date] input").value,
+            "12/12/2021"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=datetime] input").value,
-            "12/12/2021 12:55:05",
-            "the initial datetime should be correct in edit"
+            target.querySelector(".o_field_widget[name=datetime] input").value,
+            "12/12/2021 12:55:05"
         );
     });
 
-    QUnit.skipWOWL("onchanges are not sent for each keystrokes", async function (assert) {
-        var done = assert.async();
-        assert.expect(5);
-
-        var onchangeNbr = 0;
-
-        serverData.models.partner.onchanges = {
-            foo: function (obj) {
-                obj.int_field = obj.foo.length + 1000;
-            },
-        };
-        var def = testUtils.makeTestPromise();
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/><field name="int_field"/></group>' +
-                "</form>",
-            resId: 2,
-            fieldDebounce: 3,
-            mockRPC(route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "onchange") {
-                    onchangeNbr++;
-                    return concurrency.delay(3).then(function () {
-                        def.resolve();
-                        return result;
-                    });
-                }
-                return result;
-            },
-        });
-
-        await click(form.el.querySelector(".o_form_button_edit"));
-
-        editInput(form.el, ".o_field_widget[name=foo] input", "1");
-        assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
-        editInput(form.el, ".o_field_widget[name=foo] input", "12");
-        assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
-
-        return waitForFinishedOnChange()
-            .then(async function () {
-                assert.strictEqual(onchangeNbr, 1, "one onchange has been called");
-
-                // add something in the input, then focus another input
-                await testUtils.fields.editAndTrigger(
-                    form.el.querySelector(".o_field_widget[name=foo] input"),
-                    "123",
-                    ["change"]
-                );
-                assert.strictEqual(onchangeNbr, 2, "one onchange has been called immediately");
-
-                return waitForFinishedOnChange();
-            })
-            .then(function () {
-                assert.strictEqual(onchangeNbr, 2, "no extra onchange should have been called");
-
-                done();
-            });
-
-        function waitForFinishedOnChange() {
-            return def.then(function () {
-                def = testUtils.makeTestPromise();
-                return concurrency.delay(0);
-            });
-        }
-    });
-
-    QUnit.skipWOWL("onchanges are not sent for invalid values", async function (assert) {
-        assert.expect(6);
-
+    QUnit.test("onchanges are not sent for invalid values", async function (assert) {
         serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 obj.foo = String(obj.int_field);
             },
         };
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/><field name="int_field"/></group>' +
-                "</form>",
+            arch: `<form><field name="foo"/><field name="int_field"/></form>`,
             resId: 2,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
 
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
         // edit int_field, and check that an onchange has been applied
-        await editInput(form.el, '.o_field_widget[name="int_field"] input', "123");
+        await editInput(target, '.o_field_widget[name="int_field"] input', "123");
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="foo"] input').value,
+            target.querySelector('.o_field_widget[name="foo"] input').value,
             "123",
             "the onchange has been applied"
         );
 
         // enter an invalid value in a float, and check that no onchange has
         // been applied
-        await editInput(form.el, '.o_field_widget[name="int_field"] input', "123a");
+        await editInput(target, '.o_field_widget[name="int_field"] input', "123a");
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="foo"] input').value,
+            target.querySelector('.o_field_widget[name="foo"] input').value,
             "123",
             "the onchange has not been applied"
         );
 
         // save, and check that the int_field input is marked as invalid
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(target.querySelector(".o_form_button_save"));
         assert.hasClass(
-            form.el.querySelector('.o_field_widget[name="int_field"]'),
+            target.querySelector('.o_field_widget[name="int_field"]'),
             "o_field_invalid",
             "input int_field is marked as invalid"
         );
 
-        assert.verifySteps(["read", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange"]);
     });
 
-    QUnit.skipWOWL("rpc complete after destroying parent", async function (assert) {
-        // We just test that there is no crash in this situation
-        assert.expect(0);
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<button name="update_module" type="object" class="o_form_button_update"/>' +
-                "</form>",
-            resId: 2,
-            intercepts: {
-                execute_action: function (event) {
-                    form.destroy();
-                    event.data.on_success();
-                },
+    QUnit.test("rpc complete after destroying parent", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <button name="update_module" type="object" class="o_form_button_update"/>
+                </form>`,
+            "partner,false,list": `<tree><field name="display_name"/></tree>`,
+            "partner,false,search": "<search></search>",
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                res_id: 1,
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
             },
-        });
-        await click(form.el.querySelector(".o_form_button_update"));
+            2: {
+                id: 2,
+                name: "Partner 2",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+            },
+        };
+        const def = makeDeferred();
+        const mockRPC = async (route, args) => {
+            if (args.method === "update_module") {
+                await def;
+                return { type: "ir.actions.act_window_close" };
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_form_view");
+
+        // should not crash when the call to "update_module" returns, as we should not
+        // try to reload the form view, which will no longer be in the DOM
+        await click(target.querySelector(".o_form_button_update"));
+
+        // simulate that we executed another action before update_module returns
+        await doAction(webClient, 2);
+        assert.containsOnce(target, ".o_list_view");
+
+        def.resolve(); // call to update_module finally returns
+        await nextTick();
+        assert.containsOnce(target, ".o_list_view");
     });
 
-    QUnit.skipWOWL("onchanges that complete after discarding", async function (assert) {
-        assert.expect(6);
-
-        var def1 = testUtils.makeTestPromise();
-
+    QUnit.test("onchanges that complete after discarding", async function (assert) {
         serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
         };
-        const form = await makeView({
+
+        const def = makeDeferred();
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/><field name="int_field"/></group>' +
-                "</form>",
+            arch: `<form><field name="foo"/><field name="int_field"/></form>`,
             resId: 2,
-            mockRPC(route, args) {
-                var result = this._super.apply(this, arguments);
+            async mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step("onchange is done");
-                    return def1.then(function () {
-                        return result;
-                    });
+                    await def;
                 }
-                return result;
             },
         });
 
-        // go into edit mode
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').innerText,
             "blip",
             "field foo should be displayed to initial value"
         );
-        await click(form.el.querySelector(".o_form_button_edit"));
 
-        // edit a value
-        await editInput(form.el, ".o_field_widget[name=foo] input", "1234");
+        await click(target.querySelector(".o_form_button_edit"));
 
-        // discard changes
-        await click(form.el.querySelector(".o_form_button_cancel"));
-        assert.containsNone(form, ".modal");
+        // edit a field and discard
+        await editInput(target, ".o_field_widget[name=foo] input", "1234");
+        await click(target.querySelector(".o_form_button_cancel"));
+        assert.containsNone(target, ".modal");
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').innerText,
             "blip",
             "field foo should still be displayed to initial value"
         );
 
         // complete the onchange
-        def1.resolve();
-        await testUtils.nextTick();
+        def.resolve();
+        await nextTick();
         assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').innerText,
             "blip",
             "field foo should still be displayed to initial value"
         );
@@ -6684,7 +6614,6 @@ QUnit.module("Views", (hooks) => {
         };
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
-        await nextTick();
 
         assert.deepEqual(
             getVisibleButtonTexts(),
