@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch
 
+import odoo.tools
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.tests import tagged
@@ -135,3 +136,26 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         second_method.unlink()
 
         self.assertFalse(second_method.exists())
+
+    @odoo.tools.mute_logger('odoo.addons.account.models.account_journal')
+    def test_account_journal_alias_name(self):
+        journal = self.company_data['default_journal_purchase']
+        self.assertEqual(journal.alias_name, 'vendor-bills-company_1_data')
+        journal.name = 'ぁ'
+        journal.alias_name = False
+        self.assertEqual(journal.alias_name, 'bill-company_1_data')
+        journal.code = 'ぁ'
+        journal.alias_name = False
+        self.assertEqual(journal.alias_name, 'purchase-company_1_data')
+
+        company_2_id = str(self.company_data_2['company'].id)
+        journal_2 = self.company_data_2['default_journal_sale']
+        self.company_data_2['company'].name = 'ぁ'
+        journal_2.alias_name = False
+        self.assertEqual(journal_2.alias_name, 'customer-invoices-' + company_2_id)
+        journal_2.name = 'ぁ'
+        journal_2.alias_name = False
+        self.assertEqual(journal_2.alias_name, 'inv-' + company_2_id)
+        journal_2.code = 'ぁ'
+        journal_2.alias_name = False
+        self.assertEqual(journal_2.alias_name, 'sale-' + company_2_id)
