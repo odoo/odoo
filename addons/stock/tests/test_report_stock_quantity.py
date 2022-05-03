@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import fields, tests
 from odoo.tests.common import Form
@@ -183,3 +183,61 @@ class TestReportStockQuantity(tests.TransactionCase):
         self.assertEqual(orderpoint.qty_to_order, 0.0)
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
         self.assertEqual(orderpoint.qty_to_order, 0.0)
+
+    def test_inter_warehouse_transfer(self):
+        """
+        Ensure that the report correctly processes the inter-warehouses SM
+        """
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+        })
+
+        today = datetime.now()
+        two_days_ago = today - timedelta(days=2)
+        in_two_days = today + timedelta(days=2)
+
+        wh01, wh02 = self.env['stock.warehouse'].create([{
+            'name': 'Warehouse 01',
+            'code': 'WH01',
+        }, {
+            'name': 'Warehouse 02',
+            'code': 'WH02',
+        }])
+
+        self.env['stock.quant']._update_available_quantity(product, wh01.lot_stock_id, 3, in_date=two_days_ago)
+
+        # Let's have 2 inter-warehouses stock moves (one for today and one for two days from now)
+        move01, move02 = self.env['stock.move'].create([{
+            'name': 'Inter WH Move',
+            'location_id': wh01.lot_stock_id.id,
+            'location_dest_id': wh02.lot_stock_id.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+            'date': date,
+        } for date in (today, in_two_days)])
+
+        (move01 + move02)._action_confirm()
+        move01.quantity_done = 1
+        move01._action_done()
+
+        self.env['stock.move'].flush()
+
+        data = self.env['report.stock.quantity'].read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', product.id), ('date', '>=', two_days_ago), ('date', '<=', in_two_days)],
+            ['product_qty', 'date', 'warehouse_id'],
+            ['date:day', 'warehouse_id'],
+            orderby='date, warehouse_id',
+            lazy=False,
+        )
+
+        for row, qty in zip(data, [
+            # wh01_qty, wh02_qty
+            3.0, 0.0,   # two days ago
+            3.0, 0.0,
+            2.0, 1.0,   # today
+            2.0, 1.0,
+            1.0, 2.0,   # in two days
+        ]):
+            self.assertEqual(row['product_qty'], qty, "Incorrect qty for Date '%s' Warehouse '%s'" % (row['date:day'], row['warehouse_id'][1]))
