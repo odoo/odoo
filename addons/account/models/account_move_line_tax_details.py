@@ -163,10 +163,17 @@ class AccountMoveLine(models.Model):
                     comp_curr.id = account_move_line.company_currency_id
                 JOIN account_move_line_account_tax_rel tax_rel ON
                     tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
+                JOIN account_move move ON
+                    move.id = account_move_line.move_id
                 JOIN account_move_line base_line ON
                     base_line.id = tax_rel.account_move_line_id
                     AND base_line.tax_repartition_line_id IS NULL
                     AND base_line.move_id = account_move_line.move_id
+                    AND (
+                        move.move_type != 'entry'
+                        OR
+                        sign(account_move_line.balance) = sign(base_line.balance * tax.amount * tax_rep.factor_percent)
+                    )
                     AND COALESCE(base_line.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
                     AND base_line.currency_id = account_move_line.currency_id
                     AND (
