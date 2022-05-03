@@ -118,7 +118,6 @@ var PieChart = publicWidget.Widget.extend({
 publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     selector: '.o_website_links_chart',
     events: {
-        'click .graph-tabs li a': '_onGraphTabClick',
         'click .copy-to-clipboard': '_onCopyToClipboardClick',
     },
 
@@ -266,14 +265,6 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onGraphTabClick: function (ev) {
-        ev.preventDefault();
-        $('.graph-tabs li a').tab('show');
-    },
     /**
      * @private
      * @param {Event} ev
