@@ -3,14 +3,14 @@
 
 <t t-name="mail.RtcCallViewer" owl="1">
     <t t-if="rtcCallViewer">
-        <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer.isMinimized }" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_RtcCallViewer d-flex flex-column align-items-center justify-content-center bg-dark" t-att-class="{'o-fullScreen fixed-top vw-100 vh-100': rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer.isMinimized, 'h-50': !rtcCallViewer.isMinimized and !rtcCallViewer.isFullScreen, 'position-relative': !rtcCallViewer.isFullScreen }" t-attf-class="{{ className }}" t-ref="root">
             <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
             <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
 
             <!-- Call members display -->
-            <div class="o_RtcCallViewer_participantContainer" t-on-click="rtcCallViewer.onClick" t-on-mousemove="rtcCallViewer.onMouseMove">
+            <div class="o_RtcCallViewer_participantContainer d-flex justify-content-between w-100 h-100 overflow-hidden" t-on-click="rtcCallViewer.onClick" t-on-mousemove="rtcCallViewer.onMouseMove">
                 <t t-if="rtcCallViewer.layout !== 'tiled'">
-                    <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
+                    <div class="o_RtcCallViewer_mainParticipantContainer d-flex flex-grow-1 justify-content-center mw-100 mh-100">
                         <t t-if="rtcCallViewer.mainParticipantCard">
                             <RtcCallParticipantCard className="'o_RtcCallViewer_participantCard'" record="rtcCallViewer.mainParticipantCard"/>
                         </t>
@@ -18,9 +18,10 @@
                 </t>
                 <t t-if="rtcCallViewer.layout !== 'spotlight'">
                     <div
-                        class="o_RtcCallViewer_grid"
+                        class="o_RtcCallViewer_grid d-flex align-items-center h-100"
                         t-att-class="{
-                            'o-isTiled': rtcCallViewer.layout === 'tiled',
+                            'o-isTiled flex-wrap justify-content-center w-100': rtcCallViewer.layout === 'tiled',
+                            'flex-column': rtcCallViewer.layout !== 'tiled',
                             'o-isSidebar': rtcCallViewer.layout === 'sidebar',
                         }"
                         t-ref="tileContainer"
@@ -31,6 +32,7 @@
                                 <!-- maybe filter focused partner out? -->
                                 <RtcCallParticipantCard
                                     className="'o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile'"
+                                    classNameObj="{ 'w-100' : rtcCallViewer.layout === 'sidebar' }"
                                     record="participantCard"
                                 />
                             </t>
@@ -41,7 +43,7 @@
 
             <!-- Buttons -->
             <t t-if="rtcCallViewer.showOverlay or !rtcCallViewer.isControllerFloating">
-                <div class="o_RtcCallViewer_controls" t-att-class="{ 'o-isFloating': rtcCallViewer.isControllerFloating }">
+                <div class="o_RtcCallViewer_controls d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': rtcCallViewer.isControllerFloating }">
                     <div class="o_RtcCallViewer_controlsOverlayContainer" t-on-mousemove="rtcCallViewer.onMouseMoveOverlay">
                         <RtcController record="rtcCallViewer.rtcController"/>
                     </div>
