@@ -262,7 +262,7 @@ export class X2ManyField extends Component {
                     }
                 },
                 title: sprintf(
-                    this.env._t("Open: %s"),
+                    this.env._t("Create %s"),
                     this.props.record.activeFields[this.props.name].string
                 ),
             });

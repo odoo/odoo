@@ -345,7 +345,7 @@ QUnit.module("Views", (hooks) => {
             'div.o_group .o_field_widget[name="foo"]:eq(2):not(.o_invisible_modifier)',
             "third foo widget should be visible"
         );
-        await testUtils.fields.editInput(
+        await editInput(
             target.querySelector('div.o_group .o_field_widget[name="foo"]:eq(2)'),
             "hello"
         );
@@ -429,7 +429,7 @@ QUnit.module("Views", (hooks) => {
             "yop",
             "first line in one2many of second tab contains yop"
         );
-        await testUtils.fields.editInput(
+        await editInput(
             target.querySelector(
                 'div.tab-content table.o_list_table tr.o_selected_row .o_field_widget[name="foo"] input'
             ),
@@ -2808,15 +2808,11 @@ QUnit.module("Views", (hooks) => {
 
         // add a o2m row
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        // target.querySelector(".o_field_one2many input:first").focus();
-        // await testUtils.nextTick();
         await editInput(
             target,
             ".o_field_one2many .o_field_widget[name=display_name] input",
             "valid line"
         );
-        // target.querySelector(".o_field_one2many input:last").focus();
-        // await testUtils.nextTick();
         await editInput(target, ".o_field_one2many .o_field_widget[name=qux] input", "12.4");
 
         // trigger an onchange by modifying foo
@@ -5350,7 +5346,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
     });
 
-    QUnit.skipWOWL("onchange value are not discarded on o2m edition", async function (assert) {
+    QUnit.test("onchange value are not discarded on o2m edition", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[1].p = [4];
@@ -5361,23 +5357,21 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                '<field name="int_field"/>' +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="foo"/>' +
-                '<field name="bar"/>' +
-                "</tree>" +
-                "<form>" +
-                '<field name="foo"/>' +
-                '<field name="product_id"/>' +
-                "</form>" +
-                "</field>" +
-                "</group>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                    <field name="p">
+                        <tree>
+                            <field name="foo"/>
+                            <field name="bar"/>
+                        </tree>
+                        <form>
+                            <field name="foo"/>
+                            <field name="product_id"/>
+                        </form>
+                    </field>
+                </form>`,
             resId: 2,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -5402,47 +5396,41 @@ QUnit.module("Views", (hooks) => {
                         "should only write value of known fields"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await click(target.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            target.querySelector(".o_data_row td:first").innerText,
+            target.querySelector(".o_data_row td").innerText,
             "My little Foo Value",
             "the initial value should be the default one"
         );
 
-        await testUtils.fields.editInput(
-            target.querySelector(".o_field_widget[name=foo] input"),
-            "trigger an onchange"
-        );
+        await editInput(target, ".o_field_widget[name=foo] input", "trigger an onchange");
 
         assert.strictEqual(
-            target.querySelector(".o_data_row td:first").innerText,
+            target.querySelector(".o_data_row td").innerText,
             "foo changed",
             "onchange should have been correctly applied on field in o2m list"
         );
 
-        await click(target.querySelector(".o_data_row"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(
-            $(".modal .modal-title").innerText.trim(),
+            target.querySelector(".modal .modal-title").innerText.trim(),
             "Open: one2many field",
             "the field string is displayed in the modal title"
         );
         assert.strictEqual(
-            $(".modal .o_field_widget").value,
+            target.querySelector(".modal .o_field_widget input").value,
             "foo changed",
             "the onchange value hasn't been discarded when opening the o2m"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "args of onchanges in o2m fields are correct (inline edition)",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.records[1].p = [4];
             serverData.models.partner.fields.p.relation_field = "rel_field";
             serverData.models.partner.fields.int_field.default = 14;
@@ -5455,34 +5443,32 @@ QUnit.module("Views", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    '<field name="p">' +
-                    '<tree editable="top">' +
-                    '<field name="foo"/>' +
-                    '<field name="int_field"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</group>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="foo"/>
+                                <field name="int_field"/>
+                            </tree>
+                        </field>
+                    </form>`,
                 resId: 2,
             });
 
             await click(target.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
-                target.querySelector(".o_data_row td:first").innerText,
+                target.querySelector(".o_data_row td").innerText,
                 "My little Foo Value",
                 "the initial value should be the default one"
             );
 
-            await click(target.querySelector(".o_data_row td:nth(1)"));
-            await editInput(target, ".o_data_row input:nth(1)", 77);
+            await click(target.querySelectorAll(".o_data_row td")[1]);
+            await editInput(target, ".o_field_widget[name=int_field] input", 77);
 
             assert.strictEqual(
-                target.querySelector(".o_data_row input:first").value,
+                target.querySelector(".o_data_row input").value,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
@@ -5490,18 +5476,16 @@ QUnit.module("Views", (hooks) => {
             // create a new o2m record
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
             assert.strictEqual(
-                target.querySelector(".o_data_row input:first").value,
+                target.querySelector(".o_data_row input").value,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "args of onchanges in o2m fields are correct (dialog edition)",
         async function (assert) {
-            assert.expect(6);
-
             serverData.models.partner.records[1].p = [4];
             serverData.models.partner.fields.p.relation_field = "rel_field";
             serverData.models.partner.fields.int_field.default = 14;
@@ -5514,43 +5498,40 @@ QUnit.module("Views", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    '<field name="p" string="custom label">' +
-                    "<tree>" +
-                    '<field name="foo"/>' +
-                    "</tree>" +
-                    "<form>" +
-                    '<field name="foo"/>' +
-                    '<field name="int_field"/>' +
-                    "</form>" +
-                    "</field>" +
-                    "</group>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="p" string="custom label">
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                            <form>
+                                <field name="foo"/>
+                                <field name="int_field"/>
+                            </form>
+                        </field>
+                    </form>`,
                 resId: 2,
             });
 
             await click(target.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
-                target.querySelector(".o_data_row td:first").innerText,
+                target.querySelector(".o_data_row td").innerText,
                 "My little Foo Value",
                 "the initial value should be the default one"
             );
 
-            await click(target.querySelector(".o_data_row td:first"));
-            await testUtils.nextTick();
-            await testUtils.fields.editInput($(".modal input:nth(1)"), 77);
+            await click(target.querySelector(".o_data_row td"));
+            await editInput(target, ".modal .o_field_widget[name=int_field] input", 77);
             assert.strictEqual(
-                $(".modal input:first").value,
+                target.querySelector(".modal .o_field_widget[name=foo] input").value,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
-            await click($(".modal-footer .btn-primary"));
+            await click(target.querySelector(".modal-footer .btn-primary"));
             assert.strictEqual(
-                target.querySelector(".o_data_row td:first").innerText,
+                target.querySelector(".o_data_row td").innerText,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
@@ -5558,26 +5539,25 @@ QUnit.module("Views", (hooks) => {
             // create a new o2m record
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
             assert.strictEqual(
-                $(".modal .modal-title").innerText.trim(),
+                target.querySelector(".modal .modal-title").innerText.trim(),
                 "Create custom label",
                 "the custom field label is applied in the modal title"
             );
             assert.strictEqual(
-                $(".modal input:first").value,
+                target.querySelector(".modal .o_field_widget[name=foo] input").value,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
-            await clickFirst($(".modal-footer .btn-primary"));
-            await testUtils.nextTick();
+            await click(target.querySelector(".modal-footer .btn-primary"));
             assert.strictEqual(
-                target.querySelector(".o_data_row:nth(1) td:first").innerText,
+                target.querySelectorAll(".o_data_row")[1].querySelector("td").innerText,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "context of onchanges contains the context of changed fields",
         async function (assert) {
             assert.expect(2);
@@ -5589,13 +5569,11 @@ QUnit.module("Views", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<group>" +
-                    '<field name="foo" context="{\'test\': 1}"/>' +
-                    '<field name="int_field" context="{\'int_ctx\': 1}"/>' +
-                    "</group>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <field name="foo" context="{'test': 1}"/>
+                        <field name="int_field" context="{'int_ctx': 1}"/>
+                    </form>`,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
                         assert.strictEqual(
@@ -5609,7 +5587,6 @@ QUnit.module("Views", (hooks) => {
                             "the context of other fields should not be given"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
                 resId: 2,
             });
@@ -6194,7 +6171,7 @@ QUnit.module("Views", (hooks) => {
             // add a o2m subrecord
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
             await click($(".modal-body .o_field_one2many .o_field_x2many_list_row_add a"));
-            await testUtils.fields.editInput($(".modal-body input"), "xtv");
+            await editInput($(".modal-body input"), "xtv");
             await click($(".modal-footer button:first"));
             assert.strictEqual($(".modal").length, 0, "dialog should be closed");
 
@@ -6490,10 +6467,7 @@ QUnit.module("Views", (hooks) => {
             '.o_field_widget[name="foo"] input',
             "foo field should be editable"
         );
-        await testUtils.fields.editInput(
-            target.querySelector('.o_field_widget[name="foo"] input'),
-            "New foo value"
-        );
+        await editInput(target.querySelector('.o_field_widget[name="foo"] input'), "New foo value");
 
         await click(target.querySelector(".o_form_button_save"));
 
@@ -7359,7 +7333,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(".modal").length, 2, "two FormViewDialogs should be opened");
         var $secondModal = $(".modal:nth(1)");
         // Add new value
-        await testUtils.fields.editInput($secondModal.find("input"), "xtv");
+        await editInput($secondModal.find("input"), "xtv");
         await click($secondModal.find(".modal-footer button:first"));
         assert.strictEqual($(".modal").length, 1, "last opened dialog should be closed");
 
@@ -7609,9 +7583,9 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.strictEqual($(".modal").length, 1, "FormViewDialog should be opened");
-        await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "xop");
+        await editInput($('.modal .o_field_widget[name="foo"] input'), "xop");
         await click($(".modal-footer button:eq(1)"));
-        await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "zop");
+        await editInput($('.modal .o_field_widget[name="foo"] input'), "zop");
         await click($(".modal-footer button:first"));
 
         // client-side sort
@@ -7646,7 +7620,7 @@ QUnit.module("Views", (hooks) => {
         // client-side sort on edit
         await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)"));
-        await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "zzz");
+        await editInput($('.modal .o_field_widget[name="foo"] input'), "zzz");
         await click($(".modal-footer button:first"));
         assert.ok(
             target.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zzz)").length,
@@ -8123,7 +8097,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(
+        await editInput(
             target.querySelector('.o_field_widget[name="display_name"] input'),
             "test2"
         );
@@ -8760,16 +8734,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(
+        await editInput(
             target.querySelector('.o_field_widget[name="foo"] input'),
             "incorrect value"
         );
         await click(target.querySelector(".o_form_button_save"));
 
-        await testUtils.fields.editInput(
-            target.querySelector('.o_field_widget[name="foo"] input'),
-            "correct value"
-        );
+        await editInput(target.querySelector('.o_field_widget[name="foo"] input'), "correct value");
 
         await click(target.querySelector(".o_form_button_save"));
 
@@ -9023,10 +8994,7 @@ QUnit.module("Views", (hooks) => {
             "Select a model to add a filter.",
             "should contain an error message saying the model is missing"
         );
-        await testUtils.fields.editInput(
-            target.querySelector('.o_field_widget[name="model_name"] input'),
-            "test"
-        );
+        await editInput(target.querySelector('.o_field_widget[name="model_name"] input'), "test");
         assert.notStrictEqual(
             target.querySelector('.o_field_widget[name="display_name"]').innerText,
             "Select a model to add a filter.",
@@ -9106,11 +9074,8 @@ QUnit.module("Views", (hooks) => {
             "foo should be editable"
         );
         checkOnchange = true;
-        await testUtils.fields.editInput($(".modal .o_field_widget[name=foo]"), "foo value");
-        await testUtils.fields.editInput(
-            $(".modal .o_field_widget[name=display_name]"),
-            "readonly"
-        );
+        await editInput($(".modal .o_field_widget[name=foo]"), "foo value");
+        await editInput($(".modal .o_field_widget[name=display_name]"), "readonly");
         assert.strictEqual(
             $(".modal span.o_field_widget[name=foo]").length,
             1,
@@ -9297,10 +9262,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_external_button"));
         await click($(".modal .o_external_button"));
 
-        await testUtils.fields.editInput(
-            $(".modal:nth(1) .o_field_widget[name=display_name]"),
-            "new name"
-        );
+        await editInput($(".modal:nth(1) .o_field_widget[name=display_name]"), "new name");
         await click($(".modal:nth(1) footer .btn-primary").first());
 
         assert.strictEqual(
@@ -10069,7 +10031,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.fields.editInput(
+            await editInput(
                 target.querySelector(".o_field_widget[name=display_name]"),
                 "new value"
             );
@@ -10199,10 +10161,7 @@ QUnit.module("Views", (hooks) => {
             fieldDebounce: 5000,
         });
 
-        await testUtils.fields.editInput(
-            target.querySelector(".o_field_widget[name=foo] input"),
-            "some foo value"
-        );
+        await editInput(target.querySelector(".o_field_widget[name=foo] input"), "some foo value");
         // manually save the record, to prevent the field widget to notify the model of its new
         // value before being requested to
         // form.saveRecord();
@@ -10280,7 +10239,7 @@ QUnit.module("Views", (hooks) => {
 
             onchangeDef = makeDeferred(); // delay the onchange
 
-            await testUtils.fields.editInput(
+            await editInput(
                 target.querySelector(".o_field_widget[name=display_name]"),
                 "some value"
             );
@@ -11357,7 +11316,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.fields.editInput(
+            await editInput(
                 target.querySelector('.o_field_widget[name="name"] input'),
                 "Test Company"
             );
@@ -11403,7 +11362,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.fields.editInput(
+            await editInput(
                 target.querySelector('.o_field_widget[name="name"] input'),
                 "Test Company2"
             );
@@ -11592,10 +11551,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         await click($(webClient.el).find(".o_form_button_edit"));
-        await testUtils.fields.editInput(
-            $(webClient.el).find('.o_field_widget[name="name"]'),
-            "aaa"
-        );
+        await editInput($(webClient.el).find('.o_field_widget[name="name"]'), "aaa");
 
         await testUtils.controlPanel.pagerNext(webClient);
         await legacyExtraNextTick();
@@ -11659,10 +11615,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         await click($(webClient.el).find(".o_form_button_edit"));
-        await testUtils.fields.editInput(
-            $(webClient.el).find('.o_field_widget[name="name"]'),
-            "aaa"
-        );
+        await editInput($(webClient.el).find('.o_field_widget[name="name"]'), "aaa");
 
         await click($(webClient.el).find(".breadcrumb-item.o_back_button"));
         await legacyExtraNextTick();
@@ -11743,10 +11696,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         await click($(webClient.el).find(".o_form_button_edit"));
-        await testUtils.fields.editInput(
-            $(webClient.el).find('.o_field_widget[name="name"]'),
-            "aaa"
-        );
+        await editInput($(webClient.el).find('.o_field_widget[name="name"]'), "aaa");
 
         await doAction(webClient, 2, { clearBreadcrumbs: true });
 
@@ -12148,10 +12098,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(target.querySelector(".o_form_button_edit"));
-            await testUtils.fields.editInput(
-                target.querySelector('.o_field_widget[name="display_name"]'),
-                "test"
-            );
+            await editInput(target.querySelector('.o_field_widget[name="display_name"]'), "test");
             await editInput(target, '.o_field_widget[name="name"]', "");
 
             window.dispatchEvent(new Event("beforeunload"));
@@ -13382,11 +13329,8 @@ QUnit.module("Views", (hooks) => {
                 ".modal input.o_field_widget[name=foo]",
                 "foo should be editable"
             );
-            await testUtils.fields.editInput($(".modal .o_field_widget[name=foo]"), "foo value");
-            await testUtils.fields.editInput(
-                $(".modal .o_field_widget[name=display_name]"),
-                "readonly"
-            );
+            await editInput($(".modal .o_field_widget[name=foo]"), "foo value");
+            await editInput($(".modal .o_field_widget[name=display_name]"), "readonly");
             assert.containsOnce(
                 document.body,
                 ".modal span.o_field_widget[name=foo]",
