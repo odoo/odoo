@@ -5815,73 +5815,75 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("clicking on a stat button with a context", async function (assert) {
+    QUnit.test("clicking on a stat button with a context", async function (assert) {
         assert.expect(1);
+
+        const actionService = {
+            start() {
+                return {
+                    doActionButton(args) {
+                        // button context should have been evaluated and given to the
+                        // action, with magic keys but without previous context
+                        assert.deepEqual(args.buttonContext, { test: 2 });
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<div class="oe_button_box" name="button_box">' +
-                '<button class="oe_stat_button" type="action" name="1" context="{\'test\': active_id}">' +
-                '<field name="qux" widget="statinfo"/>' +
-                "</button>" +
-                "</div>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="1" context="{'test': active_id}">
+                                <field name="qux" widget="statinfo"/>
+                            </button>
+                        </div>
+                    </sheet>
+                </form>`,
             resId: 2,
-            viewOptions: {
-                context: { some_context: true },
-            },
-            intercepts: {
-                execute_action: function (e) {
-                    assert.deepEqual(
-                        e.data.action_data.context,
-                        {
-                            test: 2,
-                        },
-                        "button context should have been evaluated and given to the action, with magicc without previous context"
-                    );
-                },
-            },
+            context: { some_context: true },
         });
 
         await click(target.querySelector(".oe_stat_button"));
     });
 
-    QUnit.skipWOWL("clicking on a stat button with no context", async function (assert) {
+    QUnit.test("clicking on a stat button with no context", async function (assert) {
         assert.expect(1);
+
+        const actionService = {
+            start() {
+                return {
+                    doActionButton(args) {
+                        // button context should have been evaluated and given to the
+                        // action, with magic keys but without previous context
+                        assert.deepEqual(args.buttonContext, {});
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<div class="oe_button_box" name="button_box">' +
-                '<button class="oe_stat_button" type="action" name="1">' +
-                '<field name="qux" widget="statinfo"/>' +
-                "</button>" +
-                "</div>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="1">
+                                <field name="qux" widget="statinfo"/>
+                            </button>
+                        </div>
+                    </sheet>
+                </form>`,
             resId: 2,
-            viewOptions: {
-                context: { some_context: true },
-            },
-            intercepts: {
-                execute_action: function (e) {
-                    assert.deepEqual(
-                        e.data.action_data.context,
-                        {},
-                        "button context should have been evaluated and given to the action, with magic keys but without previous context"
-                    );
-                },
-            },
+            context: { some_context: true },
         });
 
         await click(target.querySelector(".oe_stat_button"));
