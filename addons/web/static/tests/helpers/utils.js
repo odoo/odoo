@@ -334,8 +334,12 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
         }
     }
 
-    window.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
-    window.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
+    if (!("bubbles" in eventAttrs)) {
+        eventAttrs.bubbles = true;
+    }
+
+    document.activeElement.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
+    document.activeElement.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
 }
 
 export async function legacyExtraNextTick() {
