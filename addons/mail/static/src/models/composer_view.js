@@ -1380,6 +1380,16 @@ registerModel({
                 ),
             });
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeComposerSuggestionListView() {
+            if (this.hasSuggestions) {
+                return insertAndReplace();
+            }
+            return clear();
+        }
     },
     fields: {
         /**
@@ -1424,6 +1434,11 @@ registerModel({
         }),
         composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
             compute: '_computeComposerSuggestedRecipientListView',
+            inverse: 'composerViewOwner',
+            isCausal: true,
+        }),
+        composerSuggestionListView: one('ComposerSuggestionListView', {
+            compute: '_computeComposerSuggestionListView',
             inverse: 'composerViewOwner',
             isCausal: true,
         }),
