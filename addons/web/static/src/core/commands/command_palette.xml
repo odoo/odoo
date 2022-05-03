@@ -5,7 +5,7 @@
     <div>
       <div class="o_command_palette_search">
         <span t-if="state.namespace !== 'default'" class="o_namespace" t-esc="state.namespace"/>
-        <input type="text" t-att-value="state.searchValue" t-on-input="onSearchInput" autofocus="" t-att-placeholder="state.placeholder" t-on-keydown="onKeyDown"/>
+        <input type="text" data-allow-hotkeys="true" t-att-value="state.searchValue" t-on-input="onSearchInput" autofocus="" t-att-placeholder="state.placeholder" t-on-keydown="onKeyDown"/>
         <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
       </div>
 
