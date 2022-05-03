@@ -10,7 +10,7 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
         run_script = """
             // Constants for A4 paper size
-            const tableWidth = "18cm";
+            const tableWidth = "17.65cm";
             const firstPageEnd = 3050;
             const bodyHeight = 600;
 
@@ -52,9 +52,14 @@ class IrActionsReport(models.Model):
             
             // Function to create the div containing the carry over in the beggining/end of the page
             function carryValueElement(amount) {
-                return "<div class='text-bold text-right'>" + 
-                            "Valor acumulado: " + amount.toFixed(2).replace(".", ",") + "&euro;" + 
-                       "</div>"
+                return "<table class='table-sm' style='margin-left: auto; margin-right: 0; border-top: 1px solid; border-bottom: 1px solid'>"+
+                            "<tr>" +
+                                "<td><strong>Valor acumulado</strong></td>" +
+                                "<td class='text-right'>" +
+                                    "<strong>" + amount.toLocaleString('pt-PT') + "&euro;</strong>" +
+                                "</td>" +
+                            "</tr>" +
+                        "</table>" 
             }
             
             // Create the new tables
@@ -62,15 +67,17 @@ class IrActionsReport(models.Model):
                 var html = "";
                 if (i != 0) 
                     html += carryValueElement(tables[i-1].carrying);
-                html += "<table class='table table-sm o_main_table' name='invoice_line_table' style='width: " + tableWidth + "'>";
-                html +=     theadElement.outerHTML;
-                html += "   <tobdy>";
-                for (var j = 0; j < tables[i].rows.length; j++){
-                    const row = rows[tables[i].rows[j]];
-                    html += row.outerHTML;
+                if (tables[i].rows.length > 0){
+                    html += "<table class='table table-sm o_main_table' name='invoice_line_table' style='width: " + tableWidth + "'>";
+                    html +=     theadElement.outerHTML;
+                    html += "   <tobdy>";
+                    for (var j = 0; j < tables[i].rows.length; j++){
+                        const row = rows[tables[i].rows[j]];
+                        html += row.outerHTML;
+                    }
+                    html += "   </tbody>";
+                    html += "</table>";
                 }
-                html += "   </tbody>";
-                html += "</table>";
                 if (i != tables.length - 1) {
                     html += carryValueElement(tables[i].carrying);
                     html += "<div style='page-break-after: always;'/>";
