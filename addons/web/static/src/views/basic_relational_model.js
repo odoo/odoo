@@ -240,6 +240,7 @@ export class Record extends DataPoint {
         this.selected = false;
         this.isInQuickCreation = params.isInQuickCreation || false;
         this._onChangePromise = Promise.resolve({});
+        this._savePromise = Promise.resolve();
         this._domains = {};
 
         this.canBeAbandoned = this.isVirtual;
@@ -558,6 +559,10 @@ export class Record extends DataPoint {
      * @returns {Promise<boolean>}
      */
     async save(options = { stayInEdition: false, noReload: false, savePoint: false }) {
+        let resolveSavePromise;
+        this._savePromise = new Promise((r) => {
+            resolveSavePromise = r;
+        });
         if (!this.checkValidity()) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
@@ -578,6 +583,7 @@ export class Record extends DataPoint {
             this.switchMode("readonly");
         }
         this.model.notify();
+        resolveSavePromise();
         return true;
     }
 
@@ -621,7 +627,8 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    discard() {
+    async discard() {
+        await this._savePromise;
         this.model.__bm__.discardChanges(this.__bm_handle__);
         this.__syncData();
         if (this.resId) {
