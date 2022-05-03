@@ -228,7 +228,7 @@ class StockMove(models.Model):
                     sum_of_lots += qty
                 if abs(line.qty) != sum_of_lots:
                     difference_qty = abs(line.qty) - sum_of_lots
-                    ml_vals = self[0]._prepare_move_line_vals()
+                    ml_vals = move._prepare_move_line_vals()
                     if line.product_id.tracking == 'serial':
                         move_lines_to_create.extend([ml_vals for i in range(int(difference_qty))])
                         mls_qties.extend([1]*int(difference_qty))
