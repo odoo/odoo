@@ -3,6 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model';
+import { clear, replace } from '@mail/model/model_field_command';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -312,7 +313,11 @@ export class Message extends Component {
             !isEventHandled(ev, 'MessageReactionGroup.Click') &&
             !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo')
         ) {
-            this.messageView.update({ isClicked: !this.messageView.isClicked });
+            if (this.messageView.messagingAsClickedMessageView) {
+                this.messaging.update({ clickedMessageView: clear() });
+            } else {
+                this.messaging.update({ clickedMessageView: replace(this.messageView) });
+            }
         }
     }
 

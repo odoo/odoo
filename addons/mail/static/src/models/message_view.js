@@ -48,7 +48,10 @@ registerModel({
             this.update({ isHovered: true });
         },
         onMouseleave() {
-            this.update({ isHovered: false });
+            this.update({
+                isHovered: false,
+                messagingAsClickedMessageView: clear(),
+            });
         },
         /**
          * Action to initiate reply to current messageView.
@@ -157,7 +160,7 @@ registerModel({
         _computeIsActive() {
             return Boolean(
                 this.isHovered ||
-                this.isClicked ||
+                this.messagingAsClickedMessageView ||
                 (
                     this.messageActionList &&
                     (
@@ -264,13 +267,6 @@ registerModel({
             compute: '_computeIsActive',
         }),
         /**
-         * Determines whether the message is clicked. When message is in
-         * clicked state, it keeps displaying actions even if not hovered.
-         */
-        isClicked: attr({
-            default: false
-        }),
-        /**
          * Whether the message should be forced to be isHighlighted. Should only
          * be set through @see highlight()
          */
@@ -321,6 +317,9 @@ registerModel({
             inverse: 'messageView',
             isCausal: true,
             readonly: true,
+        }),
+        messagingAsClickedMessageView: one('Messaging', {
+            inverse: 'clickedMessageView',
         }),
         /**
          * States the thread view that is displaying this messages (if any).

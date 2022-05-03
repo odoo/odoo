@@ -257,6 +257,12 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        /**
+         * Determines which message view is currently clicked, if any.
+         */
+        clickedMessageView: one('MessageView', {
+            inverse: 'messagingAsClickedMessageView',
+        }),
         commands: many('ChannelCommand'),
         companyName: attr(),
         currentGuest: one('Guest'),
