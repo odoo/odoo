@@ -493,7 +493,7 @@ class expression(object):
         """
         cr, uid, context, su = self.root_model.env.args
 
-        def to_ids(value, comodel, leaf):
+        def to_ids(value, comodel, leaf, return_query=False):
             """ Normalize a single id or name, or a list of those, into a list of ids
                 :param {int,long,basestring,list,tuple} value:
                     if int, long -> return [value]
@@ -516,6 +516,8 @@ class expression(object):
                     return []
                 return [value]
             if names:
+                if return_query:
+                    return comodel._name_search(names[0], [], 'ilike', limit=None)
                 return list({
                     rid
                     for name in names
@@ -529,7 +531,7 @@ class expression(object):
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
                 return [FALSE_LEAF]
-            if left_model._parent_store:
+            if left_model._parent_store: # maybe prevent to have a big domain with lot of OR by adding a limit : and not isinstance(ids, Query) and len(ids) <= 1000
                 domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
                     for rec in left_model.sudo().browse(ids)
@@ -539,6 +541,12 @@ class expression(object):
                 # filtering of forbidden records is done by the rest of the
                 # domain
                 parent_name = parent or left_model._parent_name
+                if isinstance(ids, Query):
+                    ids._parent_name = parent_name
+                    if prefix:
+                        return [(left, 'in', ids)]
+
+                
                 child_ids = set()
                 records = left_model.sudo().browse(ids)
                 while records:
@@ -866,7 +874,7 @@ class expression(object):
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:
-                    ids2 = to_ids(right, comodel, leaf)
+                    ids2 = to_ids(right, comodel, leaf, return_query=True)
                     if field.comodel_name != model._name:
                         dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
                     else:

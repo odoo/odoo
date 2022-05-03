@@ -69,6 +69,7 @@ class Query(object):
         # the list of parameters
         self._where_clauses = []
         self._where_params = []
+        self._parent_name = None
 
         # order, limit, offset
         self.order = None
@@ -134,6 +135,22 @@ class Query(object):
         """ Similar to :meth:`.select`, but for sub-queries.
             This one avoids the ORDER BY clause when possible.
         """
+        if self._parent_name:
+            a  = 1
+            from_clause, where_clause, params = self.get_sql()
+            query_str = '''
+            WITH RECURSIVE subordinates AS (
+            SELECT {select} FROM {from_clause} WHERE {where}
+            UNION
+            SELECT alias_sub.id FROM {from_clause} alias_sub
+            INNER JOIN subordinates s ON s.id = alias_sub.{parent_name}
+            ) SELECT * FROM subordinates'''.format(
+               select = ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+                from_clause =from_clause,
+               where= where_clause or "TRUE",
+               parent_name = self._parent_name,
+            )
+            return query_str, params
         if self.limit or self.offset:
             # in this case, the ORDER BY clause is necessary
             return self.select(*args)
