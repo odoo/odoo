@@ -767,9 +767,6 @@ class Channel(models.Model):
                 'message': dict(message_format),
             }
             notifications.append((channel, 'mail.channel/new_message', payload))
-            # add uuid to allow anonymous to listen
-            if channel.public == 'public':
-                notifications.append((channel.uuid, 'mail.channel/new_message', payload))
         return notifications
 
     # ------------------------------------------------------------
