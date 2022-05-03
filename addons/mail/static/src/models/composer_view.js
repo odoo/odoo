@@ -1548,6 +1548,13 @@ registerModel({
             default: false,
         }),
         /**
+         * Last content of textarea from input event. Useful to determine
+         * whether the current partner is typing something.
+         */
+        textareaLastInputValue: attr({
+            default: "",
+        }),
+        /**
          * Determines the main suggestions.
          */
         mainSuggestions: many('ComposerSuggestion', {
