@@ -557,11 +557,7 @@ function makeActionManager(env) {
         }
         const nextStack = controllerStack.slice(0, index).concat(controllerArray);
         // Compute breadcrumbs
-        if (action.target === "new") {
-            controller.config.breadcrumbs = _getBreadcrumbs([nextStack[nextStack.length - 1]]);
-        } else {
-            controller.config.breadcrumbs = _getBreadcrumbs(nextStack);
-        }
+        controller.config.breadcrumbs = action.target === "new" ? [] : _getBreadcrumbs(nextStack);
         controller.config.getDisplayName = () => controller.displayName;
         controller.config.setDisplayName = (displayName) => {
             controller.displayName = displayName;

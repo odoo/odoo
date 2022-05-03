@@ -414,10 +414,7 @@ QUnit.module("ActionManager", (hooks) => {
             type: "ir.actions.act_window",
             views: [[false, "list"]],
         });
-        assert.deepEqual(
-            [...target.querySelectorAll(".modal .breadcrumb-item")].map((i) => i.innerText),
-            ["Create a Partner"]
-        );
+        assert.containsNone(target, ".modal .breadcrumb");
     });
 
     QUnit.test('call switchView in an action in target="new"', async function (assert) {
