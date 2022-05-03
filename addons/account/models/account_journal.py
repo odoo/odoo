@@ -351,7 +351,10 @@ class AccountJournal(models.Model):
             ) if string and is_encodable_as_ascii(string))
 
             if journal.company_id != self.env.ref('base.main_company'):
-                alias_name = f"{alias_name}-{journal.company_id.name}"
+                if is_encodable_as_ascii(journal.company_id.name):
+                    alias_name = f"{alias_name}-{journal.company_id.name}"
+                else:
+                    alias_name = f"{alias_name}-{journal.company_id.id}"
 
             alias_values = {
                 'alias_defaults': {
@@ -368,12 +371,13 @@ class AccountJournal(models.Model):
                 alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
                 alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
                 journal.alias_id = self.env['mail.alias'].sudo().create(alias_values)
+        self.invalidate_cache(['alias_name'], self.ids)
 
     @api.depends('name')
     def _compute_alias_domain(self):
         self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
-    @api.depends('alias_id')
+    @api.depends('alias_id', 'alias_id.alias_name')
     def _compute_alias_name(self):
         for journal in self:
             journal.alias_name = journal.alias_id.alias_name
