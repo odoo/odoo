@@ -23,6 +23,14 @@ class IrActionsReport(models.Model):
                 ths[i].style.width = ths[i].getBoundingClientRect().width + "px";
             }
             
+            // Function to parse the amount displayed in HTML into a number
+            function parseAmount(amountElement) {
+                const amountText = amountElement.innerText;
+                if (amountText.indexOf(".") !== -1)   //US-formatted amount
+                    return parseFloat(amountText.split(",").join(""));
+                return parseFloat(amountText.replace(",", ".")); //European-formatted amount
+            }
+            
             // Parse main table informations into a list of dicts representing the smaller tables (one per page)
             const rows = document.querySelectorAll("tr");
             const amounts = document.querySelectorAll("span.oe_currency_value");
@@ -34,7 +42,7 @@ class IrActionsReport(models.Model):
                 if (amounts[i - 1] === undefined)   // i-1 because offset with header which has no amount,
                     continue                        // might be undefined if the row is a total row
                 
-                tables[tables.length-1].carrying += parseFloat(amounts[i - 1].innerText.split(",").join(""));
+                tables[tables.length-1].carrying += parseAmount(amounts[i - 1]);
                 tables[tables.length-1].rows.push(i);
                 
                 if (rows[i].getBoundingClientRect().bottom > firstPageEnd + (tables.length-1) * bodyHeight) {
@@ -52,11 +60,12 @@ class IrActionsReport(models.Model):
             
             // Function to create the div containing the carry over in the beggining/end of the page
             function carryValueElement(amount) {
+                amount = amount.toFixed(2).replace(".", ",");   // PT-formatted currency
                 return "<table class='table-sm' style='margin-left: auto; margin-right: 0; border-top: 1px solid; border-bottom: 1px solid'>"+
                             "<tr>" +
                                 "<td><strong>Valor acumulado</strong></td>" +
                                 "<td class='text-right'>" +
-                                    "<strong>" + amount.toLocaleString('pt-PT') + "&euro;</strong>" +
+                                    "<strong>" + amount + "&nbsp;&euro;</strong>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" 
