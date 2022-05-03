@@ -129,21 +129,20 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _load_data(self, data):
         def deref(values, model):
-            for field, value in values.items():
-                if field not in model._fields:
-                    continue
-                if model._fields[field].type in ('many2one', 'integer', 'many2one_reference') and isinstance(value, str):
-                    values[field] = self.env.ref(value).id
-                elif model._fields[field].type in ('one2many', 'many2many'):
-                    if value and isinstance(value[0], (list, tuple)):
-                        for command in value:
-                            idx = len(command) - 1
-                            if command[0] in (Command.CREATE, Command.UPDATE):
-                                deref(command[idx], self.env[model._fields[field].comodel_name])
-                            if command[0] == Command.SET:
-                                for i, subvalue in enumerate(command[idx]):
-                                    if isinstance(subvalue, str):
-                                        command[idx][i] = self.env.ref(subvalue).id
+            fields = ((model._fields[k], k, v) for k, v in values.items() if k in model._fields and v)
+            for field, field_idx, value in fields:
+                if field.type in ('many2one', 'integer', 'many2one_reference') and isinstance(value, str):
+                    values[field_idx] = self.env.ref(value).id
+                elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
+                    for first_part, *_eventual, last_part in value:
+                        # (0, 0, {'test': 'account.ref_name'}) -> Command.Create({'test': 13})
+                        if first_part in (Command.CREATE, Command.UPDATE):
+                            deref(last_part, self.env[field.comodel_name])
+                        # (6, 0, ['account.ref_name']) -> Command.Set([13])
+                        if first_part == Command.SET:
+                            for subvalue_idx, subvalue in enumerate(last_part):
+                                if isinstance(subvalue, str):
+                                    last_part[subvalue_idx] = self.env.ref(subvalue).id
             return values
 
         def defer(all_data):
