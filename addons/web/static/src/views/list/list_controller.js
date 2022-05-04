@@ -47,6 +47,7 @@ export class ListController extends Component {
 
         this.archInfo = this.props.archInfo;
         this.editable = this.props.editable ? this.archInfo.editable : false;
+        this.multiEdit = this.archInfo.multiEdit;
         this.activeActions = this.archInfo.activeActions;
         const fields = this.props.fields;
         this.model = useModel(this.props.Model, {
@@ -59,6 +60,7 @@ export class ListController extends Component {
             defaultOrder: this.archInfo.defaultOrder,
             expand: this.archInfo.expand,
             groupsLimit: this.archInfo.groupsLimit,
+            multiEdit: this.multiEdit,
         });
         useViewButtons(this.model, useRef("root"));
 
@@ -143,6 +145,21 @@ export class ListController extends Component {
 
     onClickSave() {
         this.model.root.editedRecord.save();
+    }
+
+    onMouseDownDiscard(mouseDownEvent) {
+        const list = this.model.root;
+        list.blockUpdate = true;
+        document.addEventListener(
+            "mouseup",
+            (mouseUpEvent) => {
+                if (mouseUpEvent.target !== mouseDownEvent.target) {
+                    list.blockUpdate = false;
+                    list.multiSave(list.editedRecord);
+                }
+            },
+            { capture: true, once: true }
+        );
     }
 
     getSelectedResIds() {

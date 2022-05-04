@@ -157,9 +157,9 @@ export class Field extends Component {
             format: this.format.bind(this),
             parse: this.parse.bind(this),
             decorations: decorationMap,
+            readonly: readonlyFromViewMode || readonlyFromModifiers || false,
             ...props,
             type: field.type,
-            readonly: readonlyFromViewMode || readonlyFromModifiers || false,
             ...extractedPropsForStandaloneComponent,
         };
     }

@@ -2,7 +2,7 @@
 import { _t } from "@web/core/l10n/translation";
 /**
  * Parse the arch to check if is true or false
- * If the string is empyt, 0, False or false it's considered as false
+ * If the string is empty, 0, False or false it's considered as false
  * The rest is considered as true
  *
  * @param {string} str

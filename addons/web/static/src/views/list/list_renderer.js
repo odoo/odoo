@@ -12,9 +12,11 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "../helpers/view_hook";
 import { useSortable } from "@web/core/utils/ui";
 import { Pager } from "@web/core/pager/pager";
+import { useService } from "@web/core/utils/hooks";
 
 const {
     Component,
+    onMounted,
     onPatched,
     onWillPatch,
     onWillUpdateProps,
@@ -39,6 +41,7 @@ const FIELD_CLASSES = {
 
 export class ListRenderer extends Component {
     setup() {
+        this.uiService = useService("ui");
         this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
@@ -59,6 +62,9 @@ export class ListRenderer extends Component {
 
         this.cellToFocus = null;
         this.activeRowId = null;
+        onMounted(() => {
+            this.activeElement = this.uiService.activeElement;
+        });
         onWillPatch(() => {
             const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
@@ -528,7 +534,10 @@ export class ListRenderer extends Component {
     }
 
     async onCellClicked(record, column) {
-        if (this.props.editable) {
+        if (this.props.list.model.multiEdit && record.selected) {
+            await record.switchMode("edit");
+            this.cellToFocus = { column, record };
+        } else if (this.props.editable) {
             if (record.isInEdition) {
                 this.focusCell(column);
                 this.cellToFocus = null;
@@ -612,6 +621,13 @@ export class ListRenderer extends Component {
         }
         if (this.tableRef.el.contains(ev.target)) {
             return; // ignore clicks inside the table, they are handled directly by the renderer
+        }
+        if (this.activeElement !== this.uiService.activeElement) {
+            return;
+        }
+        // Legacy DatePicker
+        if (ev.target.closest(".daterangepicker")) {
+            return;
         }
         this.props.list.unselectRecord();
     }

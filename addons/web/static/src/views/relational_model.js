@@ -17,6 +17,8 @@ import { Model } from "@web/views/helpers/model";
 import { registry } from "@web/core/registry";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
+import { ListConfirmationDialog } from "@web/views/list/list_confirmation_dialog";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 const { markRaw, markup, toRaw } = owl;
@@ -802,9 +804,19 @@ export class Record extends DataPoint {
         });
     }
 
-    setInvalidField(fieldName) {
-        this._invalidFields.add(fieldName);
-        this.model.notify();
+    async setInvalidField(fieldName) {
+        if (this.selected && this.model.multiEdit) {
+            const dialogProps = {
+                body: this.model.env._t("No valid record to save"),
+                confirm: () => {
+                    this.discard();
+                },
+            };
+            await this.model.dialogService.add(AlertDialog, dialogProps);
+        } else {
+            this._invalidFields.add(fieldName);
+            this.model.notify();
+        }
     }
 
     /**
@@ -851,32 +863,36 @@ export class Record extends DataPoint {
 
     async update(fieldName, value) {
         await this._applyChange(fieldName, value);
-        this._removeInvalidField(fieldName);
-        this.onChanges();
-        const activeField = this.activeFields[fieldName];
-        const proms = [];
-        if (activeField && activeField.onChange) {
-            await this.model.mutex.exec(async () => {
-                const changes = await this._onChange(fieldName);
-                for (const [fieldName, value] of Object.entries(changes)) {
-                    const field = this.fields[fieldName];
-                    // for x2many fields, the onchange returns commands, not ids, so we need to process them
-                    // for now, we simply return an empty list
-                    if (isX2Many(field)) {
-                        this._changes[fieldName] = value;
-                        this.data[fieldName].applyCommands(value);
-                        proms.push(this.data[fieldName].load());
-                    } else {
-                        this._changes[fieldName] = value;
-                        this.data[fieldName] = this._changes[fieldName];
+        if (this.selected && this.model.multiEdit) {
+            await this.model.root.multiSave(this);
+        } else {
+            this._removeInvalidField(fieldName);
+            this.onChanges();
+            const activeField = this.activeFields[fieldName];
+            const proms = [];
+            if (activeField && activeField.onChange) {
+                await this.model.mutex.exec(async () => {
+                    const changes = await this._onChange(fieldName);
+                    for (const [fieldName, value] of Object.entries(changes)) {
+                        const field = this.fields[fieldName];
+                        // for x2many fields, the onchange returns commands, not ids, so we need to process them
+                        // for now, we simply return an empty list
+                        if (isX2Many(field)) {
+                            this._changes[fieldName] = value;
+                            this.data[fieldName].applyCommands(value);
+                            proms.push(this.data[fieldName].load());
+                        } else {
+                            this._changes[fieldName] = value;
+                            this.data[fieldName] = this._changes[fieldName];
+                        }
                     }
-                }
-            });
+                });
+            }
+            proms.push(this.loadPreloadedData());
+            await Promise.all(proms);
+            this.canBeAbandoned = false;
+            this.model.notify();
         }
-        proms.push(this.loadPreloadedData());
-        await Promise.all(proms);
-        this.canBeAbandoned = false;
-        this.model.notify();
     }
 
     // -------------------------------------------------------------------------
@@ -966,6 +982,9 @@ export class Record extends DataPoint {
                 }
                 this.canBeAbandoned = false;
                 await Promise.all(proms);
+                if (this.selected && this.model.multiEdit) {
+                    await this.model.root.multiSave(this);
+                }
                 this.onChanges();
             },
         });
@@ -1291,6 +1310,77 @@ class DynamicList extends DataPoint {
             resIds = this.records.map((r) => r.resId);
         }
         return resIds;
+    }
+
+    async multiSave(record) {
+        if (this.blockUpdate) {
+            return;
+        }
+        const selection = this.selection;
+        const changes = record.getChanges();
+        if (!changes) {
+            return;
+        }
+        if (this.confDialogIsOpen) {
+            return;
+        }
+        const validSelection = selection.reduce((result, record) => {
+            if (
+                !Object.keys(changes).filter(
+                    (fieldName) =>
+                        record.isReadonly(fieldName) ||
+                        (record.isRequired(fieldName) && !changes[fieldName])
+                ).length
+            ) {
+                result.push(record);
+            }
+            return result;
+        }, []);
+
+        if (validSelection.length === 0) {
+            const dialogProps = {
+                body: this.model.env._t("No valid record to save"),
+                confirm: () => {
+                    record.discard();
+                },
+            };
+            await this.model.dialogService.add(AlertDialog, dialogProps);
+        } else if (validSelection.length > 1) {
+            this.editedRecord = null;
+            const dialogProps = {
+                confirm: async () => {
+                    const resIds = validSelection.map((r) => r.resId);
+                    await this.model.orm.write(this.resModel, resIds, changes);
+                    validSelection.forEach((record) => {
+                        record.selected = false;
+                    });
+                    await Promise.all(validSelection.map((record) => record.load()));
+                    record.switchMode("readonly");
+                },
+                cancel: () => {
+                    record.discard();
+                },
+                isDomainSelected: this.isDomainSelected,
+                fields: Object.keys(changes).map((fieldName) => {
+                    const label =
+                        record.activeFields[fieldName].string || record.fields[fieldName].string;
+                    const widget = record.activeFields[fieldName].widget;
+                    return { name: fieldName, label, widget };
+                }),
+                nbRecords: selection.length,
+                nbValidRecords: validSelection.length,
+                record,
+            };
+            this.confDialogIsOpen = true;
+            await this.model.dialogService.add(ListConfirmationDialog, dialogProps, {
+                onClose: () => {
+                    this.confDialogIsOpen = false;
+                },
+            });
+        } else {
+            await record.save();
+            record.selected = false;
+        }
     }
 
     selectDomain(value) {
@@ -1723,7 +1813,6 @@ export class DynamicGroupList extends DynamicList {
         for (const group of this.groups) {
             group.list.deleteRecords();
         }
-
     }
 
     exportState() {
@@ -2816,6 +2905,7 @@ export class RelationalModel extends Model {
         this.mutex = new Mutex();
 
         this.onCreate = params.onCreate;
+        this.multiEdit = params.multiEdit || false;
         this.quickCreateView = params.quickCreateView;
         this.defaultGroupBy = params.defaultGroupBy || false;
         this.defaultOrderBy = params.defaultOrder;

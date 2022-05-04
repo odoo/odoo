@@ -31,11 +31,11 @@
                     <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s" t-on-click.stop="onClickSave">
                         Save
                     </button>
-                    <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard changes" aria-label="Discard changes" data-hotkey="j" t-on-click="onClickDiscard">
+                    <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard changes" aria-label="Discard changes" data-hotkey="j" t-on-click="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
                         Discard
                     </button>
                 </t>
-                <t t-elif="activeActions['create'] and !model.root.isGrouped">
+                <t t-elif="activeActions['create'] and (!model.root.isGrouped or !editable)">
                     <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
                         Create
                     </button>

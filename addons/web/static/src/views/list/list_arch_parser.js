@@ -29,14 +29,6 @@ export class GroupListArchParser extends XMLParser {
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
-        const activeActions = {
-            ...getActiveActions(xmlDoc),
-            exportXlsx: isTruthy(xmlDoc.getAttribute("export_xlsx"), true),
-        };
-        const decorations = getDecoration(xmlDoc);
-        const editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
-        let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
-        const expand = xmlDoc.getAttribute("expand") === "1";
         const activeFields = {};
         const columns = [];
         let buttonId = 0;
@@ -51,8 +43,6 @@ export class ListArchParser extends XMLParser {
         let handleField = null;
         const treeAttr = {};
         let nextId = 0;
-        const jsClass = xmlDoc.getAttribute("js_class");
-
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
@@ -76,7 +66,7 @@ export class ListArchParser extends XMLParser {
                     columns.push(buttonGroup);
                 }
             } else if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, fields, "list", jsClass);
+                const fieldInfo = Field.parseFieldNode(node, fields, "list");
                 activeFields[fieldInfo.name] = fieldInfo;
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
@@ -99,11 +89,7 @@ export class ListArchParser extends XMLParser {
                 const xmlSerializer = new XMLSerializer();
                 const groupByArch = xmlSerializer.serializeToString(node);
                 const groupByFields = fields[fieldName].relatedFields;
-                const groupByArchInfo = groupListArchParser.parse(
-                    groupByArch,
-                    groupByFields,
-                    jsClass
-                );
+                const groupByArchInfo = groupListArchParser.parse(groupByArch, groupByFields);
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
                     activeFields: groupByArchInfo.activeFields,
@@ -127,32 +113,44 @@ export class ListArchParser extends XMLParser {
                     context: node.getAttribute("context"),
                     description: node.getAttribute("string"),
                 });
-            } else if (node.tagName === "tree") {
+            } else if (["tree", "list"].includes(node.tagName)) {
+                const activeActions = {
+                    ...getActiveActions(xmlDoc),
+                    exportXlsx: isTruthy(xmlDoc.getAttribute("export_xlsx"), true),
+                };
+                treeAttr.activeActions = activeActions;
+
+                treeAttr.editable = activeActions.edit ? xmlDoc.getAttribute("editable") : false;
+                treeAttr.multiEdit = activeActions.edit
+                    ? archParseBoolean(node.getAttribute("multi_edit") || "")
+                    : false;
+
                 const limitAttr = node.getAttribute("limit");
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
+
                 const groupsLimitAttr = node.getAttribute("groups_limit");
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
-                const noOpenAttr = node.getAttribute("no_open");
-                treeAttr.noOpen = noOpenAttr && archParseBoolean(noOpenAttr);
+
+                treeAttr.defaultOrder = stringToOrderBy(
+                    xmlDoc.getAttribute("default_order") || null
+                );
+                treeAttr.noOpen = archParseBoolean(node.getAttribute("no_open") || "");
+                treeAttr.expand = archParseBoolean(xmlDoc.getAttribute("expand") || "");
+                treeAttr.decorations = getDecoration(xmlDoc);
             }
         });
 
-        if (!defaultOrder.length && handleField) {
-            defaultOrder = stringToOrderBy(handleField);
+        if (!treeAttr.defaultOrder.length && handleField) {
+            treeAttr.defaultOrder = stringToOrderBy(handleField);
         }
 
         return {
-            activeActions,
             creates,
-            editable,
-            expand,
             handleField,
             headerButtons,
             activeFields,
             columns,
             groupBy,
-            defaultOrder,
-            decorations,
             __rawArch: arch,
             ...treeAttr,
         };
