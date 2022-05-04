@@ -6,12 +6,10 @@
             <div class="o_RtcController" t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_RtcController_buttons">
                     <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
-                        <t t-if="messaging.rtc.currentRtcSession.isMute"><t t-set="microphoneTitle">Unmute</t></t>
-                        <t t-else=""><t t-set="microphoneTitle">Mute</t></t>
                         <button class="o_RtcController_button"
                             t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMute, 'o-isSmall': rtcController.isSmall }"
-                            t-att-aria-label="microphoneTitle"
-                            t-att-title="microphoneTitle"
+                            t-att-aria-label="rtcController.microphoneButtonTitle"
+                            t-att-title="rtcController.microphoneButtonTitle"
                             t-on-click="rtcController.onClickMicrophone">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa" t-att-class="{

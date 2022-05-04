@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcController',
@@ -80,6 +80,20 @@ registerModel({
         _computeIsSmall() {
             return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
         },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeMicrophoneButtonTitle() {
+            if (!this.messaging.rtc.currentRtcSession) {
+                return clear();
+            }
+            if (this.messaging.rtc.currentRtcSession.isMute) {
+                return this.env._t("Unmute");
+            } else {
+                return this.env._t("Mute");
+            }
+        },
     },
     fields: {
         callViewer: one('RtcCallViewer', {
@@ -89,6 +103,9 @@ registerModel({
         }),
         isSmall: attr({
             compute: '_computeIsSmall',
+        }),
+        microphoneButtonTitle: attr({
+            compute: '_computeMicrophoneButtonTitle',
         }),
         rtcOptionList: one('RtcOptionList', {
             default: insertAndReplace(),
