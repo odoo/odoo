@@ -8,6 +8,7 @@ const components = {
     Composer: require('mail/static/src/components/composer/composer.js'),
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
+const useComponentToModel = require('mail/static/src/component_hooks/use_component_to_model/use_component_to_model.js');
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
@@ -43,6 +44,7 @@ class Chatter extends Component {
             },
         });
         useUpdate({ func: () => this._update() });
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId' });
         /**
          * Reference of the composer. Useful to focus it.
          */

@@ -708,6 +708,10 @@ function factory(dependencies) {
                 });
             }
             this.update(values);
+            for (const chatter of this.chatters) {
+                chatter.update({ skipRefreshOnViewReload: true });
+                chatter.reloadParentView();
+            }
         }
 
         /**
@@ -1833,6 +1837,9 @@ function factory(dependencies) {
             isCausal: true,
         }),
         channel_type: attr(),
+        chatters: one2many('mail.chatter', {
+            inverse: 'thread',
+        }),
         /**
          * States the `mail.chat_window` related to `this`. Serves as compute
          * dependency. It is computed from the inverse relation and it should

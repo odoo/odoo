@@ -87,7 +87,11 @@ class ChatterContainer extends Component {
      */
     _update() {
         if (this.chatter) {
-            this.chatter.refresh();
+            if (!this.chatter.skipRefreshOnViewReload) {
+                this.chatter.refresh();
+            } else {
+                this.chatter.update({ skipRefreshOnViewReload: clear() });
+            }
         }
     }
 

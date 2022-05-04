@@ -53,6 +53,12 @@ function factory(dependencies) {
             }
         }
 
+        reloadParentView() {
+            if (this.component) {
+                this.component.trigger('reload', { keepChanges: true });
+            }
+        }
+
         showLogNote() {
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: true });
@@ -179,6 +185,10 @@ function factory(dependencies) {
     }
 
     Chatter.fields = {
+        /**
+         * States the OWL Chatter component of this chatter.
+         */
+        component: attr(),
         composer: many2one('mail.composer', {
             related: 'thread.composer',
         }),
@@ -284,10 +294,15 @@ function factory(dependencies) {
                 'threadIsLoadingAttachments',
             ],
         }),
+        skipRefreshOnViewReload: attr({
+            default: false,
+        }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
-        thread: many2one('mail.thread'),
+        thread: many2one('mail.thread', {
+            inverse: 'chatters',
+        }),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */
