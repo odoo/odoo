@@ -37,10 +37,16 @@ class AccountMove(models.Model):
     l10n_es_tbai_is_required = fields.Boolean(
         string="TicketBAI required",
         help="Is the Bask EDI (TicketBAI) needed",
-        compute="_compute_l10n_es_tbai_is_required"
+        compute="_compute_l10n_es_tbai_is_required",
+    )
+    l10n_es_tbai_is_in_chain = fields.Boolean(
+        string="In TicketBAI chain",
+        compute="_compute_l10n_es_tbai_is_in_chain",
+        help="Invoice has been included in chain",
+        store=True, copy=False,
     )
     l10n_es_tbai_chain_index = fields.Integer(
-        string="Chain index (TicketBai)",
+        string="TicketBAI chain index",
         help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
         store=True, copy=False, readonly=True,
     )
@@ -59,13 +65,13 @@ class AccountMove(models.Model):
 
     # Non-stored fields
     l10n_es_tbai_id = fields.Char(string="TicketBAI ID", compute="_compute_l10n_es_tbai_id")
-    l10n_es_tbai_sequence = fields.Char(string="TicketBAI sequence", compute="_compute_l10n_es_tbai_sequence")
-    l10n_es_tbai_number = fields.Char(string="TicketBAI number", compute="_compute_l10n_es_tbai_number")
-    l10n_es_tbai_qr = fields.Char(string="QR code to verify posted invoice", compute="_compute_l10n_es_tbai_qr")
-    l10n_es_tbai_qr_escaped = fields.Char(string="QR code, escaped", compute="_compute_l10n_es_tbai_qr")
-    l10n_es_tbai_signature = fields.Char(string="Signature value of XML", compute="_compute_l10n_es_tbai_values")
+    l10n_es_tbai_sequence = fields.Char(string="TicketBAI sequence", compute="_compute_l10n_es_tbai_seq_num")
+    l10n_es_tbai_number = fields.Char(string="TicketBAI number", compute="_compute_l10n_es_tbai_seq_num")
+    l10n_es_tbai_qr = fields.Char(string="TicketBAI QR code URL", compute="_compute_l10n_es_tbai_qr")
+    l10n_es_tbai_qr_escaped = fields.Char(string="TicketBAI QR code, escaped", compute="_compute_l10n_es_tbai_qr")
+    l10n_es_tbai_signature = fields.Char(string="TicketBAI XML signature", compute="_compute_l10n_es_tbai_values")
     l10n_es_tbai_registration_date = fields.Date(
-        string="Registration Date (TicketBai)",
+        string="TicketBAI registration date",
         help="Technical field to keep the date the invoice was sent the first time as the date the invoice was "
              "registered into the TicketBai system.",
         compute="_compute_l10n_es_tbai_values",
@@ -97,67 +103,30 @@ class AccountMove(models.Model):
                 and move.country_code == 'ES' \
                 and move.company_id.l10n_es_tbai_tax_agency
 
-    @api.depends('edi_state', 'l10n_es_tbai_is_required', 'l10n_es_tbai_post_xml_id')
-    def _compute_l10n_es_tbai_id(self):
-        for record in self:
-            if record.l10n_es_tbai_is_required:
-                # TODO (POS): pre-sign document and store it as EDI document (before posting), only then get signature
-                # rationale: signature changes every time doc is signed, but needs to be consistent across XMLs / TBAI IDs
-                # cons: if pre-computed values need to be changed, signature will be wrong, QR won't work
-                if not record.l10n_es_tbai_signature:
-                    record.l10n_es_tbai_id = ''
-                else:
-                    company = record.company_id
-                    tbai_id_no_crc = '-'.join([
-                        'TBAI',
-                        str(company.vat[2:] if company.vat.startswith('ES') else company.vat),
-                        datetime.strftime(record.l10n_es_tbai_registration_date, '%d%m%y'),
-                        record.l10n_es_tbai_signature[:13],
-                        ''  # CRC
-                    ])
-                    record.l10n_es_tbai_id = tbai_id_no_crc + self._l10n_es_edi_tbai_crc8(tbai_id_no_crc)
-            else:
-                record.l10n_es_tbai_id = ''  # record
+    @api.depends('l10n_es_tbai_is_required', 'edi_document_ids.state')
+    def _compute_l10n_es_tbai_is_in_chain(self):
+        # Note that cancelled invoices remain part of the chain
+        for move in self:
+            tbai_doc_ids = move.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')
+            move.l10n_es_tbai_is_in_chain = move.l10n_es_tbai_is_required \
+                and len(tbai_doc_ids) > 0 \
+                and not any(tbai_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
-    @api.depends('name')
-    def _compute_l10n_es_tbai_sequence(self):
-        for record in self:
-            sequence, _ = record.name.rsplit('/', 1)
+    @api.depends('l10n_es_tbai_is_required', 'name')
+    def _compute_l10n_es_tbai_seq_num(self):
+        tbai_required = self.filtered(lambda m: m.l10n_es_tbai_is_required)
+        for move in tbai_required:
+            sequence, number = move.name.rsplit('/', 1)
             sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
             sequence = regex_sub(r"[\s]+", " ", sequence)  # no more than once consecutive whitespace allowed
             # TODO (optional) issue warning if sequence uses chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-            self.l10n_es_tbai_sequence = sequence + ("TEST" if record.company_id.l10n_es_edi_test_env else "")
+            move.l10n_es_tbai_sequence = sequence + ("TEST" if move.company_id.l10n_es_edi_test_env else "")
+            move.l10n_es_tbai_number = regex_sub(r"[^0-9]", "", number)  # remove non-decimal characters
+        for move in self - tbai_required:
+            move.l10n_es_tbai_sequence = ''
+            move.l10n_es_tbai_number = ''
 
-    @api.depends('name')
-    def _compute_l10n_es_tbai_number(self):
-        for record in self:
-            _, number = record.name.rsplit('/', 1)
-            self.l10n_es_tbai_number = regex_sub(r"[^0-9]", "", number)  # remove non-decimal characters
-
-    @api.depends('l10n_es_tbai_id')
-    def _compute_l10n_es_tbai_qr(self):
-        for record in self:
-            if record.l10n_es_tbai_is_required and record.edi_state != 'to_send':
-                company = record.company_id
-                web_services = get_web_services_for_agency(agency=company.l10n_es_tbai_tax_agency, env=self.env)
-                tbai_qr_no_crc = web_services.get_qr_base_url(company=company) + '?' + '&'.join([
-                    'id=' + record.l10n_es_tbai_id,
-                    's=' + record.l10n_es_tbai_sequence,
-                    'nf=' + record.l10n_es_tbai_number,
-                    'i=' + record._get_l10n_es_tbai_values_from_xml({'importe': r'.//ImporteTotalFactura'})['importe']
-                ])
-                record.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + self._l10n_es_edi_tbai_crc8(tbai_qr_no_crc)
-            else:
-                record.l10n_es_tbai_qr = ''
-            record.l10n_es_tbai_qr_escaped = url_quote(record.l10n_es_tbai_qr)
-
-    def _l10n_es_edi_tbai_crc8(self, data):
-        crc = 0x0
-        for c in data:
-            crc = L10N_ES_TBAI_CRC8_TABLE[(crc ^ ord(c)) & 0xFF]
-        return '{:03d}'.format(crc & 0xFF)
-
-    @api.depends('company_id', 'edi_state', 'l10n_es_tbai_post_xml_id')
+    @api.depends('l10n_es_tbai_is_in_chain', 'l10n_es_tbai_post_xml_id')
     def _compute_l10n_es_tbai_values(self):
         """
         This function reads values directly from the 'post' XMLs submitted to the government \
@@ -165,23 +134,59 @@ class AccountMove(models.Model):
         Note about the signature value: if the post XML has \
             not been validated (yet), the signature value is left blank.
         """
-        for record in self:
-            vals = record._get_l10n_es_tbai_values_from_xml({
+        in_chain = self.filtered(lambda m: m.l10n_es_tbai_is_in_chain)
+        for move in in_chain:
+            vals = move._get_l10n_es_tbai_values_from_xml({
                 'signature': r'.//{http://www.w3.org/2000/09/xmldsig#}SignatureValue',
                 'registration_date': r'.//CabeceraFactura//FechaExpedicionFactura'
             })
+            # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
+            # Any characters outside of the base64 alphabet are to be ignored in base64-encoded data.
+            move.l10n_es_tbai_signature = vals['signature'].replace("\n", "")
+            move.l10n_es_tbai_registration_date = datetime.strptime(vals['registration_date'], '%d-%m-%Y').replace(tzinfo=timezone('Europe/Madrid'))
+        for move in self - in_chain:
+            move.l10n_es_tbai_signature = ''
+            move.l10n_es_tbai_registration_date = ''
 
-            if record.edi_state not in ('sent', 'cancelled'):
-                # Documents may exist but have not been validated by govt (eg. timeout)
-                record.l10n_es_tbai_signature = ''
-            else:
-                # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
-                # Any characters outside of the base64 alphabet are to be ignored in base64-encoded data.
-                record.l10n_es_tbai_signature = vals['signature'].replace("\n", "")
-            if vals['registration_date']:
-                record.l10n_es_tbai_registration_date = datetime.strptime(vals['registration_date'], '%d-%m-%Y').replace(tzinfo=timezone('Europe/Madrid'))
-            else:
-                record.l10n_es_tbai_registration_date = False
+    @api.depends('l10n_es_tbai_is_in_chain', 'l10n_es_tbai_signature', 'l10n_es_tbai_registration_date')
+    def _compute_l10n_es_tbai_id(self):
+        in_chain = self.filtered(lambda m: m.l10n_es_tbai_is_in_chain)
+        for move in in_chain:
+            company = move.company_id
+            tbai_id_no_crc = '-'.join([
+                'TBAI',
+                str(company.vat[2:] if company.vat.startswith('ES') else company.vat),
+                datetime.strftime(move.l10n_es_tbai_registration_date, '%d%m%y'),
+                move.l10n_es_tbai_signature[:13],
+                ''  # CRC
+            ])
+            move.l10n_es_tbai_id = tbai_id_no_crc + self._l10n_es_edi_tbai_crc8(tbai_id_no_crc)
+        for move in self - in_chain:
+            move.l10n_es_tbai_id = ''
+
+    @api.depends('l10n_es_tbai_is_in_chain', 'l10n_es_tbai_id', 'l10n_es_tbai_sequence', 'l10n_es_tbai_number')
+    def _compute_l10n_es_tbai_qr(self):
+        in_chain = self.filtered(lambda m: m.l10n_es_tbai_is_in_chain)
+        for move in in_chain:
+            company = move.company_id
+            web_services = get_web_services_for_agency(agency=company.l10n_es_tbai_tax_agency, env=self.env)
+            tbai_qr_no_crc = web_services.get_qr_base_url(company=company) + '?' + '&'.join([
+                'id=' + move.l10n_es_tbai_id,
+                's=' + move.l10n_es_tbai_sequence,
+                'nf=' + move.l10n_es_tbai_number,
+                'i=' + move._get_l10n_es_tbai_values_from_xml({'importe': r'.//ImporteTotalFactura'})['importe']
+            ])
+            move.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + self._l10n_es_edi_tbai_crc8(tbai_qr_no_crc)
+        for move in self - in_chain:
+            move.l10n_es_tbai_qr = ''
+        for move in self:
+            move.l10n_es_tbai_qr_escaped = url_quote(move.l10n_es_tbai_qr)
+
+    def _l10n_es_edi_tbai_crc8(self, data):
+        crc = 0x0
+        for c in data:
+            crc = L10N_ES_TBAI_CRC8_TABLE[(crc ^ ord(c)) & 0xFF]
+        return '{:03d}'.format(crc & 0xFF)
 
     def _get_l10n_es_tbai_values_from_xml(self, xpaths):
         """
