@@ -344,6 +344,13 @@ export class ListRenderer extends Component {
         if (column.type === "button_group") {
             classNames.push("o_list_button");
         }
+        // note: remove this oe_read/edit_only logic when form view
+        // will always be in edit mode
+        if (/\boe_edit_only\b/.test(column.className)) {
+            classNames.push("oe_edit_only");
+        } else if (/\boe_read_only\b/.test(column.className)) {
+            classNames.push("oe_read_only");
+        }
         return classNames.join(" ");
     }
 

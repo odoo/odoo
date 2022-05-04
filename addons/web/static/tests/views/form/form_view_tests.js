@@ -6030,7 +6030,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("one2many default value creation", async function (assert) {
+    QUnit.test("one2many default value creation", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].product_ids = [37];
@@ -6042,53 +6042,46 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="product_ids" nolabel="1">' +
-                '<tree editable="top" create="0">' +
-                '<field name="name" readonly="1"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="product_ids" nolabel="1">
+                        <tree editable="top" create="0">
+                            <field name="name" readonly="1"/>
+                        </tree>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 if (args.method === "create") {
-                    var command = args.args[0].product_ids[0];
+                    const command = args.args[0].product_ids[0];
                     assert.strictEqual(
                         command[2].partner_type_id,
                         12,
                         "the default partner_type_id should be equal to 12"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
         await click(target.querySelector(".o_form_button_save"));
     });
 
-    QUnit.skipWOWL("many2manys inside one2manys are saved correctly", async function (assert) {
+    QUnit.test("many2manys inside one2manys are saved correctly", async function (assert) {
         assert.expect(1);
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="timmy" widget="many2many_tags"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="timmy" widget="many2many_tags"/>
+                        </tree>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 if (args.method === "create") {
-                    var command = args.args[0].p;
+                    const command = args.args[0].p;
                     assert.deepEqual(
                         command,
                         [
@@ -6103,19 +6096,16 @@ QUnit.module("Views", (hooks) => {
                         "the default partner_type_id should be equal to 12"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         // add a o2m subrecord with a m2m tag
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
-
+        await selectDropdownItem(target, "timmy", "gold");
         await click(target.querySelector(".o_form_button_save"));
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2manys (list editable) inside one2manys are saved correctly",
         async function (assert) {
             assert.expect(3);
@@ -6124,26 +6114,19 @@ QUnit.module("Views", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="p">' +
-                    "<tree>" +
-                    '<field name="p"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</sheet>" +
-                    "</form>",
-                archs: {
-                    "partner,false,form":
-                        "<form>" +
-                        '<field name="p">' +
-                        '<tree editable="top">' +
-                        '<field name="display_name"/>' +
-                        "</tree>" +
-                        "</field>" +
-                        "</form>",
-                },
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree><field name="p"/></tree>
+                            <form>
+                                <field name="p">
+                                    <tree editable="top">
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </form>
+                        </field>
+                    </form>`,
                 mockRPC(route, args) {
                     if (args.method === "create") {
                         assert.deepEqual(
@@ -6166,20 +6149,17 @@ QUnit.module("Views", (hooks) => {
                             "create should be called with the correct arguments"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             // add a o2m subrecord
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
-            await click($(".modal-body .o_field_one2many .o_field_x2many_list_row_add a"));
-            await editInput($(".modal-body input"), "xtv");
-            await click($(".modal-footer button:first"));
-            assert.strictEqual($(".modal").length, 0, "dialog should be closed");
-
-            var row = target.querySelector(".o_field_one2many .o_list_view .o_data_row");
+            await click(target.querySelector(".modal .o_field_x2many_list_row_add a"));
+            await editInput(target, ".modal .o_field_widget[name=display_name] input", "xtv");
+            await click(target.querySelector(".modal-footer .btn-primary"));
+            assert.containsNone(target, ".modal", "dialog should be closed");
             assert.strictEqual(
-                row.children()[0].textContent,
+                target.querySelector(".o_data_cell").textContent,
                 "1 record",
                 "the cell should contains the number of record: 1"
             );
@@ -6188,11 +6168,9 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "oe_read_only and oe_edit_only classNames on fields inside groups",
         async function (assert) {
-            assert.expect(10);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -6207,60 +6185,56 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            assert.hasClass(
-                target.querySelector(".o_form_view"),
-                "o_form_readonly",
+            assert.containsOnce(
+                target,
+                ".o_form_view .o_form_readonly",
                 "form should be in readonly mode"
             );
             assert.isVisible(target.querySelector(".o_field_widget[name=foo]"));
-            assert.isVisible(target.querySelector("label:contains(Foo)"));
+            assert.isVisible(target.querySelector(".o_form_label"));
             assert.isNotVisible(target.querySelector(".o_field_widget[name=bar]"));
-            assert.isNotVisible(target.querySelector("label:contains(Bar)"));
+            assert.isNotVisible(target.querySelectorAll(".o_form_label")[1]);
 
             await click(target.querySelector(".o_form_button_edit"));
-            assert.hasClass(
-                target.querySelector(".o_form_view"),
-                "o_form_editable",
+            assert.containsOnce(
+                target,
+                ".o_form_view .o_form_editable",
                 "form should be in readonly mode"
             );
             assert.isNotVisible(target.querySelector(".o_field_widget[name=foo]"));
-            assert.isNotVisible(target.querySelector("label:contains(Foo)"));
+            assert.isNotVisible(target.querySelector(".o_form_label"));
             assert.isVisible(target.querySelector(".o_field_widget[name=bar]"));
-            assert.isVisible(target.querySelector("label:contains(Bar)"));
+            assert.isVisible(target.querySelectorAll(".o_form_label")[1]);
         }
     );
 
     QUnit.skipWOWL("oe_read_only className is handled in list views", async function (assert) {
-        assert.expect(7);
-
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="foo"/>' +
-                '<field name="display_name" class="oe_read_only"/>' +
-                '<field name="bar"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="foo"/>
+                                <field name="display_name" class="oe_read_only"/>
+                                <field name="bar"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 
-        assert.hasClass(
-            target.querySelector(".o_form_view"),
-            "o_form_readonly",
+        assert.containsOnce(
+            target,
+            ".o_form_view .o_form_readonly",
             "form should be in readonly mode"
         );
         assert.isVisible(
-            target.querySelector(
-                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
-            ),
+            target.querySelector('.o_field_one2many thead th[data-name="display_name"]'),
             "display_name cell should be visible in readonly mode"
         );
 
@@ -6277,128 +6251,101 @@ QUnit.module("Views", (hooks) => {
             '"oe_read_only" in edit mode should have a 0px width'
         );
 
-        assert.hasClass(
-            target.querySelector(".o_form_view"),
-            "o_form_editable",
-            "form should be in edit mode"
-        );
+        assert.containsOnce(target, ".o_form_view .o_form_editable", "form should be in edit mode");
         assert.isNotVisible(
-            target.querySelector(
-                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
-            ),
+            target.querySelector('.o_field_one2many thead th[data-name="display_name"]'),
             "display_name cell should not be visible in edit mode"
         );
 
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.hasClass(
             target.querySelector(
-                '.o_form_view .o_list_view tbody tr:first .o_field_widget[name="display_name"]'
+                '.o_form_view tbody tr:first .o_field_widget[name="display_name"]'
             ),
             "oe_read_only",
             "display_name input should have oe_read_only class"
         );
     });
 
-    QUnit.skipWOWL("oe_edit_only className is handled in list views", async function (assert) {
-        assert.expect(5);
+    QUnit.test("oe_edit_only className is handled in list views", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="foo"/>' +
-                '<field name="display_name" class="oe_edit_only"/>' +
-                '<field name="bar"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="foo"/>
+                                <field name="display_name" class="oe_edit_only"/>
+                                <field name="bar"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 
-        assert.hasClass(
-            target.querySelector(".o_form_view"),
-            "o_form_readonly",
+        assert.containsOnce(
+            target,
+            ".o_form_view .o_form_readonly",
             "form should be in readonly mode"
         );
         assert.isNotVisible(
-            target.querySelector(
-                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
-            ),
+            target.querySelector('.o_field_one2many thead th[data-name="display_name"]'),
             "display_name cell should not be visible in readonly mode"
         );
 
         await click(target.querySelector(".o_form_button_edit"));
-        assert.hasClass(
-            target.querySelector(".o_form_view"),
-            "o_form_editable",
-            "form should be in edit mode"
-        );
+        assert.containsOnce(target, ".o_form_view .o_form_editable", "form should be in edit mode");
         assert.isVisible(
-            target.querySelector(
-                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
-            ),
+            target.querySelector('.o_field_one2many thead th[data-name="display_name"]'),
             "display_name cell should be visible in edit mode"
         );
 
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        assert.hasClass(
-            target.querySelector(
-                '.o_form_view .o_list_view tbody tr:first .o_field_widget[name="display_name"] input'
-            ),
-            "oe_edit_only",
-            "display_name input should have oe_edit_only class"
+        assert.isVisible(
+            target.querySelector(".o_selected_row .o_data_cell.oe_edit_only"),
+            "display_name cell should be visible in edit mode"
         );
     });
 
-    QUnit.skipWOWL("*_view_ref in context are passed correctly", async function (assert) {
-        var done = assert.async();
-        assert.expect(3);
+    QUnit.test("*_view_ref in context are passed correctly", async function (assert) {
+        serverData.views = {
+            "partner_type,module.tree_view_ref,list": "<tree/>",
+        };
 
-        createView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<field name=\"p\" context=\"{'tree_view_ref':'module.tree_view_ref'}\"/>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="timmy" widget="one2many" context="{'tree_view_ref':'module.tree_view_ref'}"/>
+                </form>`,
             resId: 1,
-            intercepts: {
-                load_views: function (event) {
-                    var context = event.data.context;
-                    assert.strictEqual(
-                        context.tree_view_ref,
-                        "module.tree_view_ref",
-                        "context should contain tree_view_ref"
-                    );
-                    event.data.on_success();
-                },
-            },
-            viewOptions: {
-                context: { some_context: false },
-            },
+            resIds: [1, 2],
             mockRPC(route, args) {
-                if (args.method === "read") {
-                    assert.strictEqual(
-                        "some_context" in args.kwargs.context && !args.kwargs.context.some_context,
-                        true,
-                        "the context should have been set"
-                    );
+                assert.step(`${args.kwargs.context.some_context}`);
+                if (args.method === "get_views" && args.model === "partner_type") {
+                    // get_views for the x2many field
+                    assert.step(args.kwargs.context.tree_view_ref);
                 }
-                return this._super.apply(this, arguments);
             },
-        }).then(async function (form) {
-            // reload to check that the record's context hasn't been modified
-            // await form.reload();
-            done();
+            context: { some_context: 354 },
         });
+
+        assert.verifySteps([
+            "354", // main get_views
+            "354", // x2many get_views
+            "module.tree_view_ref", // x2many get_views
+            "354", // read
+        ]);
+
+        // reload to check that the record's context hasn't been modified
+        await click(target.querySelector(".o_pager_next"));
+        assert.verifySteps(["354"]);
     });
 
     QUnit.skipWOWL("non inline subview and create=0 in action context", async function (assert) {

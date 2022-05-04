@@ -1,19 +1,24 @@
 /**@odoo-module */
+
 import { fieldVisualFeedback } from "@web/fields/field";
 
- 
-export class FormLabel extends owl.Component {
+const { Component, xml } = owl;
 
-    get labelClasses() {
+export class FormLabel extends Component {
+    get className() {
         const { invalid, empty } = fieldVisualFeedback(this.props.record, this.props.fieldName);
-        return {
-            "o_field_invalid": invalid,
-            "o_form_label_empty" :empty,
-        };
+        const classes = this.props.className ? [this.props.className] : [];
+        if (invalid) {
+            classes.push("o_field_invalid");
+        }
+        if (empty) {
+            classes.push("o_form_label_empty");
+        }
+        return classes.join(" ");
     }
 }
-FormLabel.template = owl.xml`
-  <label class="o_form_label" t-att-for="props.id" t-att-class="labelClasses">
+FormLabel.template = xml`
+  <label class="o_form_label" t-att-for="props.id" t-att-class="className">
     <t t-esc="props.string" />
   </label>
 `;

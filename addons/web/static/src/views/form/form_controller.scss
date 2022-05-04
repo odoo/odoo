@@ -107,7 +107,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // Readonly specific rules
-    &.o_form_readonly {
+    .o_form_readonly {
         .oe_edit_only {
             display: none!important;
         }
@@ -144,7 +144,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // Editable specific rules
-    &.o_form_editable {
+    .o_form_editable {
         .oe_read_only {
             display: none!important;
         }
@@ -174,7 +174,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // No sheet
-    &.o_form_nosheet {
+    .o_form_nosheet {
         display: block;
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
 

@@ -572,6 +572,13 @@ export class ViewCompiler {
                                 : `record.fields.${fieldName}.string`,
                         ],
                     ];
+                    // note: remove this oe_read/edit_only logic when form view
+                    // will always be in edit mode
+                    if (child.classList.contains("oe_read_only")) {
+                        props.push(["className", `"oe_read_only"`]);
+                    } else if (child.classList.contains("oe_edit_only")) {
+                        props.push(["className", `"oe_edit_only"`]);
+                    }
                     mainSlot.setAttribute("props", tupleArrayToExpr(props));
                     mainSlot.setAttribute("Component", "constructor.components.FormLabel");
                     mainSlot.setAttribute("subType", "'item_component'");

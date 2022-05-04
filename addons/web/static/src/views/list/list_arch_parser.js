@@ -76,6 +76,7 @@ export class ListArchParser extends XMLParser {
                     columns.push({
                         ...fieldInfo,
                         id: `column_${nextId++}`,
+                        className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
                         optional: node.getAttribute("optional") || false,
                         type: "field",
                         hasLabel: !(fieldInfo.attrs.nolabel || fieldInfo.FieldComponent.noLabel),
