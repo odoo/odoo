@@ -9906,7 +9906,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
 
         serverData.models.partner.records[0].turtles = [1, 2, 3];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9933,27 +9933,27 @@ QUnit.module("Fields", (hooks) => {
                         ],
                     });
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
         });
 
-        assert.strictEqual(form.$(".o_kanban_record:not(.o_kanban_ghost)").text(), "yopblipkawa");
-        assert.doesNotHaveClass(form.$(".o_field_one2many .o_kanban_view"), "ui-sortable");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["yop", "blip", "kawa"]
+        );
 
         await clickEdit(target);
 
-        assert.hasClass(form.$(".o_field_one2many .o_kanban_view"), "ui-sortable");
+        await dragAndDrop(".o_kanban_record:nth-child(1)", ".o_kanban_record:nth-child(3)");
 
-        var $record = form.$(
-            ".o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:first"
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["blip", "kawa", "yop"]
         );
-        var $to = form.$(
-            ".o_field_one2many[name=turtles] .o_kanban_view .o_kanban_record:nth-child(3)"
-        );
-        await testUtils.dom.dragAndDrop($record, $to, { position: "bottom" });
-
-        assert.strictEqual(form.$(".o_kanban_record:not(.o_kanban_ghost)").text(), "blipkawayop");
 
         await clickSave(target);
     });
