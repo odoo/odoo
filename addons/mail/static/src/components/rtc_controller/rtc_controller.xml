@@ -22,12 +22,10 @@
                                 }"/>
                             </div>
                         </button>
-                        <t t-if="messaging.rtc.currentRtcSession.isDeaf"><t t-set="headphoneTitle">Undeafen</t></t>
-                        <t t-else=""><t t-set="headphoneTitle">Deafen</t></t>
                         <button class="o_RtcController_button"
                             t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isDeaf, 'o-isSmall': rtcController.isSmall }"
-                            t-att-aria-label="headphoneTitle"
-                            t-att-title="headphoneTitle"
+                            t-att-aria-label="rtcController.headphoneButtonTitle"
+                            t-att-title="rtcController.headphoneButtonTitle"
                             t-on-click="rtcController.onClickDeafen">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa" t-att-class="{

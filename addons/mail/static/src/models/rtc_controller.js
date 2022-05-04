@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcController',
@@ -76,6 +76,20 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeHeadphoneButtonTitle() {
+            if (!this.messaging.rtc.currentRtcSession) {
+                return clear();
+            }
+            if (this.messaging.rtc.currentRtcSession.isDeaf) {
+                return this.env._t("Undeafen");
+            } else {
+                return this.env._t("Deafen");
+            }
+        },
+        /**
+         * @private
          */
         _computeIsSmall() {
             return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
@@ -86,6 +100,9 @@ registerModel({
             inverse: 'rtcController',
             readonly: true,
             required: true,
+        }),
+        headphoneButtonTitle: attr({
+            compute: '_computeHeadphoneButtonTitle',
         }),
         isSmall: attr({
             compute: '_computeIsSmall',
