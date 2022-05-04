@@ -42,6 +42,10 @@ let testUtils,
     AbstractStorageService,
     RamStorage;
 
+async function clickCreate(target) {
+    await click(target.querySelector(".o_form_button_create"));
+}
+
 async function clickDiscard(target) {
     await click(target.querySelector(".o_form_button_cancel"));
 }
@@ -272,8 +276,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skipWOWL(
         "New record with a o2m also with 2 new records, ordered, and resequenced",
         async function (assert) {
-            assert.expect(2);
-
             // Needed to have two new records in a single stroke
             serverData.models.partner.onchanges = {
                 foo: function (obj) {
@@ -281,7 +283,9 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            let startAssert = false;
+
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -294,24 +298,24 @@ QUnit.module("Fields", (hooks) => {
                                 <field name="trululu"/>
                             </tree>
                         </field>
-                    </form>`,
-                viewOptions: {
-                    mode: "create",
-                },
+                    </form>
+                `,
                 mockRPC(route, args) {
-                    assert.step(args.method + " " + args.model);
-                    return this._super(route, args);
+                    if (startAssert) {
+                        assert.step(args.method + " " + args.model);
+                    }
                 },
+                resId: 1,
             });
+
+            await clickCreate(target);
+
+            startAssert = true;
 
             // change the int_field through drag and drop
             // that way, we'll trigger the sorting and the name_get
             // of the lines of "p"
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle").eq(1),
-                form.$("tbody tr").first(),
-                { position: "top" }
-            );
+            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
 
             assert.verifySteps(["onchange partner"]);
         }
@@ -769,18 +773,12 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <sheet>
-                        <notebook>
-                            <page string="P page">
-                                <field name="turtles">
-                                    <tree default_order="turtle_int">
-                                        <field name="turtle_int" widget="handle"/>
-                                        <field name="turtle_foo"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                    <field name="turtles">
+                        <tree default_order="turtle_int">
+                            <field name="turtle_int" widget="handle"/>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
                 </form>`,
             resId: 1,
         });
@@ -1201,9 +1199,9 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            var ids = [];
-            for (var i = 10; i < 50; i++) {
-                var id = 10 + i;
+            const ids = [];
+            for (let i = 10; i < 50; i++) {
+                const id = 10 + i;
                 ids.push(id);
                 serverData.models.turtle.records.push({
                     id: id,
@@ -1219,60 +1217,59 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: `
                     <form>
-                        <sheet>
-                            <group>
-                                <field name="turtles">
-                                    <tree editable="bottom" default_order="turtle_int">
-                                        <field name="turtle_int" widget="handle"/>
-                                        <field name="turtle_foo"/>
-                                    </tree>
-                                </field>
-                            </group>
-                        </sheet>
+                        <field name="turtles">
+                            <tree editable="bottom" default_order="turtle_int">
+                                <field name="turtle_int" widget="handle"/>
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
                     </form>`,
                 resId: 1,
             });
 
-            await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
-            assert.strictEqual(
-                form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-                "yopblipkawa",
-                "should have the 3 rows in the correct order"
+            await click(target, "div[name=turtles] .o_pager_next");
+
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                    (el) => el.innerText
+                ),
+                ["yop", "blip", "kawa"]
             );
 
             await clickEdit(target);
-            await click(form.$(".o_field_one2many .o_list_view tbody tr:first td:first"));
-            await testUtils.fields.editInput(
-                form.$(".o_field_one2many .o_list_view tbody tr:first input:first"),
-                "blurp"
-            );
+
+            await click(target.querySelector('.o_list_renderer div[name="turtle_foo"]'));
+            await editInput(target, '.o_list_renderer div[name="turtle_foo"] input', "blurp");
 
             // Drag and drop the third line in second position
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle").eq(2),
-                form.$(".o_field_one2many tbody tr").eq(1),
-                { position: "top" }
+            await dragAndDrop(
+                "tbody tr:nth-child(3) .o_handle_cell",
+                "tbody tr:nt-child(2)",
+                "top"
             );
 
-            assert.strictEqual(
-                form.$(".o_data_cell").text(),
-                "blurpkawablip",
-                "should display to record in 'turtle_int' order"
+            // need to unselect row...
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                    (el) => el.textContent
+                ),
+                ["blurp", "kawa", "blip"]
             );
 
             await clickSave(target);
-            await click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
+            await click(target, 'div[name="turtles"] .o_pager_next');
 
-            assert.strictEqual(
-                form.$(".o_data_cell:not(.o_handle_cell)").text(),
-                "blurpkawablip",
-                "should display to record in 'turtle_int' order"
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_row div[name="turtle_foo"]')].map(
+                    (el) => el.textContent
+                ),
+                ["blurp", "kawa", "blip"]
             );
         }
     );
@@ -12125,53 +12122,73 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("Check onchange with two consecutive many2one", async function (assert) {
-        // test name: it's not many2one, it's one2many
-        // assert.expect(2);
-        // this.data.product.fields.product_partner_ids = { string: "User", type: 'one2many', relation: 'partner' };
-        // this.data.product.records[0].product_partner_ids = [1];
-        // this.data.product.records[1].product_partner_ids = [2];
-        // this.data.turtle.fields.product_ids = { string: "Product", type: "one2many", relation: 'product' };
-        // this.data.turtle.fields.user_ids = { string: "Product", type: "one2many", relation: 'user' };
-        // this.data.turtle.onchanges = {
-        //     turtle_trululu: function (record) {
-        //         record.product_ids = [37];
-        //         record.user_ids = [17, 19];
-        //     },
-        // };
-        // var form = await createView({
-        //     View: FormView,
-        //     model: 'turtle',
-        //     data: this.data,
-        //     arch:
-        //         '<form string="Turtles">' +
-        //             '<field string="Product" name="turtle_trululu"/>' +
-        //             '<field readonly="1" string="Related field" name="product_ids">' +
-        //                 '<tree>' +
-        //                     '<field widget="many2many_tags" name="product_partner_ids"/>' +
-        //                 '</tree>' +
-        //             '</field>' +
-        //             '<field readonly="1" string="Second related field" name="user_ids">' +
-        //                 '<tree>' +
-        //                     '<field widget="many2many_tags" name="partner_ids"/>' +
-        //                 '</tree>' +
-        //             '</field>' +
-        //         '</form>',
-        //     res_id: 1,
-        // });
-        // await testUtils.form.clickEdit(form);
-        // await testUtils.fields.many2one.clickOpenDropdown("turtle_trululu");
-        // await testUtils.fields.many2one.searchAndClickItem('turtle_trululu', {search: 'first record'});
-        // const getElementTextContent = name => [...document.querySelectorAll(`.o_field_many2manytags[name="${name}"] .badge.o_tag_color_0 > span`)]
-        //     .map(x=>x.textContent);
-        // assert.deepEqual(
-        //     getElementTextContent('product_partner_ids'),
-        //     ['first record'],
-        //     "should have the correct value in the many2many tag widget");
-        // assert.deepEqual(
-        //     getElementTextContent('partner_ids'),
-        //     ['first record', 'second record'],
-        //     "should have the correct values in the many2many tag widget");
-        // form.destroy();
+    QUnit.test("Check onchange with two consecutive one2one", async function (assert) {
+        serverData.models.product.fields.product_partner_ids = {
+            string: "User",
+            type: "one2many",
+            relation: "partner",
+        };
+        serverData.models.product.records[0].product_partner_ids = [1];
+        serverData.models.product.records[1].product_partner_ids = [2];
+        serverData.models.turtle.fields.product_ids = {
+            string: "Product",
+            type: "one2many",
+            relation: "product",
+        };
+        serverData.models.turtle.fields.user_ids = {
+            string: "Product",
+            type: "one2many",
+            relation: "user",
+        };
+        serverData.models.turtle.onchanges = {
+            turtle_trululu: function (record) {
+                record.product_ids = [37];
+                record.user_ids = [17, 19];
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            serverData,
+            arch: `
+                <form string="Turtles">
+                    <field string="Product" name="turtle_trululu"/>
+                    <field readonly="1" string="Related field" name="product_ids">
+                        <tree>
+                            <field widget="many2many_tags" name="product_partner_ids"/>
+                        </tree>
+                    </field>
+                    <field readonly="1" string="Second related field" name="user_ids">
+                        <tree>
+                            <field widget="many2many_tags" name="partner_ids"/>
+                        </tree>
+                    </field>
+                </form>
+            `,
+            resId: 1,
+        });
+
+        await clickEdit(target);
+
+        await clickOpenM2ODropdown(target, "turtle_trululu");
+        await clickM2OHighlightedItem(target, "turtle_trululu");
+
+        const getElementTextContent = (name) =>
+            [
+                ...document.querySelectorAll(
+                    `.o_field_many2many_tags[name="${name}"] .badge.o_tag_color_0 > span`
+                ),
+            ].map((x) => x.textContent);
+        assert.deepEqual(
+            getElementTextContent("product_partner_ids"),
+            ["first record"],
+            "should have the correct value in the many2many tag widget"
+        );
+        assert.deepEqual(
+            getElementTextContent("partner_ids"),
+            ["first record", "second record"],
+            "should have the correct values in the many2many tag widget"
+        );
     });
 });
