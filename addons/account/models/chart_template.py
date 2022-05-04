@@ -74,8 +74,7 @@ class AccountChartTemplate(models.AbstractModel):
         return next((key for key, template in TEMPLATES.items() if template['country'] == country_code), default)
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
-        """ Installs this chart of accounts for the current company if not chart
-        of accounts had been created for it yet.
+        """ Checks if the chart template can be loaded then proceeds installing it.
 
         :param template_code (str): code of the chart template to be loaded.
         :param company (Model<res.company>): the company we try to load the chart template on.
@@ -93,39 +92,52 @@ class AccountChartTemplate(models.AbstractModel):
             company = self.env['res.company'].browse([company])
 
         template_code = template_code or company and self._guess_chart_template(company)
+
+        # If we don't have any chart of account on this company, install this chart of account
+        if not company.chart_template and not company.existing_accounting():
+            return self._load(template_code, company, install_demo)
+
+    def _load(self, template_code, company, install_demo):
+        """ Installs this chart of accounts for the current company.
+        This function is overridden in modules like point_of_sales.
+
+        :param template_code (str): code of the chart template to be loaded.
+        :param company (Model<res.company>): the company we try to load the chart template on.
+            If not provided, it is retrieved from the context.
+        :param install_demo (bool): whether or not we should load demo data right after loading the
+            chart template.
+        """
         module_names = TEMPLATES[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
         if module_ids:
             module_ids.sudo().button_immediate_install()
             self.env.reset()
 
-        # If we don't have any chart of account on this company, install this chart of account
-        if not company.chart_template and not company.existing_accounting():
-            with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
-            xml_id = company.get_metadata()[0]['xmlid']
-            if not xml_id:
-                with_company.env['ir.model.data']._update_xmlids([{
-                    'xml_id': f"base.company_{company.id}",
-                    'record': company
-                }])
+        with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
+        xml_id = company.get_metadata()[0]['xmlid']
+        if not xml_id:
+            with_company.env['ir.model.data']._update_xmlids([{
+                'xml_id': f"base.company_{company.id}",
+                'record': company
+            }])
 
-            data = with_company._get_chart_template_data(template_code, company)
-            with_company._load_data(data)
-            with_company._post_load_data(template_code, company)
+        data = with_company._get_chart_template_data(template_code, company)
+        with_company._load_data(data)
+        with_company._post_load_data(template_code, company)
 
-            company.flush()
-            with_company.env.cache.invalidate()
+        company.flush()
+        with_company.env.cache.invalidate()
 
-            # Install the demo data when the first localization is instanciated on the company
-            if install_demo and with_company.env.ref('base.module_account').demo:
-                try:
-                    with with_company.env.cr.savepoint():
-                        with_company._load_data(with_company._get_demo_data(company))
-                        with_company._post_load_demo_data(company)
-                except Exception:
-                    # Do not rollback installation of CoA if demo data failed
-                    _logger.exception('Error while loading accounting demo data')
-            company.chart_template = template_code
+        # Install the demo data when the first localization is instanciated on the company
+        if install_demo and with_company.env.ref('base.module_account').demo:
+            try:
+                with with_company.env.cr.savepoint():
+                    with_company._load_data(with_company._get_demo_data(company))
+                    with_company._post_load_demo_data(company)
+            except Exception:
+                # Do not rollback installation of CoA if demo data failed
+                _logger.exception('Error while loading accounting demo data')
+        company.chart_template = template_code
 
     def _load_data(self, data):
         def deref(values, model):
