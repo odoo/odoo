@@ -505,7 +505,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
 QUnit.test('do not show messaging seen indicator if before last seen by all message', async function (assert) {
     assert.expect(3);
 
-    const { env, messaging, widget } = await start();
+    const { env, messaging, target } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
@@ -549,7 +549,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     ]);
      await createRootMessagingComponent(env, "Message", {
         props: { localId: threadViewer.threadView.messageViews[0].localId },
-        target: widget.el,
+        target,
     });
 
     assert.containsOnce(
