@@ -141,7 +141,7 @@
                                                 'readonly': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'infographic')]}"/>
                                     </group>
                                     <group name="related_details">
-                                        <field name="user_id" string="Responsible" widget="many2one_avatar"/>
+                                        <field name="user_id" string="Responsible" domain="[('share', '=', False)]" widget="many2one_avatar"/>
                                         <label for="completion_time"/>
                                         <div>
                                             <field name="completion_time" widget="float_time" class="oe_inline"/>

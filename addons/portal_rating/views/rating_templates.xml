@@ -54,6 +54,7 @@
         <t t-set="display_composer" t-value="not disable_composer and not (request.session.uid and env.user._is_public())"/>
 
         <div class="d-print-none o_rating_popup_composer o_not_editable p-0"
+            contenteditable="false"
             t-att-data-rating_avg="rating_avg or 0.0"
             t-att-data-rating_count="rating_count or 0.0"
             t-att-data-token="token"
