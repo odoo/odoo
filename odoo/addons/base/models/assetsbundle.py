@@ -5,6 +5,7 @@ import re
 import hashlib
 import itertools
 import json
+import requests
 import textwrap
 import uuid
 try:
@@ -488,6 +489,50 @@ class AssetsBundle(object):
                 asset_id = fragments.pop(0)
                 asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
                 asset._content = fragments.pop(0)
+
+                font_family_url_re = r'@import url\("https:\/\/fonts\.googleapis\.com\/css\?family=.+"\);'
+                font_url_re = r'src: url\(.+\)'
+                headers = {
+                    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36',
+                }
+                def fetch_google_font(src):
+                    statement = src.group()
+                    url, font_format = re.findall(r'src: url\(([^\)]+)\) (.+)', statement)[0]
+                    try:
+                        req = requests.get(url, headers=headers)
+                        req.raise_for_status()
+                        name = re.findall(r'.+/([^/]+)', url)[0]
+                        local_url = '/web/content/fonts/%s' % re.findall(r'https?://[^/]+/(.+)', url)[0]
+                        attachment = self.env['ir.attachment'].sudo().search([
+                            ('url', '=', local_url),
+                        ])
+                        if not attachment:
+                            attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create({
+                                'name': name,
+                                'type': 'binary',
+                                'public': True,
+                                'datas': base64.b64encode(req.content),
+                                'url': local_url,
+                                'website_id': None,
+                            })
+                        return 'src: url(%s) %s' % (attachment.url, font_format)
+                    except IOError:
+                        _logger.warning("Could not fetch font: %s", statement)
+                        return statement
+                def fetch_google_font_family(import_url):
+                    statement = import_url.group()
+                    url = re.findall(r'.*\("(.+)"\)', statement)[0]
+                    try:
+                        req = requests.get(url, headers=headers)
+                        req.raise_for_status()
+                        response = req.content.decode('utf8')
+                        response = re.sub(font_url_re, fetch_google_font, response)
+                        return response
+                    except IOError:
+                        _logger.warning("Could not fetch font family: %s", statement)
+                        return statement
+
+                asset._content = re.sub(font_family_url_re, fetch_google_font_family, asset._content)
 
                 if debug:
                     try:
