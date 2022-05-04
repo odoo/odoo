@@ -2766,3 +2766,31 @@ class TestMrpOrder(TestMrpCommon):
         production.workorder_ids[0].button_start()
         production.workorder_ids[0].button_start()
         self.assertEqual(len(production.workorder_ids[0].time_ids.filtered(lambda t: t.date_start and not t.date_end)), 1)
+
+    def test_qty_update_and_method_reservation(self):
+        """
+        When the reservation method of Manufacturing is 'manual', updating the
+        quantity of a confirmed MO shouldn't trigger the reservation of the
+        components
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], order='id', limit=1)
+        warehouse.manu_type_id.reservation_method = 'manual'
+
+        for product in self.product_1 + self.product_2:
+            product.type = 'product'
+            self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.assertFalse(mo.move_raw_ids.move_line_ids)
+
+        wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 5,
+        })
+        wizard.change_prod_qty()
+
+        self.assertFalse(mo.move_raw_ids.move_line_ids)
