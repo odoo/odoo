@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import fields, models, _
 from odoo.tools.float_utils import float_compare, float_is_zero
 
@@ -23,6 +25,7 @@ class AccountMove(models.Model):
 
     def _get_price_difference_svl_values(self):
         svl_vals_list = []
+        cost_to_add_byproduct = defaultdict(lambda: {'qty': 0, 'cost': 0})
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
 
         for move in self:
@@ -99,7 +102,7 @@ class AccountMove(models.Model):
                     product = line.product_id
                     linked_layer = valuation_stock_moves.stock_valuation_layer_ids[-1]
                     price_unit_val_dif = line.price_unit - linked_layer.unit_cost
-                    price_subtotal = qty_to_diff * price_unit_val_dif
+                    price_subtotal = move.company_id.currency_id.round(qty_to_diff * price_unit_val_dif)
                     if price_unit_val_dif == 0:
                         continue
                     # Creates a new stock valuation layer for the price difference.
@@ -116,10 +119,19 @@ class AccountMove(models.Model):
                         'account_move_id': move.id,
                         'stock_valuation_layer_id': linked_layer.id
                     })
+                    linked_layer.remaining_value += price_subtotal
                     # If product cost method is AVCO, updates the standard price.
-                    if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                        # product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += price_unit_val_dif / product.quantity_svl
-                        product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += price_unit_val_dif
+                    if product.cost_method == 'average' and\
+                       not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                        cost_to_add_byproduct[product]['qty'] += qty_to_diff
+                        cost_to_add_byproduct[product]['cost'] += price_unit_val_dif
+            # Batch standard price computation avoids recompute `quantity_svl` at each iteration.
+            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys())
+            for product in products:  # Iterates on recordset to prefetch efficiently `quantity_svl`.
+                unit_cost = cost_to_add_byproduct[product]['cost']
+                invoiced_qty = cost_to_add_byproduct[product]['qty']
+                cost_to_add = (unit_cost * invoiced_qty) / product.quantity_svl
+                product.with_company(move.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add
         return svl_vals_list
 
     def _skip_move_for_price_diff(self):

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.exceptions import UserError
@@ -28,6 +30,7 @@ class StockMove(models.Model):
 
     def _get_in_svl_vals(self, forced_quantity):
         svl_vals_list = []
+        cost_to_add_byproduct = defaultdict(lambda: {'qty': 0, 'cost': 0})
         # Before define the incoming SVL values, checks if some quantities has
         # already been invoiced and still waiting to be receive.
         # In such case, get back the price from these waiting invoice lines.
@@ -41,7 +44,6 @@ class StockMove(models.Model):
                 continue
             quantity_received = 0
             # Gets values for each of those invoice lines.
-            # TODO: checks what happens when receive less qty than already invoiced.
             for line in invoice_lines:
                 same_uom = move.product_uom == line.product_uom_id
                 line_qty = line.qty_waiting_for_receipt
@@ -57,22 +59,19 @@ class StockMove(models.Model):
                 else:  # Not the same UoM: reconverts the qty before decreases invoice wainting qty.
                     line.qty_waiting_for_receipt -= move.product_uom._compute_quantity(qty_to_process, line.product_uom_id)
 
+                value = move.company_id.currency_id.round(qty_to_process * unit_cost)
                 svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
                 svl_vals[0]['unit_cost'] = unit_cost
-                svl_vals[0]['value'] = qty_to_process * unit_cost
+                svl_vals[0]['value'] = value
+                svl_vals[0]['remaining_value'] = value
                 svl_vals[0]['description'] = move.picking_id.name
                 svl_vals_list += svl_vals
                 # If product cost method is AVCO, updates the standard price.
                 # if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                if product.cost_method == 'average':
-                    # TODO: checks with differents UoM for the move line and the invoice line.
-                    unit_price_diff = unit_cost - product.standard_price
-                    svl_qty = svl_vals[0]['quantity']
-                    qty_delta = 1
-                    if product.qty_available > 0:
-                        qty_delta = svl_qty / (svl_qty + product.quantity_svl)
-                    standard_price_diff = unit_price_diff * qty_delta
-                    product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += standard_price_diff
+                if product.cost_method == 'average' and\
+                   not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                    cost_to_add_byproduct[product]['qty'] += qty_to_process
+                    cost_to_add_byproduct[product]['cost'] += qty_to_process * (unit_cost - move.purchase_line_id.price_unit)
             # If it remains quantities to process after processed the waiting
             # ones, gets SVL values for the remaining quantity.
             if quantity_received < move.quantity_done:
@@ -80,6 +79,13 @@ class StockMove(models.Model):
                 svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
                 svl_vals[0]['description'] = move.picking_id.name
                 svl_vals_list += svl_vals
+
+            # Batch standard price computation avoids recompute `quantity_svl` at each iteration.
+            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys())
+            for product in products:  # Iterates on recordset to prefetch efficiently `quantity_svl`.
+                product_qty = product.quantity_svl + cost_to_add_byproduct[product]['qty']
+                cost_to_add = cost_to_add_byproduct[product]['cost'] / product_qty
+                product.with_company(move.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add
         return svl_vals_list + super(StockMove, remainging_moves)._get_in_svl_vals(forced_quantity)
 
     def _get_price_unit(self):
