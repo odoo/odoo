@@ -18,6 +18,16 @@ registerModel({
             return this.component.root.el;
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickLoadMore(ev) {
+            ev.preventDefault();
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.cache.loadMoreMessages();
+        },
+        /**
          * @private
          * @returns {boolean|FieldCommand}
          */

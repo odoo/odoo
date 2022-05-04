@@ -81,7 +81,7 @@
             </div>
         </t>
         <t t-elif="!messageListView.threadViewOwner.threadCache.isAllHistoryLoaded and !messageListView.threadViewOwner.thread.isTemporary">
-            <a class="o_MessageList_item o_MessageList_loadMore align-self-center" href="#" t-on-click="_onClickLoadMore" t-ref="loadMore">
+            <a class="o_MessageList_item o_MessageList_loadMore align-self-center" href="#" t-on-click="messageListView.onClickLoadMore" t-ref="loadMore">
                 Load more
             </a>
         </t>
