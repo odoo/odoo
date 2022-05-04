@@ -2035,8 +2035,9 @@ export class DynamicGroupList extends DynamicList {
         const { ArchParser } = registry.category("views").get("form");
         let quickCreateFields = DEFAULT_QUICK_CREATE_FIELDS;
         let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
+        let quickCreateRelatedModels = {};
         if (viewRef) {
-            const { fields, views } = await this.model.keepLast.add(
+            const { fields, relatedModels, views } = await this.model.keepLast.add(
                 this.model.viewService.loadViews({
                     context: { ...this.context, form_view_ref: viewRef },
                     resModel: this.resModel,
@@ -2045,9 +2046,14 @@ export class DynamicGroupList extends DynamicList {
             );
             quickCreateFields = fields;
             quickCreateForm = views.form;
+            quickCreateRelatedModels = relatedModels;
         }
         this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(quickCreateForm.arch, quickCreateFields);
+        const models = {
+            ...quickCreateRelatedModels,
+            [this.modelName]: quickCreateFields,
+        };
+        return new ArchParser().parse(quickCreateForm.arch, models, this.modelName);
     }
 }
 

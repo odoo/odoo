@@ -283,12 +283,16 @@ export class X2ManyField extends Component {
         let formViewInfo = this.activeField.views.form;
         const comodel = this.list.resModel;
         if (!formViewInfo) {
-            const { fields, views } = await this.viewService.loadViews({
+            const { fields, relatedModels, views } = await this.viewService.loadViews({
                 context: {},
                 resModel: comodel,
                 views: [[false, "form"]],
             });
-            const archInfo = new FormArchParser().parse(views.form.arch, fields);
+            const models = {
+                ...relatedModels,
+                [comodel]: fields,
+            };
+            const archInfo = new FormArchParser().parse(views.form.arch, models, comodel);
             formViewInfo = { ...archInfo, fields }; // should be good to memorize this on activeField
         }
 

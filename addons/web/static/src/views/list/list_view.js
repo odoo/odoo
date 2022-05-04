@@ -19,8 +19,12 @@ export const listView = {
 
     props: (genericProps, view) => {
         const { ArchParser } = view;
-        const { arch, fields } = genericProps;
-        const archInfo = new ArchParser().parse(arch, fields);
+        const { arch, fields, relatedModels, resModel } = genericProps;
+        const models = {
+            ...relatedModels,
+            [resModel]: fields,
+        };
+        const archInfo = new ArchParser().parse(arch, models, resModel);
 
         return {
             ...genericProps,

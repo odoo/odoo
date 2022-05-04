@@ -7,7 +7,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { stringToOrderBy } from "../relational_model";
 
 export class GroupListArchParser extends XMLParser {
-    parse(arch, fields, jsClass) {
+    parse(arch, models, modelName, jsClass) {
         const activeFields = {};
         const buttons = [];
         let buttonId = 0;
@@ -18,7 +18,7 @@ export class GroupListArchParser extends XMLParser {
                     id: buttonId++,
                 });
             } else if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, fields, "list", jsClass);
+                const fieldInfo = Field.parseFieldNode(node, models, modelName, "list", jsClass);
                 activeFields[fieldInfo.name] = fieldInfo;
             }
         });
@@ -27,10 +27,11 @@ export class GroupListArchParser extends XMLParser {
 }
 
 export class ListArchParser extends XMLParser {
-    parse(arch, fields) {
+    parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
         const activeFields = {};
         const columns = [];
+        const fields = models[modelName];
         let buttonId = 0;
         const groupBy = {
             buttons: {},
@@ -66,7 +67,7 @@ export class ListArchParser extends XMLParser {
                     columns.push(buttonGroup);
                 }
             } else if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, fields, "list");
+                const fieldInfo = Field.parseFieldNode(node, models, modelName, "list");
                 activeFields[fieldInfo.name] = fieldInfo;
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
@@ -89,12 +90,12 @@ export class ListArchParser extends XMLParser {
                 const fieldName = node.getAttribute("name");
                 const xmlSerializer = new XMLSerializer();
                 const groupByArch = xmlSerializer.serializeToString(node);
-                const groupByFields = fields[fieldName].relatedFields;
-                const groupByArchInfo = groupListArchParser.parse(groupByArch, groupByFields);
+                const coModelName = fields[fieldName].relation;
+                const groupByArchInfo = groupListArchParser.parse(groupByArch, models, coModelName);
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
                     activeFields: groupByArchInfo.activeFields,
-                    fields: groupByFields,
+                    fields: models[coModelName],
                 };
                 return false;
             } else if (node.tagName === "header") {

@@ -5,14 +5,14 @@ import { Field } from "@web/fields/field";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 
 export class FormArchParser extends XMLParser {
-    parse(arch, fields) {
+    parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
         const jsClass = xmlDoc.getAttribute("js_class");
         const activeActions = getActiveActions(xmlDoc);
         const activeFields = {};
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, fields, "form", jsClass);
+                const fieldInfo = Field.parseFieldNode(node, models, modelName, "form", jsClass);
                 activeFields[fieldInfo.name] = fieldInfo;
                 return false;
             } else if (node.tagName === "div") {

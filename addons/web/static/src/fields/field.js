@@ -224,9 +224,10 @@ const EXCLUDED_ATTRS = [
     "on_change",
 ];
 
-Field.parseFieldNode = function (node, fields, viewType, jsClass) {
+Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
+    const fields = models[modelName];
     const field = fields[name];
     const fieldInfo = {
         name,
@@ -273,13 +274,13 @@ Field.parseFieldNode = function (node, fields, viewType, jsClass) {
             const { ArchParser } = viewRegistry.get(viewType);
             const xmlSerializer = new XMLSerializer();
             const subArch = xmlSerializer.serializeToString(child);
-            const archInfo = new ArchParser().parse(subArch, field.relatedFields);
+            const archInfo = new ArchParser().parse(subArch, models, field.relation);
 
             views[viewType] = {
                 ...archInfo,
-                fields: field.relatedFields,
+                fields: models[field.relation],
             };
-            fieldInfo.relatedFields = field.relatedFields;
+            fieldInfo.relatedFields = models[field.relation];
         }
         fieldInfo.viewMode =
             (node.getAttribute("mode") === "tree" ? "list" : node.getAttribute("mode")) ||

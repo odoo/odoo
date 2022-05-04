@@ -86,7 +86,8 @@ const extractAttributes = (el, attributes) => {
 };
 
 export class KanbanArchParser extends XMLParser {
-    parse(arch, fields) {
+    parse(arch, models, modelName) {
+        const fields = models[modelName];
         const xmlDoc = this.parseXML(arch);
         const className = xmlDoc.getAttribute("class") || null;
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
@@ -122,7 +123,7 @@ export class KanbanArchParser extends XMLParser {
             }
             // Case: field node
             if (node.tagName === "field") {
-                const fieldInfo = Field.parseFieldNode(node, fields, "kanban", jsClass);
+                const fieldInfo = Field.parseFieldNode(node, models, modelName, "kanban", jsClass);
                 const name = fieldInfo.name;
                 activeFields[name] = fieldInfo;
                 if (fieldInfo.options.group_by_tooltip) {
