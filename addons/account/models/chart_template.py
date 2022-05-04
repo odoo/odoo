@@ -394,6 +394,10 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_payable_account_id': 'account.tax.group',
             'property_tax_receivable_account_id': 'account.tax.group',
             'property_advance_tax_payment_account_id': 'account.tax.group',
+            'property_stock_journal': 'property_stock_journal',
+            'property_stock_account_input_categ_id': 'product.category',
+            'property_stock_account_output_categ_id': 'product.category',
+            'property_stock_valuation_account_id': 'product.category',
         }.items():
             value = template_data.get(field)
             if value:
