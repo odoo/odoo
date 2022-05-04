@@ -1,5 +1,6 @@
 from odoo import models
 
+
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
@@ -8,6 +9,10 @@ class IrActionsReport(models.Model):
         if account_move.company_id.country_id.code != 'PT':
             return super()._render_qweb_pdf(res_ids=res_ids, data=data, run_script=run_script)
         carrying_text = "Valor acumulado"
+        currency_decimal_places = account_move.currency_id.decimal_places
+        currency_symbol = account_move.currency_id.symbol
+        currency_symbol_code = ord(currency_symbol)
+        currency_position = account_move.currency_id.position
         run_script = f"""
             // Constants for A4 paper size
             const tableWidth = "17.65cm";
@@ -47,19 +52,20 @@ class IrActionsReport(models.Model):
             
             // Function to create the div containing the carry over in the beggining/end of the page
             function carryValueElement(amount) {{
-                var formattedAmount = 0;
-                amount = amount.toFixed(2).replace(".", ",");   // PT-formatted currency
-                document.createTextNode("€")
+                var formattedAmount = amount.toFixed({currency_decimal_places});
+                if ("{currency_position}" == "after")
+                    formattedAmount += "&nbsp;&#{currency_symbol_code}"
+                else
+                    formattedAmount = "&#{currency_symbol_code}&nbsp;" + formattedAmount
                 return "<table class='table-sm' style='margin-left: auto; margin-right: 0; border-top: 1px solid; border-bottom: 1px solid'>"+
                             "<tr>" +
                                 "<td><strong>{carrying_text}</strong></td>" +
                                 "<td class='text-right'>" +
-                                    "<strong>" + amount + "&nbsp;&euro;</strong>" +
+                                    "<strong>" + formattedAmount + "</strong>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" 
             }}
-            console.log(document.body.innerHTML);
             
             // Create the new tables
             for (var i = 0; i < tables.length; i++){{
