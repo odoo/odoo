@@ -17,6 +17,8 @@ class AccountChartTemplate(models.Model):
         moves = demo_data_move[1]
         # Create new invoices with loooots of lines to test the multi-page carry-over
         nb_moves = len(moves)
+        for currency_id in (1, 2, 3):
+            self.env["res.currency"].browse(currency_id).active = True
         for i, nb_lines in enumerate([5, 10, 15, 20, 25, 30, 40, 60, 100, 200]):
             invoice_line_ids = []
             for _ in range(nb_lines):
@@ -31,6 +33,7 @@ class AccountChartTemplate(models.Model):
                 'partner_id': ref('base.res_partner_12').id,
                 'invoice_user_id': ref('base.user_demo').id,
                 'invoice_date': time.strftime('%Y-%m-%d'),
-                'invoice_line_ids': invoice_line_ids
+                'invoice_line_ids': invoice_line_ids,
+                'currency_id': randint(1, 3),
             }
         return 'account.move', moves

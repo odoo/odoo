@@ -11,7 +11,7 @@ class IrActionsReport(models.Model):
         carrying_text = "Valor acumulado"
         currency_decimal_places = account_move.currency_id.decimal_places
         currency_symbol = account_move.currency_id.symbol
-        currency_symbol_code = ord(currency_symbol)
+        currency_symbol_html = f"&#{ord(currency_symbol)};" if len(currency_symbol) == 1 else currency_symbol
         currency_position = account_move.currency_id.position
         run_script = f"""
             // Constants for A4 paper size
@@ -54,9 +54,9 @@ class IrActionsReport(models.Model):
             function carryValueElement(amount) {{
                 var formattedAmount = amount.toFixed({currency_decimal_places});
                 if ("{currency_position}" == "after")
-                    formattedAmount += "&nbsp;&#{currency_symbol_code}"
+                    formattedAmount += "&nbsp;{currency_symbol_html}"
                 else
-                    formattedAmount = "&#{currency_symbol_code}&nbsp;" + formattedAmount
+                    formattedAmount = "{currency_symbol_html}&nbsp;" + formattedAmount
                 return "<table class='table-sm' style='margin-left: auto; margin-right: 0; border-top: 1px solid; border-bottom: 1px solid'>"+
                             "<tr>" +
                                 "<td><strong>{carrying_text}</strong></td>" +
