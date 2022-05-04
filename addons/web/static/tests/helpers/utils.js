@@ -373,7 +373,7 @@ export async function editInput(el, selector, value) {
     const input = findElement(el, selector);
     if (
         !["INPUT", "TEXTAREA"].includes(input.tagName) ||
-        !["text", "textarea", "email", "number"].includes(input.type)
+        !["text", "textarea", "email", "number", "search"].includes(input.type)
     ) {
         throw new Error("Only inputs tag and textarea tag can be edited with editInput.");
     }

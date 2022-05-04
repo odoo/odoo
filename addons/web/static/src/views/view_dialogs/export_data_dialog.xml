@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <t t-name="web.ExportDataItem" owl="1">
+        <div t-att-data-field_id="props.field.name" class="o_export_tree_item " role="treeitem" t-on-click.stop="onClick"> 
+            <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
+            <div class="o_tree_column">
+                <span t-esc="formattedName" />
+                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.name) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)" />
+            </div>
+            <t t-if="state.isExpanded">
+                <t t-foreach="state.subFields" t-as="field" t-key="field.name">
+                    <ExportDataItem
+                        field="field"
+                        expandedContent="props.expandedContent"
+                        isFieldExpanded="props.isFieldExpanded"
+                        isFieldExpandable="props.isFieldExpandable"
+                        fieldsToExport="props.fieldsToExport"
+                        onClick="props.onClick"
+                        onAdd="props.onAdd"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+
     <t t-name="web.ExportDataDialog" owl="1">
         <Dialog contentClass="'o_export_data_dialog'" title="title" size="'lg'">
             <div class="col-12 col-md-6 o_left_panel">
@@ -10,16 +33,19 @@
                     </CheckBox>
                 </div>
                 <h4 class="mt-3">Available fields</h4>
-                    <input type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" />
+                <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
                 <div class="border o_left_field_panel">
                     <div class="o_field_tree_structure">
-                        <t t-foreach="fieldsAvailable" t-as="field" t-key="field">
-                            <div t-att-data-field_id="field.name" class="o_export_tree_item " role="treeitem"> 
-                                <div class="o_tree_column">
-                                    <span t-esc="field.string" />
-                                    <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(field.name) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(field.name) and this.onAddItemExportList(ev)" />
-                                </div>
-                            </div>
+                        <t t-foreach="fieldsAvailable" t-as="field" t-key="field.name">
+                            <ExportDataItem
+                                field="field"
+                                expandedContent.bind="expandedContent"
+                                isFieldExpanded.bind="isFieldExpanded"
+                                fieldsToExport="state.fieldsToExport"
+                                isFieldExpandable="isFieldExpandable"
+                                onClick.bind="onToggleExpandField"
+                                onAdd.bind="onAddItemExportList"
+                            />
                         </t>
                     </div>
                 </div>
@@ -48,7 +74,7 @@
                             <select class="form-control ml-4 o_exported_lists_select" t-on-change="onChangeExportList">
                                 <option />
                                 <t t-foreach="templates" t-as="template" t-key="template.id">
-                                    <option t-att-value="template.id" t-esc="template.name" t-att-selected="state.templateSelection === template.id" />
+                                    <option t-att-value="template.id" t-esc="template.name or 'undefined'" t-att-selected="state.templateSelection === template.id" />
                                 </t>
                                 <option class="font-italic" value="new_template">New template </option>
                             </select>
@@ -70,7 +96,7 @@
                 </div>
                 <div class="border o_right_field_panel">
                     <ul class="o_fields_list list-unstyled" t-ref="draggable">
-                        <t t-foreach="fieldsToExport" t-as="field" t-key="field">
+                        <t t-foreach="fieldsToExport" t-as="field" t-key="field.name">
                             <li class="o_export_field" t-att-data-field_id="field.name">
                                 <span class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ fieldsToExport.length === 1 ? 0 : 1 }}" />
                                 <span t-esc="field.string" />
@@ -82,7 +108,7 @@
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click.stop="onExportButtonClicked">Export</button>
-                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click.stop="close">Close</button>
+                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click.stop="props.close">Close</button>
             </t>
         </Dialog>
     </t>
