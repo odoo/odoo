@@ -12,20 +12,23 @@ export class ExportDataDialog extends Component {
     setup() {
         super.setup();
         this.notification = useService("notification");
+        this.rpc = useService("rpc");
         this.draggableRef = useRef("draggable");
         this.exportListRef = useRef("exportList");
 
         this.fieldsAvailableAll = {};
+        this.availableFormats = [];
+        this.templates = [];
+
         this.state = useState({
             selectedFormat: 0,
-            shouldUpdateData: false,
+            importCompatibleData: false,
             templateSelection: null,
-            fieldsToExport: null,
+            fieldsToExport: [],
+            templateisEditing: false,
         });
 
         this.initializeData();
-        this.availableFormats = ["XLSX", "CSV"];
-        this.options = [];
 
         this.title = this.env._t("Export Data");
         this.newTemplateText = this.env._t("New template");
@@ -70,8 +73,32 @@ export class ExportDataDialog extends Component {
         );
     }
 
+    handleTemplateEdition() {
+        if (this.state.templateSelection && !this.state.templateisEditing) {
+            this.state.templateisEditing = true;
+        }
+    }
+
     isFieldSelected(name) {
         return this.state.fieldsToExport.includes(name);
+    }
+
+    async loadExportList(value) {
+        this.state.templateSelection = value;
+        if (value === "new_template") {
+            this.state.templateisEditing = true;
+            return;
+        }
+        this.state.templateisEditing = false;
+        const list = await this.rpc("/web/export/namelist", {
+            model: this.props.root.resModel,
+            export_id: Number(value),
+        });
+        const newList = [];
+        list.forEach((field) => {
+            newList.push(field.name);
+        });
+        this.state.fieldsToExport = newList;
     }
 
     onDraggingEnd([item, target]) {
@@ -80,19 +107,20 @@ export class ExportDataDialog extends Component {
 
     onAddItemExportList(ev) {
         this.state.fieldsToExport.push(ev.target.closest(".o_export_tree_item").dataset.field_id);
+        this.handleTemplateEdition();
     }
 
     onRemoveItemExportList(ev) {
         const item = this.state.fieldsToExport.indexOf(ev.target.parentElement.dataset.field_id);
         this.state.fieldsToExport.splice(item, 1);
-        //todo handle exportlist -> save template?
+        this.handleTemplateEdition();
     }
 
-    onChangeExportList(ev) {
-        this.state.templateSelection = ev.target.value;
+    async onChangeExportList(ev) {
+        this.loadExportList(ev.target.value);
     }
 
-    onSaveExportListEdition() {
+    async onSaveExportListEdition() {
         const name = this.exportListRef.el.value;
         if (!name) {
             this.notification.add(this.env._t("Please enter save field list name"), {
@@ -100,27 +128,63 @@ export class ExportDataDialog extends Component {
             });
             return;
         }
-        console.log(`save the ${name} template`);
-        this.options.push(name);
-        this.state.templateSelection = name;
+
+        const exportedFields = this.fieldsToExport.map((field) => [
+            0,
+            0,
+            {
+                name: field.name,
+            },
+        ]);
+
+        const id = await this.rpc("/web/dataset/call_kw", {
+            args: [
+                {
+                    name,
+                    export_fields: exportedFields,
+                    resource: this.props.root.resModel,
+                },
+            ],
+            kwargs: {
+                context: this.props.context,
+            },
+            model: "ir.exports",
+            method: "create",
+        });
+
+        this.state.templateSelection = id;
+        this.templates.push({ id, name });
     }
 
     onClearExportListEdition() {
-        this.state.templateSelection = null;
+        if (this.state.templateSelection === "new_template") {
+            this.state.templateSelection = null;
+            return;
+        }
+        this.loadExportList(this.state.templateSelection);
     }
 
-    onUpdateDataChange() {
-        // todo updateDataChange
+    onCompatibleDataChange(value) {
+        this.state.importCompatibleData = value;
     }
 
     async onExportButtonClicked() {
+        if (!this.fieldsToExport.length) {
+            this.notification.add(this.env._t("Please select fields to save export list..."), {
+                type: "danger",
+            });
+            return;
+        }
         const exportedFields = this.fieldsToExport.map((field) => ({
             name: field.name,
             label: field.string,
             store: field.store,
             type: field.type,
         }));
-        const request = {
+        if (this.state.importCompatibleData) {
+            exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
+        }
+        await download({
             data: {
                 data: JSON.stringify({
                     context: this.props.context,
@@ -128,18 +192,26 @@ export class ExportDataDialog extends Component {
                     ids: this.props.resIds,
                     fields: exportedFields,
                     domain: this.props.root.domain,
-                    import_compat: false,
+                    import_compat: this.state.importCompatibleData,
                     groupby: this.props.root.groupBy,
                 }),
             },
-            url: `/web/export/${this.availableFormats[this.state.selectedFormat].toLowerCase()}`,
-        };
-        console.log(request);
-        await download(request);
+            url: `/web/export/${this.availableFormats[this.state.selectedFormat].tag}`,
+        });
     }
 
     async initializeData() {
+        this.availableFormats = await this.rpc("/web/export/formats");
         this.fieldsAvailableAll = this.props.root.fields;
+        const templates = await this.rpc("/web/dataset/call_kw", {
+            args: [],
+            kwargs: {
+                context: this.props.context,
+            },
+            model: "ir.exports",
+            method: "search_read",
+        });
+        this.templates = templates;
         this.state.fieldsToExport = Object.values(this.props.root.activeFields).map((i) => i.name);
     }
 

@@ -5,7 +5,7 @@
         <Dialog contentClass="'o_export_data_dialog'" title="title" size="'lg'">
             <div class="col-12 col-md-6 o_left_panel">
                 <div class="o_import_compat">
-                    <CheckBox className="'o_import_compat'" id="'o-update-data'" value="state.shouldUpdateData" onChange.bind="onUpdateDataChange">
+                    <CheckBox className="'o_import_compat'" id="'o-update-data'" value="state.importCompatibleData" onChange.bind="onCompatibleDataChange">
                         <span>I want to update data (import-compatible export) </span>
                     </CheckBox>
                 </div>
@@ -17,7 +17,7 @@
                             <div t-att-data-field_id="field.name" class="o_export_tree_item " role="treeitem"> 
                                 <div class="o_tree_column">
                                     <span t-esc="field.string" />
-                                    <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(field.name) ? 'o_inactive' : '' }}" t-on-click="(ev) => !this.isFieldSelected(field.name) and this.onAddItemExportList(ev)" />
+                                    <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(field.name) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(field.name) and this.onAddItemExportList(ev)" />
                                 </div>
                             </div>
                         </t>
@@ -27,10 +27,10 @@
             <div class="col-12 col-md-6 o_right_panel mt-3 mt-md-0">
                 <div class="o_export_format">
                     <strong>Export Format:</strong>
-                    <t t-foreach="availableFormats" t-as="format" t-key="format">
+                    <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
                         <div class="radio form-check form-check-inline pl-4">
-                            <input t-att-id="'o_radio' + format" type="radio" t-att-checked="format === availableFormats[state.selectedFormat]" name="o_export_format_name" t-att-value="format" class="form-check-input" />
-                            <label class="form-check-label" t-att-for="'o_radio' + format" t-esc="format" />
+                            <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" />
+                            <label class="form-check-label" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
                         </div>
                     </t>
                 </div>
@@ -42,23 +42,27 @@
                         <t t-if="state.templateSelection === 'new_template'">
                             <label class="pt-2 mb-0 font-weight-bold">Save as: </label>
                             <input t-ref="exportList" class="form-control ml-4 o_save_list_name" t-att-placeholder="newTemplateText" />
-                            <button type="button" class="btn btn-secondary ml-1 o_save_list_btn" t-on-click="onSaveExportListEdition">
-                                <i class="fa fa-floppy-o" />
-                            </button>
-                            <button type="button" class="btn btn-secondary ml-1 o_cancel_list_btn" t-on-click="onClearExportListEdition">
-                                <i class="fa fa-times" />
-                            </button>
                         </t>
                         <t t-else="">
                             <label class="pt-2 mb-0 font-weight-bold">Template: </label>
                             <select class="form-control ml-4 o_exported_lists_select" t-on-change="onChangeExportList">
                                 <option />
-                                <t t-foreach="options" t-as="option" t-key="option">
-                                    <option value="option" t-esc="option" t-att-selected="state.templateSelection === option" />
+                                <t t-foreach="templates" t-as="template" t-key="template.id">
+                                    <option t-att-value="template.id" t-esc="template.name" t-att-selected="state.templateSelection === template.id" />
                                 </t>
                                 <option class="font-italic" value="new_template">New template </option>
                             </select>
-                            <button t-if="state.templateSelection" type="button" class="btn btn-secondary ml-1 o_delete_exported_list" t-on-click="onClearExportListEdition">
+                        </t>
+                        <t t-if="state.templateisEditing">
+                            <button type="button" class="btn btn-secondary ml-1 o_save_list_btn" t-on-click.stop="onSaveExportListEdition">
+                                <i class="fa fa-floppy-o" />
+                            </button>
+                            <button type="button" class="btn btn-secondary ml-1 o_cancel_list_btn" t-on-click.stop="onClearExportListEdition">
+                                <i class="fa fa-times" />
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <button t-if="state.templateSelection" type="button" class="btn btn-secondary ml-1 o_delete_exported_list" t-on-click.stop="onClearExportListEdition">
                                 <i class="fa fa-trash" />
                             </button>
                         </t>
@@ -70,15 +74,15 @@
                             <li class="o_export_field" t-att-data-field_id="field.name">
                                 <span class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ fieldsToExport.length === 1 ? 0 : 1 }}" />
                                 <span t-esc="field.string" />
-                                <span class="fa fa-trash m-1 float-end o_remove_field" t-att-title="removeFieldText" t-on-click="onRemoveItemExportList" />
+                                <span class="fa fa-trash m-1 float-end o_remove_field" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
                             </li>
                         </t>
                     </ul>
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click="onExportButtonClicked">Export</button>
-                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click="close">Close</button>
+                <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click.stop="onExportButtonClicked">Export</button>
+                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click.stop="close">Close</button>
             </t>
         </Dialog>
     </t>
