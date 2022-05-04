@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo import api, fields, models
 
 
@@ -66,16 +68,3 @@ class ResCompany(models.Model):
             [('l10n_es_tbai_chain_index', '!=', 0)],
             limit=1, order='l10n_es_tbai_chain_index desc'
         )
-
-    def write(self, vals):
-        # OVERRIDE
-        try:
-            run_xsd_cron = vals.pop('l10n_es_tbai_run_xsd_cron')
-        except KeyError:
-            run_xsd_cron = True
-        super(ResCompany, self).write(vals)
-        xsd_cron = self.env.ref('l10n_es_edi_tbai.l10n_es_edi_tbai_ir_cron_load_xsd_files')
-        if self.l10n_es_tbai_tax_agency and run_xsd_cron:
-            xsd_cron.active = True
-            # We could deactivate the cron if/when tax agency is unset
-            # but then we would have to check it's not running (else: lock error)

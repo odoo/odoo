@@ -17,10 +17,8 @@ class TestEdiTbaiXsds(TestEsEdiTbaiCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Download govt. XSDs
-        for agency in ('araba', 'bizkaia', 'gipuzkoa'):
-            cls._set_tax_agency(agency, run_xsd_cron=True)
-            cls.env['ir.attachment']._l10n_es_tbai_load_xsd_attachments()
+        # Download govt. XSDs (non deterministic, OK for non-standard tests)
+        cls.env['ir.attachment']._l10n_es_tbai_load_xsd_attachments()
 
         cls.out_invoice = cls.env['account.move'].create({
             'name': 'INV/01',
@@ -61,6 +59,7 @@ class TestEdiTbaiXsds(TestEsEdiTbaiCommon):
     def _validate_format_xsd(self, xml_doc, xsd_name):
         xml_bytes = etree.tostring(xml_doc, encoding="UTF-8")
         try:
+            self.env.ref(xsd_name, raise_if_not_found=True)
             L10nEsTbaiXmlUtils._validate_format_xsd(xml_bytes, xsd_name, self.env)
-        except UserError as e:
+        except (UserError, ValueError) as e:
             self.fail(str(e))

@@ -73,7 +73,7 @@ class IrAttachment(models.Model):
         xsd_bytes = bytes(response.text, "utf-8")
         self._l10n_es_tbai_create_xsd_attachment(file_name, xsd_bytes, "Core schema, locally imported by schemas")
 
-    def _l10n_es_tbai_load_xsd_zip(self, url):
+    def _l10n_es_tbai_load_xsd_zip(self, agency, url):
         response = self._l10n_es_tbai_get_url_content(url)
         if response is None:
             return
@@ -88,7 +88,7 @@ class IrAttachment(models.Model):
             if not file_name or not file_name.endswith("ticketBaiV1-2.xsd"):
                 continue
 
-            attachment_name = f'{self.env.company.l10n_es_tbai_tax_agency}_{file_name}'
+            attachment_name = f'{agency}_{file_name}'
             attachment = self.env.ref('l10n_es_edi_tbai.' + attachment_name, raise_if_not_found=False)
             if attachment:
                 continue
@@ -103,13 +103,14 @@ class IrAttachment(models.Model):
         """
         This method only downloads the xsd validation schemas for the selected tax agency if they don't already exist.
         """
-        url = get_web_services_for_agency(agency=self.env.company.l10n_es_tbai_tax_agency, env=self.env).get_xsd_urls()
-        if url:
-            self._l10n_es_tbai_load_xsd_file("xmldsig-core-schema.xsd", "https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd")
+        self._l10n_es_tbai_load_xsd_file("xmldsig-core-schema.xsd", "https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd")
+        # for agency in ('araba', 'bizkaia', 'gipuzkoa'):
+        for agency in dict(self.env['res.company'].fields_get(allfields=['l10n_es_tbai_tax_agency'])['l10n_es_tbai_tax_agency']['selection']):
+            url = get_web_services_for_agency(agency=agency, env=self.env).get_xsd_urls()
             # For Bizkaia, one url per file
             if isinstance(url, tuple):
                 for u in url:
-                    self._l10n_es_tbai_load_xsd_file(u.rsplit("/", 1)[1], u)
+                    self._l10n_es_tbai_load_xsd_file(agency + "_" + u.rsplit("/", 1)[1], u)
             # For other agencies, single url to zip file
             else:
-                self._l10n_es_tbai_load_xsd_zip(url)
+                self._l10n_es_tbai_load_xsd_zip(agency, url)

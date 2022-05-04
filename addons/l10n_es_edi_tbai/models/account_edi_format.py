@@ -83,24 +83,20 @@ class AccountEdiFormat(models.Model):
 
         # Chain integrity check: chain head must have been REALLY posted (not timeout'ed)
         chain_head = invoice.company_id.get_l10n_es_tbai_last_posted_invoice()
-        if chain_head.edi_state == 'to_send' and chain_head != invoice:
+        if chain_head and chain_head != invoice and not chain_head.l10n_es_tbai_is_in_chain:
             raise UserError(f"TicketBAI: Cannot post invoice while chain head ({chain_head.name}) has not been posted")
 
         # Generate the XML values.
         inv_xml = self._get_l10n_es_tbai_invoice_xml(invoice)
-
-        # Optional check using the XSD
-        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
-        res = {invoice: self._l10n_es_tbai_verify_xml(inv_xml, xsd_id)}
-        if 'error' in res[invoice]:
-            return res
+        if isinstance(inv_xml, dict):
+            return inv_xml  # XSD validation failed, return errors
 
         # Assign unique 'chain index' from dedicated sequence
         if not invoice.l10n_es_tbai_chain_index:
             invoice.l10n_es_tbai_chain_index = invoice.company_id._get_l10n_es_tbai_next_chain_index()
 
         # Call the web service and get response
-        res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
+        res = self._l10n_es_tbai_post_to_web_service(invoice, inv_xml)
         response_xml = res[invoice]['response']
 
         # TIMEOUT / NO RESPONSE: success is undetermined
@@ -128,7 +124,7 @@ class AccountEdiFormat(models.Model):
     def _cancel_invoice_edi(self, invoice):
         # OVERRIDE
         if self.code != 'es_tbai':
-            return super()._post_invoice_edi(invoice)
+            return super()._cancel_invoice_edi(invoice)
 
         # Configuration check
         error_dict = self._check_move_configuration(invoice)
@@ -137,15 +133,11 @@ class AccountEdiFormat(models.Model):
 
         # Generate the XML values.
         cancel_xml = self._get_l10n_es_tbai_invoice_xml(invoice, cancel=True)
-
-        # Optional check using the XSD
-        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
-        res = {invoice: self._l10n_es_tbai_verify_xml(cancel_xml, xsd_id)}
-        if 'error' in res[invoice]:
-            return res
+        if isinstance(cancel_xml, dict):
+            return cancel_xml  # XSD validation failed, return errors
 
         # Call the web service and get response
-        res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
+        res = self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True)
         response_xml = res[invoice]['response']
 
         # TIMEOUT / NO RESPONSE: success is undetermined
@@ -175,10 +167,10 @@ class AccountEdiFormat(models.Model):
         xsd_attachment = self.env.ref(xsd_id, raise_if_not_found=False)
         if xsd_attachment:
             try:
-                L10nEsTbaiXmlUtils._validate_format_xsd(xml, xsd_id)
+                L10nEsTbaiXmlUtils._validate_format_xsd(xml, xsd_id, self.env)
             except UserError as e:
                 return {
-                    'error': str(e).split('\\n'),
+                    'error': str(e),
                     'blocking_level': 'error',
                 }
         return {}
@@ -209,6 +201,12 @@ class AccountEdiFormat(models.Model):
         xml_str = self.env.ref(template_name)._render(values)
         xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str)
         xml_doc = self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
+
+        # Optional check using the XSD
+        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}{"_Anula" if cancel else ""}_ticketBaiV1-2.xsd'
+        res = {invoice: self._l10n_es_tbai_verify_xml(xml_doc, xsd_id)}
+        if 'error' in res[invoice]:
+            return res
 
         # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
         invoice._update_l10n_es_tbai_submitted_xml(xml_doc=xml_doc, cancel=cancel)

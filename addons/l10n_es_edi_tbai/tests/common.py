@@ -35,6 +35,9 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         cls.certificate = None
         cls._set_tax_agency('gipuzkoa')
 
+        xsd_cron = cls.env.ref('l10n_es_edi_tbai.l10n_es_edi_tbai_ir_cron_load_xsd_files')
+        xsd_cron.active = False  # Do not download xsd in runbot tests (undeterministic)
+
         # ==== Business ====
 
         cls.partner_a.write({
@@ -74,7 +77,6 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         cls.company_data['company'].write({
             'l10n_es_tbai_tax_agency': agency,
             'l10n_es_tbai_certificate_id': cls.certificate.id,
-            'l10n_es_tbai_run_xsd_cron': run_xsd_cron,
         })
 
     @classmethod
