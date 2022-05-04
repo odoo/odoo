@@ -32,10 +32,9 @@ def _auto_install_l10n(env):
 
         Chart = env['account.chart.template']
         template_code = Chart._guess_chart_template(env.company)
-        if template_code != "generic_coa":
-            Chart.try_loading(template_code, env.company)
-        module_list = []
+        Chart.try_loading(template_code, env.company)
 
+        module_list = []
         if country_code in ['US', 'CA']:
             module_list.append('account_check_printing')
         if country_code in SYSCOHADA_LIST + VAT_LIST:
