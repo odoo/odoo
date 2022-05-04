@@ -244,6 +244,44 @@ QUnit.module(
             );
         });
 
+        QUnit.skipWOWL('hide / show setting tips properly', async function (assert) {
+            assert.expect(3);
+
+            const form = await createView({
+                View: BaseSettingsView,
+                model: 'res.config.settings',
+                data: this.data,
+                arch: `
+                    <form string="Settings" class="oe_form_configuration o_base_settings">
+                        <div class="o_panel">
+                            <div class="setting_search">
+                                <input type="text" class="searchInput" placeholder="Search..." />
+                            </div>
+                        </div>
+                        <div class="o_setting_container">
+                            <div class="settings_tab" />
+                            <div class="settings">
+                                <div class="notFound o_hidden">No Record Found</div>
+                                <div class="app_settings_block" string="Settings" data-key="settings">
+                                    <h2>Setting Header</h2>
+                                    <h3 class="o_setting_tip">Settings will appear below</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`
+            });
+
+            assert.containsOnce(form, '.o_setting_tip:not(.o_hidden)', 'Tip should not be hidden initially');
+
+            await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'Setting', 'keyup');
+            assert.containsOnce(form, '.o_setting_tip.o_hidden', 'Tip should be hidden when user searches in settings');
+
+            await testUtils.fields.editAndTrigger(form.$('.searchInput'), '', 'keyup');
+            assert.containsOnce(form, '.o_setting_tip:not(.o_hidden)', 'Tip should be displayed again');
+
+            form.destroy();
+        });
+
         QUnit.test(
             "settings views does not read existing id when coming back in breadcrumbs",
             async function (assert) {

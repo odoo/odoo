@@ -6,7 +6,7 @@ import { SettingsFormController } from "./settings_form_controller";
 import { SettingsFormRenderer } from "./settings_form_renderer";
 import { SettingsFormCompiler } from "./settings_form_compiler";
 
-const settingsFormView = {
+export const settingsFormView = {
     ...formView,
     display: {},
     buttonTemplate: "web.SettingsFormView.Buttons",
