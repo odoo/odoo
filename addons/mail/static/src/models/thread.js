@@ -664,6 +664,10 @@ registerModel({
                 });
             }
             this.update(values);
+            for (const chatter of this.chatters) {
+                chatter.update({ skipRefreshOnViewReload: true });
+                chatter.reloadParentView();
+            }
         },
         /**
          * Add current user to provided thread's followers.
@@ -1898,6 +1902,9 @@ registerModel({
             required: true,
         }),
         channel_type: attr(),
+        chatters: many('Chatter', {
+            inverse: 'thread',
+        }),
         /**
          * States the chat window related to this thread (if any).
          */

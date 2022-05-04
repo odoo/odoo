@@ -382,10 +382,15 @@ registerModel({
             default: false,
         }),
         scrollPanelRef: attr(),
+        skipRefreshOnViewReload: attr({
+            default: false,
+        }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one('Thread'),
+        thread: one('Thread', {
+            inverse: 'chatters',
+        }),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */
