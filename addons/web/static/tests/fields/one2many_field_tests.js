@@ -8701,7 +8701,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many with sequence field, fetch name_get from empty list, field text",
         async function (assert) {
             // There was a bug where a RPC would fail because no route was set.
@@ -8726,7 +8726,7 @@ QUnit.module("Fields", (hooks) => {
                 relation: "product",
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -8743,10 +8743,8 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await clickEdit(target);
-
             // starting condition
-            assert.strictEqual(target.querySelector(".o_data_cell:nth-child(2)").innerText, "");
+            assert.containsNone(target, ".o_data_cell");
 
             const inputText1 = "relax";
             const inputText2 = "max";
@@ -8756,17 +8754,23 @@ QUnit.module("Fields", (hooks) => {
             await editInput(target, 'div[name="turtle_foo"] input', inputText2);
             await addRow(target);
 
-            assert.strictEqual($(".o_data_cell:nth-child(2)").text(), inputText1 + inputText2);
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_cell div[name="turtle_foo"]')].map(
+                    (el) => el.innerText
+                ),
+                [inputText1, inputText2, ""]
+            );
 
-            const $handles = form.$(".ui-sortable-handle");
+            assert.containsN(target, ".ui-sortable-handle", 3);
 
-            assert.equal($handles.length, 3, "There should be 3 sequence handlers");
+            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
 
-            await testUtils.dom.dragAndDrop($handles.eq(1), form.$("tbody tr").first(), {
-                position: "top",
-            });
-
-            assert.strictEqual($(".o_data_cell:nth-child(2)").text(), inputText2 + inputText1);
+            assert.deepEqual(
+                [...target.querySelectorAll('.o_data_cell div[name="turtle_foo"]')].map(
+                    (el) => el.innerText
+                ),
+                [inputText2, inputText1, ""]
+            );
         }
     );
 
