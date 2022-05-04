@@ -332,7 +332,10 @@ class AccountChartTemplate(models.AbstractModel):
         # Set newly created Cash difference and Suspense accounts to the Cash and Bank journals
         self.env.ref(f"account.{cid}_cash").suspense_account_id = company.account_journal_suspense_account_id
         self.env.ref(f"account.{cid}_cash").profit_account_id = company.default_cash_difference_income_account_id
+        self.env.ref(f"account.{cid}_cash").loss_account_id = company.default_cash_difference_expense_account_id
+
         self.env.ref(f"account.{cid}_bank").suspense_account_id = company.account_journal_suspense_account_id
+        self.env.ref(f"account.{cid}_bank").profit_account_id = company.default_cash_difference_income_account_id
         self.env.ref(f"account.{cid}_bank").loss_account_id = company.default_cash_difference_expense_account_id
 
         # Uneffected earnings account on the company (if not present yet)
@@ -394,7 +397,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_payable_account_id': 'account.tax.group',
             'property_tax_receivable_account_id': 'account.tax.group',
             'property_advance_tax_payment_account_id': 'account.tax.group',
-            'property_stock_journal': 'property_stock_journal',
+            'property_stock_journal': 'product.category',
             'property_stock_account_input_categ_id': 'product.category',
             'property_stock_account_output_categ_id': 'product.category',
             'property_stock_valuation_account_id': 'product.category',
@@ -406,6 +409,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_template_data(self, template_code, company):
         cid = (company or self.env.company).id
         return {
+            'anglo_saxon_accounting': True,
             'bank_account_code_prefix': '1014',
             'cash_account_code_prefix': '1015',
             'transfer_account_code_prefix': '1017',
