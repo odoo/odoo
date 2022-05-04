@@ -1041,13 +1041,17 @@ class MrpProduction(models.Model):
         self.ensure_one()
         update_info = []
         move_to_unlink = self.env['stock.move']
+        moves_to_assign = self.env['stock.move']
         procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
             new_qty = old_qty * factor
             if new_qty > 0:
                 move.write({'product_uom_qty': new_qty})
-                move._action_assign()
+                if move._should_bypass_reservation() \
+                        or move.picking_type_id.reservation_method == 'at_confirm' \
+                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
+                    moves_to_assign |= move
                 if move.procure_method == 'make_to_order':
                     procurement_qty = new_qty - old_qty
                     values = move._prepare_procurement_values()
@@ -1061,6 +1065,7 @@ class MrpProduction(models.Model):
                 move._action_cancel()
                 move_to_unlink |= move
 
+        moves_to_assign._action_assign()
         move_to_unlink.unlink()
         if procurements:
             self.env['procurement.group'].run(procurements)
