@@ -73,6 +73,9 @@ registerModel({
         }),
         scrollHeight: attr(),
         scrollTop: attr(),
+        thread: one('Thread', {
+            related: 'threadViewOwner.thread',
+        }),
         threadViewOwner: one('ThreadView', {
             inverse: 'messageListView',
             readonly: true,
