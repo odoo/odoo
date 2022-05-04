@@ -56,7 +56,7 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
     # TODO: test other agencies (once licenses can be published)
     def test_edi_gipuzkoa(self):
         self._set_tax_agency('gipuzkoa')
-        self.moves.action_process_edi_web_services()
+        self.moves.action_process_edi_web_services(with_commit=False)
         generated_files = self._process_documents_web_services(self.moves, {'es_tbai'})
         self.assertTrue(generated_files)
         self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
