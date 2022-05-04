@@ -2242,3 +2242,59 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(quant.quantity, 1.0)
         self.assertEqual(quant.lot_id.name, 'USN01')
+
+    def test_assign_sm_to_existing_picking(self):
+        """
+        Suppose:
+            - Two warehouses WH01, WH02
+            - Three products with the route 'WH02 supplied by WH01'
+        We trigger an orderpoint for each product
+        There should be two pickings (out from WH01 + in to WH02)
+        """
+        wh01_address, wh02_address = self.env['res.partner'].create([{
+            'name': 'Address %s' % i,
+            'parent_id': self.env.company.id,
+            'type': 'delivery',
+        } for i in [1, 2]])
+
+        warehouse01 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse01.partner_id = wh01_address
+        warehouse02 = self.env['stock.warehouse'].create({
+            'name': 'Second Warehouse',
+            'code': 'WH02',
+            'partner_id': wh02_address.id,
+            'resupply_wh_ids': [(6, 0, warehouse01.ids)],
+        })
+
+        wh01_stock_location = warehouse01.lot_stock_id
+        wh02_stock_location = warehouse02.lot_stock_id
+        products = self.productA + self.productB + self.productC
+
+        for product in products:
+            product.route_ids = [(6, 0, warehouse02.resupply_route_ids.ids)]
+            self.env['stock.quant']._update_available_quantity(product, wh01_stock_location, 10)
+            self.env['stock.warehouse.orderpoint'].create({
+                'name': 'RR for %s' % product.name,
+                'warehouse_id': warehouse02.id,
+                'location_id': wh02_stock_location.id,
+                'product_id': product.id,
+                'product_min_qty': 1,
+                'product_max_qty': 5,
+            })
+
+        self.env['procurement.group'].run_scheduler()
+
+        out_moves = self.env['stock.move'].search([('product_id', 'in', products.ids), ('picking_id', '!=', False), ('location_id', '=', wh01_stock_location.id)])
+        in_moves = self.env['stock.move'].search([('product_id', 'in', products.ids), ('picking_id', '!=', False), ('location_dest_id', '=', wh02_stock_location.id)])
+
+        out_picking = out_moves[0].picking_id
+        self.assertEqual(len(out_moves), 3)
+        self.assertEqual(out_moves.product_id, products)
+        self.assertEqual(out_moves.picking_id, out_picking, 'All SM should be part of the same picking')
+        self.assertEqual(out_picking.partner_id, wh02_address, 'It should be an outgoing picking to %s' % wh02_address.display_name)
+
+        in_picking = in_moves[0].picking_id
+        self.assertEqual(len(in_moves), 3)
+        self.assertEqual(in_moves.product_id, products)
+        self.assertEqual(in_moves.picking_id, in_picking, 'All SM should be part of the same picking')
+        self.assertEqual(in_picking.partner_id, wh01_address, 'It should be an incoming picking from %s' % wh01_address.display_name)
