@@ -1864,6 +1864,20 @@ class Orderline extends PosModel {
         return taxes;
     }
     /**
+     * Calculate the amount of taxes of a specific Orderline, that are included in the price.
+     * @returns {Number} the total amount of price included taxes
+     */
+    get_total_taxes_included_in_price() {
+        return this.get_taxes()
+            .filter(tax => tax.price_include)
+            .reduce((sum, tax) => sum + this.get_tax_details()[tax.id],
+            0
+        );
+    }
+    _map_tax_fiscal_position(tax, order = false) {
+        return this.pos._map_tax_fiscal_position(tax, order);
+    }
+    /**
      * Mirror JS method of:
      * _compute_amount in addons/account/models/account.py
      */
@@ -2467,6 +2481,58 @@ class Order extends PosModel {
     }
     get_orderlines(){
         return this.orderlines;
+    }
+    /**
+     * Groups the orderlines of the specific order according to the taxes applied to them. The orderlines that have
+     * the exact same combination of taxes are grouped together.
+     *
+     * @returns {tax_ids: Orderlines[]} contains pairs of tax_ids (in csv format) and arrays of Orderlines
+     * with the corresponding tax_ids.
+     * e.g. {
+     *  '1,2': [Orderline_A, Orderline_B],
+     *  '3': [Orderline_C],
+     * }
+     */
+    get_orderlines_grouped_by_tax_ids() {
+        let orderlines_by_tax_group = {};
+        const lines = this.get_orderlines();
+        for (let line of lines) {
+            const tax_group = this._get_tax_group_key(line);
+            if (!(tax_group in orderlines_by_tax_group)) {
+                orderlines_by_tax_group[tax_group] = [];
+            }
+            orderlines_by_tax_group[tax_group].push(line);
+        }
+        return orderlines_by_tax_group;
+    }
+    _get_tax_group_key(line) {
+        return line
+            .get_taxes()
+            .map(tax => tax.id)
+            .join(',');
+    }
+    /**
+     * Calculate the amount that will be used as a base in order to apply a downpayment or discount product in PoS.
+     * In our calculation we take into account taxes that are included in the price.
+     *
+     * @param  {String} tax_ids a string of the tax ids that are applied on the orderlines, in csv format
+     * e.g. if taxes with ids 2, 5 and 6 are applied tax_ids will be "2,5,6"
+     * @param  {Orderline[]} lines an srray of Orderlines
+     * @return {Number} the base amount on which we will apply a percentile reduction
+     */
+    calculate_base_amount(tax_ids_array, lines) {
+        // Consider price_include taxes use case
+        let has_taxes_included_in_price = tax_ids_array.filter(tax_id =>
+            this.pos.taxes_by_id[tax_id].price_include
+        ).length;
+
+        let base_amount = lines.reduce((sum, line) =>
+                sum +
+                line.get_price_without_tax() +
+                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+            0
+        );
+        return base_amount;
     }
     get_last_orderline(){
         const orderlines = this.orderlines;
