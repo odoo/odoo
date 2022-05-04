@@ -16,7 +16,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
     },
     {
         content: 'Check that the modal has opened properly',
-        trigger: 'iframe .s_gallery_lightbox img',
+        trigger: 'iframe .s_lightbox img',
         run: () => {}, // This is a check.
     },
 ]);
