@@ -28,28 +28,25 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ae_account_journal(self, template_code, company):
         """ If UAE chart, we add 2 new journals TA and IFRS"""
         cid = (company or self.env.company).id
-        journals_dict = self._get_account_journal(template_code, company)
-        if template_code == 'ae':
-            journals_dict = {
-                **journals_dict,
-                f'{cid}_journal_tax_adjustments': {
-                    "name": "Tax Adjustments",
-                    "company_id": cid,
-                    "code": "TA",
-                    "type": "general",
-                    "sequence": 1,
-                    "show_on_dashboard": True,
-                },
-                f'{cid}_journal_ifrs': {
-                    "name": "IFRS 16",
-                    "company_id": cid,
-                    "code": "IFRS",
-                    "type": "general",
-                    "sequence": 10,
-                    "show_on_dashboard": True,
-                }
+        return {
+            **self._get_account_journal(template_code, company),
+            f'{cid}_journal_tax_adjustments': {
+                "name": "Tax Adjustments",
+                "company_id": cid,
+                "code": "TA",
+                "type": "general",
+                "sequence": 1,
+                "show_on_dashboard": True,
+            },
+            f'{cid}_journal_ifrs': {
+                "name": "IFRS 16",
+                "company_id": cid,
+                "code": "IFRS",
+                "type": "general",
+                "sequence": 10,
+                "show_on_dashboard": True,
             }
-        return journals_dict
+        }
 
     def _get_ae_template_data(self, template_code, company):
         cid = (company or self.env.company).id
