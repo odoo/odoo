@@ -44,6 +44,15 @@
                     <field name="source_id"/>
                 </group>
             </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        name="action_view_source_sale_orders"
+                        type="object"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                    <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
+                </button>
+            </xpath>
         </field>
     </record>
 

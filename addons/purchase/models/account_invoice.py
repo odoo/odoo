@@ -15,6 +15,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
+    purchase_order_count = fields.Integer(compute="_compute_origin_po_count", string='Purchase Order Count')
 
     def _get_invoice_reference(self):
         self.ensure_one()
@@ -95,6 +96,24 @@ class AccountMove(models.Model):
             if self.partner_id.property_purchase_currency_id:
                 self.currency_id = self.partner_id.property_purchase_currency_id
         return res
+
+    @api.depends('line_ids.purchase_line_id')
+    def _compute_origin_po_count(self):
+        for move in self:
+            move.purchase_order_count = len(move.line_ids.purchase_line_id.order_id)
+
+    def action_view_source_purchase_orders(self):
+        self.ensure_one()
+        source_orders = self.line_ids.purchase_line_id.order_id
+        result = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_form_action')
+        if len(source_orders) > 1:
+            result['domain'] = [('id', 'in', source_orders.ids)]
+        elif len(source_orders) == 1:
+            result['views'] = [(self.env.ref('purchase.purchase_order_form', False).id, 'form')]
+            result['res_id'] = source_orders.id
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
 
     @api.model_create_multi
     def create(self, vals_list):
