@@ -489,6 +489,119 @@ class TestStockValuation(TransactionCase):
         self.check_svl_values(svl_5, quantity=0.0, unit_cost=0.0, value=5.0, linked_to=svl_4)
         self.assertEqual(sum(svl.mapped('value')), 60.0)
 
+    def test_anglosaxon_valuation_price_unit_diff_returns_01(self):
+        """ Creates a PO for 4 units at $5, receives them and invoices them at $10.
+        Then, creates a returns for 2 units and checks the SVL is created with the right price.
+        """
+        StockValuationLayer = self.env['stock.valuation.layer']
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        # Creates a PO for 4 units at $5.0.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 4
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_ids.quantity_done = 4
+        receipt.button_validate()
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 10.0
+        invoice_form.invoice_date = fields.Date.today()
+        invoice = invoice_form.save()
+        invoice.action_post()
+
+        # Checks stock valuation layers.
+        svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 2)
+        svl_1 = svl[0]  # SVL for the receipt of product1.
+        svl_2 = svl[1]  # SVL for the price difference correction.
+        self.check_svl_values(svl_1, quantity=4.0, unit_cost=5.0, value=20.0)
+        self.check_svl_values(svl_2, quantity=0.0, unit_cost=0.0, value=20.0, linked_to=svl_1)
+        self.assertEqual(sum(svl.mapped('value')), 40.0)
+
+        # Returns 2 units.
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=receipt.ids, active_id=receipt.id, active_model='stock.picking'
+        ))
+        with return_picking_form.product_return_moves.edit(0) as return_line:
+            return_line.quantity = 2
+        stock_return_picking_action = return_picking_form.save().create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_picking.action_assign()
+        return_picking.move_ids.quantity_done = 2
+        return_picking._action_done()
+
+        # Checks stock valuation layers.
+        svl_3 = return_picking.move_ids.stock_valuation_layer_ids
+        self.check_svl_values(svl_3, quantity=-2.0, unit_cost=10.0, value=-20.0)
+        svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
+        self.assertEqual(sum(svl.mapped('value')), 20.0)
+
+    def test_anglosaxon_valuation_price_unit_diff_returns_02(self):
+        """ Creates a PO for 4 units at $5, invoices them at $10 ant receives them.
+        Then, creates a returns for 2 units and checks the SVL is created with the right price.
+        """
+        StockValuationLayer = self.env['stock.valuation.layer']
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        # Creates a PO for 4 units at $5.0.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 4
+            po_line.price_unit = 5.0
+        order = po_form.save()
+        order.button_confirm()
+        # Creates an invoice and increases the price.
+        invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
+        invoice_form.purchase_id = order
+        with invoice_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 4
+            line_form.price_unit = 10.0
+        invoice_form.invoice_date = fields.Date.today()
+        invoice = invoice_form.save()
+        invoice.action_post()
+        # Receives the goods.
+        receipt = order.picking_ids[0]
+        receipt.move_ids.quantity_done = 4
+        receipt.button_validate()
+
+        # Checks stock valuation layers.
+        svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
+        self.assertEqual(len(svl), 1)
+        self.check_svl_values(svl, quantity=4.0, unit_cost=10.0, value=40.0)
+
+        # Returns 2 units.
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=receipt.ids, active_id=receipt.id, active_model='stock.picking'
+        ))
+        with return_picking_form.product_return_moves.edit(0) as return_line:
+            return_line.quantity = 2
+        stock_return_picking_action = return_picking_form.save().create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_picking.action_assign()
+        return_picking.move_ids.quantity_done = 2
+        return_picking._action_done()
+
+        # Checks stock valuation layers.
+        svl_2 = return_picking.move_ids.stock_valuation_layer_ids
+        self.check_svl_values(svl_2, quantity=-2.0, unit_cost=10.0, value=-20.0)
+        svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
+        self.assertEqual(sum(svl.mapped('value')), 20.0)
+
     def test_anglosaxon_valuation_price_unit_diff_bill_before_receipt_01(self):
         """ Creates an invoice, then receives the product.
         PO: 5 units at $5.0
