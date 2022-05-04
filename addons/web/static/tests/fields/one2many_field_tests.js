@@ -10889,7 +10889,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "reordering embedded one2many with handle widget starting with same sequence",
         async function (assert) {
             serverData.models.turtle = {
@@ -10905,7 +10905,7 @@ QUnit.module("Fields", (hooks) => {
             };
             serverData.models.partner.records[0].turtles = [1, 2, 3, 4, 5, 6];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10923,29 +10923,28 @@ QUnit.module("Fields", (hooks) => {
 
             await clickEdit(target);
 
-            assert.strictEqual(
-                form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-                "123456",
-                "default should be sorted by id"
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_cell:not(.o_handle_cell)")].map(
+                    (el) => el.innerText
+                ),
+                ["1", "2", "3", "4", "5", "6"]
             );
 
             // Drag and drop the fourth line in first position
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle").eq(3),
-                form.$("tbody tr").first(),
-                { position: "top" }
-            );
-            assert.strictEqual(
-                form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-                "412356",
-                "should still have the 6 rows in the correct order"
+            await dragAndDrop("tbody tr:nth-child(4) .o_handle_cell", "tbody tr", "top");
+
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_cell:not(.o_handle_cell)")].map(
+                    (el) => el.innerText
+                ),
+                ["4", "1", "2", "3", "5", "6"]
             );
 
             await clickSave(target);
 
             assert.deepEqual(
-                _.map(serverData.models.turtle.records, function (turtle) {
-                    return _.pick(turtle, "id", "turtle_int");
+                Object.values(serverData.models.turtle.records).map((r) => {
+                    return { id: r.id, turtle_int: r.turtle_int };
                 }),
                 [
                     { id: 1, turtle_int: 2 },
@@ -10954,8 +10953,7 @@ QUnit.module("Fields", (hooks) => {
                     { id: 4, turtle_int: 1 },
                     { id: 5, turtle_int: 5 },
                     { id: 6, turtle_int: 6 },
-                ],
-                "should have saved the updated turtle_int sequence"
+                ]
             );
         }
     );
