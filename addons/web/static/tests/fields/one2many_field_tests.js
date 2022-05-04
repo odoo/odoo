@@ -8933,11 +8933,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange in a one2many with non inline view on an existing record",
         async function (assert) {
-            assert.expect(6);
-
             serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
             serverData.models.partner.records[0].sequence = 1;
             serverData.models.partner.records[1].sequence = 2;
@@ -8949,34 +8947,35 @@ QUnit.module("Fields", (hooks) => {
                 relation: "partner",
             };
             serverData.models.partner_type.records[0].partner_ids = [1, 2];
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="sequence" widget="handle"/>
+                        <field name="display_name"/>
+                    </tree>
+                `,
+            };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
-                model: "partner_type",
+                resModel: "partner_type",
                 serverData,
-                arch: `<form><field name="partner_ids"/></form>`,
-                archs: {
-                    "partner,false,list": `
-                        <tree>
-                            <field name="sequence" widget="handle"/>
-                            <field name="display_name"/>
-                        </tree>`,
-                },
+                arch: `
+                    <form>
+                        <field name="partner_ids" widget="one2many"/>
+                    </form>`,
                 resId: 12,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
                 },
-                viewOptions: { mode: "edit" },
             });
 
+            await clickEdit(target);
+
             // swap 2 lines in the one2many
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle:eq(1)"),
-                form.$("tbody tr").first(),
-                { position: "top" }
-            );
-            assert.verifySteps(["get_views", "read", "read", "onchange", "onchange"]);
+            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
+
+            assert.verifySteps(["get_views", "get_views", "read", "read", "onchange", "onchange"]);
         }
     );
 
