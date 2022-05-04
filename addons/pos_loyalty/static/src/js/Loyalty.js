@@ -201,7 +201,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
     can_be_merged_with(otherLine) {
         if (this.is_reward_line && otherLine.is_reward_line) {
             if (otherLine.reward_id == this.reward_id) {
-                const reward = this.order.pos.reward_by_id[this.reward_id];
+                const reward = this.pos.reward_by_id[this.reward_id];
                 if (reward && reward.reward_type == 'product') {
                     return otherLine.product.id == this.product.id;
                 }
@@ -222,14 +222,14 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             // force_points_cost can be zero. As long as it's a number, we return it.
             return this.force_points_cost;
         } else {
-            const reward = this.order.pos.reward_by_id[this.reward_id];
+            const reward = this.pos.reward_by_id[this.reward_id];
             const rewardUnitCost = reward.required_points / reward.reward_product_qty;
             return rewardUnitCost * this.get_quantity();
         }
     }
     get_full_product_name() {
         if (this.is_reward_line) {
-            const reward = this.order.pos.reward_by_id[this.reward_id];
+            const reward = this.pos.reward_by_id[this.reward_id];
             if (reward.reward_type == "product") {
                 return super.get_full_product_name() + _t(' (free)');
             }
@@ -560,11 +560,11 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      * @return {number} The maximum possible quantity for the given reward line when the remaining points of the coupon is negative.
      */
     _getNewRewardQuantity(rewardLine) {
-        const remainingPoints = rewardLine.order._getRealCouponPoints(rewardLine.coupon_id, true);
+        const remainingPoints = this._getRealCouponPoints(rewardLine.coupon_id, true);
         let correction = 0;
         if (remainingPoints < 0) {
             // We correct the quantity of this line if the remaining points is negative.
-            const reward = rewardLine.order.pos.reward_by_id[rewardLine.reward_id];
+            const reward = rewardLine.pos.reward_by_id[rewardLine.reward_id];
             // NOTE that value of correction is negative.
             correction = this._getClaimableQty(reward, remainingPoints);
         }
