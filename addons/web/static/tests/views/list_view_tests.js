@@ -2961,11 +2961,11 @@ QUnit.module("Views", (hooks) => {
                     limit: 2,
                 },
             });
-            var widthPage1 = $(target).find(`th[data-fieldtype=foo]`)[0].offsetWidth;
+            var widthPage1 = $(target).find(`th[data-name=foo]`)[0].offsetWidth;
 
             await testUtils.controlPanel.pagerNext(target);
 
-            var widthPage2 = $(target).find(`th[data-fieldtype=foo]`)[0].offsetWidth;
+            var widthPage2 = $(target).find(`th[data-name=foo]`)[0].offsetWidth;
             assert.ok(
                 widthPage1 > widthPage2,
                 "column widths should be computed dynamically according to the content"
@@ -3011,18 +3011,18 @@ QUnit.module("Views", (hooks) => {
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    $(target).find(`th[data-fieldtype="${a.field}"]`)[0].offsetWidth,
+                    $(target).find(`th[data-name="${a.field}"]`)[0].offsetWidth,
                     a.expected,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
             assert.strictEqual(
-                $(target).find('th[data-fieldtype="foo"]')[0].style.width,
+                $(target).find('th[data-name="foo"]')[0].style.width,
                 "100%",
                 "Char field should occupy the remaining space"
             );
             assert.strictEqual(
-                $(target).find('th[data-fieldtype="currency_id"]')[0].offsetWidth,
+                $(target).find('th[data-name="currency_id"]')[0].offsetWidth,
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
@@ -3089,18 +3089,18 @@ QUnit.module("Views", (hooks) => {
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    form.$(`.o_field_one2many th[data-fieldtype="${a.field}"]`)[0].offsetWidth,
+                    form.$(`.o_field_one2many th[data-name="${a.field}"]`)[0].offsetWidth,
                     a.expected,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
             assert.strictEqual(
-                form.$('.o_field_one2many th[data-fieldtype="foo"]')[0].style.width,
+                form.$('.o_field_one2many th[data-name="foo"]')[0].style.width,
                 "100%",
                 "Char field should occupy the remaining space"
             );
             assert.strictEqual(
-                form.$('th[data-fieldtype="currency_id"]')[0].offsetWidth,
+                form.$('th[data-name="currency_id"]')[0].offsetWidth,
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
@@ -3589,18 +3589,18 @@ QUnit.module("Views", (hooks) => {
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    $(target).find(`th[data-fieldtype="${a.field}"]`)[0].offsetWidth,
+                    $(target).find(`th[data-name="${a.field}"]`)[0].offsetWidth,
                     a.expected,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
             assert.strictEqual(
-                $(target).find('th[data-fieldtype="foo"]')[0].style.width,
+                $(target).find('th[data-name="foo"]')[0].style.width,
                 "100%",
                 "Char field should occupy the remaining space"
             );
             assert.strictEqual(
-                $(target).find('th[data-fieldtype="currency_id"]')[0].offsetWidth,
+                $(target).find('th[data-name="currency_id"]')[0].offsetWidth,
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
@@ -3621,7 +3621,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
         assert.strictEqual(
-            target.querySelector('th[data-fieldtype="datetime"]').offsetWidth,
+            target.querySelector('th[data-name="datetime"]').offsetWidth,
             92,
             "should be the optimal width to display a date, not a datetime"
         );
@@ -3642,12 +3642,12 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
 
-        var width = $(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth;
+        var width = $(target).find('th[data-name="datetime"]')[0].offsetWidth;
 
         await click(target.querySelector(".o_list_button_add"));
 
         assert.containsOnce(target, ".o_data_row");
-        assert.strictEqual($(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth, width);
+        assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, width);
     });
 
     QUnit.skipWOWL("column widths are kept when editing a record", async function (assert) {
@@ -3664,7 +3664,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
 
-        var width = $(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth;
+        var width = $(target).find('th[data-name="datetime"]')[0].offsetWidth;
 
         await click($(target).find(".o_data_row:eq(0) .o_data_cell:eq(1)"));
         assert.containsOnce(target, ".o_selected_row");
@@ -3677,7 +3677,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_save"));
 
         assert.containsNone(target, ".o_selected_row");
-        assert.strictEqual($(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth, width);
+        assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, width);
     });
 
     QUnit.skipWOWL(
@@ -3695,17 +3695,17 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             });
 
-            const width = $(target).find('th[data-fieldtype="m2o"]')[0].offsetWidth;
+            const width = $(target).find('th[data-name="m2o"]')[0].offsetWidth;
 
             await click($(target).find(".o_data_row:first .o_data_cell:first"));
 
             assert.hasClass($(target).find(".o_data_row:first"), "o_selected_row");
-            assert.strictEqual($(target).find('th[data-fieldtype="m2o"]')[0].offsetWidth, width);
+            assert.strictEqual($(target).find('th[data-name="m2o"]')[0].offsetWidth, width);
 
             await click($(target).find(".o_data_row:nth(1) .o_data_cell:first"));
 
             assert.hasClass($(target).find(".o_data_row:nth(1)"), "o_selected_row");
-            assert.strictEqual($(target).find('th[data-fieldtype="m2o"]')[0].offsetWidth, width);
+            assert.strictEqual($(target).find('th[data-name="m2o"]')[0].offsetWidth, width);
         }
     );
 
@@ -3730,7 +3730,7 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
         });
 
-        const initialTextWidth = $(target).find('th[data-fieldtype="text"]')[0].offsetWidth;
+        const initialTextWidth = $(target).find('th[data-name="text"]')[0].offsetWidth;
         const selectorWidth = $(target).find("th.o_list_record_selector")[0].offsetWidth;
 
         // simulate a window resize
@@ -3738,7 +3738,7 @@ QUnit.module("Views", (hooks) => {
         core.bus.trigger("resize");
         await testUtils.nextTick();
 
-        const postResizeTextWidth = $(target).find('th[data-fieldtype="text"]')[0].offsetWidth;
+        const postResizeTextWidth = $(target).find('th[data-name="text"]')[0].offsetWidth;
         const postResizeSelectorWidth = $(target).find("th.o_list_record_selector")[0].offsetWidth;
         assert.ok(postResizeTextWidth < initialTextWidth);
         assert.strictEqual(selectorWidth, postResizeSelectorWidth);
@@ -3770,11 +3770,8 @@ QUnit.module("Views", (hooks) => {
                     "</tree>",
             });
 
-            assert.strictEqual($(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth, 146);
-            assert.strictEqual(
-                $(target).find('th[data-fieldtype="int_field"]')[0].offsetWidth,
-                200
-            );
+            assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, 146);
+            assert.strictEqual($(target).find('th[data-name="int_field"]')[0].offsetWidth, 200);
         }
     );
 
@@ -3896,7 +3893,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
 
-        var width = $(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth;
+        var width = $(target).find('th[data-name="datetime"]')[0].offsetWidth;
 
         // select two records and edit
         const rows = target.querySelectorAll(".o_data_row");
@@ -3914,7 +3911,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".modal .btn-primary");
 
         assert.containsNone(target, ".o_selected_row");
-        assert.strictEqual($(target).find('th[data-fieldtype="datetime"]')[0].offsetWidth, width);
+        assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, width);
     });
 
     QUnit.skipWOWL(
@@ -4837,7 +4834,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        await mouseEnter(target.querySelector("th[data-fieldtype=foo]"));
+        await mouseEnter(target.querySelector("th[data-name=foo]"));
         await nextTick(); // GES: see next nextTick comment
         assert.strictEqual(
             target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
@@ -4851,7 +4848,7 @@ QUnit.module("Views", (hooks) => {
 
         // it is necessary to rerender the list so tooltips can be properly created
         await reloadListView(target);
-        await mouseEnter(target.querySelector("th[data-fieldtype=foo]"));
+        await mouseEnter(target.querySelector("th[data-name=foo]"));
         await nextTick(); // GES: I had once an indetermist failure because of no tooltip, so for safety I add a nextTick.
 
         assert.strictEqual(
@@ -5254,7 +5251,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".o-tooltip--string");
 
         // From column header
-        target.querySelector(':scope th[data-fieldtype="foo"]').focus();
+        target.querySelector(':scope th[data-name="foo"]').focus();
 
         assert.ok(document.activeElement.dataset.name === "foo");
 
