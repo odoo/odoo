@@ -213,6 +213,9 @@ export class KanbanRenderer extends Component {
         if (!this.canResequenceRecords) {
             return false;
         }
+        if (!this.props.list.groupByField) {
+            return true;
+        }
         const { groupByField } = this.props.list;
         const { modifiers, type } = groupByField;
         return (
@@ -234,7 +237,7 @@ export class KanbanRenderer extends Component {
         const { handleField, recordsDraggable } = this.props.archInfo;
         return (
             recordsDraggable &&
-            (isGrouped || (handleField && (!orderBy[0] || orderBy[0] === handleField)))
+            (isGrouped || (handleField && (!orderBy[0] || orderBy[0].name === handleField)))
         );
     }
 
