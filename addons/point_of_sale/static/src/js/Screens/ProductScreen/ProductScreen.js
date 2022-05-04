@@ -149,7 +149,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Do not add product if options is undefined.
             if (!options) return;
             // Add the product after having the extra information.
-            this.currentOrder.add_product(product, options);
+            this._addProduct(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {
@@ -258,6 +258,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     merge: false,
                 });
             }
+            this._addProduct(product, options);
+        }
+        _addProduct(product, options) {
             this.currentOrder.add_product(product,  options)
         }
         _barcodePartnerAction(code) {

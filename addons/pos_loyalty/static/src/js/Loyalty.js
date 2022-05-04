@@ -73,7 +73,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
     async load_server_data() {
         await super.load_server_data(...arguments);
         if (this.selectedOrder) {
-            this.selectedOrder._updateRewards();
+            this.selectedOrder.updateRewards();
         }
     }
     set_order(order) {
@@ -81,9 +81,9 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
         // FIXME - JCB: This is a temporary fix.
         // When an order is selected, it doesn't always contain the reward lines.
         // And the list of active programs are not always correct. This is because
-        // of the use of DropPrevious in _updateRewards.
+        // of the use of DropPrevious in updateRewards.
         if (order) {
-            order._updateRewards();
+            order.updateRewards();
         }
         return result;
     }
@@ -291,7 +291,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             delete this.couponPointChanges[oldPartner.loyalty_card_id];
         }
         if (oldPartner !== this.get_partner()) {
-            this._updateRewards();
+            this.updateRewards();
         }
     }
     wait_for_push_order() {
@@ -398,51 +398,18 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         line.giftBarcode = options.giftBarcode;
     }
     /**
-     * We override the behavior of add_product such that if the product is claimable
-     * as reward, we update the options to add the product as a reward.
-     *
-     * @override
-     * @param {Product} product
-     * @param {*} options
-     */
-    add_product(product, options) {
-        const claimable = this._isClaimable(product);
-        if (claimable) {
-            const { reward, coupon_id } = claimable;
-            options = this._getFreeProductOptions(options, reward, coupon_id);
-        }
-        super.add_product(...arguments);
-        this._updateRewards();
-    }
-
-    /**
-     * Checks if the given product can be claimed as reward or not.
-     * - If so, we return the object containing the reward object and the coupon_id.
-     *
-     * @param {Product} product
-     * @returns {{ reward: Reward, coupon_id: number } | undefined}
-     */
-    _isClaimable(product) {
-        const claimable = this.getClaimableRewards().find(item => item.reward.reward_type === 'product' && item.reward.reward_product_ids.includes(product.id));
-        if (claimable && !this.disabledRewards.includes(claimable.reward.id)) {
-            return claimable;
-        }
-    }
-
-    /**
-     * @param {*} options
+     * @param {*} initOptions
      * @param {Reward} reward
      * @param {number} coupon_id
      */
-    _getFreeProductOptions(options, reward, coupon_id) {
-        return Object.assign(options, {
+    _getFreeProductOptions(initOptions, reward, coupon_id) {
+        return Object.assign(initOptions, {
             price: 0,
             is_reward_line: true,
             reward_id: reward.id,
             coupon_id,
         });
     }
-
     _initializePrograms() {
         // When deleting a reward line, a popup will be displayed if the reward was automatic,
         //  if confirmed the reward is added to this list and will not be claimed automatically again.
@@ -471,14 +438,14 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         for (const line of this._get_reward_lines()) {
             this.remove_orderline(line);
         }
-        this._updateRewards();
+        this.updateRewards();
     }
     /**
      * 1. Apply/update claimable rewards that are not free products.
      * 2. When claimable quantity of the existing free product reward is reduced,
      *    update its quantity. Remove it if the claimable quantity becomes zero.
      */
-    _updateRewards() {
+    updateRewards() {
         // Calls are not expected to take some time besides on the first load + when loyalty programs are made applicable
         if (this.pos.programs.length === 0) {
             return;
@@ -489,7 +456,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             let changed = false;
             for (const {coupon_id, reward} of claimableRewards) {
                 if (reward.reward_type !== 'product') {
-                    this._applyNonProductReward(reward, coupon_id);
+                    this.applyReward(reward, coupon_id);
                     changed = true;
                 }
             }
@@ -613,7 +580,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 !this.couponPointChanges[claimedReward.coupon_id]) {
                 continue;
             }
-            this._applyNonProductReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
+            this.applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     }
     /**
@@ -995,20 +962,22 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return result;
     }
     /**
-     * Call this to apply a non-product reward. This means that this method ignores
-     * rewards that has `reward_type == 'product'`.
-     * NOTE: Free product rewards are handled differently.
-     *
+     * Apply the given reward.
      * @param {loyalty.reward} reward
      * @param {Integer} coupon_id
      * @param {Object} args Reward options
      * @returns
      *  - true if everything went right, or
      *  - an error message, or
-     *  - undefined if reward type is product
+     *  - throw an error if reward type is product but no product is provided.
      */
-    _applyNonProductReward(reward, coupon_id, args) {
-        if (reward.reward_type == 'product') return;
+    applyReward(reward, coupon_id, args) {
+        if (reward.reward_type == 'product') {
+            const rewardProduct = args['product'];
+            if (!rewardProduct) throw new Error("Missing product when applying a free product reward.");
+            args = this._getFreeProductOptions(args, reward, coupon_id);
+            return this.add_product(rewardProduct, args);
+        }
 
         if (this._getRealCouponPoints(coupon_id) < reward.required_points) {
             return _t("There are not enough points on the coupon to claim this reward.");
@@ -1202,7 +1171,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return {discountable, discountablePerTax};
     }
     /**
-     * @param {Object} args See `_applyNonProductReward`
+     * @param {Object} args See `applyReward`
      * @returns {Array} List of values to create the reward lines
      */
     _getRewardLineValues(args) {
@@ -1214,7 +1183,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return [];
     }
     /**
-     * @param {Object} args See `_applyNonProductReward`
+     * @param {Object} args See `applyReward`
      * @returns {Array} List of values to create the discount lines
      */
     _getRewardLineValuesDiscount(args) {
@@ -1347,9 +1316,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             }
         }
         if (claimableRewards && claimableRewards.length === 1) {
-            if (claimableRewards[0].reward.reward_type !== 'product' || !claimableRewards[0].reward.multi_product) {
-                this._applyNonProductReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
-                this._updateRewards();
+            if (claimableRewards[0].reward.reward_type !== 'product') {
+                this.applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
+                this.updateRewards();
             }
         }
         return true;

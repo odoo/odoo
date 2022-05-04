@@ -12,11 +12,9 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                 coupon: this._onCouponScan,
             });
         }
-
         _onCouponScan(code) {
             this.currentOrder.activateCode(code.base_code);
         }
-
         async _updateSelectedOrderline(event) {
             const selectedLine = this.currentOrder.get_selected_orderline();
             if (selectedLine && selectedLine.is_reward_line && !selectedLine.manual_reward &&
@@ -40,8 +38,6 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
             }
             return super._updateSelectedOrderline(...arguments);
         }
-
-
         /**
          * 1/ Perform the usual set value operation (super._setValue) if the line being modified
          * is not a reward line or if it is a reward line, the `val` being set is '' or 'remove' only.
@@ -77,8 +73,40 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                 }
             }
             if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === 'remove')) {
-                selectedLine.order._updateRewards();
+                selectedLine.order.updateRewards();
             }
+        }
+        /**
+         * Checks if the given product can be claimed as reward or not.
+         * - If so, we return the object containing the reward object and the coupon_id.
+         *
+         * @param {Order} order
+         * @param {Product} product
+         * @returns {{ reward: Reward, coupon_id: number } | undefined}
+         */
+        _isClaimableAsReward(order, product) {
+            const claimable = order.getClaimableRewards().find(item => item.reward.reward_type === 'product' && item.reward.reward_product_ids.includes(product.id));
+            if (claimable && !order.disabledRewards.includes(claimable.reward.id)) {
+                return claimable;
+            }
+        }
+        /**
+         * If product is claimable as reward, we apply the reward. Otherwise, call super.
+         * Additionally, we always need to update the rewards.
+         * @override
+         * @param {Product} product
+         * @param {Object} options
+         */
+        _addProduct(product, options) {
+            const order = this.currentOrder;
+            const claimable = this._isClaimableAsReward(order, product);
+            if (claimable) {
+                const { reward, coupon_id } = claimable;
+                order.applyReward(reward, coupon_id, Object.assign(options, { product }));
+            } else {
+                super._addProduct(product, options);
+            }
+            order.updateRewards();
         }
     };
 

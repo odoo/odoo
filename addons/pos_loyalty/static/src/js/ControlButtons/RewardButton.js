@@ -32,9 +32,10 @@ export class RewardButton extends PosComponent {
             order.disabledRewards.splice(indexDisabled, 1);
         }
 
+        let selectedProduct;
         if (reward.reward_type === 'product') {
-            let selectedProduct;
             if (reward.multi_product) {
+                // multi_product is always true for number of reward_product_ids more than 1.
                 const productsList = reward.reward_product_ids.map((product_id) => {
                     const product = this.env.pos.db.get_product_by_id(product_id);
                     return {
@@ -54,11 +55,9 @@ export class RewardButton extends PosComponent {
             } else {
                 selectedProduct = this.env.pos.db.get_product_by_id(reward.reward_product_ids[0]);
             }
-            this.env.pos.get_order().add_product(selectedProduct, { quantity: reward.reward_product_qty });
-        } else {
-            this.env.pos.get_order()._applyNonProductReward(reward, coupon_id, {});
-            this.env.pos.get_order()._updateRewards();
         }
+        this.env.pos.get_order().applyReward(reward, coupon_id, { product: selectedProduct });
+        this.env.pos.get_order().updateRewards();
     }
 
     async onClick() {
