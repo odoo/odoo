@@ -1017,18 +1017,23 @@ class MrpProduction(models.Model):
         self.ensure_one()
         update_info = []
         move_to_unlink = self.env['stock.move']
+        moves_to_assign = self.env['stock.move']
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
             new_qty = old_qty * factor
             if new_qty > 0:
                 move.write({'product_uom_qty': new_qty})
-                move._action_assign()
+                if move._should_bypass_reservation() \
+                        or move.picking_type_id.reservation_method == 'at_confirm' \
+                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
+                    moves_to_assign |= move
                 update_info.append((move, old_qty, new_qty))
             else:
                 if move.quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move._action_cancel()
                 move_to_unlink |= move
+        moves_to_assign._action_assign()
         move_to_unlink.unlink()
         return update_info
 
