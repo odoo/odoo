@@ -1874,7 +1874,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list in form: create with one2many with many2one", async function (assert) {
+    QUnit.test("list in form: create with one2many with many2one", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.p.default = [
@@ -1911,7 +1911,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list in form: create with one2many with many2one (version 2)",
         async function (assert) {
             // This test simulates the exact same scenario as the previous one,
@@ -2038,7 +2038,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list in form: name_get with unique ids (default_get)", async function (assert) {
+    QUnit.test("list in form: name_get with unique ids (default_get)", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].display_name = "MyTrululu";
@@ -2070,13 +2070,13 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector("td.o_data_cell").textContent,
+            [...target.querySelectorAll("td.o_data_cell")].map((cell) => cell.textContent).join(""),
             "MyTrululuMyTrululu",
             "both records should have the correct display_name for trululu field"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list in form: show name of many2one fields in multi-page (default_get)",
         async function (assert) {
             assert.expect(4);
