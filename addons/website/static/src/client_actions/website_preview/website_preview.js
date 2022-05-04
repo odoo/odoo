@@ -201,6 +201,12 @@ export class WebsitePreview extends Component {
         // The clicks on the iframe are listened, so that links with external
         // redirections can be opened in the top window.
         this.iframe.el.contentDocument.addEventListener('click', (ev) => {
+            if (!this.websiteContext.edition) {
+                // Forward clicks to close backend client action's navbar
+                // dropdowns.
+                this.iframe.el.dispatchEvent(new MouseEvent('click', ev));
+            }
+
             const linkEl = ev.target.closest('[href]');
             if (!linkEl) {
                 return;
