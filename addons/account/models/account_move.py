@@ -761,8 +761,33 @@ class AccountMove(models.Model):
             if recompute_tax_base_amount:
                 fields_to_update = ('tax_base_amount',)
             else:
+<<<<<<< HEAD
                 fields_to_update = ('tax_base_amount', 'amount_currency', 'debit', 'credit')
             line_ids_commands.append(Command.update(tax_line.id, {k: v for k, v in to_update.items() if k in fields_to_update}))
+=======
+                # Create a new tax line.
+                create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
+                tax_repartition_line_id = taxes_map_entry['grouping_dict']['tax_repartition_line_id']
+                tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_repartition_line_id)
+                tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
+                taxes_map_entry['tax_line'] = create_method({
+                    **to_write_on_line,
+                    'name': tax.name,
+                    'move_id': self.id,
+                    'company_id': self.company_id.id,
+                    'company_currency_id': self.company_currency_id.id,
+                    'tax_base_amount': tax_base_amount,
+                    'exclude_from_invoice_tab': True,
+                    'tax_exigible': tax.tax_exigibility == 'on_invoice',
+                    **taxes_map_entry['grouping_dict'],
+                })
+
+            if in_draft_mode:
+                taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance(force_computation=True))
+
+    def _tax_tags_need_inversion(self, move, is_refund, tax_type):
+        """ Tells whether the tax tags need to be inverted for a given move.
+>>>>>>> 17c7f4d82ba... temp
 
         (self.update if in_draft_mode else self.write)({'line_ids': line_ids_commands})
 
