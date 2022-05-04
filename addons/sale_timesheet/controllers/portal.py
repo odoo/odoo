@@ -59,6 +59,11 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
 
 class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
+    def _prepare_portal_layout_values(self):
+        values = super()._prepare_portal_layout_values()
+        values['access_sale_order_ids'] = list(request.env['sale.order']._search([]))
+        return values
+
     def _get_searchbar_inputs(self):
         searchbar_inputs = super()._get_searchbar_inputs()
         searchbar_inputs.update(

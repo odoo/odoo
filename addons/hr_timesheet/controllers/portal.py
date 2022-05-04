@@ -172,6 +172,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
             'is_uom_day': request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
+            'access_project_ids': list(request.env['project.project']._search([])),
         })
         return request.render("hr_timesheet.portal_my_timesheets", values)
 

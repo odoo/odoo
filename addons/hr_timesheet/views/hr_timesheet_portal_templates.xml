@@ -118,8 +118,15 @@
                                 <tr>
                                     <td t-if="not groupby == 'date'"><span t-field="timesheet.date" t-options='{"widget": "date"}'/></td>
                                     <td t-if="not groupby == 'employee'"><span t-field="timesheet.employee_id" t-att-title="timesheet.employee_id.display_name" /></td>
-                                    <td t-if="not groupby == 'project'"><span t-field="timesheet.project_id" t-att-title="timesheet.project_id.display_name"/></td>
-                                    <td t-if="not groupby == 'task'"><span t-field="timesheet.task_id" t-att-title="timesheet.task_id.display_name"/></td>
+                                    <td t-if="not groupby == 'project'">
+                                        <a t-attf-href="#{timesheet.project_id.access_url}" t-out="timesheet.project_id.display_name"
+                                            t-att-title="timesheet.project_id.display_name" t-if="timesheet.project_id.id in access_project_ids"/>
+                                        <t t-else="" t-out="timesheet.project_id.display_name" t-att-title="timesheet.project_id.display_name"/>
+                                    </td>
+                                    <td t-if="not groupby == 'task'">
+                                        <a t-attf-href="#{timesheet.task_id.access_url}" t-out="timesheet.task_id.display_name"
+                                            t-att-title="timesheet.task_id.display_name"/>
+                                    </td>
                                     <td><span t-esc="timesheet.name" t-att-title="timesheet.name"/></td>
                                     <td class="text-end">
                                         <span t-if="is_uom_day" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>

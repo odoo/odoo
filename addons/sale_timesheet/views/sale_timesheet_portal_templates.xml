@@ -87,7 +87,11 @@
             <th t-if="not groupby == 'sol'">Sales Order Item</th>
         </xpath>
         <xpath expr="//tbody//td[hasclass('text-end')]" position="before">
-            <td t-if="not groupby == 'sol'"><span t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span></td>
+            <td t-if="not groupby == 'sol'">
+                <a t-attf-href="#{timesheet.order_id.access_url}" t-out="timesheet.so_line.display_name"
+                    t-att-title="timesheet.so_line.display_name" t-if="timesheet.order_id.id in access_sale_order_ids"/>
+                <t t-else="" t-out="timesheet.so_line.display_name" t-att-title="timesheet.so_line.display_name"/>
+            </td>
         </xpath>
     </template>
 
