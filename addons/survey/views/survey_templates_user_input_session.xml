@@ -30,19 +30,27 @@
 
     <template id="user_input_session_open" name="Survey: Open Session">
         <t t-call="survey.user_input_session">
-            <div class="wrap py-3 min-vh-100 align-items-center justify-content-center d-flex o_survey_session_open o_survey_session_manage"
+            <div class="wrap mt-md-5 py-3 justify-content-center d-flex o_survey_session_open o_survey_session_manage"
                 t-att-data-survey-access-token="survey.access_token"
                 t-att-data-survey-id="survey.id"
                 t-att-data-is-start-screen="True">
-                <div class="w-75 p-4">
+                <div class="w-75 p-md-4">
+                    <div class="row mb-5">
+                        <div class="col-12 col-md-9">
+                            <h2 class="fw-normal mb-5">
+                                Join at <span class="text-primary o_survey_session_copy" t-out="survey.session_link" />
+                                <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
+                            </h2>
+                            <h1 t-field="survey.title" />
+                            <h3 class="fw-normal text-break" t-field="survey.description" />
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <img class="img-fluid align-content-center" t-att-src="'/report/barcode/QR/%s?width=300&amp;height=300' % quote_plus(survey.session_link)"/>
+                        </div>
+                    </div>
                     <div class="text-center">
-                        <h1 class="mb-4" t-field="survey.title" />
-                        <h2 class="mb-5 fw-normal">
-                            <span class="text-break">To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
-                            <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
-                        </h2>
                         <h2 class="fw-normal"><span>Waiting for attendees...</span>
-                            <span class="ms-1 fw-bold o_survey_session_attendees_count" t-esc="survey.session_answer_count" />
+                            <span class="ms-1 fw-bold o_survey_session_attendees_count" t-out="survey.session_answer_count" />
                         </h2>
                     </div>
                     <a role="button"
