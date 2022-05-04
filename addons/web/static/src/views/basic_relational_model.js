@@ -837,6 +837,11 @@ export class StaticList extends DataPoint {
     }
 
     async resequence(movedId, targetId) {
+        if (this.__viewType === "list") {
+            this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
+            this.model.__bm__.freezeOrder(this.__bm_handle__);
+        }
+
         const handleField = this.handleField || "sequence";
         const fromIndex = this.records.findIndex((r) => r.id === movedId);
         const toIndex = targetId ? this.records.findIndex((r) => r.id === targetId) : 0;
@@ -879,7 +884,7 @@ export class StaticList extends DataPoint {
             records.reverse();
         }
 
-        const sequences = records.filter((r) => Boolean(r.resId)).map((r) => r.data[handleField]);
+        const sequences = records.map((r) => r.data[handleField]);
         const offset = Math.min(...sequences);
 
         const operations = records.map((record, i) => ({
@@ -900,7 +905,18 @@ export class StaticList extends DataPoint {
                 );
             })
         );
-        await this.model.__bm__.notifyChanges(parentID, { [this.__fieldName__]: lastOperation });
+
+        try {
+            await this.model.__bm__.notifyChanges(parentID, {
+                [this.__fieldName__]: lastOperation,
+            });
+        } finally {
+            if (this.__viewType === "list") {
+                await this.model.__bm__.setSort(this.__bm_handle__, handleField);
+            }
+        }
+
+        this.__syncData();
         this.model.notify();
     }
 

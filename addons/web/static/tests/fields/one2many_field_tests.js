@@ -35,12 +35,7 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils,
-    delay,
-    relationalFields,
-    makeLegacyDialogMappingTestEnv,
-    AbstractStorageService,
-    RamStorage;
+let testUtils, relationalFields, makeLegacyDialogMappingTestEnv, AbstractStorageService, RamStorage;
 
 async function clickCreate(target) {
     await click(target.querySelector(".o_form_button_create"));
@@ -2089,11 +2084,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "embedded one2many with handle widget with minimum setValue calls",
         async function (assert) {
-            assert.expect(20);
-
             serverData.models.turtle.records[0].turtle_int = 6;
             serverData.models.turtle.records.push(
                 {
@@ -2119,7 +2112,20 @@ QUnit.module("Fields", (hooks) => {
             );
             serverData.models.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
 
-            const form = await makeView({
+            let model;
+            patchWithCleanup(BasicModel.prototype, {
+                init() {
+                    this._super(...arguments);
+                    model = this;
+                },
+                notifyChanges() {
+                    const changes = arguments[1];
+                    assert.step(String(this.get(changes.turtles.id).res_id));
+                    return this._super(...arguments);
+                },
+            });
+
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2135,38 +2141,46 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            testUtils.mock.intercept(
-                form,
-                "field_changed",
-                function (event) {
-                    assert.step(String(form.model.get(event.data.changes.turtles.id)));
-                },
-                true
-            );
+            const formHandle = Object.keys(model.localData).find((k) => /partner/.test(k));
 
             await clickEdit(target);
 
-            var positions = [
-                [6, 0, "top", ["3", "6", "1", "2", "5", "7", "4"]], // move the last to the first line
-                [5, 1, "top", ["7", "6", "1", "2", "5"]], // move the penultimate to the second line
-                [2, 5, "bottom", ["1", "2", "5", "6"]], // move the third to the penultimate line
+            assert.deepEqual(
+                Object.values(model.get(formHandle).data.turtles.data).map((r) => {
+                    return r.data;
+                }),
+                [
+                    { id: 6, turtle_foo: "a3", turtle_int: 2 },
+                    { id: 1, turtle_foo: "yop", turtle_int: 6 },
+                    { id: 2, turtle_foo: "blip", turtle_int: 9 },
+                    { id: 5, turtle_foo: "a2", turtle_int: 9 },
+                    { id: 7, turtle_foo: "a4", turtle_int: 11 },
+                    { id: 4, turtle_foo: "a1", turtle_int: 20 },
+                    { id: 3, turtle_foo: "kawa", turtle_int: 21 },
+                ]
+            );
+
+            const positions = [
+                [7, 1, "top", ["3", "6", "1", "2", "5", "7", "4"]], // move the last to the first line
+                [6, 3, "top", ["7", "6", "1", "2", "5"]], // move the penultimate to the second line
+                [3, 6, "bottom", ["1", "2", "5", "6"]], // move the third to the penultimate line
             ];
-            for (const [source, target, position, steps] of positions) {
-                await testUtils.dom.dragAndDrop(
-                    form.$(".ui-sortable-handle").eq(source),
-                    form.$("tbody tr").eq(target),
+            for (const [sourceIndex, targetIndex, position, steps] of positions) {
+                await dragAndDrop(
+                    `tbody tr:nth-child(${sourceIndex}) .o_handle_cell`,
+                    `tbody tr:nth-child(${targetIndex})`,
                     { position: position }
                 );
 
-                await delay(10);
+                // await delay(10);
 
-                assert.verifySteps(
-                    steps,
-                    "sequences values should be apply from the begin index to the drop index"
-                );
+                assert.verifySteps(steps);
             }
+
             assert.deepEqual(
-                _.pluck(form.model.get(form.handle).data.turtles.data, "data"),
+                Object.values(model.get(formHandle).data.turtles.data).map((r) => {
+                    return r.data;
+                }),
                 [
                     { id: 3, turtle_foo: "kawa", turtle_int: 2 },
                     { id: 7, turtle_foo: "a4", turtle_int: 3 },
@@ -2175,8 +2189,7 @@ QUnit.module("Fields", (hooks) => {
                     { id: 5, turtle_foo: "a2", turtle_int: 6 },
                     { id: 6, turtle_foo: "a3", turtle_int: 7 },
                     { id: 4, turtle_foo: "a1", turtle_int: 8 },
-                ],
-                "sequences must be apply correctly"
+                ]
             );
         }
     );
@@ -8774,7 +8787,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many with several pages, onchange and default order", async function (assert) {
+    QUnit.test("one2many with several pages, onchange and default order", async function (assert) {
         // This test reproduces a specific scenario where a one2many is displayed
         // over several pages, and has a default order such that a record that
         // would normally be on page 1 is actually on another page. Moreover,
@@ -8782,7 +8795,6 @@ QUnit.module("Fields", (hooks) => {
         // (LINK_TO) into commands 1 (UPDATE), which is standard in the ORM.
         // This test ensures that the record displayed on page 2 is never fully
         // read.
-        assert.expect(8);
 
         serverData.models.partner.records[0].turtles = [1, 2, 3];
         serverData.models.turtle.records[0].partner_ids = [1];
@@ -8843,6 +8855,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.verifySteps([
+            "get_views",
             "read [1]", // main record
             "read [1,2,3]", // one2many (turtle_foo, all records)
             "read [2,3]", // one2many (all fields in view, records of first page)
