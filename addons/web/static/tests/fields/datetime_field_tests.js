@@ -765,8 +765,6 @@ QUnit.module("Fields", (hooks) => {
             - we click outside the field to validate our entry
             - we save
         */
-        assert.expect(3);
-
         patchTimeZone(120);
 
         registry.category("services").add(

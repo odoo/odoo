@@ -412,8 +412,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("DateField with warn_future option", async function (assert) {
-        assert.expect(2);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -573,8 +571,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("DateField remove value", async function (assert) {
-        assert.expect(4);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -696,8 +692,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("DateField support internationalization", async function (assert) {
-        assert.expect(2);
-
         // The DatePicker component needs the locale to be available since it
         // is still using Moment.js for the bootstrap datepicker
         const originalLocale = moment.locale();
@@ -713,7 +707,7 @@ QUnit.module("Fields", (hooks) => {
             .category("services")
             .add(
                 "localization",
-                makeFakeLocalizationService({ dateFormat: strftimeToLuxonFormat("%d.%m/%Y") })
+                makeFakeLocalizationService({ dateFormat: strftimeToLuxonFormat("%d-%m/%Y") })
             );
         patchWithCleanup(luxon.Settings, {
             defaultLocale: "no",

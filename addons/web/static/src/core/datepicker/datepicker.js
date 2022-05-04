@@ -105,7 +105,10 @@ export class DatePicker extends Component {
         for (const prop in nextProps) {
             const prev = this.props[prop];
             const next = nextProps[prop];
-            if ((prev instanceof DateTime && !prev.equals(next)) || prev !== next) {
+            if (
+                (prev instanceof DateTime && next instanceof DateTime && !prev.equals(next)) ||
+                prev !== next
+            ) {
                 pickerParams[prop] = nextProps[prop];
                 if (prop === "date") {
                     this.setDate(nextProps);
@@ -186,25 +189,6 @@ export class DatePicker extends Component {
         }
     }
 
-    /**
-     * Allow the value to be converted to a date value even if the
-     * year part is not complete.
-     */
-    formatValue(value, retry = false) {
-        let date;
-        try {
-            date = this.parse(value, this.options);
-            return date;
-        } catch (_err) {
-            if (retry) return date;
-            const retryValue = luxon.DateTime.fromString(
-                value,
-                localization.dateTimeFormat.replace("yyyy", "yy")
-            ).toString();
-            return this.formatValue(retryValue, true);
-        }
-    }
-
     //---------------------------------------------------------------------
     // Bootstrap datepicker
     //---------------------------------------------------------------------
@@ -251,16 +235,38 @@ export class DatePicker extends Component {
      * @param {boolean} [params.useStatic]
      */
     onDateChange({ useStatic } = {}) {
-        let date;
-        try {
-            date = this.parseValue(this.inputRef.el.value, this.getOptions(useStatic));
-        } catch (_err) {
+        /**
+         * Allow the value to be converted to a date value even if the
+         * year part is not complete.
+         */
+        const unfuckThisWOWL = (value, retry) => {
+            let date;
+            const options = this.getOptions(useStatic);
+            try {
+                date = this.parseValue(value, options);
+                return date;
+            } catch (_err) {
+                if (retry) return date;
+                const retryValue = luxon.DateTime.fromString(
+                    value,
+                    localization.dateTimeFormat.replace("yyyy", "yy")
+                ).toString();
+                return unfuckThisWOWL(retryValue, true);
+            }
+        };
+
+        let date = unfuckThisWOWL(this.inputRef.el.value);
+        if (date === undefined) {
             // Reset to default (= given) date.
-        }
-        if (!date || (this.date instanceof DateTime && date.equals(this.date))) {
             this.updateInput();
-        } else {
-            this.state.warning = date > DateTime.local();
+            return;
+        }
+        this.state.warning = date > DateTime.local();
+        const areEqual =
+            date instanceof DateTime && this.date instanceof DateTime
+                ? date.equals(this.date)
+                : date === this.date;
+        if (!areEqual) {
             this.props.onDateTimeChanged(date);
         }
     }
