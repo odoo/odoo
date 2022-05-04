@@ -423,7 +423,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      * @returns {{ reward: Reward, coupon_id: number } | undefined}
      */
     _isClaimable(product) {
-        const claimable = this.getClaimableRewards().find(item => item.reward.reward_product_ids.includes(product.id));
+        const claimable = this.getClaimableRewards().find(item => item.reward.reward_type === 'product' && item.reward.reward_product_ids.includes(product.id));
         if (claimable && !this.disabledRewards.includes(claimable.reward.id)) {
             return claimable;
         }
@@ -502,7 +502,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     }
     async _updateLoyaltyPrograms() {
         if (this.partner && !(this.partner.loyalty_card_id in this.pos.couponCache)) {
-            await this.pos.fetchCoupons([['id', 'in', [this.partner.loyalty_card_id]]], 1);
+            this.pos.couponCache[this.partner.loyalty_card_id] = new PosLoyaltyCard(null, this.partner.loyalty_card_id, this.pos.config.loyalty_program_id[0], this.partner.id, this.partner.loyalty_points);
         }
         await this._checkMissingCoupons();
         await this._updatePrograms();
