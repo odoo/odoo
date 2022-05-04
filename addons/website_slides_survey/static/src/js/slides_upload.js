@@ -3,7 +3,6 @@ odoo.define('website_slides_survey.upload_modal', function (require) {
 
 var core = require('web.core');
 var _t = core._t;
-var sessionStorage = window.sessionStorage;
 var SlidesUpload = require('@website_slides/js/slides_upload')[Symbol.for("default")];
 
 /**
@@ -23,8 +22,12 @@ SlidesUpload.SlideUploadDialog.include({
     */
     _onChangeCertification: function (ev) {
         const $inputElement = this.$("input#name");
-        if (ev.added && ev.added.text && !$inputElement.val().trim()) {
-            $inputElement.val(ev.added.text);
+        if (ev.added) {
+            this.$('.o_error_no_certification').addClass('d-none');
+            this.$('#certification_id').closest('.form-group').find('.select2-container').removeClass('is-invalid');
+            if (ev.added.text && !$inputElement.val().trim()) {
+                $inputElement.val(ev.added.text);
+            }
         }
     },
 
@@ -83,11 +86,14 @@ SlidesUpload.SlideUploadDialog.include({
             var $select2Container = $certificationInput
                 .closest('.form-group')
                 .find('.select2-container');
+            var $errorContainer = $('.o_error_no_certification');
             $select2Container.removeClass('is-invalid is-valid');
             if ($certificationInput.is(':invalid')) {
                 $select2Container.addClass('is-invalid');
+                $errorContainer.removeClass('d-none');
             } else if ($certificationInput.is(':valid')) {
                 $select2Container.addClass('is-valid');
+                $errorContainer.addClass('d-none');
             }
         }
 
@@ -114,22 +120,6 @@ SlidesUpload.SlideUploadDialog.include({
         }
         result['survey'] = survey;
         return result;
-    },
-
-    /**
-     * Overridde to handle certification created on-the-fly: toaster will hold
-     * survey edit url, need to put it in session to use it in CertificationUploadToast
-     *
-     * @override
-     * @private
-     */
-    _onFormSubmitDone: function (data) {
-        if (!data.error && data.redirect_to_certification) {
-            sessionStorage.setItem("survey_certification_url", data.redirect_url);
-            window.location.reload();
-        } else {
-            this._super.apply(this, arguments);
-        }
     },
 });
 
