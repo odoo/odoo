@@ -345,8 +345,9 @@ class AccountChartTemplate(models.AbstractModel):
         company.write({key: val for key, val in template_data.items()
                        if not key.startswith("property_") and key in company._fields})
 
-        # Set the currency to the fiscal country's currency if not set yet
-        company.currency_id = company.currency_id or company.account_fiscal_country_id.currency_id
+        # Set the currency to the fiscal country's currency if not set yet, and make sure it's active
+        company.currency_id = company.account_fiscal_country_id.currency_id
+        company.currency_id.active = True
 
         # Create utility bank_accounts
         self._setup_utility_bank_accounts(template_code, company, bank_prefix, code_digits)
