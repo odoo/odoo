@@ -366,8 +366,11 @@ class SaleOrder(models.Model):
             lines = order.order_line.filtered(lambda line: line.product_id == program.discount_line_product_id)
             if program.reward_type == 'discount' and program.discount_type == 'percentage':
                 lines_to_remove = lines
+                lines_to_add = []
                 # Values is what discount lines should really be, lines is what we got in the SO at the moment
                 # 1. If values & lines match, we should update the line (or delete it if no qty or price?)
+                #    As removing a lines remove all the other lines linked to the same program, we need to save them
+                #    using lines_to_keep
                 # 2. If the value is not in the lines, we should add it
                 # 3. if the lines contains a tax not in value, we should remove it
                 for value in values:
@@ -380,11 +383,13 @@ class SaleOrder(models.Model):
                             lines_to_remove -= line
                             lines_to_remove += update_line(order, line, value)
                             continue
-                    # Case 2.
+                    # Working on Case 2.
                     if not value_found:
-                        order.write({'order_line': [(0, False, value)]})
+                        lines_to_add += [(0, False, value)]
                 # Case 3.
                 lines_to_remove.unlink()
+                # Case 2.
+                order.write({'order_line': lines_to_add})
             else:
                 update_line(order, lines, values[0]).unlink()
 
