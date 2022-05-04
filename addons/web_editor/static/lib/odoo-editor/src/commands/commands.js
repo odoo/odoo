@@ -83,7 +83,7 @@ function insert(editor, data, isText = true) {
 
     // In case the html inserted is all contained in a single root <P> tag,
     // we take the all content of the <p> and avoid inserting the <p>.
-    if (fakeEl.firstChild === fakeEl.lastChild && fakeEl.firstChild.nodeName === 'P') {
+    if (fakeEl.childElementCount === 1 && fakeEl.firstChild.nodeName === 'P') {
         const p = fakeEl.firstElementChild;
         fakeEl.replaceChildren(...p.childNodes);
     } else if (fakeEl.childElementCount > 1) {
