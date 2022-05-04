@@ -165,13 +165,50 @@ export class Many2OneField extends Component {
                     this.env._t("Open: %s"),
                     this.props.record.activeFields[this.props.name].string
                 ),
-
                 onRecordSaved: async () => {
                     await this.props.record.load();
                     await this.props.update(this.props.value);
                 },
             })
         );
+    }
+
+    async createRecord(value) {
+        let result;
+        try {
+            result = await this.props.update([false, value]);
+        } catch {
+            result = new Promise((resolve) => {
+                this.dialogClose.push(
+                    this.dialog.add(
+                        FormViewDialog,
+                        {
+                            context: {
+                                ...this.props.record.getFieldContext(this.props.name),
+                                default_name: value,
+                            },
+                            mode: this.props.canWrite ? "edit" : "readonly",
+                            resId: false,
+                            resModel: this.props.relation,
+                            viewId: false,
+                            title: sprintf(
+                                this.env._t("Create: %s"),
+                                this.props.record.activeFields[this.props.name].string
+                            ),
+                            onRecordSaved: (record) => {
+                                return this.props.update([record.data.id, record.data.name]);
+                            },
+                        },
+                        {
+                            onClose: () => {
+                                resolve();
+                            },
+                        }
+                    )
+                );
+            });
+        }
+        return result;
     }
 
     onSearchMore() {
@@ -197,11 +234,11 @@ export class Many2OneField extends Component {
                 value: inputValue.trim(),
                 name: this.props.string,
                 create: () => {
-                    return this.props.update([false, inputValue]);
+                    return this.createRecord(inputValue);
                 },
             });
         } else {
-            this.props.update([false, inputValue]);
+            this.createRecord(inputValue);
         }
     }
     onCreateEdit() {
@@ -262,7 +299,7 @@ Many2OneField.supportedTypes = ["many2one"];
 Many2OneField.extractProps = (fieldName, record, attrs) => {
     const noOpen = Boolean(attrs.options.no_open);
     const noCreate = Boolean(attrs.options.no_create);
-    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create));
+    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
     const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
     const noQuickCreate = Boolean(attrs.options.no_quick_create);
     const noCreateEdit = Boolean(attrs.options.no_create_edit);
@@ -270,7 +307,7 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
     return {
         placeholder: attrs.placeholder,
         canOpen: !noOpen,
-        canCreate: canCreate && !noCreate,
+        canCreate,
         canWrite,
         canQuickCreate: canCreate && !noQuickCreate,
         canCreateEdit: canCreate && !noCreateEdit,

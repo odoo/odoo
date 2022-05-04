@@ -2968,7 +2968,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body, ".modal .modal-footer .btn-primary");
     });
 
-    QUnit.skipWOWL("failing quick create on a many2one", async function (assert) {
+    QUnit.test("failing quick create on a many2one", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -2998,28 +2998,24 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await testUtils.fields.many2one.searchAndClickItem("product_id", {
-            search: "abcd",
-            item: 'Create "abcd"',
-        });
+        await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
+        await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
+
         assert.containsOnce(document.body, ".modal .o_form_view");
         assert.strictEqual(
-            document.body.querySelector(".o_field_widget[name='name']").value,
+            document.body.querySelector(".modal .o_field_widget[name='name'] input").value,
             "abcd"
         );
 
-        await testUtils.fields.editInput(
-            document.body.querySelector(".modal .o_field_widget[name=name]"),
-            "xyz"
-        );
-        await click(document.body, ".modal .modal-footer .btn-primary");
+        await editInput(document.body, ".modal .o_field_widget[name='name'] input", "xyz");
+        await click(document.body, ".modal .o_form_button_save");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='product_id'] input").value,
             "xyz"
         );
     });
 
-    QUnit.skipWOWL("failing quick create on a many2one inside a one2many", async function (assert) {
+    QUnit.test("failing quick create on a many2one inside a one2many", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -3044,33 +3040,28 @@ QUnit.module("Fields", (hooks) => {
                     <field name="p" />
                 </form>
             `,
-            mockRPC(route, args) {
-                if (args.method === "name_create") {
+            mockRPC(route, { args, method }) {
+                if (method === "name_create") {
                     return Promise.reject();
                 }
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0], { name: "xyz" });
+                if (method === "create") {
+                    assert.deepEqual(args[0], { name: "xyz" });
                 }
-                return this._super(...arguments);
             },
         });
 
         await click(target, ".o_field_x2many_list_row_add a");
-        await testUtils.fields.many2one.searchAndClickItem("product_id", {
-            search: "abcd",
-            item: 'Create "abcd"',
-        });
+        await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
+        await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
+
         assert.containsOnce(document.body, ".modal .o_form_view");
         assert.strictEqual(
-            document.body.querySelector(".o_field_widget[name='name']").value,
+            document.body.querySelector(".modal .o_field_widget[name='name'] input").value,
             "abcd"
         );
 
-        await testUtils.fields.editInput(
-            document.body.querySelector(".modal .o_field_widget[name='name']"),
-            "xyz"
-        );
-        await click(document.body, ".modal .modal-footer .btn-primary");
+        await editInput(document.body, ".modal .o_field_widget[name='name'] input", "xyz");
+        await click(document.body, ".modal .o_form_button_save");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='product_id'] input").value,
             "xyz"
@@ -3253,18 +3244,12 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        await testUtils.fields.editInput(
-            target.querySelectorAll(".o_field_many2one input"),
-            "new partner"
-        );
-        target.querySelectorAll(".o_field_many2one input").trigger("keyup").trigger("focusout");
+        await editInput(target, ".o_field_many2one input", "new partner");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+
+        assert.containsNone(document.body, ".modal", "should not display the create modal");
         assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            0,
-            "should not display the create modal"
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "",
             "many2one value should cleared on focusout if many2one is no_create"
         );

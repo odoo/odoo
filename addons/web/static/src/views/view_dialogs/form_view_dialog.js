@@ -28,7 +28,7 @@ export class FormViewDialog extends Component {
                 const saved = await record.save({ stayInEdition: true, noReload: true });
                 if (saved) {
                     if (this.props.onRecordSaved) {
-                        await this.props.onRecordSaved();
+                        await this.props.onRecordSaved(record);
                     }
                     this.props.close();
                 }
@@ -60,7 +60,7 @@ FormViewDialog.props = {
         validate: (m) => ["edit", "readonly"].includes(m),
     },
     onRecordSaved: { type: Function, optional: true },
-    resId: { type: Number, optional: true },
+    resId: { type: [Number, false], optional: true },
     title: { type: String, optional: true },
     viewId: { type: [Number, false], optional: true },
 };
