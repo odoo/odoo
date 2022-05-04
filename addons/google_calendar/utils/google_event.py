@@ -193,3 +193,12 @@ class GoogleEvent(abc.Set):
         if all(not e.is_recurrence() for e in self):
             return env['calendar.event']
         raise TypeError("Mixing Google events and Google recurrences")
+
+    def get_meeting_url(self):
+        if not self.conferenceData:
+            return False
+        video_meeting = list(filter(lambda entryPoints: entryPoints['entryPointType'] == 'video', self.conferenceData['entryPoints']))
+        return video_meeting[0]['uri'] if video_meeting else False
+
+    def is_available(self):
+        return self.transparency == 'transparent'

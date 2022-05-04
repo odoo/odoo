@@ -100,11 +100,12 @@ const Wysiwyg = Widget.extend({
         const self = this;
 
         var options = this._editorOptions();
-        this._value = options.value;
         this.options.isInternalUser = await session.user_has_group('base.group_user');
 
         this.$editable = this.$editable || this.$el;
-        this.$editable.html(this._value);
+        if (options.value) {
+            this.$editable.html(options.value);
+        }
         this.$editable.data('wysiwyg', this);
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
@@ -178,6 +179,7 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.document.addEventListener("keyup", this._signalOnline, true);
         }
 
+        this._initialValue = this.getValue();
         const $wrapwrap = $('#wrapwrap');
         if ($wrapwrap.length) {
             $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
@@ -741,7 +743,7 @@ const Wysiwyg = Widget.extend({
      * @returns {Boolean}
      */
     isDirty: function () {
-        return this._value !== (this.$editable.html() || this.$editable.val());
+        return this._initialValue !== (this.getValue() || this.$editable.val());
     },
     /**
      * Get the value of the editable element.
@@ -758,6 +760,7 @@ const Wysiwyg = Widget.extend({
         $editable.find('[title=""]').removeAttr('title');
         $editable.find('[alt=""]').removeAttr('alt');
         $editable.find('[data-original-title=""]').removeAttr('data-original-title');
+        $editable.find('[data-editor-message]').removeAttr('data-editor-message');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
         this.odooEditor.cleanForSave($editable[0]);
@@ -779,7 +782,7 @@ const Wysiwyg = Widget.extend({
         } else {
             this.$editable.html(html);
         }
-        return Promise.resolve({isDirty:isDirty, html:html});
+        return Promise.resolve({isDirty: isDirty, html: html});
     },
     /**
      * Save the content for the normal mode or the translation mode.
@@ -1313,7 +1316,9 @@ const Wysiwyg = Widget.extend({
             if (!this.lastMediaClicked) {
                 return;
             }
-            new weWidgets.ImageCropWidget(this, this.lastMediaClicked).appendTo(this.$editable);
+            new weWidgets.ImageCropWidget(this, this.lastMediaClicked).appendTo(this.odooEditor.document.body);
+            this.odooEditor.toolbarHide();
+            $(this.lastMediaClicked).on('image_cropper_destroyed', () => this.odooEditor.toolbarShow());
         });
         $toolbar.find('#image-transform').click(e => {
             if (!this.lastMediaClicked) {
@@ -1370,11 +1375,11 @@ const Wysiwyg = Widget.extend({
         setTimeout(() => {
             const scrollableContainer = this.$el.scrollParent();
             if (!options.snippets && scrollableContainer.length) {
-                // this.odooEditor.addDomListener(
-                //   scrollableContainer[0],
-                //   'scroll',
-                //   this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                // );
+                this.odooEditor.addDomListener(
+                    scrollableContainer[0],
+                    'scroll',
+                    this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
+                );
             }
         }, 0);
     },

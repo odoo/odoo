@@ -338,6 +338,13 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
 function isImageSupportedForProcessing(mimetype) {
     return ['image/jpeg', 'image/png'].includes(mimetype);
 }
+/**
+ * @param {HTMLImageElement} img
+ * @returns {Boolean}
+ */
+function isImageSupportedForStyle(img) {
+    return img.parentElement && !img.parentElement.dataset.oeType;
+}
 
 return {
     applyModifications,
@@ -347,5 +354,6 @@ return {
     loadImage,
     removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
     isImageSupportedForProcessing,
+    isImageSupportedForStyle,
 };
 });
