@@ -12,7 +12,7 @@ var SlideArchiveDialog = Dialog.extend({
      */
     init: function (parent, options) {
         options = _.defaults(options || {}, {
-            title: _t('Archive Slide'),
+            title: _t('Archive Content'),
             size: 'medium',
             buttons: [{
                 text: _t('Archive'),
