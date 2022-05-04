@@ -6349,30 +6349,29 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["354"]);
     });
 
-    QUnit.skipWOWL("non inline subview and create=0 in action context", async function (assert) {
+    QUnit.test("non inline subview and create=0 in action context", async function (assert) {
         // the create=0 should apply on the main view (form), but not on subviews
-        assert.expect(2);
+        // this works because we pass the "base_model" in the context for the "get_views" call
+        serverData.views = {
+            "product,false,kanban": `
+                <kanban>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="name"/></div>
+                    </t></templates>
+                </kanban>`,
+        };
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form><field name="product_ids" mode="kanban"/></form>',
-            archs: {
-                "product,false,kanban": `<kanban>
-                                            <templates><t t-name="kanban-box">
-                                                <div><field name="name"/></div>
-                                            </t></templates>
-                                        </kanban>`,
-            },
+            arch: '<form><field name="product_ids" mode="kanban" widget="one2many"/></form>',
             resId: 1,
-            viewOptions: {
-                context: { create: false },
-                mode: "edit",
-            },
+            context: { create: false },
         });
 
         assert.containsNone(target, ".o_form_button_create");
+        await click(target.querySelector(".o_form_button_edit"));
         assert.containsOnce(target, ".o-kanban-button-new");
     });
 
