@@ -17,6 +17,13 @@ registerModel({
             }
             return this.component.root.el;
         },
+        onClickRetryLoadMoreMessages() {
+            if (!this.exists() || !this.thread) {
+                return;
+            }
+            this.thread.cache.update({ hasLoadingFailed: false });
+            this.thread.cache.loadMoreMessages();
+        },
         /**
          * @private
          * @returns {boolean|FieldCommand}
