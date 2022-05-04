@@ -980,7 +980,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 if (reward.reward_type === 'discount' && totalIsZero) {
                     continue;
                 }
-                if (reward.reward_type === 'product' && !reward.multi_product) {
+                if (reward.reward_type === 'product') {
                     const availableQty = this._getClaimableQty(reward, points);
                     if (availableQty <= 0) {
                         continue;

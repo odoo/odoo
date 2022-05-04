@@ -2,6 +2,7 @@
 
 import { PosLoyalty } from 'pos_loyalty.tour.PosCouponTourMethods';
 import { ProductScreen } from 'point_of_sale.tour.ProductScreenTourMethods';
+import { SelectionPopup } from 'point_of_sale.tour.SelectionPopupTourMethods';
 import { getSteps, startSteps } from 'point_of_sale.tour.utils';
 import Tour from 'web_tour.tour';
 
@@ -63,7 +64,7 @@ PosLoyalty.check.hasRewardLine('Whiteboard Pen (free)', '0.00', '1.00');
 
 ProductScreen.do.pressNumpad('6');
 PosLoyalty.check.isRewardButtonHighlighted(true);
-PosLoyalty.do.claimSingleReward();
+PosLoyalty.do.clickRewardButton();
 PosLoyalty.check.isRewardButtonHighlighted(false);
 PosLoyalty.check.hasRewardLine('Whiteboard Pen (free)', '0.00', '2.00');
 // Finalize order that consumed a reward.
@@ -89,6 +90,34 @@ ProductScreen.check.selectedOrderlineHas('Magnetic Board', '3.00');
 PosLoyalty.check.isRewardButtonHighlighted(true);
 
 PosLoyalty.check.orderTotalIs('5.94');
+PosLoyalty.exec.finalizeOrder('Cash', '10');
+
+// Promotion: 2 items of shelves, get desk_pad/monitor_stand free
+// This is the 5th order.
+ProductScreen.exec.addOrderline('Wall Shelf Unit', '1');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+ProductScreen.exec.addOrderline('Small Shelf', '1');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+// Click reward product. Should be automatically added as reward.
+ProductScreen.do.clickDisplayedProduct('Desk Pad');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+PosLoyalty.check.hasRewardLine('Desk Pad (free)', '0.00', '1.00');
+// Remove the reward line. The next steps will check if cashier
+// can select from the different reward products.
+PosLoyalty.exec.removeRewardLine('Desk Pad (free)');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.check.hasSelectionItem('Monitor Stand');
+SelectionPopup.check.hasSelectionItem('Desk Pad');
+SelectionPopup.do.clickItem('Desk Pad');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+PosLoyalty.check.hasRewardLine('Desk Pad (free)', '0.00', '1.00');
+PosLoyalty.exec.removeRewardLine('Desk Pad (free)');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.claimReward('Monitor Stand');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+PosLoyalty.check.hasRewardLine('Monitor Stand (free)', '0.00', '1.00');
+PosLoyalty.check.orderTotalIs('4.81');
 PosLoyalty.exec.finalizeOrder('Cash', '10');
 
 Tour.register('PosLoyaltyFreeProductTour', { test: true, url: '/pos/web' }, getSteps());

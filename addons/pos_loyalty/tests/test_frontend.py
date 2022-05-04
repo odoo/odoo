@@ -245,8 +245,28 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'required_points': 3,
             })],
         })
+        free_multi_product = self.env['loyalty.program'].create({
+            'name': '2 items of shelves, get desk_pad/monitor_stand free',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': (self.wall_shelf | self.small_shelf).ids,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': self.env['product.tag'].create({
+                    'name': 'reward_product_tag',
+                    'product_product_ids': (self.desk_pad | self.monitor_stand).ids,
+                }).id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+        })
         self.main_pos_config.write({
-            'promo_program_ids': [Command.set([free_product.id, free_other_product.id])]
+            'promo_program_ids': [Command.set([free_product.id, free_other_product.id, free_multi_product.id])]
         })
 
         self.start_tour(
@@ -255,7 +275,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="accountman",
         )
 
-        # Keep the tour to generate 4 orders.
+        # Keep the tour to generate 4 orders for the free_product and free_other_product programs.
         # 2 of them don't use a program.
         # 1 uses free_product.
         # 1 uses free_other_product.
@@ -263,6 +283,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         # It would be nice to have a check like: Validate that a reward is "not" there.
         self.assertEqual(free_product.pos_order_count, 1)
         self.assertEqual(free_other_product.pos_order_count, 1)
+
+        # There is the 5th order that tests multi_product reward.
+        # It attempted to add one reward product, removed it, then add the second.
+        # The second reward was synced with the order.
+        self.assertEqual(free_multi_product.pos_order_count, 1)
 
     def test_loyalty_free_product_loyalty_program(self):
         # In this program, each whiteboard pen gives 1 point.

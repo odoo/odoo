@@ -59,7 +59,7 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 },
             ];
         }
-        claimSingleReward() {
+        clickRewardButton() {
             return [
                 {
                     content: 'open reward dialog',
