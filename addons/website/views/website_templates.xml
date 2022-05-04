@@ -187,7 +187,7 @@
     </xpath>
 </template>
 
-<template id="user_dropdown" inherit_id="portal.user_dropdown">
+<template id="user_dropdown" inherit_id="web.user_dropdown">
     <xpath expr="//t[@t-set='is_connected']" position="replace">
         <t t-set="is_connected" t-value="False"/>
         <t t-if="website">
@@ -252,12 +252,12 @@
                             </t>
                         </t>
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
@@ -306,12 +306,12 @@
                 </t>
                 <ul class="nav navbar-nav navbar-expand d-none d-sm-block">
                     <!-- Sign In -->
-                    <t t-call="portal.placeholder_user_sign_in">
+                    <t t-call="web.placeholder_user_sign_in">
                         <t t-set="_item_class" t-valuef="nav-item ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
                     </t>
                     <!-- User Dropdown -->
-                    <t t-call="portal.user_dropdown">
+                    <t t-call="web.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
                         <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
@@ -342,12 +342,12 @@
                             </t>
                         </t>
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item d-block d-sm-none"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown d-block d-sm-none"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
@@ -489,12 +489,12 @@
                                 </t>
                             </t>
                             <!-- Sign In -->
-                            <t t-call="portal.placeholder_user_sign_in">
+                            <t t-call="web.placeholder_user_sign_in">
                                 <t t-set="_item_class" t-valuef="nav-item ml-lg-3"/>
                                 <t t-set="_link_class" t-valuef="nav-link"/>
                             </t>
                             <!-- User Dropdown -->
-                            <t t-call="portal.user_dropdown">
+                            <t t-call="web.user_dropdown">
                                 <t t-set="_user_name" t-value="True"/>
                                 <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-3"/>
                                 <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
@@ -611,12 +611,12 @@
                         <li class="nav-item d-lg-none">
                             <ul class="nav navbar-nav">
                                 <!-- Sign In -->
-                                <t t-call="portal.placeholder_user_sign_in">
+                                <t t-call="web.placeholder_user_sign_in">
                                     <t t-set="_item_class" t-valuef="nav-item"/>
                                     <t t-set="_link_class" t-valuef="nav-link"/>
                                 </t>
                                 <!-- User Dropdown -->
-                                <t t-call="portal.user_dropdown">
+                                <t t-call="web.user_dropdown">
                                     <t t-set="_icon" t-value="true"/>
                                     <t t-set="_user_name" t-value="true"/>
                                     <t t-set="_item_class" t-valuef="nav-item dropdown mr-auto"/>
@@ -628,12 +628,12 @@
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_sidebar_1"/>
                     <ul class="nav navbar-nav d-none d-lg-block">
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropup mr-auto"/>
@@ -706,12 +706,12 @@
                 </div>
                 <ul class="nav navbar-nav navbar-expand ml-auto order-last order-lg-0">
                     <!-- Sign In -->
-                    <t t-call="portal.placeholder_user_sign_in">
+                    <t t-call="web.placeholder_user_sign_in">
                         <t t-set="_item_class" t-valuef="nav-item ml-3"/>
                         <t t-set="_link_class" t-valuef="btn btn-outline-primary"/>
                     </t>
                     <!-- User Dropdown -->
-                    <t t-call="portal.user_dropdown">
+                    <t t-call="web.user_dropdown">
                         <t t-set="_user_name" t-value="True"/>
                         <t t-set="_user_name_class" t-valuef="font-weight-bold"/>
                         <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
@@ -815,12 +815,12 @@
                             </t>
                         </t>
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_user_name" t-value="True"/>
                             <t t-set="_user_name_class" t-valuef="font-weight-bold"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
@@ -891,12 +891,12 @@
                 <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1"/>
                 <ul class="nav ml-auto flex-nowrap" contenteditable="false">
                     <!-- Sign In -->
-                    <t t-call="portal.placeholder_user_sign_in">
+                    <t t-call="web.placeholder_user_sign_in">
                         <t t-set="_item_class" t-valuef="nav-item ml-lg-3"/>
                         <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
                     </t>
                     <!-- User Dropdown -->
-                    <t t-call="portal.user_dropdown">
+                    <t t-call="web.user_dropdown">
                         <t t-set="_avatar" t-value="true"/>
                         <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
@@ -985,12 +985,12 @@
                 <!-- Right -->
                 <ul class="nav navbar-nav o_header_centered_logo justify-content-end flex-row">
                     <!-- Sign In -->
-                    <t t-call="portal.placeholder_user_sign_in">
+                    <t t-call="web.placeholder_user_sign_in">
                         <t t-set="_item_class" t-valuef="nav-item ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
                     </t>
                     <!-- User Dropdown -->
-                    <t t-call="portal.user_dropdown">
+                    <t t-call="web.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
                         <t t-set="_item_class" t-valuef="nav-item dropdown ml-3"/>
                         <t t-set="_link_class" t-valuef="nav-link"/>
@@ -1051,12 +1051,12 @@
                             </t>
                         </t>
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item ml-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_icon" t-value="True"/>
                             <t t-set="_user_name" t-value="True"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown ml-lg-auto"/>
@@ -1121,12 +1121,12 @@
                             <t t-call="website.placeholder_header_language_selector"/>
                         </li>
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
                             <t t-set="_link_class" t-valuef="nav-link font-weight-bold"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown"/>
                             <t t-set="_link_class" t-valuef="nav-link font-weight-bold ml-lg-3"/>
@@ -1212,12 +1212,12 @@
                             <t t-call="website.placeholder_header_call_to_action"/>
                         </li>
                         <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in">
+                        <t t-call="web.placeholder_user_sign_in">
                             <t t-set="_item_class" t-valuef="nav-item"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
                         <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown">
+                        <t t-call="web.user_dropdown">
                             <t t-set="_user_name" t-value="true"/>
                             <t t-set="_item_class" t-valuef="nav-item dropdown"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>

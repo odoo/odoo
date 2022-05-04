@@ -62,7 +62,7 @@ def test_02_cow_views_inherit_on_module_update(env):
     # Change `inherit_id` so the module update will set it back to the XML value
     view_D.write({'inherit_id': view_A.id, 'arch_db': view_D.arch_db.replace('o_logout_divider', 'discussion')})
     # Trigger COW on view
-    view_B = env.ref('portal.user_dropdown')  # XML data
+    view_B = env.ref('web.user_dropdown')  # XML data
     view_D.with_context(website_id=1).write({'name': 'D Website 1'})
     view_B.with_context(website_id=1).write({'name': 'B Website 1'})
     view_Dcow = view_D._get_specific_views()

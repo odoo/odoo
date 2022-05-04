@@ -81,7 +81,7 @@
     </template>
 
     <template id="template_header_boxed" inherit_id="website.template_header_boxed">
-        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+        <xpath expr="//t[@t-call='web.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_text" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>
@@ -91,7 +91,7 @@
     </template>
 
     <template id="template_header_centered_logo" inherit_id="website.template_header_centered_logo">
-        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+        <xpath expr="//t[@t-call='web.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link">
                 <t t-set="_icon" t-value="True"/>
                 <t t-set="_item_class" t-value="'nav-item'"/>

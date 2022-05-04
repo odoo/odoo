@@ -1123,7 +1123,7 @@ class Crawler(HttpCase):
         })
         self.inherit_view.write({'name': 'Main layout', 'key': '_website.layout'})
 
-        self.inherit_view.copy({'name': 'Sign In', 'customize_show': True, 'key': '_portal.user_sign_in'})
+        self.inherit_view.copy({'name': 'Sign In', 'customize_show': True, 'key': '_web.user_sign_in'})
         view_logo = self.inherit_view.copy({
             'name': 'Show Logo',
             'inherit_id': self.inherit_view.id,
