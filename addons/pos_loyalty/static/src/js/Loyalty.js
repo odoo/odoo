@@ -620,12 +620,12 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      * Update our couponPointChanges, meaning the points/coupons each program give etc.
      */
     async _updatePrograms() {
-        const nItems = this._get_regular_order_lines().reduce((n, l) => n + l.get_quantity(), 0);
+        const hasItems = this._get_regular_order_lines().reduce((n, l) => n + l.get_quantity(), 0) > 0;
         const changesPerProgram = {};
         const programsToCheck = new Set();
         // By default include all programs that are considered 'applicable'
         for (const program of this.pos.programs) {
-            if (this._programIsApplicable(program, nItems)) {
+            if (this._programIsApplicable(program, hasItems)) {
                 programsToCheck.add(program.id);
             }
         }
@@ -643,10 +643,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         const pointsAddedPerProgram = this.pointsForPrograms(programs);
         for (const program of this.pos.programs) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
-            const pointsAdded = this._programIsApplicable(program, nItems) ? pointsAddedPerProgram[program.id] : [];
+            const pointsAdded = this._programIsApplicable(program, hasItems) ? pointsAddedPerProgram[program.id] : [];
             // For programs that apply to both (loyalty) we always add a change of 0 points, if there is none, since it makes it easier to
             //  track for claimable rewards, and makes sure to load the partner's loyalty card.
-            if (program.is_nominative && !pointsAdded.length && this.get_partner() && nItems > 0) {
+            if (program.is_nominative && !pointsAdded.length && this.get_partner() && hasItems) {
                 pointsAdded.push({points: 0});
             }
             const oldChanges = changesPerProgram[program.id] || [];
@@ -790,8 +790,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         // This type of coupons don't need to really exist up until validating the order, so no need to cache
         return new PosLoyaltyCard(null, null, program.id, (this.get_partner() || {id: -1}).id, 0);
     }
-    _programIsApplicable(program, nItems) {
-        if (program.program_type == 'loyalty' && !(nItems > 0)) {
+    /**
+     * @param {Program} program
+     * @param {boolean} hasItems - whether the order has more than 0 quantity for the regular items
+     * @returns {boolean}
+     */
+    _programIsApplicable(program, hasItems) {
+        if (program.program_type == 'loyalty' && !hasItems) {
             return false;
         }
         if (program.trigger === 'auto' && !program.rules.find((rule) => rule.mode === 'auto' || this.codeActivatedProgramRules.includes(rule.id))) {
