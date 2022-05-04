@@ -750,6 +750,10 @@ function factory(dependencies) {
                 });
             }
             this.update(values);
+            for (const chatter of this.chatters) {
+                chatter.update({ skipRefreshOnNextViewReload: true });
+                chatter.reloadParentView();
+            }
         }
 
         /**
@@ -2162,6 +2166,9 @@ function factory(dependencies) {
             required: true,
         }),
         channel_type: attr(),
+        chatters: one2many('mail.chatter', {
+            inverse: 'thread',
+        }),
         /**
          * States the chat window related to this thread (if any).
          */

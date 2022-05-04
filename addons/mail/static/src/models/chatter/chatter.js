@@ -169,6 +169,12 @@ function factory(dependencies) {
             }
         }
 
+        reloadParentView() {
+            if (this.component) {
+                this.component.trigger('reload', { keepChanges: true });
+            }
+        }
+
         showLogNote() {
             this.update({ composerView: insertAndReplace() });
             this.composerView.composer.update({ isLog: true });
@@ -321,6 +327,10 @@ function factory(dependencies) {
             readonly: true,
         }),
         /**
+         * States the OWL Chatter component of this chatter.
+         */
+        component: attr(),
+        /**
          * States the OWL component of this chatter top bar.
          */
         componentChatterTopbar: attr(),
@@ -405,10 +415,15 @@ function factory(dependencies) {
         isShowingAttachmentsLoading: attr({
             default: false,
         }),
+        skipRefreshOnNextViewReload: attr({
+            default: false,
+        }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.
          */
-        thread: many2one('mail.thread'),
+        thread: many2one('mail.thread', {
+            inverse: 'chatters',
+        }),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */

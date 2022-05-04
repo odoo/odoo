@@ -68,7 +68,11 @@ export class ChatterContainer extends Component {
             values.threadId = clear();
         }
         this.chatter = messaging.models['mail.chatter'].insert(values);
-        this.chatter.refresh();
+        if (!this.chatter.skipRefreshOnNextViewReload) {
+            this.chatter.refresh();
+        } else {
+            this.chatter.update({ skipRefreshOnNextViewReload: clear() });
+        }
         this.render();
     }
 
