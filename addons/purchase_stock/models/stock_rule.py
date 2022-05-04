@@ -328,6 +328,6 @@ class StockRule(models.Model):
         if values.get('supplierinfo_name'):
             move_values['restrict_partner_id'] = values['supplierinfo_name'].id
         elif values.get('supplierinfo_id'):
-            partner = values['supplierinfo_id'].name
+            partner = values['supplierinfo_id'].partner_id
             move_values['restrict_partner_id'] = partner.id
         return move_values

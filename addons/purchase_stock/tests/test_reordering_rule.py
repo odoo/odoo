@@ -656,3 +656,29 @@ class TestReorderingRule(TransactionCase):
             {'product_id': self.product_01.id, 'qty_done': 1.0, 'state': 'done', 'location_dest_id': stock_location.id},
             {'product_id': self.product_01.id, 'qty_done': 2.0, 'state': 'done', 'location_dest_id': sub_location.id},
         ])
+
+    def test_2steps_and_partner_on_orderpoint(self):
+        """
+        Suppose a 2-steps receipt
+        This test ensures that an orderpoint with its route and supplied defined correctly works
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
+        route_buy_id = self.ref('purchase_stock.route_warehouse0_buy')
+
+        warehouse.reception_steps = 'two_steps'
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'RR for %s' % self.product_01.name,
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'trigger': 'manual',
+            'product_id': self.product_01.id,
+            'product_min_qty': 1,
+            'product_max_qty': 5,
+            'route_id': route_buy_id,
+            'supplier_id': self.product_01.seller_ids.id,
+        })
+        orderpoint.action_replenish()
+
+        po_line = self.env['purchase.order.line'].search([('partner_id', '=', self.partner.id), ('product_id', '=', self.product_01.id)])
+        self.assertEqual(po_line.product_qty, 5)
