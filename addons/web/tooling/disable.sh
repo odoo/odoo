@@ -19,6 +19,7 @@ if [[ $willingToDeleteToolingInEnterprise != "n" ]]
 then
     read -p "What is the relative path from community to enterprise ? (../enterprise)" pathToEnterprise
     pathToEnterprise=${pathToEnterprise:-../enterprise}
+    pathToEnterprise=$(realpath $community/$pathToEnterprise)
 fi
 
 disableInDir "$community"
