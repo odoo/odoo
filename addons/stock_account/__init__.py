@@ -13,7 +13,7 @@ def _configure_journals(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
 
     # if we already have a coa installed, create journal and set property field
-    company_ids = env['res.company'].search([('chart_template_id', '!=', False)])
+    company_ids = env['res.company'].search([('chart_template', '!=', False)])
 
     for company_id in company_ids:
         # Check if property exists for stock account journal exists

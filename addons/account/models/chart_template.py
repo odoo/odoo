@@ -338,6 +338,7 @@ class AccountChartTemplate(models.AbstractModel):
         cid = company.id
 
         template_data = self._get_data(template_code, company, 'template_data')
+        additional_properties = template_data.pop('additional_properties', {})
         code_digits = int(template_data.get('code_digits', 6))
         bank_prefix = template_data.get('bank_account_code_prefix', '')
 
@@ -370,17 +371,18 @@ class AccountChartTemplate(models.AbstractModel):
             company.account_purchase_tax_id = self.env['account.tax'].search([
                 ('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', cid)], limit=1).id
 
-        for field, model in [
-            ('property_account_receivable_id', 'res.partner'),
-            ('property_account_payable_id', 'res.partner'),
-            ('property_account_expense_categ_id', 'product.category'),
-            ('property_account_income_categ_id', 'product.category'),
-            ('property_account_expense_id', 'product.template'),
-            ('property_account_income_id', 'product.template'),
-            ('property_tax_payable_account_id', 'account.tax.group'),
-            ('property_tax_receivable_account_id', 'account.tax.group'),
-            ('property_advance_tax_payment_account_id', 'account.tax.group'),
-        ]:
+        for field, model in {
+            **additional_properties,
+            'property_account_receivable_id': 'res.partner',
+            'property_account_payable_id': 'res.partner',
+            'property_account_expense_categ_id': 'product.category',
+            'property_account_income_categ_id': 'product.category',
+            'property_account_expense_id': 'product.template',
+            'property_account_income_id': 'product.template',
+            'property_tax_payable_account_id': 'account.tax.group',
+            'property_tax_receivable_account_id': 'account.tax.group',
+            'property_advance_tax_payment_account_id': 'account.tax.group',
+        }.items():
             value = template_data.get(field)
             if value:
                 self.env['ir.property']._set_default(field, model, self.env.ref(value).id, company=company)
