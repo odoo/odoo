@@ -173,10 +173,23 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("close on outside click", async (assert) => {
-        class Parent extends Component {}
+        patchWithCleanup(Dropdown.prototype, {
+            close() {
+                assert.step("dropdown will close");
+                this._super();
+            }
+        });
+        class Parent extends Component {
+            clicked() {
+                assert.verifySteps(
+                    ["dropdown will close"],
+                    "the dropdown already knows it should close"
+                );
+            }
+        }
         Parent.template = xml`
         <div>
-          <div class="outside">outside</div>
+          <div class="outside" t-on-click.stop="clicked">outside</div>
           <Dropdown/>
         </div>
       `;
