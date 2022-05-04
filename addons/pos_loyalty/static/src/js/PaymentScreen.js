@@ -26,9 +26,9 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                     continue;
                 }
                 if (!pointChanges[line.coupon_id]) {
-                    pointChanges[line.coupon_id] = -line.points_cost;
+                    pointChanges[line.coupon_id] = -line.getPointsCost();
                 } else {
-                    pointChanges[line.coupon_id] -= line.points_cost;
+                    pointChanges[line.coupon_id] -= line.getPointsCost();
                 }
             }
             // No need to do an rpc if no existing coupon is being used.
@@ -109,7 +109,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                 if (!couponData[line.coupon_id].line_codes.includes(line.reward_identifier_code)) {
                     !couponData[line.coupon_id].line_codes.push(line.reward_identifier_code);
                 }
-                couponData[line.coupon_id].points -= line.points_cost;
+                couponData[line.coupon_id].points -= line.getPointsCost();
             }
             // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
             couponData = Object.fromEntries(Object.entries(couponData).filter(([key, value]) => {

@@ -154,7 +154,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
         result.reward_product_id = this.reward_product_id;
         result.coupon_id = this.coupon_id;
         result.reward_identifier_code = this.reward_identifier_code;
-        result.points_cost = this.points_cost;
+        result.points_cost = this.getPointsCost();
         result.force_points_cost = this.force_points_cost;
         result.giftBarcode = this.giftBarcode;
         return result;
@@ -169,7 +169,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
             this.coupon_id = this.order.oldCouponMapping[json.coupon_id] || json.coupon_id;
             this.reward_identifier_code = json.reward_identifier_code;
             // IMPORTANT: We introduce this field to allow forcing the
-            // value for points_cost, instead of being computed based on
+            // value for `getPointsCost()`, instead of being computed based on
             // the reward object. This is used for discount rewards which
             // needed multiple lines when claiming.
             this.force_points_cost = json.force_points_cost;
@@ -215,7 +215,7 @@ const PosLoyaltyOrderline = (Orderline) => class PosLoyaltyOrderline extends Ord
      * - Otherwise, we compute based on the reward object
      *   and quantity of this orderline.
      */
-    get points_cost() {
+    getPointsCost() {
         if (!this.is_reward_line) {
             return 0;
         } else if (this.is_reward_line && typeof this.force_points_cost == 'number') {
@@ -337,7 +337,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     if (reward.program_id.id !== loyaltyProgramId) {
                         continue;
                     }
-                    partner.loyalty_points -= line.points_cost;
+                    partner.loyalty_points -= line.getPointsCost();
                 }
             }
         }
@@ -476,7 +476,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     /**
      * 1. Apply/update claimable rewards that are not free products.
      * 2. When claimable quantity of the existing free product reward is reduced,
-     *    update it's quantity. Remove it if the claimable quantity becomes zero.
+     *    update its quantity. Remove it if the claimable quantity becomes zero.
      */
     _updateRewards() {
         // Calls are not expected to take some time besides on the first load + when loyalty programs are made applicable
@@ -703,7 +703,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             if (couponId !== 0) {
                 for (const line of this._get_reward_lines()) {
                     if (line.coupon_id === couponId) {
-                        spent += line.points_cost;
+                        spent += line.getPointsCost();
                     }
                 }
             }
@@ -771,7 +771,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     // once we see a reward orderline that is "clear_wallet".
                     return 0;
                 } else {
-                    points -= line.points_cost;
+                    points -= line.getPointsCost();
                 }
             }
         }
