@@ -1332,6 +1332,11 @@ registerModel({
         recoveryDelay: attr({
             default: 3000,
         }),
+        rtcActivityNoticeView: one('RtcActivityNoticeView', {
+            default: insertAndReplace(),
+            inverse: 'rtc',
+            isCausal: true,
+        }),
         /**
          * True if we want to enable the video track of the current partner.
          */
