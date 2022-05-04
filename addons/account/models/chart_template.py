@@ -358,8 +358,11 @@ class AccountChartTemplate(models.AbstractModel):
         bank_prefix = template_data.get('bank_account_code_prefix', '')
 
         # Apply template data to the company
-        company.write({key: val for key, val in template_data.items()
-                       if not key.startswith("property_") and key in company._fields})
+        filter_properties = lambda key: (
+            (not key.startswith("property_") or key.startswith("property_stock_"))
+            and key in company._fields
+        )
+        company.write({key: val for key, val in template_data.items() if filter_properties(key)})
 
         # Set the currency to the fiscal country's currency if not set yet, and make sure it's active
         company.currency_id = company.account_fiscal_country_id.currency_id
@@ -403,7 +406,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_valuation_account_id': 'product.category',
         }.items():
             value = template_data.get(field)
-            if value:
+            if value and field in self.env[model]._fields:
                 self.env['ir.property']._set_default(field, model, self.env.ref(value).id, company=company)
 
     def _get_template_data(self, template_code, company):
@@ -413,15 +416,18 @@ class AccountChartTemplate(models.AbstractModel):
             'bank_account_code_prefix': '1014',
             'cash_account_code_prefix': '1015',
             'transfer_account_code_prefix': '1017',
+            'default_pos_receivable_account_id': f'account.{cid}_pos_receivable',
             'property_account_receivable_id': f'account.{cid}_receivable',
             'property_account_payable_id': f'account.{cid}_payable',
-            'property_account_expense_categ_id': f'account.{cid}_expense',
-            'property_account_income_categ_id': f'account.{cid}_income',
             'property_account_expense_id': f'account.{cid}_expense',
             'property_account_income_id': f'account.{cid}_income',
+            'property_account_expense_categ_id': f'account.{cid}_expense',
+            'property_account_income_categ_id': f'account.{cid}_income',
             'property_tax_payable_account_id': f'account.{cid}_tax_payable',
             'property_tax_receivable_account_id': f'account.{cid}_tax_receivable',
-            # Only LU -- 'property_advance_tax_payment_account_id': '',
+            'property_stock_account_input_categ_id': f'account.{cid}_stock_in',
+            'property_stock_account_output_categ_id': f'account.{cid}_stock_out',
+            'property_stock_valuation_account_id': f'account.{cid}_stock_valuation',
         }
 
     # --------------------------------------------------------------------------------

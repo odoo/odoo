@@ -169,6 +169,20 @@ class ResConfigSettings(models.TransientModel):
             self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
 
     @api.depends('company_id')
+    def _compute_account_default_credit_limit(self):
+        for setting in self:
+            setting.account_default_credit_limit = self.env['ir.property']._get('credit_limit', 'res.partner')
+
+    def _inverse_account_default_credit_limit(self):
+        for setting in self:
+            self.env['ir.property']._set_default(
+                'credit_limit',
+                'res.partner',
+                setting.account_default_credit_limit,
+                self.company_id.id
+            )
+
+    @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template)
         self.has_accounting_entries = self.company_id.existing_accounting()

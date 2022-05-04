@@ -28,8 +28,8 @@ class AccountChartTemplate(models.AbstractModel):
         cid = (company or self.env.company).id
         return {
             **(super()._get_template_data(template_code, company)),
-            'property_stock_journal': f'account.{cid}_inventory_valuation',
-            'property_stock_account_input_categ_id': company.property_stock_account_input_categ_id,
-            'property_stock_account_output_categ_id': company.property_stock_account_output_categ_id,
-            'property_stock_valuation_account_id': company.property_stock_valuation_account_id,
+            'property_stock_journal':                 f'account.{cid}_inventory_valuation',
+            'property_stock_account_input_categ_id':  f'account.{cid}_stock_in',
+            'property_stock_account_output_categ_id': f'account.{cid}_stock_out',
+            'property_stock_valuation_account_id':    f'account.{cid}_stock_valuation',
         }
