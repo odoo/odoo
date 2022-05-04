@@ -42,3 +42,17 @@ class TestQwebFieldTime(common.TransactionCase):
         # Only values inferior to 24 can be used
         with self.assertRaises(ValueError):
             self.value_to_html(24)
+
+
+class TestQwebFieldInteger(common.TransactionCase):
+    def value_to_html(self, value, options=None):
+        options = options or {}
+        return self.env['ir.qweb.field.integer'].value_to_html(value, options)
+
+    def test_integer_value_to_html(self):
+        self.assertEqual(self.value_to_html(1000), "1,000")
+        self.assertEqual(self.value_to_html(1000000, {'format_decimalized_number': True}), "1M")
+        self.assertEqual(
+            self.value_to_html(125125, {'format_decimalized_number': True, 'precision_digits': 3}),
+            "125.125k"
+        )
