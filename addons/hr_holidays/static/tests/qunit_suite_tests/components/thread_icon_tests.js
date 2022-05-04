@@ -34,12 +34,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
         ],
         channel_type: 'chat',
     });
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, widget.el);
+    await this.createThreadIcon(thread, target);
 
     assert.containsOnce(
         document.body,
@@ -68,12 +68,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
         ],
         channel_type: 'chat',
     });
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, widget.el);
+    await this.createThreadIcon(thread, target);
 
     assert.containsOnce(
         document.body,
@@ -102,12 +102,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
         ],
         channel_type: 'chat',
     });
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, widget.el);
+    await this.createThreadIcon(thread, target);
 
     assert.containsOnce(
         document.body,

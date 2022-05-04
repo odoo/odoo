@@ -33,12 +33,12 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, widget } = await start();
+    const { messaging, target, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, widget.el);
+    await this.createThreadTextualTypingStatusComponent(thread, target);
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,

@@ -35,12 +35,12 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         ],
         channel_type: 'chat',
     });
-    const { messaging, widget } = await start();
+    const { messaging, target, widget } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, widget.el);
+    await this.createThreadIcon(thread, target);
 
     assert.containsOnce(
         document.body,

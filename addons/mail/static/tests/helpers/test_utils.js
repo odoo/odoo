@@ -388,13 +388,13 @@ function getClick({ afterNextRender }) {
     };
 }
 
-function getCreateChatterContainerComponent({ afterEvent, env, widget }) {
+function getCreateChatterContainerComponent({ afterEvent, env, target }) {
     return async function createChatterContainerComponent(props, { waitUntilMessagesLoaded = true } = {}) {
         let chatterContainerComponent;
         async function func() {
             chatterContainerComponent = await createRootMessagingComponent(env, "ChatterContainer", {
                 props,
-                target: widget.el,
+                target,
             });
         }
         if (waitUntilMessagesLoaded) {
@@ -419,7 +419,7 @@ function getCreateChatterContainerComponent({ afterEvent, env, widget }) {
     };
 }
 
-function getCreateComposerComponent({ env, modelManager, widget }) {
+function getCreateComposerComponent({ env, modelManager, target }) {
     return async function createComposerComponent(composer, props) {
         const composerView = modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
@@ -428,12 +428,12 @@ function getCreateComposerComponent({ env, modelManager, widget }) {
         });
         return await createRootMessagingComponent(env, "Composer", {
             props: { localId: composerView.localId, ...props },
-            target: widget.el,
+            target,
         });
     };
 }
 
-function getCreateComposerSuggestionComponent({ env, modelManager, widget }) {
+function getCreateComposerSuggestionComponent({ env, modelManager, target }) {
     return async function createComposerSuggestionComponent(composer, props) {
         const composerView = modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
@@ -442,24 +442,24 @@ function getCreateComposerSuggestionComponent({ env, modelManager, widget }) {
         });
         await createRootMessagingComponent(env, "ComposerSuggestion", {
             props: { ...props, composerViewLocalId: composerView.localId },
-            target: widget.el,
+            target,
         });
     };
 }
 
-function getCreateFollowerListMenuComponent({ env, modelManager, widget }) {
+function getCreateFollowerListMenuComponent({ env, modelManager, target }) {
     return async function createFollowerListMenuComponent(thread, props) {
         const followerListMenuView = modelManager.messaging.models['FollowerListMenuView'].create({
             qunitTest: insertAndReplace(),
         });
         return await createRootMessagingComponent(env, "FollowerListMenu", {
             props: { localId: followerListMenuView.localId, threadLocalId: thread.localId, ...props },
-            target: widget.el,
+            target,
         });
     };
 }
 
-function getCreateMessageComponent({ env, modelManager, widget }) {
+function getCreateMessageComponent({ env, modelManager, target }) {
     return async function createMessageComponent(message) {
         const messageView = modelManager.messaging.models['MessageView'].create({
             message: replace(message),
@@ -467,18 +467,18 @@ function getCreateMessageComponent({ env, modelManager, widget }) {
         });
         await createRootMessagingComponent(env, "Message", {
             props: { localId: messageView.localId },
-            target: widget.el,
+            target,
         });
     };
 }
 
-function getCreateMessagingMenuComponent({ env, widget }) {
+function getCreateMessagingMenuComponent({ env, target }) {
     return async function createMessagingMenuComponent() {
-        return await createRootComponent({ env }, MessagingMenuContainer, { target: widget.el });
+        return await createRootComponent({ env }, MessagingMenuContainer, { target });
     };
 }
 
-function getCreateNotificationListComponent({ env, modelManager, widget }) {
+function getCreateNotificationListComponent({ env, modelManager, target }) {
     return async function createNotificationListComponent({ filter = 'all' } = {}) {
         const notificationListView = modelManager.messaging.models['NotificationListView'].create({
             filter,
@@ -486,14 +486,14 @@ function getCreateNotificationListComponent({ env, modelManager, widget }) {
         });
         await createRootMessagingComponent(env, "NotificationList", {
             props: { localId: notificationListView.localId },
-            target: widget.el,
+            target,
         });
     };
 }
 
-function getCreateThreadViewComponent({ afterEvent, env, widget }) {
+function getCreateThreadViewComponent({ afterEvent, env, target }) {
     return async function createThreadViewComponent(threadView, otherProps = {}, { isFixedSize = false, waitUntilMessagesLoaded = true } = {}) {
-        let target;
+        let actualTarget;
         if (isFixedSize) {
             // needed to allow scrolling in some tests
             const div = document.createElement('div');
@@ -502,13 +502,13 @@ function getCreateThreadViewComponent({ afterEvent, env, widget }) {
                 'flex-flow': 'column',
                 height: '300px',
             });
-            widget.el.append(div);
-            target = div;
+            target.append(div);
+            actualTarget = div;
         } else {
-            target = widget.el;
+            actualTarget = target;
         }
         async function func() {
-            return createRootMessagingComponent(env, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target });
+            return createRootMessagingComponent(env, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target: actualTarget });
         }
         if (waitUntilMessagesLoaded) {
             await afterNextRender(() => afterEvent({
@@ -632,7 +632,7 @@ async function start(param0 = {}) {
         hasView = false,
         loadingBaseDelayDuration = 0,
         messagingBeforeCreationDeferred = Promise.resolve(),
-        target = getFixture(),
+        target: webclientTarget = getFixture(),
         waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
     } = param0;
@@ -800,7 +800,7 @@ async function start(param0 = {}) {
         legacyParams.withLegacyMockServer = true;
         legacyParams.env = env;
 
-        widget = await createWebClient({ target, serverData, mockRPC, legacyParams });
+        widget = await createWebClient({ target: webclientTarget, serverData, mockRPC, legacyParams });
 
         legacyPatch(widget, {
             destroy() {
@@ -870,21 +870,23 @@ async function start(param0 = {}) {
         result['discussWidget'] = discussWidget;
     }
     await waitUntilEventPromise;
+    const target = widget.el;
     return {
         ...result,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: testEnv, widget }),
-        createComposerComponent: getCreateComposerComponent({ env: testEnv, modelManager, widget }),
-        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: testEnv, modelManager, widget }),
-        createFollowerListMenuComponent: getCreateFollowerListMenuComponent({ env: testEnv, modelManager, widget }),
-        createMessageComponent: getCreateMessageComponent({ env: testEnv, modelManager, widget }),
-        createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, widget }),
-        createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, widget }),
-        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: testEnv, widget }),
+        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: testEnv, target }),
+        createComposerComponent: getCreateComposerComponent({ env: testEnv, modelManager, target }),
+        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: testEnv, modelManager, target }),
+        createFollowerListMenuComponent: getCreateFollowerListMenuComponent({ env: testEnv, modelManager, target }),
+        createMessageComponent: getCreateMessageComponent({ env: testEnv, modelManager, target }),
+        createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, target }),
+        createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, target }),
+        createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: testEnv, target }),
         insertText,
         messaging: modelManager.messaging,
         openDiscuss,
+        target,
     };
 }
 
