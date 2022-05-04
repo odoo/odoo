@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { CharField } from "@web/fields/char_field";
-import { FormView } from "@web/views/form/form_view";
+import { FormController } from "@web/views/form/form_controller";
 import {
     click,
     editInput,
@@ -27,6 +27,7 @@ const serviceRegistry = registry.category("services");
 let createView,
     testUtils,
     core,
+    FormView,
     mapLegacyEnvToWowlEnv,
     makeTestEnv,
     makeTestEnvironment,
@@ -5174,7 +5175,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("discarding before save returns", async function (assert) {
         const def = makeDeferred();
         let form;
-        patchWithCleanup(FormView.prototype, {
+        patchWithCleanup(FormController.prototype, {
             setup() {
                 this._super(...arguments);
                 form = this;
