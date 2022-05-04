@@ -5,9 +5,14 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 const { Component } = owl;
 
 export class RtcActivityNotice extends Component {
+
+    /**
+     * @returns {RtcActivityNoticeView}
+     */
     get rtcActivityNoticeView() {
-        return this.messaging && this.messaging.models['RtcActivityNotice'].get(this.props.localId);
+        return this.messaging && this.messaging.models['RtcActivityNoticeView'].get(this.props.localId);
     }
+
 }
 
 Object.assign(RtcActivityNotice, {
