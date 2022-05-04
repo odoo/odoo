@@ -32,7 +32,7 @@ describe('Copy and paste', () => {
                 ];
 
                 for (const node of CLIPBOARD_WHITELISTS.nodes) {
-                    if (!['TABLE', 'THEAD', 'TH', 'TBODY', 'TR', 'TD', 'IMG', 'BR', '.fa'].includes(node)) {
+                    if (!['TABLE', 'THEAD', 'TH', 'TBODY', 'TR', 'TD', 'IMG', 'BR', 'LI', '.fa'].includes(node)) {
                         tagsToKeep.push(`a<${node.toLowerCase()}>b</${node.toLowerCase()}>c`);
                     }
                 }
@@ -63,6 +63,24 @@ describe('Copy and paste', () => {
                         await pasteHtml(editor, 'a<span>bc</span>d');
                     },
                     contentAfter: '123abcd[]',
+                });
+            });
+            it('should not keep orphan LI', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '123[]',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, 'a<li>bc</li>d');
+                    },
+                    contentAfter: '123a<p>bc</p>d[]',
+                });
+            });
+            it('should keep LI in UL', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '123[]',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, 'a<ul><li>bc</li></ul>d');
+                    },
+                    contentAfter: '123a<ul><li>bc</li></ul>d[]',
                 });
             });
             it('should keep styled span', async () => {
