@@ -1,6 +1,11 @@
 #!/bin/bash
 community=$(cd -- "$(dirname "$0")" &> /dev/null && cd ../../.. && pwd)
 tooling="$community/addons/web/tooling"
+testRealPath="$(realpath --relative-to=. "$tooling/hooks")"
+if [[ $testRealPath == "" ]]; then
+    echo "Please install realpath"
+    exit 1
+fi
 
 enableInDir () {
     cd $1
