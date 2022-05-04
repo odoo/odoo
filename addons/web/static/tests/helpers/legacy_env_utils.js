@@ -30,6 +30,8 @@ export async function makeLegacyDialogMappingTestEnv() {
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
 
     const env = await makeTestEnv();
+    legacyEnv.services.hotkey = env.services.hotkey;
+    legacyEnv.services.ui = env.services.ui;
 
     registerCleanup(() => {
         for (const listener of coreBusListeners) {

@@ -8,6 +8,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
     const testUtils = require('web.test_utils');
 
     const cpHelpers = require('@web/../tests/search/helpers');
+    const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { createControlPanel, createView, mock } = testUtils;
     const { patchDate } = mock;
 
@@ -255,6 +256,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 sort: "[]",
                 user_id: [2, "Mitchell Admin"],
             }];
+            const { legacyEnv } = await makeLegacyDialogMappingTestEnv();
             const params = {
                 cpModelConfig: { favoriteFilters, searchMenuTypes },
                 cpProps: { searchMenuTypes, action: {} },
@@ -263,6 +265,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                     assert.deepEqual(domain, []);
                 },
                 env: {
+                    ...legacyEnv,
                     dataManager: {
                         delete_filter: function () {
                             return Promise.resolve();
