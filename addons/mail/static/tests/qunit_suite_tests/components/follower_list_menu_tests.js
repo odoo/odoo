@@ -52,13 +52,13 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    const { click, createFollowerListMenuComponent, messaging, widget } = await start();
+    const { click, createFollowerListMenuComponent, messaging } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
         hasWriteAccess: true,
     });
-    await createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread);
 
     assert.containsOnce(
         document.body,
@@ -130,13 +130,13 @@ QUnit.test('click on "add followers" button', async function (assert) {
         pyEnv['res.partner'].write([payload.action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
         payload.options.on_close();
     });
-    const { click, createFollowerListMenuComponent, messaging, widget } = await start({ env: { bus } });
+    const { click, createFollowerListMenuComponent, messaging } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
         id: resPartnerId1,
         model: 'res.partner',
     });
-    await createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread);
 
     assert.containsOnce(
         document.body,
@@ -199,7 +199,7 @@ QUnit.test('click on remove follower', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, createFollowerListMenuComponent, messaging, widget } = await start({
+    const { click, createFollowerListMenuComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
@@ -226,7 +226,7 @@ QUnit.test('click on remove follower', async function (assert) {
             name: "François Perusse",
         }),
     });
-    await createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread);
 
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -387,14 +387,14 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
 QUnit.test('Show "No Followers" dropdown-item if there are no followers and user dose not have write access', async function (assert) {
     assert.expect(1);
 
-    const { click, createFollowerListMenuComponent, messaging, widget } = await start();
+    const { click, createFollowerListMenuComponent, messaging } = await start();
     const thread = messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
         hasWriteAccess: false,
     });
 
-    await createFollowerListMenuComponent(thread, widget.el);
+    await createFollowerListMenuComponent(thread);
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,

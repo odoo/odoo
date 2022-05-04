@@ -26,7 +26,7 @@ QUnit.module('follower_tests.js', {
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
 
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: false,
@@ -42,7 +42,7 @@ QUnit.test('base rendering not editable', async function (assert) {
         id: 2,
         isActive: true,
     });
-    await this.createFollowerComponent(follower, widget.el);
+    await this.createFollowerComponent(follower, target);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -73,7 +73,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
         id: 100,
@@ -88,7 +88,7 @@ QUnit.test('base rendering editable', async function (assert) {
         id: 2,
         isActive: true,
     });
-    await this.createFollowerComponent(follower, widget.el);
+    await this.createFollowerComponent(follower, target);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -147,7 +147,7 @@ QUnit.test('click on partner follower details', async function (assert) {
     });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { messaging, widget } = await start({ env: { bus } });
+    const { messaging, target } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
         id: resPartnerId1,
         model: 'res.partner',
@@ -162,7 +162,7 @@ QUnit.test('click on partner follower details', async function (assert) {
             name: "François Perusse",
         }),
     });
-    await this.createFollowerComponent(follower, widget.el);
+    await this.createFollowerComponent(follower, target);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -193,7 +193,7 @@ QUnit.test('click on edit follower', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, messaging, widget } = await start({
+    const { click, messaging, target } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -206,7 +206,7 @@ QUnit.test('click on edit follower', async function (assert) {
         model: 'res.partner',
     });
     await thread.fetchData(['followers']);
-    await this.createFollowerComponent(thread.followers[0], widget.el);
+    await this.createFollowerComponent(thread.followers[0], target);
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -235,7 +235,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, messaging, widget } = await start({
+    const { click, messaging, target } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -265,7 +265,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             name: "François Perusse",
         }),
     });
-    await this.createFollowerComponent(follower, widget.el);
+    await this.createFollowerComponent(follower, target);
     assert.containsOnce(
         document.body,
         '.o_Follower',

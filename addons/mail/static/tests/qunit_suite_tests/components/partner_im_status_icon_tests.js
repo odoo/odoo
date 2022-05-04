@@ -22,13 +22,13 @@ QUnit.module('partner_im_status_icon_tests.js', {
 QUnit.test('initially online', async function (assert) {
     assert.expect(3);
 
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',
     });
-    await this.createPartnerImStatusIcon(partner, widget.el);
+    await this.createPartnerImStatusIcon(partner, target);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon`).length,
         1,
@@ -49,13 +49,13 @@ QUnit.test('initially online', async function (assert) {
 QUnit.test('initially offline', async function (assert) {
     assert.expect(1);
 
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'offline',
     });
-    await this.createPartnerImStatusIcon(partner, widget.el);
+    await this.createPartnerImStatusIcon(partner, target);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
         1,
@@ -66,13 +66,13 @@ QUnit.test('initially offline', async function (assert) {
 QUnit.test('initially away', async function (assert) {
     assert.expect(1);
 
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'away',
     });
-    await this.createPartnerImStatusIcon(partner, widget.el);
+    await this.createPartnerImStatusIcon(partner, target);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
         1,
@@ -83,13 +83,13 @@ QUnit.test('initially away', async function (assert) {
 QUnit.test('change icon on change partner im_status', async function (assert) {
     assert.expect(4);
 
-    const { messaging, widget } = await start();
+    const { messaging, target } = await start();
     const partner = messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',
     });
-    await this.createPartnerImStatusIcon(partner, widget.el);
+    await this.createPartnerImStatusIcon(partner, target);
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,
