@@ -843,7 +843,7 @@ class MassMailing(models.Model):
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
-        if 'partner_id' in target._fields:
+        if 'partner_id' in target._fields and target._fields['partner_id'].store:
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
