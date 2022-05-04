@@ -222,6 +222,10 @@ class SaleOrderLine(models.Model):
                     line.order_id.message_post(body=msg_body)
         return lines
 
+    def update_task_planned_hours(self):
+        planned_hours = self._convert_qty_company_hours(self.task_id.company_id)
+        self.task_id.write({'planned_hours': planned_hours})
+
     def write(self, values):
         result = super(SaleOrderLine, self).write(values)
         # changing the ordered quantity should change the planned hours on the
@@ -230,8 +234,7 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             for line in self:
                 if line.task_id:
-                    planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
-                    line.task_id.write({'planned_hours': planned_hours})
+                    line.update_task_planned_hours()
         return result
 
     ###########################################
