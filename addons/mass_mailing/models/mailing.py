@@ -439,7 +439,7 @@ class MassMailing(models.Model):
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
-        if 'partner_id' in target._fields:
+        if 'partner_id' in target._fields and target._fields['partner_id'].store:
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
@@ -450,21 +450,21 @@ class MassMailing(models.Model):
             """
         elif issubclass(type(target), self.pool['mail.address.mixin']):
             mail_field = 'email_normalized'
-        elif 'email_from' in target._fields:
+        elif 'email_from' in target._fields and target._fields['email_from'].store:
             mail_field = 'email_from'
-        elif 'partner_email' in target._fields:
+        elif 'partner_email' in target._fields and target._fields['partner_email'].store:
             mail_field = 'partner_email'
-        elif 'email' in target._fields:
+        elif 'email' in target._fields and target._fields['email'].store:
             mail_field = 'email'
         else:
             raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
 
         if self.unique_ab_testing:
-            query +="""
+            query += """
                AND s.campaign_id = %%(mailing_campaign_id)s;
             """
         else:
-            query +="""
+            query += """
                AND s.mass_mailing_id = %%(mailing_id)s
                AND s.model = %%(target_model)s;
             """
