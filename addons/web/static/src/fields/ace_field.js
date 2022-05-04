@@ -1,6 +1,6 @@
 /** @odoo-module **/
 /* global ace */
-import { loadAssets } from "@web/core/assets";
+import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
@@ -12,16 +12,14 @@ export class AceField extends Component {
         this.editorRef = useRef("editor");
 
         onWillStart(async () => {
-            await loadAssets({
-                jsLibs: ["/web/static/lib/ace/ace.js"],
-            });
-            await loadAssets({
-                jsLibs: [
-                    "/web/static/lib/ace/mode-python.js",
-                    "/web/static/lib/ace/mode-xml.js",
-                    "/web/static/lib/ace/mode-qweb.js",
-                ],
-            });
+            await loadJS("/web/static/lib/ace/ace.js");
+            const jsLibs = [
+                "/web/static/lib/ace/mode-python.js",
+                "/web/static/lib/ace/mode-xml.js",
+                "/web/static/lib/ace/mode-qweb.js",
+            ];
+            const proms = jsLibs.map((url) => loadJS(url));
+            return Promise.all(proms);
         });
 
         useEffect(
