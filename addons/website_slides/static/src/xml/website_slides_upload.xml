@@ -4,7 +4,7 @@
     <t t-name="website.slide.upload.modal">
         <div>
             <div class="o_w_slide_upload_modal_container">
-                <t t-call="website.slide.upload.modal.select"/>
+                <t t-call="{{widget.get('defaultTemplate')}}"/>
             </div>
         </div>
     </t>
@@ -29,7 +29,7 @@
                 <a class="o_wslides_js_upload_install_button w-100 text-center mb-4 btn rounded border text-600 p-3"
                     href="#" t-att-title="module_info['name']"
                     t-att-data-module-id="module_info['id']">
-                    <i class="fa fa-trophy"></i> <t t-esc="module_info['motivational']"/>
+                    <i class="fa fa-trophy"></i> <t t-out="module_info['motivational']"/><span class="text-primary"> Install the <t t-out="module_info['name']"/> app.</span>
                 </a>
             </t>
         </t>

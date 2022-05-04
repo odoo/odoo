@@ -34,13 +34,20 @@ var SlideUploadDialog = Dialog.extend({
         this._setup();
 
         this.channelID = parseInt(options.channelId, 10);
-        this.defaultCategoryID = parseInt(options.categoryId,10);
+        this.defaultCategoryID = parseInt(options.categoryId, 10);
         this.canUpload = options.canUpload === 'True';
         this.canPublish = options.canPublish === 'True';
         this.modulesToInstall = options.modulesToInstall ? JSON.parse(options.modulesToInstall.replace(/'/g, '"')) : null;
         this.modulesToInstallStatus = null;
 
-        this.set('state', '_select');
+        if (options.openModal && options.openModal in this.slide_category_data) {
+            // Sets the appropriate category's upload template if one has to be opened on load.
+            this.set('state', options.openModal);
+            this.set('defaultTemplate', this.slide_category_data[options.openModal]['template']);
+        } else {
+            this.set('state', '_select');
+            this.set('defaultTemplate', 'website.slide.upload.modal.select');
+        }
         this.on('change:state', this, this._onChangeType);
         this.set('can_submit_form', false);
         this.on('change:can_submit_form', this, this._onChangeCanSubmitForm);
@@ -51,6 +58,10 @@ var SlideUploadDialog = Dialog.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
+            if (self.get('state') !== '_select') {
+                self.$modal.find('.modal-dialog').addClass('modal-lg');
+            }
+            self._bindSelect2Dropdown();
             self._resetModalButton();
         });
     },
@@ -668,7 +679,12 @@ var SlideUploadDialog = Dialog.extend({
             method: 'button_immediate_install',
             args: [[this.modulesToInstallStatus.id]],
         }).then(function () {
-            window.location.href = window.location.origin + window.location.pathname + '?enable_slide_upload';
+            let redirectUrl = window.location.origin + window.location.pathname + '?enable_slide_upload';
+            if (self.modulesToInstallStatus.default_slide_category) {
+                redirectUrl += '=';
+                redirectUrl += self.modulesToInstallStatus.default_slide_category;
+            }
+            window.location.href = redirectUrl;
         }, function () {
             $el.text(_.str.sprintf(_t('Failed to install "%s".'), self.modulesToInstallStatus.name));
             self.modulesToInstallStatus.installing = false;
@@ -733,13 +749,16 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
     },
 
     /**
+     * Automatically opens the upload dialog if requested from query string.
+     * If openModal is defined ( === '' ), opens the category selection dialog.
+     * If openModal is a category name, opens the category's upload dialog.
+     * 
      * @override
      */
     start: function () {
-        // Automatically open the upload dialog if requested from query string
-        if (this.$el.attr('data-open-modal')) {
-            this.$el.removeAttr('data-open-modal');
+        if ('openModal' in this.$el.data()) {
             this._openDialog(this.$el);
+            this.$el.data('openModal', false);
         }
         return this._super.apply(this, arguments);
     },
@@ -749,8 +768,7 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     _openDialog: function ($element) {
-        var data = $element.data();
-        return new SlideUploadDialog(this, data).open();
+        return new SlideUploadDialog(this, $element.data()).open();
     },
 
     //--------------------------------------------------------------------------

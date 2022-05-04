@@ -7,6 +7,7 @@ import werkzeug.exceptions
 
 from odoo import _
 from odoo import http
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
@@ -74,13 +75,9 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         # Then create the slide
         result = super(WebsiteSlidesSurvey, self).create_slide(*args, **post)
 
-        if create_new_survey:
-            # Set the redirect_url used in toaster
-            action_id = request.env.ref('survey.action_survey_form').id
-            result.update({
-                'redirect_url': '/web#id=%s&action=%s&model=survey.survey&view_type=form' % (post['survey_id'], action_id),
-                'redirect_to_certification': True
-            })
+        if post['slide_category'] == "certification":
+            # Set the url to redirect the user to the survey
+            result['url'] = '/slides/slide/%s?fullscreen=1' % (slug(request.env['slide.slide'].browse(result['slide_id']))),
 
         return result
 

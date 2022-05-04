@@ -544,7 +544,7 @@ class WebsiteSlides(WebsiteProfile):
             # display data
             'pager': pager,
             # display upload modal
-            'enable_slide_upload': 'enable_slide_upload' in kw,
+            'enable_slide_upload': kw.get('enable_slide_upload', False),
             ** errors,
             ** self._slide_channel_prepare_review_values(channel),
         })
@@ -580,7 +580,8 @@ class WebsiteSlides(WebsiteProfile):
                 render_values['modules_to_install'] = [{
                     'id': module.id,
                     'name': module.shortdesc,
-                    'motivational': _('Evaluate and certify your students.'),
+                    'motivational': _('Want to test and certify your students?'),
+                    'default_slide_category': 'certification',
                 }]
 
         render_values = self._prepare_additional_channel_values(render_values, **kw)
@@ -1246,10 +1247,12 @@ class WebsiteSlides(WebsiteProfile):
         channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
-        if channel.channel_type == "training" and slide.slide_category not in ["article", "quiz"]:
-            redirect_url = "/slides/%s" % (slug(channel))
         if slide.slide_category == 'article':
             redirect_url += "?enable_editor=1"
+        elif slide.slide_category == 'quiz':
+            redirect_url += "?quiz_quick_create"
+        elif channel.channel_type == "training":
+            redirect_url = "/slides/%s" % (slug(channel))
         return {
             'url': redirect_url,
             'channel_type': channel.channel_type,
