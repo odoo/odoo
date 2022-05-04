@@ -371,9 +371,6 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAvatarUrl() {
-            if (this === this.messaging.partnerRoot) {
-                return '/mail/static/src/img/odoobot.png';
-            }
             return `/web/image/res.partner/${this.id}/avatar_128`;
         }
 

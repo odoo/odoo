@@ -116,7 +116,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             self.destroy();
         };
         if (!this.wysiwyg.isDirty()) {
-            return destroy();
+            destroy();
+            window.location.reload();
+            return;
         }
         return this.wysiwyg.saveContent(false).then((result) => {
             var $wrapwrap = $('#wrapwrap');
