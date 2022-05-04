@@ -2162,6 +2162,14 @@ class AccountMove(models.Model):
             vals.pop('invoice_line_ids', None)
             res = super(AccountMove, self.with_context(check_move_validity=False, skip_account_move_synchronization=True)).write(vals)
 
+        for move in self:
+            taxes = move.line_ids.mapped('tax_ids').flatten_taxes_hierarchy()
+            if set(taxes) - set(move.line_ids.mapped('tax_line_id')):
+                raise UserError(
+                    _("You cannot delete this journal item as it has been triggered by the tax applied on a base item. "
+                      "Even though a Journal Item of 0 may seem superfluous, "
+                      "it is necessary for the calculation of the tax reports."))
+
         # You can't change the date of a not-locked move to a locked period.
         # You can't post a new journal entry inside a locked period.
         if 'date' in vals or 'state' in vals:
