@@ -1164,11 +1164,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange (with command 5) for embedded one2many with handle widget",
         async function (assert) {
-            assert.expect(3);
-
             const ids = [];
             for (let i = 10; i < 50; i++) {
                 const id = 10 + i;
@@ -1218,11 +1216,7 @@ QUnit.module("Fields", (hooks) => {
             await editInput(target, '.o_list_renderer div[name="turtle_foo"] input', "blurp");
 
             // Drag and drop the third line in second position
-            await dragAndDrop(
-                "tbody tr:nth-child(3) .o_handle_cell",
-                "tbody tr:nt-child(2)",
-                "top"
-            );
+            await dragAndDrop("tbody tr:nth-child(3) .o_handle_cell", "tbody tr:nth-child(2)");
 
             // need to unselect row...
             assert.deepEqual(
@@ -2136,19 +2130,15 @@ QUnit.module("Fields", (hooks) => {
             );
 
             const positions = [
-                [7, 1, "top", ["3", "6", "1", "2", "5", "7", "4"]], // move the last to the first line
-                [6, 3, "top", ["7", "6", "1", "2", "5"]], // move the penultimate to the second line
-                [3, 6, "bottom", ["1", "2", "5", "6"]], // move the third to the penultimate line
+                [7, 1, ["3", "6", "1", "2", "5", "7", "4"]], // move the last to the first line
+                [6, 2, ["7", "6", "1", "2", "5"]], // move the penultimate to the second line
+                [3, 6, ["1", "2", "5", "6"]], // move the third to the penultimate line
             ];
-            for (const [sourceIndex, targetIndex, position, steps] of positions) {
+            for (const [sourceIndex, targetIndex, steps] of positions) {
                 await dragAndDrop(
                     `tbody tr:nth-child(${sourceIndex}) .o_handle_cell`,
-                    `tbody tr:nth-child(${targetIndex})`,
-                    { position: position }
+                    `tbody tr:nth-child(${targetIndex})`
                 );
-
-                // await delay(10);
-
                 assert.verifySteps(steps);
             }
 
@@ -8751,7 +8741,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsN(target, ".ui-sortable-handle", 3);
 
-            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
+            await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr:nth-child(1)");
 
             assert.deepEqual(
                 [...target.querySelectorAll('.o_data_cell div[name="turtle_foo"]')].map(

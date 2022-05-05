@@ -847,6 +847,10 @@ export class StaticList extends DataPoint {
         await this.resequence(dataRecordId, refId);
     }
 
+    /**
+     * @param {RecordId} movedId  // id of the moved record
+     * @param {RecordId | null} targetId // id of the record (if any) that must be before moved record after operation is done
+     */
     async resequence(movedId, targetId) {
         if (this.__viewType === "list") {
             this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
@@ -855,7 +859,12 @@ export class StaticList extends DataPoint {
 
         const handleField = this.handleField || "sequence";
         const fromIndex = this.records.findIndex((r) => r.id === movedId);
-        const toIndex = targetId ? this.records.findIndex((r) => r.id === targetId) : 0;
+        let targetIndex = null;
+        let toIndex = 0;
+        if (targetId !== null) {
+            targetIndex = this.records.findIndex((r) => r.id === targetId);
+            toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
+        }
 
         const record = this.records[fromIndex];
 
