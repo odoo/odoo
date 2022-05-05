@@ -11399,13 +11399,13 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["mounted", "willUnmount"]);
     });
 
-    QUnit.skipWOWL("Auto save: save when page changed", async function (assert) {
+    QUnit.test("Auto save: save when page changed", async function (assert) {
         assert.expect(10);
 
         serverData.actions[1] = {
             id: 1,
             name: "Partner",
-            resModel: "partner",
+            res_model: "partner",
             type: "ir.actions.act_window",
             views: [
                 [false, "list"],
@@ -11439,28 +11439,40 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
 
-        await click($(webClient.el).find(".o_data_row:first"));
-        await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
+        await click(target.querySelector(".o_data_row td[title='name']"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
+            ["Partner", "first record"]
+        );
 
-        await click($(webClient.el).find(".o_form_button_edit"));
-        await editInput($(webClient.el).find('.o_field_widget[name="name"]'), "aaa");
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
-        await testUtils.controlPanel.pagerNext(webClient);
-        await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_form_editable");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnersecond record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').value, "name");
+        await click(target.querySelector(`.o_pager button.o_pager_next`));
+        assert.containsOnce(target, ".o_form_editable");
+        assert.deepEqual(
+            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
+            ["Partner", "second record"]
+        );
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="name"] input').value,
+            "name"
+        );
 
-        await click($(webClient.el).find(".o_form_button_cancel"));
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnersecond record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "name");
+        await click(target.querySelector(".o_form_button_cancel"));
+        assert.deepEqual(
+            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
+            ["Partner", "second record"]
+        );
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "name");
 
-        await testUtils.controlPanel.pagerPrevious(webClient);
-        await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_form_readonly");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "aaa");
+        await click(target.querySelector(`.o_pager button.o_pager_previous`));
+        assert.containsOnce(target, ".o_form_readonly");
+        assert.deepEqual(
+            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
+            ["Partner", "first record"]
+        );
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
     QUnit.skipWOWL("Auto save: save when breadcrumb clicked", async function (assert) {
