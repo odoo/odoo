@@ -69,7 +69,7 @@ QUnit.module("utils", () => {
     });
 
     QUnit.test("debounce with immediate", async function (assert) {
-        const execRegisteredTimeouts = mockTimeout();
+        const { execRegisteredTimeouts } = mockTimeout();
         const myFunc = () => {
             assert.step("myFunc");
             return 42;
@@ -100,7 +100,7 @@ QUnit.module("utils", () => {
 
     QUnit.test("debounced call can be cancelled", async function (assert) {
         assert.expect(3);
-        const execRegisteredTimeouts = mockTimeout();
+        const { execRegisteredTimeouts } = mockTimeout();
         const myFunc = () => {
             assert.step("myFunc");
         };

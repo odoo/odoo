@@ -49,7 +49,7 @@ QUnit.module("Effect Service", (hooks) => {
             message: markup("<div>Congrats!</div>"),
         };
 
-        execRegisteredTimeouts = mockTimeout();
+        execRegisteredTimeouts = mockTimeout().execRegisteredTimeouts;
         patchWithCleanup(session, { show_effect: true }); // enable effects
 
         serviceRegistry.add("user", userService);
