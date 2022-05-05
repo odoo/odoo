@@ -19,7 +19,7 @@
         justify-content: center;
     }
 
-    &:not(.o-mobile) {
+    &:not(.o-isDeviceSmall) {
         flex: 0 1 auto;
         width: 450px;
         min-height: 50px;
@@ -34,7 +34,7 @@
         z-index: 1050; // on top of chat windows
     }
 
-    &.o-mobile {
+    &.o-isDeviceSmall {
         flex: 1 1 auto;
         position: fixed;
         top: $o-mail-chat-window-header-height-mobile;
@@ -49,12 +49,12 @@
 
 .o_MessagingMenu_dropdownMenuHeader {
 
-    &:not(.o-mobile) {
+    &:not(.o-isDeviceSmall) {
         display: flex;
         flex-shrink: 0; // Forces Safari to not shrink below fit content
     }
 
-    &.o-mobile {
+    &.o-isDeviceSmall {
         display: grid;
         grid-template-areas:
             "top"
@@ -75,7 +75,7 @@
     right: 0;
 }
 
-.o_MessagingMenu_newMessageButton.o-mobile {
+.o_MessagingMenu_newMessageButton.o-isDeviceSmall {
     grid-area: top;
     justify-self: start;
 }
@@ -86,7 +86,7 @@
     margin-top: map-get($spacers, 2);
 }
 
-.o_MessagingMenu_notificationList.o-mobile {
+.o_MessagingMenu_notificationList.o-isDeviceSmall {
     flex: 1 1 auto;
     overflow-y: auto;
 }
@@ -101,7 +101,7 @@
     background-color: rgba($black, 0.1);
 }
 
-.o_MessagingMenu_dropdownMenu.o-mobile {
+.o_MessagingMenu_dropdownMenu.o-isDeviceSmall {
     border: 0;
 }
 

@@ -8,7 +8,7 @@
     align-items: center;
     padding: map-get($spacers, 1);
 
-    &.o-mobile {
+    &.o-isDeviceSmall {
         padding: map-get($spacers, 2);
     }
 }
@@ -69,7 +69,7 @@
 }
 
 @mixin o-mail-notification-list-item-name-layout {
-    &.o-mobile {
+    &.o-isDeviceSmall {
         font-size: 1.1em;
     }
 }
@@ -151,7 +151,7 @@ $o-mail-notification-list-item-muted-hover-background-color:
 @mixin o-mail-notification-list-item-partner-im-status-icon-style {
     color: $o-mail-notification-list-item-background-color;
 
-    &:not(.o-mobile) {
+    &:not(.o-isDeviceSmall) {
         font-size: x-small;
     }
 

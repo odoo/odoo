@@ -32,7 +32,7 @@ QUnit.test('select another mailbox', async function (assert) {
     );
     assert.hasClass(
         document.querySelector('.o_Discuss'),
-        'o-mobile',
+        'o-isDeviceSmall',
         "discuss should be opened in mobile mode"
     );
     assert.containsOnce(
