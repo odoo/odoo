@@ -103,40 +103,53 @@ class CrmTeam(models.Model):
         for team in self:
             team.sale_order_count = data_map.get(team.id, 0)
 
+    def _in_sale_scope(self):
+        return self.env.context.get('in_sales_app')
+
     def _graph_get_model(self):
-        if self._context.get('in_sales_app'):
+        if self._in_sale_scope():
             return 'sale.report'
-        return super(CrmTeam,self)._graph_get_model()
+        return super()._graph_get_model()
 
     def _graph_date_column(self):
-        if self._context.get('in_sales_app'):
+        if self._in_sale_scope():
             return 'date'
-        return super(CrmTeam,self)._graph_date_column()
+        return super()._graph_date_column()
+
+    def _graph_get_table(self, GraphModel):
+        if self._in_sale_scope():
+            # For a team not shared between company, we make sure the amounts are expressed
+            # in the currency of the team company and not converted to the current company currency,
+            # as the amounts of the sale report are converted in the currency
+            # of the current company (for multi-company reporting, see #83550)
+            GraphModel = GraphModel.with_company(self.company_id)
+            return f"({GraphModel._table_query}) AS {GraphModel._table}"
+        return super()._graph_get_table(GraphModel)
 
     def _graph_y_query(self):
-        if self._context.get('in_sales_app'):
+        if self._in_sale_scope():
             return 'SUM(price_subtotal)'
-        return super(CrmTeam,self)._graph_y_query()
+        return super()._graph_y_query()
 
     def _extra_sql_conditions(self):
-        if self._context.get('in_sales_app'):
+        if self._in_sale_scope():
             return "AND state in ('sale', 'done', 'pos_done')"
-        return super(CrmTeam,self)._extra_sql_conditions()
+        return super()._extra_sql_conditions()
 
     def _graph_title_and_key(self):
-        if self._context.get('in_sales_app'):
+        if self._in_sale_scope():
             return ['', _('Sales: Untaxed Total')] # no more title
-        return super(CrmTeam, self)._graph_title_and_key()
+        return super()._graph_title_and_key()
 
     def _compute_dashboard_button_name(self):
         super(CrmTeam,self)._compute_dashboard_button_name()
-        if self._context.get('in_sales_app'):
-            self.update({'dashboard_button_name': _("Sales Analysis")})
+        if self._in_sale_scope():
+            self.dashboard_button_name = _("Sales Analysis")
 
     def action_primary_channel_button(self):
-        if self._context.get('in_sales_app'):
+        if self._in_sale_scope():
             return self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_so_salesteam")
-        return super(CrmTeam, self).action_primary_channel_button()
+        return super().action_primary_channel_button()
 
     def update_invoiced_target(self, value):
         return self.write({'invoiced_target': round(float(value or 0))})
