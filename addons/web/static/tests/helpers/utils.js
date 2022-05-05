@@ -360,21 +360,38 @@ for (const propName of Object.keys(window.console)) {
 
 export function mockTimeout() {
     const timeouts = new Map();
+    let currentTime = 0;
     let id = 1;
     patchWithCleanup(browser, {
-        setTimeout(fn) {
-            timeouts.set(id, fn);
+        setTimeout(fn, delay = 0) {
+            timeouts.set(id, { fn, scheduledFor: delay + currentTime, id });
             return id++;
         },
         clearTimeout(id) {
             timeouts.delete(id);
         },
     });
-    return function execRegisteredTimeouts() {
-        for (const fn of timeouts.values()) {
-            fn();
-        }
-        timeouts.clear();
+    return {
+        execRegisteredTimeouts() {
+            for (const { fn } of timeouts.values()) {
+                fn();
+            }
+            timeouts.clear();
+        },
+        async advanceTime(duration) {
+            // wait here so all microtasktick scheduled in this frame can be
+            // executed and possibly register their own timeout
+            await nextTick();
+            currentTime += duration;
+            for (const { fn, scheduledFor, id } of timeouts.values()) {
+                if (scheduledFor <= currentTime) {
+                    fn();
+                    timeouts.delete(id);
+                }
+            }
+            // wait here to make sure owl can update the UI
+            await nextTick();
+        },
     };
 }
 

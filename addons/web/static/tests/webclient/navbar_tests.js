@@ -427,7 +427,7 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
 QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     assert.expect(5);
 
-    const execRegisteredTimeouts = mockTimeout();
+    const { execRegisteredTimeouts } = mockTimeout();
     class MyNavbar extends NavBar {
         async adapt() {
             assert.step("adapt NavBar");
