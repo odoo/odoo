@@ -80,25 +80,6 @@ export class ComposerTextInput extends Component {
         this.composerView.updateTextInputHeight();
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onInputTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        this.composerView.saveStateInStore();
-        if (this.composerView.textareaLastInputValue !== this.composerView.textareaRef.el.value) {
-            this.composerView.handleCurrentPartnerIsTyping();
-        }
-        this.composerView.update({ textareaLastInputValue: this.composerView.textareaRef.el.value });
-        this.composerView.updateTextInputHeight();
-    }
-
 }
 
 Object.assign(ComposerTextInput, {

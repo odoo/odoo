@@ -293,6 +293,17 @@ registerModel({
             this.saveStateInStore();
             this.update({ isFocused: false });
         },
+        onInputTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            this.saveStateInStore();
+            if (this.textareaLastInputValue !== this.textareaRef.el.value) {
+                this.handleCurrentPartnerIsTyping();
+            }
+            this.update({ textareaLastInputValue: this.textareaRef.el.value });
+            this.updateTextInputHeight();
+        },
         /**
          * @param {KeyboardEvent} ev
          */
