@@ -89,6 +89,24 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     assert.expect(14);
     const mailTestActivityIds = pyEnv['mail.test.activity'].search([]);
     const mailActivityTypeIds = pyEnv['mail.activity.type'].search([]);
+    const actionServiceInterceptor = event => {
+            assert.deepEqual(event.data.action, {
+                context: {
+                    default_res_id: mailTestActivityIds[1],
+                    default_res_model: "mail.test.activity",
+                    default_activity_type_id: mailActivityTypeIds[2],
+                },
+                res_id: false,
+                res_model: "mail.activity",
+                target: "new",
+                type: "ir.actions.act_window",
+                view_mode: "form",
+                view_type: "form",
+                views: [[false, "form"]]
+            },
+            "should do a do_action with correct parameters");
+            event.data.options.on_close();
+    };
     var { widget: activity } = await start({
         View: ActivityView,
         hasView: true,
@@ -101,24 +119,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
                     '</templates>' +
             '</activity>',
         intercepts: {
-            do_action: function (event) {
-                assert.deepEqual(event.data.action, {
-                    context: {
-                        default_res_id: mailTestActivityIds[1],
-                        default_res_model: "mail.test.activity",
-                        default_activity_type_id: mailActivityTypeIds[2],
-                    },
-                    res_id: false,
-                    res_model: "mail.activity",
-                    target: "new",
-                    type: "ir.actions.act_window",
-                    view_mode: "form",
-                    view_type: "form",
-                    views: [[false, "form"]]
-                },
-                "should do a do_action with correct parameters");
-                event.data.options.on_close();
-            },
+            do_action: actionServiceInterceptor,
         },
     });
 
@@ -230,6 +231,30 @@ QUnit.test('activity view: activity widget', async function (assert) {
     const mailActivityTypeIds = pyEnv['mail.activity.type'].search([]);
     const [mailTestActivityId2] = pyEnv['mail.test.activity'].search([['name', '=', 'Office planning']]);
     const [mailTemplateId1] = pyEnv['mail.template'].search([['name', '=', 'Template1']]);
+    const actionServiceInterceptor = ev => {
+            var action = ev.data.action;
+            if (action.serverGeneratedAction) {
+                assert.step('serverGeneratedAction');
+            } else if (action.res_model === 'mail.compose.message') {
+                assert.deepEqual({
+                    default_model: 'mail.test.activity',
+                    default_res_id: mailTestActivityId2,
+                    default_template_id: mailTemplateId1,
+                    default_use_template: true,
+                    force_email: true
+                    }, action.context);
+                assert.step("do_action_compose");
+            } else if (action.res_model === 'mail.activity') {
+                assert.deepEqual({
+                    "default_activity_type_id": mailActivityTypeIds[1],
+                    "default_res_id": mailTestActivityId2,
+                    "default_res_model": 'mail.test.activity',
+                }, action.context);
+                assert.step("do_action_activity");
+            } else {
+                assert.step("Unexpected action");
+            }
+    };
     const params = {
         hasView: true,
         View: ActivityView,
@@ -256,30 +281,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
             return this._super.apply(this, arguments);
         },
         intercepts: {
-            do_action: function (ev) {
-                var action = ev.data.action;
-                if (action.serverGeneratedAction) {
-                    assert.step('serverGeneratedAction');
-                } else if (action.res_model === 'mail.compose.message') {
-                    assert.deepEqual({
-                        default_model: 'mail.test.activity',
-                        default_res_id: mailTestActivityId2,
-                        default_template_id: mailTemplateId1,
-                        default_use_template: true,
-                        force_email: true
-                        }, action.context);
-                    assert.step("do_action_compose");
-                } else if (action.res_model === 'mail.activity') {
-                    assert.deepEqual({
-                        "default_activity_type_id": mailActivityTypeIds[1],
-                        "default_res_id": mailTestActivityId2,
-                        "default_res_model": 'mail.test.activity',
-                    }, action.context);
-                    assert.step("do_action_activity");
-                } else {
-                    assert.step("Unexpected action");
-                }
-            },
+            do_action: actionServiceInterceptor,
         },
     };
 
@@ -371,6 +373,25 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
     Object.assign(serverData.views, {
         'mail.test.activity,false,list': '<tree string="MailTestActivity"><field name="name"/></tree>',
     });
+    const actionServiceInterceptor = ev => {
+            assert.step('doAction');
+            var expectedAction = {
+                context: {
+                    default_res_id: { id: mailTestActivityId1, display_name: undefined },
+                    default_res_model: "mail.test.activity",
+                },
+                name: "Schedule Activity",
+                res_id: false,
+                res_model: "mail.activity",
+                target: "new",
+                type: "ir.actions.act_window",
+                view_mode: "form",
+                views: [[false, "form"]],
+            };
+            assert.deepEqual(ev.data.action, expectedAction,
+                "should execute an action with correct params");
+            ev.data.options.on_close();
+    };
     var { widget: activity } = await start({
         hasView: true,
         View: ActivityView,
@@ -393,25 +414,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
             return this._super.apply(this, arguments);
         },
         intercepts: {
-            do_action: function (ev) {
-                assert.step('doAction');
-                var expectedAction = {
-                    context: {
-                        default_res_id: { id: mailTestActivityId1, display_name: undefined },
-                        default_res_model: "mail.test.activity",
-                    },
-                    name: "Schedule Activity",
-                    res_id: false,
-                    res_model: "mail.activity",
-                    target: "new",
-                    type: "ir.actions.act_window",
-                    view_mode: "form",
-                    views: [[false, "form"]],
-                };
-                assert.deepEqual(ev.data.action, expectedAction,
-                    "should execute an action with correct params");
-                ev.data.options.on_close();
-            },
+            do_action: actionServiceInterceptor,
         },
     });
 

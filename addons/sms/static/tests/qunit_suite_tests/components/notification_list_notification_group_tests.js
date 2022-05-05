@@ -190,43 +190,43 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         },
     ]);
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action.name,
-            "SMS Failures",
-            "action should have 'SMS Failures' as name",
-        );
-        assert.strictEqual(
-            payload.action.type,
-            'ir.actions.act_window',
-            "action should have the type act_window"
-        );
-        assert.strictEqual(
-            payload.action.view_mode,
-            'kanban,list,form',
-            "action should have 'kanban,list,form' as view_mode"
-        );
-        assert.strictEqual(
-            JSON.stringify(payload.action.views),
-            JSON.stringify([[false, 'kanban'], [false, 'list'], [false, 'form']]),
-            "action should have correct views"
-        );
-        assert.strictEqual(
-            payload.action.target,
-            'current',
-            "action should have 'current' as target"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'res.partner',
-            "action should have the group model as res_model"
-        );
-        assert.strictEqual(
-            JSON.stringify(payload.action.domain),
-            JSON.stringify([['message_has_sms_error', '=', true]]),
-            "action should have 'message_has_sms_error' as domain"
-        );
+    bus.on('do-action', null, ({ action }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action.name,
+                "SMS Failures",
+                "action should have 'SMS Failures' as name",
+            );
+            assert.strictEqual(
+                action.type,
+                'ir.actions.act_window',
+                "action should have the type act_window"
+            );
+            assert.strictEqual(
+                action.view_mode,
+                'kanban,list,form',
+                "action should have 'kanban,list,form' as view_mode"
+            );
+            assert.strictEqual(
+                JSON.stringify(action.views),
+                JSON.stringify([[false, 'kanban'], [false, 'list'], [false, 'form']]),
+                "action should have correct views"
+            );
+            assert.strictEqual(
+                action.target,
+                'current',
+                "action should have 'current' as target"
+            );
+            assert.strictEqual(
+                action.res_model,
+                'res.partner',
+                "action should have the group model as res_model"
+            );
+            assert.strictEqual(
+                JSON.stringify(action.domain),
+                JSON.stringify([['message_has_sms_error', '=', true]]),
+                "action should have 'message_has_sms_error' as domain"
+            );
     });
 
     const { createNotificationListComponent } = await start({ env: { bus } });

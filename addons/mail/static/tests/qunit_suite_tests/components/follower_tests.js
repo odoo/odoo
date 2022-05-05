@@ -126,24 +126,24 @@ QUnit.test('click on partner follower details', async function (assert) {
 
     const openFormDef = makeDeferred();
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action.res_id,
-            3,
-            "The redirect action should redirect to the right res id (3)"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'res.partner',
-            "The redirect action should redirect to the right res model (res.partner)"
-        );
-        assert.strictEqual(
-            payload.action.type,
-            "ir.actions.act_window",
-            "The redirect action should be of type 'ir.actions.act_window'"
-        );
-        openFormDef.resolve();
+    bus.on('do-action', null, ({ action }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action.res_id,
+                3,
+                "The redirect action should redirect to the right res id (3)"
+            );
+            assert.strictEqual(
+                action.res_model,
+                'res.partner',
+                "The redirect action should redirect to the right res model (res.partner)"
+            );
+            assert.strictEqual(
+                action.type,
+                "ir.actions.act_window",
+                "The redirect action should be of type 'ir.actions.act_window'"
+            );
+            openFormDef.resolve();
     });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
