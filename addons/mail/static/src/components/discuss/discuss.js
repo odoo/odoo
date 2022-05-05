@@ -2,7 +2,9 @@
 
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+
 import { LegacyComponent } from '@web/legacy/legacy_component';
+import { useWowlService } from '@web/legacy/utils';
 
 export class Discuss extends LegacyComponent {
 
@@ -10,6 +12,9 @@ export class Discuss extends LegacyComponent {
      * @override
      */
     setup() {
+        this.routerService = useWowlService('router');
+        this.effectService = useWowlService('effect');
+        this._lastPushStateActiveThread = null;
         this._updateLocalStoreProps();
         // bind since passed as props
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
@@ -22,7 +27,14 @@ export class Discuss extends LegacyComponent {
             return;
         }
         if (this.discussView.discuss.thread) {
-            this.trigger('o-push-state-action-manager');
+            if (this._lastPushStateActiveThread === this.discussView.discuss.thread) {
+                return;
+            }
+            this.routerService.pushState({
+                action: this.discussView.actionId,
+                active_id: this.discussView.discuss.activeId,
+            });
+            this._lastPushStateActiveThread = this.discussView.discuss.thread;
         }
         if (
             this.discussView.discuss.thread &&
@@ -31,7 +43,9 @@ export class Discuss extends LegacyComponent {
             this._lastThreadCache === this.discussView.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discussView.discuss.thread.counter === 0
         ) {
-            this.trigger('o-show-rainbow-man');
+            this.effectService.add({
+                message: this.env._t("Congratulations, your inbox is empty!"),
+            });
         }
         this._updateLocalStoreProps();
     }
