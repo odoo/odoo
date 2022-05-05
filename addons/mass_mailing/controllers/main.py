@@ -7,7 +7,7 @@ import werkzeug
 from odoo import _, exceptions, http, tools
 from odoo.http import request
 from odoo.tools import consteq
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 
 class MassMailController(http.Controller):
@@ -216,3 +216,15 @@ class MassMailController(http.Controller):
                 _("""Requested de-blacklisting via unsubscription page."""))
             return True
         return 'error'
+
+    # ------------------------------------------------------------
+    # MISCELLANEOUS
+    # ------------------------------------------------------------
+
+    @http.route('/mailing/get_preview_assets', type='json', auth='user')
+    def get_mobile_preview_styling(self):
+        """ This route allows a rpc call to get the styling needed for email template conversion.
+        We do this to avoid duplicating the template."""
+        if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise NotFound
+        return request.env['ir.qweb']._render('mass_mailing.iframe_css_assets_edit')

@@ -12,6 +12,7 @@ import { buildQuery } from "web.rpc";
 import { HtmlField } from "@web_editor/js/backend/html_field";
 import { getWysiwygClass } from 'web_editor.loader';
 import { device } from 'web.config';
+import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 
 const {
     useEffect,
@@ -24,6 +25,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         this.action = useService('action');
         this.rpc = useService('rpc');
+        this.dialog = useService('dialog');
 
         onWillUpdateProps(() => {
             if (this.props.record.data.mailing_model_id && this.wysiwyg) {
@@ -210,6 +212,17 @@ export class MassMailingHtmlField extends HtmlField {
                 $codeview.val(this.wysiwyg.getValue());
             }
             this.onIframeUpdated();
+        });
+
+        $snippetsSideBar.on('click', '.o_mobile_preview_btn', () => {
+            let mailingHtml = new DOMParser().parseFromString(this.wysiwyg.getValue(), 'text/html');
+            [...mailingHtml.querySelectorAll('a')].forEach(el => {
+                el.style.setProperty('pointer-events', 'none');
+            });
+            this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
+                title: this.env._t("Mobile Preview"),
+                preview: mailingHtml.body.innerHTML,
+            });
         });
 
         if ($themes.length === 0) {
