@@ -42,9 +42,9 @@
                                     </a>
                                     <t t-else="" t-esc="sol_name"/>
                                 </td>
-                                <td align="right"><t t-esc="sale_item.product_uom_qty"/> <t t-esc="uom_name"/></td>
-                                <td align="right"><t t-esc="sale_item.qty_delivered"/> <t t-esc="uom_name"/></td>
-                                <td align="right"><t t-esc="sale_item.qty_invoiced"/> <t t-esc="uom_name"/></td>
+                                <td align="right"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
+                                <td align="right"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
+                                <td align="right"><t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-esc="uom_name"/></td>
                             </tr>
                             <tr class="o_rightpanel_nohover" t-if="sale_items.total &gt; sale_items.data.length">
                                 <td>
