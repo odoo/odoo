@@ -1,6 +1,11 @@
 #!/bin/bash
 community=$(cd -- "$(dirname "$0")" &> /dev/null && cd ../../.. && pwd)
 tooling="$community/addons/web/tooling"
+testRealPath="$(realpath --relative-to=. "$tooling/hooks")"
+if [[ $testRealPath == "" ]]; then
+    echo "Please install realpath"
+    exit 1
+fi
 
 enableInDir () {
     cd $1
@@ -26,6 +31,7 @@ if [[ $willingToInstallToolingInEnterprise != "n" ]]
 then
     read -p "What is the relative path from community to enterprise ? (../enterprise)" pathToEnterprise
     pathToEnterprise=${pathToEnterprise:-../enterprise}
+    pathToEnterprise=$(realpath $community/$pathToEnterprise)
 fi
 
 enableInDir "$community"
