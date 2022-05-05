@@ -144,6 +144,13 @@ class Sanitize {
                 return;
             }
         }
+        // Transform <li> into <p> if they are not in a <ul> / <ol>
+        if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
+            const p = document.createElement("p");
+            p.replaceChildren(...node.childNodes);
+            node.replaceWith(p);
+            node = p;
+        }
 
         // Sanitize font awesome elements
         if (isFontAwesome(node)) {

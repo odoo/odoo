@@ -468,7 +468,6 @@
       coerce_types = { 'true': !0, 'false': !1, 'null': null };
     
     // Iterate over all name=value pairs.
-    if (params.indexOf('__proto__') !== -1) { return obj; }
     $.each( params.replace( /\+/g, ' ' ).split( '&' ), function(j,v){
       var param = v.split( '=' ),
         key = decode( param[0] ),
@@ -521,6 +520,7 @@
           // * Rinse & repeat.
           for ( ; i <= keys_last; i++ ) {
             key = keys[i] === '' ? cur.length : keys[i];
+            if ( key === "__proto__" || key === "prototype" || key === "constructor" ) break;
             cur = cur[key] = i < keys_last
               ? cur[key] || ( keys[i+1] && isNaN( keys[i+1] ) ? {} : [] )
               : val;
