@@ -905,6 +905,18 @@ section, .oe_img_bg, [data-oe-shape-data] {
         -webkit-text-fill-color: inherit;
     }
 }
+// Jquery sortable add a placeholder element to visually see where to drop the
+// dragged element. In case the element is a TR, the placeholder will be a TR
+// that contains as many TD with `colspan=1` in the dragged element. The fact
+// that there is collspan in that element is resizing the other TD of the tables
+// (behavior that we don't want). The issue is arising for the
+// `.o_we_table_wrapper` created by the `ListUserValueWidget`. Setting display:
+// block on the contained `.ui-sortable-placeholder` disable the behavior of
+// `colspan=1`.
+
+.o_we_table_wrapper .ui-sortable-placeholder {
+    display: block;
+}
 
 /* QWEB */
 
