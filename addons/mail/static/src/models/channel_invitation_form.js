@@ -176,6 +176,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeSelectedPartnerViews() {
+            if (this.selectedPartners.length === 0) {
+                return clear();
+            }
+            return insertAndReplace(this.selectedPartners.map(partner => ({ partner: replace(partner) })));
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeThread() {
             if (
                 this.popoverViewOwner &&
@@ -257,6 +267,11 @@ registerModel({
          * Determines all partners that are currently selected.
          */
         selectedPartners: many('Partner'),
+        selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
+            compute: '_computeSelectedPartnerViews',
+            inverse: 'channelInvitationFormOwner',
+            isCausal: true,
+        }),
         /**
          * States the thread on which this list operates (if any).
          */

@@ -7,26 +7,16 @@ const { Component } = owl;
 export class ChannelInvitationFormSelectedPartner extends Component {
 
     /**
-     * @returns {ChannelInvitationForm}
+     * @returns {ChannelInvitationFormSelectedPartnerView}
      */
-    get channelInvitationForm() {
-        return this.props.channelInvitationForm;
-    }
-
-    /**
-     * @returns {Partner}
-     */
-    get selectedPartner() {
-        return this.props.selectedPartner;
+    get channelInvitationFormSelectedPartnerView() {
+        return this.props.record;
     }
 
 }
 
 Object.assign(ChannelInvitationFormSelectedPartner, {
-    props: {
-        channelInvitationForm: Object,
-        selectedPartner: Object,
-    },
+    props: { record: Object },
     template: 'mail.ChannelInvitationFormSelectedPartner',
 });
 

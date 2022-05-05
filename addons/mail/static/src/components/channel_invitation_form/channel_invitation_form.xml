@@ -26,8 +26,8 @@
                         <div class="mx-3 mt-3">
                             <h4>Selected users:</h4>
                             <div class="o_ChannelInvitationForm_selectedPartners overflow-auto">
-                                <t t-foreach="channelInvitationForm.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.localId">
-                                    <ChannelInvitationFormSelectedPartner channelInvitationForm="channelInvitationForm" selectedPartner="selectedPartner"/>
+                                <t t-foreach="channelInvitationForm.selectedPartnerViews" t-as="selectedPartnerView" t-key="selectedPartnerView.localId">
+                                    <ChannelInvitationFormSelectedPartner record="selectedPartnerView"/>
                                 </t>
                             </div>
                         </div>
