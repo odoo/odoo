@@ -4,45 +4,35 @@ import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
 import { tooltipService } from "../../src/core/tooltip/tooltip_service";
-import { makeFakeUserService } from "../helpers/mock_services";
+import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
     addRow,
-    click,
-    clickEdit,
+    click, clickDiscard, clickEdit,
     clickSave,
-    editInput,
-    getFixture,
-    legacyExtraNextTick,
+    editInput, editSelect, getFixture, getNodesTextContent, legacyExtraNextTick,
     makeDeferred,
     mouseEnter,
     nextTick,
     patchTimeZone,
-    patchWithCleanup,
-    triggerEvent,
-    triggerEvents,
-    editSelect,
-    clickDiscard,
-    getNodesTextContent,
+    patchWithCleanup, selectDropdownItem, triggerEvent,
+    triggerEvents
 } from "../helpers/utils";
 import {
     getButtons,
-    getFacetTexts,
-    getPagerValue,
-    getPagerLimit,
-    groupByMenu,
+    getFacetTexts, getPagerLimit, getPagerValue, groupByMenu,
     pagerNext,
     pagerPrevious,
     toggleActionMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
-    toggleMenuItem,
+    toggleMenuItem
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
-import { uiService } from "@web/core/ui/ui_service";
 
 const { markup, onWillStart } = owl;
 
@@ -61,7 +51,6 @@ let testUtils,
     core,
     _t,
     clickFirst,
-    mixins,
     BasicModel,
     RamStorage,
     AbstractStorageService,
@@ -3979,12 +3968,11 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("fields are translatable in list view", async function (assert) {
-        assert.expect(3);
-
-        var multiLang = _t.database.multi_lang;
-        _t.database.multi_lang = true;
+    QUnit.test("fields are translatable in list view", async function (assert) {
         serverData.models.foo.fields.foo.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
 
         await makeView({
             type: "list",
@@ -4003,26 +3991,21 @@ QUnit.module("Views", (hooks) => {
                         ["fr_BE", "Frenglish"],
                     ]);
                 }
-                return this._super.apply(this, arguments);
             },
             arch: '<tree editable="top">' + '<field name="foo" required="1"/>' + "</tree>",
         });
+        await click(target.querySelector(".o_data_row .o_data_cell"))
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
 
-        await click($(target).find(".o_data_row:first > td:not(.o_list_record_selector)").first());
-        assert.hasClass($(target).find(".o_data_row:first"), "o_selected_row");
-
-        await click($(target).find("input.o_field_translate+span.o_field_translate"));
-        await testUtils.nextTick();
-
-        assert.containsOnce($("body"), ".o_translation_dialog");
+        await click(target.querySelector("span.o_field_translate"));
+        assert.containsOnce(target, ".o_translation_dialog");
         assert.containsN(
-            $(".o_translation_dialog"),
+            target.querySelector(".o_translation_dialog"),
             ".translation>input.o_field_char",
             2,
             "modal should have 2 languages to translate"
         );
 
-        _t.database.multi_lang = multiLang;
     });
 
     QUnit.test("long words in text cells should break into smaller lines", async function (assert) {
@@ -8926,7 +8909,8 @@ QUnit.module("Views", (hooks) => {
 
             // Change the date in the first datetime
             await editInput(
-                target, ".o_data_row .o_data_cell .o_field_daterange[name='date_start'] input",
+                target,
+                ".o_data_row .o_data_cell .o_field_daterange[name='date_start'] input",
                 "2021-04-01 11:00:00"
             );
             assert.containsOnce(
@@ -9112,7 +9096,10 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector('.o_data_cell [name="bar"]'));
         await click(target.querySelector('.o_data_cell [name="bar"] label'));
         await clickSave(target);
-        assert.strictEqual(target.querySelector('.o_data_cell [name="foo"]').textContent, "changed");
+        assert.strictEqual(
+            target.querySelector('.o_data_cell [name="foo"]').textContent,
+            "changed"
+        );
         assert.verifySteps(["onchange"]);
     });
 
@@ -9432,15 +9419,16 @@ QUnit.module("Views", (hooks) => {
             serverData.models.bar.records.push({ id: i, display_name: "Value" + i });
         }
 
+        serverData.views = {
+            "bar,false,list": '<tree><field name="name"/></tree>',
+            "bar,false,search": "<search></search>",
+        };
+
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree multi_edit="1"><field name="m2m" widget="many2many_tags"/></tree>',
-            archs: {
-                "bar,false,list": '<tree><field name="name"/></tree>',
-                "bar,false,search": "<search></search>",
-            },
         });
 
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
@@ -9451,18 +9439,17 @@ QUnit.module("Views", (hooks) => {
         await click(rows[1], ".o_list_record_selector input");
         await click(rows[0].querySelector(".o_data_cell"));
 
-        await testUtils.fields.many2one.clickOpenDropdown("m2m");
-        await testUtils.fields.many2one.clickItem("m2m", "Search More");
+        await selectDropdownItem(target, "m2m", "Search More");
         assert.containsOnce(document.body, ".modal .o_list_view", "should have open the modal");
 
-        await click($(".modal .o_list_view .o_data_row:first"));
+        await click(target.querySelector(".modal .o_list_view .o_data_row"));
 
         assert.containsOnce(
-            document.body,
+            target,
             ".modal [role='alert']",
             "should have open the confirmation modal"
         );
-        assert.containsN(document.body, ".modal .o_field_many2manytags .badge", 3);
+        assert.containsN(target, ".modal .o_field_many2manytags .badge", 3);
         assert.strictEqual(
             $(".modal .o_field_many2manytags .badge:last").text().trim(),
             "Value 3",
@@ -9470,6 +9457,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    // Need Update duplicate m2m record
     QUnit.skipWOWL("multi edition: many2many field in grouped list", async function (assert) {
         assert.expect(2);
 
@@ -9484,13 +9472,14 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["m2m"],
         });
 
-        await click($(target).find(".o_group_header:first")); // open first group
-        await click($(target).find(".o_group_header:eq(1)")); // open second group
+        await click(target.querySelectorAll(".o_group_header")[1]); // open Value 1 group
+        await click(target.querySelectorAll(".o_group_header")[2]); // open Value 2 group
+
         const rows = target.querySelectorAll(".o_data_row");
         await click(rows[0], ".o_list_record_selector input");
         await click(rows[0].querySelectorAll(".o_data_cell")[1]);
-        await testUtils.fields.many2one.clickOpenDropdown("m2m");
-        await testUtils.fields.many2one.clickItem("m2m", "Value 3");
+        await selectDropdownItem(target, "m2m", "Value 3");
+
         assert.strictEqual(
             $(target)
                 .find("tbody:eq(1) .o_data_row:first .o_data_cell:eq(1)")
@@ -9531,7 +9520,6 @@ QUnit.module("Views", (hooks) => {
                             "should force write value on all selected records"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
@@ -9541,15 +9529,15 @@ QUnit.module("Views", (hooks) => {
             );
 
             // select all records (the first one has value 1 for m2o)
-            await click($(target).find("thead .o_list_record_selector input"));
+            await click(target, ".o_list_record_selector input")
 
             // set m2o to 1 in first record
-            await click($(target).find(".o_data_row:eq(0) .o_data_cell:eq(1)"));
+            await click(target.querySelector(".o_data_row .o_data_cell"))
             await testUtils.fields.many2one.searchAndClickItem("m2o", { search: "Value 1" });
 
             assert.containsOnce(document.body, ".modal");
 
-            await click($(".modal .modal-footer .btn-primary"));
+            await click(target, ".modal .modal-footer .btn-primary");
 
             assert.strictEqual(
                 $(target).find(".o_list_many2one").text(),
@@ -9601,12 +9589,11 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'editable list view (multi edition): mousedown on "Discard", but mouseup somewhere else',
         async function (assert) {
-            assert.expect(1);
-
             await makeView({
+                type: "list",
                 arch: `
                 <tree multi_edit="1">
                     <field name="foo"/>
@@ -9620,19 +9607,18 @@ QUnit.module("Views", (hooks) => {
             await click(rows[0], ".o_list_record_selector input");
             await click(rows[1], ".o_list_record_selector input");
             await click(rows[0].querySelector(".o_data_cell"));
-            $(target).find(".o_data_row:first() .o_data_cell:first() input").val("oof");
+            target.querySelector(".o_data_row .o_data_cell input").value = "oof";
 
-            // Simulates a pseudo drag and drop
-            await testUtils.dom.triggerEvents(target.querySelector(".o_list_button_discard"), [
-                "mousedown",
+            const discardButton = target.querySelector(".o_list_button_discard");
+            // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
+            await triggerEvents(discardButton, null, ["mousedown"]);
+            await triggerEvents(target.querySelector(".o_data_row .o_data_cell input"), null, [
+                "change",
+                "blur",
+                "focusout",
             ]);
-            await testUtils.dom.triggerEvents(
-                $(target).find(".o_data_row:first() .o_data_cell:first() input"),
-                ["change", "blur", "focusout"]
-            );
-            await testUtils.dom.triggerEvents($(document.body), ["focus"]);
-            window.dispatchEvent(new MouseEvent("mouseup"));
-            await testUtils.nextTick();
+            await triggerEvents(discardButton, null, ["focus"]);
+            await triggerEvents(document, null, ["mouseup"]);
 
             assert.ok(
                 $(".modal").text().includes("Confirmation"),
@@ -10361,12 +10347,12 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable form alongside html field: click out to unselect the row",
         async function (assert) {
             assert.expect(5);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "foo",
                 serverData,
@@ -10381,20 +10367,21 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             });
 
-            assert.containsNone(form, ".o_data_row");
+            assert.containsNone(target, ".o_data_row");
 
-            await click(form.$(".o_field_x2many_list_row_add > a"));
-            assert.containsOnce(form, ".o_data_row");
-            assert.hasClass(form.$(".o_data_row"), "o_selected_row");
+            await addRow(target);
+            assert.containsOnce(target, ".o_data_row");
+            assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+
             await editInput(
-                form.$('.o_field_x2many[name="o2m"] .o_selected_row input[name="display_name"]'),
+                target, '[name="o2m"] .o_field_x2many .o_selected_row [name="display_name"] input',
                 "new value"
             );
 
             // click outside to unselect the row
-            await click(document.body);
-            assert.containsOnce(form, ".o_data_row");
-            assert.doesNotHaveClass(form.$(".o_data_row"), "o_selected_row");
+            await click(target.querySelector(".o_form_view"));
+            assert.containsOnce(target, ".o_data_row");
+            assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_selected_row");
         }
     );
 
@@ -10414,9 +10401,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("grouped list edition with toggle_button widget", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("grouped list edition with toggle_button widget", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -10431,17 +10416,16 @@ QUnit.module("Views", (hooks) => {
                         "should write the correct value"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await click($(target).find(".o_group_header:first"));
+        await click(target.querySelector(".o_group_header"));
         assert.containsOnce(
             target,
             ".o_data_row:first .o_toggle_button_success",
             "boolean value of the first record should be true"
         );
-        await click($(target).find(".o_data_row:first .o_icon_button"));
+        await click(target.querySelector(".o_data_row .o_icon_button"));
         assert.strictEqual(
             $(target).find(".o_data_row:first .text-muted:not(.o_toggle_button_success)").length,
             1,
@@ -10599,69 +10583,26 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 2, "should display 2 data rows");
     });
 
-    QUnit.skipWOWL("check if the view destroys all widgets and instances", async function (assert) {
-        assert.expect(2);
-
-        var instanceNumber = 0;
-        testUtils.mock.patch(mixins.ParentedMixin, {
-            init: function () {
-                instanceNumber++;
-                return this._super.apply(this, arguments);
-            },
-            destroy: function () {
-                if (!this.isDestroyed()) {
-                    instanceNumber--;
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        var params = {
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch:
-                '<tree string="Partners">' +
-                '<field name="foo"/>' +
-                '<field name="bar"/>' +
-                '<field name="date"/>' +
-                '<field name="int_field"/>' +
-                '<field name="qux"/>' +
-                '<field name="m2o"/>' +
-                '<field name="o2m"/>' +
-                '<field name="m2m"/>' +
-                '<field name="amount"/>' +
-                '<field name="currency_id"/>' +
-                '<field name="datetime"/>' +
-                '<field name="reference"/>' +
-                "</tree>",
-        };
-
-        await makeView(params);
-        assert.ok(instanceNumber > 0);
-
-        assert.strictEqual(instanceNumber, 0);
-
-        testUtils.mock.unpatch(mixins.ParentedMixin);
-    });
-
-    QUnit.skipWOWL("concurrent reloads finishing in inverse order", async function (assert) {
-        assert.expect(4);
-
-        var blockSearchRead = false;
-        var prom = testUtils.makeTestPromise();
-        const list = await makeView({
+    QUnit.test("concurrent reloads finishing in inverse order", async function (assert) {
+        let blockSearchRead = false;
+        const def = makeDeferred();
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/></tree>',
-            mockRPC: function (route) {
-                var result = this._super.apply(this, arguments);
-                if (route === "/web/dataset/search_read" && blockSearchRead) {
-                    return prom.then(_.constant(result));
+            mockRPC: async function (route, args, performRPC) {
+                const result = await performRPC(route, args);
+                if (args.method === "web_search_read" && blockSearchRead) {
+                    await def;
+                    return _.constant(result);
                 }
                 return result;
             },
+            searchViewArch: `
+                <search>
+                    <filter name="yop" domain="[('foo', '=', 'yop')]"/>
+                </search>`,
         });
 
         assert.containsN(
@@ -10673,9 +10614,9 @@ QUnit.module("Views", (hooks) => {
 
         // reload with a domain (this request is blocked)
         blockSearchRead = true;
-        list.reload({ domain: [["foo", "=", "yop"]] });
-        await testUtils.nextTick();
-
+        // list.reload({ domain: [["foo", "=", "yop"]] });
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "yop");
         assert.containsN(
             target,
             ".o_list_view .o_data_row",
@@ -10685,9 +10626,9 @@ QUnit.module("Views", (hooks) => {
 
         // reload without the domain
         blockSearchRead = false;
-        list.reload({ domain: [] });
-        await testUtils.nextTick();
-
+        // list.reload({ domain: [] });
+        // await toggleFilterMenu(target);
+        await toggleMenuItem(target, "yop");
         assert.containsN(
             target,
             ".o_list_view .o_data_row",
@@ -10696,9 +10637,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // unblock the RPC
-        prom.resolve();
-        await testUtils.nextTick();
-
+        def.resolve();
+        await nextTick();
         assert.containsN(
             target,
             ".o_list_view .o_data_row",
@@ -13046,7 +12986,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("selection is kept when optional fields are toggled", async function (assert) {
+    QUnit.test("selection is kept when optional fields are toggled", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -13131,6 +13071,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_optional_columns_dropdown input:checked");
     });
 
+    // Remove ?
     QUnit.skipWOWL(
         "open list optional fields dropdown position to right place",
         async function (assert) {
