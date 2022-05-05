@@ -273,6 +273,9 @@ class CrmTeam(models.Model):
     def _graph_date_column(self):
         return 'create_date'
 
+    def _graph_get_table(self, GraphModel):
+        return GraphModel._table
+
     def _graph_x_query(self):
         return 'EXTRACT(WEEK FROM %s)' % self._graph_date_column()
 
@@ -305,7 +308,7 @@ class CrmTeam(models.Model):
         # apply rules
         dashboard_graph_model = self._graph_get_model()
         GraphModel = self.env[dashboard_graph_model]
-        graph_table = GraphModel._table
+        graph_table = self._graph_get_table(GraphModel)
         extra_conditions = self._extra_sql_conditions()
         where_query = GraphModel._where_calc([])
         GraphModel._apply_ir_rules(where_query, 'read')
