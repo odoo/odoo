@@ -5,7 +5,7 @@
     <div>
       <div class="o_command_palette_search input-group mb-2 px-4 py-3 border-bottom">
         <span t-if="state.namespace !== 'default'" class="o_namespace d-flex align-items-center mr-1" t-out="state.namespace"/>
-        <input class="form-control border-0 p-0" type="text" t-att-value="state.searchValue" t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"/>
+        <input class="form-control border-0 p-0" type="text" data-allow-hotkeys="true" t-att-value="state.searchValue" t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"/>
         <span class="input-group-append">
           <div class="input-group-text border-0 bg-transparent">
               <i t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="oi oi-search"/>
