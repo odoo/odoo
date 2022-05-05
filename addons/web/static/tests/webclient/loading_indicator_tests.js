@@ -151,7 +151,7 @@ QUnit.test("loading indicator blocks UI", async (assert) => {
 
 QUnit.test("loading indicator doesn't unblock ui if it didn't block it", async (assert) => {
     const env = await makeTestEnv({ ...baseConfig });
-    const execRegisteredTimeouts = mockTimeout();
+    const { execRegisteredTimeouts } = mockTimeout();
     const ui = env.services.ui;
     ui.bus.on("BLOCK", null, () => {
         assert.step("block");

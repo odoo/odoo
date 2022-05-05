@@ -20,7 +20,7 @@ QUnit.test("useTransition hook", async (assert) => {
         }
     }
     Parent.template = xml`<div t-if="transition.shouldMount" t-att-class="transition.className"/>`;
-    const execRegisteredTimeouts = mockTimeout();
+    const { execRegisteredTimeouts } = mockTimeout();
 
     const target = getFixture();
     const parent = await mount(Parent, target);
@@ -58,7 +58,7 @@ QUnit.test("Transition HOC", async (assert) => {
         </Transition>
     `;
     Parent.components = { Transition };
-    const execRegisteredTimeouts = mockTimeout();
+    const { execRegisteredTimeouts } = mockTimeout();
 
     const target = getFixture();
     const parent = await mount(Parent, target);
