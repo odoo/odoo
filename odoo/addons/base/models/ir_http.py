@@ -231,6 +231,10 @@ class IrHttp(models.AbstractModel):
     # Binary server
     #------------------------------------------------------
 
+    def _get_file_models(self):
+        # List of models whose name is likely to be a file name with extension.
+        return {'ir.attachment'}
+
     @classmethod
     def _xmlid_to_obj(cls, env, xmlid):
         return env.ref(xmlid, False)
@@ -347,6 +351,7 @@ class IrHttp(models.AbstractModel):
         default_filename = False
         if not filename:
             if filename_field in record:
+                default_filename = (filename_field == 'name' and model not in self._get_file_models())
                 filename = record[filename_field]
             if not filename:
                 default_filename = True
@@ -359,7 +364,7 @@ class IrHttp(models.AbstractModel):
         _, existing_extension = os.path.splitext(filename)
         if not existing_extension or default_filename:
             extension = mimetypes.guess_extension(mimetype)
-            if extension:
+            if extension and not filename.endswith(extension):
                 filename = "%s%s" % (filename, extension)
 
         if not filehash:
