@@ -13,6 +13,7 @@
         'l10n_latam_base',
         'l10n_latam_invoice_document',
         'account_debit_note',
+        'l10n_multilang',
     ],
     'data': [
         'security/ir.model.access.csv',
