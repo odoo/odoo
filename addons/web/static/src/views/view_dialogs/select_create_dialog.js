@@ -42,6 +42,7 @@ export class SelectCreateDialog extends Component {
             searchViewId: this.props.searchViewId || false,
             display: { searchPanel: false },
             noContentHelp: markup(sprintf("<p>%s</p>", this.env._t("No records found!"))),
+            dynamicFilters: this.props.dynamicFilters || [],
         };
     }
 

@@ -115,6 +115,8 @@ export class AutoComplete extends Component {
         );
     }
     selectOption(indices, params = {}) {
+        this.inputRef.el.value = "";
+
         const option = this.sources[indices[0]].options[indices[1]];
         if (option.unselectable) {
             return;
@@ -123,6 +125,7 @@ export class AutoComplete extends Component {
         this.props.onSelect(option, {
             ...params,
             inputValue: this.inputRef.el.value.trim(),
+            input: this.inputRef.el,
         });
         this.close();
     }

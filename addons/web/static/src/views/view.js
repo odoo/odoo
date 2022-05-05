@@ -122,6 +122,7 @@ const STANDARD_PROPS = [
     "globalState",
 
     "activateFavorite",
+    "dynamicFilters",
     "searchMenuTypes",
 
     // LEGACY: remove this later (clean when mappings old state <-> new state are established)

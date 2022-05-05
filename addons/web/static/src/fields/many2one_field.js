@@ -97,7 +97,7 @@ export class Many2OneField extends Component {
             options.push({
                 label: this.env._t("Search More..."),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
-                action: this.onSearchMore.bind(this),
+                action: this.onSearchMore.bind(this, request),
             });
         }
 
@@ -107,7 +107,7 @@ export class Many2OneField extends Component {
                 options.push({
                     label: sprintf(this.env._t(`Create "%s"`), escape(request)),
                     classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
-                    action: this.onCreate.bind(this),
+                    action: this.onCreate.bind(this, request),
                 });
             }
 
@@ -116,7 +116,7 @@ export class Many2OneField extends Component {
                 options.push({
                     label: this.env._t(`Create and Edit...`),
                     classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
-                    action: this.onCreateEdit.bind(this),
+                    action: this.onCreateEdit.bind(this, request),
                 });
             }
 
@@ -173,49 +173,75 @@ export class Many2OneField extends Component {
         );
     }
 
+    async openCreateDialog(value) {
+        return new Promise((resolve) => {
+            this.dialogClose.push(
+                this.dialog.add(
+                    FormViewDialog,
+                    {
+                        context: {
+                            ...this.props.record.getFieldContext(this.props.name),
+                            default_name: value,
+                        },
+                        mode: this.props.canWrite ? "edit" : "readonly",
+                        resId: false,
+                        resModel: this.props.relation,
+                        viewId: false,
+                        title: sprintf(
+                            this.env._t("Create: %s"),
+                            this.props.record.activeFields[this.props.name].string
+                        ),
+                        onRecordSaved: (record) => {
+                            return this.props.update([record.data.id, record.data.name]);
+                        },
+                    },
+                    {
+                        onClose: () => {
+                            resolve();
+                        },
+                    }
+                )
+            );
+        });
+    }
+
     async createRecord(value) {
         let result;
         try {
             result = await this.props.update([false, value]);
         } catch {
-            result = new Promise((resolve) => {
-                this.dialogClose.push(
-                    this.dialog.add(
-                        FormViewDialog,
-                        {
-                            context: {
-                                ...this.props.record.getFieldContext(this.props.name),
-                                default_name: value,
-                            },
-                            mode: this.props.canWrite ? "edit" : "readonly",
-                            resId: false,
-                            resModel: this.props.relation,
-                            viewId: false,
-                            title: sprintf(
-                                this.env._t("Create: %s"),
-                                this.props.record.activeFields[this.props.name].string
-                            ),
-                            onRecordSaved: (record) => {
-                                return this.props.update([record.data.id, record.data.name]);
-                            },
-                        },
-                        {
-                            onClose: () => {
-                                resolve();
-                            },
-                        }
-                    )
-                );
-            });
+            result = await this.openCreateDialog(value);
         }
         return result;
     }
 
-    onSearchMore() {
+    async onSearchMore(request) {
+        const domain = this.getDomain();
+        const context = this.props.record.getFieldContext(this.props.name);
+
+        let dynamicFilters = [];
+        if (request.length) {
+            const nameGets = await this.orm.call(this.props.relation, "name_search", [], {
+                name: request,
+                args: domain,
+                operator: "ilike",
+                limit: this.constructor.SEARCH_MORE_LIMIT,
+                context,
+            });
+
+            dynamicFilters = [
+                {
+                    description: sprintf(this.env._t("Quick search: %s"), request),
+                    domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
+                },
+            ];
+        }
+
         this.dialogClose.push(
             this.dialog.add(SelectCreateDialog, {
                 resModel: this.props.relation,
-                domain: this.getDomain(),
+                domain,
+                context,
                 title: sprintf(
                     this.env._t("Search: %s"),
                     this.props.record.activeFields[this.props.name].string
@@ -225,24 +251,27 @@ export class Many2OneField extends Component {
                     this.props.update([resId]);
                 },
                 searchViewId: false,
+                dynamicFilters,
             })
         );
     }
-    onCreate({ inputValue, triggeredOnBlur }) {
+    async onCreate(request, { input, triggeredOnBlur }) {
         if (triggeredOnBlur) {
             this.dialog.add(CreateConfirmationDialog, {
-                value: inputValue.trim(),
+                value: request,
                 name: this.props.string,
-                create: () => {
-                    return this.createRecord(inputValue);
+                create: async () => {
+                    await this.createRecord(request);
+                    input.focus();
                 },
             });
         } else {
-            this.createRecord(inputValue);
+            await this.createRecord(request);
+            input.focus();
         }
     }
-    onCreateEdit() {
-        this.onSearchMore();
+    onCreateEdit(request) {
+        return this.openCreateDialog(request);
     }
 
     onClick() {
@@ -315,6 +344,8 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
         string: attrs.string || record.fields[fieldName].string,
     };
 };
+
+Many2OneField.SEARCH_MORE_LIMIT = 320;
 
 registry.category("fields").add("many2one", Many2OneField);
 registry.category("fields").add("list.many2one", Many2OneField); // TODO WOWL: link isn't clickable in lists
