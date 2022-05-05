@@ -9918,9 +9918,8 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    // determine if move records is allowed should be done in a useEffect or something
     QUnit.skipWOWL("one2many kanban with widget handle", async function (assert) {
-        assert.expect(5);
-
         serverData.models.partner.records[0].turtles = [1, 2, 3];
         await makeView({
             type: "form",
@@ -9931,11 +9930,13 @@ QUnit.module("Fields", (hooks) => {
                     <field name="turtles">
                         <kanban>
                             <field name="turtle_int" widget="handle"/>
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div><field name="turtle_foo"/></div>
-                                    </t>
-                                </templates>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div>
+                                        <field name="turtle_foo"/>
+                                    </div>
+                                </t>
+                            </templates>
                         </kanban>
                     </field>
                 </form>`,
@@ -9952,6 +9953,16 @@ QUnit.module("Fields", (hooks) => {
             },
             resId: 1,
         });
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["yop", "blip", "kawa"]
+        );
+
+        // should not work (form in mode "readonly")
+        await dragAndDrop(".o_kanban_record:nth-child(1)", ".o_kanban_record:nth-child(3)");
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(

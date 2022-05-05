@@ -836,6 +836,17 @@ export class StaticList extends DataPoint {
         await this.__syncParent(operation);
     }
 
+    /**
+     * @param {string} dataRecordId
+     * @param {string} dataGroupId
+     * @param {string} refId
+     * @param {string} targetGroupId
+     * @returns {Promise<Record>}
+     */
+    async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
+        await this.resequence(dataRecordId, refId);
+    }
+
     async resequence(movedId, targetId) {
         if (this.__viewType === "list") {
             this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
