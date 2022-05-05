@@ -1793,6 +1793,11 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        """
+        .. deprecated:: saas-15.4
+
+            Use :meth:`~odoo.models.Model.get_view()` instead.
+        """
         warnings.warn('Method `fields_view_get` is deprecated, use `get_view` instead', DeprecationWarning)
         result = self.get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
         node = etree.fromstring(result['arch'])
