@@ -652,7 +652,7 @@ class StockQuant(models.Model):
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
 
     @api.model
-    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False, flexible_lot=False):
         """ Increase the reserved quantity, i.e. increase `reserved_quantity` for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
         the *exact same characteristics* otherwise. Typically, this method is called when reserving
@@ -667,6 +667,9 @@ class StockQuant(models.Model):
         self = self.sudo()
         rounding = product_id.uom_id.rounding
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        if lot_id and flexible_lot:
+            quants += self._gather(product_id, location_id, lot_id=False, package_id=package_id, owner_id=owner_id, strict=True)
+
         reserved_quants = []
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
