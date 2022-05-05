@@ -268,7 +268,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("One2ManyField");
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "New record with a o2m also with 2 new records, ordered, and resequenced",
         async function (assert) {
             // Needed to have two new records in a single stroke
@@ -303,9 +303,9 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await clickCreate(target);
-
             startAssert = true;
+
+            await clickCreate(target);
 
             // change the int_field through drag and drop
             // that way, we'll trigger the sorting and the name_get
