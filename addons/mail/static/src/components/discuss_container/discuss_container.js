@@ -2,6 +2,8 @@
 
 import { useModels } from '@mail/component_hooks/use_models';
 import { useUpdate } from '@mail/component_hooks/use_update';
+// ensure component is registered before-hand
+import '@mail/components/discuss/discuss';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component, onWillUnmount } = owl;
