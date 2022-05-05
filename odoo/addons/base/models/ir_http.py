@@ -382,6 +382,7 @@ class IrHttp(models.AbstractModel):
         default_filename = False
         if not filename:
             if filename_field in record:
+                default_filename = (filename_field == 'name' and model != 'ir.attachment')
                 filename = record[filename_field]
             if not filename:
                 default_filename = True
