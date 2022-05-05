@@ -151,6 +151,7 @@ class Sanitize {
             // Remove zero-width spaces added by `fillEmpty` when there is
             // content and the selection is not next to it.
             if (
+                selection &&
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
                 node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
