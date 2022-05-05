@@ -2298,3 +2298,46 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(in_moves.product_id, products)
         self.assertEqual(in_moves.picking_id, in_picking, 'All SM should be part of the same picking')
         self.assertEqual(in_picking.partner_id, wh01_address, 'It should be an incoming picking from %s' % wh01_address.display_name)
+
+    def test_2steps_and_automatic_reservation(self):
+        """
+        Suppose the automatic reservation of the picking is enabled. An out-move
+        is waiting for one available P in stock. When receiving some P (in 2
+        steps), the out-move should be automatically assigned.
+        """
+        self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+
+        out_move = self.env['stock.move'].create({
+            'name': 'out',
+            'product_id': self.productA.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 1,
+            'picking_type_id': self.picking_type_out,
+            'reservation_date': fields.Date.today(),
+        })
+        out_move._action_confirm()
+
+        in_input_move = self.env['stock.move'].create({
+            'name': 'in',
+            'product_id': self.productA.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 1,
+            'picking_type_id': self.picking_type_in,
+        })
+        in_input_move._action_confirm()
+        in_input_move.quantity_done = 1
+        in_input_move._action_done()
+
+        in_stock_move = self.env['stock.move'].search([('product_id', '=', self.productA.id), ('location_id', '=', warehouse.wh_input_stock_loc_id.id)], limit=1)
+        in_stock_move.quantity_done = 1
+        in_stock_picking = in_stock_move.picking_id
+        in_stock_picking.button_validate()
+
+        self.assertEqual(out_move.move_line_ids.reserved_qty, 1.0, 'The out move should be reserved')
