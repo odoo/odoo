@@ -85,7 +85,7 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
-                for order_line in order.order_line:
+                for order_line in order.order_line.filtered(lambda l: l.display_type not in ('line_section', 'line_note')):
                     if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), precision_rounding=order_line.product_uom.rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
