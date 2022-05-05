@@ -235,7 +235,6 @@ class AccountMove(models.Model):
                     not move.currency_id.is_zero(price_subtotal)
                     and float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0
                 ):
-                    # Adds an account line for the price difference.
                     accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
                     stock_valuation_account = accounts.get('stock_valuation')
 
@@ -247,12 +246,13 @@ class AccountMove(models.Model):
                             continue
                         product = line.product_id
                         linked_layer = valuation_stock_moves.stock_valuation_layer_ids[-1]
-                        price_unit_val_dif = line.price_unit - linked_layer.unit_cost
+                        price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                        price_unit_val_dif = price_unit - linked_layer.unit_cost
                         price_subtotal = qty_to_diff * price_unit_val_dif
                         if price_unit_val_dif == 0:
                             continue
 
-                        # Add an account line for the price difference.
+                        # Adds an account line for the price difference.
                         common_vals = {
                             'name': line.name[:64],
                             'move_id': move.id,
