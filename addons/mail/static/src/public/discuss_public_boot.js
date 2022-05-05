@@ -2,6 +2,9 @@
 
 import { data } from 'mail.discuss_public_channel_template';
 
+// ensure components are registered beforehand.
+import '@mail/components/dialog_manager/dialog_manager';
+import '@mail/components/discuss_public_view/discuss_public_view';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
