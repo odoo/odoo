@@ -181,11 +181,9 @@ registerModel({
             // prefetched partners
             let partners = [];
             const cleanedSearchTerm = cleanSearchTerm(keyword);
-            const currentPartner = this.messaging.currentPartner;
             for (const partner of this.all(partner => partner.active)) {
                 if (partners.length < limit) {
                     if (
-                        partner !== currentPartner &&
                         partner.name &&
                         partner.user &&
                         cleanSearchTerm(partner.name).includes(cleanedSearchTerm)
