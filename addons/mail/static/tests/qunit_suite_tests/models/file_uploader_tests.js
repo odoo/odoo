@@ -24,10 +24,6 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         threadId: resPartnerId2,
         threadModel: 'res.partner',
     });
-    await afterNextRender(() => {
-        document.querySelectorAll('.o_ChatterTopbar_buttonAttachments')[0].click();
-        document.querySelectorAll('.o_ChatterTopbar_buttonAttachments')[1].click();
-    });
 
     const file1 = await createFile({
         name: 'text1.txt',
@@ -35,7 +31,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         contentType: 'text/plain',
     });
     await afterNextRender(() => inputFiles(
-        firstChatterContainerComponent.chatter.attachmentBoxView.fileUploader.fileInput,
+        firstChatterContainerComponent.chatter.fileUploader.fileInput,
         [file1]
     ));
     assert.strictEqual(
@@ -50,7 +46,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         contentType: 'text/plain',
     });
     await afterNextRender(() => inputFiles(
-        secondChatterContainerComponent.chatter.attachmentBoxView.fileUploader.fileInput,
+        secondChatterContainerComponent.chatter.fileUploader.fileInput,
         [file2]
     ));
     assert.strictEqual(

@@ -4,6 +4,12 @@
     <t t-name="mail.Chatter" owl="1">
         <t t-if="chatter">
             <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-white" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="chatter.dropZoneView">
+                    <DropZone
+                        className="'o_Chatter_dropZone'"
+                        record="chatter.dropZoneView"
+                    />
+                </t>
                 <div class="o_Chatter_fixedPanel">
                     <ChatterTopbar
                         className="'o_Chatter_topbar'"

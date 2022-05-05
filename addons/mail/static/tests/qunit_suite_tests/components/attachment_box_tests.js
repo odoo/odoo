@@ -1,16 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterNextRender,
-    dragenterFiles,
-    dropFiles,
-    start,
-    startServer,
-} from '@mail/../tests/helpers/test_utils';
-
-import { file } from 'web.test_utils';
-
-const { createFile } = file;
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -91,82 +81,6 @@ QUnit.test('base non-empty rendering', async function (assert) {
         document.querySelectorAll(`.o_attachmentBox_attachmentList`).length,
         1,
         "should have an attachment list"
-    );
-});
-
-QUnit.test('attachment box: drop attachments', async function (assert) {
-    assert.expect(5);
-
-    const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createChatterContainerComponent } = await start();
-    await createChatterContainerComponent({
-        isAttachmentBoxVisibleInitially: true,
-        threadId: resPartnerId1,
-        threadModel: 'res.partner',
-    });
-    const files = [
-        await createFile({
-            content: 'hello, world',
-            contentType: 'text/plain',
-            name: 'text.txt',
-        }),
-    ];
-    assert.strictEqual(
-        document.querySelectorAll('.o_AttachmentBox').length,
-        1,
-        "should have an attachment box"
-    );
-
-    await afterNextRender(() =>
-        dragenterFiles(document.querySelector('.o_AttachmentBox'))
-    );
-    assert.ok(
-        document.querySelector('.o_AttachmentBox_dropZone'),
-        "should have a drop zone"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
-        0,
-        "should have no attachment before files are dropped"
-    );
-
-    await afterNextRender(() =>
-        dropFiles(
-            document.querySelector('.o_AttachmentBox_dropZone'),
-            files
-        )
-    );
-
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
-        1,
-        "should have 1 attachment in the box after files dropped"
-    );
-
-    await afterNextRender(() =>
-        dragenterFiles(document.querySelector('.o_AttachmentBox'))
-    );
-    const file1 = await createFile({
-        content: 'hello, world',
-        contentType: 'text/plain',
-        name: 'text2.txt',
-    });
-    const file2 = await createFile({
-        content: 'hello, world',
-        contentType: 'text/plain',
-        name: 'text3.txt',
-    });
-    await afterNextRender(() =>
-        dropFiles(
-            document.querySelector('.o_AttachmentBox_dropZone'),
-            [file1, file2]
-        )
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
-        3,
-        "should have 3 attachments in the box after files dropped"
     );
 });
 

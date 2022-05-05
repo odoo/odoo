@@ -101,8 +101,8 @@ QUnit.test('base disabled rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '0',
-        "attachments button counter should be 0"
+        'Attach files',
+        "attachments button counter content should be 'Attach files'"
     );
 });
 
@@ -273,8 +273,8 @@ QUnit.test('attachment counter without attachments', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '0',
-        'attachment counter should contain "0"'
+        'Attach files',
+        'attachment counter content should contain "Attach files"'
     );
 });
 
@@ -320,8 +320,8 @@ QUnit.test('attachment counter with attachments', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
-        '2',
-        'attachment counter should contain "2"'
+        '2 files',
+        'attachment counter content should contain "2 files"'
     );
 });
 
