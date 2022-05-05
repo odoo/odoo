@@ -1,6 +1,7 @@
 /** @odoo-module  */
 
 import { patch } from 'web.utils';
+import { formatFloatTime, formatFloat } from "@web/fields/formatters";
 import ProjectRightPanel from '@project/js/right_panel/project_right_panel';
 
 patch(ProjectRightPanel.prototype, '@sale_project/right_panel/project_right_panel', {
@@ -24,5 +25,9 @@ patch(ProjectRightPanel.prototype, '@sale_project/right_panel/project_right_pane
         if (saleItems && saleItems.total > saleItems.data.length) {
             await this._loadAdditionalSalesOrderItems();
         }
+    },
+
+    formatValue(value, unit) {
+        return unit === 'Hours' ? formatFloatTime(value) : formatFloat(value);
     }
 });
