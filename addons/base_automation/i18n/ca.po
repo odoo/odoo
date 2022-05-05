@@ -11,6 +11,8 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
 # Arnau Ros, 2020
 # jabelchi, 2021
+# Jonatan Gk, 2022
+# marcescu, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: jabelchi, 2021\n"
+"Last-Translator: marcescu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,7 +135,7 @@ msgstr "Automatització"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Regla d'acció base: comprovació i execució"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
@@ -201,17 +203,17 @@ msgstr "Després d'actualitzar el domini "
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Model d'enquadernació"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Tipus d'enquadernació"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "Veure tipus d'enquadernació"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
@@ -304,7 +306,7 @@ msgstr "Demo"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Desactiva l'acció"
 
 #. module: base_automation
 #. openerp-web
@@ -339,7 +341,7 @@ msgstr "Tipus de venciment"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Edita l'acció"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -474,7 +476,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Model en el qual s'executa l'acció del servidor."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -592,7 +594,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Configurar una nova automatització automatitzada"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -617,7 +619,7 @@ msgstr "Model destí"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Nom tècnic de l' usuari en el registre"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -626,6 +628,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"El \"%(trigger_value)s\" %(trigger_label)s només es pot utilitzar amb el "
+"\"%(state_value)s\" tipus d'acció"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -633,6 +637,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"L'acció s'activarà si i només si s'actualitza un d'aquests camps.Si està "
+"buit, tots els camps es veuen."
 
 #. module: base_automation
 #. openerp-web
@@ -665,6 +671,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Tipus d' acció del servidor. Els següents valors estan disponibles:\n"
+"-- 'Execut el codi Python': un bloc de codi Python que s' executarà\n"
+"-- 'Crea': crea un nou registre amb nous valors\n"
+"- Actualitza un registre: actualitza els valors d' un registre\n"
+"- 'Execuciona diverses accions': defineix una acció que activa vàries altres accions del servidor\n"
+"- 'Envia correu- e': automàticament envieu un correu electrònic (Discuss)\n"
+"- \"Afegeix seguidors\" - afegeixen seguidors a un disc (discuss)\n"
+"- \"Crea l' activitat següent:\" crea una activitat (disccuss)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -679,6 +693,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Usa \" Usuari específic\" per assignar sempre el mateix usuari en la propera"
+" activitat. Usa l' usuari 'Generic' per especificar el nom del camp de l' "
+"usuari per escollir- lo en el registre."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -694,6 +711,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Utilitza les accions automatitzades per activar automàticament les accions\n"
+"                diverses pantalles. Exemple: un avantatge creat per un usuari específic on\n"
+"                s'estableix automàticament a un equip de vendes específic, o un\n"
+"                oportunitat que encara té estat pendent després de 14 dies\n"
+"                activa un correu electrònic de recordatori automàtic."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -703,7 +725,7 @@ msgstr "Usuari"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Nom del camp d' usuari"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -770,6 +792,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Podeu demanar a un administrador que inhabiliti o corregeixi aquesta acció "
+"automatitzada."
 
 #. module: base_automation
 #. openerp-web
@@ -777,3 +801,5 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Podeu desactivar aquesta acció automàtica o editar-la per resoldre el "
+"problema."
