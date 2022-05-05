@@ -7,10 +7,11 @@ import logging
 import mimetypes
 import os
 import re
+import requests
 from collections import defaultdict
 import uuid
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError, MissingError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
@@ -569,7 +570,34 @@ class IrAttachment(models.Model):
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
-        return self.search_read(domain, fieldNames, order=order, limit=1)
+        result = self.search_read(domain, fieldNames, order=order, limit=1)
+        if not result:
+            if url[:19] == '/web/content/fonts/':
+                # Try fetching font.
+                headers_woff = { # Agent that receives woff font (Internet Explorer 9)
+                    'user-agent': 'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US))',
+                }
+                headers_woff2 = { # Agent that receives woff2 font (Chrome 101.0)
+                    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36',
+                }
+                name = re.findall(r'.+/([^/]+)', url)[0]
+                google_url = 'https://fonts.gstatic.com/%s' % url[19:]
+                try:
+                    headers = headers_woff2 if url[-6:] == '.woff2' else headers_woff
+                    req = requests.get(google_url, headers=headers)
+                    req.raise_for_status()
+                    result = self.env['ir.attachment'].with_user(SUPERUSER_ID).create({
+                        'name': name,
+                        'type': 'binary',
+                        'public': True,
+                        'datas': base64.b64encode(req.content),
+                        'url': url,
+                        'website_id': None,
+                    })
+                except IOError:
+                    _logger.warning("Could not fetch font: %s", google_url)
+
+        return result
 
     @api.model
     def get_attachment_by_key(self, key, extra_domain=None, order=None):

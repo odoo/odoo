@@ -500,28 +500,8 @@ class AssetsBundle(object):
                 }
                 def fetch_google_font(src_url):
                     url = re.findall(r'url\(([^\)]+)\)', src_url.group())[0]
-                    try:
-                        headers = headers_woff2 if url[-6:] == '.woff2' else headers_woff
-                        req = requests.get(url, headers=headers)
-                        req.raise_for_status()
-                        name = re.findall(r'.+/([^/]+)', url)[0]
-                        local_url = '/web/content/fonts/%s' % re.findall(r'https?://[^/]+/(.+)', url)[0]
-                        attachment = self.env['ir.attachment'].sudo().search([
-                            ('url', '=', local_url),
-                        ])
-                        if not attachment:
-                            attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create({
-                                'name': name,
-                                'type': 'binary',
-                                'public': True,
-                                'datas': base64.b64encode(req.content),
-                                'url': local_url,
-                                'website_id': None,
-                            })
-                        return 'url(%s)' % attachment.url
-                    except IOError:
-                        _logger.warning("Could not fetch font: %s", url)
-                        return url
+                    local_url = '/web/content/fonts/%s' % re.findall(r'https?://[^/]+/(.+)', url)[0]
+                    return 'url(%s)' % local_url
                 def fetch_google_font_family(import_url):
                     statement = import_url.group()
                     url = re.findall(r'.*\("(.+)"\)', statement)[0]
