@@ -7,9 +7,9 @@ const { Component } = owl;
 export class ChatterTopbar extends Component {
 
     /**
-     * @returns {Chatter}
+     * @returns {ChatterTopbar}
      */
-    get chatter() {
+    get chatterTopbar() {
         return this.props.record;
     }
 

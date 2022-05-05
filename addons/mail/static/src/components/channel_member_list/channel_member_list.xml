@@ -5,16 +5,10 @@
         <t t-if="channelMemberListView">
             <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="channelMemberListView.channel.orderedOnlineMembers.length > 0">
-                    <t t-call="mail.ChannelMemberList_memberList">
-                        <t t-set="members" t-value="channelMemberListView.channel.orderedOnlineMembers"/>
-                        <t t-set="title">Online</t>
-                    </t>
+                    <ChannelMemberListCategory category="'online'" channelMemberListView="channelMemberListView"/>
                 </t>
                 <t t-if="channelMemberListView.channel.orderedOfflineMembers.length > 0">
-                    <t t-call="mail.ChannelMemberList_memberList">
-                        <t t-set="members" t-value="channelMemberListView.channel.orderedOfflineMembers"/>
-                        <t t-set="title">Offline</t>
-                    </t>
+                    <ChannelMemberListCategory category="'offline'" channelMemberListView="channelMemberListView"/>
                 </t>
                 <t t-if="channelMemberListView.channel.unknownMemberCount === 1">
                     <span class="mx-2 mt-2">And 1 other member.</span>
@@ -28,13 +22,6 @@
                     </div>
                 </t>
             </div>
-        </t>
-    </t>
-
-    <t t-name="mail.ChannelMemberList_memberList" owl="1">
-        <h6 class="m-2"><t t-esc="title"/> - <t t-esc="members.length"/></h6>
-        <t t-foreach="members" t-as="member" t-key="member.localId">
-            <ChannelMember channel="channelMemberListView.channel" member="member"/>
         </t>
     </t>
 

@@ -293,6 +293,17 @@ registerModel({
             this.saveStateInStore();
             this.update({ isFocused: false });
         },
+        onInputTextarea() {
+            if (!this.exists()) {
+                return;
+            }
+            this.saveStateInStore();
+            if (this.textareaLastInputValue !== this.textareaRef.el.value) {
+                this.handleCurrentPartnerIsTyping();
+            }
+            this.update({ textareaLastInputValue: this.textareaRef.el.value });
+            this.updateTextInputHeight();
+        },
         /**
          * @param {KeyboardEvent} ev
          */
@@ -721,6 +732,13 @@ registerModel({
             }
             const previousSuggestion = suggestions[activeElementIndex - 1];
             this.update({ activeSuggestion: replace(previousSuggestion) });
+        },
+        /**
+         * Updates the textarea height of text input.
+         */
+        updateTextInputHeight() {
+            this.mirroredTextareaRef.el.value = this.composer.textInputContent;
+            this.textareaRef.el.style.height = this.mirroredTextareaRef.el.scrollHeight + 'px';
         },
         /**
          * Update a posted message when the message is ready.

@@ -410,6 +410,11 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        topbar: one('ChatterTopbar', {
+            default: insertAndReplace(),
+            inverse: 'chatter',
+            isCausal: true,
+        }),
     },
     onChanges: [
         new OnChange({
