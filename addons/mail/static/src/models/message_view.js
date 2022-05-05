@@ -21,24 +21,35 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
-        onClick(ev) {
+        async onClick(ev) {
             if (ev.target.closest('.o_channel_redirect')) {
-                this.messaging.openProfile({
+                // avoid following dummy href
+                ev.preventDefault();
+                const channel = this.messaging.models['Thread'].insert({
                     id: Number(ev.target.dataset.oeId),
                     model: 'mail.channel',
                 });
-                // avoid following dummy href
+                if (!channel.isPinned) {
+                    await channel.join();
+                    channel.update({ isServerPinned: true });
+                }
+                channel.open();
+                return;
+            } else if (ev.target.closest('.o_mail_redirect')) {
                 ev.preventDefault();
+                this.messaging.openChat({
+                    partnerId: Number(ev.target.dataset.oeId)
+                });
                 return;
             }
             if (ev.target.tagName === 'A') {
                 if (ev.target.dataset.oeId && ev.target.dataset.oeModel) {
+                    // avoid following dummy href
+                    ev.preventDefault();
                     this.messaging.openProfile({
                         id: Number(ev.target.dataset.oeId),
                         model: ev.target.dataset.oeModel,
                     });
-                    // avoid following dummy href
-                    ev.preventDefault();
                 }
                 return;
             }
@@ -76,7 +87,7 @@ registerModel({
             if (!this.message.author) {
                 return;
             }
-            this.message.author.openProfile();
+            this.message.author.openChat();
         },
         /**
          * @param {MouseEvent} ev
@@ -184,8 +195,8 @@ registerModel({
          * @private
          * @returns {string}
          */
-        _computeAuthorAvatarTitleText() {
-            return this.env._t("Open chat");
+        _computeAuthorTitleText() {
+            return this.hasAuthorOpenChat ? this.env._t("Open chat") : '';
         },
         /**
          * @returns {string}
@@ -342,8 +353,8 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        authorAvatarTitleText: attr({
-            compute: '_computeAuthorAvatarTitleText',
+        authorTitleText: attr({
+            compute: '_computeAuthorTitleText',
         }),
         clockWatcher: one('ClockWatcher', {
             default: insertAndReplace({

@@ -34,7 +34,7 @@
                     <div class="o_Message_sidebar d-flex justify-content-center flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative mx-1">
-                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_Message_authorRedirect o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" role="button" tabindex="0" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''" t-att-alt="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''"/>
+                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.authorTitleText" t-att-alt="messageView.authorTitleText"/>
                                 <t t-if="messageView.personaImStatusIconView">
                                     <PersonaImStatusIcon
                                         className="'o_Message_personaImStatusIcon d-flex align-items-center justify-content-center'"
@@ -66,7 +66,7 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_header d-flex flex-wrap align-items-baseline ms-2">
                                 <t t-if="messageView.message.author">
-                                    <strong class="o_Message_authorName o_Message_authorRedirect o_redirect o_cursor_pointer text-truncate" role="link" tabindex="0" t-on-click="messageView.onClickAuthorName" title="Open profile">
+                                    <strong class="o_Message_authorName o_redirect text-truncate" t-att-class="{'o_cursor_pointer': messageView.hasAuthorOpenChat}" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorName" t-att-title="messageView.authorTitleText">
                                         <t t-if="messageView.message.originThread">
                                             <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
                                         </t>
