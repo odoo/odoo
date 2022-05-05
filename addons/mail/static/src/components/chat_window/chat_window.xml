@@ -17,7 +17,6 @@
                     className="'o_ChatWindow_header flex-grow-0 flex-shrink-0'"
                     chatWindow="chatWindow"
                     record="chatWindow.chatWindowHeaderView"
-                    onClicked="chatWindow.onClickHeader"
                 />
                 <t t-if="chatWindow.channelMemberListView">
                     <ChannelMemberList record="chatWindow.channelMemberListView" className="'bg-white'"/>
@@ -41,7 +40,6 @@
                             record="chatWindow.newMessageAutocompleteInputView"
                             select="chatWindow.onAutocompleteSelect"
                             source="chatWindow.onAutocompleteSource"
-                            inputRef="_inputRef"
                         />
                     </div>
                 </t>
