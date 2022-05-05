@@ -412,8 +412,22 @@ export async function click(el, options) {
     await nextTickFrame();
 }
 
-export async function keydown(editable, key, shiftKey) {
-    const ev = new KeyboardEvent('keydown', { key, shiftKey: !!shiftKey });
+export async function keydown(editable, key, options = {}) {
+    options = Object.assign(
+        { key: key },
+        options
+    );
+    const ev = new KeyboardEvent('keydown', options);
+    editable.dispatchEvent(ev);
+    await nextTickFrame();
+}
+
+export async function keyup(editable, key, options = {}) {
+    options = Object.assign(
+        { key: key },
+        options
+    );
+    const ev = new KeyboardEvent('keyup', options);
     editable.dispatchEvent(ev);
     await nextTickFrame();
 }
