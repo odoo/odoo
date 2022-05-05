@@ -80,6 +80,17 @@ registerModel({
         _computeIsSmall() {
             return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeScreenSharingButtonTitle() {
+            if (this.messaging.rtc.sendDisplay) {
+                return this.env._t("Stop screen sharing");
+            } else {
+                return this.env._t("Share screen");
+            }
+        },
     },
     fields: {
         callViewer: one('RtcCallViewer', {
@@ -94,6 +105,10 @@ registerModel({
             default: insertAndReplace(),
             inverse: 'rtcController',
             isCausal: true,
+        }),
+        screenSharingButtonTitle: attr({
+            compute: '_computeScreenSharingButtonTitle',
+            default: '',
         }),
     },
 });

@@ -52,15 +52,13 @@
                                 <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
                             </div>
                         </button>
-                        <t t-if="messaging.rtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
-                        <t t-else=""><t t-set="displayTitle">Share screen</t></t>
                         <button class="o_RtcController_button o_RtcController_videoButton"
                             t-att-class="{
                                 'o-isActive': messaging.rtc.sendDisplay,
                                 'o-isSmall': rtcController.isSmall,
                             }"
-                            t-att-aria-label="displayTitle"
-                            t-att-title="displayTitle"
+                            t-att-aria-label="rtcController.screenSharingButtonTitle"
+                            t-att-title="rtcController.screenSharingButtonTitle"
                             t-on-click="rtcController.onClickScreen">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa fa-desktop" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
