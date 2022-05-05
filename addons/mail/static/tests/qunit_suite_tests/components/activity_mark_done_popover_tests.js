@@ -199,9 +199,9 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
     assert.expect(6);
 
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('activity_action');
-        throw new Error("The do-action event should not be triggered when the route doesn't return an action");
+    bus.on('do-action', null, () => {
+            assert.step('activity_action');
+            throw new Error("The do-action event should not be triggered when the route doesn't return an action");
     });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
@@ -249,13 +249,13 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
     assert.expect(3);
 
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('activity_action');
-        assert.deepEqual(
-            payload.action,
-            { type: 'ir.actions.act_window' },
-            "The content of the action should be correct"
-        );
+    bus.on('do-action', null, ({ action }) => {
+            assert.step('activity_action');
+            assert.deepEqual(
+                action,
+                { type: 'ir.actions.act_window' },
+                "The content of the action should be correct"
+            );
     });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();

@@ -602,31 +602,31 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
         res_partner_id: pyEnv.currentPartnerId,
     });
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        // Callback of doing an action (action manager).
-        // Expected to be called on click on origin thread link,
-        // which redirects to form view of record related to origin thread
-        assert.step('do-action');
-        assert.strictEqual(
-            payload.action.type,
-            'ir.actions.act_window',
-            "action should open a view"
-        );
-        assert.deepEqual(
-            payload.action.views,
-            [[false, 'form']],
-            "action should open form view"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'res.fake',
-            "action should open view with model 'res.fake' (model of message origin thread)"
-        );
-        assert.strictEqual(
-            payload.action.res_id,
-            resFakeId1,
-            "action should open view with id of resFake1 (id of message origin thread)"
-        );
+    bus.on('do-action', null, ({ action }) => {
+            // Callback of doing an action (action manager).
+            // Expected to be called on click on origin thread link,
+            // which redirects to form view of record related to origin thread
+            assert.step('do-action');
+            assert.strictEqual(
+                action.type,
+                'ir.actions.act_window',
+                "action should open a view"
+            );
+            assert.deepEqual(
+                action.views,
+                [[false, 'form']],
+                "action should open form view"
+            );
+            assert.strictEqual(
+                action.res_model,
+                'res.fake',
+                "action should open view with model 'res.fake' (model of message origin thread)"
+            );
+            assert.strictEqual(
+                action.res_id,
+                resFakeId1,
+                "action should open view with id of resFake1 (id of message origin thread)"
+            );
     });
     await this.start({
         env: {

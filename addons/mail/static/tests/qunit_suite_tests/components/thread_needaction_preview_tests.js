@@ -151,18 +151,18 @@ QUnit.test('click on expand from chat window should close the chat window and op
         res_partner_id: pyEnv.currentPartnerId,
     });
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action.res_id,
-            resPartnerId1,
-            "should redirect to the id of the thread"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'res.partner',
-            "should redirect to the model of the thread"
-        );
+    bus.on('do-action', null, ({ action }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action.res_id,
+                resPartnerId1,
+                "should redirect to the id of the thread"
+            );
+            assert.strictEqual(
+                action.res_model,
+                'res.partner',
+                "should redirect to the model of the thread"
+            );
     });
     const { afterEvent, click, createMessagingMenuComponent } = await start({
         env: { bus },

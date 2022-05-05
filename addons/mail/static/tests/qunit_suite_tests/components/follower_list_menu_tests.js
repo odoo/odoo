@@ -105,30 +105,30 @@ QUnit.test('click on "add followers" button', async function (assert) {
         res_model: 'res.partner',
     });
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('action:open_view');
-        assert.strictEqual(
-            payload.action.context.default_res_model,
-            'res.partner',
-            "'The 'add followers' action should contain thread model in context'"
-        );
-        assert.strictEqual(
-            payload.action.context.default_res_id,
-            resPartnerId1,
-            "The 'add followers' action should contain thread id in context"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'mail.wizard.invite',
-            "The 'add followers' action should be a wizard invite of mail module"
-        );
-        assert.strictEqual(
-            payload.action.type,
-            "ir.actions.act_window",
-            "The 'add followers' action should be of type 'ir.actions.act_window'"
-        );
-        pyEnv['res.partner'].write([payload.action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
-        payload.options.on_close();
+    bus.on('do-action', null, ({ action, options }) => {
+            assert.step('action:open_view');
+            assert.strictEqual(
+                action.context.default_res_model,
+                'res.partner',
+                "'The 'add followers' action should contain thread model in context'"
+            );
+            assert.strictEqual(
+                action.context.default_res_id,
+                resPartnerId1,
+                "The 'add followers' action should contain thread id in context"
+            );
+            assert.strictEqual(
+                action.res_model,
+                'mail.wizard.invite',
+                "The 'add followers' action should be a wizard invite of mail module"
+            );
+            assert.strictEqual(
+                action.type,
+                "ir.actions.act_window",
+                "The 'add followers' action should be of type 'ir.actions.act_window'"
+            );
+            pyEnv['res.partner'].write([action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
+            options.on_close();
     });
     const { click, createFollowerListMenuComponent, messaging } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({

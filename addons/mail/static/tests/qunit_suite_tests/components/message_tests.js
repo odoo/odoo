@@ -190,19 +190,19 @@ QUnit.test('Notification Error', async function (assert) {
     });
     const openResendActionDef = makeDeferred();
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'mail.mail_resend_message_action',
-            "action should be the one to resend email"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.mail_message_to_resend,
-            mailMessageId1,
-            "action should have correct message id"
-        );
-        openResendActionDef.resolve();
+    bus.on('do-action', null, ({ action, options }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action,
+                'mail.mail_resend_message_action',
+                "action should be the one to resend email"
+            );
+            assert.strictEqual(
+                options.additional_context.mail_message_to_resend,
+                mailMessageId1,
+                "action should have correct message id"
+            );
+            openResendActionDef.resolve();
     });
     const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -756,23 +756,23 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
     assert.expect(7);
 
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.strictEqual(
-            payload.action.type,
-            'ir.actions.act_window',
-            "action should open view"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'some.model',
-            "action should open view on 'some.model' model"
-        );
-        assert.strictEqual(
-            payload.action.res_id,
-            250,
-            "action should open view on 250"
-        );
-        assert.step('do-action:openFormView_some.model_250');
+    bus.on('do-action', null, ({ action }) => {
+            assert.strictEqual(
+                action.type,
+                'ir.actions.act_window',
+                "action should open view"
+            );
+            assert.strictEqual(
+                action.res_model,
+                'some.model',
+                "action should open view on 'some.model' model"
+            );
+            assert.strictEqual(
+                action.res_id,
+                250,
+                "action should open view on 250"
+            );
+            assert.step('do-action:openFormView_some.model_250');
     });
     const { createMessageComponent, messaging } = await start({ env: { bus } });
     const message = messaging.models['Message'].create({

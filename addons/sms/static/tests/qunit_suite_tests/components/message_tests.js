@@ -114,19 +114,19 @@ QUnit.test('Notification Error', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'sms.sms_resend_action',
-            "action should be the one to resend sms"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.default_mail_message_id,
-            mailMessageId1,
-            "action should have correct message id"
-        );
-        openResendActionDef.resolve();
+    bus.on('do-action', null, ({ action, options }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action,
+                'sms.sms_resend_action',
+                "action should be the one to resend sms"
+            );
+            assert.strictEqual(
+                options.additional_context.default_mail_message_id,
+                mailMessageId1,
+                "action should have correct message id"
+            );
+            openResendActionDef.resolve();
     });
     const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const threadViewer = messaging.models['ThreadViewer'].create({
