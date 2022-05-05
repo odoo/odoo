@@ -491,14 +491,17 @@ class AssetsBundle(object):
                 asset._content = fragments.pop(0)
 
                 font_family_url_re = r'@import url\("https:\/\/fonts\.googleapis\.com\/css\?family=.+"\);'
-                font_url_re = r'src: url\(.+\)'
-                headers = {
+                font_url_re = r'url\([^\)]+\)'
+                headers_woff = { # Agent that receives woff font (Internet Explorer 9)
+                    'user-agent': 'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US))',
+                }
+                headers_woff2 = { # Agent that receives woff2 font (Chrome 101.0)
                     'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36',
                 }
-                def fetch_google_font(src):
-                    statement = src.group()
-                    url, font_format = re.findall(r'src: url\(([^\)]+)\) (.+)', statement)[0]
+                def fetch_google_font(src_url):
+                    url = re.findall(r'url\(([^\)]+)\)', src_url.group())[0]
                     try:
+                        headers = headers_woff2 if url[-6:] == '.woff2' else headers_woff
                         req = requests.get(url, headers=headers)
                         req.raise_for_status()
                         name = re.findall(r'.+/([^/]+)', url)[0]
@@ -515,18 +518,50 @@ class AssetsBundle(object):
                                 'url': local_url,
                                 'website_id': None,
                             })
-                        return 'src: url(%s) %s' % (attachment.url, font_format)
+                        return 'url(%s)' % attachment.url
                     except IOError:
-                        _logger.warning("Could not fetch font: %s", statement)
-                        return statement
+                        _logger.warning("Could not fetch font: %s", url)
+                        return url
                 def fetch_google_font_family(import_url):
                     statement = import_url.group()
                     url = re.findall(r'.*\("(.+)"\)', statement)[0]
                     try:
-                        req = requests.get(url, headers=headers)
+                        # Inventory woff source per font-weight and font-style
+                        woff_sources = {}
+                        req = requests.get(url, headers=headers_woff)
                         req.raise_for_status()
-                        response = req.content.decode('utf8')
-                        response = re.sub(font_url_re, fetch_google_font, response)
+                        current_style = None
+                        current_weight = None
+                        current_src = None
+                        for line in req.content.decode('utf8').splitlines():
+                            matched = re.findall(r'font-style:\s*([^;]+);', line)
+                            if matched:
+                                current_style = matched[0]
+                            matched = re.findall(r'font-weight:\s*(\d+);', line)
+                            if matched:
+                                current_weight = matched[0]
+                            matched = re.findall(r'src:\s*([^;]+);', line)
+                            if matched:
+                                current_src = matched[0]
+                                woff_sources['%s/%s' % (current_style, current_weight)] = current_src
+
+                        req = requests.get(url, headers=headers_woff2)
+                        req.raise_for_status()
+                        # Merge woff sources per font-weight and font-style
+                        response_lines = []
+                        for line in req.content.decode('utf8').splitlines():
+                            matched = re.findall(r'font-style:\s*([^;]+);', line)
+                            if matched:
+                                current_style = matched[0]
+                            matched = re.findall(r'font-weight:\s*(\d+);', line)
+                            if matched:
+                                current_weight = matched[0]
+                            if 'src:' in line:
+                                current = '%s/%s' % (current_style, current_weight)
+                                if current in woff_sources:
+                                    line = '%s, %s;' % (line[:-1], woff_sources[current])
+                            response_lines.append(line)
+                        response = re.sub(font_url_re, fetch_google_font, '\n'.join(response_lines))
                         return response
                     except IOError:
                         _logger.warning("Could not fetch font family: %s", statement)
