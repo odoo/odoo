@@ -698,6 +698,34 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
     );
 });
 
+QUnit.test("protects editable elements: an editable can allow hotkeys", async (assert) => {
+    class Comp extends Component {
+        setup() {
+            useHotkey("arrowleft", () => assert.step("called"));
+        }
+    }
+    Comp.template = xml`<div><input class="foo" data-allow-hotkeys="true"/><input class="bar"/></div>`;
+    await mount(Comp, target, { env });
+    const fooInput = target.querySelector(".foo");
+    const barInput = target.querySelector(".bar");
+
+    assert.verifySteps([]);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"]);
+
+    fooInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(["called"], "the callback gets called as the foo editable allows it");
+
+    barInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    await nextTick();
+    assert.verifySteps(
+        [],
+        "the callback does not get called as the bar editable does not explicitly allow hotkeys"
+    );
+});
+
 QUnit.test("ignore numpad keys", async (assert) => {
     assert.expect(3);
 
