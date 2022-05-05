@@ -14,7 +14,7 @@ class AccountTax(models.Model):
         ('9996', 'GRA - Free'),
         ('9997', 'EXO - Exonerated'),
         ('9998', 'INA - Unaffected'),
-        ('9999', 'OTROS - Other taxes')
+        ('9999', 'OTHERS - Other taxes')
     ], 'EDI peruvian code')
 
     l10n_pe_edi_unece_category = fields.Selection([
@@ -46,7 +46,7 @@ class AccountTaxTemplate(models.Model):
         ('9996', 'GRA - Free'),
         ('9997', 'EXO - Exonerated'),
         ('9998', 'INA - Unaffected'),
-        ('9999', 'OTROS - Other taxes')
+        ('9999', 'OTHERS - Other taxes')
     ], 'EDI peruvian code')
 
     l10n_pe_edi_unece_category = fields.Selection([
