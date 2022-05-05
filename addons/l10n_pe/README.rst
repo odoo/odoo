@@ -34,7 +34,7 @@ Taxes:
 'GRA': {'name': 'FRE', 'code': 'Z'},
 'EXO': {'name': 'VAT', 'code': 'E'},
 'INA': {'name': 'FRE', 'code': 'O'},
-'OTROS': {'name': 'OTH', 'code': 'S'},
+'OTHERS': {'name': 'OTH', 'code': 'S'},
 
 We added on this module the 3 concepts in taxes (necessary for the EDI
 signature)
