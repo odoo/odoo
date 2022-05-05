@@ -69,9 +69,9 @@ export class ComposerSuggestedRecipient extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {SuggestedRecipientInfo}
+     * @returns {ComposerSuggestedRecipientView}
      */
-    get suggestedRecipientInfo() {
+    get composerSuggestedRecipientView() {
         return this.props.record;
     }
 
@@ -83,8 +83,8 @@ export class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _update() {
-        if (this._checkboxRef.el) {
-            this._checkboxRef.el.checked = this.suggestedRecipientInfo.isSelected;
+        if (this._checkboxRef.el && this.composerSuggestedRecipientView.suggestedRecipientInfo) {
+            this._checkboxRef.el.checked = this.composerSuggestedRecipientView.suggestedRecipientInfo.isSelected;
         }
     }
 
@@ -96,9 +96,12 @@ export class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _onChangeCheckbox() {
+        if (!this.composerSuggestedRecipientView.exists()) {
+            return;
+        }
         const isChecked = this._checkboxRef.el.checked;
-        this.suggestedRecipientInfo.update({ isSelected: isChecked });
-        if (!this.suggestedRecipientInfo.partner) {
+        this.composerSuggestedRecipientView.suggestedRecipientInfo.update({ isSelected: isChecked });
+        if (!this.composerSuggestedRecipientView.suggestedRecipientInfo.partner) {
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
             // should be opened.
@@ -116,7 +119,13 @@ export class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _onDialogSaved() {
-        const thread = this.suggestedRecipientInfo.exists() && this.suggestedRecipientInfo.thread;
+        if (!this.composerSuggestedRecipientView.exists()) {
+            return;
+        }
+        const thread = (
+            this.composerSuggestedRecipientView.suggestedRecipientInfo &&
+            this.composerSuggestedRecipientView.suggestedRecipientInfo.thread
+        );
         if (!thread) {
             return;
         }

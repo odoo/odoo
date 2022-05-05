@@ -2,75 +2,75 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatterTopbar" owl="1">
-        <t t-if="chatter">
+        <t t-if="chatterTopbar">
             <div class="o_ChatterTopbar justify-content-between d-flex" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_ChatterTopbar_actions flex-wrap-reverse flex-fill d-flex border-bottom" t-attf-class="{{ chatter.composerView ? 'o-has-active-button' : 'border-white' }}">
-                    <t t-if="chatter.threadView">
+                <div class="o_ChatterTopbar_actions flex-wrap-reverse flex-fill d-flex border-bottom" t-attf-class="{{ chatterTopbar.chatter.composerView ? 'o-has-active-button' : 'border-white' }}">
+                    <t t-if="chatterTopbar.chatter.threadView">
                         <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonSendMessage btn btn-link"
                             type="button"
                             t-att-class="{
-                                'o-active border-right': chatter.composerView and !chatter.composerView.composer.isLog,
-                                'o-bordered': chatter.hasExternalBorder,
-                                'border-top border-left': chatter.composerView and !chatter.composerView.composer.isLog and chatter.hasExternalBorder,
+                                'o-active border-right': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog,
+                                'o-bordered': chatterTopbar.chatter.hasExternalBorder,
+                                'border-top border-left': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog and chatterTopbar.chatter.hasExternalBorder,
                             }"
-                            t-att-disabled="chatter.isDisabled"
+                            t-att-disabled="chatterTopbar.chatter.isDisabled"
                             title="Send a message"
                             data-hotkey="m"
-                            t-on-click="chatter.onClickSendMessage"
+                            t-on-click="chatterTopbar.chatter.onClickSendMessage"
                         >
                             Send message
                         </button>
                         <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonLogNote btn btn-link"
                             type="button"
                             t-att-class="{
-                                'o-active border-right border-left': chatter.composerView and chatter.composerView.composer.isLog,
-                                'o-bordered': chatter.hasExternalBorder,
-                                'border-top': chatter.composerView and chatter.composerView.composer.isLog and chatter.hasExternalBorder,
+                                'o-active border-right border-left': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
+                                'o-bordered': chatterTopbar.chatter.hasExternalBorder,
+                                'border-top': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog and chatterTopbar.chatter.hasExternalBorder,
                             }"
-                            t-att-disabled="chatter.isDisabled"
-                            t-on-click="chatter.onClickLogNote"
+                            t-att-disabled="chatterTopbar.chatter.isDisabled"
+                            t-on-click="chatterTopbar.chatter.onClickLogNote"
                             title="Log a note"
                             data-hotkey="shift+m"
                         >
                             Log note
                         </button>
                     </t>
-                    <t t-if="chatter.hasActivities">
-                        <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-link" type="button" t-att-disabled="chatter.isDisabled" t-on-click="chatter.onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
+                    <t t-if="chatterTopbar.chatter.hasActivities">
+                        <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-link" type="button" t-att-disabled="chatterTopbar.chatter.isDisabled" t-on-click="chatterTopbar.chatter.onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
                             <i class="fa fa-clock-o"/>
                             Schedule activity
                         </button>
                     </t>
                     <div class="o-autogrow"/>
                         <div class="o_ChatterTopbar_rightSection flex-grow-1 flex-shrink-0 justify-content-end d-flex">
-                            <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments btn btn-link" type="button" t-att-disabled="chatter.isDisabled" t-on-click="chatter.onClickButtonAttachments">
+                            <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments btn btn-link" type="button" t-att-disabled="chatterTopbar.chatter.isDisabled" t-on-click="chatterTopbar.chatter.onClickButtonAttachments">
                                 <i class="fa fa-paperclip"/>
-                                <t t-if="!chatter.isShowingAttachmentsLoading">
-                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount pl-1" t-esc="chatter.thread ? chatter.thread.allAttachments.length : 0"/>
+                                <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
+                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount pl-1" t-esc="chatterTopbar.chatter.thread ? chatterTopbar.chatter.thread.allAttachments.length : 0"/>
                                 </t>
-                                <t t-if="chatter.isShowingAttachmentsLoading">
+                                <t t-if="chatterTopbar.chatter.isShowingAttachmentsLoading">
                                     <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin ms-1" aria-label="Attachment counter loading..."/>
                                 </t>
                             </button>
-                            <t t-if="chatter.hasFollowers and chatter.thread">
-                                <t t-if="chatter.followButtonView">
+                            <t t-if="chatterTopbar.chatter.hasFollowers and chatterTopbar.chatter.thread">
+                                <t t-if="chatterTopbar.chatter.followButtonView">
                                     <FollowButton
                                         className="'o_ChatterTopbar_followButton'"
-                                        record="chatter.followButtonView"
+                                        record="chatterTopbar.chatter.followButtonView"
                                     />
                                 </t>
                                 <FollowerListMenu
                                     className="'o_ChatterTopbar_followerListMenu'"
-                                    isDisabled="chatter.isDisabled"
-                                    record="chatter.followerListMenuView"
-                                    thread="chatter.thread"
+                                    isDisabled="chatterTopbar.chatter.isDisabled"
+                                    record="chatterTopbar.chatter.followerListMenuView"
+                                    thread="chatterTopbar.chatter.thread"
                                     isChatterButton="true"
                                 />
                             </t>
                         </div>
                 </div>
-                <t t-if="chatter.hasTopbarCloseButton">
-                    <button class="o_ChatterTopbar_buttonClose btn btn-dark flex-shrink-0 rounded-lg-bottom" title="Close" t-on-click="chatter.onClickChatterTopbarClose">
+                <t t-if="chatterTopbar.chatter.hasTopbarCloseButton">
+                    <button class="o_ChatterTopbar_buttonClose btn btn-dark flex-shrink-0 rounded-lg-bottom" title="Close" t-on-click="chatterTopbar.chatter.onClickChatterTopbarClose">
                         <i class="oi oi-large oi-close"/>
                     </button>
                 </t>
