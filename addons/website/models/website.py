@@ -1379,11 +1379,12 @@ class Website(models.Model):
         return self._get_cached_values()[field]
 
     def _get_html_fields(self):
-        html_fields = [('ir_ui_view', 'arch_db')]
+        html_fields = [('ir_ui_view', 'arch_db', True)]
         cr = self.env.cr
         cr.execute(r"""
             SELECT f.model,
-                   f.name
+                   f.name,
+                   f.translate
               FROM ir_model_fields f
               JOIN ir_model m
                 ON m.id = f.model_id
@@ -1393,10 +1394,10 @@ class Website(models.Model):
                AND f.model NOT LIKE 'ir.actions%'
                AND f.model != 'mail.message'
         """)
-        for model, name in cr.fetchall():
+        for model, name, translate in cr.fetchall():
             table = self.env[model]._table
             if tools.table_exists(cr, table) and tools.column_exists(cr, table, name):
-                html_fields.append((table, name))
+                html_fields.append((table, name, translate))
         return html_fields
 
     def _get_snippets_assets(self):
@@ -1439,11 +1440,13 @@ class Website(models.Model):
 
         # As well as every snippet dropped in html fields
         self.env.cr.execute(sql.SQL(" UNION ").join(
-            sql.SQL("SELECT regexp_matches({}, {}, 'g') FROM {}").format(
+            sql.SQL("SELECT regexp_matches({}{}, {}, 'g') FROM {}").format(
                 sql.Identifier(column),
+                sql.SQL('->>\'en_US\'' if translate else ''),
                 sql.Placeholder('snippet_regex'),
                 sql.Identifier(table)
-            ) for table, column in html_fields
+            )
+            for table, column, translate in html_fields
         ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
         results = self.env.cr.fetchall()
         for r in results:
