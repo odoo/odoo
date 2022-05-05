@@ -102,6 +102,13 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         self._unsubscribe_from_channels()
         return super().unlink()
 
+    @api.model
+    def _get_livechat_anonymous_users(self):
+        """ Returns all the potential "anonymous" users that could be used as correspondents in livechat.
+            The client code needs to know them in order to differentiate them from each other on a per channel basis.
+        """
+        return self.env.ref('base.public_user')
+
     def _unsubscribe_from_channels(self):
         """ This method un-subscribes users from private mail channels. Main purpose of this
             method is to prevent sending internal communication to archived / deleted users.
