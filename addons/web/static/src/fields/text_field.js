@@ -11,7 +11,7 @@ const { Component, useEffect, useRef } = owl;
 export class TextField extends Component {
     setup() {
         this.textareaRef = useRef("textarea");
-        useInputField(() => this.props.value || "", "textarea");
+        useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
 
         useEffect(() => {
             if (!this.props.readonly) {

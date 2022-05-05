@@ -10,7 +10,7 @@ const { Component } = owl;
 
 export class CharField extends Component {
     setup() {
-        useInputField(() => this.props.value || "");
+        useInputField({ getValue: () => this.props.value || "", parse: (v) => this.parse(v) });
     }
 
     get formattedValue() {
@@ -21,14 +21,17 @@ export class CharField extends Component {
         return value;
     }
 
+    parse(value) {
+        if (this.props.shouldTrim) {
+            return value.trim();
+        }
+        return value;
+    }
     /**
      * @param {Event} ev
      */
     onChange(ev) {
-        let value = ev.target.value;
-        if (this.props.shouldTrim) {
-            value = value.trim();
-        }
+        let value = this.parse(ev.target.value);
         this.props.update(value || false);
     }
 }

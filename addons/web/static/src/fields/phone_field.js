@@ -9,7 +9,7 @@ const { Component } = owl;
 
 export class PhoneField extends Component {
     setup() {
-        useInputField(() => this.props.value || "");
+        useInputField({ getValue: () => this.props.value || "" });
     }
 
     /**

@@ -2,7 +2,7 @@
 
 import { getScrollPosition, setScrollPosition } from "./scrolling";
 
-const { useComponent, useEffect } = owl;
+const { useComponent, useEffect, useExternalListener } = owl;
 
 // -----------------------------------------------------------------------------
 // Action hook
@@ -66,6 +66,9 @@ export function useSetupAction(params = {}) {
         __getContext__,
     } = component.env;
 
+    if (params.beforeUnload) {
+        useExternalListener(window, "beforeunload", params.beforeUnload);
+    }
     if (__beforeLeave__ && params.beforeLeave) {
         useCallbackRecorder(__beforeLeave__, params.beforeLeave);
     }

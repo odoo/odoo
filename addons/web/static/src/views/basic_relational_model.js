@@ -530,7 +530,12 @@ export class Record extends DataPoint {
             const fieldType = this.fields[fieldName].type;
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
         }
-
+        if (this._urgentSave) {
+            return this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
+                viewType: this.__viewType,
+                notifyChange: false,
+            });
+        }
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
         if (parentID && this.__viewType === "list") {
             // inside an x2many (parentID is the id of the static list datapoint)
@@ -595,6 +600,41 @@ export class Record extends DataPoint {
         this.model.notify();
         resolveSavePromise();
         return true;
+    }
+
+    /**
+     * To be called **only** when Odoo is about to be closed, and we want to
+     * save potential changes on a given record.
+     *
+     * We can't follow the normal flow (onchange(s) + save, mutexified),
+     * because the 'beforeunload' handler must be *almost* sync (< 10 ms
+     * setTimeout seems fine, but an rpc roundtrip is definitely too long),
+     * so here we bypass the standard mechanism of notifying changes and
+     * saving them:
+     *  - we ask the model to bypass its mutex for upcoming 'notifyChanges' and
+     *   'save' requests
+     *  - we ask all fields to commit their changes (in case there would
+     *    be a focused field with a fresh value)
+     *  - we take all changes that have been reported to the
+     *    controller, but not yet sent to the model because of the mutex,
+     *    and directly notify the model about them, see update.
+     *  - we reset the widgets with all those changes, s.t. a further call
+     *    to 'canBeRemoved' uses the correct data (it asks the widgets if
+     *    they are set/valid, based on their internal state)
+     *  - if the record is dirty, we save directly
+     *
+     * @param {string} recordID
+     * @private
+     */
+    async urgentSave() {
+        this.model.__bm__.executeDirectly(async () => {
+            this._urgentSave = true;
+            this.model.env.bus.trigger("FIELD:COMMIT_CHANGE");
+            this.__syncData();
+            if (this.isDirty && this.checkValidity()) {
+                await this.model.__bm__.save(this.__bm_handle__, { reload: false });
+            }
+        });
     }
 
     async archive() {

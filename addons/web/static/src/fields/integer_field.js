@@ -8,7 +8,11 @@ import { useNumpadDecimal } from "./numpad_decimal_hook";
 const { Component } = owl;
 export class IntegerField extends Component {
     setup() {
-        useInputField(() => this.formattedInputValue, "numpadDecimal");
+        useInputField({
+            getValue: () => this.formattedInputValue,
+            refName: "numpadDecimal",
+            parse: (v) => this.props.parse(v),
+        });
         useNumpadDecimal();
     }
     onChange(ev) {

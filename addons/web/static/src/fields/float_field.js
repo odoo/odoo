@@ -9,7 +9,11 @@ const { Component, onWillUpdateProps } = owl;
 export class FloatField extends Component {
     setup() {
         this.defaultInputValue = this.getFormattedValue();
-        useInputField(() => this.defaultInputValue, "numpadDecimal");
+        useInputField({
+            getValue: () => this.defaultInputValue,
+            refName: "numpadDecimal",
+            parse: (v) => this.parse(v),
+        });
         useNumpadDecimal();
         onWillUpdateProps((nextProps) => {
             if (
@@ -22,11 +26,15 @@ export class FloatField extends Component {
         });
     }
 
+    parse(value) {
+        return this.props.inputType === "number" ? Number(value) : this.props.parse(value);
+    }
+
     onChange(ev) {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.inputType === "number" ? Number(value) : this.props.parse(value);
+            value = this.parse(value);
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             isValid = false;

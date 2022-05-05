@@ -9,7 +9,7 @@ const { Component } = owl;
 
 export class EmailField extends Component {
     setup() {
-        useInputField(() => this.props.value || "");
+        useInputField({ getValue: () => this.props.value || "" });
     }
 
     /**

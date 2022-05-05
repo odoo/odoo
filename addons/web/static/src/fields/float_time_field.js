@@ -8,7 +8,7 @@ import { useNumpadDecimal } from "./numpad_decimal_hook";
 const { Component } = owl;
 export class FloatTimeField extends Component {
     setup() {
-        useInputField(() => this.formattedValue, "numpadDecimal");
+        useInputField({ getValue: () => this.formattedValue, refName: "numpadDecimal" });
         useNumpadDecimal();
     }
 

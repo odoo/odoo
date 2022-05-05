@@ -9,7 +9,7 @@ const { Component } = owl;
 
 export class UrlField extends Component {
     setup() {
-        useInputField(() => this.props.value || "");
+        useInputField({ getValue: () => this.props.value || "" });
     }
 
     get formattedHref() {

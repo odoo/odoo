@@ -1,6 +1,7 @@
 /** @odoo-module **/
+import { useBus } from "@web/core/utils/hooks";
 
-const { useEffect, useRef } = owl;
+const { useEffect, useRef, useEnv } = owl;
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -12,8 +13,9 @@ const { useEffect, useRef } = owl;
  *   the input, if the user isn't currently editing it
  * @param {string} [refName="input"] the ref of the input/textarea
  */
-export function useInputField(getValue, refName = "input") {
-    const inputRef = useRef(refName);
+export function useInputField(params) {
+    const env = useEnv();
+    const inputRef = useRef(params.refName || "input");
     let isDirty = false;
     let lastSetValue = null;
     function onInput(ev) {
@@ -23,6 +25,7 @@ export function useInputField(getValue, refName = "input") {
         lastSetValue = ev.target.value;
         isDirty = false;
     }
+    useBus(env.bus, "FIELD:COMMIT_CHANGE", commitChanges);
     useEffect(
         (inputEl) => {
             if (inputEl) {
@@ -38,8 +41,15 @@ export function useInputField(getValue, refName = "input") {
     );
     useEffect(() => {
         if (inputRef.el && !isDirty) {
-            inputRef.el.value = getValue();
+            inputRef.el.value = params.getValue();
             lastSetValue = inputRef.el.value;
         }
     });
+
+    async function commitChanges() {
+        if (inputRef.el && inputRef.el.value !== this.props.value) {
+            const val = params.parse ? params.parse(inputRef.el.value) : inputRef.el.value;
+            await this.props.update(val);
+        }
+    }
 }

@@ -11,7 +11,11 @@ const { Component } = owl;
 
 export class MonetaryField extends Component {
     setup() {
-        useInputField(() => this.formattedValue, "numpadDecimal");
+        useInputField({
+            getValue: () => this.formattedValue,
+            refName: "numpadDecimal",
+            parse: (v) => this.props.parse(v, { currencyId: this.props.currencyId }),
+        });
         useNumpadDecimal();
     }
     onChange(ev) {

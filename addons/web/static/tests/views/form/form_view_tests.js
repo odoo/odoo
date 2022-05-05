@@ -16,6 +16,7 @@ import {
     patchTimeZone,
     patchWithCleanup,
     selectDropdownItem,
+    triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -11377,7 +11378,7 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
 
-        await click(target.querySelector(".o_data_row td[title='name']"));
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
             "Partner",
             "first record",
@@ -11413,13 +11414,13 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
-    QUnit.skipWOWL("Auto save: save when breadcrumb clicked", async function (assert) {
+    QUnit.test("Auto save: save when breadcrumb clicked", async function (assert) {
         assert.expect(7);
 
         serverData.actions[1] = {
             id: 1,
             name: "Partner",
-            resModel: "partner",
+            res_model: "partner",
             type: "ir.actions.act_window",
             views: [
                 [false, "list"],
@@ -11453,36 +11454,39 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
 
-        await click($(webClient.el).find(".o_data_row:first"));
-        await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
 
-        await click($(webClient.el).find(".o_form_button_edit"));
-        await editInput($(webClient.el).find('.o_field_widget[name="name"]'), "aaa");
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
-        await click($(webClient.el).find(".breadcrumb-item.o_back_button"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".breadcrumb-item.o_back_button"));
 
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partner");
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Partner");
         assert.strictEqual(
-            $(webClient.el).find('.o_field_cell[name="name"]:first').innerText,
+            target.querySelector('.o_field_cell .o_field_widget[name="name"]').innerText,
             "aaa"
         );
 
-        await click($(webClient.el).find(".o_data_row:first"));
-        await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_form_readonly");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "aaa");
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
+        assert.containsOnce(target, ".o_form_readonly");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
-    QUnit.skipWOWL("Auto save: save when action changed", async function (assert) {
+    QUnit.test("Auto save: save when action changed", async function (assert) {
         assert.expect(6);
 
         serverData.actions[1] = {
             id: 1,
             name: "Partner",
-            resModel: "partner",
+            res_model: "partner",
             type: "ir.actions.act_window",
             views: [
                 [false, "list"],
@@ -11493,7 +11497,7 @@ QUnit.module("Views", (hooks) => {
         serverData.actions[2] = {
             id: 2,
             name: "Other action",
-            resModel: "partner",
+            res_model: "partner",
             type: "ir.actions.act_window",
             views: [[false, "kanban"]],
         };
@@ -11534,27 +11538,31 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
 
-        await click($(webClient.el).find(".o_data_row:first"));
-        await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
 
-        await click($(webClient.el).find(".o_form_button_edit"));
-        await editInput($(webClient.el).find('.o_field_widget[name="name"]'), "aaa");
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
         await doAction(webClient, 2, { clearBreadcrumbs: true });
 
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Other action");
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Other action");
 
         await doAction(webClient, 1, { clearBreadcrumbs: true });
 
-        await click($(webClient.el).find(".o_data_row:first"));
-        await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_form_readonly");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "aaa");
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
+        assert.containsOnce(target, ".o_form_readonly");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
-    QUnit.skipWOWL("Auto save: save on closing tab/browser", async function (assert) {
+    QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -11572,7 +11580,6 @@ QUnit.module("Views", (hooks) => {
                 if (method === "write" && model === "partner") {
                     assert.deepEqual(args, [[1], { display_name: "test" }]);
                 }
-                return this._super(...arguments);
             },
         });
 
@@ -11582,45 +11589,41 @@ QUnit.module("Views", (hooks) => {
             "test"
         );
 
-        await editInput(target, '.o_field_widget[name="display_name"]', "test");
+        await editInput(target, '.o_field_widget[name="display_name"] input', "test");
         window.dispatchEvent(new Event("beforeunload"));
-        await testUtils.nextTick();
+        await nextTick();
     });
 
-    QUnit.skipWOWL(
-        "Auto save: save on closing tab/browser (invalid field)",
-        async function (assert) {
-            assert.expect(1);
+    QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
+        assert.expect(1);
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                 <form>
                     <group>
                         <field name="display_name" required="1"/>
                     </group>
                 </form>`,
-                resId: 1,
-                mockRPC(route, { args, method, model }) {
-                    if (method === "write" && model === "partner") {
-                        assert.step("save"); // should not be called
-                    }
-                    return this._super(...arguments);
-                },
-            });
+            resId: 1,
+            mockRPC(route, { args, method, model }) {
+                if (method === "write" && model === "partner") {
+                    assert.step("save"); // should not be called
+                }
+            },
+        });
 
-            await click(target.querySelector(".o_form_button_edit"));
-            await editInput(target, '.o_field_widget[name="display_name"]', "");
-            window.dispatchEvent(new Event("beforeunload"));
-            await testUtils.nextTick();
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, '.o_field_widget[name="display_name"] input', "");
+        window.dispatchEvent(new Event("beforeunload"));
+        await nextTick();
 
-            assert.verifySteps([], "should not save because of invalid field");
-        }
-    );
+        assert.verifySteps([], "should not save because of invalid field");
+    });
 
-    QUnit.skipWOWL("Auto save: save on closing tab/browser (not dirty)", async function (assert) {
+    QUnit.test("Auto save: save on closing tab/browser (not dirty)", async function (assert) {
         assert.expect(1);
 
         await makeView({
@@ -11638,84 +11641,78 @@ QUnit.module("Views", (hooks) => {
                 if (method === "write" && model === "partner") {
                     assert.step("save"); // should not be called
                 }
-                return this._super(...arguments);
             },
         });
 
         await click(target.querySelector(".o_form_button_edit"));
 
         window.dispatchEvent(new Event("beforeunload"));
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.verifySteps([], "should not save because we do not change anything");
     });
 
-    QUnit.skipWOWL(
-        "Auto save: save on closing tab/browser (detached form)",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("Auto save: save on closing tab/browser (detached form)", async function (assert) {
+        assert.expect(3);
 
-            serverData.actions[1] = {
-                id: 1,
-                name: "Partner",
-                resModel: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "list"],
-                    [false, "form"],
-                ],
-            };
+        serverData.actions[1] = {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        };
 
-            serverData.views = {
-                "partner,false,list": `
+        serverData.views = {
+            "partner,false,list": `
                 <tree>
                     <field name="display_name"/>
                 </tree>
             `,
-                "partner,false,form": `
+            "partner,false,form": `
                 <form>
                     <group>
                         <field name="display_name"/>
                     </group>
                 </form>
             `,
-                "partner,false,search": "<search></search>",
-            };
+            "partner,false,search": "<search></search>",
+        };
 
-            const mockRPC = (route, args) => {
-                if (args.method === "write") {
-                    assert.step("save");
-                }
-            };
+        const mockRPC = (route, args) => {
+            if (args.method === "write") {
+                assert.step("save");
+            }
+        };
 
-            const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
 
-            await doAction(webClient, 1);
+        await doAction(webClient, 1);
 
-            // Click on a row to open a record
-            await click($(webClient.el).find(".o_data_row:first"));
-            await legacyExtraNextTick();
-            assert.strictEqual(
-                $(webClient.el).find(".breadcrumb").innerText,
-                "Partnerfirst record"
-            );
+        // Click on a row to open a record
+        await click(target.querySelector(".o_data_row td.o_data_cell"));
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
 
-            // Return in the list view to detach the form view
-            await click($(webClient.el).find(".o_back_button"));
-            await legacyExtraNextTick();
-            assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partner");
+        // Return in the list view to detach the form view
+        await click(target.querySelector(".o_back_button"));
+        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Partner");
 
-            // Simulate tab/browser close in the list
-            window.dispatchEvent(new Event("beforeunload"));
-            await testUtils.nextTick();
+        // Simulate tab/browser close in the list
+        window.dispatchEvent(new Event("beforeunload"));
+        await nextTick();
 
-            // write rpc should not trigger because form view has been detached
-            // and list has nothing to save
-            assert.verifySteps([]);
-        }
-    );
+        // write rpc should not trigger because form view has been detached
+        // and list has nothing to save
+        assert.verifySteps([]);
+    });
 
-    QUnit.skipWOWL("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
+    QUnit.test("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.onchanges = {
@@ -11744,18 +11741,17 @@ QUnit.module("Views", (hooks) => {
                 if (method === "write" && model === "partner") {
                     assert.deepEqual(args, [[1], { display_name: "test" }]);
                 }
-                return this._super(...arguments);
             },
         });
 
         await click(target.querySelector(".o_form_button_edit"));
-        await editInput(target, '.o_field_widget[name="display_name"]', "test");
+        await editInput(target, '.o_field_widget[name="display_name"] input', "test");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await testUtils.nextTick();
+        await nextTick();
     });
 
-    QUnit.skipWOWL("Auto save: save on closing tab/browser (onchanges 2)", async function (assert) {
+    QUnit.test("Auto save: save on closing tab/browser (onchanges 2)", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.onchanges = {
@@ -11780,62 +11776,53 @@ QUnit.module("Views", (hooks) => {
                     return def;
                 }
                 if (method === "write") {
-                    assert.deepEqual(args, [[1], { display_name: "test", name: "test" }]);
+                    assert.deepEqual(args, [[1], { display_name: "test1", name: "test2" }]);
                 }
-                return this._super(...arguments);
             },
         });
 
         await click(target.querySelector(".o_form_button_edit"));
-        await editInput(target, '.o_field_widget[name="display_name"]', "test");
-        await editInput(target, '.o_field_widget[name="name"]', "test");
+        await editInput(target, '.o_field_widget[name="display_name"] input', "test1");
+        await editInput(target, '.o_field_widget[name="name"] input', "test2");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await testUtils.nextTick();
+        await nextTick();
     });
 
-    QUnit.skipWOWL(
-        "Auto save: save on closing tab/browser (pending change)",
-        async function (assert) {
-            assert.expect(4);
+    QUnit.test("Auto save: save on closing tab/browser (pending change)", async function (assert) {
+        assert.expect(5);
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                fieldDebounce: 1000,
-                arch: `<form><field name="foo"/></form>`,
-                resId: 1,
-                mockRPC(route, { args, method }) {
-                    assert.step(method);
-                    if (method === "write") {
-                        assert.deepEqual(args, [[1], { foo: "test" }]);
-                    }
-                    return this._super(...arguments);
-                },
-            });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+            resId: 1,
+            mockRPC(route, { args, method }) {
+                assert.step(method);
+                if (method === "write") {
+                    assert.deepEqual(args, [[1], { foo: "test" }]);
+                }
+            },
+        });
 
-            await click(target.querySelector(".o_form_button_edit"));
+        await click(target.querySelector(".o_form_button_edit"));
 
-            // edit 'foo' but do not focusout -> the model isn't aware of the change
-            // until the 'beforeunload' event is triggered
-            target.querySelector('.o_field_widget[name="foo"]').val("test");
-            await testUtils.dom.triggerEvent(
-                target.querySelector('.o_field_widget[name="foo"]'),
-                "input"
-            );
+        // edit 'foo' but do not focusout -> the model isn't aware of the change
+        // until the 'beforeunload' event is triggered
+        await editInput(target, ".o_field_widget[name='foo'] input", "test");
+        await triggerEvent(target, ".o_field_widget[name='foo'] input", "input");
 
-            window.dispatchEvent(new Event("beforeunload"));
-            await testUtils.nextTick();
+        window.dispatchEvent(new Event("beforeunload"));
+        await nextTick();
 
-            assert.verifySteps(["read", "write"]);
-        }
-    );
+        assert.verifySteps(["get_views", "read", "write"]);
+    });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "Auto save: save on closing tab/browser (onchanges + pending change)",
         async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
             serverData.models.partner.onchanges = {
                 display_name: function (obj) {
@@ -11848,7 +11835,6 @@ QUnit.module("Views", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 serverData,
-                fieldDebounce: 1000,
                 arch: `
                 <form>
                     <field name="display_name"/>
@@ -11867,47 +11853,37 @@ QUnit.module("Views", (hooks) => {
                             { display_name: "test", name: "test", foo: "test" },
                         ]);
                     }
-                    return this._super(...arguments);
                 },
             });
 
             await click(target.querySelector(".o_form_button_edit"));
             // edit 'display_name' and simulate a focusout (trigger the 'change' event)
             // -> notifies the model of the change and performs the onchange
-            target.querySelector('.o_field_widget[name="display_name"]').val("test");
-            await testUtils.dom.triggerEvent(
-                target.querySelector('.o_field_widget[name="display_name"]'),
-                "change"
-            );
+            await editInput(target, '.o_field_widget[name="display_name"] input', "test");
+            await triggerEvent(target, '.o_field_widget[name="display_name"] input', "change");
 
             // edit 'name' and simulate a focusout (trigger the 'change' event)
             // -> waits for the mutex (i.e. the onchange) to notify the model
-            target.querySelector('.o_field_widget[name="name"]').val("test");
-            await testUtils.dom.triggerEvent(
-                target.querySelector('.o_field_widget[name="name"]'),
-                "change"
-            );
+            await editInput(target, '.o_field_widget[name="name"] input', "test");
+            await triggerEvent(target, '.o_field_widget[name="name"] input', "change");
 
             // edit 'foo' but do not focusout -> the model isn't aware of the change
             // until the 'beforeunload' event is triggered
-            target.querySelector('.o_field_widget[name="foo"]').val("test");
-            await testUtils.dom.triggerEvent(
-                target.querySelector('.o_field_widget[name="foo"]'),
-                "input"
-            );
+            await editInput(target, '.o_field_widget[name="foo"] input', "test");
+            await triggerEvent(target, '.o_field_widget[name="foo"] input', "input");
 
             // trigger the 'beforeunload' event -> notifies the model directly and saves
             window.dispatchEvent(new Event("beforeunload"));
-            await testUtils.nextTick();
+            await nextTick();
 
-            assert.verifySteps(["read", "onchange", "write"]);
+            assert.verifySteps(["get_views", "read", "onchange", "write"]);
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "Auto save: save on closing tab/browser (onchanges + invalid field)",
         async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
 
             serverData.models.partner.onchanges = {
                 display_name: function (obj) {
@@ -11936,18 +11912,17 @@ QUnit.module("Views", (hooks) => {
                     if (method === "write") {
                         throw new Error("Should not save the record");
                     }
-                    return this._super(...arguments);
                 },
             });
 
             await click(target.querySelector(".o_form_button_edit"));
-            await editInput(target.querySelector('.o_field_widget[name="display_name"]'), "test");
-            await editInput(target, '.o_field_widget[name="name"]', "");
+            await editInput(target, '.o_field_widget[name="display_name"] input', "test");
+            await editInput(target, '.o_field_widget[name="name"] input', "");
 
             window.dispatchEvent(new Event("beforeunload"));
-            await testUtils.nextTick();
+            await nextTick();
 
-            assert.verifySteps(["read", "onchange"]);
+            assert.verifySteps(["get_views", "read", "onchange"]);
         }
     );
 
