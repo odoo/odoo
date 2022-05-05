@@ -77,17 +77,7 @@ export class ComposerTextInput extends Component {
             }
             this.composerView.update({ hasToRestoreContent: false });
         }
-        this._updateHeight();
-    }
-
-    /**
-     * Updates the textarea height.
-     *
-     * @private
-     */
-    _updateHeight() {
-        this.composerView.mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
-        this.composerView.textareaRef.el.style.height = this.composerView.mirroredTextareaRef.el.scrollHeight + 'px';
+        this.composerView.updateTextInputHeight();
     }
 
     //--------------------------------------------------------------------------
@@ -106,7 +96,7 @@ export class ComposerTextInput extends Component {
             this.composerView.handleCurrentPartnerIsTyping();
         }
         this.composerView.update({ textareaLastInputValue: this.composerView.textareaRef.el.value });
-        this._updateHeight();
+        this.composerView.updateTextInputHeight();
     }
 
 }

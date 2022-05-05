@@ -723,6 +723,13 @@ registerModel({
             this.update({ activeSuggestion: replace(previousSuggestion) });
         },
         /**
+         * Updates the textarea height of text input.
+         */
+        updateTextInputHeight() {
+            this.mirroredTextareaRef.el.value = this.composer.textInputContent;
+            this.textareaRef.el.style.height = this.mirroredTextareaRef.el.scrollHeight + 'px';
+        },
+        /**
          * Update a posted message when the message is ready.
          */
         async updateMessage() {
