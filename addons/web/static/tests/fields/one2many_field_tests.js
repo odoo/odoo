@@ -26,7 +26,6 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { ListRenderer } from "@web/views/list/list_renderer";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { FieldOne2Many } from "web.relational_fields";
 
@@ -748,20 +747,13 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, "span.o_row_handle");
     });
 
-    QUnit.skipWOWL("embedded one2many with handle widget", async function (assert) {
-        assert.expect(10);
-
-        let nbConfirmChange = 0;
-        patchWithCleanup(ListRenderer.prototype, {
-            confirmChange: () => {
-                nbConfirmChange++;
-                return this._super(...arguments);
-            },
-        });
-
+    QUnit.test("embedded one2many with handle widget", async function (assert) {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
+        serverData.models.partner.onchanges = {
+            turtles: function () {},
+        };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -775,72 +767,56 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
+            async mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.step("onchange");
+                }
+            },
         });
 
-        testUtils.mock.intercept(
-            form,
-            "field_changed",
-            function (event) {
-                assert.step(event.data.changes.turtles.data.turtle_int.toString());
-            },
-            true
-        );
-
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "yopblipkawa",
-            "should have the 3 rows in the correct order"
+        assert.deepEqual(
+            [...target.querySelectorAll('div[name="turtle_foo"]')].map((el) => el.innerText),
+            ["yop", "blip", "kawa"]
         );
 
         await clickEdit(target);
 
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "yopblipkawa",
-            "should still have the 3 rows in the correct order"
+        assert.deepEqual(
+            [...target.querySelectorAll('div[name="turtle_foo"]')].map((el) => el.innerText),
+            ["yop", "blip", "kawa"]
         );
-        assert.strictEqual(nbConfirmChange, 0, "should not have confirmed any change yet");
 
         // Drag and drop the second line in first position
-        await testUtils.dom.dragAndDrop(
-            form.$(".ui-sortable-handle").eq(1),
-            form.$("tbody tr").first(),
-            { position: "top" }
-        );
+        await dragAndDrop("tbody tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
 
-        assert.strictEqual(nbConfirmChange, 1, "should have confirmed changes only once");
-        assert.verifySteps(
-            ["0", "1"],
-            "sequences values should be incremental starting from the previous minimum one"
-        );
+        assert.verifySteps(["onchange"]);
 
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "blipyopkawa",
-            "should have the 3 rows in the new order"
+        assert.deepEqual(
+            [...target.querySelectorAll('div[name="turtle_foo"]')].map((el) => el.innerText),
+            ["blip", "yop", "kawa"]
         );
 
         await clickSave(target);
 
         assert.deepEqual(
-            _.map(serverData.models.turtle.records, function (turtle) {
-                return _.pick(turtle, "id", "turtle_foo", "turtle_int");
+            serverData.models.turtle.records.map((r) => {
+                return {
+                    id: r.id,
+                    turtle_foo: r.turtle_foo,
+                    turtle_int: r.turtle_int,
+                };
             }),
             [
                 { id: 1, turtle_foo: "yop", turtle_int: 1 },
                 { id: 2, turtle_foo: "blip", turtle_int: 0 },
                 { id: 3, turtle_foo: "kawa", turtle_int: 21 },
-            ],
-            "should have save the changed sequence"
+            ]
         );
 
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "blipyopkawa",
-            "should still have the 3 rows in the new order"
+        assert.deepEqual(
+            [...target.querySelectorAll('div[name="turtle_foo"]')].map((el) => el.innerText),
+            ["blip", "yop", "kawa"]
         );
-
-        testUtils.mock.unpatch(ListRenderer);
     });
 
     QUnit.test("onchange for embedded one2many in a one2many", async function (assert) {
