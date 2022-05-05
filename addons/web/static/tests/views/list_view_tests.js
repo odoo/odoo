@@ -8879,7 +8879,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".modal");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "multi edit field with daterange widget (edition without using the picker)",
         async function (assert) {
             assert.expect(4);
@@ -8902,10 +8902,11 @@ QUnit.module("Views", (hooks) => {
                     },
                 ],
             };
+            patchTimeZone(360);
 
             await makeView({
                 type: "list",
-                model: "daterange",
+                resModel: "daterange",
                 serverData,
                 arch: `
                 <tree multi_edit="1">
@@ -8916,33 +8917,25 @@ QUnit.module("Views", (hooks) => {
                     if (args.method === "write") {
                         assert.deepEqual(args.args, [[1, 2], { date_start: "2021-04-01" }]);
                     }
-                    return this._super(...arguments);
-                },
-                session: {
-                    getTZOffset: function () {
-                        // see #tzoffset_daterange
-                        return 360;
-                    },
                 },
             });
 
             // Test manually edit the date without using the daterange picker
-            await click($(target).find("thead .o_list_record_selector:first input"));
-            await click($(target).find(".o_data_row:first .o_data_cell:eq(0)"));
+            await click(target.querySelector(".o_list_record_selector input"));
+            await click(target.querySelector(".o_data_row .o_data_cell")); // edit first row
 
             // Change the date in the first datetime
             await editInput(
-                $(target).find(".o_data_row:first .o_data_cell:eq(0) .o_field_date_range"),
+                target, ".o_data_row .o_data_cell .o_field_daterange[name='date_start'] input",
                 "2021-04-01 11:00:00"
             );
-
             assert.containsOnce(
-                document.body,
+                target,
                 ".modal",
                 "The confirm dialog should appear to confirm the multi edition."
             );
 
-            const changesTable = document.querySelector(".modal-body .o_modal_changes");
+            const changesTable = target.querySelector(".modal-body .o_modal_changes");
             assert.strictEqual(
                 changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
                 "Field:Date StartUpdate to:04/01/2021"
@@ -8950,8 +8943,7 @@ QUnit.module("Views", (hooks) => {
 
             // Valid the confirm dialog
             await click(target, ".modal .btn-primary");
-
-            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".modal");
         }
     );
 
@@ -8975,8 +8967,10 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_save"));
     });
 
-    QUnit.skipWOWL("editable list view: contexts with multiple edit", async function (assert) {
+    QUnit.test("editable list view: contexts with multiple edit", async function (assert) {
         assert.expect(4);
+
+        patchWithCleanup(session.user_context, { someKey: "some value" });
 
         await makeView({
             type: "list",
@@ -8988,26 +8982,21 @@ QUnit.module("Views", (hooks) => {
                     route === "/web/dataset/call_kw/foo/write" ||
                     route === "/web/dataset/call_kw/foo/read"
                 ) {
-                    var context = args.kwargs.context;
+                    const context = args.kwargs.context;
                     assert.strictEqual(context.active_field, 2, "context should be correct");
                     assert.strictEqual(context.someKey, "some value", "context should be correct");
                 }
-                return this._super.apply(this, arguments);
             },
-            session: {
-                user_context: { someKey: "some value" },
-            },
-            viewOptions: {
-                context: { active_field: 2 },
-            },
+            context: { active_field: 2 },
         });
 
         // Uses the main selector to select all lines.
-        await click($(target).find(".o_content input:first"));
-        await click($(target).find(".o_data_cell:first"));
+        await click(target.querySelector(".o_list_record_selector input"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+
         // Edits first record then confirms changes.
-        await editInput($(target).find(".o_field_widget[name=foo]"), "legion");
-        await click($(".modal-dialog button.btn-primary"));
+        await editInput(target, ".o_data_row [name=foo] input", "legion");
+        await click(target, ".modal-dialog button.btn-primary");
     });
 
     QUnit.test("editable list view: single edition with selected records", async function (assert) {
@@ -9031,6 +9020,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(fooFields[1].innerText, "oui", "Second row should have been updated");
     });
 
+    // Need keynav Enter
     QUnit.skipWOWL(
         "editable list view: non dirty record with required fields",
         async function (assert) {
@@ -9087,7 +9077,7 @@ QUnit.module("Views", (hooks) => {
 
             // discard row and create new record and keep required field empty and click anywhere
             await click(target.querySelector(".o_list_button_discard"));
-            await click($(".o_list_button_add"));
+            await click(target, ".o_list_button_add");
             assert.containsOnce(target, ".o_selected_row", "row should be selected");
             await editInput(target, ".o_selected_row .o_field_widget[name=int_field]", 123);
             await click(target, ".o_list_view");
@@ -9095,9 +9085,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("editable list view: do not commit changes twice", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("editable list view: do not commit changes twice", async function (assert) {
         serverData.models.foo.onchanges = {
             bar: function (obj) {
                 obj.foo = "changed";
@@ -9117,25 +9105,14 @@ QUnit.module("Views", (hooks) => {
                 if (model === "foo" && method === "onchange") {
                     assert.step("onchange");
                 }
-                return this._super(...arguments);
             },
         });
-        testUtils.mock.intercept(
-            target,
-            "field_changed",
-            function (ev) {
-                assert.deepEqual(ev.data.changes, { bar: false });
-            },
-            true
-        );
+        assert.strictEqual(target.querySelector('.o_data_cell [name="foo"]').textContent, "yop");
 
-        assert.strictEqual($(target).find('.o_field_cell[name="foo"]')[0].textContent, "yop");
-
-        await click($(target).find('.o_field_cell[name="bar"]')[0]);
-        await click($(target).find('.o_field_cell[name="bar"] label')[0]);
-
-        await click($(target).find(".o_list_button_save")[0]);
-        assert.strictEqual($(target).find('.o_field_cell[name="foo"]')[0].textContent, "changed");
+        await click(target.querySelector('.o_data_cell [name="bar"]'));
+        await click(target.querySelector('.o_data_cell [name="bar"] label'));
+        await clickSave(target);
+        assert.strictEqual(target.querySelector('.o_data_cell [name="foo"]').textContent, "changed");
         assert.verifySteps(["onchange"]);
     });
 

@@ -1350,7 +1350,7 @@ class DynamicList extends DataPoint {
             const dialogProps = {
                 confirm: async () => {
                     const resIds = validSelection.map((r) => r.resId);
-                    await this.model.orm.write(this.resModel, resIds, changes);
+                    await this.model.orm.write(this.resModel, resIds, changes, this.context);
                     validSelection.forEach((record) => {
                         record.selected = false;
                     });
