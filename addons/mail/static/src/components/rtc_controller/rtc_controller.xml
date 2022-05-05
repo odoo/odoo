@@ -106,13 +106,11 @@
                                 </div>
                             </button>
                         </t>
-                        <t t-if="rtcController.callViewer.threadView.thread.rtc"><t t-set="phoneTitle">Disconnect</t></t>
-                        <t t-else=""><t t-set="phoneTitle">Join Call</t></t>
                         <button class="o_RtcController_button o_RtcController_callToggle"
-                            t-att-aria-label="phoneTitle"
+                            t-att-aria-label="rtcController.callButtonTitle"
                             t-att-class="{ 'o-isActive': !!rtcController.callViewer.threadView.thread.rtc, 'o-isSmall': rtcController.isSmall }"
                             t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
-                            t-att-title="phoneTitle"
+                            t-att-title="rtcController.callButtonTitle"
                             t-on-click="rtcController.onClickToggleAudioCall">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa fa-phone" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>

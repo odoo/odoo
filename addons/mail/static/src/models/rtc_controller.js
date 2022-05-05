@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcController',
@@ -76,12 +76,30 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeCallButtonTitle() {
+            if (!this.callViewer.threadView.thread) {
+                return clear();
+            }
+            if (this.callViewer.threadView.thread.rtc) {
+                return this.env._t("Disconnect");
+            } else {
+                return this.env._t("Join Call");
+            }
+        },
+        /**
+         * @private
          */
         _computeIsSmall() {
             return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
         },
     },
     fields: {
+        callButtonTitle: attr({
+            compute: '_computeCallButtonTitle',
+            default: '',
+        }),
         callViewer: one('RtcCallViewer', {
             inverse: 'rtcController',
             readonly: true,
