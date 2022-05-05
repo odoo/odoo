@@ -964,7 +964,7 @@ class MrpProduction(models.Model):
                     )
                 )
 
-            if not any(order.move_raw_ids.mapped('quantity_done')):
+            if order.move_raw_ids and not any(order.move_raw_ids.mapped('quantity_done')):
                 raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
 
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
