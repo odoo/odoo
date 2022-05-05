@@ -96,7 +96,7 @@ class AccountMove(models.Model):
                    float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0:
                     qty_invoiced = line.purchase_line_id.qty_invoiced
                     qty_received = line.purchase_line_id.qty_received
-                    qty_to_diff = qty_received - (qty_invoiced - line.quantity)
+                    qty_to_diff = min(line.quantity, qty_received - (qty_invoiced - line.quantity))
                     if qty_to_diff <= 0:
                         continue
                     product = line.product_id
