@@ -3,7 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount, useEffect } = owl;
+const { Component, onMounted, onWillUnmount } = owl;
 
 export class AutocompleteInput extends Component {
 
@@ -15,12 +15,6 @@ export class AutocompleteInput extends Component {
         useComponentToModel({ fieldName: 'component' });
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
-        useEffect(() => {
-            if (this.props.inputRef) {
-                this.props.inputRef.el = this.root.el;
-                return () => this.props.inputRef.el = null;
-            }
-        })
     }
 
     _mounted() {
@@ -176,10 +170,6 @@ Object.assign(AutocompleteInput, {
         },
         source: {
             type: Function,
-            optional: true,
-        },
-        inputRef: {
-            type: { el: Object },
             optional: true,
         },
     },

@@ -46,8 +46,12 @@ export class ChatWindow extends Component {
         }
         if (this.chatWindow.isDoFocus) {
             this.chatWindow.update({ isDoFocus: false });
-            if (this._inputRef.el) {
-                this._inputRef.el.focus();
+            if (
+                this.chatWindow.newMessageAutocompleteInputView &&
+                this.chatWindow.newMessageAutocompleteInputView.component &&
+                this.chatWindow.newMessageAutocompleteInputView.component.root.el
+            ) {
+                this.chatWindow.newMessageAutocompleteInputView.component.root.el.focus();
             }
         }
     }
