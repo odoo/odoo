@@ -6558,16 +6558,14 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target.querySelector(".o_form_view"), "button.infooter");
     });
 
-    QUnit.skipWOWL("open new record even with warning message", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("open new record even with warning message", async function (assert) {
         serverData.models.partner.onchanges = { foo: true };
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<group><field name="foo"/></group>' + "</form>",
+            arch: `<form><group><field name="foo"/></group></form>`,
             resId: 2,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -6578,25 +6576,25 @@ QUnit.module("Views", (hooks) => {
                         },
                     });
                 }
-                return this._super.apply(this, arguments);
             },
         });
         await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            target.querySelector("input").value,
+            target.querySelector(".o_field_widget[name=foo] input").value,
             "blip",
             "input should contain record value"
         );
         await editInput(target, '.o_field_widget[name="foo"] input', "tralala");
         assert.strictEqual(
-            target.querySelector("input").value,
+            target.querySelector(".o_field_widget[name=foo] input").value,
             "tralala",
             "input should contain new value"
         );
 
-        // await form.reload({ currentId: false });
+        await click(target.querySelector(".o_form_button_cancel"));
+        await click(target.querySelector(".o_form_button_create"));
         assert.strictEqual(
-            target.querySelector("input").value,
+            target.querySelector(".o_field_widget[name=foo] input").value,
             "",
             "input should have no value after reload"
         );
@@ -6629,103 +6627,65 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("renderer waits for asynchronous fields rendering", async function (assert) {
-        assert.expect(1);
-        var done = assert.async();
-
-        testUtils
-            .createView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    '<field name="bar"/>' +
-                    '<field name="foo" widget="ace"/>' +
-                    '<field name="int_field"/>' +
-                    "</form>",
-                resId: 1,
-            })
-            .then(function (form) {
-                assert.containsOnce(
-                    target,
-                    ".ace_editor",
-                    "should have waited for ace to load its dependencies"
-                );
-                done();
-            });
-    });
-
-    QUnit.skipWOWL("open one2many form containing one2many", async function (assert) {
-        assert.expect(9);
-
+    QUnit.test("open one2many form containing one2many", async function (assert) {
         serverData.models.partner.records[0].product_ids = [37];
-        this.data.product.fields.partner_type_ids = {
+        serverData.models.product.fields.partner_type_ids = {
             string: "one2many partner",
             type: "one2many",
             relation: "partner_type",
         };
-        this.data.product.records[0].partner_type_ids = [12];
+        serverData.models.product.records[0].partner_type_ids = [12];
 
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="partner_type_ids">
+                        <tree create="0">
+                            <field name="display_name"/>
+                            <field name="color"/>
+                        </tree>
+                    </field>
+                </form>`,
+        };
         await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="product_ids">' +
-                '<tree create="0">' +
-                '<field name="display_name"/>' +
-                '<field name="partner_type_ids"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "product,false,form":
-                    '<form string="Products">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="partner_type_ids">' +
-                    '<tree create="0">' +
-                    '<field name="display_name"/>' +
-                    '<field name="color"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-            },
+            arch: `
+                <form>
+                    <field name="product_ids" widget="one2many">
+                        <tree create="0">
+                            <field name="display_name"/>
+                            <field name="partner_type_ids"/>
+                        </tree>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
-        var row = target.querySelector(".o_field_one2many .o_list_view .o_data_row");
+
+        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            row.children()[1].textContent,
+            target.querySelectorAll(".o_data_row .o_data_cell")[1].textContent,
             "1 record",
             "the cell should contains the number of record: 1"
         );
-        await click(row);
-        await testUtils.nextTick(); // wait for quick edit
-        var modal_row = $(".modal-body .o_form_sheet .o_field_one2many .o_list_view .o_data_row");
-        assert.strictEqual(
-            modal_row.children(".o_data_cell").length,
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsN(
+            target,
+            ".modal .o_data_row .o_data_cell",
             2,
             "the row should contains the 2 fields defined in the form view"
         );
         assert.strictEqual(
-            $(modal_row).innerText,
+            getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
             "gold2",
             "the value of the fields should be fetched and displayed"
         );
         assert.verifySteps(
-            ["read", "read", "get_views", "read", "read"],
+            ["get_views", "read", "read", "get_views", "read", "read"],
             "there should be 4 read rpcs"
         );
     });
@@ -7034,12 +6994,12 @@ QUnit.module("Views", (hooks) => {
         assert.expect(4);
 
         serverData.models.partner.records[0].product_ids = [37];
-        this.data.product.fields.partner_type_ids = {
+        serverData.models.product.fields.partner_type_ids = {
             string: "many2many partner_type",
             type: "many2many",
             relation: "partner_type",
         };
-        this.data.product.records[0].partner_type_ids = [12, 14];
+        serverData.models.product.records[0].partner_type_ids = [12, 14];
 
         await makeView({
             type: "form",
@@ -7197,7 +7157,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skipWOWL("check interactions between multiple FormViewDialogs", async function (assert) {
         assert.expect(8);
 
-        this.data.product.fields.product_ids = {
+        serverData.models.product.fields.product_ids = {
             string: "one2many product",
             type: "one2many",
             relation: "product",
@@ -8175,7 +8135,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.product.fields.name.translate = true;
+            serverData.models.product.fields.name.translate = true;
             serverData.models.partner.records[0].product_id = 37;
             var nbTranslateCalls = 0;
 
