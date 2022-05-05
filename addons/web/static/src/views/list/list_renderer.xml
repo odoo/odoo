@@ -50,7 +50,7 @@
                 </tfoot>
                 <Dropdown t-if="displayOptionalFields" class="'o_optional_columns_dropdown'" position="'bottom-end'">
                     <t t-set-slot="toggler">
-                        <i class="oi oi-settings-adjust o_optional_columns_dropdown_toggle"/>
+                        <i class="oi oi-fw oi-settings-adjust o_optional_columns_dropdown_toggle"/>
                     </t>
                     <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
                         <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
