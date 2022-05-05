@@ -6375,7 +6375,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o-kanban-button-new");
     });
 
-    QUnit.skipWOWL("readonly fields with modifiers may be saved", async function (assert) {
+    QUnit.test("readonly fields with modifiers may be saved", async function (assert) {
         // the readonly property on the field description only applies on view,
         // this is not a DB constraint. It should be seen as a default value,
         // that may be overridden in views, for example with modifiers. So
@@ -6387,23 +6387,16 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<field name=\"foo\" attrs=\"{'readonly': [('bar','=',False)]}\"/>" +
-                '<field name="bar"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo" attrs="{'readonly': [('bar','=',False)]}"/>
+                    <field name="bar"/>
+                </form>`,
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
-                    assert.deepEqual(
-                        args.args[1],
-                        { foo: "New foo value" },
-                        "the new value should be saved"
-                    );
+                    assert.deepEqual(args.args[1], { foo: "New foo value" });
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -6416,7 +6409,7 @@ QUnit.module("Views", (hooks) => {
             '.o_field_widget[name="foo"] input',
             "foo field should be editable"
         );
-        await editInput(target.querySelector('.o_field_widget[name="foo"] input'), "New foo value");
+        await editInput(target, '.o_field_widget[name="foo"] input', "New foo value");
 
         await click(target.querySelector(".o_form_button_save"));
 
@@ -6427,9 +6420,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("readonly set by modifier do not break many2many_tags", async function (assert) {
-        assert.expect(0);
-
+    QUnit.test("readonly set by modifier do not break many2many_tags", async function (assert) {
         serverData.models.partner.onchanges = {
             bar: function (obj) {
                 obj.timmy = [[6, false, [12]]];
@@ -6439,21 +6430,21 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="bar"/>' +
-                "<field name=\"timmy\" widget=\"many2many_tags\" attrs=\"{'readonly': [('bar','=',True)]}\"/>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="timmy" widget="many2many_tags" attrs="{'readonly': [('bar','=',True)]}"/>
+                </form>`,
             resId: 5,
         });
 
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
         await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
     });
 
-    QUnit.skipWOWL("check if id and active_id are defined", async function (assert) {
+    QUnit.test("check if id and active_id are defined", async function (assert) {
         assert.expect(2);
 
         let checkOnchange = false;
@@ -6461,19 +6452,13 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<field name=\"p\" context=\"{'default_trululu':active_id, 'current_id':id}\">" +
-                "<tree>" +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,form": '<form><field name="trululu"/></form>',
-            },
+            arch: `
+                <form>
+                    <field name="p" context="{'default_trululu': active_id, 'current_id': id}">
+                        <tree><field name="trululu"/></tree>
+                        <form><field name="trululu"/></form>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 if (args.method === "onchange" && checkOnchange) {
                     assert.strictEqual(
@@ -6487,7 +6472,6 @@ QUnit.module("Views", (hooks) => {
                         "default_trululu should be false"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 

@@ -206,7 +206,6 @@ export class X2ManyField extends Component {
                 }
                 if (saveAndNew) {
                     return this.list.model.addNewRecord(this.list, {
-                        context: this.list.context,
                         resModel: this.list.resModel,
                         activeFields: form.activeFields,
                         fields: { ...form.fields },
@@ -243,7 +242,7 @@ export class X2ManyField extends Component {
         } else {
             const form = await this._getFormViewInfo();
             const recordParams = {
-                context: makeContext([this.list.context, context]),
+                context,
                 resModel: this.list.resModel,
                 activeFields: form.activeFields,
                 fields: { ...form.fields },
