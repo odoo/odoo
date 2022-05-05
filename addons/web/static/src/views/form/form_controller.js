@@ -79,11 +79,7 @@ export async function loadSubViews(
             context: makeContext([fieldContext, userService.context, refinedContext]),
         });
         const { ArchParser } = viewRegistry.get(viewType);
-        const models = {
-            ...relatedModels,
-            [comodel]: comodelFields,
-        };
-        const archInfo = new ArchParser().parse(views[viewType].arch, models, comodel);
+        const archInfo = new ArchParser().parse(views[viewType].arch, relatedModels, comodel);
         fieldInfo.views[viewType] = { ...archInfo, fields: comodelFields };
         fieldInfo.relatedFields = comodelFields;
     }

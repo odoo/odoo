@@ -288,11 +288,7 @@ export class X2ManyField extends Component {
                 resModel: comodel,
                 views: [[false, "form"]],
             });
-            const models = {
-                ...relatedModels,
-                [comodel]: fields,
-            };
-            const archInfo = new FormArchParser().parse(views.form.arch, models, comodel);
+            const archInfo = new FormArchParser().parse(views.form.arch, relatedModels, comodel);
             formViewInfo = { ...archInfo, fields }; // should be good to memorize this on activeField
         }
 

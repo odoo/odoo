@@ -20,11 +20,7 @@ export const kanbanView = {
     props: (genericProps, view) => {
         const { ArchParser } = view;
         const { arch, fields, limit, relatedModels, resModel, searchMenuTypes } = genericProps;
-        const models = {
-            ...relatedModels,
-            [resModel]: fields,
-        };
-        const archInfo = new ArchParser().parse(arch, models, resModel);
+        const archInfo = new ArchParser().parse(arch, relatedModels, resModel);
         const { activeFields, defaultGroupBy, onCreate, quickCreateView } = archInfo;
         const modelParams = {
             activeFields,
