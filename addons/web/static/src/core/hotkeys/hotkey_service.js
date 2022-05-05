@@ -93,15 +93,20 @@ export const hotkeyService = {
                 return;
             }
 
-            // Prepare and dispatch.
+            // Protect any editable target that does not explicitly accept hotkeys
+            // NB: except for ESC, which is always allowed as hotkey in editables.
             const targetIsEditable =
-                (event.target instanceof Element && /input|textarea/i.test(event.target.tagName)) ||
-                (event.target instanceof HTMLElement && event.target.isContentEditable);
+                event.target instanceof HTMLElement &&
+                (/input|textarea/i.test(event.target.tagName) || event.target.isContentEditable);
+            const shouldProtectEditable =
+                targetIsEditable && !event.target.dataset.allowHotkeys && singleKey !== "escape";
+
+            // Finally, prepare and dispatch.
             const infos = {
                 activeElement,
                 hotkey,
                 isRepeated: event.repeat,
-                shouldProtectEditable: targetIsEditable && singleKey !== "escape",
+                shouldProtectEditable,
             };
             const dispatched = dispatch(infos);
             if (dispatched) {
