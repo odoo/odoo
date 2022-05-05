@@ -291,7 +291,7 @@ msgstr "Programes de promoció immediata aplicada"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
 msgid "Applied Promo Program"
-msgstr ""
+msgstr "Programa de promoció aplicat"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__sales_order_id
@@ -1025,6 +1025,9 @@ msgid ""
 "Product used in the sales order to apply the discount. Each coupon program "
 "has its own reward product for reporting purpose"
 msgstr ""
+"Producte utilitzat en l'ordre de vendes per aplicar el descompte. Cada "
+"programa de cupons té el seu propi producte de recompensa per a propòsits "
+"d'informe"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_specific_product_ids
@@ -1135,7 +1138,7 @@ msgstr "Recompensa"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr ""
+msgstr "Quantitat de la recompensa"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__reward_description
@@ -1148,7 +1151,7 @@ msgstr "Descripció de la recompensa"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr ""
+msgstr "Producte de la línia Reward"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__reward_product_id
@@ -1183,7 +1186,7 @@ msgstr "Import mínim de la regla"
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_program__rule_minimum_amount_tax_inclusion
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_rule__rule_minimum_amount_tax_inclusion
 msgid "Rule Minimum Amount Tax Inclusion"
-msgstr ""
+msgstr "Regla Import mínim Inclusió fiscal"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
@@ -1461,6 +1464,10 @@ msgid ""
 "products should be recorded on the sales order. (Example: You need to have 3"
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
+"No té les quantitats de producte requerides en la seva ordre de venda. Tots "
+"els productes haurien de registrar-se en la comanda de vendes. (Exemple: "
+"Necessita tenir 3 samarretes en la seva comanda de venda si la promoció és "
+"\"Compri 2, emporti's 1 gratis\")"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_program.py:0
@@ -1471,6 +1478,11 @@ msgid ""
 "recorded on the sales order (Example: You need to have 3 T-shirts on your "
 "sales order if the promotion is 'Buy 2, Get 1 Free'."
 msgstr ""
+"No té les quantitats de producte requerides en la seva ordre de venda. Si la"
+" recompensa és la mateixa quantitat de productes, asseguri's que tots els "
+"productes estiguin registrats en la comanda de venda (Exemple: És necessari "
+"tenir 3 samarretes en la comanda de venda si la promoció és 'Compri 2, "
+"emporti's 1 gratis'."
 
 #. module: sale_coupon
 #: model:mail.template,report_name:sale_coupon.mail_template_sale_coupon
