@@ -423,6 +423,7 @@ class MailComposer(models.TransientModel):
                 'body_html': record.body or False,
                 'model_id': model.id or False,
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
+                'use_default_to': True,
             }
             template = self.env['mail.template'].create(values)
             # generate the saved template
