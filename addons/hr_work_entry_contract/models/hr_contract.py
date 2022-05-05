@@ -105,7 +105,7 @@ class HrContract(models.Model):
             for leave in itertools.chain(leaves_by_resource[False], leaves_by_resource[resource.id]):
                 for resource in resources_list:
                     # Global time off is not for this calendar, can happen with multiple calendars in self
-                    if resource and leave.calendar_id != calendar and not leave.resource_id:
+                    if resource and leave.calendar_id and leave.calendar_id != calendar and not leave.resource_id:
                         continue
                     tz = tz if tz else pytz.timezone((resource or contract).tz)
                     if (tz, start_dt) in tz_dates:
