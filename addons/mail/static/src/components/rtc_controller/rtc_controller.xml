@@ -38,15 +38,13 @@
                                 }"/>
                             </div>
                         </button>
-                        <t t-if="messaging.rtc.sendUserVideo"><t t-set="cameraTitle">Stop camera</t></t>
-                        <t t-else=""><t t-set="cameraTitle">Turn camera on</t></t>
                         <button class="o_RtcController_button o_RtcController_videoButton"
                             t-att-class="{
                                 'o-isActive': messaging.rtc.sendUserVideo,
                                 'o-isSmall': rtcController.isSmall,
                             }"
-                            t-att-aria-label="cameraTitle"
-                            t-att-title="cameraTitle"
+                            t-att-aria-label="rtcController.cameraButtonTitle"
+                            t-att-title="rtcController.cameraButtonTitle"
                             t-on-click="rtcController.onClickCamera">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>

@@ -76,6 +76,17 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeCameraButtonTitle() {
+            if (this.messaging.rtc.sendUserVideo) {
+                return this.env._t("Stop camera");
+            } else {
+                return this.env._t("Turn camera on");
+            }
+        },
+        /**
+         * @private
          */
         _computeIsSmall() {
             return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
@@ -86,6 +97,10 @@ registerModel({
             inverse: 'rtcController',
             readonly: true,
             required: true,
+        }),
+        cameraButtonTitle: attr({
+            compute: '_computeCameraButtonTitle',
+            default: '',
         }),
         isSmall: attr({
             compute: '_computeIsSmall',
