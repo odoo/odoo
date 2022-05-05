@@ -912,18 +912,19 @@ class AccountJournal(models.Model):
         self.refund_sequence = self.type in ('sale', 'purchase')
 
     def _get_alias_values(self, type, alias_name=None):
+        company_name = ''
+        if self.company_id != self.env.ref('base.main_company'):
+            company_name = '-' + str(self.company_id.name)
         if not alias_name:
-            alias_name = self.name
-            if self.company_id != self.env.ref('base.main_company'):
-                alias_name += '-' + str(self.company_id.name)
+            alias_name = self.name + company_name
         try:
             remove_accents(alias_name).encode('ascii')
         except UnicodeEncodeError:
             try:
-                remove_accents(self.code).encode('ascii')
-                safe_alias_name = self.code
+                safe_alias_name = self.code + company_name
+                remove_accents(safe_alias_name).encode('ascii')
             except UnicodeEncodeError:
-                safe_alias_name = self.type
+                safe_alias_name = type
             _logger.warning("Cannot use '%s' as email alias, fallback to '%s'",
                 alias_name, safe_alias_name)
             alias_name = safe_alias_name
