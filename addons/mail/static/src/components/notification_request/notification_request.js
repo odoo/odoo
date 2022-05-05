@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { sprintf } from '@web/core/utils/strings';
 
 const { Component } = owl;
 
@@ -10,16 +9,6 @@ export class NotificationRequest extends Component {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * @returns {string}
-     */
-    getHeaderText() {
-        return sprintf(
-            this.env._t("%s has a request"),
-            this.messaging.partnerRoot.nameOrDisplayName
-        );
-    }
 
     /**
      * @returns {NotificationRequestView}
