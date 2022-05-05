@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { CharField } from "@web/fields/char_field";
 import { FormController } from "@web/views/form/form_controller";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -6918,22 +6919,17 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("create with false values", async function (assert) {
+    QUnit.test("create with false values", async function (assert) {
         assert.expect(1);
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<group><field name="bar"/></group>' + "</form>",
+            arch: `<form><field name="bar"/></form>`,
             mockRPC(route, args) {
                 if (args.method === "create") {
-                    assert.strictEqual(
-                        args.args[0].bar,
-                        false,
-                        "the false value should be given as parameter"
-                    );
+                    assert.strictEqual(args.args[0].bar, false);
                 }
-                return this._super(route, args);
             },
         });
 
@@ -6990,9 +6986,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("open one2many form containing many2many_tags", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("open one2many form containing many2many_tags", async function (assert) {
         serverData.models.partner.records[0].product_ids = [37];
         serverData.models.product.fields.partner_type_ids = {
             string: "many2many partner_type",
@@ -7006,89 +7000,65 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             resId: 1,
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="product_ids">' +
-                '<tree create="0">' +
-                '<field name="display_name"/>' +
-                '<field name="partner_type_ids" widget="many2many_tags"/>' +
-                "</tree>" +
-                '<form string="Products">' +
-                "<sheet>" +
-                "<group>" +
-                '<label for="partner_type_ids"/>' +
-                "<div>" +
-                '<field name="partner_type_ids" widget="many2many_tags"/>' +
-                "</div>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>" +
-                "</field>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="product_ids">
+                        <tree create="0">
+                            <field name="display_name"/>
+                            <field name="partner_type_ids" widget="many2many_tags"/>
+                        </tree>
+                        <form>
+                            <group>
+                                <label for="partner_type_ids"/>
+                                <div>
+                                    <field name="partner_type_ids" widget="many2many_tags"/>
+                                </div>
+                            </group>
+                        </form>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
-        var row = target.querySelector(".o_field_one2many .o_list_view .o_data_row");
-        await click(row);
-        assert.verifySteps(["read", "read", "read"], "there should be 3 read rpcs");
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.verifySteps(["get_views", "read", "read", "read"]);
     });
 
-    QUnit.skipWOWL(
-        "onchanges are applied before checking if it can be saved",
-        async function (assert) {
-            assert.expect(4);
+    QUnit.test("onchanges are applied before checking if it can be saved", async function (assert) {
+        serverData.models.partner.onchanges.foo = function (obj) {};
+        serverData.models.partner.fields.foo.required = true;
 
-            serverData.models.partner.onchanges.foo = function (obj) {};
-            serverData.models.partner.fields.foo.required = true;
+        const notificationService = makeFakeNotificationService((msg, options) => {
+            assert.step(options.type);
+        });
+        registry.category("services").add("notification", notificationService, { force: true });
 
-            var def = makeDeferred();
+        const def = makeDeferred();
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: "<form><field name='foo'/></form>",
+            resId: 2,
+            async mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "onchange") {
+                    await def;
+                }
+            },
+        });
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    "<sheet><group>" +
-                    '<field name="foo"/>' +
-                    "</group></sheet>" +
-                    "</form>",
-                resId: 2,
-                mockRPC(route, args) {
-                    var result = this._super.apply(this, arguments);
-                    assert.step(args.method);
-                    if (args.method === "onchange") {
-                        return def.then(function () {
-                            return result;
-                        });
-                    }
-                    return result;
-                },
-                services: {
-                    notification: {
-                        notify: function (params) {
-                            assert.step(params.type);
-                        },
-                    },
-                },
-            });
+        await click(target.querySelector(".o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=foo] input", "");
+        await click(target.querySelector(".o_form_button_save"));
 
-            await click(target.querySelector(".o_form_button_edit"));
-            await editInput(target, '.o_field_widget[name="foo"] input', "");
-            await click(target.querySelector(".o_form_button_save"));
+        def.resolve();
+        await nextTick();
 
-            def.resolve();
-            await testUtils.nextTick();
-
-            assert.verifySteps(["read", "onchange", "danger"]);
-        }
-    );
+        assert.verifySteps(["get_views", "read", "onchange", "danger"]);
+    });
 
     QUnit.skipWOWL("display toolbar", async function (assert) {
         assert.expect(8);

@@ -521,6 +521,10 @@ export class Record extends DataPoint {
     }
 
     async update(changes) {
+        let resolveUpdatePromise;
+        this._updatePromise = new Promise((r) => {
+            resolveUpdatePromise = r;
+        });
         const data = {};
         for (const [fieldName, value] of Object.entries(changes)) {
             const fieldType = this.fields[fieldName].type;
@@ -542,14 +546,17 @@ export class Record extends DataPoint {
             const operation = { operation: "UPDATE", id: this.__bm_handle__, data };
             await this.__syncParent(operation);
         } else {
-            await this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
+            const prom = this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
                 viewType: this.__viewType,
             });
+            prom.catch(resolveUpdatePromise); // onchange rpc may return an error
+            await prom;
             this.__syncData();
         }
         this._removeInvalidFields(Object.keys(changes));
         this.canBeAbandoned = false;
         this.model.notify();
+        resolveUpdatePromise();
     }
 
     /**
@@ -565,6 +572,7 @@ export class Record extends DataPoint {
         this._savePromise = new Promise((r) => {
             resolveSavePromise = r;
         });
+        await this._updatePromise;
         if (!this.checkValidity()) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
