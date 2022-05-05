@@ -289,7 +289,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if not self.active:
+        if not self.active or not self.sale_ok:
             # for performance: avoid calling `_get_possible_combinations`
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False
