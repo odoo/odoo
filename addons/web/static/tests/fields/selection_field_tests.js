@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editSelect, getFixture } from "../helpers/utils";
+import { click, editSelect, editInput, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -364,7 +364,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // trigger an onchange that will update the domain
-            await editSelect(target, ".o_field_widget[name='int_field'] input", 2);
+            await editInput(target, ".o_field_widget[name='int_field'] input", 2);
 
             assert.containsOnce(
                 target,

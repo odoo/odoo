@@ -2,7 +2,14 @@
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
-import { click, editInput, getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    patchWithCleanup,
+    triggerEvent,
+    editSelect,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 // WOWL remove after adapting tests
@@ -259,7 +266,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await editInput(target, "select", "partner");
+        await editSelect(target, "select", "partner");
 
         await click(target, ".o_field_widget[name='reference'] input");
         await editInput(target, ".o_field_widget[name='reference'] input", "new partner");

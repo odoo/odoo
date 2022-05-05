@@ -4863,11 +4863,11 @@ QUnit.module("Views", (hooks) => {
             "widget should be present for this field"
         );
 
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent([
                 target.querySelector('.o-tooltip--technical>li[data-item="widget"]'),
             ]),
-            "Widget:CharField (char)",
+            ["Widget:CharField (char)"],
             "widget description should be correct"
         );
     });
@@ -8963,7 +8963,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(target.querySelector(".o_data_cell"));
-        await editInput(target.querySelector(".o_field_widget[name=foo]"), null, "abc");
+        await editInput(target.querySelector(".o_field_widget[name=foo] input"), null, "abc");
         await click(target.querySelector(".o_list_button_save"));
     });
 

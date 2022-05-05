@@ -191,9 +191,9 @@ QUnit.module("Fields", (hooks) => {
             arch: '<tree><field name="user_id" widget="many2one_avatar"/></tree>',
         });
 
-        assert.strictEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell span")),
-            "AlineChristineAline"
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
+            ["Aline", "Christine", "Aline", ""]
         );
 
         const sources = (function* expectedSources() {
@@ -216,9 +216,9 @@ QUnit.module("Fields", (hooks) => {
             arch: '<tree editable="top"><field name="user_id" widget="many2one_avatar"/></tree>',
         });
 
-        assert.strictEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell span")),
-            "AlineChristineAline"
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
+            ["Aline", "Christine", "Aline", ""]
         );
 
         const sources = (function* expectedSources() {

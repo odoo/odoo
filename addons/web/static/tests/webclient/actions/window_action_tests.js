@@ -1509,9 +1509,9 @@ QUnit.module("ActionManager", (hooks) => {
             ];
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 100);
-            assert.strictEqual(
+            assert.deepEqual(
                 getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
-                "zoupyopplopgnapblip",
+                ["zoup", "yop", "plop", "gnap", "blip"],
                 "record should be in descending order as default_order applies"
             );
 
@@ -1522,26 +1522,26 @@ QUnit.module("ActionManager", (hooks) => {
                 "favorite filter",
                 "favorite filter should be applied"
             );
-            assert.strictEqual(
+            assert.deepEqual(
                 getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
-                "gnapblip",
+                ["gnap", "blip"],
                 "record should still be in descending order after default_order applied"
             );
 
             // go to formview and come back to listview
             await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
-            assert.strictEqual(
+            assert.deepEqual(
                 getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
-                "gnapblip",
+                ["gnap", "blip"],
                 "order of records should not be changed, while coming back through breadcrumb"
             );
 
             // remove filter
             await cpHelpers.removeFacet(target, 0);
-            assert.strictEqual(
+            assert.deepEqual(
                 getNodesTextContent(target.querySelectorAll(".o_data_row .o_data_cell")),
-                "zoupyopplopgnapblip",
+                ["zoup", "yop", "plop", "gnap", "blip"],
                 "order of records should not be changed, after removing current filter"
             );
         }
@@ -1656,9 +1656,9 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.containsOnce(target, ".o_form_uri:contains(First record)");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
-            "PartnersNew"
+            ["Partners", "New"]
         );
 
         // set form view dirty and open m2o record
@@ -1666,9 +1666,9 @@ QUnit.module("ActionManager", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "val");
         await click(target.querySelector(".o_form_uri"));
         assert.containsOnce(target, ".o_form_view .o_form_readonly");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
-            "PartnerstestFirst record"
+            ["Partners", "test", "First record"]
         );
         // go back to test using the breadcrumbs
         await testUtils.dom.click(
@@ -1676,9 +1676,9 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // should be readonly and so saved
         assert.containsOnce(target, ".o_form_view .o_form_readonly");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
-            "Partnerstest"
+            ["Partners", "test"]
         );
         assert.verifySteps([
             "/web/webclient/load_menus",

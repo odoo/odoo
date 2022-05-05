@@ -13,7 +13,6 @@ import {
     clickOpenM2ODropdown,
     dragAndDrop,
     editInput,
-    editSelect,
     getFixture,
     getNodesTextContent,
     makeDeferred,
@@ -1057,7 +1056,7 @@ QUnit.module("Fields", (hooks) => {
 
             await clickEdit(target);
             await click(target.querySelectorAll(".o_data_cell")[1]);
-            await editSelect(target, ".o_selected_row [name=turtle_foo] input", "hop");
+            await editInput(target, ".o_selected_row [name=turtle_foo] input", "hop");
             await clickSave(target);
             assert.deepEqual(
                 [
@@ -7423,7 +7422,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_data_row .o_field_widget input", "a name");
         def = makeDeferred();
         await click(target, ".o_datepicker_input");
-        await editSelect(target, ".o_datepicker_input", "04/27/2022 14:08:52");
+        await editInput(target, ".o_datepicker_input", "04/27/2022 14:08:52");
 
         // resolve the onchange promise
         def.resolve();
@@ -10102,7 +10101,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(target, ".o_data_row", 2);
             assert.deepEqual(
                 getNodesTextContent(target.querySelectorAll('.o_field_widget[name="partner_ids"]')),
-                "second recordsecond recordaaa"
+                ["second record", "second recordaaa"]
             );
 
             assert.verifySteps(["get_views", "onchange", "read"]);
@@ -10199,7 +10198,7 @@ QUnit.module("Fields", (hooks) => {
             getNodesTextContent(
                 target.querySelectorAll('.o_field_widget[name="turtles2"] .o_data_row')
             ),
-            "ABCDEF"
+            ["ABC", "DEF"]
         );
     });
 
@@ -10547,17 +10546,16 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsOnce(target, ".modal .o_form_view");
             assert.containsOnce(target, ".modal .o_field_widget[name=turtles] .o_data_row");
-            assert.strictEqual(
-                getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
-                "new turtle"
-            );
+            assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")), [
+                "new turtle",
+            ]);
 
             await addRow(target.querySelector(".modal"));
             assert.containsN(target, ".modal .o_field_widget[name=turtles] .o_data_row", 2);
-            assert.strictEqual(
-                getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
-                "new turtle"
-            );
+            assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")), [
+                "new turtle",
+                "",
+            ]);
             assert.hasClass(
                 target.querySelectorAll(".modal .o_field_widget[name=turtles] .o_data_row")[1],
                 "o_selected_row"
@@ -10635,11 +10633,11 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
             assert.containsN(target, ".o_data_row .o_field_many2many_tags .badge", 2);
-            assert.strictEqual(
+            assert.deepEqual(
                 getNodesTextContent(
                     target.querySelectorAll(".o_data_row .o_field_many2many_tags .o_tag_badge_text")
                 ),
-                "new turtleanother one"
+                ["new turtle", "another one"]
             );
         }
     );
@@ -11162,16 +11160,24 @@ QUnit.module("Fields", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_list_view");
-        assert.strictEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), "1090");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "10",
+            "9",
+            "0",
+        ]);
 
         await click(target.querySelector("th.o_column_sortable"));
-        assert.strictEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), "0910");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "0",
+            "9",
+            "10",
+        ]);
 
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
-            "kawablip",
+            ["kawa", "blip"],
             "The o2m should not have been sorted."
         );
     });
@@ -11246,9 +11252,9 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_list_record_remove"));
         // the next line should be displayed below the newly added one
         assert.containsN(target, ".o_data_row", 2, "should have 2 records");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
-            "pikawa",
+            ["pi", "", "kawa", ""],
             "should display the correct records on page 1"
         );
     });
@@ -11672,25 +11678,25 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_row .o_list_number")),
-            "124",
+            ["1", "2", "4"],
             "should have correct order initially"
         );
 
         await click(target.querySelectorAll(".o_list_renderer thead th")[1]);
 
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_row .o_list_number")),
-            "412",
+            ["4", "1", "2"],
             "should have correct order (ASC)"
         );
 
         await click(target.querySelectorAll(".o_list_renderer thead th")[1]);
 
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_row .o_list_number")),
-            "214",
+            ["2", "1", "4"],
             "should have correct order (DESC)"
         );
     });
@@ -11767,9 +11773,9 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".modal .btn-primary"));
 
             assert.containsN(target, ".o_data_row", 2);
-            assert.strictEqual(
+            assert.deepEqual(
                 getNodesTextContent(target.querySelectorAll(".o_field_widget[name=display_name]")),
-                "firstsecond"
+                ["first", "second"]
             );
         }
     );

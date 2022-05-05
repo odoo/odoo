@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { editInput, getFixture } from "../helpers/utils";
+import { editSelect, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -59,7 +59,7 @@ QUnit.module("Fields", (hooks) => {
             "Option 2 should have the correct font (Oswald)"
         );
 
-        await editInput(target, ".o_input", options[2].value);
+        await editSelect(target, ".o_input", options[2].value);
 
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="fonts"] > *').style.fontFamily,

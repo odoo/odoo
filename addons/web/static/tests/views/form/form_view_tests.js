@@ -4715,18 +4715,18 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             resId: 2,
         });
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
-            "aaaNo records",
+            ["aaa", "No records"],
             "should have proper initial content"
         );
         await click(target.querySelector(".o_form_button_edit"));
 
         await editInput(target, ".o_field_widget[name=foo] input", "tralala");
 
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
-            "goldNo records",
+            ["gold", "No records"],
             "should have proper initial content"
         );
     });
@@ -11440,38 +11440,38 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
 
         await click(target.querySelector(".o_data_row td[title='name']"));
-        assert.deepEqual(
-            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
-            ["Partner", "first record"]
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
 
         await click(target.querySelector(".o_form_button_edit"));
         await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
         await click(target.querySelector(`.o_pager button.o_pager_next`));
         assert.containsOnce(target, ".o_form_editable");
-        assert.deepEqual(
-            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
-            ["Partner", "second record"]
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "second record",
+        ]);
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="name"] input').value,
             "name"
         );
 
         await click(target.querySelector(".o_form_button_cancel"));
-        assert.deepEqual(
-            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
-            ["Partner", "second record"]
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "second record",
+        ]);
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "name");
 
         await click(target.querySelector(`.o_pager button.o_pager_previous`));
         assert.containsOnce(target, ".o_form_readonly");
-        assert.deepEqual(
-            [...target.querySelectorAll(".breadcrumb li")].map((x) => x.innerText),
-            ["Partner", "first record"]
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
+            "Partner",
+            "first record",
+        ]);
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
     });
 

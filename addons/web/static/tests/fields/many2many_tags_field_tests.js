@@ -291,11 +291,11 @@ QUnit.module("Fields", (hooks) => {
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')"
         );
         await clickOpenedDropdownItem(target, "timmy", "gold");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(
                 target.querySelectorAll(`.o_field_many2many_tags[name="timmy"] .badge`)
             ),
-            "gold"
+            ["gold"]
         );
     });
 
@@ -514,9 +514,9 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain 1 tag");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".badge")),
-            "gold",
+            ["gold"],
             "should have fetched and rendered gold partner tag"
         );
 
@@ -546,9 +546,9 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 tags"
         );
 
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".badge")),
-            "goldsilver",
+            ["gold", "silver"],
             "should contain newly added tag 'silver'"
         );
     });
@@ -590,9 +590,9 @@ QUnit.module("Fields", (hooks) => {
         await clickOpenedDropdownItem(target, "timmy", "gold");
 
         assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain 1 tag");
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_field_many2many_tags .badge")),
-            "gold",
+            ["gold"],
             "should contain newly added tag 'gold'"
         );
 
@@ -1104,24 +1104,24 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await clickEdit(target);
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
-            "second recordaaa",
+            ["second recordaaa"],
             "the tags should be correctly rendered"
         );
 
         // open the x2m form view
         await click(target.querySelector('.o_field_one2many[name="turtles"] .o_data_cell'));
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
-            "blipMy little Foo Value",
+            ["blip", "My little Foo Value"],
             "the list view should be correctly rendered with foo"
         );
 
         await click(target.querySelector(".modal button.o_form_button_cancel"));
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_data_cell")),
-            "second recordaaa",
+            ["second recordaaa"],
             "the tags should still be correctly rendered"
         );
     });
