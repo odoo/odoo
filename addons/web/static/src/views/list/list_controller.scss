@@ -336,7 +336,7 @@
     // Optional fields
     &.o_list_optional_columns {
         th:last-child {
-            padding-right: 15px;
+            padding-right: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size})); // matches the .oi-fw width calculation
         }
     }
 
@@ -346,9 +346,7 @@
 
     .o_optional_columns_dropdown {
         .dropdown-toggle {
-            padding: 0 5px;
-            text-align: center;
-            line-height: 30px;
+            padding: calc(#{$table-cell-padding-y-sm} + #{$table-border-width}) 0 calc(#{$table-cell-padding-y-sm} + #{2 * $table-border-width}) 0; // matches the .table header-cell top/bottom box-size
             z-index: 1; // must be over the resize handle
             background: none;
             color: inherit;
