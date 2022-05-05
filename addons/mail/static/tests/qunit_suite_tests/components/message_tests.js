@@ -842,6 +842,47 @@ QUnit.test('chat with author should be opened after clicking on their avatar', a
     );
 });
 
+QUnit.test('chat with author should be opened after clicking on their name', async function (assert) {
+    assert.expect(4);
+
+    const pyEnv = await startServer();
+    const resPartnerId = pyEnv['res.partner'].create({});
+    pyEnv['res.users'].create({ partner_id: resPartnerId });
+    pyEnv['mail.message'].create({
+        author_id: resPartnerId,
+        body: 'not empty',
+        model: 'res.partner',
+        res_id: resPartnerId,
+    });
+    const { click, openFormView } = await start();
+    await openFormView({
+        res_model: 'res.partner',
+        res_id: resPartnerId,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message_authorName',
+        "message should have the author name"
+    );
+    assert.hasClass(
+        document.querySelector('.o_Message_authorName'),
+        'o_redirect',
+        "author name should have the redirect style"
+    );
+
+    await click('.o_Message_authorName');
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_thread',
+        "chat window with thread should be opened after clicking on author name"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow_thread').dataset.correspondentId,
+        resPartnerId.toString(),
+        "chat with author should be opened after clicking on their name"
+    );
+});
+
 QUnit.test('chat with author should be opened after clicking on their im status icon', async function (assert) {
     assert.expect(4);
 
@@ -935,6 +976,59 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
         document.body,
         '.o_ChatWindow',
         "should have no thread opened after clicking on author avatar when currently chatting with the author"
+    );
+});
+
+QUnit.test('Chat with partner should be opened after clicking on their mention', async function (assert) {
+    assert.expect(2);
+
+    const pyEnv = await startServer();
+    const resPartnerId = pyEnv['res.partner'].create({ name: 'Test Partner', email: 'testpartner@odoo.com' });
+    pyEnv['res.users'].create({ partner_id: resPartnerId });
+    const { click, insertText, openFormView } = await start();
+    await openFormView({
+        res_model: 'res.partner',
+        res_id: resPartnerId,
+    });
+
+    await click('.o_ChatterTopbar_buttonSendMessage');
+    await insertText('.o_ComposerTextInput_textarea', "@Te");
+    await click('.o_ComposerSuggestionView');
+    await click('.o_Composer_buttonSend');
+    await click('.o_mail_redirect');
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_thread',
+        "chat window with thread should be opened after clicking on partner mention"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow_thread').dataset.correspondentId,
+        resPartnerId.toString(),
+        "chat with partner should be opened after clicking on their mention"
+    );
+});
+
+QUnit.test('Channel should be opened after clicking on its mention', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const resPartnerId = pyEnv['res.partner'].create({});
+    pyEnv['mail.channel'].create({ name: 'my-channel' });
+    const { click, insertText, openFormView } = await start();
+    await openFormView({
+        res_model: 'res.partner',
+        res_id: resPartnerId,
+    });
+
+    await click('.o_ChatterTopbar_buttonSendMessage');
+    await insertText('.o_ComposerTextInput_textarea', "#my-channel");
+    await click('.o_ComposerSuggestionView');
+    await click('.o_Composer_buttonSend');
+    await click('.o_channel_redirect');
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_thread',
+        "chat window with thread should be opened after clicking on channel mention"
     );
 });
 

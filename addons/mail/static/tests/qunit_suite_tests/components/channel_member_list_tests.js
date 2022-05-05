@@ -202,5 +202,36 @@ QUnit.test('Load more button should load more members', async function (assert) 
     );
 });
 
+QUnit.test('chat with member should be opened after clicking on channel member', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
+        channel_type: 'group',
+        public: 'private',
+    });
+    const { click, messaging, openDiscuss } = await start({
+        discuss: {
+            context: {
+                active_id: `mail.channel_${mailChannelId1}`,
+            },
+        },
+    });
+    await openDiscuss();
+
+    await click('.o_ThreadViewTopbar_showMemberListButton');
+    await click(`.o_ChannelMember[data-partner-local-id="${messaging.models['Partner'].findFromIdentifyingData({ id: resPartnerId1 }).localId}"]`);
+    assert.containsOnce(
+        document.body,
+        `.o_ThreadView[data-correspondent-id="${resPartnerId1}"]`,
+        "Chat with member Demo should be opened",
+    );
+});
+
 });
 });
