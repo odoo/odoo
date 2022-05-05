@@ -7,17 +7,11 @@
                 <div class="o_AttachmentBox_title d-flex align-items-center">
                     <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
                     <span class="o_AttachmentBox_titleText p-3 font-weight-bold">
-                        Attachments
+                        Files
                     </span>
                     <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
                 </div>
                 <div class="o_AttachmentBox_content d-flex flex-column">
-                    <t t-if="attachmentBoxView.dropZoneView">
-                        <DropZone
-                            className="'o_AttachmentBox_dropZone'"
-                            record="attachmentBoxView.dropZoneView"
-                        />
-                    </t>
                     <t t-if="attachmentBoxView.attachmentList">
                         <AttachmentList
                             className="'o_attachmentBox_attachmentList'"
@@ -26,7 +20,7 @@
                     </t>
                     <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
                         <i class="fa fa-plus-square"/>
-                        Add attachments
+                        Attach files
                     </button>
                 </div>
             </div>
