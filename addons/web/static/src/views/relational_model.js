@@ -496,7 +496,7 @@ export class Record extends DataPoint {
         for (const fieldName in this._requiredFields) {
             const fieldType = this.fields[fieldName].type;
             if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
-                this._removeInvalidField(fieldName);
+                this._removeInvalidFields([fieldName]);
                 continue;
             }
             switch (fieldType) {
@@ -861,18 +861,25 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    async update(fieldName, value) {
-        await this._applyChange(fieldName, value);
+    async update(changes) {
+        await this._applyChanges(changes);
         if (this.selected && this.model.multiEdit) {
             await this.model.root.multiSave(this);
         } else {
-            this._removeInvalidField(fieldName);
-            this.onChanges();
-            const activeField = this.activeFields[fieldName];
             const proms = [];
-            if (activeField && activeField.onChange) {
+            const fieldNames = Object.keys(changes);
+            if (fieldNames.length) {
+                this.onChanges();
+            }
+            this._removeInvalidFields(fieldNames);
+            if (
+                fieldNames.some(
+                    (fieldName) =>
+                        this.activeFields[fieldName] && this.activeFields[fieldName].onChange
+                )
+            ) {
                 await this.model.mutex.exec(async () => {
-                    const changes = await this._onChange(fieldName);
+                    const changes = await this._onChange(fieldNames);
                     for (const [fieldName, value] of Object.entries(changes)) {
                         const field = this.fields[fieldName];
                         // for x2many fields, the onchange returns commands, not ids, so we need to process them
@@ -899,19 +906,21 @@ export class Record extends DataPoint {
     // Protected
     // -------------------------------------------------------------------------
 
-    async _applyChange(fieldName, value) {
-        const field = this.fields[fieldName];
-        if (field && isX2Many(field)) {
-            this._changes[fieldName] = value;
-            await this.data[fieldName].update(value);
-        } else {
-            if (field && field.type === "many2one") {
-                value = await this._loadMany2OneData(fieldName, value);
-            } else if (field && field.type === "reference") {
-                value = await this._loadReference(fieldName, value);
+    async _applyChanges(changes) {
+        for (let [fieldName, value] of Object.entries(changes)) {
+            const field = this.fields[fieldName];
+            if (field && isX2Many(field)) {
+                this._changes[fieldName] = value;
+                await this.data[fieldName].update(value);
+            } else {
+                if (field && field.type === "many2one") {
+                    value = await this._loadMany2OneData(fieldName, value);
+                } else if (field && field.type === "reference") {
+                    value = await this._loadReference(fieldName, value);
+                }
+                this.data[fieldName] = value;
+                this._changes[fieldName] = value;
             }
-            this.data[fieldName] = value;
-            this._changes[fieldName] = value;
         }
     }
 
@@ -964,7 +973,7 @@ export class Record extends DataPoint {
                 this._changes[fieldName] = list;
                 const proms = [];
                 if (activeField && activeField.onChange && this.isX2ManyValid(fieldName)) {
-                    const changes = await this._onChange(fieldName);
+                    const changes = await this._onChange([fieldName]);
                     const proms = [];
                     for (const [fieldName, value] of Object.entries(changes)) {
                         const field = this.fields[fieldName];
@@ -1106,7 +1115,7 @@ export class Record extends DataPoint {
         }
     }
 
-    async _onChange(fieldName) {
+    async _onChange(fieldNames) {
         if (!this.fieldNames.length) {
             return;
         }
@@ -1117,7 +1126,7 @@ export class Record extends DataPoint {
             [
                 [],
                 this.getChanges(true, true),
-                fieldName ? [fieldName] : [],
+                fieldNames && fieldNames.length ? fieldNames : [],
                 this._getOnchangeSpec(),
             ],
             { context: this.context }
@@ -1154,8 +1163,10 @@ export class Record extends DataPoint {
         return this._parseServerValues(serverValues);
     }
 
-    _removeInvalidField(fieldName) {
-        this._invalidFields.delete(fieldName);
+    _removeInvalidFields(fieldNames) {
+        for (const fieldName of fieldNames) {
+            this._invalidFields.delete(fieldName);
+        }
     }
 
     _sanitizeValues(values) {
@@ -1321,9 +1332,6 @@ class DynamicList extends DataPoint {
         if (!changes) {
             return;
         }
-        if (this.confDialogIsOpen) {
-            return;
-        }
         const validSelection = selection.reduce((result, record) => {
             if (
                 !Object.keys(changes).filter(
@@ -1371,12 +1379,7 @@ class DynamicList extends DataPoint {
                 nbValidRecords: validSelection.length,
                 record,
             };
-            this.confDialogIsOpen = true;
-            await this.model.dialogService.add(ListConfirmationDialog, dialogProps, {
-                onClose: () => {
-                    this.confDialogIsOpen = false;
-                },
-            });
+            await this.model.dialogService.add(ListConfirmationDialog, dialogProps);
         } else {
             await record.save();
             record.selected = false;

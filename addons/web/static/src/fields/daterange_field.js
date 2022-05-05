@@ -145,10 +145,10 @@ DateRangeField.extractProps = (fieldName, record, attrs) => {
         startDate: record.data[relatedStartDate || fieldName],
         // pickerOptions: attrs.options.datepicker,
         async updateRange(start, end) {
-            await Promise.all([
-                record.update(relatedStartDate || fieldName, start),
-                record.update(relatedEndDate || fieldName, end),
-            ]);
+            await record.update({
+                [relatedStartDate || fieldName]: start,
+                [relatedEndDate || fieldName]: end,
+            });
         },
     };
 };

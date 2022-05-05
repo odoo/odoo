@@ -319,7 +319,7 @@ export class Record extends DataPoint {
             const fieldType = this.fields[fieldName].type;
             if (fieldName in this._requiredFields) {
                 if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
-                    this._removeInvalidField(fieldName);
+                    this._removeInvalidFields([fieldName]);
                     continue;
                 }
             }
@@ -473,7 +473,7 @@ export class Record extends DataPoint {
                                 await this.model.__bm__.save(this.__bm_handle__, {
                                     savePoint: true,
                                 });
-                                await this.update(fieldName, value);
+                                await this.update({ [fieldName]: value });
                             },
                         });
                         data[fieldName].__fieldName__ = fieldName;
@@ -520,8 +520,13 @@ export class Record extends DataPoint {
         ]);
     }
 
-    async update(fieldName, value) {
-        const fieldType = this.fields[fieldName].type;
+    async update(changes) {
+        const data = {};
+        for (const [fieldName, value] of Object.entries(changes)) {
+            const fieldType = this.fields[fieldName].type;
+            data[fieldName] = mapWowlValueToLegacy(value, fieldType);
+        }
+
         const parentID = this.model.__bm__.localData[this.__bm_handle__].parentID;
         if (parentID && this.__viewType === "list") {
             // inside an x2many (parentID is the id of the static list datapoint)
@@ -534,19 +539,15 @@ export class Record extends DataPoint {
             if (!x2manyFieldName) {
                 throw new Error("couldn't find x2many field name");
             }
-            const data = {};
-            data[fieldName] = mapWowlValueToLegacy(value, fieldType);
             const operation = { operation: "UPDATE", id: this.__bm_handle__, data };
             await this.__syncParent(operation);
         } else {
-            const changes = {};
-            changes[fieldName] = mapWowlValueToLegacy(value, fieldType);
-            await this.model.__bm__.notifyChanges(this.__bm_handle__, changes, {
+            await this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
                 viewType: this.__viewType,
             });
             this.__syncData();
         }
-        this._removeInvalidField(fieldName);
+        this._removeInvalidFields(Object.keys(changes));
         this.canBeAbandoned = false;
         this.model.notify();
     }
@@ -638,8 +639,10 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
-    _removeInvalidField(fieldName) {
-        this._invalidFields.delete(fieldName);
+    _removeInvalidFields(fieldNames) {
+        for (const fieldName of fieldNames) {
+            this._invalidFields.delete(fieldName);
+        }
     }
 }
 

@@ -253,7 +253,7 @@ function registerField(name, LegacyFieldWidget) {
             if (fieldName === this.props.name) {
                 return this.props.update(value);
             } else {
-                return this.props.record.update(fieldName, value);
+                return this.props.record.update({ [fieldName]: value });
             }
         }
     }

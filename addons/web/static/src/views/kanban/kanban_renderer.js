@@ -79,7 +79,7 @@ class KanbanCoverImageDialog extends Component {
 
     async setCover() {
         const id = this.state.selectedAttachmentId ? [this.state.selectedAttachmentId] : false;
-        await this.props.record.update(this.props.fieldName, id);
+        await this.props.record.update({ [this.props.fieldName]: id });
         await this.props.record.save();
         this.props.close();
     }
@@ -483,7 +483,7 @@ export class KanbanRenderer extends Component {
     }
 
     async selectColor(record, colorIndex) {
-        await record.update(this.props.archInfo.colorField, colorIndex);
+        await record.update({ [this.props.archInfo.colorField]: colorIndex });
         await record.save();
     }
 

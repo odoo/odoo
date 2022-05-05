@@ -50,7 +50,7 @@ export class Many2ManyTagsField extends Component {
     }
     switchTagColor(colorIndex, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
-        tagRecord.update(this.props.colorField, colorIndex);
+        tagRecord.update({ [this.props.colorField]: colorIndex });
         tagRecord.save();
         this.closePopover();
     }
@@ -59,10 +59,9 @@ export class Many2ManyTagsField extends Component {
         if (tagRecord.data[this.props.colorField] != 0) {
             this.previousColorsMap[tagRecord.resId] = tagRecord.data[this.props.colorField];
         }
-        tagRecord.update(
-            this.props.colorField,
-            isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1
-        );
+        tagRecord.update({
+            [this.props.colorField]: isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1,
+        });
         tagRecord.save();
         this.closePopover();
     }

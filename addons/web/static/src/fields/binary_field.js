@@ -86,10 +86,11 @@ BinaryField.extractProps = (fieldName, record, attrs) => {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         isDownloadable: !(record.isReadonly(fieldName) && record.mode === "edit"),
         update: (file) => {
-            record.update(fieldName, file.data || false);
+            const changes = { [fieldName]: file.data || false }
             if (attrs.filename && attrs.filename !== fieldName) {
-                record.update(attrs.filename, file.name || false);
+                changes[attrs.filename] = file.name || false;
             }
+            record.update(changes);
         },
     };
 };

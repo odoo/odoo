@@ -52,7 +52,7 @@ export class ProgressBarField extends Component {
             return;
         }
         this.state[part] = parsedValue;
-        this.props.update(parsedValue, this.props[part].fieldName);
+        this.props.record.update({ [this.props[part].fieldName]: parsedValue });
     }
 
     onKeydownUpdate(ev, part) {
@@ -111,9 +111,6 @@ ProgressBarField.extractProps = (fieldName, record, attrs) => {
             attrs.options.edit_current_value,
         isMaxValueEditable: attrs.options.edit_max_value,
         setAsInvalid: record.setInvalidField.bind(record),
-        update: (value, fieldName) => {
-            record.update(fieldName, value);
-        },
     };
 };
 ProgressBarField.displayName = _lt("Progress Bar");

@@ -147,7 +147,7 @@ export class Field extends Component {
             ...activeField.props,
             required: this.props.record.isRequired(this.props.name), // AAB: does the field really need this?
             update: async (value) => {
-                await record.update(this.props.name, value);
+                await record.update({ [this.props.name]: value });
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (readonlyFromViewMode && !readonlyFromModifiers && !emptyRequiredValue) {
                     return record.save();

@@ -421,7 +421,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                 const value = isRelational(this.groupByField)
                     ? [targetGroup.value]
                     : targetGroup.value;
-                await record.update(this.groupByField.name, value);
+                await record.update({ [this.groupByField.name]: value });
                 await record.save({ noReload: true });
                 // Record can be loaded along with the group metadata
                 await Promise.all([
