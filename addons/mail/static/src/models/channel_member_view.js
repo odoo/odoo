@@ -1,32 +1,38 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { isEventHandled } from '@mail/utils/utils'
 
 registerModel({
     name: 'ChannelMemberView',
     identifyingFields: ['channelMemberListCategoryViewOwner', 'channelMember'],
     recordMethods: {
         /**
-         * Handles click on the avatar of the channel member in the member list
-         * of this channel.
+         * Handles click on channel member in the member list of this channel.
+         *
+         * @param {MouseEvent} ev
          */
-        onClickMemberAvatar() {
-            if (!this.channelMember.partner) {
+        onClickMember(ev) {
+            if (isEventHandled(ev, 'PersonaImStatusIcon.Click') || !this.channelMember.partner) {
                 return;
             }
             this.channelMember.partner.openChat();
         },
         /**
-         * Handles click on the name of the channel member in the member list of
-         * this channel.
+         * @private
+         * @returns {Boolean}
          */
-        onClickMemberName() {
-            if (!this.channelMember.partner) {
-                return;
-            }
-            this.channelMember.partner.openProfile();
+        _computeHasOpenChat() {
+            return this.channelMember.partner ? true : false;
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeMemberTitleText() {
+            return this.hasOpenChat ? this.env._t("Open chat") : '';
         },
         /**
          * @private
@@ -46,6 +52,12 @@ registerModel({
             inverse: 'channelMemberViews',
             readonly: true,
             required: true,
+        }),
+        hasOpenChat: attr({
+            compute: '_computeHasOpenChat',
+        }),
+        memberTitleText: attr({
+            compute: '_computeMemberTitleText',
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
