@@ -1,5 +1,8 @@
 /** @odoo-module **/
 
+// ensure components are registered beforehand.
+import '@mail/components/messaging_menu/messaging_menu';
+import '@mail/components/rtc_activity_notice/rtc_activity_notice';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
 import AbstractService from 'web.AbstractService';
