@@ -49,7 +49,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'partner_id': self.partner_a.id,
             'user_id': self.user_salesperson.id,
         })
-        so_line = self.env['sale.order.line'].create({
+        so_line, _ = self.env['sale.order.line'].create([{
             'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 1,
@@ -57,7 +57,11 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'price_unit': product.list_price,
             'tax_id': False,
             'order_id': so.id,
-        })
+        }, {
+            'name': 'Super Section',
+            'display_type': 'line_section',
+            'order_id': so.id,
+        }])
 
         so.action_confirm()
 
