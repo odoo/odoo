@@ -11,7 +11,7 @@
     height: map-get($sizes, 100);
     min-height: 0;
 
-    &.o-mobile {
+    &.o-isDeviceSmall {
         flex-flow: column;
         align-items: center;
     }
@@ -70,7 +70,7 @@
     flex: 1 1 0;
     min-width: 0;
 
-    &.o-mobile {
+    &.o-isDeviceSmall {
         width: map-get($sizes, 100);
     }
 }
@@ -84,7 +84,7 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_Discuss.o-mobile {
+.o_Discuss.o-isDeviceSmall {
     background-color: $white;
 }
 
