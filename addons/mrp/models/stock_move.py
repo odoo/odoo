@@ -414,6 +414,7 @@ class StockMove(models.Model):
         return {
             'state': 'confirmed',
             'reservation_date': self.reservation_date,
+            'date_deadline': self.date_deadline,
             'manual_consumption': self.bom_line_id.manual_consumption or self.product_id.tracking != 'none',
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
