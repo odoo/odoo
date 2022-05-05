@@ -26,11 +26,12 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
     var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
     var timeInterval = actualDate.getTime() - fakeDate.getTime();
 
-    Date = (function (NativeDate) {
+    window.Date = (function (NativeDate) {
         function Date(Y, M, D, h, m, s, ms) {
             var length = arguments.length;
+            let date;
             if (arguments.length > 0) {
-                var date =
+                date =
                     length == 1 && String(Y) === Y // isString(Y)
                         ? // We explicitly pass it through parse:
                           new NativeDate(Date.parse(Y))
@@ -55,7 +56,7 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
                 date.constructor = Date;
                 return date;
             } else {
-                var date = new NativeDate();
+                date = new NativeDate();
                 var time = date.getTime();
                 time -= timeInterval;
                 date.setTime(time);
