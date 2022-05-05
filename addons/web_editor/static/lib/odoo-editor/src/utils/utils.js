@@ -231,6 +231,29 @@ export function findNode(domPath, findCallback = () => true, stopCallback = () =
  */
 
 /**
+ * Return the furthest uneditable parent of node contained within parentLimit.
+ * @see deleteRange Used to guarantee that uneditables are fully contained in
+ * the range (so that it is not possible to partially remove them)
+ *
+ * @param {Node} node
+ * @param {Node} parentLimit non-inclusive furthest parent allowed
+ * @returns {Node} uneditable parent if it exists
+ */
+export function getFurthestUneditableParent(node, parentLimit) {
+    if (node === parentLimit || !parentLimit.contains(node)) {
+        return undefined;
+    }
+    let parent = node && node.parentElement;
+    let nonEditableElement;
+    while (parent && parent !== parentLimit) {
+        if (!parent.isContentEditable) {
+            nonEditableElement = parent;
+        }
+        parent = parent.parentElement;
+    }
+    return nonEditableElement;
+}
+/**
  * Returns the closest HTMLElement of the provided Node
  * if a 'selector' is provided, Returns the closest HTMLElement that match the selector
  *
@@ -461,6 +484,24 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
     }
 
     return [node, offset];
+}
+/**
+ * Guarantee that the focus is on element or one of its children.
+ *
+ * A simple call to element.focus will change the editable context
+ * if one of the parents of the current activeElement is not editable,
+ * and the caret position will not be preserved, even if activeElement is
+ * one of the subchildren of element. This is why the (re)focus is
+ * only called when the current activeElement is not one of the
+ * (sub)children of element.
+ *
+ * @param {Element} element should have the focus or a child with the focus
+ */
+ export function ensureFocus(element) {
+    const activeElement = element.ownerDocument.activeElement;
+    if (activeElement !== element && (!element.contains(activeElement) || !activeElement.isContentEditable)) {
+        element.focus();
+    }
 }
 /**
  * @param {Node} anchorNode

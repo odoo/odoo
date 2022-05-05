@@ -18,13 +18,16 @@ import {
     containsUnremovable,
     DIRECTIONS,
     endPos,
+    ensureFocus,
     getCursorDirection,
+    getFurthestUneditableParent,
     getListMode,
     getOuid,
     insertText,
     isColorGradient,
     nodeSize,
     preserveCursor,
+    setCursorStart,
     setSelection,
     startPos,
     toggleClass,
@@ -1321,6 +1324,28 @@ export class OdooEditor extends EventTarget {
             correctTripleClick: true,
         });
         if (!range) return;
+        // Expand the range to fully include all contentEditable=False elements.
+        const commonAncestorContainer = this.editable.contains(range.commonAncestorContainer) ?
+            range.commonAncestorContainer :
+            this.editable;
+        const startUneditable = getFurthestUneditableParent(range.startContainer, commonAncestorContainer);
+        if (startUneditable) {
+            let leaf = previousLeaf(startUneditable);
+            if (leaf) {
+                range.setStart(leaf, nodeSize(leaf));
+            } else {
+                range.setStart(commonAncestorContainer, 0);
+            }
+        }
+        const endUneditable = getFurthestUneditableParent(range.endContainer, commonAncestorContainer);
+        if (endUneditable) {
+            let leaf = nextLeaf(endUneditable);
+            if (leaf) {
+                range.setEnd(leaf, 0);
+            } else {
+                range.setEnd(commonAncestorContainer, nodeSize(commonAncestorContainer));
+            }
+        }
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
@@ -1892,7 +1917,7 @@ export class OdooEditor extends EventTarget {
                 this.historyStep(true);
                 this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
                 setTimeout(() => {
-                    this.editable.focus();
+                    ensureFocus(this.editable);
                     getDeepRange(this.editable, { select: true });
                 });
             },
@@ -2403,15 +2428,38 @@ export class OdooEditor extends EventTarget {
                 this.deleteRange(selection);
             }
         }
-        if (ev.key === 'Backspace' && !ev.ctrlKey && !ev.metaKey) {
+        if (ev.key === 'Backspace') {
             // backspace
-            // We need to hijack it because firefox doesn't trigger a
-            // deleteBackward input event with a collapsed selection in front of
-            // a contentEditable="false" (eg: font awesome).
             const selection = this.document.getSelection();
-            if (selection.isCollapsed) {
-                ev.preventDefault();
-                this._applyCommand('oDeleteBackward');
+            if (!ev.ctrlKey && !ev.metaKey) {
+                if (selection.isCollapsed) {                    
+                    // We need to hijack it because firefox doesn't trigger a
+                    // deleteBackward input event with a collapsed selection in
+                    // front of a contentEditable="false" (eg: font awesome).
+                    ev.preventDefault();
+                    this._applyCommand('oDeleteBackward');
+                }
+            } else if (selection.isCollapsed && selection.anchorNode) {
+                const anchor = (selection.anchorNode.nodeType !== Node.TEXT_NODE && selection.anchorOffset) ?
+                    selection.anchorNode[selection.anchorOffset] : selection.anchorNode;
+                const element = closestBlock(anchor);
+                if (isEmptyBlock(element) && element.parentElement.children.length === 1) {
+                    // Prevent removing a <p> if it is the last element of its
+                    // parent.
+                    ev.preventDefault();
+                    if (element.tagName !== 'P') {
+                        // Replace an empty block which is not a <p> by a <p>
+                        const paragraph = this.document.createElement('P');
+                        const br = this.document.createElement('BR');
+                        paragraph.append(br);
+                        element.before(paragraph);
+                        const result = this._protect(() => element.remove());
+                        if (result !== UNBREAKABLE_ROLLBACK_CODE && result !== UNREMOVABLE_ROLLBACK_CODE) {
+                            setCursorStart(paragraph);
+                            this.historyStep();
+                        }
+                    }
+                }
             }
         } else if (ev.key === 'Tab') {
             // Tab

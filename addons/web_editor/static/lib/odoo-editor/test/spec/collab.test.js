@@ -2,8 +2,10 @@ import { OdooEditor } from '../../src/OdooEditor.js';
 import {
     insertCharsAt,
     parseMultipleTextualSelection,
+    redo,
     setTestSelection,
     targetDeepest,
+    undo,
 } from '../utils.js';
 
 const overridenDomClass = [
@@ -566,6 +568,21 @@ describe('Collaboration', () => {
                         .expect(clientInfos.c2.editor.editable.innerHTML)
                         .to.equal('<x>a<img class="b"></x>');
                 },
+            });
+        });
+        it('should not sanitize contenteditable attribute (check DOMPurify DEFAULT_ALLOWED_ATTR)', () => {
+            testMultiEditor({
+                clientIds: ['c1'],
+                contentBefore: '<div class="remove-me" contenteditable="true">[c1}{c1]<br></div>',
+                afterCreate: clientInfos => {
+                    const editor = clientInfos.c1.editor;
+                    const target = editor.editable.querySelector('.remove-me');
+                    target.classList.remove("remove-me");
+                    editor.historyStep();
+                    undo(editor);
+                    redo(editor);
+                },
+                contentAfter: '<div contenteditable="true">[c1}{c1]<br></div>',
             });
         });
     });
