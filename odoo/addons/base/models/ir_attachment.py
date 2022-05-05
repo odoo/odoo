@@ -141,6 +141,8 @@ class IrAttachment(models.Model):
     @api.model
     def _file_gc(self):
         """ Perform the garbage collection of the filestore. """
+        # TODO In master register method through annotation.
+        self._cleanup_fonts()
         if self._storage() != 'file':
             return
 
@@ -598,6 +600,15 @@ class IrAttachment(models.Model):
                     _logger.warning("Could not fetch font: %s", google_url)
 
         return result
+
+    @api.model
+    def _cleanup_fonts(self):
+        # Inventory all used fonts.
+        used_fonts = set()
+        for attachment in self.search([('url', '=like', '/%/static/%.css')]):
+            css = base64.b64decode(attachment.datas).decode('utf8')
+            used_fonts.update(set(re.findall(r'url\((/web/content/fonts/[^\)]+)\)', css)))
+        self.search([('url', '=like', '/web/content/fonts/%'), ('url', 'not in', list(used_fonts))]).unlink()
 
     @api.model
     def get_attachment_by_key(self, key, extra_domain=None, order=None):
