@@ -3,7 +3,6 @@
 
     <t t-name="web.KanbanRenderer" owl="1">
         <div class="o_kanban_renderer"
-            t-att-class="{ o_kanban_sortable: canResequenceRecords }"
             t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.archInfo.className or '' }}"
             t-ref="root"
         >

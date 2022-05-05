@@ -6516,7 +6516,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("resequence columns in grouped by m2o", async (assert) => {
-        assert.expect(8);
+        assert.expect(7);
 
         await makeView({
             type: "kanban",
@@ -6532,11 +6532,6 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        assert.hasClass(
-            target.querySelector(".o_kanban_renderer"),
-            "o_kanban_sortable",
-            "columns should be sortable"
-        );
         assert.containsN(target, ".o_kanban_group", 2);
         assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
         assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
@@ -8620,7 +8615,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("ungrouped kanban with handle field", async (assert) => {
-        assert.expect(4);
+        assert.expect(3);
 
         await makeView({
             type: "kanban",
@@ -8645,7 +8640,6 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_sortable");
         assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
 
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
@@ -8654,7 +8648,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("ungrouped kanban without handle field", async (assert) => {
-        assert.expect(3);
+        assert.expect(2);
 
         await makeView({
             type: "kanban",
@@ -8674,7 +8668,6 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.doesNotHaveClass(target.querySelector(".o_kanban_renderer"), "o_kanban_sortable");
         assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
 
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
