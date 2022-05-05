@@ -93,3 +93,21 @@ $position-properties: (
 .fst-normal {
   font-style: normal !important;
 }
+
+// == Line Height
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-class to handle line-height.
+// These class definition can be safely removed after migrating to BTS v5.
+
+$line-height-values: (
+  1: 1,
+  sm: $line-height-sm,
+  base: $line-height-base,
+  lg: $line-height-lg,
+);
+
+@each $-value-key, $-value in $line-height-values {
+  .lh-#{$-value-key} {
+    line-height: #{$-value};
+  }
+}
