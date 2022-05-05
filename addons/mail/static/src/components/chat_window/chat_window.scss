@@ -5,7 +5,7 @@
 .o_ChatWindow {
     overflow: auto;
 
-    &:not(.o-mobile) {
+    &:not(.o-isDeviceSmall) {
         width: 325px;
 
         &.o-folded {
@@ -32,7 +32,7 @@
     box-shadow: -5px -5px 10px rgba($black, 0.09);
     outline: none;
 
-    &.o-focused:not(.o-mobile) {
+    &.o-focused:not(.o-isDeviceSmall) {
         box-shadow: -5px -5px 10px rgba($black, 0.18);
     }
 

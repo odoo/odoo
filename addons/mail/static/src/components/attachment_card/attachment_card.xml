@@ -4,11 +4,10 @@
         <t t-if="attachmentCard">
             <div t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_AttachmentCard o-has-card-details d-flex rounded bg-300"
-                     t-att-class="{
-                            'o-downloadable': !attachmentCard.attachmentList.composerViewOwner,
-                            'o-isUploading': attachmentCard.attachment.isUploading,
-                            'o-viewable': attachmentCard.attachment.isViewable,
-                            }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" t-att-data-id="attachmentCard.attachment.localId"
+                    t-att-class="{
+                        'o-isUploading': attachmentCard.attachment.isUploading,
+                        'o-viewable': attachmentCard.attachment.isViewable,
+                    }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" t-att-data-id="attachmentCard.attachment.localId"
                 >
                     <!-- Image style-->
                     <!-- o_image from mimetype.scss -->
@@ -28,7 +27,7 @@
                         </t>
                     </div>
                     <!-- Attachment aside -->
-                    <div class="o_AttachmentCard_aside position-relative rounded-right overflow-hidden" t-att-class="{ 'o-has-multiple-action d-flex flex-column': !attachmentCard.attachmentList.composerViewOwner and attachmentCard.attachment.isDeletable }">
+                    <div class="o_AttachmentCard_aside position-relative rounded-right overflow-hidden" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': attachmentCard.hasMultipleActions }">
                         <!-- Uploading icon -->
                         <t t-if="attachmentCard.attachment.isUploading and attachmentCard.attachmentList.composerViewOwner">
                             <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUploading d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
