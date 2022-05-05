@@ -234,8 +234,14 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
                 }
             });
             server_orders.forEach(function(server_order){
+<<<<<<< HEAD
                 var new_order = self.createAutomaticallySavedOrder(server_order);
                 self.orders.add(new_order);
+=======
+                var new_order = new models.Order({},{pos: self, json: server_order});
+                self.get("orders").add(new_order);
+                new_order.save_to_db();
+>>>>>>> b2d7ac7f385... temp
             })
             if (!ids_to_remove.length) {
                 self.set_synch('connected');
