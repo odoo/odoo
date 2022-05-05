@@ -176,6 +176,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeSelectablePartnerViews() {
+            if (this.selectablePartners.length === 0) {
+                return clear();
+            }
+            return insertAndReplace(this.selectablePartners.map(partner => ({ partner: replace(partner) })));
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeThread() {
             if (
                 this.popoverViewOwner &&
@@ -253,6 +263,11 @@ registerModel({
          * search term.
          */
         selectablePartners: many('Partner'),
+        selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
+            compute: '_computeSelectablePartnerViews',
+            inverse: 'channelInvitationFormOwner',
+            isCausal: true,
+        }),
         /**
          * Determines all partners that are currently selected.
          */
