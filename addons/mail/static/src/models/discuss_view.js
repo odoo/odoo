@@ -111,6 +111,7 @@ registerModel({
         },
     },
     fields: {
+        actionId: attr(),
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeMobileAddItemHeaderAutocompleteInputView',
             inverse: 'discussViewOwnerAsMobileAddItemHeader',

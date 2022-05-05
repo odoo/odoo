@@ -10,6 +10,8 @@ export class Discuss extends LegacyComponent {
      * @override
      */
     setup() {
+        this.lastPushStateActiveThread = null;
+        this.actionManager = this.props.actionManager;
         this._updateLocalStoreProps();
         // bind since passed as props
         useUpdate({ func: () => this._update() });
@@ -17,7 +19,14 @@ export class Discuss extends LegacyComponent {
 
     _update() {
         if (this.discussView.discuss.thread) {
-            this.trigger('o-push-state-action-manager');
+            if (this.lastPushStateActiveThread === this.discussView.discuss.thread) {
+                return;
+            }
+            this.actionManager.do_push_state({
+                action: this.discussView.actionId,
+                active_id: this.discussView.discuss.activeId,
+            });
+            this.lastPushStateActiveThread = this.discussView.discuss.thread;
         }
         if (
             this.discussView.discuss.thread &&
@@ -26,7 +35,10 @@ export class Discuss extends LegacyComponent {
             this._lastThreadCache === this.discussView.discuss.threadView.threadCache.localId &&
             this._lastThreadCounter > 0 && this.discussView.discuss.thread.counter === 0
         ) {
-            this.trigger('o-show-rainbow-man');
+            this.env.bus.trigger('show-effect', {
+                message: this.env._t("Congratulations, your inbox is empty!"),
+                type: 'rainbow_man',
+            });
         }
         this._updateLocalStoreProps();
     }
@@ -73,7 +85,10 @@ export class Discuss extends LegacyComponent {
 }
 
 Object.assign(Discuss, {
-    props: { record: Object },
+    props: {
+        actionManager: Object,
+        record: Object,
+    },
     template: 'mail.Discuss',
 });
 
