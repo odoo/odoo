@@ -402,6 +402,14 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
+        channelInvitationFormSelectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
+        channelInvitationFormSelectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
         country: one('Country'),
         /**
          * Deprecated.
