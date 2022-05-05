@@ -562,18 +562,18 @@ QUnit.test('Format Error', async function (assert) {
         res_partner_id: resPartnerId1,
     });
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'snailmail.snailmail_letter_format_error_action',
-            "action should be the one for format error"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.message_id,
-            mailMessageId1,
-            "action should have correct message id"
-        );
+    bus.on('do-action', null, ({ action, options }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action,
+                'snailmail.snailmail_letter_format_error_action',
+                "action should be the one for format error"
+            );
+            assert.strictEqual(
+                options.additional_context.message_id,
+                mailMessageId1,
+                "action should have correct message id"
+            );
     });
     const { createThreadViewComponent, messaging } = await start({ env: { bus } });
     const threadViewer = messaging.models['ThreadViewer'].create({
@@ -637,18 +637,18 @@ QUnit.test('Missing Required Fields', async function (assert) {
         message_id: mailMessageId1,
     });
     const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'snailmail.snailmail_letter_missing_required_fields_action',
-            "action should be the one for missing fields"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.default_letter_id,
-            snailMailLetterId1,
-            "action should have correct letter id"
-        );
+    bus.on('do-action', null, ({ action, options }) => {
+            assert.step('do_action');
+            assert.strictEqual(
+                action,
+                'snailmail.snailmail_letter_missing_required_fields_action',
+                "action should be the one for missing fields"
+            );
+            assert.strictEqual(
+                options.additional_context.default_letter_id,
+                snailMailLetterId1,
+                "action should have correct letter id"
+            );
     });
 
     const { createThreadViewComponent, messaging } = await start({
