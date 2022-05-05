@@ -1,6 +1,17 @@
 /** @odoo-module **/
 
-import { afterNextRender, nextAnimationFrame, start, startServer } from '@mail/../tests/helpers/test_utils';
+import {
+    afterNextRender,
+    dragenterFiles,
+    dropFiles,
+    nextAnimationFrame,
+    start,
+    startServer
+} from '@mail/../tests/helpers/test_utils';
+
+import { file } from 'web.test_utils';
+
+const { createFile } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -215,6 +226,68 @@ QUnit.test('show attachment box', async function (assert) {
         document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
         1,
         "should have an attachment box in the chatter"
+    );
+});
+
+QUnit.test('chatter: drop attachments', async function (assert) {
+    assert.expect(4);
+
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { createChatterContainerComponent } = await start();
+    await createChatterContainerComponent({
+        threadId: resPartnerId1,
+        threadModel: 'res.partner',
+    });
+    const files = [
+        await createFile({
+            content: 'hello, world',
+            contentType: 'text/plain',
+            name: 'text.txt',
+        }),
+        await createFile({
+            content: 'hello, worlduh',
+            contentType: 'text/plain',
+            name: 'text2.txt',
+        }),
+    ];
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Chatter')));
+    assert.ok(
+        document.querySelector('.o_Chatter_dropZone'),
+        "should have a drop zone"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_AttachmentBox`).length,
+        0,
+        "should have no attachment before files are dropped"
+    );
+
+    await afterNextRender(() =>
+        dropFiles(document.querySelector('.o_Chatter_dropZone'), files)
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        2,
+        "should have 2 attachments in the attachment box after files dropped"
+    );
+
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Chatter')));
+    await afterNextRender(async () =>
+        dropFiles(
+            document.querySelector('.o_Chatter_dropZone'),
+            [
+                await createFile({
+                    content: 'hello, world',
+                    contentType: 'text/plain',
+                    name: 'text3.txt',
+                })
+            ]
+        )
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
+        3,
+        "should have 3 attachments in the attachment box after files dropped"
     );
 });
 

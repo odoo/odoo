@@ -16,7 +16,7 @@ const getAttachmentNextTemporaryId = (function () {
 
 registerModel({
     name: 'FileUploader',
-    identifyingFields: [['activityView', 'attachmentBoxView', 'composerView']],
+    identifyingFields: [['activityView', 'attachmentBoxView', 'chatterOwner', 'composerView']],
     recordMethods: {
         openBrowserFileUploader() {
             this.fileInput.click();
@@ -39,6 +39,9 @@ registerModel({
             await this._performUpload({ files });
             if (this.fileInput && this.fileInput.el) {
                 this.fileInput.el.value = '';
+            }
+            if (this.chatterOwner && !this.chatterOwner.attachmentBoxView) {
+                this.chatterOwner.openAttachmentBoxView();
             }
         },
         /**
@@ -66,6 +69,9 @@ registerModel({
             }
             if (this.attachmentBoxView) {
                 return replace(this.attachmentBoxView.chatter.thread);
+            }
+            if (this.chatterOwner) {
+                return replace(this.chatterOwner.thread);
             }
             if (this.composerView) {
                 return replace(this.composerView.composer.activeThread);
@@ -120,7 +126,7 @@ registerModel({
         async _performUpload({ files }) {
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
-            const chatter = this.attachmentBoxView && this.attachmentBoxView.chatter; // save before async
+            const chatter = this.chatterOwner; // save before async
             const activity = this.activityView && this.activityView.activity; // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
@@ -179,6 +185,10 @@ registerModel({
             readonly: true,
         }),
         attachmentBoxView: one('AttachmentBoxView', {
+            inverse: 'fileUploader',
+            readonly: true,
+        }),
+        chatterOwner: one('Chatter', {
             inverse: 'fileUploader',
             readonly: true,
         }),

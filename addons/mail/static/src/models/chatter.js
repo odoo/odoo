@@ -41,7 +41,11 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickButtonAttachments(ev) {
-            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
+            if (this.thread && this.thread.allAttachments.length === 0) {
+                this.fileUploader.openBrowserFileUploader();
+            } else {
+                this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
+            }
         },
         /**
          * Handles click on top bar close button.
@@ -112,6 +116,9 @@ registerModel({
             }
             this.threadView.messageListView.component.onScroll(ev);
         },
+        openAttachmentBoxView() {
+            this.update({ attachmentBoxView: insertAndReplace() });
+        },
         async refresh() {
             const requestData = ['activities', 'followers', 'suggestedRecipients'];
             if (this.hasMessageList) {
@@ -151,6 +158,23 @@ registerModel({
                 return insertAndReplace();
             }
             return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeDropZoneView() {
+            if (this.useDragVisibleDropZone.isVisible) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeFileUploader() {
+            return this.thread ? insertAndReplace() : clear();
         },
         /**
          * @private
@@ -310,6 +334,16 @@ registerModel({
         context: attr({
             default: {},
         }),
+        dropZoneView: one('DropZoneView', {
+            compute: '_computeDropZoneView',
+            inverse: 'chatterOwner',
+            isCausal: true,
+        }),
+        fileUploader: one('FileUploader', {
+            compute: '_computeFileUploader',
+            inverse: 'chatterOwner',
+            isCausal: true,
+        }),
         followButtonView: one('FollowButtonView', {
             compute: '_computeFollowButtonView',
             inverse: 'chatterOwner',
@@ -422,6 +456,13 @@ registerModel({
             default: insertAndReplace(),
             inverse: 'chatter',
             isCausal: true,
+        }),
+        useDragVisibleDropZone: one('UseDragVisibleDropZone', {
+            default: insertAndReplace(),
+            inverse: 'chatterOwner',
+            isCausal: true,
+            readonly: true,
+            required: true,
         }),
     },
     onChanges: [

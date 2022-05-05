@@ -6,7 +6,7 @@ import { decrement, increment } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'UseDragVisibleDropZone',
-    identifyingFields: [['attachmentBoxViewOwner', 'composerViewOwner']],
+    identifyingFields: [['chatterOwner', 'composerViewOwner']],
     lifecycleHooks: {
         _created() {
             document.addEventListener('dragenter', this._onDragenterListener, true);
@@ -68,7 +68,7 @@ registerModel({
         },
     },
     fields: {
-        attachmentBoxViewOwner: one('AttachmentBoxView', {
+        chatterOwner: one('Chatter', {
             inverse: 'useDragVisibleDropZone',
             readonly: true,
         }),

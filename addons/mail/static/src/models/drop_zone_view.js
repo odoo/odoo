@@ -6,7 +6,7 @@ import { decrement, increment } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DropZoneView',
-    identifyingFields: [['attachmentBoxViewOwner', 'composerViewOwner']],
+    identifyingFields: [['chatterOwner', 'composerViewOwner']],
     recordMethods: {
         /**
          * Shows a visual drop effect when dragging inside the dropzone.
@@ -63,8 +63,8 @@ registerModel({
             ev.preventDefault();
             this.update({ isDraggingInside: false });
             if (this._isDragSourceExternalFile(ev.dataTransfer)) {
-                if (this.attachmentBoxViewOwner) {
-                    await this.attachmentBoxViewOwner.fileUploader.uploadFiles(ev.dataTransfer.files);
+                if (this.chatterOwner) {
+                    await this.chatterOwner.fileUploader.uploadFiles(ev.dataTransfer.files);
                 }
                 if (this.composerViewOwner) {
                     await this.composerViewOwner.fileUploader.uploadFiles(ev.dataTransfer.files);
@@ -91,7 +91,7 @@ registerModel({
         },
     },
     fields: {
-        attachmentBoxViewOwner: one('AttachmentBoxView', {
+        chatterOwner: one('Chatter', {
             inverse: 'dropZoneView',
             readonly: true,
         }),
