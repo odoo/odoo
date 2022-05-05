@@ -95,6 +95,7 @@ registerModel({
             inverse: 'newMessageAutocompleteInputView',
             readonly: true,
         }),
+        component: attr(),
         customClass: attr({
             compute: '_computeCustomClass',
             default: '',

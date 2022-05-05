@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 
 import { sprintf } from '@web/core/utils/strings';
 
@@ -44,6 +44,10 @@ registerModel({
         },
     },
     fields: {
+        composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
+            inverse: 'suggestedRecipientInfo',
+            isCausal: true,
+        }),
         dialogText: attr({
             compute: '_computeDialogText',
         }),

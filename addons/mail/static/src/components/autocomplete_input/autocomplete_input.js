@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component, onMounted, onWillUnmount, useEffect } = owl;
@@ -11,6 +12,7 @@ export class AutocompleteInput extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component' });
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
         useEffect(() => {
