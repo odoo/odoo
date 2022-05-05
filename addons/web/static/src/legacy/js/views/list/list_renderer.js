@@ -1132,7 +1132,7 @@ var ListRenderer = BasicRenderer.extend({
             if (this._shouldRenderOptionalColumnsDropdown()) {
                 this.el.classList.add('o_list_optional_columns');
                 this.$('table').append(
-                    $('<i class="o_optional_columns_dropdown_toggle oi oi-settings-adjust"/>')
+                    $('<i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust lh-base"/>')
                 );
                 this.$el.append(this._renderOptionalColumnsDropdown());
             }
