@@ -19,11 +19,10 @@
                     <field name="name" string="Task" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
                     <field name="tag_ids"/>
                     <field name="user_ids" filter_domain="[('user_ids', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
-                    <field string="Project" name="display_project_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
+                    <field name="ancestor_id" groups="project.group_subtask_project"/>
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
-                    <field name="parent_id"/>
                     <field name="description"/>
                     <field name="rating_last_text"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
@@ -69,7 +68,7 @@
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Personal Stage" name="personal_stage" context="{'group_by': 'personal_stage_type_ids'}"/>
                         <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
-                        <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Ancestor Task" name="groupby_ancestor_task" context="{'group_by': 'ancestor_id'}" groups="project.group_subtask_project"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
                         <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                         <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
@@ -86,10 +85,19 @@
             <field name="inherit_id" ref="view_task_search_form"></field>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-               <xpath expr="//filter[@name='unassigned']" position="after">
+                <xpath expr="//field[@name='user_ids']" position='after'>
+                    <field string="Project" name="display_project_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='my_tasks']" position='after'>
+                    <filter string="My Private Tasks" name="my_private_task" domain="[('project_id', '=', False), ('user_ids', 'in', uid)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='unassigned']" position="after">
                     <separator/>
                     <filter string="My Projects" name="my_projects" domain="[('project_id.user_id', '=', uid)]"/>
                     <filter string="My Favorite Projects" name="my_favorite_projects" domain="[('project_id.favorite_user_ids', 'in', [uid])]"/>
+                </xpath>
+                <xpath expr="//filter[@name='user']" position='after'>
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                 </xpath>
             </field>
         </record>
@@ -539,75 +547,85 @@
                                 <group name="extra_settings">
                                 </group>
                             </group>
-                            <div class="row mt16 o_settings_container">
-                                <div id="rating_settings" class="col-lg-6 o_setting_box" groups="project.group_project_rating">
-                                    <div class="o_setting_left_pane">
-                                        <field name="rating_active"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="rating_active" />
-                                        <div class="text-muted">
-                                            Get customer feedback
-                                        </div>
-                                        <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
-                                            <field name="rating_status" widget="radio" />
-                                            <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
-                                                <label for="rating_status_period"/>
-                                                <field name="rating_status_period"/>
+                            <group>
+                                <group name="group_tasks_managment" string="Tasks Managment" class="row mt16 o_settings_container" groups="project.group_subtask_project,project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
+                                    <div>
+                                        <div class="o_setting_box" id="subtask_settings" groups="project.group_subtask_project">
+                                            <div class="o_setting_left_pane">
+                                                <field name="allow_subtasks"/>
                                             </div>
-                                            <div class="content-group">
-                                                    <div class="mt8">
-                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                            <div class="o_setting_right_pane">
+                                                <label for="allow_subtasks"/>
+                                                <div class="text-muted">
+                                                    Split your tasks to organize your work into sub-milestones
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_box mt-4" id="recurring_tasks_setting" groups="project.group_project_recurring_tasks">
+                                            <div class="o_setting_left_pane">
+                                                <field name="allow_recurring_tasks"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="allow_recurring_tasks"/>
+                                                <div class="text-muted">
+                                                    Auto-generate tasks for regular activities
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_box mt-4" id="task_dependencies_setting" groups="project.group_project_task_dependencies">
+                                            <div class="o_setting_left_pane">
+                                                <field name="allow_task_dependencies"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="allow_task_dependencies"/>
+                                                <div class="text-muted">
+                                                    Determine the order in which to perform tasks
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="o_setting_box mt-4" id="project_milestone_setting" groups="project.group_project_milestone">
+                                            <div class="o_setting_left_pane">
+                                                <field name="allow_milestones"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="allow_milestones"/>
+                                                <div class="text-muted">
+                                                    Track major progress points that must be reached to achieve success
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </group>
+                                <group name="group_time_managment" string="Time Managment" invisible="1" class="row mt16 o_settings_container"/>
+                                <group name="group_documents_analytics" string="Analytics" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
+                                    <div>
+                                        <field name="allow_rating" invisible="1"/>
+                                        <div class="o_setting_box" name="analytic_div" groups="project.group_project_rating">
+                                            <div class="o_setting_left_pane">
+                                                <field name="rating_active"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="rating_active" />
+                                                <div class="text-muted">
+                                                    Get customer feedback
+                                                </div>
+                                                <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
+                                                    <field name="rating_status" widget="radio" />
+                                                    <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
+                                                        <label for="rating_status_period"/>
+                                                        <field name="rating_status_period"/>
                                                     </div>
+                                                    <div class="content-group">
+                                                        <div class="mt8">
+                                                            <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 o_setting_box"  id="subtask_settings" groups="project.group_subtask_project">
-                                    <div class="o_setting_left_pane">
-                                        <field name="allow_subtasks" />
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="allow_subtasks" />
-                                        <div class="text-muted">
-                                            Split your tasks to organize your work into sub-milestones
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 o_setting_box"  id="recurring_tasks_setting" groups="project.group_project_recurring_tasks">
-                                    <div class="o_setting_left_pane">
-                                        <field name="allow_recurring_tasks" />
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="allow_recurring_tasks" />
-                                        <div class="text-muted">
-                                            Auto-generate tasks for regular activities
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 o_setting_box" id="task_dependencies_setting" groups="project.group_project_task_dependencies">
-                                    <div class="o_setting_left_pane">
-                                        <field name="allow_task_dependencies"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="allow_task_dependencies"/>
-                                        <div class="text-muted">
-                                            Determine the order in which to perform tasks
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 o_setting_box" id="project_milestone_setting" groups="project.group_project_milestone">
-                                    <div class="o_setting_left_pane">
-                                        <field name="allow_milestones"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="allow_milestones"/>
-                                        <div class="text-muted">
-                                            Track major progress points that must be reached to achieve success
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -1172,7 +1190,7 @@
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id }"
                                    widget="many2many"
                                    domain="['!', ('id', 'parent_of', id)]">
-                                <tree editable="bottom">
+                                <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
                                     <field name="legend_blocked" invisible="1"/>
@@ -1210,7 +1228,7 @@
                         </page>
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1" context="{'default_project_id' : project_id}">
-                                <tree editable="bottom">
+                                <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
                                     <field name="display_project_id" invisible="1" />
@@ -1575,7 +1593,7 @@
                     <field name="stage_id"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
-                    <field name="rating_last_value" type="measure" string="Rating (/5)"/>
+                    <field name="rating_last_value" string="Rating (/5)"/>
                 </graph>
             </field>
         </record>

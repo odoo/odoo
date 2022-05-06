@@ -7,6 +7,9 @@
             <search string="Search Update">
                 <field name="name"/>
                 <field name="project_id" invisible="1"/>
+                <field name="user_id"/>
+                <field name="description"/>
+                <field name="status"/>
                 <filter string="My Updates" name="my_updates" domain="[('user_id', '=', uid)]"/>
                 <filter string="Followed Updates" name="followed_updates" domain="[('message_is_follower', '=', True)]"/>
                 <separator/>
