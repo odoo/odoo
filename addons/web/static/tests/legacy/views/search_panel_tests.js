@@ -1093,6 +1093,7 @@ QUnit.module('Views', {
         assert.expect(5);
 
         let prom = testUtils.makeTestPromise();
+        const rpcDonePromise = testUtils.makeTestPromise();
         const kanbanPromise = createView({
             arch: `
                 <kanban>
@@ -1118,13 +1119,14 @@ QUnit.module('Views', {
                     await prom;
                 }
                 assert.step(args.method || route);
+                rpcDonePromise.resolve();
                 return _super(...arguments);
             },
             model: 'partner',
             View: KanbanView,
         });
 
-        await testUtils.nextTick();
+        await rpcDonePromise;
         assert.verifySteps(["/web/dataset/search_read"]);
 
         prom.resolve();

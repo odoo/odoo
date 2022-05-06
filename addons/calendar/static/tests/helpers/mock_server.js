@@ -20,7 +20,7 @@ MockServer.include({
         startDate.setUTCHours(0, 0, 0, 0);
         const endDate = new Date();
         endDate.setUTCHours(23, 59, 59, 999);
-        const currentPartnerAttendeeIds = this.mockSearch('calendar.attendee', [[['partner_id', '=', this.currentPartnerId]]], {});
+        const currentPartnerAttendeeIds = this.pyEnv['calendar.attendee'].search([['partner_id', '=', this.currentPartnerId]]);
         return [
             '&',
                 '|',
@@ -43,13 +43,12 @@ MockServer.include({
      */
     _mockResUsersSystrayGetActivities() {
         const activities = this._super(...arguments);
-        const meetingsLines = this.mockSearchRead(
-            'calendar.event',
-            [
-                this._mockResUsers_SystrayGetCalendarEventDomain(),
-                ['id', 'start', 'name', 'allday', 'attendee_status']
-            ],
-            { order: 'start' }
+        const meetingsLines = this.pyEnv['calendar.event'].searchRead(
+            this._mockResUsers_SystrayGetCalendarEventDomain(),
+            {
+                fields: ['id', 'start', 'name', 'allday', 'attendee_status'],
+                order: 'start',
+            }
         ).filter(meetingLine => meetingLine['attendee_status'] !== 'declined');
         if (meetingsLines.length) {
             activities.unshift({

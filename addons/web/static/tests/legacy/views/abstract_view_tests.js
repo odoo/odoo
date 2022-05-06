@@ -37,7 +37,9 @@ QUnit.module('Views', {
 
         var prom = testUtils.makeTestPromise();
         var loadJS = ajax.loadJS;
+        const libraryLoadingStartedPromise = testUtils.makeTestPromise();
         ajax.loadJS = function (url) {
+            libraryLoadingStartedPromise.resolve();
             assert.step(url);
             return prom.then(function () {
                 assert.step(url + ' loaded');
@@ -60,7 +62,7 @@ QUnit.module('Views', {
             done();
         });
 
-        await testUtils.nextTick();
+        await libraryLoadingStartedPromise;
         assert.verifySteps(['a', 'b'], "both libs should be loaded in parallel");
         prom.resolve();
     });
@@ -75,7 +77,9 @@ QUnit.module('Views', {
             c:  testUtils.makeTestPromise(),
         };
         var loadJS = ajax.loadJS;
+        const libraryLoadingStartedPromise = testUtils.makeTestPromise();
         ajax.loadJS = function (url) {
+            libraryLoadingStartedPromise.resolve();
             assert.step(url);
             return proms[url].then(function () {
                 assert.step(url + ' loaded');
@@ -99,7 +103,7 @@ QUnit.module('Views', {
             view.destroy();
             done();
         });
-        await testUtils.nextTick();
+        await libraryLoadingStartedPromise;
         assert.verifySteps(['a', 'b'], "libs 'a' and 'b' should be loaded in parallel");
         await proms.b.resolve();
         await testUtils.nextTick();

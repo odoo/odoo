@@ -46,7 +46,7 @@ QUnit.module("View service", (hooks) => {
             }
         };
 
-        makeMockServer(serverData, mockRPC);
+        await makeMockServer(serverData, mockRPC);
         const env = await makeTestEnv();
 
         await env.services.views.loadViews(
@@ -77,7 +77,7 @@ QUnit.module("View service", (hooks) => {
             }
         };
 
-        makeMockServer(serverData, mockRPC);
+        await makeMockServer(serverData, mockRPC);
         const env = await makeTestEnv();
 
         try {

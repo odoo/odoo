@@ -100,7 +100,7 @@ export async function makeTestEnv(config = {}) {
     }
 
     if (config.serverData || config.mockRPC || config.activateMockServer) {
-        makeMockServer(config.serverData, config.mockRPC);
+        await makeMockServer(config.serverData, config.mockRPC);
     }
 
     // remove the multi-click delay for the quick edit in form views
