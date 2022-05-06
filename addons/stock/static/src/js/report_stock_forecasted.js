@@ -111,11 +111,13 @@ const ReplenishReport = clientAction.extend({
      */
     async _createGraphController() {
         const model = "report.stock.quantity";
-        const viewInfo = await this._rpc({
+        const viewsInfo = await this._rpc({
             model,
-            method: "fields_view_get",
-            kwargs: { view_type: "graph" }
+            method: "get_views",
+            args: [[[false, "graph"]]],
         });
+        const viewInfo = viewsInfo.views.graph;
+        viewInfo.fields = viewsInfo.models["report.stock.quantity"];
         const params = {
             domain: this._getReportDomain(),
             modelName: model,
