@@ -210,8 +210,10 @@ let pyEnv;
     }
     pyEnv = new Proxy(
         {
-            mockServer: new MockServer(data, {}),
             ...TEST_USER_IDS,
+            get currentPartner() {
+                return this.mockServer.currentPartner;
+            }
         },
         {
             get(target, name) {
@@ -244,14 +246,23 @@ let pyEnv;
                         return target.mockServer.mockSearch(name, [domain], context);
                     },
                     /**
+                     * Simulate a `search_count` operation on a model.
+                     *
+                     * @param {Array} domain
+                     * @return {number} count of records matching the given domain.
+                     */
+                    searchCount(domain) {
+                        return this.search(domain).length;
+                    },
+                    /**
                      * Simulate a 'search_read' operation on a model.
                      *
                      * @param {Array} domain
-                     * @param {Object} context
+                     * @param {Object} kwargs
                      * @returns {Object[]} array of records corresponding to the given domain.
                      */
-                    searchRead(domain, context = {}) {
-                        return target.mockServer.mockSearchRead(name, [], { domain, context });
+                    searchRead(domain, kwargs = {}) {
+                        return target.mockServer.mockSearchRead(name, [domain], kwargs);
                     },
                     /**
                      * Simulate an 'unlink' operation on a model.
@@ -279,8 +290,19 @@ let pyEnv;
             },
          },
     );
+    pyEnv['mockServer'] = new MockServer(data, {});
+    await pyEnv['mockServer'].setup();
     registerCleanup(() => pyEnv = undefined);
     return pyEnv;
+}
+
+/**
+ *
+ * @returns {Object} An environment that can be used to interact with the mock
+ * server (creation, deletion, update of records...)
+ */
+export function getPyEnv() {
+    return pyEnv || startServer();
 }
 
 //------------------------------------------------------------------------------

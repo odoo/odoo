@@ -67,6 +67,11 @@ var MockServer = Class.extend({
         this.archs = options.archs || {};
     },
 
+    /**
+     * Perform asynchronous setup after the initialization of the mockServer.
+     */
+    setup: async function () {},
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------

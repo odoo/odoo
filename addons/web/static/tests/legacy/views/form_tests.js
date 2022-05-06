@@ -9041,7 +9041,7 @@ QUnit.module('Views', {
 
         widgetRegistry.add('test', MyWidget);
 
-        createView({
+        const viewCreatedPromise = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -9056,7 +9056,7 @@ QUnit.module('Views', {
         });
 
         def1.resolve();
-        await testUtils.nextTick();
+        await viewCreatedPromise;
     });
 
     QUnit.test('no deadlock when saving with uncommitted changes', async function (assert) {

@@ -30,9 +30,9 @@ MockServer.include({
      * @private
      */
     _mockRouteNoteNew(values) {
-        const noteId = this.mockCreate('note.note', { memo: values['note'] });
+        const noteId = this.pyEnv['note.note'].create({ memo: values['note'] });
         if (values['date_deadline']) {
-            this.mockCreate('mail.activity', {
+            this.pyEnv['mail.activity'].create({
                 date_deadline: date_to_str(new Date(values['date_deadline'])),
                 note_id: noteId,
                 res_model: 'note.note',
@@ -51,7 +51,7 @@ MockServer.include({
      */
     _mockResUsersSystrayGetActivities() {
         const activities = this._super(...arguments);
-        const noteCount = this.mockSearchCount('note.note', [[['user_id', '=', this.currentUserId]]]);
+        const noteCount = this.pyEnv['note.note'].searchCount([['user_id', '=', this.currentUserId]]);
         if (noteCount) {
             const noteIndex = activities.findIndex(act => act['model'] === 'note.note');
             if (noteIndex) {
