@@ -65,6 +65,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickActivityBoxTitle(ev) {
+            ev.preventDefault();
             this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
