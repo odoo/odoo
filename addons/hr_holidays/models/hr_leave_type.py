@@ -397,7 +397,8 @@ class HolidaysType(models.Model):
     @api.depends('employee_requests')
     def _compute_allocation_validation_type(self):
         for leave_type in self:
-            leave_type.allocation_validation_type = 'no' if leave_type.employee_requests == 'no' else 'officer'
+            if leave_type.employee_requests == 'no':
+                leave_type.allocation_validation_type = 'officer'
 
     def requested_name_get(self):
         return self._context.get('holiday_status_name_get', True) and self._context.get('employee_id')
