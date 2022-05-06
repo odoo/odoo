@@ -217,18 +217,7 @@
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="active_lang_count" invisible="1"/>
-                            <label for="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}">
-                                <field name="lang"/>
-                                <button
-                                    type="action"
-                                    name="%(base.res_lang_act_window)d"
-                                    class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
-                                    aria-label="More languages"
-                                    groups="base.group_system"
-                                    title="More languages"
-                                />
-                            </div>
+                            <field name="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
                         </group>
                     </group>
