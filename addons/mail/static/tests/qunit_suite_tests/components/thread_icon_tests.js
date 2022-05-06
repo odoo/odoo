@@ -35,7 +35,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         ],
         channel_type: 'chat',
     });
-    const { messaging, target, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -53,17 +53,15 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         "should have thread icon with partner im status icon 'online'"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId1,
+            'partner_name': "Demo",
+        });
     });
     assert.containsOnce(
         document.body,
@@ -78,15 +76,12 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
 
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: false,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': false,
+            'partner_id': resPartnerId1,
+            'partner_name': "Demo",
+        });
     });
     assert.containsOnce(
         document.body,

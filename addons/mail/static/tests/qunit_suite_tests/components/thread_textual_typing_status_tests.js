@@ -32,7 +32,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { messaging, target, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -45,17 +45,15 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
         "Should display no one is currently typing"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            channel_id: mailChannelId1,
+            is_typing: true,
+            partner_id: resPartnerId1,
+            partner_name: "Demo",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -75,7 +73,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { messaging, target, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -88,17 +86,15 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
         "Should display no one is currently typing"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId1,
+            'partner_name': "Demo",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -108,15 +104,12 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
 
     // simulate receive typing notification from demo "is no longer typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: false,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': false,
+            'partner_id': resPartnerId1,
+            'partner_name': "Demo",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -136,7 +129,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { advanceTime, messaging, target, widget } = await start({
+    const { advanceTime, messaging, target } = await start({
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -151,17 +144,15 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
         "Should display no one is currently typing"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId1,
+            'partner_name': "Demo",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -188,7 +179,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { advanceTime, messaging, target, widget } = await start({
+    const { advanceTime, messaging, target } = await start({
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -203,17 +194,15 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         "Should display no one is currently typing"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Demo",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId1,
+            'partner_name': "Demo",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -223,15 +212,12 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 
     // simulate receive typing notification from demo "is typing" again after 50s.
     await advanceTime(50 * 1000);
-    widget.call('bus_service', 'trigger', 'notification', [{
-        type: 'mail.channel.partner/typing_status',
-        payload: {
-            channel_id: mailChannelId1,
-            is_typing: true,
-            partner_id: resPartnerId1,
-            partner_name: "Demo",
-        },
-    }]);
+    pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+        'channel_id': mailChannelId1,
+        'is_typing': true,
+        'partner_id': resPartnerId1,
+        'partner_name': "Demo",
+    });
     await advanceTime(50 * 1000);
     await nextAnimationFrame();
     assert.strictEqual(
@@ -265,7 +251,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             [0, 0, { partner_id: resPartnerId3 }],
         ],
     });
-    const { messaging, target, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -278,17 +264,15 @@ QUnit.test('receive several other members typing status "is typing"', async func
         "Should display no one is currently typing"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from other10 (is typing)
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Other10",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId1,
+            'partner_name': "Other10",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -298,15 +282,12 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other11 (is typing)
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId2,
-                partner_name: "Other11",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId2,
+            'partner_name': "Other11",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -316,15 +297,12 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other12 (is typing)
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId3,
-                partner_name: "Other12",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId3,
+            'partner_name': "Other12",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -334,15 +312,12 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other10 (no longer is typing)
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: false,
-                partner_id: resPartnerId1,
-                partner_name: "Other10",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': false,
+            'partner_id': resPartnerId1,
+            'partner_name': "Other10",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -352,15 +327,12 @@ QUnit.test('receive several other members typing status "is typing"', async func
 
     // simulate receive typing notification from other10 (is typing again)
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: resPartnerId1,
-                partner_name: "Other10",
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': resPartnerId1,
+            'partner_name': "Other10",
+        });
     });
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,

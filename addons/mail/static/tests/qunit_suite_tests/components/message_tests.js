@@ -256,7 +256,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         ],
         channel_type: 'chat',
     });
-    const { createThreadViewComponent, messaging, widget } = await start();
+    const { createThreadViewComponent, messaging } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
@@ -290,16 +290,14 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         "message component should not have any check (V) as message is not yet received"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/fetched',
-            payload: {
-                channel_id: mailChannelId1,
-                last_message_id: 100,
-                partner_id: resPartnerId1,
-            },
-    }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/fetched', {
+            'channel_id': mailChannelId1,
+            'last_message_id': 100,
+            'partner_id': resPartnerId1,
+        });
     });
 
     assert.containsOnce(
@@ -321,7 +319,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         ],
         channel_type: 'chat',
     });
-    const { createThreadViewComponent, messaging, widget } = await start();
+    const { createThreadViewComponent, messaging } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
@@ -354,16 +352,14 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         "message component should not have any check (V) as message is not yet received"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/seen',
-            payload: {
-                channel_id: mailChannelId1,
-                last_message_id: 100,
-                partner_id: resPartnerId1,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/seen', {
+            'channel_id': mailChannelId1,
+            'last_message_id': 100,
+            'partner_id': resPartnerId1,
+        });
     });
     assert.containsN(
         document.body,
@@ -385,7 +381,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         ],
         channel_type: 'chat',
     });
-    const { createThreadViewComponent, messaging, widget } = await start();
+    const { createThreadViewComponent, messaging } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
@@ -418,16 +414,14 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         "message component should not have any check (V) as message is not yet received"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/fetched',
-            payload: {
-                channel_id: mailChannelId1,
-                last_message_id: 100,
-                partner_id: resPartnerId1,
-            }
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/fetched', {
+            'channel_id': mailChannelId1,
+            'last_message_id': 100,
+            'partner_id': resPartnerId1,
+        });
     });
     assert.containsOnce(
         document.body,
@@ -437,14 +431,11 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/seen',
-            payload: {
-                channel_id: mailChannelId1,
-                last_message_id: 100,
-                partner_id: resPartnerId1,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/seen', {
+            'channel_id': mailChannelId1,
+            'last_message_id': 100,
+            'partner_id': resPartnerId1,
+        });
     });
     assert.containsN(
         document.body,

@@ -9,6 +9,7 @@ import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/j
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
+import { url } from '@web/core/utils/urls';
 
 registerModel({
     name: 'ComposerView',
@@ -842,7 +843,7 @@ registerModel({
          */
         _computeCurrentPartnerAvatar() {
             if (this.messaging.currentUser) {
-                return this.env.session.url('/web/image', {
+                return url('/web/image', {
                     field: 'avatar_128',
                     id: this.messaging.currentUser.id,
                     model: 'res.users',
@@ -1208,7 +1209,7 @@ registerModel({
                 });
                 body = body.replace(text, placeholder);
             }
-            const baseHREF = this.env.session.url('/web');
+            const baseHREF = url('/web');
             for (const mention of mentions) {
                 const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
                 const attClass = `class='${mention.class}'`;
