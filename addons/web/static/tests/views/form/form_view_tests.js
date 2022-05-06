@@ -6679,9 +6679,9 @@ QUnit.module("Views", (hooks) => {
             2,
             "the row should contains the 2 fields defined in the form view"
         );
-        assert.strictEqual(
+        assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".modal .o_data_cell")),
-            "gold2",
+            ["gold", "2"],
             "the value of the fields should be fetched and displayed"
         );
         assert.verifySteps(
