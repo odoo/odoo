@@ -457,12 +457,20 @@ class HolidaysRequest(models.Model):
 
     @api.depends('holiday_type')
     def _compute_from_holiday_type(self):
+        allocation_from_domain = self.env['hr.leave.allocation']
+        if (self._context.get('active_model') == 'hr.leave.allocation' and
+           self._context.get('active_id')):
+            allocation_from_domain = allocation_from_domain.browse(self._context['active_id'])
         for holiday in self:
             if holiday.holiday_type == 'employee':
                 if not holiday.employee_ids:
-                    # This handles the case where a request is made with only the employee_id
-                    # but does not need to be recomputed on employee_id changes
-                    holiday.employee_ids = holiday.employee_id or self.env.user.employee_id
+                    if allocation_from_domain:
+                        holiday.employee_ids = allocation_from_domain.employee_id
+                        holiday.holiday_status_id = allocation_from_domain.holiday_status_id
+                    else:
+                        # This handles the case where a request is made with only the employee_id
+                        # but does not need to be recomputed on employee_id changes
+                        holiday.employee_ids = holiday.employee_id or self.env.user.employee_id
                 holiday.mode_company_id = False
                 holiday.category_id = False
             elif holiday.holiday_type == 'company':
