@@ -364,6 +364,7 @@ class Project(models.Model):
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
     rating_active = fields.Boolean('Customer Ratings', default=lambda self: self.env.user.has_group('project.group_project_rating'))
+    allow_rating = fields.Boolean('Allow Customer Ratings', compute="_compute_allow_rating", default=lambda self: self.env.user.has_group('project.group_project_rating'))
     rating_status = fields.Selection(
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodic rating')
@@ -444,6 +445,10 @@ class Project(models.Model):
         for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
             project.access_warning = _(
                 "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
+
+    @api.depends_context('uid')
+    def _compute_allow_rating(self):
+        self.allow_rating = self.env.user.has_group('project.group_project_rating')
 
     @api.depends('rating_status', 'rating_status_period')
     def _compute_rating_request_deadline(self):
@@ -1340,6 +1345,14 @@ class Task(models.Model):
             return [('project_id', '=', False)]
         else:
             return [('project_id', '!=', False)]
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'search' and  self.env.user.notification_type == 'email':
+            for node in arch.xpath("//filter[@name='message_needaction']"):
+                node.set('invisible', '1')
+        return arch, view
 
     @api.depends('parent_id.ancestor_id')
     def _compute_ancestor_id(self):

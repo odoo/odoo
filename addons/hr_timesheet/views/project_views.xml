@@ -84,8 +84,11 @@
                 <xpath expr="//div[@name='dates']" position="after">
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                 </xpath>
-                <xpath expr="//div[@id='rating_settings']" position="before">
-                    <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
+                <xpath expr="//group[@name='group_time_managment']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//group[@name='group_time_managment']" position="inside">
+                    <div class="o_setting_box" id="timesheet_settings" colspan="2">
                         <div class="o_setting_left_pane">
                             <field name="allow_timesheets"/>
                         </div>
@@ -394,12 +397,12 @@
                     <attribute name="js_class">hr_timesheet_graphview</attribute>
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position='after'>
-                    <field name="planned_hours" widget="timesheet_uom" type="measure"/>
-                    <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
-                    <field name="effective_hours" widget="timesheet_uom" type="measure"/>
-                    <field name="total_hours_spent" widget="timesheet_uom" type="measure"/>
-                    <field name="overtime" widget="timesheet_uom" type="measure"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="planned_hours" widget="timesheet_uom"/>
+                    <field name="remaining_hours" widget="timesheet_uom"/>
+                    <field name="effective_hours" widget="timesheet_uom"/>
+                    <field name="total_hours_spent" widget="timesheet_uom"/>
+                    <field name="overtime" widget="timesheet_uom"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom"/>
                 </xpath>
             </field>
         </record>

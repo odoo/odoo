@@ -48,10 +48,10 @@
                     <field name="user_ids" context="{'active_test': False}"/>
                     <field name="project_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
+                    <field name="ancestor_id" groups="project.group_subtask_project"/>
                     <field name="stage_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="active"/>
-                    <field name="parent_id"/>
                     <field name="rating_last_text"/>
                     <field name="date_assign"/>
                     <field name="date_end"/>
@@ -93,7 +93,7 @@
                         <filter string="Stage" name="Stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Personal Stage" name="personal_stage" context="{'group_by': 'personal_stage_type_ids'}"/>
                         <filter string="Assignees" name="User" context="{'group_by': 'user_ids'}"/>
-                        <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Ancestor Task" name="groupby_ancestor_task" context="{'group_by': 'ancestor_id'}" groups="project.group_subtask_project"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
                         <filter string="Customer" name="Customer" context="{'group_by': 'partner_id'}"/>
                         <filter string="Kanban State" name="kanban_state" context="{'group_by': 'state'}"/>
