@@ -1805,7 +1805,7 @@ class BaseModel(metaclass=MetaModel):
         result['fields'] = self.fields_get(view_fields)
         result.pop('models', None)
         if 'id' in result:
-            view = self.env['ir.ui.view'].sudo(result.pop('id'))
+            view = self.env['ir.ui.view'].sudo().browse(result.pop('id'))
             result['name'] = view.name
             result['type'] = view.type
             result['view_id'] = view.id
