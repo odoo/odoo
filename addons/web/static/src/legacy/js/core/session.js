@@ -197,7 +197,18 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_translations: function (modules=null) {
-        return _t.database.load_translations(this, modules, this.user_context.lang, this.translationURL);
+        var lang = this.user_context.lang
+        /* We need to get the website lang at this level.
+           The only way is to get it is to take the HTML tag lang
+           Without it, we will always send undefined if there is no lang
+           in the user_context. */
+        var html = document.documentElement,
+            htmlLang = html.getAttribute('lang');
+        if (!this.user_context.lang && htmlLang) {
+            lang = htmlLang.replace('-', '_');
+        }
+
+        return _t.database.load_translations(this, modules, lang, this.translationURL);
     },
     load_js: function (files) {
         var self = this;
