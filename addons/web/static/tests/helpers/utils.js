@@ -266,6 +266,14 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
         event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
     }
     const target = findElement(el, selector);
+    const isVisible =
+        target === document ||
+        target === window ||
+        target.offsetWidth > 0 ||
+        target.offsetHeight > 0;
+    if (!isVisible) {
+        throw new Error(`Called triggerEvent ${eventType} on invisible target`);
+    }
     target.dispatchEvent(event);
     await nextTick();
 }
@@ -273,11 +281,12 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
 export async function triggerEvents(el, querySelector, events) {
     for (let e = 0; e < events.length; e++) {
         if (Array.isArray(events[e])) {
-            await triggerEvent(el, querySelector, events[e][0], events[e][1]);
+            triggerEvent(el, querySelector, events[e][0], events[e][1]);
         } else {
-            await triggerEvent(el, querySelector, events[e]);
+            triggerEvent(el, querySelector, events[e]);
         }
     }
+    await nextTick();
 }
 
 /**

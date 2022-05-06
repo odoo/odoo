@@ -474,6 +474,7 @@ QUnit.module("ActionManager", (hooks) => {
             async start() {
                 const res = await this._super(...arguments);
                 const link = document.createElement("a");
+                link.innerText = "some link";
                 link.setAttribute("id", `client_${this.ID}`);
                 link.addEventListener("click", () => {
                     this.do_action("testClientAction", {
@@ -494,7 +495,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(['id: 0 props: {"className":"o_action","breadcrumbs":[]}']);
 
         await click(document.getElementById("client_0"));
-        assert.verifySteps(['id: 1 props: {"chain":"never break","className":"o_action","breadcrumbs":[]}']);
+        assert.verifySteps([
+            'id: 1 props: {"chain":"never break","className":"o_action","breadcrumbs":[]}',
+        ]);
     });
 
     QUnit.test("bootstrap tooltip in dialog action auto destroy", async (assert) => {

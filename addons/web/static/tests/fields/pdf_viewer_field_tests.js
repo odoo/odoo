@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getFixture, triggerEvent, nextTick } from "../helpers/utils";
+import { getFixture, nextTick } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -98,7 +98,7 @@ QUnit.module("Fields", (hooks) => {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(new File(["test"], "test.pdf", { type: "application/pdf" }));
         fileInput.files = dataTransfer.files;
-        await triggerEvent(fileInput, null, "change");
+        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
 
         await nextTick();
 

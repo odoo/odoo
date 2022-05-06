@@ -86,7 +86,7 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
             ev.preventDefault();
         }
     }
-    MyComponent.template = xml`<a href="#" class="MyComponent" t-on-click="onclick" />`;
+    MyComponent.template = xml`<a href="#" class="MyComponent" t-on-click="onclick">Some link</a>`;
     let env = await makeTestEnv(baseConfig);
 
     // Mount the component as standalone and control-click the <a href/>

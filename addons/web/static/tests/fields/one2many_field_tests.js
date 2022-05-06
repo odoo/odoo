@@ -10962,7 +10962,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles" context="{'default_turtle_foo': 'hard', 'default_turtle_bar': True}">
                             <tree editable="bottom">
                                 <control>
-                                    <create name="add_soft_shell_turtle" context="{'default_turtle_foo': 'soft', 'default_turtle_int': 2}"/>
+                                    <create name="add_soft_shell_turtle" string="Add soft shell turtle" context="{'default_turtle_foo': 'soft', 'default_turtle_int': 2}"/>
                                 </control>
                                 <field name="turtle_foo"/>
                             </tree>

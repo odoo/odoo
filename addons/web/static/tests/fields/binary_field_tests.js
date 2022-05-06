@@ -2,14 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { makeMockXHR } from "../helpers/mock_services";
-import {
-    click,
-    editInput,
-    getFixture,
-    makeDeferred,
-    nextTick,
-    patchWithCleanup,
-} from "../helpers/utils";
+import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registerCleanup } from "../helpers/cleanup";
 import { FileUploader } from "@web/fields/file_handler";
@@ -196,7 +189,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "binary fields input value is empty whean clearing after uploading",
+        "binary fields input value is empty when clearing after uploading",
         async function (assert) {
             assert.expect(2);
             patch(FileUploader.prototype, "test.FileUploader", {
@@ -224,11 +217,15 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_form_button_edit");
 
+            const input = target.querySelector(".o_field_binary input");
             // We need to convert the input type since we can't programmatically set
             // the value of a file input. The patch of the onFileChange will create
             // a file object to be used by the component.
-            target.querySelector(".o_field_binary input").setAttribute("type", "text");
-            await editInput(target, ".o_field_binary input", "fake_file");
+            input.setAttribute("type", "text");
+            input.value = "fake_file";
+            input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+            await nextTick();
             await nextTick();
 
             assert.strictEqual(

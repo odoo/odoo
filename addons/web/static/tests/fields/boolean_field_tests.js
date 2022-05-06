@@ -32,8 +32,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("BooleanField");
 
     QUnit.test("boolean field in form view", async function (assert) {
-        assert.expect(15);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -161,8 +159,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("boolean field in editable list view", async function (assert) {
-        assert.expect(11);
-
         await makeView({
             type: "list",
             resModel: "partner",
@@ -243,8 +239,7 @@ QUnit.module("Fields", (hooks) => {
         // Re-Edit the line to check the checkbox back but this time click on
         // the checkbox directly in readonly mode !
         cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
-        await click(cell, ".custom-checkbox .custom-control-label");
-        await nextTick();
+        await click(cell, ".custom-checkbox input");
 
         assert.containsN(
             target,
@@ -260,19 +255,13 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("readonly boolean field", async function (assert) {
-        assert.expect(6);
-
+    QUnit.skipWOWL("readonly boolean field", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
             serverData,
-            arch: `
-                <form>
-                        <field name="bar" readonly="1"/>
-                </form>
-            `,
+            arch: `<form><field name="bar" readonly="1"/></form>`,
         });
 
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
@@ -294,7 +283,7 @@ QUnit.module("Fields", (hooks) => {
             "checkbox should still be disabled"
         );
 
-        await click(target, ".o_field_boolean label");
+        await click(target, ".o_field_boolean input");
         assert.containsOnce(
             target,
             ".o_field_boolean input:checked",

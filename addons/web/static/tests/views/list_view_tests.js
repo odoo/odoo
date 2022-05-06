@@ -9060,40 +9060,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("editable list view: do not commit changes twice", async function (assert) {
-        serverData.models.foo.onchanges = {
-            bar: function (obj) {
-                obj.foo = "changed";
-            },
-        };
-
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
-                <tree editable="top">
-                    <field name="foo"/>
-                    <field name="bar"/>
-                </tree>`,
-            mockRPC(route, { method, model }) {
-                if (model === "foo" && method === "onchange") {
-                    assert.step("onchange");
-                }
-            },
-        });
-        assert.strictEqual(target.querySelector('.o_data_cell [name="foo"]').textContent, "yop");
-
-        await click(target.querySelector('.o_data_cell [name="bar"]'));
-        await click(target.querySelector('.o_data_cell [name="bar"] label'));
-        await clickSave(target);
-        assert.strictEqual(
-            target.querySelector('.o_data_cell [name="foo"]').textContent,
-            "changed"
-        );
-        assert.verifySteps(["onchange"]);
-    });
-
     // Neer focus datacell
     QUnit.skipWOWL("editable list view: multi edition", async function (assert) {
         assert.expect(26);

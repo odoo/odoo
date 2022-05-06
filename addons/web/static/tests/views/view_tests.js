@@ -742,7 +742,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy>
-                <a type="action" data-method="setTheControl" data-model="animal" />
+                <a type="action" data-method="setTheControl" data-model="animal">link</a>
             </toy>`;
 
         const mockRPC = (route) => {
@@ -797,7 +797,9 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy>
-                <a type="action" name="myLittleAction" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }"/>
+                <a type="action" name="myLittleAction" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }">
+                    link
+                </a>
             </toy>`;
 
         const config = {
@@ -850,7 +852,9 @@ QUnit.module("Views", (hooks) => {
 
         serverData.views["animal,1,toy"] = `
             <toy>
-                <a type="action" title="myTitle" data-model="animal" data-resId="66" data-views="[[55, 'toy']]" data-domain="[['field', '=', 'val']]" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }"/>
+                <a type="action" title="myTitle" data-model="animal" data-resId="66" data-views="[[55, 'toy']]" data-domain="[['field', '=', 'val']]" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }">
+                    link
+                </a>
             </toy>`;
 
         const config = {
@@ -970,7 +974,7 @@ QUnit.module("Views", (hooks) => {
 
         const banners = [
             `<div class="banner1">
-                <a type="action" data-method="setTheControl" data-model="animal" data-reload-on-close="true" />
+                <a type="action" data-method="setTheControl" data-model="animal" data-reload-on-close="true">link</a>
             </div>`,
             `<div class="banner2">
                 MyBanner
@@ -1082,13 +1086,13 @@ QUnit.module("Views", (hooks) => {
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/banner_route">
                 <Banner t-if="env.config.bannerRoute" />
-                <a type="action" data-method="setTheControl" data-model="animal" />
+                <a type="action" data-method="setTheControl" data-model="animal">link</a>
             </toy>`;
 
         const mockRPC = async (route) => {
             if (route.includes("banner_route")) {
                 return {
-                    html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal" /></div>`,
+                    html: `<div><a type="action" data-method="heartOfTheSun" data-model="animal">link</a></div>`,
                 };
             }
             if (route.includes("setTheControl")) {
