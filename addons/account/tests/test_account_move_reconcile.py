@@ -1896,9 +1896,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 1.71,       'amount_residual_currency': 0.09,       'reconciled': False},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
         ])
+        payment_exchange_id = inv2_rec_line.matched_credit_ids.filtered(lambda x: x.id != res['partials'].id)
+
         self.assert_invoice_outstanding_reconciled_widget(inv2, {
             refund1.id: 28.46,
             pay1.move_id.id: 1907.17,
+            res['partials'].exchange_move_id.id: 312.54,
+            payment_exchange_id[0].exchange_move_id.id: 6.34,
         })
 
         # 4th reconciliation inv2 + pay2
@@ -1940,10 +1944,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
         ])
+        payment_exchange_id = inv2_rec_line.matched_credit_ids.filtered(lambda x: x.id != res['partials'].id)
+
         self.assert_invoice_outstanding_reconciled_widget(inv2, {
             refund1.id: 28.46,
             pay1.move_id.id: 1907.17,
             pay2.move_id.id: 0.09,
+            res['partials'].exchange_move_id.id: 0.06,
+            payment_exchange_id[0].exchange_move_id.id: 6.34,
+            payment_exchange_id[1].exchange_move_id.id: 312.54,
         })
         self.assert_invoice_outstanding_to_reconcile_widget(inv2, {})
 
@@ -2113,6 +2122,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         ])
         self.assert_invoice_outstanding_reconciled_widget(inv2, {
             pay1.move_id.id: 1907.17,
+            res['partials'].exchange_move_id.id: 312.54,
         })
         self.assert_invoice_outstanding_to_reconcile_widget(inv2, {
             refund1.id: 28.46,
@@ -2205,11 +2215,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
         ])
+        payment_exchange_id = inv2_rec_line.matched_credit_ids.filtered(lambda x: x.id != res['partials'].id)
 
         self.assert_invoice_outstanding_reconciled_widget(inv2, {
             refund1.id: 28.46,
             pay1.move_id.id: 1907.17,
             pay2.move_id.id: 0.09,
+            res['partials'].exchange_move_id.id: 0.06,
+            payment_exchange_id[0].exchange_move_id.id: 312.54,
+            payment_exchange_id[1].exchange_move_id.id: 6.34,
         })
         self.assert_invoice_outstanding_to_reconcile_widget(inv2, {})
 

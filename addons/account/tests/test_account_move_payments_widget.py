@@ -146,3 +146,59 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
 
         self.assert_invoice_outstanding_to_reconcile_widget(out_invoice, expected_amounts)
         self.assert_invoice_outstanding_to_reconcile_widget(in_invoice, expected_amounts)
+
+    def test_payments_with_exchange_difference_payment(self):
+        ''' Test the payments widget on invoices having a foreign currency that triggers an exchange difference on the payment. '''
+
+        # Customer invoice of 300 in GOL at exchage rate 3:1. 300 GOL -> 100 USD
+        out_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 300})],
+        })
+        out_invoice.action_post()
+
+        # Payment at exchange rate 2:1. 300 GOL -> 150 USD
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=out_invoice.ids)\
+            .create({'payment_date': '2017-01-01'})\
+            ._create_payments()
+
+        expected_amounts = {payment.move_id.id: 300.0}
+        # Get the exchange difference move.
+        for ln in out_invoice.line_ids:
+            if ln.matched_credit_ids.exchange_move_id:
+                expected_amounts[ln.matched_credit_ids.exchange_move_id.id] = 50.0
+
+        self.assert_invoice_outstanding_reconciled_widget(out_invoice, expected_amounts)
+
+    def test_payments_with_exchange_difference_invoice(self):
+        ''' Test the payments widget on invoices having a foreign currency that triggers an exchange difference on the invoice. '''
+
+        # Customer invoice of 300 in GOL at exchage rate 2:1. 300 GOL -> 150 USD
+        out_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 300})],
+        })
+        out_invoice.action_post()
+
+        # Payment at exchange rate 3:1. 300 GOL -> 100 USD
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=out_invoice.ids)\
+            .create({'payment_date': '2016-01-01'})\
+            ._create_payments()
+
+        expected_amounts = {payment.move_id.id: 300.0}
+        # Get the exchange difference move.
+        for ln in out_invoice.line_ids:
+            if ln.matched_credit_ids.exchange_move_id:
+                expected_amounts[ln.matched_credit_ids.exchange_move_id.id] = 50.0
+
+        self.assert_invoice_outstanding_reconciled_widget(out_invoice, expected_amounts)
