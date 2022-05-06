@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fiscal_position_template_domestic" model="account.fiscal.position.template">
+        <field name="sequence">1</field>
+        <field name="name">Domestic Customer</field>
+        <field name="chart_template_id" ref="l10n_rs_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.rs"/>
+    </record>
+
+    <record id="fiscal_position_template_foreign" model="account.fiscal.position.template">
+        <field name="sequence">2</field>
+        <field name="name">Foreign Customer</field>
+        <field name="chart_template_id" ref="l10n_rs_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+    </record>
+
+    <record id="account_fiscal_position_purchase_10_0" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_rs.rs_purchase_vat_10"/>
+        <field name="tax_dest_id" ref="l10n_rs.rs_purchase_vat_0"/>
+        <field name="position_id" ref="fiscal_position_template_foreign"/>
+    </record>
+
+    <record id="account_fiscal_position_purchase_20_0" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_rs.rs_purchase_vat_20"/>
+        <field name="tax_dest_id" ref="l10n_rs.rs_purchase_vat_0"/>
+        <field name="position_id" ref="fiscal_position_template_foreign"/>
+    </record>
+
+    <record id="account_fiscal_position_sale_10_0" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_rs.rs_sale_vat_10"/>
+        <field name="tax_dest_id" ref="l10n_rs.rs_sale_vat_0"/>
+        <field name="position_id" ref="fiscal_position_template_foreign"/>
+    </record>
+
+    <record id="account_fiscal_position_sale_20_0" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="l10n_rs.rs_sale_vat_20"/>
+        <field name="tax_dest_id" ref="l10n_rs.rs_sale_vat_0"/>
+        <field name="position_id" ref="fiscal_position_template_foreign"/>
+    </record>
+
+    <!-- Fiscal Position Account Templates -->
+
+    <record id="fiscal_position_account_template_foreign" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_foreign"  />
+        <field name="account_src_id" ref="l10n_rs.rs_604" />
+        <field name="account_dest_id" ref="l10n_rs.rs_605" />
+    </record>
+</odoo>

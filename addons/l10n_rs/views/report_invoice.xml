@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//address" position="after">
+            <div t-if="o.company_id.account_fiscal_country_id.code == 'RS' and o.partner_id.company_registry" class="mt16">
+                <p>Company ID: <span t-field="o.partner_id.company_registry"/></p>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
