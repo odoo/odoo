@@ -2,11 +2,10 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
-import { debounce } from "@web/core/utils/timing";
 import { standardFieldProps } from "./standard_field_props";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
 
-const { Component, onWillUpdateProps, onWillUnmount, useState } = owl;
+const { Component, onWillUpdateProps, useState } = owl;
 
 export class ProgressBarField extends Component {
     setup() {
@@ -15,7 +14,6 @@ export class ProgressBarField extends Component {
             currentValue: this.props.currentValue.value,
             maxValue: this.props.maxValue.value,
         });
-        this.debouncedOnKeydownUpdate = debounce((ev, part) => this.onKeydownUpdate(ev, part), 250);
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
                 Object.assign(this.state, {
@@ -24,7 +22,6 @@ export class ProgressBarField extends Component {
                 });
             }
         });
-        onWillUnmount(() => this.debouncedOnKeydownUpdate.cancel());
     }
 
     getFormattedValue(part, isHumanReadable = false) {
@@ -55,7 +52,7 @@ export class ProgressBarField extends Component {
         this.props.record.update({ [this.props[part].fieldName]: parsedValue });
     }
 
-    onKeydownUpdate(ev, part) {
+    onInput(ev, part) {
         try {
             this.state[part] = this.props.parse(ev.target.value, {
                 parser: this.props[part].type,

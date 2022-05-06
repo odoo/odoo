@@ -29,7 +29,7 @@
                             t-att-value="getFormattedValue('currentValue') or ''"
                             t-att-required="props.required"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                            t-on-keydown="(ev) => this.debouncedOnKeydownUpdate(ev, 'currentValue')"
+                            t-on-input="(ev) => this.onInput(ev, 'currentValue')"
                         />
                         <span>%</span>
                     </div>
@@ -42,7 +42,7 @@
                             inputmode="numeric"
                             t-att-value="getFormattedValue('currentValue')"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'currentValue')"
-                            t-on-keydown="(ev) => this.debouncedOnKeydownUpdate(ev, 'currentValue')"
+                            t-on-input="(ev) => this.onInput(ev, 'currentValue')"
                         />
                     </t>
                     <t t-else="">
@@ -56,7 +56,7 @@
                             inputmode="numeric"
                             t-att-value="getFormattedValue('maxValue')"
                             t-on-change="(ev) => this.onChangeValue(ev.target.value, 'maxValue')"
-                            t-on-keydown="(ev) => this.debouncedOnKeydownUpdate(ev, 'maxValue')"
+                            t-on-input="(ev) => this.onInput(ev, 'maxValue')"
                         />
                     </t>
                     <t t-else="">
