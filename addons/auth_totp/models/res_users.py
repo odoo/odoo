@@ -20,7 +20,7 @@ compress = functools.partial(re.sub, r'\s', '')
 class Users(models.Model):
     _inherit = 'res.users'
 
-    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
+    totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS, prefetch=False)
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
     totp_trusted_device_ids = fields.One2many('auth_totp.device', 'user_id', string="Trusted Devices")
 
@@ -60,9 +60,9 @@ class Users(models.Model):
         key = base64.b32decode(sudo.totp_secret)
         match = TOTP(key).match(code)
         if match is None:
-            _logger.info("2FA check: FAIL for %s %r", self, self.login)
+            _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
             raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check: SUCCESS for %s %r", self, self.login)
+        _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
