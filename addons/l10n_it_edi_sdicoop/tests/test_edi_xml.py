@@ -9,6 +9,7 @@ from freezegun import freeze_time
 from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -58,10 +59,43 @@ class TestItEdi(AccountEdiTestCommon):
             'is_company': True,
         })
 
+        cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'l10n_it_codice_fiscale': '00465840031',
+            'is_company': True,
+        })
+
+        cls.italian_partner_no_address_VAT = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': 'IT00465840031',
+            'is_company': True,
+        })
+
+        cls.american_partner = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': '00465840031',
+            'country_id': cls.env.ref('base.us').id,
+            'is_company': True,
+        })
+
         cls.standard_line = {
             'name': 'standard_line',
             'quantity': 1,
             'price_unit': 800.40,
+            'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
+        }
+
+        cls.standard_line_below_400 = {
+            'name': 'cheap_line',
+            'quantity': 1,
+            'price_unit': 100.00,
+            'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
+        }
+
+        cls.standard_line_400 = {
+            'name': '400_line',
+            'quantity': 1,
+            'price_unit': 327.87,
             'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
         }
 
@@ -146,6 +180,56 @@ class TestItEdi(AccountEdiTestCommon):
                 ],
             })
 
+        cls.below_400_codice_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_no_address_codice.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line_below_400,
+                    }),
+                (0, 0, {
+                    **cls.standard_line_below_400,
+                    'name': 'cheap_line_2',
+                    'quantity': 2,
+                    'price_unit': 10.0,
+                    }),
+                ],
+            })
+
+        cls.total_400_VAT_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_no_address_VAT.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line_400,
+                    }),
+                ],
+            })
+
+        cls.more_400_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_no_address_codice.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line,
+                    }),
+                ],
+            })
+
+        cls.non_domestic_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.american_partner.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line_below_400,
+                    }),
+                ],
+            })
+
         # We create this because we are unable to post without a proxy user existing
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': 'l10n_it_edi_sdicoop_test',
@@ -160,8 +244,11 @@ class TestItEdi(AccountEdiTestCommon):
         cls.partial_discount_invoice._post()
         cls.full_discount_invoice._post()
         cls.non_latin_and_latin_invoice._post()
+        cls.below_400_codice_simplified_invoice._post()
+        cls.total_400_VAT_simplified_invoice._post()
 
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
+        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
 
     @classmethod
     def _get_test_file_content(cls, filename):
@@ -170,7 +257,6 @@ class TestItEdi(AccountEdiTestCommon):
         with tools.file_open(path, mode='rb') as test_file:
             return test_file.read()
 
-    @freeze_time('2020-03-24')
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
             equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
@@ -247,7 +333,6 @@ class TestItEdi(AccountEdiTestCommon):
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
-    @freeze_time('2020-03-24')
     def test_partially_discounted_invoice(self):
         # The EDI can account for discounts, but a line with, for example, a 100% discount should still have
         # a corresponding tax with a base amount of 0
@@ -305,7 +390,6 @@ class TestItEdi(AccountEdiTestCommon):
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
-    @freeze_time('2020-03-24')
     def test_fully_discounted_inovice(self):
         invoice_etree = etree.fromstring(self.full_discount_invoice._export_as_xml())
         expected_etree = self.with_applied_xpath(
@@ -340,7 +424,6 @@ class TestItEdi(AccountEdiTestCommon):
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
-    @freeze_time('2020-03-24')
     def test_non_latin_and_latin_inovice(self):
         invoice_etree = etree.fromstring(self.non_latin_and_latin_invoice._export_as_xml())
         expected_etree = self.with_applied_xpath(
@@ -386,3 +469,67 @@ class TestItEdi(AccountEdiTestCommon):
             ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    def test_below_400_codice_simplified_invoice(self):
+        invoice_etree = etree.fromstring(self.below_400_codice_simplified_invoice._export_as_xml())
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_simplified_basis_xml),
+            '''
+            <xpath expr="//FatturaElettronicaHeader//CessionarioCommittente" position="inside">
+            <IdentificativiFiscali>
+                <CodiceFiscale>00465840031</CodiceFiscale>
+            </IdentificativiFiscali>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody//DatiBeniServizi" position="replace">
+            <DatiBeniServizi>
+              <Descrizione>cheap_line</Descrizione>
+              <Importo>122.00</Importo>
+              <DatiIVA>
+                <Imposta>22.00</Imposta>
+              </DatiIVA>
+            </DatiBeniServizi>
+            <DatiBeniServizi>
+              <Descrizione>cheap_line_2</Descrizione>
+              <Importo>24.40</Importo>
+              <DatiIVA>
+                <Imposta>4.40</Imposta>
+              </DatiIVA>
+            </DatiBeniServizi>
+            </xpath>
+            ''')
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    def test_total_400_VAT_simplified_invoice(self):
+        invoice_etree = etree.fromstring(self.total_400_VAT_simplified_invoice._export_as_xml())
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_simplified_basis_xml),
+            '''
+            <xpath expr="//FatturaElettronicaHeader//CessionarioCommittente" position="inside">
+            <IdentificativiFiscali>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese>
+                    <IdCodice>00465840031</IdCodice>
+                </IdFiscaleIVA>
+            </IdentificativiFiscali>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody//DatiBeniServizi" position="replace">
+            <DatiBeniServizi>
+              <Descrizione>400_line</Descrizione>
+              <Importo>400.00</Importo>
+              <DatiIVA>
+                <Imposta>72.13</Imposta>
+              </DatiIVA>
+            </DatiBeniServizi>
+            </xpath>
+            ''')
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    def test_more_400_simplified_invoice(self):
+        with self.assertRaises(UserError):
+            self.more_400_simplified_invoice._post()
+
+    def test_non_domestic_simplified_invoice(self):
+        with self.assertRaises(UserError):
+            self.non_domestic_simplified_invoice._post()
