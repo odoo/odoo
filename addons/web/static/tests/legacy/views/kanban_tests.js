@@ -7504,22 +7504,19 @@ QUnit.module('Views', {
             },
         }));
 
-        var kanbanController;
-        testUtils.createView({
+        const viewCreatedPromise = testUtils.createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
                         '<div><field name="foo" widget="asyncwidget"/></div>' +
                 '</t></templates></kanban>',
-        }).then(function (kanban) {
-            kanbanController = kanban;
         });
 
         assert.strictEqual($('.o_kanban_record').length, 0, "kanban view is not ready yet");
 
         fooFieldProm.resolve();
-        await nextTick();
+        const kanbanController = await viewCreatedPromise;
         assert.strictEqual($('.o_kanban_record').text(), "LOADEDLOADEDLOADEDLOADED");
 
         // reload with a domain
@@ -7551,8 +7548,7 @@ QUnit.module('Views', {
             },
         }));
 
-        var kanbanController;
-        testUtils.createView({
+        const viewCreatedPromise = testUtils.createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -7560,14 +7556,12 @@ QUnit.module('Views', {
                         '<div><field name="foo" widget="asyncwidget"/></div>' +
                 '</t></templates></kanban>',
             groupBy: ['foo'],
-        }).then(function (kanban) {
-            kanbanController = kanban;
         });
 
         assert.strictEqual($('.o_kanban_record').length, 0, "kanban view is not ready yet");
 
         fooFieldProm.resolve();
-        await nextTick();
+        const kanbanController = await viewCreatedPromise;
         assert.strictEqual($('.o_kanban_record').text(), "LOADEDLOADEDLOADEDLOADED");
 
         // reload with a domain
@@ -7598,22 +7592,19 @@ QUnit.module('Views', {
             },
         }));
 
-        var kanbanController;
-        testUtils.createAsyncView({
+        const viewCreatedPromise = testUtils.createAsyncView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
                         '<div><field name="foo" display="right" widget="asyncwidget"/></div>' +
                 '</t></templates></kanban>',
-        }).then(function (kanban) {
-            kanbanController = kanban;
         });
 
         assert.containsNone(document.body, '.o_kanban_record');
 
         fooFieldDef.resolve();
-        await nextTick();
+        const kanbanController = await viewCreatedPromise;
         assert.strictEqual(kanbanController.$('.o_kanban_record').text(),
             "LOADEDLOADEDLOADEDLOADED");
         assert.hasClass(kanbanController.$('.o_kanban_record:first .o_field_char'), 'float-right');
@@ -7635,22 +7626,19 @@ QUnit.module('Views', {
             },
         }));
 
-        var kanbanController;
-        testUtils.createAsyncView({
+        const viewCreatedPromise = testUtils.createAsyncView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
                         '<div><widget name="asyncwidget"/></div>' +
                 '</t></templates></kanban>',
-        }).then(function (kanban) {
-            kanbanController = kanban;
         });
 
         assert.containsNone(document.body, '.o_kanban_record');
 
         widgetDef.resolve();
-        await nextTick();
+        const kanbanController = await viewCreatedPromise;
         assert.strictEqual(kanbanController.$('.o_kanban_record .o_widget').text(),
             "LOADEDLOADEDLOADEDLOADED");
 

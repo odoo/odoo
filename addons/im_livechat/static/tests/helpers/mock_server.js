@@ -232,7 +232,7 @@ MockServer.include({
         }
         // create the session, and add the link with the given channel
         const mailChannelVals = this._mockImLivechatChannel_getLivechatMailChannelVals(id, anonymous_name, operator, user_id, country_id);
-        const mailChannelId = this.mockCreate('mail.channel', mailChannelVals);
+        const mailChannelId = this.pyEnv['mail.channel'].create(mailChannelVals);
         this._mockMailChannel_broadcast([mailChannelId], [operator.partner_id]);
         return this._mockMailChannelChannelInfo([mailChannelId])[0];
     },

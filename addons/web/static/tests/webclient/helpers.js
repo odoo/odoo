@@ -108,7 +108,7 @@ export function setupWebClientRegistries() {
 /**
  * Remove this as soon as we drop the legacy support
  */
-export function addLegacyMockEnvironment(env, legacyParams = {}) {
+export async function addLegacyMockEnvironment(env, legacyParams = {}) {
     // setup a legacy env
     const dataManager = Object.assign(
         {
@@ -206,6 +206,7 @@ export function addLegacyMockEnvironment(env, legacyParams = {}) {
         const W = Widget.extend({ do_push_state() {} });
         const widget = new W(adapter);
         const legacyMockServer = new LegacyMockServer(legacyParams.models, { widget });
+        await legacyMockServer.setup();
         const originalRPC = env.services.rpc;
         env.services.rpc = async (...args) => {
             try {
@@ -275,7 +276,7 @@ export async function createWebClient(params) {
         serverData: params.serverData,
         mockRPC,
     });
-    addLegacyMockEnvironment(env, legacyParams);
+    await addLegacyMockEnvironment(env, legacyParams);
 
     const WebClientClass = params.WebClientClass || WebClient;
     const target = params && params.target ? params.target : getFixture();

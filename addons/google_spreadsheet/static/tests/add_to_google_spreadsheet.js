@@ -64,7 +64,7 @@ QUnit.module(
                     return Promise.reject("erreur");
                 }
             };
-            makeMockServer(this.data, mockRPC);
+            await makeMockServer(this.data, mockRPC);
             const env = await makeTestEnv();
 
             const list = await createView({

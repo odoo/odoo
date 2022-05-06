@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { nextAnimationFrame } from '@mail/../tests/helpers/test_utils';
+import { getPyEnv, nextAnimationFrame } from '@mail/../tests/helpers/test_utils';
 
 import MockServer from 'web.MockServer';
 import { date_to_str, datetime_to_str } from 'web.time';
@@ -56,6 +56,12 @@ MockServer.include({
             }
         }
     },
+    /**
+     * @override
+     */
+    async setup() {
+        this.pyEnv = await getPyEnv();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -70,7 +76,7 @@ MockServer.include({
             const is_pending = init.body.get('is_pending') === 'true';
             const model = is_pending ? 'mail.compose.message' : init.body.get('thread_model');
             const id = is_pending ? 0 : parseInt(init.body.get('thread_id'));
-            const attachmentId = this.mockCreate('ir.attachment', {
+            const attachmentId = this.pyEnv['ir.attachment'].create({
                 // datas,
                 mimetype: ufile.type,
                 name: ufile.name,
@@ -357,7 +363,7 @@ MockServer.include({
      * @param {integer} attachment_id
      */
     async _mockRouteMailAttachmentRemove(attachment_id) {
-        return this._mockUnlink('ir.attachment', [[attachment_id]]);
+        return this.pyEnv['ir.attachment'].unlink([attachment_id]);
     },
 
     /**
@@ -520,23 +526,23 @@ MockServer.include({
      */
     async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
         const res = {};
-        const thread = this.mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
+        const thread = this.pyEnv[thread_model].searchRead([['id', '=', thread_id]])[0];
         if (!thread) {
             console.warn(`mock server: reading data "${request_list}" from invalid thread "${thread_model}_${thread_id}"`);
             return res;
         }
         if (request_list.includes('activities')) {
-            const activities = this.mockSearchRead('mail.activity', [[['id', 'in', thread.activity_ids || []]]], {});
+            const activities = this.pyEnv['mail.activity'].searchRead([['id', 'in', thread.activity_ids || []]]);
             res['activities'] = this._mockMailActivityActivityFormat(activities.map(activity => activity.id));
         }
         if (request_list.includes('attachments')) {
-            const attachments = this.mockSearchRead('ir.attachment', [
+            const attachments = this.pyEnv['ir.attachment'].searchRead(
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
-            ], {}); // order not done for simplicity
+            ); // order not done for simplicity
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
         }
         if (request_list.includes('followers')) {
-            const followers = this.mockSearchRead('mail.followers', [[['id', 'in', thread.message_follower_ids || []]]], {});
+            const followers = this.pyEnv['mail.followers'].searchRead([['id', 'in', thread.message_follower_ids || []]]);
             // search read returns many2one relations as an array [id, display_name].
             // But the original route does not. Thus, we need to change it now.
             followers.forEach(follower => follower.partner_id = follower.partner_id[0]);
@@ -705,12 +711,12 @@ MockServer.include({
         if (!channelMember) {
             return true;
         }
-        this.mockWrite('mail.channel', [
+        this.pyEnv['mail.channel'].write(
             [channel.id],
             {
                 channel_last_seen_partner_ids: [[2, channelMember.id]],
             },
-        ]);
+        );
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/leave',
             payload: {
@@ -742,7 +748,7 @@ MockServer.include({
         const [channel] = this.getRecords('mail.channel', [['id', 'in', ids]]);
         const partners = this.getRecords('res.partner', [['id', 'in', partner_ids]]);
         for (const partner of partners) {
-            this.mockCreate('mail.channel.partner', {
+            this.pyEnv['mail.channel.partner'].create({
                 channel_id: channel.id,
                 partner_id: partner.id,
             });
@@ -825,10 +831,10 @@ MockServer.include({
                 continue;
             }
             const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-            this.mockWrite('mail.channel.partner', [
+            this.pyEnv['mail.channel.partner'].write(
                 [memberOfCurrentUser.id],
                 { fetched_message_id: lastMessage.id },
-            ]);
+            );
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.channel.partner/fetched',
                 payload: {
@@ -883,7 +889,7 @@ MockServer.include({
                 fold_state: foldState,
                 is_minimized: foldState !== 'closed',
             };
-            this.mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], vals]);
+            this.pyEnv['mail.channel.partner'].write([memberOfCurrentUser.id], vals);
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.channel/insert',
                 payload: {
@@ -914,7 +920,7 @@ MockServer.include({
         // is supposed to return this existing chat. But the mock is currently
         // always creating a new chat, because no test is relying on receiving
         // an existing chat.
-        const id = this.mockCreate('mail.channel', {
+        const id = this.pyEnv['mail.channel'].create({
             channel_last_seen_partner_ids: partners.map(partner => [0, 0, {
                 partner_id: partner.id,
             }]),
@@ -995,10 +1001,10 @@ MockServer.include({
         const [channel] = this.getRecords('mail.channel', [['id', 'in', ids]]);
         const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId], ['is_pinned', '!=', pinned]]);
         if (memberOfCurrentUser) {
-            this.mockWrite('mail.channel.partner', [
+            this.pyEnv['mail.channel.partner'].write(
                 [memberOfCurrentUser.id],
                 { is_pinned: pinned },
-            ]);
+            );
         }
         if (!pinned) {
             this._widget.call('bus_service', 'trigger', 'notification', [{
@@ -1059,10 +1065,10 @@ MockServer.include({
      */
     _mockMailChannelChannelRename(ids, name) {
         const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
-        this.mockWrite('mail.channel', [
+        this.pyEnv['mail.channel'].write(
             [channel.id],
             { name },
-        ]);
+        );
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
             payload: {
@@ -1079,10 +1085,10 @@ MockServer.include({
      */
     _mockMailChannelChannelSetCustomName(ids, name) {
         const channel = this.getRecords('mail.channel', [['id', 'in', ids]])[0];
-        this.mockWrite('mail.channel', [
+        this.pyEnv['mail.channel'].write(
             [channel.id],
             { custom_channel_name: name },
-        ]);
+        );
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
             payload: {
@@ -1100,7 +1106,7 @@ MockServer.include({
      */
     async _mockMailChannelCreateGroup(partners_to) {
         const partners = this.getRecords('res.partner', [['id', 'in', partners_to]]);
-        const id = this.mockCreate('mail.channel', {
+        const id = this.pyEnv['mail.channel'].create({
             channel_type: 'group',
             channel_last_seen_partner_ids: partners.map(partner => [0, 0, { partner_id: partner.id }]),
             name: '',
@@ -1204,12 +1210,12 @@ MockServer.include({
      * @param {integer} id
      */
     _mockMailChannelWriteImage128(id) {
-        this.mockWrite('mail.channel', [
+        this.pyEnv['mail.channel'].write(
             [id],
             {
                 avatarCacheKey: moment.utc().format("YYYYMMDDHHmmss"),
             },
-        ]);
+        );
         const avatarCacheKey = this.getRecords('mail.channel', [['id', '=', id]])[0].avatarCacheKey;
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
@@ -1233,13 +1239,13 @@ MockServer.include({
         const channel = this.getRecords('mail.channel', [['id', '=', id]])[0];
         if (channel.channel_type !== 'channel') {
             const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
-            this.mockWrite('mail.channel.partner', [
+            this.pyEnv['mail.channel.partner'].write(
                 [memberOfCurrentUser.id],
                 {
                     last_interest_dt: datetime_to_str(new Date()),
                     is_pinned: true,
                 },
-            ]);
+            );
         }
         const messageData = this._mockMailThreadMessagePost(
             'mail.channel',
@@ -1255,10 +1261,10 @@ MockServer.include({
         // simulate compute of message_unread_counter
         const otherMembers = this.getRecords('mail.channel.partner', [['channel_id', '=', channel.id], ['partner_id', '!=', this.currentPartnerId]]);
         for (const member of otherMembers) {
-            this.mockWrite('mail.channel.partner', [
+            this.pyEnv['mail.channel.partner'].write(
                 [member.id],
                 { message_unread_counter: member.message_unread_counter + 1 },
-            ]);
+            );
         }
         return messageData;
     },
@@ -1331,10 +1337,10 @@ MockServer.include({
      */
     _mockMailChannel_SetLastSeenMessage(ids, message_id) {
         const [memberOfCurrentUser] = this.getRecords('mail.channel.partner', [['channel_id', 'in', ids], ['partner_id', '=', this.currentPartnerId]]);
-        this.mockWrite('mail.channel.partner', [[memberOfCurrentUser.id], {
+        this.pyEnv['mail.channel.partner'].write([memberOfCurrentUser.id], {
             fetched_message_id: message_id,
             seen_message_id: message_id,
-        }]);
+        });
     },
     /**
      * Simulates `mark_all_as_read` on `mail.message`.
@@ -1355,10 +1361,10 @@ MockServer.include({
             return ids;
         }
         const notifications = this.getRecords('mail.notification', notifDomain);
-        this.mockWrite('mail.notification', [
+        this.pyEnv['mail.notification'].write(
             notifications.map(notification => notification.id),
             { is_read: true },
-        ]);
+        );
         const messageIds = [];
         for (const notification of notifications) {
             if (!messageIds.includes(notification.mail_message_id)) {
@@ -1368,7 +1374,7 @@ MockServer.include({
         const messages = this.getRecords('mail.message', [['id', 'in', messageIds]]);
         // simulate compute that should be done based on notifications
         for (const message of messages) {
-            this.mockWrite('mail.message', [
+            this.pyEnv['mail.message'].write(
                 [message.id],
                 {
                     needaction: false,
@@ -1376,7 +1382,7 @@ MockServer.include({
                         partnerId => partnerId !== this.currentPartnerId
                     ),
                 },
-            ]);
+            );
         }
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.message/mark_as_read',
@@ -1553,13 +1559,13 @@ MockServer.include({
             ['is_read', '=', false],
             ['mail_message_id', 'in', messages.map(messages => messages.id)]
         ]);
-        this.mockWrite('mail.notification', [
+        this.pyEnv['mail.notification'].write(
             notifications.map(notification => notification.id),
             { is_read: true },
-        ]);
+        );
         // simulate compute that should be done based on notifications
         for (const message of messages) {
-            this.mockWrite('mail.message', [
+            this.pyEnv['mail.message'].write(
                 [message.id],
                 {
                     needaction: false,
@@ -1567,7 +1573,7 @@ MockServer.include({
                         partnerId => partnerId !== this.currentPartnerId
                     ),
                 },
-            ]);
+            );
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.message/mark_as_read',
                 payload: {
@@ -1587,10 +1593,10 @@ MockServer.include({
         const messages = this.getRecords('mail.message', [['id', 'in', ids]]);
         for (const message of messages) {
             const wasStared = message.starred_partner_ids.includes(this.currentPartnerId);
-            this.mockWrite('mail.message', [
+            this.pyEnv['mail.message'].write(
                 [message.id],
                 { starred_partner_ids: [[wasStared ? 3 : 4, this.currentPartnerId]] }
-            ]);
+            );
             this._widget.call('bus_service', 'trigger', 'notification', [{
                 type: 'mail.message/toggle_star',
                 payload: {
@@ -1609,10 +1615,10 @@ MockServer.include({
         const messages = this.getRecords('mail.message', [
             ['starred_partner_ids', 'in', this.currentPartnerId],
         ]);
-        this.mockWrite('mail.message', [
+        this.pyEnv['mail.message'].write(
             messages.map(message => message.id),
             { starred_partner_ids: [[3, this.currentPartnerId]] }
-        ]);
+        );
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.message/toggle_star',
             payload: {
@@ -1817,13 +1823,13 @@ MockServer.include({
                 ['res_id', '=', 0],
             ]);
             const attachmentIds = attachments.map(attachment => attachment.id);
-            this.mockWrite('ir.attachment', [
+            this.pyEnv['ir.attachment'].write(
                 attachmentIds,
                 {
                     res_id: id,
                     res_model: model,
                 },
-            ]);
+            );
             kwargs.attachment_ids = attachmentIds.map(attachmentId => [4, attachmentId]);
         }
         const subtype_xmlid = kwargs.subtype_xmlid || 'mail.mt_note';
@@ -1842,7 +1848,7 @@ MockServer.include({
             res_id: id,
         });
         delete values.subtype_xmlid;
-        const messageId = this.mockCreate('mail.message', values);
+        const messageId = this.pyEnv['mail.message'].create(values);
         this._mockMailThread_NotifyThread(model, ids, messageId);
         return this._mockMailMessageMessageFormat([messageId])[0];
     },
@@ -1859,16 +1865,16 @@ MockServer.include({
     _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
         for (const id of ids) {
             for (const partner_id of partner_ids) {
-                const followerId = this.mockCreate('mail.followers', {
+                const followerId = this.pyEnv['mail.followers'].create({
                     is_active: true,
                     partner_id,
                     res_id: id,
                     res_model: model,
                     subtype_ids: subtype_ids,
                 });
-                this.mockWrite('res.partner', [[partner_id], {
+                this.pyEnv['res.partner'].write([partner_id], {
                     message_follower_ids: [followerId],
-                }]);
+                });
             }
         }
     },
@@ -1910,10 +1916,10 @@ MockServer.include({
                 // notify update of last_interest_dt
                 const now = datetime_to_str(new Date());
                 const members = this.getRecords('mail.channel.partner', [['id', 'in', channel.channel_last_seen_partner_ids]]);
-                this.mockWrite('mail.channel.partner', [
+                this.pyEnv['mail.channel.partner'].write(
                     members.map(member => member.id),
                     { last_interest_dt: now },
-                ]);
+                );
                 for (const member of members) {
                     // simplification, send everything on the current user "test" bus, but it should send to each member instead
                     notifications.push({
@@ -1946,7 +1952,7 @@ MockServer.include({
             ['res_id', 'in', ids],
             ['partner_id', 'in', partner_ids || []],
         ]);
-        this._mockUnlink(model, [followers.map(follower => follower.id)]);
+        this.pyEnv[model].unlink(followers.map(follower => follower.id));
     },
     /**
      * Simulates `_message_track` on `mail.thread`
@@ -2056,8 +2062,8 @@ MockServer.include({
                 values['new_value_char'] = newValue;
                 break;
             case 'many2one':
-                initialValue = initialValue ? this.mockSearchRead(field.relation, [[['id', '=', initialValue]]], {})[0] : initialValue;
-                newValue = newValue ? this.mockSearchRead(field.relation, [[['id', '=', newValue]]], {})[0] : newValue;
+                initialValue = initialValue ? this.pyEnv[field.relation].searchRead([['id', '=', initialValue]])[0] : initialValue;
+                newValue = newValue ? this.pyEnv[field.relation].searchRead([['id', '=', newValue]])[0] : newValue;
                 values['old_value_integer'] = initialValue ? initialValue.id : 0;
                 values['new_value_integer'] = newValue ? newValue.id : 0;
                 values['old_value_char'] = initialValue ? initialValue.display_name : '';
@@ -2067,7 +2073,7 @@ MockServer.include({
                 isTracked = false;
         }
         if (isTracked) {
-            return this.mockCreate('mail.tracking.value', values);
+            return this.pyEnv['mail.tracking.value'].create(values);
         }
         return false;
     },
@@ -2130,7 +2136,7 @@ MockServer.include({
      * @private
      */
      _mockResUsersSystrayGetActivities() {
-        const activities = this.mockSearchRead('mail.activity', [[]], {});
+        const activities = this.pyEnv['mail.activity'].searchRead([]);
         const userActivitiesByModelName = {};
         for (const activity of activities) {
             const today = date_to_str(new Date());
@@ -2173,7 +2179,7 @@ MockServer.include({
     _mockResUsersSettings_FindOrCreateForUser(user_id) {
         let settings = this.getRecords('res.users.settings', [['user_id', '=', user_id]])[0];
         if (!settings) {
-            const settingsId = this.mockCreate('res.users.settings', { user_id: user_id });
+            const settingsId = this.pyEnv['res.users.settings'].create({ user_id: user_id });
             settings = this.getRecords('res.users.settings', [['id', '=', settingsId]])[0];
         }
         return settings;
@@ -2193,10 +2199,10 @@ MockServer.include({
                 changedSettings[setting] = newSettings[setting];
             }
         }
-        this.mockWrite('res.users.settings', [
+        this.pyEnv['res.users.settings'].write(
             [id],
             changedSettings,
-        ]);
+        );
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'res.users.settings/changed',
             payload: changedSettings,
@@ -2443,7 +2449,7 @@ MockServer.include({
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),
             public_partners: [...this._mockResPartnerMailPartnerFormat(this.publicPartnerId).values()],
-            shortcodes: this.mockSearchRead('mail.shortcode', [[], ['source', 'substitution']], {}),
+            shortcodes: this.pyEnv['mail.shortcode'].searchRead([], { fields: ['source', 'substitution'] }),
             starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };
     },
@@ -2461,10 +2467,10 @@ MockServer.include({
             return message.model === model && message.author_id === this.currentPartnerId;
         });
         // Update notification status
-        this.mockWrite('mail.notification', [
+        this.pyEnv['mail.notification'].write(
             notifications.map(notification => notification.id),
             { notification_status: 'canceled' },
-        ]);
+        );
         // Send bus notifications to update status of notifications in the web client
         this._widget.call('bus_service', 'trigger', 'notification', [{
             payload: {

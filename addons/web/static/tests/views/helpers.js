@@ -61,7 +61,7 @@ export const makeView = async (params) => {
             }
         });
     }
-    addLegacyMockEnvironment(env, legacyParams);
+    await addLegacyMockEnvironment(env, legacyParams);
 
     const view = await mount(View, getFixture(), { env, props });
     const viewNode = view.__owl__;

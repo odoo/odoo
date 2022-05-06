@@ -60,7 +60,7 @@ MockServer.include({
             } else {
                 membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
             }
-            const livechatId = this.mockCreate('mail.channel', {
+            const livechatId = this.pyEnv['mail.channel'].create({
                 anonymous_name: visitor_name,
                 channel_last_seen_partner_ids: membersToAdd,
                 channel_type: 'livechat',
