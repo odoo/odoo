@@ -121,7 +121,8 @@
                                 <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                 <field name="lang_code" invisible="1"/>
                                 <field name="lang_id"
-                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                    options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                    context="{'active_test': False, 'lang_installed': True}"/>
                             </group>
 
                             <group name="opportunity_partner" invisible="type == 'lead'">
@@ -292,7 +293,8 @@
                                         </div>
                                         <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                         <field name="lang_id"
-                                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                                            options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                                            context="{'active_test': False, 'lang_installed': True}"/>
                                     </group>
                                     <group class="mt48">
                                         <label for="contact_name_page_lead"/>

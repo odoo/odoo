@@ -29,7 +29,7 @@ WARNING_HELP = 'Selecting the "Warning" option will notify user with the message
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 @api.model
 def _lang_get(self):
-    return self.env['res.lang'].get_installed()
+    return self.env['res.lang'].with_context(lang_installed=True)._get_available_lang()
 
 
 # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728

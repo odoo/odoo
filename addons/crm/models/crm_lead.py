@@ -203,8 +203,9 @@ class Lead(models.Model):
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True)
     lang_id = fields.Many2one(
-        'res.lang', string='Language',
-        compute='_compute_lang_id', readonly=False, store=True)
+        'res.lang', string="Language",
+        compute='_compute_lang_id', domain=lambda self: [('code', 'in', self.env['res.lang']._get_enabled_lang_code())],
+        readonly=False, store=True)
     lang_code = fields.Char(related='lang_id.code')
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -400,7 +401,7 @@ class Lead(models.Model):
             if not lead.website or lead.partner_id.website:
                 lead.website = lead.partner_id.website
 
-    @api.depends('partner_id')
+    @api.depends('partner_id.lang')
     def _compute_lang_id(self):
         """ compute the lang based on partner, erase any value to force the partner
         one if set. """
@@ -408,13 +409,13 @@ class Lead(models.Model):
         lang_codes = [code for code in self.mapped('partner_id.lang') if code]
         if lang_codes:
             lang_id_by_code = dict(
-                (code, self.env['res.lang']._get_data(code=code).id)
+                (code, self.env['res.lang']._get_all_data(code=code).id)
                 for code in lang_codes
             )
         else:
             lang_id_by_code = {}
         for lead in self.filtered('partner_id'):
-            lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
+            lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, lead.lang_id)
 
     @api.depends('partner_id')
     def _compute_partner_address_values(self):
@@ -644,7 +645,7 @@ class Lead(models.Model):
         # For other fields, get the info from the partner, but only if set
         values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC if f != 'lang'})
         if partner.lang:
-            values['lang_id'] = self.env['res.lang']._get_data(code=partner.lang).id
+            values['lang_id'] = self.env['res.lang']._get_all_data(code=partner.lang).id
 
         # Fields with specific logic
         values.update(self._prepare_contact_name_from_partner(partner))
@@ -1859,7 +1860,7 @@ class Lead(models.Model):
         :return: dictionary of values to give at res_partner.create()
         """
         email_parts = tools.email_split(self.email_from)
-        res = {
+        return {
             'name': partner_name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
@@ -1877,11 +1878,9 @@ class Lead(models.Model):
             'state_id': self.state_id.id,
             'website': self.website,
             'is_company': is_company,
-            'type': 'contact'
+            'type': 'contact',
+            'lang': self.lang_id.code,
         }
-        if self.lang_id.active:
-            res['lang'] = self.lang_id.code
-        return res
 
     # ------------------------------------------------------------
     # MAILING

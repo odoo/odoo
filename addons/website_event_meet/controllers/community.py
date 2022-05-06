@@ -84,7 +84,7 @@ class WebsiteEventMeetController(EventCommunityController):
         max_capacity = post.get("capacity")
 
         # get the record to be sure they really exist
-        lang = request.env["res.lang"].search([("code", "=", lang_code)], limit=1)
+        lang = request.env["res.lang"].with_context(active_test=False).search([("code", "=", lang_code)], limit=1)
 
         if not lang or max_capacity == "no_limit":
             raise Forbidden()
@@ -105,7 +105,7 @@ class WebsiteEventMeetController(EventCommunityController):
 
     @http.route(["/event/active_langs"], type="json", auth="public")
     def active_langs(self):
-        return request.env["res.lang"].sudo().get_installed()
+        return request.env["res.lang"].with_context(lang_installed=False).sudo()._get_available_lang()
 
     # ------------------------------------------------------------
     # ROOM PAGE VIEW
