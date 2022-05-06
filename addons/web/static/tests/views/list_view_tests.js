@@ -6861,36 +6861,32 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.skipWOWL("display toolbar", async function (assert) {
-        assert.expect(2);
-
         await makeView({
             type: "list",
-            model: "event",
+            resModel: "event",
             serverData,
             arch: '<tree><field name="name"/></tree>',
-            toolbar: {
-                action: [
-                    {
-                        model_name: "event",
-                        name: "Action event",
-                        type: "ir.actions.server",
-                        usage: "ir_actions_server",
-                    },
-                ],
-                print: [],
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 29,
+                            name: "Action partner",
+                        },
+                    ],
+                },
             },
-            actionMenus: {},
         });
 
         assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
 
-        await click($(target).find(".o_list_record_selector:first input"));
+        await click(target.querySelector(".o_list_record_selector input"));
 
         await toggleActionMenu(target);
-        assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(target), [
-            "Delete",
-            "Action event",
-        ]);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
+            ["Delete", "Action event"]
+        );
     });
 
     QUnit.skipWOWL(

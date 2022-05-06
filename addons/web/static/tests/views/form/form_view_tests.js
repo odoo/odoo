@@ -7060,67 +7060,55 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "read", "onchange", "danger"]);
     });
 
-    QUnit.skipWOWL("display toolbar", async function (assert) {
-        assert.expect(8);
+    QUnit.test("display toolbar", async function (assert) {
+        assert.expect(7);
+
+        const actionService = {
+            start() {
+                return {
+                    doAction(action, options) {
+                        assert.strictEqual(action, 29);
+                        assert.strictEqual(options.additionalContext.active_id, 1);
+                        assert.deepEqual(options.additionalContext.active_ids, [1]);
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             resId: 1,
-            arch: "<form>" + '<group><field name="bar"/></group>' + "</form>",
-            toolbar: {
-                action: [
-                    {
-                        model_name: "partner",
-                        name: "Action partner",
-                        type: "ir.actions.server",
-                        usage: "ir_actions_server",
-                    },
-                ],
-                print: [],
-            },
-            viewOptions: {
-                hasActionMenus: true,
-            },
-            mockRPC(route, args) {
-                if (route === "/web/action/load") {
-                    assert.strictEqual(args.context.active_id, 1, "the active_id shoud be 1.");
-                    assert.deepEqual(
-                        args.context.active_ids,
-                        [1],
-                        "the active_ids should be an array with 1 inside."
-                    );
-                    return Promise.resolve({});
-                }
-                return this._super.apply(this, arguments);
+            arch: `<form><field name="bar"/></form>`,
+            info: {
+                actionMenus: {
+                    action: [
+                        {
+                            id: 29,
+                            name: "Action partner",
+                        },
+                    ],
+                },
             },
         });
 
-        assert.containsNone(target, ".o_cp_action_menus .dropdown:contains(Print)");
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown:contains(Action)");
+        assert.containsNone(target, ".o_cp_action_menus .dropdown-toggle:contains(Print)");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
 
+        await toggleActionMenu(target);
         assert.containsN(
             target,
             ".o_cp_action_menus .dropdown-item",
             3,
             "there should be 3 actions"
         );
-        assert.strictEqual(
-            target.querySelector(".o_cp_action_menus .dropdown-item:last").innerText.trim(),
-            "Action partner",
-            "the custom action should have 'Action partner' as name"
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
+            ["Duplicate", "Delete", "Action partner"]
         );
 
-        await testUtils.mock.intercept(target, "do_action", function (event) {
-            var context = event.data.action.context.__contexts[1];
-            assert.strictEqual(context.active_id, 1, "the active_id shoud be 1.");
-            assert.deepEqual(
-                context.active_ids,
-                [1],
-                "the active_ids should be an array with 1 inside."
-            );
-        });
         await toggleMenuItem(target, "Action partner");
     });
 
