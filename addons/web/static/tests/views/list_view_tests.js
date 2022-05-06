@@ -323,10 +323,15 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "export feature in list for users not in base.group_allow_export",
         async function (assert) {
             assert.expect(5);
+
+            function hasGroup(group) {
+                return group !== "base.group_allow_export";
+            }
+            serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
 
             await makeView({
                 type: "list",
@@ -334,14 +339,6 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 actionMenus: {},
                 arch: '<tree><field name="foo"/></tree>',
-                session: {
-                    async user_has_group(group) {
-                        if (group === "base.group_allow_export") {
-                            return false;
-                        }
-                        return this._super(...arguments);
-                    },
-                },
             });
 
             assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
@@ -350,12 +347,13 @@ QUnit.module("Views", (hooks) => {
                 "should have at least one record"
             );
             assert.containsNone(target, "div.o_control_panel .o_cp_buttons .o_list_export_xlsx");
-
-            await click($(target).find("tbody td.o_list_record_selector:first input"));
+            await click(target.querySelector("tbody td.o_list_record_selector input"));
             assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
             await toggleActionMenu(target);
             assert.deepEqual(
-                testUtils.controlPanel.getMenuItemTexts(target),
+                getNodesTextContent(
+                    target.querySelectorAll(".o_control_panel .o_cp_action_menus .o_menu_item")
+                ),
                 ["Delete"],
                 "action menu should not contain the Export button"
             );
@@ -389,15 +387,15 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
         await toggleActionMenu(target);
         assert.deepEqual(
-            Array.from(
+            getNodesTextContent(
                 target.querySelectorAll(".o_control_panel .o_cp_action_menus .o_menu_item")
-            ).map((e) => e.textContent),
+            ),
             ["Export", "Delete"],
             "action menu should have Export button"
         );
     });
 
-    QUnit.skipWOWL("export button in list view", async function (assert) {
+    QUnit.test("export button in list view", async function (assert) {
         assert.expect(5);
 
         function hasGroup(group) {
@@ -416,7 +414,6 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(target.querySelector(".o_list_export_xlsx"));
 
         await click(target.querySelector("tbody td.o_list_record_selector input"));
-
         assert.isNotVisible(target.querySelector(".o_list_export_xlsx"));
         assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
 
@@ -424,26 +421,43 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(target.querySelector(".o_list_export_xlsx"));
     });
 
-    QUnit.skipWOWL("export button in empty list view", async function (assert) {
-        assert.expect(2);
+    QUnit.test("export button in empty list view", async function (assert) {
+        const records = serverData.models.foo.records;
+
+        serverData.models.foo.records = [];
 
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
 
-        const list = await makeView({
+        await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/></tree>',
-            domain: [["id", "<", 0]], // such that no record matches the domain
         });
 
         assert.isNotVisible(target.querySelector(".o_list_export_xlsx"));
 
-        await list.reload({ domain: [["id", ">", 0]] });
+        serverData.models.foo.records = records;
+        await reloadListView(target);
         assert.isVisible(target.querySelector(".o_list_export_xlsx"));
+    });
+
+    QUnit.test("Direct export button invisible", async function (assert) {
+        function hasGroup(group) {
+            return group === "base.group_allow_export";
+        }
+        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "foo",
+            arch: `<tree export_xlsx="0"><field name="foo"/></tree>`,
+        });
+        assert.containsNone(target, ".o_list_export_xlsx");
     });
 
     QUnit.test("list view with adjacent buttons", async function (assert) {
@@ -4059,7 +4073,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(
             document.querySelector("body"),
             "modal-open",
-            "body should have modal-open clsss"
+            "body should have modal-open class"
         );
 
         await click(document, "body .modal footer button.btn-primary");

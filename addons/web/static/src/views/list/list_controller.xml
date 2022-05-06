@@ -40,11 +40,11 @@
                         Create
                     </button>
                 </t>
-                <t t-if="activeActions['exportXlsx'] and isExportEnable">
+                <t t-if="nbTotal and !nbSelected and activeActions['exportXlsx'] and isExportEnable">
                     <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
                 </t>
             </t>
-            <t t-if="model.root.selection.length">
+            <t t-if="nbSelected">
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                     <ListViewHeaderButton
                         clickParams="button.clickParams"

@@ -75,7 +75,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.module("ExportDataDialog");
 
-    QUnit.skipWOWL("Export dialog UI test", async function (assert) {
+    QUnit.test("Export dialog UI test", async function (assert) {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
@@ -336,18 +336,5 @@ QUnit.module("ViewDialogs", (hooks) => {
         });
 
         await click(target.querySelector(".o_list_export_xlsx"));
-    });
-
-    QUnit.skipWOWL("Direct export button invisible", async function (assert) {
-        assert.expect(1);
-
-        await makeView({
-            type: "list",
-            model: "partner",
-            data: this.data,
-            arch: `<tree export_xlsx="0"><field name="foo"/></tree>`,
-            session: this.mockSession,
-        });
-        assert.containsNone(target, ".o_list_export_xlsx");
     });
 });
