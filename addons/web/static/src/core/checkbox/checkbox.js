@@ -20,6 +20,20 @@ export class CheckBox extends Component {
     setup() {
         this.id = `checkbox-comp-${CheckBox.nextId++}`;
     }
+
+    /**
+     * When a click is triggered on an input directly with
+     * Javascript, the disabled attribute is not respected
+     * and the value is changed. This assures a disabled
+     * CheckBox can't be forced to update
+     */
+    onChange(ev) {
+        if (this.props.disabled) {
+            ev.target.checked = !ev.target.checked;
+            return;
+        }
+        this.props.onChange(ev.target.checked);
+    }
 }
 
 CheckBox.template = "web.CheckBox";

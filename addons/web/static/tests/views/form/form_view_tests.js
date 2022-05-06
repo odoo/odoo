@@ -6481,7 +6481,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
-    QUnit.test("modifiers are considered on multiple <footer/> tags", async function (assert) {
+    QUnit.skipWOWL("modifiers are considered on multiple <footer/> tags", async function (assert) {
         serverData.views = {
             "partner,false,form": `
                 <form>

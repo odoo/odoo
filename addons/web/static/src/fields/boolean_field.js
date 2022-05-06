@@ -10,7 +10,9 @@ const { Component, useExternalListener, useRef } = owl;
 export class BooleanField extends Component {
     setup() {
         this.root = useRef("root");
-        useExternalListener(window, "click", (ev) => this.onClick(ev), { capture: true });
+        if (this.props.isReadonlyEnabled) {
+            useExternalListener(window, "click", (ev) => this.onClick(ev), { capture: true });
+        }
     }
     /**
      * @param {Event} ev
@@ -22,13 +24,9 @@ export class BooleanField extends Component {
      * @param {Event} ev
      */
     onClick(ev) {
-        if (
-            this.props.readonly &&
-            !this.props.isDisabled &&
-            ev.composedPath().includes(this.root.el)
-        ) {
+        if (ev.composedPath().includes(this.root.el)) {
             this.props.update(!this.props.value);
-            ev.stopPropagation();
+            ev.preventDefault();
         }
     }
     /**
@@ -46,11 +44,12 @@ export class BooleanField extends Component {
 BooleanField.template = "web.BooleanField";
 BooleanField.props = {
     ...standardFieldProps,
-    isDisabled: { type: Boolean, optional: true },
+    isReadonlyEnabled: { type: Boolean, optional: true },
 };
 BooleanField.extractProps = (fieldName, record) => {
     return {
-        isDisabled: record.isReadonly(fieldName),
+        isReadonlyEnabled:
+            record.activeFields[fieldName].viewType === "list" && !record.isReadonly(fieldName),
     };
 };
 BooleanField.displayName = _lt("Checkbox");

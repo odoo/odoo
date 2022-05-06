@@ -255,7 +255,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("readonly boolean field", async function (assert) {
+    QUnit.test("readonly boolean field", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -263,7 +263,6 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `<form><field name="bar" readonly="1"/></form>`,
         });
-
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
         assert.containsOnce(
             target,

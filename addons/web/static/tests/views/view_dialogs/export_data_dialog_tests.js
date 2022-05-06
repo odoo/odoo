@@ -75,7 +75,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.module("ExportDataDialog");
 
-    QUnit.test("Export dialog UI test", async function (assert) {
+    QUnit.skipWOWL("Export dialog UI test", async function (assert) {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
