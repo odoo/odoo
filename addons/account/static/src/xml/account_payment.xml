@@ -40,26 +40,32 @@
                         <td t-if="!line.is_exchange">
                             <i class="o_field_widget text-left o_payment_label">Paid on <t t-esc="line.date"></t></i>
                         </td>
-                        <td t-if="line.is_exchange">
-                            <i class="o_field_widget text-left o_payment_label text-muted">Exchange Difference</i>
+                        <td t-if="line.is_exchange" colspan="2">
+                            <i class="o_field_widget text-left text-muted text-left">
+                                <span class="oe_form_field oe_form_field_float oe_form_field_monetary font-weight-bold">
+                                    <t t-if="line.position === 'before'">
+                                        <t t-esc="line.currency"/>
+                                    </t>
+                                    <t t-esc="line.amount"/>
+                                    <t t-if="line.position === 'after'">
+                                        <t t-esc="line.currency"/>
+                                    </t>
+                                </span>
+                                <span>Exchange Difference</span>
+                            </i>
                         </td>
                     </t>
-                        <td style="text-align:right;">
-                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary" style="margin-left: -10px;">
-                                <t t-if="line.position === 'before'">
-                                    <t t-esc="line.currency"/>
-                                </t>
-                                <t t-if="!line.is_exchange">
-                                    <t t-esc="line.amount"/>
-                                </t>
-                                <t t-if="line.is_exchange">
-                                    <i class="text-muted"><t t-esc="line.amount"/></i>
-                                </t>
-                                <t t-if="line.position === 'after'">
-                                    <t t-esc="line.currency"/>
-                                </t>
-                            </span>
-                        </td>
+                    <td t-if="!line.is_exchange" style="text-align:right;">
+                        <span class="oe_form_field oe_form_field_float oe_form_field_monetary" style="margin-left: -10px;">
+                            <t t-if="line.position === 'before'">
+                                <t t-esc="line.currency"/>
+                            </t>
+                            <t t-esc="line.amount"/>
+                            <t t-if="line.position === 'after'">
+                                <t t-esc="line.currency"/>
+                            </t>
+                        </span>
+                    </td>
                     </tr>
                 </t>
             </table>

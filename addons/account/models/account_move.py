@@ -1648,35 +1648,30 @@ class AccountMove(models.Model):
     def _get_reconciled_info_JSON_values(self):
         self.ensure_one()
         reconciled_vals = []
-        reconciled_partials, exchange_diff_moves = self._get_reconciled_invoices_partials()
-        for partial, amount, counterpart_line in reconciled_partials:
+        reconciled_partials = self._get_all_reconciled_invoice_partials()
+        for reconciled_partial in reconciled_partials:
+            counterpart_line = reconciled_partial['aml']
             if counterpart_line.move_id.ref:
                 reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
             else:
                 reconciliation_ref = counterpart_line.move_id.name
 
-            currency = self.currency_id
-            is_exchange = counterpart_line.move_id.id in exchange_diff_moves
-            if is_exchange:
-                amount = counterpart_line.move_id.amount_total_signed
-                currency = self.company_id.currency_id
-
             reconciled_vals.append({
                 'name': counterpart_line.name,
                 'journal_name': counterpart_line.journal_id.name,
-                'amount': amount,
-                'currency': currency.symbol,
-                'digits': [69, currency.decimal_places],
-                'position': currency.position,
+                'amount': reconciled_partial['amount'],
+                'currency': reconciled_partial['currency'].symbol,
+                'digits': [69, reconciled_partial['currency'].decimal_places],
+                'position': reconciled_partial['currency'].position,
                 'date': counterpart_line.date,
                 'payment_id': counterpart_line.id,
-                'partial_id': partial.id,
+                'partial_id': reconciled_partial['partial_id'],
                 'account_payment_id': counterpart_line.payment_id.id,
                 'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
                 'move_id': counterpart_line.move_id.id,
                 'ref': reconciliation_ref,
                 # these are necessary for the views to change depending on the values
-                'is_exchange': is_exchange,
+                'is_exchange': reconciled_partial['is_exchange'],
                 'amount_company_currency': formatLang(self.env, abs(counterpart_line.balance), currency_obj=counterpart_line.company_id.currency_id),
                 'amount_foreign_currency': formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=counterpart_line.currency_id) if counterpart_line.currency_id != counterpart_line.company_id.currency_id else False
             })
@@ -2465,6 +2460,84 @@ class AccountMove(models.Model):
         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
                           reconciled_lines.mapped('matched_credit_ids.credit_move_id')
         return reconciled_amls.move_id.filtered(lambda move: move.is_invoice(include_receipts=True))
+
+    def _get_all_reconciled_invoice_partials(self):
+        self.ensure_one()
+        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        if not reconciled_lines:
+            return {}
+
+        query = '''
+            SELECT
+                part.id,
+                part.exchange_move_id,
+                part.debit_amount_currency AS amount,
+                part.credit_move_id AS counterpart_line_id
+            FROM account_partial_reconcile part
+            WHERE part.debit_move_id IN %s
+
+            UNION ALL
+
+            SELECT
+                part.id,
+                part.exchange_move_id,
+                part.credit_amount_currency AS amount,
+                part.debit_move_id AS counterpart_line_id
+            FROM account_partial_reconcile part
+            WHERE part.credit_move_id IN %s
+        '''
+        self._cr.execute(query, [tuple(reconciled_lines.ids)] * 2)
+
+        partial_values_list = []
+        counterpart_line_ids = set()
+        exchange_move_ids = set()
+        for values in self._cr.dictfetchall():
+            partial_values_list.append({
+                'aml_id': values['counterpart_line_id'],
+                'partial_id': values['id'],
+                'amount': values['amount'],
+                'currency': self.currency_id,
+            })
+            counterpart_line_ids.add(values['counterpart_line_id'])
+            if values['exchange_move_id']:
+                exchange_move_ids.add(values['exchange_move_id'])
+
+        if exchange_move_ids:
+            query = '''
+                SELECT
+                    part.id,
+                    part.credit_move_id AS counterpart_line_id
+                FROM account_partial_reconcile part
+                JOIN account_move_line credit_line ON credit_line.id = part.credit_move_id
+                WHERE credit_line.move_id IN %s AND part.debit_move_id IN %s
+
+                UNION ALL
+
+                SELECT
+                    part.id,
+                    part.debit_move_id AS counterpart_line_id
+                FROM account_partial_reconcile part
+                JOIN account_move_line debit_line ON debit_line.id = part.debit_move_id
+                WHERE debit_line.move_id IN %s AND part.credit_move_id IN %s
+            '''
+            self._cr.execute(query, [tuple(exchange_move_ids), tuple(counterpart_line_ids)] * 2)
+
+            for values in self._cr.dictfetchall():
+                counterpart_line_ids.add(values['counterpart_line_id'])
+                partial_values_list.append({
+                    'aml_id': values['counterpart_line_id'],
+                    'partial_id': values['id'],
+                    'currency': self.company_id.currency_id,
+                })
+
+        counterpart_lines = {x.id: x for x in self.env['account.move.line'].browse(counterpart_line_ids)}
+        for partial_values in partial_values_list:
+            partial_values['aml'] = counterpart_lines[partial_values['aml_id']]
+            partial_values['is_exchange'] = partial_values['aml'].move_id.id in exchange_move_ids
+            if partial_values['is_exchange']:
+                partial_values['amount'] = abs(partial_values['aml'].balance)
+
+        return partial_values_list
 
     def _get_reconciled_invoices_partials(self):
         ''' Helper to retrieve the details about reconciled invoices.
