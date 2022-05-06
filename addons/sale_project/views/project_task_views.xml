@@ -39,18 +39,22 @@
                 <attribute name="options">{'always_reload': True}</attribute>
                 <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
             </xpath>
-            <xpath expr="//div[@id='rating_settings']" position="before">
-                <div class="col-lg-6 o_setting_box" id="allow_billable_container">
-                    <div class="o_setting_left_pane">
-                        <field name="allow_billable"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="allow_billable"/>
-                        <div class="text-muted" id="allow_billable_setting">
-                            Invoice your time and material to customers
+            <xpath expr="//group[@name='group_time_managment']" position="after">
+                 <group name="group_sales_invoicing" string="Sales &amp; Invoicing" class="row mt16 o_settings_container col-lg-6">
+                    <div>
+                        <div class="o_setting_box" id="allow_billable_container">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_billable"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="allow_billable"/>
+                                <div class="text-muted" id="allow_billable_setting">
+                                    Invoice your time and material to customers
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </group>
             </xpath>
         </field>
     </record>
