@@ -221,6 +221,10 @@ class Contract(models.Model):
         if vals.get('state') == 'close':
             for contract in self.filtered(lambda c: not c.date_end):
                 contract.date_end = max(date.today(), contract.date_start)
+        date_end = vals.get('date_end')
+        if self.env.context.get('close_contract', True) and date_end and fields.Date.from_string(date_end) < fields.Date.context_today(self):
+            for contract in self.filtered(lambda c: c.state == 'open'):
+                contract.state = 'close'
 
         calendar = vals.get('resource_calendar_id')
         if calendar:
