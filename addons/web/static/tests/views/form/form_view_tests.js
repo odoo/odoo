@@ -7112,7 +7112,7 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Action partner");
     });
 
-    QUnit.skipWOWL("check interactions between multiple FormViewDialogs", async function (assert) {
+    QUnit.test("check interactions between multiple FormViewDialogs", async function (assert) {
         assert.expect(8);
 
         serverData.models.product.fields.product_ids = {
@@ -7122,79 +7122,59 @@ QUnit.module("Views", (hooks) => {
         };
 
         serverData.models.partner.records[0].product_id = 37;
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="display_name"/>
+                    <field name="product_ids"/>
+                </form>`,
+            "product,false,list": '<tree><field name="display_name"/></tree>',
+        };
 
         await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="product_id"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "product,false,form":
-                    '<form string="Products">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="display_name"/>' +
-                    '<field name="product_ids"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                "product,false,list": '<tree><field name="display_name"/></tree>',
-            },
+            arch: `<form><field name="product_id"/></form>`,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/product/get_formview_id") {
-                    return Promise.resolve(false);
+                    return false;
                 } else if (args.method === "write") {
-                    assert.strictEqual(args.model, "product", "should write on product model");
-                    assert.strictEqual(
-                        args.args[1].product_ids[0][2].display_name,
-                        "xtv",
-                        "display_name of the new object should be xtv"
-                    );
+                    assert.strictEqual(args.model, "product");
+                    assert.strictEqual(args.args[1].product_ids[0][2].display_name, "xtv");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await click(target.querySelector(".o_form_button_edit"));
         // Open first dialog
         await click(target.querySelector(".o_external_button"));
-        assert.strictEqual($(".modal").length, 1, "One FormViewDialog should be opened");
-        var $firstModal = $(".modal");
+        assert.containsOnce(target, ".modal");
         assert.strictEqual(
-            $(".modal .modal-title").first().innerText.trim(),
-            "Open: Product",
-            "dialog title should display the python field string as label"
+            target.querySelector(".modal .modal-title").innerText.trim(),
+            "Open: Product"
         );
         assert.strictEqual(
-            $firstModal.find("input").value,
-            "xphone",
-            "display_name should be correctly displayed"
+            target.querySelector(".modal .o_field_widget[name=display_name] input").value,
+            "xphone"
         );
 
         // Open second dialog
-        await click($firstModal.find(".o_field_x2many_list_row_add a"));
-        assert.strictEqual($(".modal").length, 2, "two FormViewDialogs should be opened");
-        var $secondModal = $(".modal:nth(1)");
+        await click(target.querySelector(".modal .o_field_x2many_list_row_add a"));
+        assert.containsN(target, ".modal", 2);
         // Add new value
-        await editInput($secondModal.find("input"), "xtv");
-        await click($secondModal.find(".modal-footer button:first"));
-        assert.strictEqual($(".modal").length, 1, "last opened dialog should be closed");
+        const secondModal = target.querySelectorAll(".modal")[1];
+        await editInput(secondModal, ".o_field_widget[name=display_name] input", "xtv");
+        await click(secondModal.querySelector(".modal-footer .btn-primary"));
+        assert.containsOnce(target, ".modal");
 
         // Check that data in first dialog is correctly updated
         assert.strictEqual(
-            $firstModal.find("tr.o_data_row td").innerText,
-            "xtv",
-            "should have added a line with xtv as new record"
+            target.querySelector(".modal .o_data_row .o_data_cell").innerText,
+            "xtv"
         );
-        await click($firstModal.find(".modal-footer button:first"));
+        await click(target.querySelector(".modal .modal-footer .btn-primary:not(.d-none"));
     });
 
     QUnit.skipWOWL("fields and record contexts are not mixed", async function (assert) {
