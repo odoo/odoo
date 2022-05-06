@@ -18,6 +18,7 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     trigger: 'div.o_field_radio[name="access_mode"] > div.o_radio_item > input[data-value="edit"]',
     content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
 }, {
+    id: 'project_share_partner_selection',
     trigger: '.o_field_many2one[name="partner_ids"]',
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: function (actions) {
@@ -119,3 +120,32 @@ tour.register('portal_project_sharing_tour', {
     test: true,
     url: '/my/projects',
 }, projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length));
+
+const projectSharingWarningSteps = [{
+    trigger: '.o_field_many2one[name="partner_ids"]',
+    content: 'Select the non portal partner as collaborator to the "Project Sharing" project.',
+    run: function (actions) {
+        actions.text('Odysseus', this.$anchor.find('input'));
+    },
+}, {
+    trigger: '.ui-autocomplete a:contains("Odysseus")',
+    in_modal: false,
+}, {
+    trigger: 'footer > button[name="action_send_mail"]',
+    content: 'Share the editable project with this partner.',
+}, {
+    trigger: 'footer > button[name="confirmed_action_send_mail"]',
+    content: 'Confirm Sharing the editable project with this partner and creating a portal user.',
+}, {
+    trigger: '.o_web_client',
+    content: 'Go to project portal view to select the "Project Sharing" project',
+    run: function () {
+        window.location.href = window.location.origin + '/my/projects';
+    },
+}];
+const projectSharingPrePartnerInputIndex = projectSharingSteps.findIndex(s => s.id && s.id === 'project_share_partner_selection')
+tour.register('project_sharing_tour_with_ext_partner', {
+    test: true,
+    url: '/web',
+}, projectSharingSteps.slice(0, projectSharingPrePartnerInputIndex).concat(projectSharingWarningSteps));
+

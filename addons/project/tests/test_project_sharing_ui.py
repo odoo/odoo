@@ -10,7 +10,7 @@ class TestProjectSharingUi(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        user = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nolog': True}).create({
+        cls.georges_user = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nolog': True}).create({
             'name': 'Georges',
             'login': 'georges1',
             'password': 'georges1',
@@ -20,17 +20,16 @@ class TestProjectSharingUi(HttpCase):
             'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
         })
 
-        cls.partner_portal = cls.env['res.partner'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Georges',
-            'email': 'georges@project.portal',
-            'company_id': False,
-            'user_ids': [user.id],
+        cls.non_portal_partner = cls.env['res.partner'].with_context({'no_reset_password': True, 'mail_create_nolog': True}).create({
+            'name': 'Odysseus',
+            'email': 'odyssey@test.com',
         })
+
         cls.project_portal = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Project Sharing',
             'privacy_visibility': 'portal',
             'alias_name': 'project+sharing',
-            'partner_id': cls.partner_portal.id,
+            'partner_id': cls.georges_user.partner_id.id,
             'type_ids': [
                 Command.create({'name': 'To Do', 'sequence': 1}),
                 Command.create({'name': 'Done', 'sequence': 10})
@@ -54,7 +53,7 @@ class TestProjectSharingUi(HttpCase):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'partner_ids': [
-                Command.link(self.partner_portal.id),
+                Command.link(self.georges_user.partner_id.id),
             ],
         })
         project_share_wizard.action_send_mail()
@@ -66,3 +65,11 @@ class TestProjectSharingUi(HttpCase):
             })],
         })
         self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1')
+
+    def test_03_project_sharing(self):
+        """ Test project sharing ui with an internal user but sharing to a non-portal partner.
+
+            This is meant to test whether the warning for sharing an editable project with a
+            non-portal partner is raised properly.
+        """
+        self.start_tour("/web", 'project_sharing_tour_with_ext_partner', login="admin")
