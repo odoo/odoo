@@ -33,7 +33,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, target, widget } = await start();
+    const { messaging, target } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
@@ -50,17 +50,15 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         "should have default livechat icon"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel.partner/typing_status',
-            payload: {
-                channel_id: mailChannelId1,
-                is_typing: true,
-                partner_id: messaging.publicPartners[0].id,
-                partner_name: messaging.publicPartners[0].name,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.partner/typing_status', {
+            'channel_id': mailChannelId1,
+            'is_typing': true,
+            'partner_id': messaging.publicPartners[0].id,
+            'partner_name': messaging.publicPartners[0].name,
+        });
     });
     assert.containsOnce(
         document.body,

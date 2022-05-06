@@ -68,10 +68,9 @@ MockServer.include({
                 public: 'private',
             });
             // notify operator
-            this._widget.call('bus_service', 'trigger', 'notification', [{
-                type: 'website_livechat.send_chat_request',
-                payload: this._mockMailChannelChannelInfo([livechatId])[0],
-            }]);
+            this.pyEnv['bus.bus']._sendone(this.currentPartner, 'website_livechat.send_chat_request',
+                this._mockMailChannelChannelInfo([livechatId])[0]
+            );
         }
     },
 });

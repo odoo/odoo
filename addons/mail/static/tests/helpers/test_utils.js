@@ -220,7 +220,7 @@ let pyEnv;
                 if (target[name]) {
                     return target[name];
                 }
-                return {
+                const modelAPI = {
                     /**
                      * Simulate a 'create' operation on a model.
                      *
@@ -284,6 +284,11 @@ let pyEnv;
                         return target.mockServer.mockWrite(name, [ids, values]);
                     },
                 };
+                if (name === 'bus.bus') {
+                    modelAPI['_sendone'] = target.mockServer._mockBusBus__sendone.bind(target.mockServer);
+                    modelAPI['_sendmany'] = target.mockServer._mockBusBus__sendmany.bind(target.mockServer);
+                }
+                return modelAPI;
             },
             set(target, name, value) {
                 return target[name] = value;

@@ -2969,7 +2969,7 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
 QUnit.test('receive new needaction messages', async function (assert) {
     assert.expect(12);
 
-    const { messaging, pyEnv, widget } = await this.start();
+    const { messaging, pyEnv } = await this.start();
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebarMailbox[data-thread-local-id="${
@@ -3003,16 +3003,13 @@ QUnit.test('receive new needaction messages', async function (assert) {
 
     // simulate receiving a new needaction message
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.message/inbox',
-            payload: {
-                body: "not empty",
-                id: 100,
-                needaction_partner_ids: [pyEnv.currentPartnerId],
-                model: 'res.partner',
-                res_id: 20,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.message/inbox', {
+            'body': "not empty",
+            'id': 100,
+            'needaction_partner_ids': [pyEnv.currentPartnerId],
+            'model': 'res.partner',
+            'res_id': 20,
+        });
     });
     assert.ok(
         document.querySelector(`
@@ -3046,16 +3043,13 @@ QUnit.test('receive new needaction messages', async function (assert) {
 
     // simulate receiving another new needaction message
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.message/inbox',
-            payload: {
-                body: "not empty",
-                id: 101,
-                needaction_partner_ids: [pyEnv.currentPartnerId],
-                model: 'res.partner',
-                res_id: 20,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.message/inbox', {
+            'body': "not empty",
+            'id': 101,
+            'needaction_partner_ids': [pyEnv.currentPartnerId],
+            'model': 'res.partner',
+            'res_id': 20,
+        });
     });
     assert.strictEqual(
         document.querySelector(`
@@ -3545,7 +3539,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
     });
-    const { widget } = await this.start({
+    await this.start({
         env: { bus },
         services: {
             bus_service: BusService.extend({
@@ -3558,19 +3552,17 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
         },
     });
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/new_message',
-            payload: {
-                id: mailChannelId1,
-                message: {
-                    id: 126,
-                    model: 'mail.channel',
-                    res_id: mailChannelId1,
-                },
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel/new_message', {
+            'id': mailChannelId1,
+            'message': {
+                id: 126,
+                model: 'mail.channel',
+                res_id: mailChannelId1,
             },
-        }]);
+        });
     });
     assert.verifySteps(['set_title_part']);
 });
@@ -3586,7 +3578,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
         assert.strictEqual(payload.part, '_chat');
         assert.strictEqual(payload.title, "1 Message");
     });
-    const { widget } = await this.start({
+    await this.start({
         env: { bus },
         services: {
             bus_service: BusService.extend({
@@ -3599,19 +3591,17 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
         },
     });
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receiving a new message with odoo focused
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/new_message',
-            payload: {
-                id: mailChannelId1,
-                message: {
-                    id: 126,
-                    model: 'mail.channel',
-                    res_id: mailChannelId1,
-                },
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel/new_message', {
+            'id': mailChannelId1,
+            'message': {
+                id: 126,
+                model: 'mail.channel',
+                res_id: mailChannelId1,
             },
-        }]);
+        });
     });
     assert.verifySteps(['set_title_part']);
 });
@@ -3640,7 +3630,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             assert.strictEqual(payload.title, "3 Messages");
         }
     });
-    const { widget } = await this.start({
+    await this.start({
         env: { bus },
         services: {
             bus_service: BusService.extend({
@@ -3653,51 +3643,44 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
         },
     });
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receiving a new message in chat 1 with odoo focused
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/new_message',
-            payload: {
-                id: mailChannelId1,
-                message: {
-                    id: 126,
-                    model: 'mail.channel',
-                    res_id: mailChannelId1,
-                },
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel/new_message', {
+            'id': mailChannelId1,
+            'message': {
+                id: 126,
+                model: 'mail.channel',
+                res_id: mailChannelId1,
             },
-        }]);
+        });
     });
     assert.verifySteps(['set_title_part']);
 
+    const mailChannel2 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId2]])[0];
     // simulate receiving a new message in chat 2 with odoo focused
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/new_message',
-            payload: {
-                id: mailChannelId2,
-                message: {
-                    id: 127,
-                    model: 'mail.channel',
-                    res_id: mailChannelId2,
-                },
+        pyEnv['bus.bus']._sendone(mailChannel2, 'mail.channel/new_message', {
+            'id': mailChannelId2,
+            'message': {
+                id: 127,
+                model: 'mail.channel',
+                res_id: mailChannelId2,
             },
-        }]);
+        });
     });
     assert.verifySteps(['set_title_part']);
 
     // simulate receiving another new message in chat 2 with odoo focused
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/new_message',
-            payload: {
-                id: mailChannelId2,
-                message: {
-                    id: 128,
-                    model: 'mail.channel',
-                    res_id: mailChannelId2,
-                },
+        pyEnv['bus.bus']._sendone(mailChannel2, 'mail.channel/new_message', {
+            'id': mailChannelId2,
+            'message': {
+                id: 128,
+                model: 'mail.channel',
+                res_id: mailChannelId2,
             },
-        }]);
+        });
     });
     assert.verifySteps(['set_title_part']);
 });

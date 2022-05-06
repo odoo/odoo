@@ -67,7 +67,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
             res_id: mailChannelId2,
         },
     ]);
-    const { createNotificationListComponent, widget } = await start();
+    const { createNotificationListComponent } = await start();
     await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
@@ -76,23 +76,21 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
         "there should be two thread previews"
     );
 
+    const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     await afterNextRender(() => {
-        widget.call('bus_service', 'trigger', 'notification', [{
-            type: 'mail.channel/new_message',
-            payload: {
-                id: mailChannelId1,
-                message: {
-                    author_id: [7, "Demo User"],
-                    body: "<p>New message !</p>",
-                    date: "2020-03-23 10:00:00",
-                    id: 44,
-                    message_type: 'comment',
-                    model: 'mail.channel',
-                    record_name: 'Channel 2019',
-                    res_id: mailChannelId1,
-                },
+        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel/new_message', {
+            'id': mailChannelId1,
+            'message': {
+                author_id: [7, "Demo User"],
+                body: "<p>New message !</p>",
+                date: "2020-03-23 10:00:00",
+                id: 44,
+                message_type: 'comment',
+                model: 'mail.channel',
+                record_name: 'Channel 2019',
+                res_id: mailChannelId1,
             },
-        }]);
+        });
     });
     assert.containsN(
         document.body,
