@@ -9,12 +9,11 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.controllers.portal import PaymentPortal
-from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class TestFlows(PaymentCommon, PaymentHttpCommon):
+class TestFlows(PaymentHttpCommon):
 
     def _test_flow(self, flow):
         """ Simulate the given online payment flow and tests the tx values at each step.
