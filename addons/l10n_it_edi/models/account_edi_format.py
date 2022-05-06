@@ -58,6 +58,14 @@ class AccountEdiFormat(models.Model):
         }
 
     def _l10n_it_edi_check_invoice_configuration(self, invoice):
+        errors = self._l10n_it_edi_check_ordinary_invoice_configuration(invoice)
+
+        if not errors:
+            errors = self._l10n_it_edi_check_simplified_invoice_configuration(invoice)
+
+        return errors
+
+    def _l10n_it_edi_check_ordinary_invoice_configuration(self, invoice):
         errors = []
         seller = invoice.company_id
         buyer = invoice.commercial_partner_id
@@ -97,7 +105,35 @@ class AccountEdiFormat(models.Model):
 
         # <1.4.1>
         if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
-            errors.append(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).", buyer.display_name))
+            errors.append(_("The buyer, %s, or his company must have a VAT number and/or a tax code (Codice Fiscale).", buyer.display_name))
+
+        # <2.2.1>
+        for invoice_line in invoice.invoice_line_ids:
+            if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
+                raise UserError(_("You must select one and only one tax by line."))
+
+        for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
+            if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
+                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
+
+        return errors
+
+    def _l10n_it_edi_check_simplified_invoice_configuration(self, invoice):
+        errors = self._l10n_it_edi_check_buyer_invoice_configuration(invoice)
+        template = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', raise_if_not_found=False)
+
+        if errors and template:
+            buyer = invoice.commercial_partner_id
+            if ((not buyer.country_id or buyer.country_id.code == 'IT')
+                and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
+                and invoice.amount_total <= 400):
+                return []
+
+        return errors
+
+    def _l10n_it_edi_check_buyer_invoice_configuration(self, invoice):
+        errors = []
+        buyer = invoice.commercial_partner_id
 
         # <1.4.2>
         if not buyer.street and not buyer.street2:
@@ -111,16 +147,23 @@ class AccountEdiFormat(models.Model):
         if not buyer.country_id:
             errors.append(_("%s must have a country.", buyer.display_name))
 
-        # <2.2.1>
-        for invoice_line in invoice.invoice_line_ids:
-            if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
-                raise UserError(_("You must select one and only one tax by line."))
-
-        for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
-            if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
-                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
-
         return errors
+
+    def _l10n_it_get_document_type(self, invoice):
+        errors_buyer = self._l10n_it_edi_check_buyer_invoice_configuration(invoice)
+        if errors_buyer: # Simplified invoice case
+            if invoice.move_type == 'out_invoice':
+                return 'TD07'
+            elif invoice.move_type == 'out_refund':
+                return 'TD08'
+
+        if invoice.move_type == 'out_invoice':
+            return 'TD01'
+        elif invoice.move_type == 'out_refund':
+            return 'TD04'
+
+    def _l10n_it_is_simplified_document_type(self, document_type):
+        return document_type in ['TD07', 'TD08', 'TD09']
 
     # -------------------------------------------------------------------------
     # Export
@@ -277,13 +320,19 @@ class AccountEdiFormat(models.Model):
             # TD04 == credit note
             # TD05 == debit note
             # TD06 == fee
+            # TD07 == simplified invoice
+            # TD08 == simplified credit note
+            # TD09 == simplified debit note
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
             move_type = 'in_invoice'
-            if elements and elements[0].text and elements[0].text == 'TD04':
+            document_type = elements[0].text if elements else ''
+            if document_type and document_type in ['TD04', 'TD08']:
                 move_type = 'in_refund'
-            elif elements and elements[0].text and elements[0].text != 'TD01':
+            elif document_type and document_type not in ['TD01', 'TD07']:
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
+
+            simplified = self._l10n_it_is_simplified_document_type(document_type)
 
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
@@ -418,7 +467,11 @@ class AccountEdiFormat(models.Model):
                             invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
-                elements = body_tree.xpath('.//DettaglioLinee')
+                if not simplified:
+                    elements = body_tree.xpath('.//DettaglioLinee')
+                else:
+                    elements = body_tree.xpath('.//DatiBeniServizi')
+
                 if elements:
                     for element in elements:
                         with invoice_form.invoice_line_ids.new() as invoice_line_form:
@@ -457,11 +510,6 @@ class AccountEdiFormat(models.Model):
                             if line_elements:
                                 invoice_line_form.name = " ".join(line_elements[0].text.split())
 
-                            # Price Unit.
-                            line_elements = element.xpath('.//PrezzoUnitario')
-                            if line_elements:
-                                invoice_line_form.price_unit = float(line_elements[0].text)
-
                             # Quantity.
                             line_elements = element.xpath('.//Quantita')
                             if line_elements:
@@ -470,11 +518,30 @@ class AccountEdiFormat(models.Model):
                                 invoice_line_form.quantity = 1
 
                             # Taxes
-                            tax_element = element.xpath('.//AliquotaIVA')
+                            percentage = None
+                            price_subtotal = 0
+                            if not simplified:
+                                tax_element = element.xpath('.//AliquotaIVA')
+                                if tax_element and tax_element[0].text:
+                                    percentage = float(tax_element[0].text)
+                            else:
+                                amount_element = element.xpath('.//Importo')
+                                if amount_element and amount_element[0].text:
+                                    amount = float(amount_element[0].text)
+                                    tax_element = element.xpath('.//Aliquota')
+                                    if tax_element and tax_element[0].text:
+                                        percentage = float(tax_element[0].text)
+                                        price_subtotal = amount / (1 + percentage / 100)
+                                    else:
+                                        tax_element = element.xpath('.//Imposta')
+                                        if tax_element and tax_element[0].text:
+                                            tax_amount = float(tax_element[0].text)
+                                            price_subtotal = amount - tax_amount
+                                            percentage = round(tax_amount / price_subtotal * 100)
+
                             natura_element = element.xpath('.//Natura')
                             invoice_line_form.tax_ids.clear()
-                            if tax_element and tax_element[0].text:
-                                percentage = float(tax_element[0].text)
+                            if percentage is not None:
                                 if natura_element and natura_element[0].text:
                                     l10n_it_kind_exoneration = natura_element[0].text
                                     tax = self.env['account.tax'].search([
@@ -505,6 +572,14 @@ class AccountEdiFormat(models.Model):
                                         message_to_log.append(_("Tax not found with percentage: %s for the article: %s") % (
                                             percentage,
                                             invoice_line_form.name))
+
+                            # Price Unit.
+                            if not simplified:
+                                line_elements = element.xpath('.//PrezzoUnitario')
+                                if line_elements:
+                                    invoice_line_form.price_unit = float(line_elements[0].text)
+                            else:
+                                invoice_line_form.price_unit = price_subtotal
 
                             # Discounts
                             discount_elements = element.xpath('.//ScontoMaggiorazione')

@@ -147,12 +147,9 @@ class AccountMove(models.Model):
 
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
-        if self.move_type == 'out_invoice':
-            document_type = 'TD01'
-        elif self.move_type == 'out_refund':
-            document_type = 'TD04'
-        else:
-            document_type = 'TD0X'
+        document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
+        if self.env['account.edi.format']._l10n_it_is_simplified_document_type(document_type):
+            formato_trasmissione = "FSM10"
 
         pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
         pdf = base64.b64encode(pdf)
@@ -208,7 +205,12 @@ class AccountMove(models.Model):
         :return: The XML content as str.
         '''
         template_values = self._prepare_fatturapa_export_values()
-        content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        if not self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
+            content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        else:
+            content = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')._render(template_values)
+            self.message_post(body=_("A simplified invoice was created instead of an ordinary one. This is because the invoice \
+                                    is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."))
         return content
 
     def _post(self, soft=True):
