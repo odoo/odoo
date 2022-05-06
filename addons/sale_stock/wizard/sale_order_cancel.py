@@ -12,4 +12,5 @@ class SaleOrderCancel(models.TransientModel):
     @api.depends('order_id')
     def _compute_display_delivery_alert(self):
         for wizard in self:
-            wizard.display_delivery_alert = bool(any(picking.state == 'done' for picking in wizard.order_id.picking_ids))
+            out_pickings = wizard.order_id.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+            wizard.display_delivery_alert = bool(any(picking.state == 'done' for picking in out_pickings))
