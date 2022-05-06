@@ -5,12 +5,11 @@ from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestSalePayment(PaymentCommon, PaymentHttpCommon):
+class TestSalePayment(PaymentHttpCommon):
 
     @classmethod
     def setUpClass(cls):
