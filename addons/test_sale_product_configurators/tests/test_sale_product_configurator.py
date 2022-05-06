@@ -19,7 +19,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             name='Salesman',
             login='salesman',
             password='salesman',
-            groups='sales_team.group_sale_salesman',
+            groups='sales_team.group_sale_salesman,product.group_product_pricelist',
         )
 
         # Setup partner since user salesman don't have the right to create it on the fly

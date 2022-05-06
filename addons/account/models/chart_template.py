@@ -362,11 +362,12 @@ class AccountChartTemplate(models.AbstractModel):
             (not key.startswith("property_") or key.startswith("property_stock_"))
             and key in company._fields
         )
-        company.write({key: val for key, val in template_data.items() if filter_properties(key)})
+        # Set the currency to the fiscal country's currency
+        vals = {key: val for key, val in template_data.items() if filter_properties(key)}
+        vals['currency_id'] = company.account_fiscal_country_id.currency_id.id
 
-        # Set the currency to the fiscal country's currency if not set yet, and make sure it's active
-        company.currency_id = company.account_fiscal_country_id.currency_id
-        company.currency_id.active = True
+        # This write method is important because it's overridden and has additional triggers
+        company.write(vals)
 
         # Create utility bank_accounts
         self._setup_utility_bank_accounts(template_code, company, bank_prefix, code_digits)
