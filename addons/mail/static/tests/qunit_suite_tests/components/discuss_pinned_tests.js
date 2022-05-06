@@ -115,7 +115,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { click, env, messaging } = await start({
+    const { click, messaging } = await start({
         autoOpenDiscuss: true,
     });
     const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
@@ -146,16 +146,13 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
-        env.services.bus_service.trigger('notification', [{
-            type: 'mail.channel/unpin',
-            payload: {
-                channel_type: 'channel',
-                id: mailChannelId1,
-                name: "General",
-                public: 'public',
-                state: 'open',
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'mail.channel/unpin', {
+            'channel_type': 'channel',
+            'id': mailChannelId1,
+            'name': "General",
+            'public': 'public',
+            'state': 'open',
+        });
     });
     assert.containsOnce(
         document.body,

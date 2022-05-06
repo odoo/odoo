@@ -10,6 +10,8 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
 import { sprintf } from '@web/core/utils/strings';
+import { url } from '@web/core/utils/urls';
+
 import { str_to_datetime } from 'web.time';
 
 const getSuggestedRecipientInfoNextTemporaryId = (function () {
@@ -1628,7 +1630,7 @@ registerModel({
          * @returns {string}
          */
         _computeUrl() {
-            const baseHref = this.env.session.url('/web');
+            const baseHref = url('/web');
             if (this.model === 'mail.channel') {
                 return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
             }

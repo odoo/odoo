@@ -325,7 +325,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { env, messaging } = await this.start();
+    const { messaging } = await this.start();
 
     assert.containsOnce(
         document.body,
@@ -338,12 +338,9 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        env.services.bus_service.trigger('notification', [{
-            type: "res.users.settings/changed",
-            payload: {
-                is_discuss_sidebar_category_livechat_open: false,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/changed', {
+            'is_discuss_sidebar_category_livechat_open': false,
+        });
     });
     assert.containsNone(
         document.body,
@@ -374,7 +371,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
-    const { env, messaging } = await this.start();
+    const { messaging } = await this.start();
 
     assert.containsNone(
         document.body,
@@ -387,12 +384,9 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     );
 
     await afterNextRender(() => {
-        env.services.bus_service.trigger('notification', [{
-            type: "res.users.settings/changed",
-            payload: {
-                is_discuss_sidebar_category_livechat_open: true,
-            },
-        }]);
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
+            'is_discuss_sidebar_category_livechat_open': true,
+        });
     });
     assert.containsOnce(
         document.body,
