@@ -31,6 +31,7 @@ except ImportError:
 
 from .exceptions import AccessError, UserError, CacheMiss
 from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
+from .tools.misc import get_lang
 from .tools.translate import _
 
 if TYPE_CHECKING:
@@ -693,7 +694,8 @@ class Environment(Mapping):
         """
         lang = self.context.get('lang')
         if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
-            raise UserError(_('Invalid language code: %s', lang))
+            # Fallback on the first lang active or en_US
+            lang = get_lang(self, lang_code=lang).get('code', 'en_US')
         return lang or None
 
     @lazy_property

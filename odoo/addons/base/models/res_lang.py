@@ -141,6 +141,16 @@ class Lang(models.Model):
             except Exception:
                 raise ValidationError(warning)
 
+    @api.depends('active', 'name')
+    @api.depends_context('lang_installed')
+    def _compute_display_name(self):
+        """ Add an icon next to the langs installed if the context key 'lang_installed' is present """
+        for lang in self:
+            lang_name = lang.name
+            if lang.active and self.env.context.get('lang_installed'):
+                lang_name = _("%s 💬") % lang_name
+            lang.display_name = lang_name
+
     def _register_hook(self):
         # check that there is at least one active language
         if not self.search_count([]):
@@ -269,6 +279,10 @@ class Lang(models.Model):
         [[field_name, field_value]] = kwargs.items()
         return self._get_active_by(field_name)[field_value]
 
+    def _get_all_data(self, **kwargs: Any) -> LangData:
+        [[field_name, field_value]] = kwargs.items()
+        return self._get_all_by(field_name)[field_value]
+
     def _lang_get(self, code: str):
         """ Return the language using this code if it is active """
         return self.browse(self._get_data(code=code).id)
@@ -276,6 +290,23 @@ class Lang(models.Model):
     def _get_code(self, code: str) -> str | Literal[False]:
         """ Return the given language code if active, else return ``False`` """
         return self._get_data(code=code).code
+
+    @api.model
+    def _get_enabled_lang_code(self):
+        """ Get the list of code enabled (aka installed and default) """
+        langs = self._get_available_lang()
+        return [lang[0] for lang in langs]
+
+    @api.model
+    def _get_available_lang(self) -> list[tuple[str, str]]:
+        """
+        Return the installed languages and the default one (aka iso_code is only 2 letters)
+        as a list of (code, name) sorted by the active state and the name (default order of model)
+        """
+        langs = self.with_context(active_test=False).search([])
+        lang_4iso_disabled = langs.filtered(lambda lang: not lang.active and len(lang.iso_code) > 2)
+        langs_enabled = langs - lang_4iso_disabled
+        return list(zip(langs_enabled.mapped('code'), langs_enabled.mapped('display_name')))
 
     @api.model
     def get_installed(self) -> list[tuple[str, str]]:
@@ -293,6 +324,18 @@ class Lang(models.Model):
             raise UserError(_('Field "%s" is not cached', field))
         if field == 'code':
             langs = self.sudo().with_context(active_test=True).search_fetch([], self.CACHED_FIELDS, order='name')
+            return LangDataDict({
+                lang.code: LangData({f: lang[f] for f in self.CACHED_FIELDS})
+                for lang in langs
+            })
+        return LangDataDict({data[field]: data for data in self._get_active_by('code').values()})
+
+    @tools.ormcache('field')
+    def _get_all_by(self, field: str) -> LangDataDict:
+        if field not in self.CACHED_FIELDS:
+            raise UserError(_('Field "%s" is not cached', field))
+        if field == 'code':
+            langs = self.sudo().with_context(active_test=False).search_fetch([], self.CACHED_FIELDS, order='name')
             return LangDataDict({
                 lang.code: LangData({f: lang[f] for f in self.CACHED_FIELDS})
                 for lang in langs
