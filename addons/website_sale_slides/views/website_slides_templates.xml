@@ -27,7 +27,7 @@
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
         <t t-if="(not channel.is_member or channel.can_publish) and channel.enroll == 'payment'">
-            <t t-if="channel.product_id.website_published">
+            <t t-if="product_info and channel.product_id.website_published">
                 <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
                     <div class="css_editable_mode_hidden">
                         <!-- real price -->
