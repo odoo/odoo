@@ -10,26 +10,37 @@ import { tooltipService } from "../../src/core/tooltip/tooltip_service";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
     addRow,
-    click, clickDiscard, clickEdit,
+    click,
+    clickDiscard,
+    clickEdit,
     clickSave,
-    editInput, editSelect, getFixture, getNodesTextContent, legacyExtraNextTick,
+    editInput,
+    editSelect,
+    getFixture,
+    getNodesTextContent,
+    legacyExtraNextTick,
     makeDeferred,
     mouseEnter,
     nextTick,
     patchTimeZone,
-    patchWithCleanup, selectDropdownItem, triggerEvent,
-    triggerEvents
+    patchWithCleanup,
+    selectDropdownItem,
+    triggerEvent,
+    triggerEvents,
 } from "../helpers/utils";
 import {
     getButtons,
-    getFacetTexts, getPagerLimit, getPagerValue, groupByMenu,
+    getFacetTexts,
+    getPagerLimit,
+    getPagerValue,
+    groupByMenu,
     pagerNext,
     pagerPrevious,
     toggleActionMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
-    toggleMenuItem
+    toggleMenuItem,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
@@ -3662,7 +3673,7 @@ QUnit.module("Views", (hooks) => {
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
             "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus " +
             "bibendum est.";
-        await editInput(target.querySelector(".o_field_widget[name=text]"), null, longVal);
+        await editInput(target.querySelector(".o_field_widget[name=text] .o_input"), null, longVal);
         await clickSave(target);
 
         assert.containsNone(target, ".o_selected_row");
@@ -3984,7 +3995,7 @@ QUnit.module("Views", (hooks) => {
             },
             arch: '<tree editable="top">' + '<field name="foo" required="1"/>' + "</tree>",
         });
-        await click(target.querySelector(".o_data_row .o_data_cell"))
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
 
         await click(target.querySelector("span.o_field_translate"));
@@ -3995,7 +4006,6 @@ QUnit.module("Views", (hooks) => {
             2,
             "modal should have 2 languages to translate"
         );
-
     });
 
     QUnit.test("long words in text cells should break into smaller lines", async function (assert) {
@@ -8676,42 +8686,36 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("multi edit in view grouped by field not in view", async function (assert) {
         serverData.models.foo.records = [
             // group 1
-            {id: 1, foo: '1', m2o: 1},
-            {id: 3, foo: '2', m2o: 1},
+            { id: 1, foo: "1", m2o: 1 },
+            { id: 3, foo: "2", m2o: 1 },
             //group 2
-            {id: 2, foo: '1', m2o: 2},
-            {id: 4, foo: '2', m2o: 2},
+            { id: 2, foo: "1", m2o: 2 },
+            { id: 4, foo: "2", m2o: 2 },
             // group 3
-            {id: 5, foo: '2', m2o: 3},
+            { id: 5, foo: "2", m2o: 3 },
         ];
 
         await makeView({
             type: "list",
-            resModel: 'foo',
+            resModel: "foo",
             serverData,
             arch: `<tree expand="1" multi_edit="1">
                    <field name="foo"/>
                </tree>`,
-            groupBy: ['m2o'],
+            groupBy: ["m2o"],
         });
         // Select items from the first group
         const rows = target.querySelectorAll(".o_data_row");
         await click(rows[0], ".o_list_record_selector input");
         await click(rows[1], ".o_list_record_selector input");
-        await click(target.querySelector(".o_list_char"))
-        await editInput(target, '.o_data_row [name=foo] input', 'test');
-        assert.containsOnce(target, '.modal');
+        await click(target.querySelector(".o_list_char"));
+        await editInput(target, ".o_data_row [name=foo] input", "test");
+        assert.containsOnce(target, ".modal");
 
-        await click(target, '.modal .modal-footer .btn-primary');
-        assert.containsNone(target, '.modal');
-        const allNames = [...document.querySelectorAll('.o_data_cell')].map(n => n.textContent);
-        assert.deepEqual(allNames, [
-            'test',
-            'test',
-            '1',
-            '2',
-            '2',
-        ]);
+        await click(target, ".modal .modal-footer .btn-primary");
+        assert.containsNone(target, ".modal");
+        const allNames = [...document.querySelectorAll(".o_data_cell")].map((n) => n.textContent);
+        assert.deepEqual(allNames, ["test", "test", "1", "2", "2"]);
     });
 
     QUnit.skipWOWL("multi edit reference field batched in grouped list", async function (assert) {
@@ -9520,10 +9524,10 @@ QUnit.module("Views", (hooks) => {
             );
 
             // select all records (the first one has value 1 for m2o)
-            await click(target, ".o_list_record_selector input")
+            await click(target, ".o_list_record_selector input");
 
             // set m2o to 1 in first record
-            await click(target.querySelector(".o_data_row .o_data_cell"))
+            await click(target.querySelector(".o_data_row .o_data_cell"));
             await testUtils.fields.many2one.searchAndClickItem("m2o", { search: "Value 1" });
 
             assert.containsOnce(document.body, ".modal");
@@ -10365,7 +10369,8 @@ QUnit.module("Views", (hooks) => {
             assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
 
             await editInput(
-                target, '[name="o2m"] .o_field_x2many .o_selected_row [name="display_name"] input',
+                target,
+                '[name="o2m"] .o_field_x2many .o_selected_row [name="display_name"] input',
                 "new value"
             );
 
