@@ -2,21 +2,18 @@
 
 import json
 from uuid import uuid4
-
 from lxml import etree, objectify
 
 from odoo.tests import HttpCase
 
-from odoo.addons.payment.tests.utils import PaymentTestUtils
+from odoo.addons.payment.tests.common import PaymentCommon
 
 
-class PaymentHttpCommon(PaymentTestUtils, HttpCase):
+class PaymentHttpCommon(PaymentCommon, HttpCase):
     """ HttpCase common to build and simulate requests going through payment controllers.
 
     Only use if you effectively want to test controllers.
     If you only want to test 'models' code, the PaymentCommon should be sufficient.
-
-    Note: This Common is expected to be used in parallel with the main PaymentCommon.
     """
 
     # Helpers #
