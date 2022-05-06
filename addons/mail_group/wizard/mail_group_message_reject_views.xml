@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Reject">
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': [('action', '!=', 'reject')]}">
-                    Reject the message <span attrs="{'invisible': [('send_email', '=', False)]}">and send an email to the author (<field name="email_from_normalized"/>)</span>.
+                    Reject the message<span attrs="{'invisible': [('send_email', '=', False)]}"> and send an email to the author (<field name="email_from_normalized"/>)</span>.
                 </div>
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': [('action', '!=', 'ban')]}">
                     Ban the author of the message (<field name="email_from_normalized"/>) <span attrs="{'invisible': [('send_email', '=', False)]}">and send him an email</span>.
@@ -19,7 +19,7 @@
                     <field name="action" invisible="1"/>
                 </group>
                 <footer>
-                    <button string="Reject" name="action_send_mail" type="object" class="btn-primary"
+                    <button string="Reject Silently" name="action_send_mail" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('action', '!=', 'reject'), ('send_email', '=', True)]}"/>
                     <button string="Send &amp; Reject" name="action_send_mail" type="object" class="btn-primary"
                         attrs="{'invisible': ['|', ('action', '!=', 'reject'), ('send_email', '=', False)]}"/>
