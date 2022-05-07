@@ -4069,7 +4069,7 @@ var FieldColorPicker = FieldInteger.extend({
         _t('Green'),
         _t('Purple'),
     ],
-
+    widthInList: '1',
     /**
      * Prepares the rendering, since we are based on an input but not using it
      * setting tagName after parent init force the widget to not render an input
