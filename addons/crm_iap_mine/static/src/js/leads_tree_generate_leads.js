@@ -60,7 +60,7 @@ class LeadMiningRequestKanbanController extends crmKanbanView.Controller {
 }
 
 const leadMiningRequestKanbanView = {
-    ...listView,
+    ...crmKanbanView,
     Controller: LeadMiningRequestKanbanController,
     buttonTemplate: "crm_iap_mine.KanbanView.Buttons",
 };
