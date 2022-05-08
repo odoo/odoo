@@ -554,6 +554,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>No s'ha trobat cap opció de pagament adequada.</strong><br/>\n"
+"                                       Si creieu que és un error, poseu-vos en contacte amb l'administrador del lloc web."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -684,7 +686,7 @@ msgstr "Compte utilitzat per als dipòsits "
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Entrada d'ingressos reportats"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1789,7 +1791,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "Si és cert, l'envàs pot utilitzar-se per a les comandes de venda"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2320,7 +2322,7 @@ msgstr "No s'ha trobat cap comanda per facturar"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "No s'ha trobat cap ordre per pujar."
 
 #. module: sale
 #. openerp-web
@@ -3591,17 +3593,17 @@ msgstr "Comença a comprovar les dades de la teva empresa."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Estat del pas de l'ordre de confirmació d'embarcament"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Estat del pas de la cita de la mostra d'embarcament"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Panell sobre l'estat de la venda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3694,6 +3696,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
+"Equip %(team_name)s té %(sale_order_count)s comandes de venda actives. "
+"Considereu cancel·lar-los o arxivar l'equip."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__pricelist_item_id
@@ -3707,6 +3711,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
+"Camp tècnic, Veritable si la llista de preus va ser modificada;\n"
+"Això mostrarà un botó de recomputació"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -3728,6 +3734,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Diguin-nos per què rebutgen aquesta cita, això ens ajudarà a millorar els "
+"nostres serveis."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -3767,6 +3775,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"La comanda de vendes %s vinculat al compte analític %s s'ha cancel·lat. No "
+"podeu registrar una despesa en una ordre de vendes cancel·lada."
 
 #. module: sale
 #: code:addons/sale/models/account_move_line.py:0
@@ -3776,6 +3786,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"La comanda de vendes %s enllaçat al compte analític %s està actualment "
+"bloquejat. No podeu registrar una despesa en una ordre de vendes bloquejada."
+" Si us plau, creu un nou SO vinculat a aquest compte analític."
 
 #. module: sale
 #: code:addons/sale/models/account_move_line.py:0
@@ -3784,6 +3797,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"La comanda de vendes %senllaçat al compte analític%s s'ha de validar abans "
+"de registrar les despeses."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
@@ -3797,6 +3812,8 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"La data d'entrega és més ràpida que la data prevista.Pot ser que no puguis "
+"complir la data de lliurament."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3811,6 +3828,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Els productes següents no es poden restringir a l'empresa %s perquè ja s'han utilitzat en quotes o comandes de vendes en una altra empresa:\n"
+"%s\n"
+"Pots arxivar aquests productes i recrear-los amb la restricció de la teva empresa, o deixar-los com a productes compartits."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3929,6 +3949,11 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"No hi ha res a facturar!\n"
+"\n"
+"Les raons d'aquest comportament podrien ser:\n"
+"- Hauries de lliurar els teus productes abans de facturar-los: Fes clic a la icona de \"truck\" (superior dreta de la pantalla) i segueix les instruccions.\n"
+"- Hauríeu de modificar la política de facturació del vostre producte: Obriu el producte, aneu a la pestanya \"Sales\" i modifiqueu la política de facturació des de \"quantitats d'entrega\" a \"quantitats ordenades\". En el cas dels serveis, hauria de modificar la política de facturació del servei per a \"premesos\"."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3957,6 +3982,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"És la data de lliurament promès al client. Si s'estableix, l'ordre de "
+"lliurament es programarà en funció d'aquesta data i no dels terminis de "
+"lliurament del producte."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -3987,6 +4015,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"Aquest producte està empaquetat per%(pack_size).2f %(pack_name)s. Hauries de"
+" vendre%(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4240,7 +4270,7 @@ msgstr "Actualitzar preus"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Venda a l'alça %(order)s per al client%(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4470,6 +4500,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4478,3 +4511,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"

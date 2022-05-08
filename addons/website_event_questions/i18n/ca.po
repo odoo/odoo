@@ -37,7 +37,7 @@ msgstr "Resposta"
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Desglossament de la resposta"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
@@ -49,12 +49,12 @@ msgstr "Respostes"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask only once per order"
-msgstr ""
+msgstr "Pregunta només una vegada per ordre"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Respostes dels assistents"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
@@ -92,12 +92,12 @@ msgstr "Esdeveniment"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Pregunta d'esdeveniment"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Esdeveniment Pregunta Resposta"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -107,7 +107,7 @@ msgstr "Registre esdeveniment"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Resposta de registre d'esdeveniments"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
@@ -122,7 +122,7 @@ msgstr "Tipus d'esdeveniment"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "Preguntes generals"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__id
@@ -138,6 +138,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"Si és cert, aquesta pregunta només es farà una vegada i el seu valor es "
+"propagarà a tots els assistents.En cas contrari, se li demanarà a cada "
+"assistent d'una reserva."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
@@ -179,6 +182,8 @@ msgstr "Tipus de pregunta"
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
+"La pregunta no pot pertànyer tant a la categoria de l'esdeveniment com a si "
+"mateixa."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -202,7 +207,7 @@ msgstr ""
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Resposta seleccionada"
 
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__simple_choice
@@ -218,7 +223,7 @@ msgstr "Seqüència"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Preguntes específiques"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_answer_id
@@ -228,7 +233,7 @@ msgstr "Resposta suggerida"
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Entrada de text"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box
@@ -238,7 +243,7 @@ msgstr "Text de la resposta"
 #. module: website_event_questions
 #: model:ir.model.constraint,message:website_event_questions.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Ha d'haver-hi un valor suggerit o un valor de text."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
@@ -257,6 +262,7 @@ msgstr "Tipus"
 msgid ""
 "You cannot change the question type of a question that already has answers!"
 msgstr ""
+"No podeu canviar el tipus de pregunta d'una pregunta que ja té respostes!"
 
 #. module: website_event_questions
 #: code:addons/website_event_questions/models/event_question.py:0
