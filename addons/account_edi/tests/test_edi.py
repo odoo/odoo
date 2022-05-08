@@ -4,7 +4,6 @@
 from odoo import Command
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon, _mocked_post_two_steps, _generate_mocked_needs_web_services, _mocked_cancel_failed, _generate_mocked_support_batching
 from unittest.mock import patch
-from unittest import skip
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.tests import tagged
 

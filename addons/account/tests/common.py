@@ -32,8 +32,6 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
-        chart_template = chart_template_ref or 'generic_coa'
-
         # Create user.
         user = cls.env['res.users'].create({
             'name': 'Because I am accountman!',
