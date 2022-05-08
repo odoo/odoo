@@ -6,8 +6,8 @@
 # Martin Trigaux, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +154,7 @@ msgstr "Numero allegati"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
-msgstr "Scelta Offerta"
+msgstr "Selezione offerta"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
@@ -181,13 +181,13 @@ msgstr "Annulla"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__cancel
 msgid "Cancelled"
-msgstr "Annullata"
+msgstr "Annullato"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
-msgstr "Annullato dal contratto associato a questo preventivo"
+msgstr "Annullato dal contratto associato a questo preventivo."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
@@ -221,7 +221,7 @@ msgstr "Conferma"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__in_progress
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Confirmed"
-msgstr "Confermata"
+msgstr "Confermato"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
@@ -236,7 +236,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
 msgid "Create a draft purchase order"
-msgstr "Crea bozza di ordine di acquisto"
+msgstr "Creare ordine di acquisto in bozza"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
@@ -306,12 +306,12 @@ msgstr "Nome visualizzato"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
-msgstr "Non creare righe di RdP automaticamente"
+msgstr "Non creare automaticamente righe di RdP"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Done"
-msgstr "Completata"
+msgstr "Completato"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
@@ -354,9 +354,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negotiated prices."
 msgstr ""
-"Per un contratto quadro, si può registrare un accordo per un periodo specifico (ad es. un anno) e si ordinano i prodotti all'interno di questo accordo,\n"
-"beneficiando\n"
-"dei prezzi negoziati."
+"Per un ordine quadro è possibile registrare un contratto per un periodo\n"
+"            specifico (es. un anno), ordinando i prodotti all'interno dell'accordo e beneficiando\n"
+"            dei prezzi negoziati."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -410,15 +410,15 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
-"Nel caso di un bando di gara, è possibile registrare i prodotti che si desidera acquistare\n"
-"            e generare richieste di preventivo per i fornitori. Una volta che le offerte\n"
-"            sono state registrate, è possibile esaminarle e confrontarle,\n"
-"            convalidarne alcune e cancellarne altre. "
+"In una gara d'appalto, è possibile registrare i prodotti da acquistare\n"
+"e generare la creazione di RfQ ai fornitori. Una volta che le offerte sono state\n"
+"registrate, puoi rivederle e confrontarle e puoi\n"
+"convalidarne alcune e cancellarne altre."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "In negotiation"
-msgstr "In corso di negoziazione"
+msgstr "In trattativa"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
@@ -697,7 +697,7 @@ msgstr "Riferimento"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
 msgid "Reordering"
-msgstr "Riordino"
+msgstr "Riordini"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -747,12 +747,12 @@ msgstr "Ricerca contratti di acquisto"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr "Seleziona RdP multiple (non esclusivo)"
+msgstr "Selezione di RdP multiple (non esclusiva)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
-msgstr "Seleziona solo una RdP (esclusivo)"
+msgstr "Selezione di una sola RdP (esclusiva)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -761,6 +761,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Selezione di una sola RdP (esclusiva):  quando viene confermato un ordine di acquisto, annulla quelli restanti.\n"
+"\n"
+"                    Selezione di RdP multiple (non esclusiva): consente ordini di acquisto multipli. Alla conferma di un ordine di acquisto, non annulla quelli restanti."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -790,7 +793,7 @@ msgstr "Avvia un nuovo contratto di acquisto"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "Stato ordine quadro"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -877,7 +880,7 @@ msgstr "UdM"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
-msgstr "Utilizza righe del contratto"
+msgstr "Utilizzare righe del contratto"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
