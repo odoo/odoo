@@ -1691,7 +1691,7 @@ msgstr "Data in cui dovrebbe essere effettuato il rifornimento."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
 msgid "Date at which the transfer has been processed or cancelled."
-msgstr "Data in cui il trasferimento è stato trattato o cancellato. "
+msgstr "Data in cui il trasferimento è stato trattato o annullato."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -2616,7 +2616,8 @@ msgstr "Se selezionato, alcuni messaggi presentano un errore di consegna."
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
-"Se selezionato, il movimento collegato viene cancellato quando lo è questo"
+"Se selezionata, l'annullamento del movimento annullerà anche il movimento "
+"collegato"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
@@ -7458,7 +7459,7 @@ msgstr "Impossibile archiviare l'ubicazione %s, è utilizzata dal magazzino %s"
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
-"Non è possibile cancellare un movimento di magazzino che è nello stato "
+"Non è possibile annullare un movimento di magazzino che è nello stato "
 "\"Completato\"."
 
 #. module: stock

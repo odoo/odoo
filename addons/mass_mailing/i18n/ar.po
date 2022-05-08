@@ -208,6 +208,8 @@ msgid ""
 "<span attrs=\"{'invisible': "
 "[('mailing_model_name','!=','mailing.list')]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': "
+"[('mailing_model_name','!=','mailing.list')]}\">جهة اتصال البريد</span> "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -222,7 +224,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"failed_text\">emails could not be sent.</span>"
-msgstr ""
+msgstr "<span name=\"failed_text\">تعذر إرسال رسائل البريد الإلكتروني.</span> "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -235,6 +237,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
 msgstr ""
+"<span name=\"next_departure_text\">هذا البريد الإلكتروني مجدول من أجل "
+"</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -242,6 +246,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text\">رسائل البريد الإلكتروني في قائمة الانتظار وسوف"
+" يتم إرسالها قريباً.</span> "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -341,7 +347,7 @@ msgstr "السماح باختبار أ/ب"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr ""
+msgstr "السماح للمستلمين بإضافة أنفسهم إلى القائمة السوداء "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -429,6 +435,8 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
+"واحد على الأقل من القائمة البريدية التي ترغب في أرشفتها مستخدَم في حملة "
+"بريدية جارية. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -472,7 +480,7 @@ msgstr "إضافتي للقائمة السوداء"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr ""
+msgstr "خيار الإضافة إلى القائمة السوداء عند إلغاء الاشتراك "
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -534,7 +542,7 @@ msgstr "الحملات"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
-msgstr ""
+msgstr "الحملات هي الأداة المثالية لتتبع النتائج عبر المراسلات المتعددة. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -627,7 +635,7 @@ msgstr "إعداد"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Configure Email Server"
-msgstr ""
+msgstr "تهيئة خادم البريد الإلكتروني "
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__smtp
@@ -685,12 +693,12 @@ msgstr "إنشاء رابط تتبع "
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
 msgid "Create a mailing campaign"
-msgstr ""
+msgstr "إنشاء حملة بريدية "
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a mailing contact"
-msgstr ""
+msgstr "إنشاء جهة اتصال بريدية "
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
@@ -804,7 +812,7 @@ msgstr "تاريخ ارتداد هذه الرسالة."
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
 msgid "Dedicated Server"
-msgstr ""
+msgstr "خادم مخصص "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -824,7 +832,7 @@ msgstr "تم التسليم"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered to"
-msgstr ""
+msgstr "التسليم لـ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__medium_id
@@ -966,7 +974,7 @@ msgstr "خطأ"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Blacklisted Emails"
-msgstr ""
+msgstr "استثناء عناوين البريد الإلكتروني المدرجة في القائمة السوداء "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
@@ -1279,7 +1287,7 @@ msgstr "حملات المراسلات"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
 msgid "Mailing Contact"
-msgstr ""
+msgstr "جهة اتصال بريدية "
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
@@ -1303,13 +1311,13 @@ msgstr "جهات اتصال القائمة البريدية"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
 msgid "Mailing List Subscription"
-msgstr ""
+msgstr "اشتراك القائمة البريدية "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_tree
 msgid "Mailing List Subscriptions"
-msgstr ""
+msgstr "اشتراك القائمة البريدية "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -1327,7 +1335,7 @@ msgstr "القوائم البريدية"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
 msgid "Mailing Statistics"
-msgstr ""
+msgstr "إحصائيات المراسلات "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -1344,12 +1352,12 @@ msgstr "اختبار المراسلات"
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_action
 #: model:ir.ui.menu,name:mass_mailing.menu_email_statistics
 msgid "Mailing Traces"
-msgstr ""
+msgstr "آثار المراسلات "
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "نوع المراسلات "
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
@@ -1357,6 +1365,7 @@ msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "business contact directory."
 msgstr ""
+"تتيح لك جهات اتصال المراسلات فصل متابعي التسويق عن دليل جهات اتصال الأعمال. "
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
@@ -1582,7 +1591,7 @@ msgstr "النشرة البريدية"
 #: model:mailing.mailing,name:mass_mailing.mass_mail_1
 #: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
 msgid "Newsletter 1"
-msgstr ""
+msgstr "النشرة الأخبارية 1 "
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_date_deadline
@@ -1633,7 +1642,7 @@ msgstr "عدد جهات الاتصال"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_count
 msgid "Number of Mass Mailing"
-msgstr ""
+msgstr "عدد رسائل البريد الجماعية "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -1949,7 +1958,7 @@ msgstr "التاريخ المجدول"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
 msgid "Scheduled for"
-msgstr ""
+msgstr "تمت الجدولة لـ"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing_contact.py:0
@@ -1983,7 +1992,7 @@ msgstr "إرسال"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
-msgstr ""
+msgstr "الإرسال من "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -2008,7 +2017,7 @@ msgstr "إرسال مراسلات جديدة"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Send on"
-msgstr ""
+msgstr "إرسال في "
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -2228,7 +2237,7 @@ msgstr "<strong>ألغى</strong> المستلم اشتراكه في القوا�
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "There are no recipients selected."
-msgstr ""
+msgstr "لم يتم تحديد أي مستلمين. "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -2381,7 +2390,7 @@ msgstr "استخدم هذا البروموكود قبل 1 أغسطس"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Use a dedicated server for mailings"
-msgstr ""
+msgstr "استخدم خادماً مخصصاً للمراسلات "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_id
@@ -2408,7 +2417,7 @@ msgstr "المستخدم"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Email Recipients"
-msgstr ""
+msgstr "مستلمي البريد الإلكتروني الصالحين "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -2496,6 +2505,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"لست بحاجة إلى استيراد قوائمك البريدية، إذ أنه بمقدورك إرسال رسائل\n"
+"                البريد الإلكتروني <br>إلى أي جهة اتصال محفوظة في تطبيقات أودو الأخرى. "
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -2509,7 +2520,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from %s</strong>."
-msgstr ""
+msgstr "لقد تم <strong>إلغاء اشتراكك بنجاح من %s</strong>. "
 
 #. module: mass_mailing
 #. openerp-web
@@ -2551,6 +2562,8 @@ msgid ""
 "You were still subscribed to those newsletters. You will not receive any "
 "news from them anymore:"
 msgstr ""
+"كنت لا تزال مشتركاً في تلك النشرات الأخبارية. لن تستلم أي أخبار منهم بعد "
+"الآن: "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_banner
