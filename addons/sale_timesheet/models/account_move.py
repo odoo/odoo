@@ -109,4 +109,4 @@ class AccountMoveLine(models.Model):
                 timesheet_ids += timesheet['ids']
 
         self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})
-        super().unlink()
+        return super().unlink()
