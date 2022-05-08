@@ -115,3 +115,25 @@ class TestPurchase(SavepointCase):
         vals['date_order'] = '2019-12-31 23:30:00'
         purchase_order = PurchaseOrder.with_context(tz='Europe/Brussels').create(vals.copy())
         self.assertTrue(purchase_order.name.startswith('PO/2020/'))
+
+    def test_on_change_quantity_description(self):
+        """
+        When a user changes the quantity of a product in a purchase order it
+        should not change the description if the descritpion was changed by
+        the user before
+        """
+        company = self.env.user.company_id
+        vals = {
+            'partner_id': self.vendor.id,
+            'company_id': company.id,
+        }
+        po = Form(self.env['purchase.order'].create(vals))
+        self.product_consu.write({'seller_ids': [
+            (0, 0, {'name': self.vendor.id, 'product_code': 'ASUCODE'}),
+        ]})
+        with po.order_line.new() as pol:
+            pol.product_id = self.product_consu
+            pol.product_qty = 1
+        pol.name = "New custom description"
+        pol.product_qty += 1
+        self.assertEqual(pol.name, "New custom description")

@@ -420,13 +420,15 @@ class Picking(models.Model):
         '''
         picking_moves_state_map = defaultdict(dict)
         picking_move_lines = defaultdict(set)
-        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids), ('scrapped', '=', False)]):
+        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids)]):
             picking_id = move.picking_id
             move_state = move.state
             picking_moves_state_map[picking_id.id].update({
                 'any_draft': picking_moves_state_map[picking_id.id].get('any_draft', False) or move_state == 'draft',
                 'all_cancel': picking_moves_state_map[picking_id.id].get('all_cancel', True) and move_state == 'cancel',
                 'all_cancel_done': picking_moves_state_map[picking_id.id].get('all_cancel_done', True) and move_state in ('cancel', 'done'),
+                'all_done_are_scrapped': picking_moves_state_map[picking_id.id].get('all_done_are_scrapped', True) and (move.scrapped if move_state == 'done' else True),
+                'any_cancel_and_not_scrapped': picking_moves_state_map[picking_id.id].get('any_cancel_and_not_scrapped', False) or (move_state == 'cancel' and not move.scrapped),
             })
             picking_move_lines[picking_id.id].add(move.id)
         for picking in self:
@@ -437,7 +439,10 @@ class Picking(models.Model):
             elif picking_moves_state_map[picking.id]['all_cancel']:
                 picking.state = 'cancel'
             elif picking_moves_state_map[picking.id]['all_cancel_done']:
-                picking.state = 'done'
+                if picking_moves_state_map[picking.id]['all_done_are_scrapped'] and picking_moves_state_map[picking.id]['any_cancel_and_not_scrapped']:
+                    picking.state = 'cancel'
+                else:
+                    picking.state = 'done'
             else:
                 relevant_move_state = self.env['stock.move'].browse(picking_move_lines[picking.id])._get_relevant_state_among_moves()
                 if picking.immediate_transfer and relevant_move_state not in ('draft', 'cancel', 'done'):
