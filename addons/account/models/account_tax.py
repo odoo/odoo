@@ -840,7 +840,7 @@ class AccountTax(models.Model):
             else:
                 price_subtotal = currency.round(price_unit_after_discount * line_vals['quantity'])
                 to_update_vals = {
-                    'tax_tag_ids': [],
+                    'tax_tag_ids': [Command.clear()],
                     'price_subtotal': price_subtotal,
                     'price_total': price_subtotal,
                 }
