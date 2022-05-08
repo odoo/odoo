@@ -730,3 +730,18 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(self._get_cache_count(), 1)
         self.env['account.move.line'].invalidate_cache(ids=lines.ids)
         self.assertEqual(self._get_cache_count(), 0)
+
+    def test_misc_prevent_edit_tax_on_posted_moves(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
+             self.cr.savepoint():
+            self.test_move.line_ids.filtered(lambda l: l.tax_ids).tax_ids = False
+
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
+             self.cr.savepoint():
+            self.test_move.line_ids.filtered(lambda l: l.tax_line_id).tax_line_id = False
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.assertTrue(self.test_move.line_ids.unlink())
