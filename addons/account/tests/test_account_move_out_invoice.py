@@ -3416,3 +3416,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_tax_grid_remove_tax(self):
+        # Add a tag to tax_sale_a
+        tax_line_tag = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': self.company_data['company'].country_id.id,
+        })
+
+        repartition_line = self.tax_sale_a.invoice_repartition_line_ids\
+            .filtered(lambda x: x.repartition_type == 'tax')
+        repartition_line.tag_ids |= tax_line_tag
+
+        # Create the invoice
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2022-02-20'),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 999.99,
+                    'tax_ids': [Command.set(self.product_a.taxes_id.ids)],
+                }),
+            ],
+        })
+
+        with Form(invoice) as form:
+            with form.invoice_line_ids.edit(0) as line_form:
+                line_form.tax_ids.clear()
+
+        # Tags should be empty since the tax has been removed from the invoice line
+        self.assertRecordValues(invoice.line_ids, [{'tax_tag_ids': []}, {'tax_tag_ids': []}])
