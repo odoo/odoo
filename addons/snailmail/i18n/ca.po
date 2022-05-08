@@ -333,6 +333,9 @@ msgid ""
 "notification and review them one by one by clicking on the red paper-plane "
 "next to each message."
 msgstr ""
+"Si voleu tornar a enviar-los, feu clic a Cancel·la ara, després feu clic a "
+"la notificació i reviseu-los un per un fent clic en el paper-plà vermell al "
+"costat de cada missatge."
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
@@ -539,7 +542,7 @@ msgstr "Missatge de Snailmail per error"
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail: processar la cua de cartes"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -578,7 +581,7 @@ msgstr "2a adreça"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
 msgid "TRIAL_ERROR"
-msgstr ""
+msgstr "PROVA I ERROR"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -651,6 +654,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Quan es crea una carta, l'estat és \"Pending\".\n"
+"Si la lletra s'envia correctament, l'estat s'inclou a «Envia»,\n"
+"En cas contrari, s'aconseguirà l'estat \"error\" i el missatge d'error es mostrarà en el camp \"Missatge d'error\"."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -659,6 +665,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"No teniu registrat un compte IAP per a aquest servei.<br>Si us plau, "
+"dirigeixi's a <a href=%s target=\"new\">iap.odoo.com</a> per a reclamar els "
+"seus crèdits gratuïts."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -667,6 +676,8 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"No tens suficients crèdits per a realitzar aquesta operació.<br>Si us plau "
+"aneu al vostre <a href=%s target=\"new\">compte d'iap</a>."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
