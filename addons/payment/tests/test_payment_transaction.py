@@ -6,7 +6,7 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestTransactions(PaymentCommon):
+class TestPaymentTransaction(PaymentCommon):
 
     def test_refunds_count(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False
