@@ -8,7 +8,7 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestPayments(PaymentCommon):
+class TestAccountPayment(PaymentCommon):
 
     def test_no_amount_available_for_refund_when_not_supported(self):
         self.acquirer.support_refund = False
