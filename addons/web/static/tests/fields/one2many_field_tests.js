@@ -9822,8 +9822,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    // determine if move records is allowed should be done in a useEffect or something
-    QUnit.skipWOWL("one2many kanban with widget handle", async function (assert) {
+    QUnit.test("one2many kanban with widget handle", async function (assert) {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
         await makeView({
             type: "form",

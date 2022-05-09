@@ -233,6 +233,9 @@ export class KanbanRenderer extends Component {
     }
 
     get canResequenceRecords() {
+        if (this.props.recordsDraggable === false) {
+            return false;
+        }
         const { isGrouped, orderBy } = this.props.list;
         const { handleField, recordsDraggable } = this.props.archInfo;
         return (

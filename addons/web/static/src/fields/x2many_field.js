@@ -88,13 +88,14 @@ export class X2ManyField extends Component {
         }
         const props = {
             activeActions: this.activeActions,
-            editable: this.props.record.isInEdition && archInfo.editable,
+            editable: !this.props.readonly && archInfo.editable,
             archInfo: { ...archInfo, columns },
             list: this.list,
             openRecord: this.openRecord.bind(this),
             onAdd: this.onAdd.bind(this),
         };
         if (this.viewMode === "kanban") {
+            props.recordsDraggable = !this.props.readonly;
             props.readonly = this.props.readonly;
         }
         return props;
