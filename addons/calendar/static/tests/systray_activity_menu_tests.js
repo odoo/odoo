@@ -4,6 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
 import testUtils from 'web.test_utils';
+import { patchDate } from "@web/../tests/helpers/utils";
 
 QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu');
@@ -11,6 +12,7 @@ QUnit.module('ActivityMenu');
 QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
 
+    patchDate(2018, 3, 20, 6, 0, 0);
     const pyEnv = await startServer();
     const calendarAttendeeId1 = pyEnv['calendar.attendee'].create({ partner_id: pyEnv.currentPartnerId });
     pyEnv['calendar.event'].create([
