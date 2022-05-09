@@ -124,6 +124,7 @@ tour.register('test_html_editor_scss', {
             content: "check that the scss modification got applied",
             trigger: 'body:has(#wrap:hidden)',
             run: function () {}, // it's a check
+            timeout: 30000, // SCSS compilation might take some time
         },
         {
             content: "reset view (after reload, html editor should have been reopened where it was)",
@@ -137,6 +138,7 @@ tour.register('test_html_editor_scss', {
             content: "check that the scss file was reset correctly, wrap content should now be visible again",
             trigger: '#wrap:visible',
             run: function () {}, // it's a check
+            timeout: 30000, // SCSS compilation might take some time
         },
         // 3. Customize again that file (will be used in second part of the test
         //    to ensure restricted user can still use the HTML Editor)
@@ -158,6 +160,7 @@ tour.register('test_html_editor_scss', {
             run: function () {
                 window.location.href = '/web/session/logout?redirect=/web/login';
             },
+            timeout: 30000, // SCSS compilation might take some time
         },
 
         // This part of the test ensures that a restricted user can still use
@@ -213,8 +216,9 @@ tour.register('test_html_editor_scss', {
         },
         {
             content: "wait for reload",
-            trigger: ":not(.o_ace_view_editor)",
+            trigger: "body:not(:has(div.o_ace_view_editor))",
             run: function () {}, // it's a check
+            timeout: 30000, // SCSS compilation might take some time
         },
         {
             content: "reset view (after reload, html editor should have been reopened where it was)",
@@ -229,6 +233,7 @@ tour.register('test_html_editor_scss', {
             extra_trigger: `body:not(:has(div.ace_line:contains("${adminCssModif}")))`,
             trigger: `body:not(:has(div.ace_line:contains("${demoCssModif}")))`,
             run: function () {}, // it's a check
+            timeout: 30000, // SCSS compilation might take some time
         },
     ]
 );
