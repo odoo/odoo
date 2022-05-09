@@ -188,7 +188,7 @@ class IrModel(models.Model):
         installed_names = set(installed_modules.mapped('name'))
         xml_ids = models.Model._get_external_ids(self)
         for model in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[model.id])
+            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[model.id or model.id.origin])
             model.modules = ", ".join(sorted(installed_names & module_names))
 
     @api.depends()
@@ -547,7 +547,7 @@ class IrModelFields(models.Model):
         installed_names = set(installed_modules.mapped('name'))
         xml_ids = models.Model._get_external_ids(self)
         for field in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[field.id])
+            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[field.id or field.id.origin])
             field.modules = ", ".join(sorted(installed_names & module_names))
 
     @api.constrains('domain')

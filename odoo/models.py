@@ -5117,7 +5117,7 @@ Fields:
                      { 'id': ['module.ext_id', 'module.ext_id_bis'],
                        'id2': [] }
         """
-        result = {record.id: [] for record in self}
+        result = {record.id or record.id.origin: [] for record in self}
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
         for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id'], order='id'):
             result[data['res_id']].append('%(module)s.%(name)s' % data)
