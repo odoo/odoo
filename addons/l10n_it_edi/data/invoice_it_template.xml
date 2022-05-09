@@ -52,7 +52,7 @@
                     <DatiTrasmissione>
                         <IdTrasmittente>
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
-                            <IdCodice t-esc="record.company_id.l10n_it_codice_fiscale or get_vat_number(record.company_id.vat)"/>
+                            <IdCodice t-esc="normalize_codice_fiscale(record.company_id.l10n_it_codice_fiscale) or get_vat_number(record.company_id.vat)"/>
                         </IdTrasmittente>
                         <ProgressivoInvio t-esc="format_alphanumeric(record.name.replace('/','')[-10:])"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
@@ -72,7 +72,7 @@
                                 <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.company_id.vat)"/>
                             </IdFiscaleIVA>
-                            <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(record.company_id.l10n_it_codice_fiscale)"/>
                             <Anagrafica>
                                 <Denominazione t-esc="format_alphanumeric(record.company_id.partner_id.display_name[:80])"/>
                             </Anagrafica>
@@ -97,7 +97,7 @@
                                 <IdPaese t-esc="get_vat_country(record.company_id.l10n_it_tax_representative_partner_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.company_id.l10n_it_tax_representative_partner_id.vat)"/>
                             </IdFiscaleIVA>
-                            <CodiceFiscale t-if="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale)"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="format_alphanumeric(record.company_id.l10n_it_tax_representative_partner_id.display_name[:80])"/>
                                 <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="format_alphanumeric(' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[:1])[:60])"/>
@@ -119,7 +119,7 @@
                                 <IdPaese t-esc="record.commercial_partner_id.country_id.code"/>
                                 <IdCodice t-esc="'0000000'"/>
                             </IdFiscaleIVA>
-                            <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="normalize_codice_fiscale(record.commercial_partner_id.l10n_it_codice_fiscale)"/>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.commercial_partner_id.is_company" t-esc="format_alphanumeric(record.commercial_partner_id.display_name[:80])"/>
