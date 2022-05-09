@@ -2113,85 +2113,70 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("embedded one2many (editable list) with handle widget", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("embedded one2many (editable list) with handle widget", async function (assert) {
         serverData.models.partner.records[0].p = [1, 2, 4];
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `
                 <form>
-                    <sheet>
-                        <notebook>
-                            <page string="P page">
-                                <field name="p">
-                                    <tree editable="top">
-                                        <field name="int_field" widget="handle"/>
-                                        <field name="foo"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="int_field" widget="handle"/>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
                 </form>`,
             resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.step(args.method);
+                    assert.deepEqual(args.args[1].p, [
+                        [1, 2, { int_field: 0 }],
+                        [1, 4, { int_field: 1 }],
+                        [4, 1, false],
+                    ]);
+                }
+            },
         });
 
-        testUtils.mock.intercept(
-            form,
-            "field_changed",
-            function (event) {
-                assert.step(event.data.changes.p.data.int_field.toString());
-            },
-            true
-        );
-
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "My little Foo Valueblipyop",
-            "should have the 3 rows in the correct order"
+        assert.deepEqual(
+            [...target.querySelectorAll("div[name=foo]")].map((el) => el.innerText),
+            ["My little Foo Value", "blip", "yop"]
         );
 
         await clickEdit(target);
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "My little Foo Valueblipyop",
-            "should still have the 3 rows in the correct order"
+        assert.deepEqual(
+            [...target.querySelectorAll("div[name=foo]")].map((el) => el.innerText),
+            ["My little Foo Value", "blip", "yop"]
         );
+
+        assert.verifySteps([]);
 
         // Drag and drop the second line in first position
-        await testUtils.dom.dragAndDrop(
-            form.$(".ui-sortable-handle").eq(1),
-            form.$("tbody tr").first(),
-            { position: "top" }
+        await dragAndDrop(
+            "tbody tr:nth-child(2) .o_handle_cell",
+            ".o_field_one2many tbody tr:nth-child(1)"
         );
 
-        assert.verifySteps(
-            ["0", "1"],
-            "sequences values should be incremental starting from the previous minimum one"
+        assert.deepEqual(
+            [...target.querySelectorAll("div[name=foo]")].map((el) => el.innerText),
+            ["blip", "My little Foo Value", "yop"]
         );
 
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "blipMy little Foo Valueyop",
-            "should have the 3 rows in the new order"
-        );
+        await click(target.querySelector("div[name=foo]"));
 
-        await click(form.$("tbody tr:first td:first"));
+        assert.strictEqual(target.querySelector("div[name=foo] input").value, "blip");
 
-        assert.strictEqual(
-            form.$("tbody tr:first td.o_data_cell:not(.o_handle_cell) input").val(),
-            "blip",
-            "should edit the correct row"
-        );
+        assert.verifySteps([]);
 
         await clickSave(target);
-        assert.strictEqual(
-            form.$("td.o_data_cell:not(.o_handle_cell)").text(),
-            "blipMy little Foo Valueyop",
-            "should still have the 3 rows in the new order"
+
+        assert.verifySteps(["write"]);
+        assert.deepEqual(
+            [...target.querySelectorAll("div[name=foo]")].map((el) => el.innerText),
+            ["blip", "My little Foo Value", "yop"]
         );
     });
 
