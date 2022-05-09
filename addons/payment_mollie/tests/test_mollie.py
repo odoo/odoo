@@ -14,7 +14,7 @@ from odoo.addons.payment_mollie.tests.common import MollieCommon
 class MollieTest(MollieCommon, PaymentHttpCommon):
 
     def test_payment_request_payload_values(self):
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
 
         payload = tx._mollie_prepare_payment_request_payload()
 
@@ -27,7 +27,7 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
     )
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         url = self._build_url(MollieController._webhook_url)
         with patch(
             'odoo.addons.payment_mollie.models.payment_acquirer.PaymentAcquirer'

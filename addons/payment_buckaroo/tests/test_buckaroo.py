@@ -33,7 +33,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
             'Brq_culture': 'en-US',
         }
 
-        tx_sudo = self.create_transaction(flow='redirect')
+        tx_sudo = self._create_transaction(flow='redirect')
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx_sudo._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
@@ -45,7 +45,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_buckaroo.models.payment_transaction')
     def test_feedback_processing(self):
         notification_data = BuckarooController._normalize_data_keys(self.sync_notification_data)
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         tx._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
@@ -54,7 +54,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
 
         self.reference = 'Test Transaction 2'
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         notification_data = BuckarooController._normalize_data_keys(dict(
             self.sync_notification_data,
             brq_invoicenumber=self.reference,
@@ -67,7 +67,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         url = self._build_url(BuckarooController._webhook_url)
         with patch(
             'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
@@ -79,7 +79,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(BuckarooController._return_url)
         with patch(
             'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
@@ -93,7 +93,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
             BuckarooController._verify_notification_signature,
@@ -105,7 +105,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.assertRaises(
             Forbidden,
             BuckarooController._verify_notification_signature,
@@ -117,7 +117,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.assertRaises(
             Forbidden,
             BuckarooController._verify_notification_signature,

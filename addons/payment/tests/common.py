@@ -175,7 +175,7 @@ class PaymentCommon(AccountTestInvoicingCommon):
         acquirer.state = 'test'
         return acquirer
 
-    def create_transaction(self, flow, sudo=True, **values):
+    def _create_transaction(self, flow, sudo=True, **values):
         default_values = {
             'amount': self.amount,
             'currency_id': self.currency.id,
@@ -186,7 +186,7 @@ class PaymentCommon(AccountTestInvoicingCommon):
         }
         return self.env['payment.transaction'].sudo(sudo).create(dict(default_values, **values))
 
-    def create_token(self, sudo=True, **values):
+    def _create_token(self, sudo=True, **values):
         default_values = {
             'name': "XXXXXXXXXXXXXXX-2565 (TEST)",
             'acquirer_id': self.acquirer.id,

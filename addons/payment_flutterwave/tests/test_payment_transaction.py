@@ -13,7 +13,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
 
     def test_no_item_missing_from_rendering_values(self):
         """ Test that the rendered values are conform to the transaction fields. """
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         with patch(
             'odoo.addons.payment_flutterwave.models.payment_acquirer.PaymentAcquirer'
             '._flutterwave_make_request', return_value={'data': {'link': 'https://dummy.com'}}
@@ -24,7 +24,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
         """ Test that the `api_url` key is not omitted from the rendering values. """
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         with patch(
             'odoo.addons.payment_flutterwave.models.payment_transaction.PaymentTransaction'
             '._get_specific_rendering_values', return_value={'api_url': 'https://dummy.com'}
@@ -38,7 +38,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
     def test_processing_notification_data_confirms_transaction(self):
         """ Test that the transaction state is set to 'done' when the notification data indicate a
         successful payment. """
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         with patch(
             'odoo.addons.payment_flutterwave.models.payment_acquirer.PaymentAcquirer'
             '._flutterwave_make_request', return_value=self.verification_data
@@ -49,7 +49,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
     def test_processing_notification_data_tokenizes_transaction(self):
         """ Test that the transaction is tokenized when it was requested and the notification data
         include token data. """
-        tx = self.create_transaction(flow='redirect', tokenize=True)
+        tx = self._create_transaction(flow='redirect', tokenize=True)
         with patch(
             'odoo.addons.payment_flutterwave.models.payment_acquirer.PaymentAcquirer'
             '._flutterwave_make_request', return_value=self.verification_data

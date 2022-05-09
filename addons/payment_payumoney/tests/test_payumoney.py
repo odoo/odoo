@@ -30,7 +30,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
         self.assertNotIn(self.payumoney, acquirers)
 
     def test_redirect_form_values(self):
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
 
@@ -60,7 +60,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
 
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
             PayUMoneyController._verify_notification_signature,
@@ -71,7 +71,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_payumoney.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, hash=None)
         self.assertRaises(
             Forbidden, PayUMoneyController._verify_notification_signature, payload, tx
@@ -80,7 +80,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_payumoney.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, hash='dummy')
         self.assertRaises(
             Forbidden, PayUMoneyController._verify_notification_signature, payload, tx

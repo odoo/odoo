@@ -18,7 +18,7 @@ from odoo.addons.payment_adyen.tests.common import AdyenCommon
 class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_processing_values(self):
-        tx = self.create_transaction(flow='direct')
+        tx = self._create_transaction(flow='direct')
         with mute_logger('odoo.addons.payment.models.payment_transaction'), \
             patch(
                 'odoo.addons.payment.utils.generate_access_token',
@@ -41,14 +41,14 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_token_activation(self):
         """Activation of disabled adyen tokens is forbidden"""
-        token = self.create_token(active=False)
+        token = self._create_token(active=False)
         with self.assertRaises(UserError):
             token._handle_reactivation_request()
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_send_refund_request(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False
-        tx = self.create_transaction(
+        tx = self._create_transaction(
             'redirect', state='done', acquirer_reference='source_reference'
         )
         tx._reconcile_after_done()  # Create the payment
@@ -78,10 +78,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_get_tx_from_notification_data_returns_refund_tx(self):
-        source_tx = self.create_transaction(
+        source_tx = self._create_transaction(
             'direct', state='done', acquirer_reference=self.original_reference
         )
-        refund_tx = self.create_transaction(
+        refund_tx = self._create_transaction(
             'direct',
             reference='RefundTx',
             acquirer_reference=self.psp_reference,
@@ -103,7 +103,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertEqual(returned_tx, refund_tx, msg="The existing refund tx is the one returned")
 
     def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
-        source_tx = self.create_transaction(
+        source_tx = self._create_transaction(
             'direct', state='done', acquirer_reference=self.original_reference
         )
         data = dict(
@@ -124,7 +124,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_capture_request(self):
         self.acquirer.capture_manually = True
-        tx = self.create_transaction('direct', state='authorized')
+        tx = self._create_transaction('direct', state='authorized')
 
         with patch(
             'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
@@ -141,7 +141,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_void_request(self):
         self.acquirer.capture_manually = True
-        tx = self.create_transaction('direct', state='authorized')
+        tx = self._create_transaction('direct', state='authorized')
 
         with patch(
             'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
@@ -156,13 +156,13 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_confirms_transaction(self):
-        tx = self.create_transaction('direct')
+        tx = self._create_transaction('direct')
         self._webhook_notification_flow(self.webhook_notification_batch_data)
         self.assertEqual(tx.state, 'done')
 
     def test_webhook_notification_authorizes_transaction(self):
         self.acquirer.capture_manually = True
-        tx = self.create_transaction('direct')
+        tx = self._create_transaction('direct')
         self._webhook_notification_flow(self.webhook_notification_batch_data)
         self.assertEqual(
             tx.state,
@@ -173,7 +173,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_webhook_notification_captures_transaction(self):
         self.acquirer.capture_manually = True
-        tx = self.create_transaction(
+        tx = self._create_transaction(
             'direct', state='authorized', acquirer_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
@@ -186,7 +186,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_cancels_transaction(self):
-        tx = self.create_transaction(
+        tx = self._create_transaction(
             'direct', state='pending', acquirer_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
@@ -202,7 +202,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_refunds_transaction(self):
-        source_tx = self.create_transaction(
+        source_tx = self._create_transaction(
             'direct', state='done', acquirer_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
@@ -225,7 +225,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_failed_webhook_authorization_notification_leaves_transaction_in_draft(self):
-        tx = self.create_transaction('direct')
+        tx = self._create_transaction('direct')
         payload = dict(self.webhook_notification_batch_data, notificationItems=[
             {'NotificationRequestItem': dict(self.webhook_notification_payload, success='false')}
         ])
@@ -237,7 +237,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_failed_webhook_capture_notification_leaves_transaction_authorized(self):
-        tx = self.create_transaction(
+        tx = self._create_transaction(
             'direct', state='authorized', acquirer_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
@@ -252,7 +252,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_failed_webhook_cancellation_notification_leaves_transaction_authorized(self):
-        tx = self.create_transaction('direct', state='authorized')
+        tx = self._create_transaction('direct', state='authorized')
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(
                 self.webhook_notification_payload, eventCode='CANCELLATION', success='false'
@@ -265,7 +265,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_failed_webhook_refund_notification_sets_refund_transaction_in_error(self):
-        source_tx = self.create_transaction(
+        source_tx = self._create_transaction(
             'direct', state='done', acquirer_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
@@ -305,7 +305,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
-        self.create_transaction('direct')
+        self._create_transaction('direct')
         url = self._build_url(AdyenController._webhook_url)
         with patch(
             'odoo.addons.payment_adyen.controllers.main.AdyenController'
@@ -319,7 +319,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_accept_webhook_notification_with_valid_signature(self):
         """ Test the verification of a webhook notification with a valid signature. """
-        tx = self.create_transaction('direct')
+        tx = self._create_transaction('direct')
         self._assert_does_not_raise(
             Forbidden,
             AdyenController._verify_notification_signature,
@@ -331,14 +331,14 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     def test_reject_webhook_notification_with_missing_signature(self):
         """ Test the verification of a webhook notification with a missing signature. """
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': None})
-        tx = self.create_transaction('direct')
+        tx = self._create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_invalid_signature(self):
         """ Test the verification of a webhook notification with an invalid signature. """
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': 'dummy'})
-        tx = self.create_transaction('direct')
+        tx = self._create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
     def test_adyen_neutralize(self):

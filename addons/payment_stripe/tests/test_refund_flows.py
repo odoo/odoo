@@ -17,7 +17,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
     def test_refund_id_is_set_as_acquirer_reference(self):
         """ Test that the id of the refund object is set as the acquirer reference of the refund
         transaction. """
-        source_tx = self.create_transaction('redirect', state='done')
+        source_tx = self._create_transaction('redirect', state='done')
         with patch(
             'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
             '._stripe_make_request', return_value=self.refund_object
@@ -35,7 +35,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
     def test_canceled_refund_webhook_notification_triggers_processing(self):
         """ Test that receiving a webhook notification for a refund cancellation
         (`charge.refund.updated` event) triggers the processing of the notification data. """
-        source_tx = self.create_transaction('redirect', state='done')
+        source_tx = self._create_transaction('redirect', state='done')
         source_tx._create_refund_transaction(
             amount_to_refund=source_tx.amount, acquirer_reference=self.refund_object['id']
         )
