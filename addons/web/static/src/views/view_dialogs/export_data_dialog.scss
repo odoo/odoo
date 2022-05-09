@@ -1,31 +1,20 @@
 .o_export_data_dialog{
-    height: 100%;
     .modal-body {
         display: flex;
         margin: auto -16px;
 
         .o_left_panel, .o_right_panel {
-            display: flex;
-            flex-flow: column nowrap;
-            height: 100%;
-
+            height: inherit;
+            
             .o_left_field_panel, .o_right_field_panel {
-                height: 100%;
-                overflow: auto;
-
+                user-select: none;
                 .o_export_tree_item {
-                    cursor: pointer;
-                    position: relative;
-                    padding-left: 20px;
-
                     .o_inactive {
                         opacity: 0.2;
                     }
 
                     .o_expand_parent {
-                        position: absolute;
-                        inset: 4px auto auto 5px;
-                        font-size: 10px;
+                        inset: 4px auto auto 0;
                     }
                 }
 

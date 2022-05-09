@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editInput, editSelect, getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
@@ -63,6 +63,11 @@ QUnit.module("ViewDialogs", (hooks) => {
                 "ir.exports": {
                     fields: {
                         name: { string: "Name", type: "char" },
+                        export_fields: {
+                            string: "Templates fields",
+                            type: "one2many",
+                            relation: "partner",
+                        },
                     },
                     records: [],
                 },
@@ -75,7 +80,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.module("ExportDataDialog");
 
-    QUnit.skipWOWL("Export dialog UI test", async function (assert) {
+    QUnit.test("Export dialog UI test", async function (assert) {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
@@ -133,6 +138,8 @@ QUnit.module("ViewDialogs", (hooks) => {
             )
         );
 
+        await nextTick();
+
         assert.containsOnce(target, ".o_dialog", "the export dialog should be visible");
         assert.containsN(
             target,
@@ -164,49 +171,82 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("Export dialog from list view", async function (assert) {
+    QUnit.test("Export dialog: interacting with export templates", async function (assert) {
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
 
-        assert.containsOnce(target, "div.o_control_panel .o_cp_buttons .o_list_export_xlsx");
         await makeView({
             serverData,
             type: "list",
             resModel: "partner",
-            actionMenus: {},
             arch: `
-                <tree export_xlsx="1">
-                    <field name="foo"/>
-                    <field name="bar"/>
-                </tree>`,
-            domain: [["bar", "!=", "glou"]],
-            // session: {
-            //     ...this.mockSession,
-            //     get_file(args) {
-            //         let data = JSON.parse(args.data.data);
-            //         assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
-            //         assert.deepEqual(data, {
-            //             context: {},
-            //             model: 'partner',
-            //             domain: [['bar', '!=', 'glou']],
-            //             groupby: [],
-            //             ids: false,
-            //             import_compat: false,
-            //             fields: [{
-            //                 name: 'foo',
-            //                 label: 'Foo',
-            //                 type: 'char',
-            //             }, {
-            //                 name: 'bar',
-            //                 label: 'Bar',
-            //                 type: 'char',
-            //             }]
-            //         }, "should be called with correct params");
-            //         args.complete();
-            //     },
-            // },
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.strictEqual(args.model, "ir.exports");
+                    assert.strictEqual(
+                        args.args[0].name,
+                        "Export template",
+                        "the template name is correctly sent"
+                    );
+                    return 2;
+                }
+                if (route === "/web/dataset/call_kw") {
+                    console.log(args.method);
+                    return Promise.resolve([{ id: 1, name: "Activities template" }]);
+                }
+                if (route === "/web/export/namelist") {
+                    if (args.export_id === 1) {
+                        return Promise.resolve([{ name: "activity_ids" }]);
+                    }
+                    return Promise.resolve([]);
+                }
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([
+                        { tag: "csv", label: "CSV" },
+                        { tag: "xls", label: "Excel" },
+                    ]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve([
+                        {
+                            field_type: "one2many",
+                            string: "Activities",
+                            required: false,
+                            value: "activity_ids/id",
+                            id: "activity_ids",
+                            params: {
+                                model: "mail.activity",
+                                prefix: "activity_ids",
+                                name: "Activities",
+                            },
+                            relation_field: "res_id",
+                            children: true,
+                        },
+                        {
+                            children: false,
+                            field_type: "char",
+                            id: "foo",
+                            relation_field: null,
+                            required: false,
+                            string: "Foo",
+                            value: "foo",
+                        },
+                        {
+                            children: false,
+                            field_type: "string",
+                            id: "thirs_field",
+                            relation_field: null,
+                            required: false,
+                            string: "Third field selected",
+                            value: "third_field",
+                        },
+                    ]);
+                }
+            },
         });
 
         // Open the export dialog
@@ -217,9 +257,72 @@ QUnit.module("ViewDialogs", (hooks) => {
                 ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
             )
         );
+        await nextTick();
 
         assert.containsOnce(target, ".o_dialog", "the export dialog should be visible");
-        assert.ok(false);
+        assert.hasClass(
+            target.querySelector(".o_export_tree_item:nth-child(2) .o_add_field"),
+            "o_inactive",
+            "fields already selected cannot be added anymore"
+        );
+
+        // load a template which contains the activity_ids field
+        await editSelect(target, ".o_exported_lists_select", "1");
+        assert.containsOnce(
+            target,
+            ".o_fields_list .o_export_field",
+            "only one field is present for the selected template"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_fields_list .o_export_field").textContent,
+            "Activities"
+        );
+
+        // add a new field to the exported fields list allow to edit the selected template
+        await click(target.querySelector(".o_export_tree_item:nth-child(2) .o_add_field"));
+        assert.containsOnce(
+            target,
+            ".o_exported_lists_select",
+            "the template list is still visible"
+        );
+        assert.containsOnce(target, ".o_save_list_btn", "a save button is now visible");
+        assert.containsOnce(target, ".o_cancel_list_btn", "a cancel button is now visible");
+
+        await editSelect(target, ".o_exported_lists_select", "new_template");
+        assert.containsNone(target, ".o_exported_lists_select", "the template list is now hidden");
+        assert.containsOnce(
+            target,
+            "input.o_save_list_name",
+            "an input is present to edit the current template"
+        );
+
+        await click(target.querySelector(".o_save_list_btn"));
+        assert.strictEqual(
+            target.querySelector(".o_notification").textContent,
+            "Please enter save field list name",
+            "should display a notification if the template list has no name"
+        );
+
+        await editInput(target, ".o_save_list_name", "Export template");
+        await click(target.querySelector(".o_cancel_list_btn"));
+        assert.containsOnce(target, ".o_exported_lists_select", "the template list is now visible");
+
+        await click(target.querySelector(".o_export_tree_item:nth-child(3) .o_add_field"));
+        assert.containsN(
+            target,
+            ".o_fields_list .o_export_field",
+            3,
+            "three fields are present in the exported fields list"
+        );
+        await editSelect(target, ".o_exported_lists_select", "new_template");
+        await editInput(target, ".o_save_list_name", "Export template");
+        await click(target.querySelector(".o_save_list_btn"));
+
+        assert.strictEqual(
+            target.querySelector(".o_exported_lists_select").selectedOptions[0].textContent,
+            "Export template",
+            "the new template is now selected"
+        );
     });
 
     QUnit.skipWOWL("Direct export list", async function (assert) {

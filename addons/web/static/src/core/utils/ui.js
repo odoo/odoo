@@ -476,7 +476,7 @@ export const useSortable = (params) => {
     useEffect(
         (el) => {
             const handler = (ev) => {
-                if (!enabled || !ev.target.closest(fullSelector)) {
+                if (!(ev.button === 0) || !enabled || !ev.target.closest(fullSelector)) {
                     return;
                 }
 

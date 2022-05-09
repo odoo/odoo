@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ExportDataItem" owl="1">
-        <div t-att-data-field_id="props.field.name" class="o_export_tree_item " role="treeitem" t-on-click.stop="onClick"> 
-            <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
-            <div class="o_tree_column">
+        <div t-att-data-field_id="props.field.name" class="o_export_tree_item o_cursor_pointer position-relative pl-3" role="treeitem" t-on-click.stop="onClick"> 
+            <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
+            <div class="o_tree_column text-wrap">
                 <span t-esc="formattedName" />
                 <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.name) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)" />
             </div>
@@ -25,8 +25,8 @@
     </t>
 
     <t t-name="web.ExportDataDialog" owl="1">
-        <Dialog contentClass="'o_export_data_dialog'" title="title" size="'lg'">
-            <div class="col-12 col-md-6 o_left_panel">
+        <Dialog contentClass="'o_export_data_dialog h100'" title="title" size="'lg'">
+            <div class="o_left_panel col-12 col-md-6 d-flex flex-column flex-nowrap">
                 <div class="o_import_compat">
                     <CheckBox className="'o_import_compat'" id="'o-update-data'" value="state.importCompatibleData" onChange.bind="onCompatibleDataChange">
                         <span>I want to update data (import-compatible export) </span>
@@ -34,9 +34,9 @@
                 </div>
                 <h4 class="mt-3">Available fields</h4>
                 <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
-                <div class="border o_left_field_panel">
+                <div class="o_left_field_panel h-100 px-2 overflow-auto border">
                     <div class="o_field_tree_structure">
-                        <t t-foreach="fieldsAvailable" t-as="field" t-key="field.name">
+                        <t t-foreach="rootFields" t-as="field" t-key="field.name">
                             <ExportDataItem
                                 field="field"
                                 expandedContent.bind="expandedContent"
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6 o_right_panel mt-3 mt-md-0">
+            <div class="o_right_panel col-12 col-md-6 d-flex flex-column flex-nowrap mt-3 mt-md-0">
                 <div class="o_export_format">
                     <strong>Export Format:</strong>
                     <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
@@ -94,13 +94,13 @@
                         </t>
                     </div>
                 </div>
-                <div class="border o_right_field_panel">
+                <div class="o_right_field_panel h-100 px-2 overflow-auto border">
                     <ul class="o_fields_list list-unstyled" t-ref="draggable">
                         <t t-foreach="fieldsToExport" t-as="field" t-key="field.name">
                             <li class="o_export_field" t-att-data-field_id="field.name">
                                 <span class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ fieldsToExport.length === 1 ? 0 : 1 }}" />
                                 <span t-esc="field.string" />
-                                <span class="fa fa-trash m-1 float-end o_remove_field" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
+                                <span class="fa fa-trash m-1 float-end o_remove_field o_cursor_pointer" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
                             </li>
                         </t>
                     </ul>

@@ -20,7 +20,8 @@ class ExportDataItem extends Component {
     get formattedName() {
         if (!this.props.field.parent) return this.props.field.string;
         const path = this.props.field.string.split("/");
-        return this.props.field.parent.string.concat("/", path.pop());
+        const start = this.props.field.parent.parent ? "…/" : "";
+        return start + this.props.field.parent.string.concat("/", path.pop());
     }
 
     async onClick(ev) {
@@ -110,6 +111,10 @@ export class ExportDataDialog extends Component {
     get fieldsAvailable() {
         const available = this.state.search.length ? this.state.search : this.fieldsAvailableAll;
         return Object.values(available);
+    }
+
+    get rootFields() {
+        return this.fieldsAvailable.filter((i) => !i.parent);
     }
 
     /**
@@ -233,7 +238,7 @@ export class ExportDataDialog extends Component {
     }
 
     async onSearch(ev) {
-        this.state.search = fuzzyLookup(ev.target.value, this.fieldsAvailable, (c) => c.name);
+        this.state.search = fuzzyLookup(ev.target.value, this.fieldsAvailable, (f) => f.string);
     }
 
     async loadFields(id) {
@@ -260,7 +265,9 @@ export class ExportDataDialog extends Component {
             import_compat: this.state.importCompatibleData,
         });
         content.forEach((field) => {
-            field.name = field.id.split("/").pop();
+            field.name = parentField
+                ? parentField.name + "/" + field.id.split("/").pop()
+                : field.id;
             field.parent = parentField;
             field.type = field.field_type;
         });
@@ -272,7 +279,11 @@ export class ExportDataDialog extends Component {
 
     async onToggleExpandField(ev) {
         const id = ev.target.closest(".o_export_tree_item").dataset.field_id;
-        return await this.loadFields(id);
+        const fields = await this.loadFields(id);
+        fields.forEach((field) => {
+            this.fieldsAvailableAll[field.name] = field;
+        });
+        return fields;
     }
 
     async onExportButtonClicked() {
@@ -308,10 +319,12 @@ export class ExportDataDialog extends Component {
     }
 
     async fetchFields() {
+        this.state.search = [];
+        this.searchRef.el.value = "";
         const fields = await this.loadFields();
         this.fieldsAvailableAll = {};
         fields.forEach((field) => {
-            this.fieldsAvailableAll[field.id] = field;
+            this.fieldsAvailableAll[field.name] = field;
         });
         if (this.state.importCompatibleData) {
             this.state.fieldsToExport = this.state.fieldsToExport.filter(
