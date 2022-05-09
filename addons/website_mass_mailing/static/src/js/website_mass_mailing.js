@@ -62,7 +62,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         var self = this;
         var $email = this.$(".js_subscribe_email:visible");
 
-        if ($email.length && !$email.val().match(/.+@.+/)) {
+        if ($email.length && !$email.val().match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
             this.$target.addClass('o_has_error').find('.form-control').addClass('is-invalid');
             return false;
         }
