@@ -479,7 +479,7 @@ class MassMailing(models.Model):
 
     def action_schedule(self):
         self.ensure_one()
-        if self.schedule_date:
+        if self.schedule_date and self.schedule_date > fields.Datetime.now():
             return self.action_put_in_queue()
         else:
             action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
