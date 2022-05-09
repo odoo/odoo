@@ -129,14 +129,14 @@ class WebsiteSnippetFilter(models.Model):
                 field_name, _, field_widget = field_name.partition(":")
                 field = model._fields.get(field_name)
                 field_widget = field_widget or field.type
-                if field.type == 'binary':
+                if field_widget == 'binary':
                     data['image_fields'][field_name] = self.escape_falsy_as_empty(Website.image_url(record, field_name))
                 elif field_widget == 'image':
                     data['image_fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
                 elif field_widget == 'monetary':
                     FieldMonetary = self.env['ir.qweb.field.monetary']
                     model_currency = None
-                    if field.type == 'monetary':
+                    if field_widget == 'monetary':
                         model_currency = record[record[field_name].currency_field]
                     elif 'currency_id' in model._fields:
                         model_currency = record['currency_id']
