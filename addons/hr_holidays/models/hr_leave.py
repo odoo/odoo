@@ -1101,16 +1101,17 @@ class HolidaysRequest(models.Model):
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
 
-
-        # Post a second message, more verbose than the tracking message
-        for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
-            holiday.message_post(
-                body=_(
-                    'Your %(leave_type)s planned on %(date)s has been accepted',
-                    leave_type=holiday.holiday_status_id.display_name,
-                    date=holiday.date_from
-                ),
-                partner_ids=holiday.employee_id.user_id.partner_id.ids)
+        if current_employee.work_email:
+            # Post a second message, more verbose than the tracking message
+            for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
+                holiday.message_post(
+                    body=_(
+                        'Your %(leave_type)s planned on %(date)s has been accepted',
+                        leave_type=holiday.holiday_status_id.display_name,
+                        date=holiday.date_from
+                    ),
+                    partner_ids=holiday.employee_id.user_id.partner_id.ids,
+                    email_from=tools.formataddr((current_employee.name, current_employee.work_email)))
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         if not self.env.context.get('leave_fast_create'):
