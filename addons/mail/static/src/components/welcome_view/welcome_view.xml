@@ -10,7 +10,7 @@
                 </h1>
                 <h2 class="m-5" t-esc="messaging.companyName"/>
                 <div class="d-flex justify-content-center">
-                    <MediaPreview t-if="welcomeView.mediaPreview" className="'mr-5'" localId="welcomeView.mediaPreview.localId"/>
+                    <MediaPreview t-if="welcomeView.mediaPreview" className="'mr-5'" record="welcomeView.mediaPreview"/>
                     <div class="d-flex flex-column justify-content-center">
                         <t t-if="messaging.currentGuest">
                             <label class="o_WelcomeView_guestNameInputLabel text-center" t-att-for="welcomeView.guestNameInputUniqueId">What's your name?</label>

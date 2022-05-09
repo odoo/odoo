@@ -12,20 +12,20 @@ export class MessageActionList extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'actionReactionRef', modelName: 'MessageActionList', refName: 'actionReaction' });
+        useRefToModel({ fieldName: 'actionReactionRef', refName: 'actionReaction' });
     }
 
     /**
      * @returns {MessageActionList}
      */
     get messageActionList() {
-        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(MessageActionList, {
-    props: { localId: String },
+    props: { record: Object },
     template: "mail.MessageActionList",
 });
 

@@ -15,13 +15,13 @@
                     <t t-if="attachmentBoxView.dropZoneView">
                         <DropZone
                             className="'o_AttachmentBox_dropZone'"
-                            localId="attachmentBoxView.dropZoneView.localId"
+                            record="attachmentBoxView.dropZoneView"
                         />
                     </t>
                     <t t-if="attachmentBoxView.attachmentList">
                         <AttachmentList
                             className="'o_attachmentBox_attachmentList'"
-                            localId="attachmentBoxView.attachmentList.localId"
+                            record="attachmentBoxView.attachmentList"
                         />
                     </t>
                     <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">

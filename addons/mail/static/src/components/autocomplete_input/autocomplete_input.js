@@ -61,7 +61,7 @@ export class AutocompleteInput extends Component {
      * @returns {AutocompleteInputView}
      */
      get autocompleteInputView() {
-        return this.messaging && this.messaging.models['AutocompleteInputView'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -163,7 +163,7 @@ Object.assign(AutocompleteInput, {
             type: Function,
             optional: true,
         },
-        localId: String,
+        record: Object,
         onHide: {
             type: Function,
             optional: true,

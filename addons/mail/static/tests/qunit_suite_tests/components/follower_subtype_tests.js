@@ -16,8 +16,8 @@ QUnit.module('follower_subtype_tests.js', {
     beforeEach() {
         this.createFollowerSubtypeComponent = async ({ follower, followerSubtype, target }) => {
             const props = {
-                followerLocalId: follower.localId,
-                followerSubtypeLocalId: followerSubtype.localId,
+                follower,
+                followerSubtype,
             };
             await createRootMessagingComponent(follower.env, "FollowerSubtype", {
                 props,

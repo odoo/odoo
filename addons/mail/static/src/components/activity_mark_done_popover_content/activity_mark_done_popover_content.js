@@ -14,8 +14,8 @@ export class ActivityMarkDonePopoverContent extends LegacyComponent {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'ActivityMarkDonePopoverContentView' });
-        useRefToModel({ fieldName: 'feedbackTextareaRef', modelName: 'ActivityMarkDonePopoverContentView', refName: 'feedbackTextarea' });
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'feedbackTextareaRef', refName: 'feedbackTextarea' });
         this._feedbackTextareaRef = useRef('feedbackTextarea');
         onMounted(() => this._mounted());
     }
@@ -35,13 +35,13 @@ export class ActivityMarkDonePopoverContent extends LegacyComponent {
      * @returns {ActivityMarkDonePopoverContentView}
      */
     get activityMarkDonePopoverContentView() {
-        return this.messaging && this.messaging.models['ActivityMarkDonePopoverContentView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ActivityMarkDonePopoverContent, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ActivityMarkDonePopoverContent',
 });
 

@@ -23,9 +23,9 @@
                         <t t-else="">
                             <div class="o_MessagingMenu_dropdownMenuHeader border-bottom" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }">
                                 <t t-if="!messaging.device.isSmall">
-                                    <MessagingMenuTab messagingMenuLocalId="messagingMenu.localId" tabId="'all'"/>
-                                    <MessagingMenuTab messagingMenuLocalId="messagingMenu.localId" tabId="'chat'"/>
-                                    <MessagingMenuTab messagingMenuLocalId="messagingMenu.localId" tabId="'channel'"/>
+                                    <MessagingMenuTab messagingMenu="messagingMenu" tabId="'all'"/>
+                                    <MessagingMenuTab messagingMenu="messagingMenu" tabId="'chat'"/>
+                                    <MessagingMenuTab messagingMenu="messagingMenu" tabId="'channel'"/>
                                 </t>
                                 <t t-if="messaging.device.isSmall">
                                     <t t-call="mail.MessagingMenu.newMessageButton"/>
@@ -37,7 +37,7 @@
                                 <t t-if="messagingMenu.mobileNewMessageAutocompleteInputView">
                                     <AutocompleteInput
                                         className="'o_MessagingMenu_mobileNewMessageInput'"
-                                        localId="messagingMenu.mobileNewMessageAutocompleteInputView.localId"
+                                        record="messagingMenu.mobileNewMessageAutocompleteInputView"
                                         select="messagingMenu.onMobileNewMessageInputSelect"
                                         source="messagingMenu.onMobileNewMessageInputSource"
                                         onHide="messagingMenu.onHideMobileNewMessage"
@@ -45,12 +45,12 @@
                                 </t>
                             </div>
                             <t t-if="messagingMenu.notificationListView">
-                                <NotificationList className="'o_MessagingMenu_notificationList'" classNameObj="{ 'o-isDeviceSmall': messaging.device.isSmall }" localId="messagingMenu.notificationListView.localId"/>
+                                <NotificationList className="'o_MessagingMenu_notificationList'" classNameObj="{ 'o-isDeviceSmall': messaging.device.isSmall }" record="messagingMenu.notificationListView"/>
                             </t>
                             <t t-if="messagingMenu.mobileMessagingNavbarView">
                                 <MobileMessagingNavbar
                                     className="'o_MessagingMenu_mobileNavbar'"
-                                    localId="messagingMenu.mobileMessagingNavbarView.localId"
+                                    record="messagingMenu.mobileMessagingNavbarView"
                                 />
                             </t>
                         </t>

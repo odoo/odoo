@@ -10,13 +10,13 @@ export class ThreadTextualTypingStatus extends Component {
      * @returns {Thread}
      */
     get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
+        return this.props.thread;
     }
 
 }
 
 Object.assign(ThreadTextualTypingStatus, {
-    props: { threadLocalId: String },
+    props: { thread: Object },
     template: 'mail.ThreadTextualTypingStatus',
 });
 

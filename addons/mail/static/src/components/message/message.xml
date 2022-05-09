@@ -25,9 +25,9 @@
                 }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
-                <MessageInReplyToView t-if="messageView.messageInReplyToView" localId="messageView.messageInReplyToView.localId"/>
+                <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView"/>
                 <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
-                    <MessageActionList localId="messageView.messageActionList.localId"/>
+                    <MessageActionList record="messageView.messageActionList"/>
                 </div>
                 <div class="d-flex flex-shrink-0">
                     <div class="o_Message_highlightIndicator h-100" t-att-class="{ 'o-active bg-primary': messageView.message.isHighlighted or messageView.isHighlighted }"/>
@@ -46,7 +46,7 @@
                                             'text-100': !messageView.message.isDiscussionOrNotification and !messageView.isSelected,
                                         }"
                                         hasOpenChat="messageView.hasAuthorOpenChat"
-                                        partnerLocalId="messageView.message.author.localId"
+                                        partner="messageView.message.author"
                                     />
                                 </t>
                             </div>
@@ -58,7 +58,7 @@
                                 </small>
                             </t>
                             <t t-if="!messageView.isActive and messageView.messageSeenIndicatorView">
-                                <MessageSeenIndicator className="'o_Message_seenIndicator'" localId="messageView.messageSeenIndicatorView.localId"/>
+                                <MessageSeenIndicator className="'o_Message_seenIndicator'" record="messageView.messageSeenIndicatorView"/>
                             </t>
                         </t>
                     </div>
@@ -98,7 +98,7 @@
                                     </small>
                                 </t>
                                 <t t-if="messageView.messageSeenIndicatorView">
-                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" localId="messageView.messageSeenIndicatorView.localId"/>
+                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" record="messageView.messageSeenIndicatorView"/>
                                 </t>
                                 <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread !== messageView.threadView.thread">
                                     <small class="o_Message_originThread" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
@@ -122,7 +122,7 @@
                                                 <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                             </span>
                                             <t t-set-slot="opened">
-                                                <MessageNotificationPopoverContent localId="messageView.localId"/>
+                                                <MessageNotificationPopoverContent record="messageView"/>
                                             </t>
                                         </Popover>
                                     </t>
@@ -139,7 +139,7 @@
                             <t t-if="messageView.composerViewInEditing">
                                 <Composer
                                     className="'o_Message_composer mb-1'"
-                                    localId="messageView.composerViewInEditing.localId"
+                                    record="messageView.composerViewInEditing"
                                 />
                             </t>
                             <t t-if="messageView.message.subtype_description and !messageView.message.isBodyEqualSubtypeDescription">
@@ -153,10 +153,10 @@
                                 </ul>
                             </t>
                         </div>
-                        <AttachmentList t-if="messageView.attachmentList" localId="messageView.attachmentList.localId"/>
+                        <AttachmentList t-if="messageView.attachmentList" record="messageView.attachmentList"/>
                         <div t-if="messageView.message.messageReactionGroups.length > 0" class="d-flex flex-wrap ml-2">
                             <t t-foreach="messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
-                                <MessageReactionGroup className="'mr-1 mb-1'" localId="messageReactionGroup.localId"/>
+                                <MessageReactionGroup className="'mr-1 mb-1'" record="messageReactionGroup"/>
                             </t>
                         </div>
                     </div>

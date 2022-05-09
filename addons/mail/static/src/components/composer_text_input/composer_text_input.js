@@ -13,8 +13,8 @@ export class ComposerTextInput extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'mirroredTextareaRef', modelName: 'ComposerView', refName: 'mirroredTextarea' });
-        useRefToModel({ fieldName: 'textareaRef', modelName: 'ComposerView', refName: 'textarea' });
+        useRefToModel({ fieldName: 'mirroredTextareaRef', refName: 'mirroredTextarea' });
+        useRefToModel({ fieldName: 'textareaRef', refName: 'textarea' });
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.
@@ -30,7 +30,7 @@ export class ComposerTextInput extends Component {
      * @returns {ComposerView}
      */
     get composerView() {
-        return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -112,7 +112,7 @@ export class ComposerTextInput extends Component {
 }
 
 Object.assign(ComposerTextInput, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ComposerTextInput',
 });
 

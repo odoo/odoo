@@ -14,21 +14,21 @@ export class Activity extends LegacyComponent {
      */
      setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'ActivityView' });
-        useRefToModel({ fieldName: 'markDoneButtonRef', modelName: 'ActivityView', refName: 'markDoneButton', });
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'markDoneButtonRef', refName: 'markDoneButton', });
     }
 
     /**
      * @returns {ActivityView}
      */
     get activityView() {
-        return this.messaging && this.messaging.models['ActivityView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(Activity, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.Activity',
     components: { Popover },
 });

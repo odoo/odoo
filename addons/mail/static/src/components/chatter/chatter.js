@@ -14,8 +14,8 @@ export class Chatter extends LegacyComponent {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        useComponentToModel({ fieldName: 'component', modelName: 'Chatter' });
-        useRefToModel({ fieldName: 'scrollPanelRef', modelName: 'Chatter', refName: 'scrollPanel' });
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'scrollPanelRef', refName: 'scrollPanel' });
     }
 
     //--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ export class Chatter extends LegacyComponent {
      * @returns {Chatter}
      */
     get chatter() {
-        return this.messaging && this.messaging.models['Chatter'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -58,7 +58,7 @@ export class Chatter extends LegacyComponent {
 }
 
 Object.assign(Chatter, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.Chatter',
 });
 

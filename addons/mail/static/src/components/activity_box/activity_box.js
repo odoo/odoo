@@ -10,13 +10,13 @@ export class ActivityBox extends Component {
      * @returns {ActivityBoxView}
      */
     get activityBoxView() {
-        return this.messaging && this.messaging.models['ActivityBoxView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ActivityBox, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ActivityBox',
 });
 

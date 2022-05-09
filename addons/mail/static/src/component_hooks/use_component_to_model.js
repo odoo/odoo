@@ -2,7 +2,7 @@
 
 import { clear } from '@mail/model/model_field_command';
 
-const { onWillDestroy, onWillUpdateProps, useComponent } = owl;
+const { onWillUpdateProps, useComponent } = owl;
 
 /**
  * This hook provides support for saving the reference of the component directly
@@ -11,29 +11,16 @@ const { onWillDestroy, onWillUpdateProps, useComponent } = owl;
  *
  * @param {Object} param0
  * @param {string} param0.fieldName Name of the field on the target record.
- * @param {string} param0.modelName Name of the model of the target record.
  */
-export function useComponentToModel({ fieldName, modelName }) {
+export function useComponentToModel({ fieldName }) {
     const component = useComponent();
-    const { modelManager } = component.env.services.messaging;
-    const record = modelManager.models[modelName].get(component.props.localId);
-    if (record) {
-        record.update({ [fieldName]: component });
-    }
+    component.props.record.update({ [fieldName]: component });
     onWillUpdateProps(nextProps => {
-        const currentRecord = modelManager.models[modelName].get(component.props.localId);
-        const nextRecord = modelManager.models[modelName].get(nextProps.localId);
-        if (currentRecord && currentRecord !== nextRecord) {
+        const currentRecord = component.props.record;
+        const nextRecord = nextProps.record;
+        if (currentRecord.exists() && currentRecord !== nextRecord) {
             currentRecord.update({ [fieldName]: clear() });
         }
-        if (nextRecord) {
-            nextRecord.update({ [fieldName]: component });
-        }
-    });
-    onWillDestroy(() => {
-        const record = modelManager.models[modelName].get(component.props.localId);
-        if (record) {
-            record.update({ [fieldName]: clear() });
-        }
+        nextRecord.update({ [fieldName]: component });
     });
 }

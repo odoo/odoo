@@ -12,20 +12,20 @@ export class MediaPreview extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'audioRef', modelName: 'MediaPreview', refName: 'audio' });
-        useRefToModel({ fieldName: 'videoRef', modelName: 'MediaPreview', refName: 'video' });
+        useRefToModel({ fieldName: 'audioRef', refName: 'audio' });
+        useRefToModel({ fieldName: 'videoRef', refName: 'video' });
     }
 
     /**
      * @returns {MediaPreview}
      */
     get mediaPreview() {
-        return this.messaging && this.messaging.models['MediaPreview'].get(this.props.localId);
+        return this.props.record;
     }
 }
 
 Object.assign(MediaPreview, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MediaPreview',
 });
 

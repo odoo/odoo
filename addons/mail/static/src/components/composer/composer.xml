@@ -20,7 +20,7 @@
                 <t t-if="composerView.dropZoneView">
                     <DropZone
                         className="'o_Composer_dropZone'"
-                        localId="composerView.dropZoneView.localId"
+                        record="composerView.dropZoneView"
                     />
                 </t>
                 <t t-if="composerView.hasHeader">
@@ -48,7 +48,7 @@
                                     </t>
                                 </b>
                             </small>
-                            <ComposerSuggestedRecipientList localId="composerView.composerSuggestedRecipientListView.localId"/>
+                            <ComposerSuggestedRecipientList record="composerView.composerSuggestedRecipientListView"/>
                         </t>
                     </div>
                 </t>
@@ -75,7 +75,7 @@
                             'o_Composer_textInput-mobile': messaging.device.isSmall,
                             'o-has-current-partner-avatar': composerView.hasCurrentPartnerAvatar,
                         }"
-                        localId="composerView.localId"
+                        record="composerView"
                         t-key="composerView.localId"
                     />
                     <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': composerView.isCompact, 'o-isDeviceSmall': messaging.device.isSmall, 'o-messaging-in-editing': composerView and composerView.messageViewInEditing }">
@@ -99,7 +99,7 @@
                                 >
                                     <i class="fa fa-smile-o"/>
                                 </button>
-                                <PopoverView t-if="composerView.emojisPopoverView" localId="composerView.emojisPopoverView.localId"/>
+                                <PopoverView t-if="composerView.emojisPopoverView" record="composerView.emojisPopoverView"/>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" title="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
                             <t t-if="composerView.isExpandable">
@@ -116,13 +116,13 @@
                 <t t-if="composerView.hasFooter">
                     <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': composerView.isCompact }">
                         <t t-if="composerView.hasThreadTyping">
-                            <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus'" threadLocalId="composerView.composer.activeThread.localId"/>
+                            <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus'" thread="composerView.composer.activeThread"/>
                         </t>
                         <AttachmentList
                             t-if="composerView.attachmentList"
                             className="'o_Composer_attachmentList'"
                             classNameObj="{ 'o-composer-is-compact': composerView.isCompact }"
-                            localId="composerView.attachmentList.localId"
+                            record="composerView.attachmentList"
                         />
                         <t t-if="!composerView.isCompact">
                             <t t-call="mail.Composer.actionButtons"/>

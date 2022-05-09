@@ -14,7 +14,7 @@ export class PartnerImStatusIcon extends Component {
      * @returns {Partner}
      */
     get partner() {
-        return this.messaging && this.messaging.models['Partner'].get(this.props.partnerLocalId);
+        return this.props.partner;
     }
 
     //--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ Object.assign(PartnerImStatusIcon, {
         hasOpenChat: false,
     },
     props: {
-        partnerLocalId: String,
+        partner: Object,
         hasBackground: { type: Boolean, optional: true },
         /**
          * Determines whether a click on `this` should open a chat with

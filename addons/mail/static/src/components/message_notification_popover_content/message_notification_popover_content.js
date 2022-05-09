@@ -10,13 +10,13 @@ export class MessageNotificationPopoverContent extends Component {
      * @returns {MessageView}
      */
     get messageView() {
-        return this.messaging && this.messaging.models['MessageView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(MessageNotificationPopoverContent, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MessageNotificationPopoverContent',
 });
 

@@ -8,7 +8,7 @@
                 t-ref="root"
             >
                 <t t-if="!messaging.device.isSmall">
-                    <DiscussSidebar className="'o_Discuss_sidebar bg-light border-right'" localId="discussView.localId"/>
+                    <DiscussSidebar className="'o_Discuss_sidebar bg-light border-right'" record="discussView"/>
                 </t>
                 <t t-if="messaging.device.isSmall" t-call="mail.Discuss.content"/>
                 <t t-else="">
@@ -22,13 +22,13 @@
 
     <t t-name="mail.Discuss.content" owl="1">
         <t t-if="messaging.device.isSmall and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
-            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'" localId="discussView.localId"/>
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'" record="discussView"/>
         </t>
         <t t-if="discussView.mobileAddItemHeaderAutocompleteInputView">
             <div class="o_Discuss_mobileAddItemHeader border-bottom">
                 <AutocompleteInput
                     className="'o_Discuss_mobileAddItemHeaderInput'"
-                    localId="discussView.mobileAddItemHeaderAutocompleteInputView.localId"
+                    record="discussView.mobileAddItemHeaderAutocompleteInputView"
                     select="discussView.onMobileAddItemHeaderInputSelect"
                     source="discussView.onMobileAddItemHeaderInputSource"
                     onHide="discussView.onHideMobileAddItemHeader"
@@ -40,7 +40,7 @@
             <ThreadView
                 className="'o_Discuss_thread'"
                 classNameObj="{ 'o-isDeviceSmall': messaging.device.isSmall }"
-                localId="discussView.discuss.threadView.localId"
+                record="discussView.discuss.threadView"
             />
         </t>
         <t t-if="!discussView.discuss.thread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
@@ -61,12 +61,12 @@
             </t>
         </t>
         <t t-if="discussView.discuss.notificationListView">
-            <NotificationList className="'o_Discuss_notificationList'" localId="discussView.discuss.notificationListView.localId"/>
+            <NotificationList className="'o_Discuss_notificationList'" record="discussView.discuss.notificationListView"/>
         </t>
         <t t-if="discussView.discuss.mobileMessagingNavbarView">
             <MobileMessagingNavbar
                 className="'o_Discuss_mobileNavbar'"
-                localId="discussView.discuss.mobileMessagingNavbarView.localId"
+                record="discussView.discuss.mobileMessagingNavbarView"
             />
         </t>
     </t>

@@ -10,7 +10,7 @@ export class ChatWindowHiddenMenuItem extends Component {
      * @returns {ChatWindowHeaderView}
      */
      get chatWindowHeaderView() {
-        return this.messaging && this.messaging.models['ChatWindowHeaderView'].get(this.props.chatWindowHeaderViewLocalId);
+        return this.props.chatWindowHeaderView;
     }
 }
 
@@ -19,7 +19,7 @@ Object.assign(ChatWindowHiddenMenuItem, {
         isLast: false,
     },
     props: {
-        chatWindowHeaderViewLocalId: String,
+        chatWindowHeaderView: Object,
         isLast: {
             type: Boolean,
             optional: true,

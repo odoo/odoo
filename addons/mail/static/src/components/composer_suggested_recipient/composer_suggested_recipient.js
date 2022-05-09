@@ -72,7 +72,7 @@ export class ComposerSuggestedRecipient extends Component {
      * @returns {SuggestedRecipientInfo}
      */
     get suggestedRecipientInfo() {
-        return this.messaging && this.messaging.models['SuggestedRecipientInfo'].get(this.props.suggestedRecipientInfoLocalId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -126,9 +126,7 @@ export class ComposerSuggestedRecipient extends Component {
 
 Object.assign(ComposerSuggestedRecipient, {
     components: { FormViewDialogComponentAdapter },
-    props: {
-        suggestedRecipientInfoLocalId: String,
-    },
+    props: { record: Object },
     template: 'mail.ComposerSuggestedRecipient',
 });
 

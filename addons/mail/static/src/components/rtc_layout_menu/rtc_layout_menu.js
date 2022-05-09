@@ -11,20 +11,20 @@ export class RtcLayoutMenu extends LegacyComponent {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'RtcLayoutMenu' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     /**
      * @returns {RtcLayoutMenu}
      */
     get layoutMenu() {
-        return this.messaging && this.messaging.models['RtcLayoutMenu'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcLayoutMenu, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcLayoutMenu',
 });
 

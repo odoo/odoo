@@ -10,13 +10,13 @@ export class MessageAuthorPrefix extends Component {
      * @returns {MessageAuthorPrefixView}
      */
     get messageAuthorPrefixView() {
-        return this.messaging && this.messaging.models['MessageAuthorPrefixView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(MessageAuthorPrefix, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MessageAuthorPrefix',
 });
 

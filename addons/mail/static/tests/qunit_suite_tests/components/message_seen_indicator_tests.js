@@ -12,7 +12,7 @@ QUnit.module('message_seen_indicator_tests.js', {
     beforeEach() {
         this.createMessageSeenIndicatorComponent = async ({ message, target, thread }, otherProps) => {
             const props = Object.assign(
-                { messageLocalId: message.localId, threadLocalId: thread.localId },
+                { message, thread },
                 otherProps
             );
             await createRootMessagingComponent(thread.env, "MessageSeenIndicator", {

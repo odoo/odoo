@@ -16,7 +16,7 @@ export class MessageList extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'MessageListView' });
+        useComponentToModel({ fieldName: 'component' });
         /**
          * Reference of the "load more" item. Useful to trigger load more
          * on scroll when it becomes visible.
@@ -146,7 +146,7 @@ export class MessageList extends Component {
      * @returns {MessageListView}
      */
     get messageListView() {
-        return this.messaging && this.messaging.models['MessageListView'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -331,7 +331,7 @@ export class MessageList extends Component {
 
 Object.assign(MessageList, {
     components: { Transition },
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MessageList',
 });
 

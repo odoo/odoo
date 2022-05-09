@@ -14,13 +14,13 @@ export class DiscussMobileMailboxSelection extends Component {
      * @returns {DiscussView}
      */
     get discussView() {
-        return this.messaging && this.messaging.models['DiscussView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(DiscussMobileMailboxSelection, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.DiscussMobileMailboxSelection',
 });
 

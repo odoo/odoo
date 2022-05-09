@@ -10,22 +10,22 @@ export class ChannelInvitationFormSelectablePartner extends Component {
      * @returns {ChannelInvitationForm}
      */
     get channelInvitationForm() {
-        return this.messaging && this.messaging.models['ChannelInvitationForm'].get(this.props.channelInvitationFormLocalId);
+        return this.props.channelInvitationForm;
     }
 
     /**
      * @returns {Partner}
      */
     get selectablePartner() {
-        return this.messaging && this.messaging.models['Partner'].get(this.props.selectablePartnerLocalId);
+        return this.props.selectablePartner;
     }
 
 }
 
 Object.assign(ChannelInvitationFormSelectablePartner, {
     props: {
-        channelInvitationFormLocalId: String,
-        selectablePartnerLocalId: String,
+        channelInvitationForm: Object,
+        selectablePartner: Object,
     },
     template: 'mail.ChannelInvitationFormSelectablePartner',
 });

@@ -14,7 +14,7 @@ export class DiscussSidebar extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        useRefToModel({ fieldName: 'quickSearchInputRef', modelName: 'DiscussView', refName: 'quickSearchInput' });
+        useRefToModel({ fieldName: 'quickSearchInputRef', refName: 'quickSearchInput' });
     }
 
     //--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ export class DiscussSidebar extends Component {
      * @returns {DiscussView}
      */
     get discussView() {
-        return this.messaging && this.messaging.models['DiscussView'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -47,7 +47,7 @@ export class DiscussSidebar extends Component {
 }
 
 Object.assign(DiscussSidebar, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.DiscussSidebar',
 });
 

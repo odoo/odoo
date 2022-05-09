@@ -11,20 +11,20 @@ export class AttachmentDeleteConfirm extends Component {
      * @override
      */
     setup() {
-        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentDeleteConfirmView' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     /**
      * @returns {AttachmentDeleteConfirmView}
      */
     get attachmentDeleteConfirmView() {
-        return this.messaging && this.messaging.models['AttachmentDeleteConfirmView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(AttachmentDeleteConfirm, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.AttachmentDeleteConfirm',
 });
 

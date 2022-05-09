@@ -5,7 +5,7 @@
         <div class="o_RtcInvitations" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="messaging.ringingThreads">
                 <t t-foreach="messaging.rtcInvitationCards" t-as="rtcInvitationCard" t-key="rtcInvitationCard.localId">
-                    <RtcInvitationCard localId="rtcInvitationCards.localId"/>
+                    <RtcInvitationCard record="rtcInvitationCards"/>
                 </t>
             </t>
         </div>

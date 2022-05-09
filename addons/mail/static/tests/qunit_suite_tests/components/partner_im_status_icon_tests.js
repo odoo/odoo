@@ -12,7 +12,7 @@ QUnit.module('partner_im_status_icon_tests.js', {
     beforeEach() {
         this.createPartnerImStatusIcon = async (partner, target) => {
             await createRootMessagingComponent(partner.env, "PartnerImStatusIcon", {
-                props: { partnerLocalId: partner.localId },
+                props: { partner },
                 target,
             });
         };

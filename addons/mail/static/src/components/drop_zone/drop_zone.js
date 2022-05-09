@@ -14,7 +14,7 @@ export class DropZone extends Component {
      * @returns {DropZoneView}
      */
     get dropZoneView() {
-        return this.messaging && this.messaging.models['DropZoneView'].get(this.props.localId);
+        return this.props.record;
     }
 
     /**
@@ -31,7 +31,7 @@ export class DropZone extends Component {
 
 Object.assign(DropZone, {
     props: {
-        localId: String,
+        record: Object,
         onDropzoneFilesDropped: {
             type: Function,
             optional: true,

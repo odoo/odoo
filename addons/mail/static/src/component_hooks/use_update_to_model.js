@@ -10,14 +10,10 @@ const { useComponent } = owl;
  *
  * @param {Object} param0
  * @param {string} param0.methodName Name of the method on the target record.
- * @param {string} param0.modelName Name of the model of the target record.
  */
-export function useUpdateToModel({ methodName, modelName }) {
+export function useUpdateToModel({ methodName }) {
     const component = useComponent();
     useUpdate({ func: () => {
-        const record = component.env.services.messaging.modelManager.models[modelName].get(component.props.localId);
-        if (record) {
-            record[methodName]();
-        }
+        component.props.record[methodName]();
     } });
 }

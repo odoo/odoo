@@ -14,7 +14,7 @@ export class ThreadNeedactionPreview extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'markAsReadRef', modelName: 'ThreadNeedactionPreviewView', refName: 'markAsRead' });
+        useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
     }
 
     //--------------------------------------------------------------------------
@@ -55,13 +55,13 @@ export class ThreadNeedactionPreview extends Component {
      * @returns {ThreadNeedactionPreviewView}
      */
     get threadNeedactionPreviewView() {
-        return this.messaging && this.messaging.models['ThreadNeedactionPreviewView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ThreadNeedactionPreview, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ThreadNeedactionPreview',
 });
 

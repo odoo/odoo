@@ -14,13 +14,13 @@ export class ThreadView extends Component {
      * @returns {ThreadView}
      */
     get threadView() {
-        return this.messaging && this.messaging.models['ThreadView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ThreadView, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ThreadView',
 });
 

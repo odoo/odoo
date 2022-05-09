@@ -18,7 +18,7 @@
                                     'o-isDeviceSmall': messaging.device.isSmall,
                                     'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0,
                                 }"
-                                partnerLocalId="threadPreviewView.thread.correspondent.localId"
+                                partner="threadPreviewView.thread.correspondent"
                             />
                         </t>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="o_ThreadPreview_core d-flex align-items-baseline">
                         <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
                             <t t-if="threadPreviewView.messageAuthorPrefixView">
-                                <MessageAuthorPrefix localId="threadPreviewView.messageAuthorPrefixView.localId"/>
+                                <MessageAuthorPrefix record="threadPreviewView.messageAuthorPrefixView"/>
                             </t>
                             <t t-esc="inlineLastMessageBody"/>
                         </span>

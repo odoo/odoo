@@ -14,13 +14,13 @@ export class FollowerSubtype extends Component {
      * @returns {FollowerSubtypeView}
      */
     get followerSubtypeView() {
-        return this.messaging && this.messaging.models['FollowerSubtypeView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(FollowerSubtype, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.FollowerSubtype',
 });
 
