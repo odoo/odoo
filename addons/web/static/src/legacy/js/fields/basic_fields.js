@@ -1000,7 +1000,7 @@ var FieldDate = InputField.extend({
             let value = this.$input.val();
             try {
                 value = this._parseValue(value);
-                if (this.field.type === "datetime") {
+                if (this.datewidget.type_of_date === "datetime") {
                     value.add(-this.getSession().getTZOffset(value), "minutes");
                 }
             } catch (err) {}
