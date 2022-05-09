@@ -55,7 +55,7 @@ export class ChatWindow extends Component {
             !this.chatWindow ||
             !this.chatWindow.threadView ||
             !this.chatWindow.threadView.messageListView ||
-            !this.chatWindow.threadView.messageListView.component ||
+            !this.chatWindow.threadView.messageListView.getScrollableElement() ||
             !this.chatWindow.threadViewer
         ) {
             return;

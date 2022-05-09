@@ -12,7 +12,13 @@ registerModel({
          */
         getScrollableElement() {
             if (this.threadViewOwner.threadViewer.chatter) {
+                if (!this.threadViewOwner.threadViewer.chatter.scrollPanelRef) {
+                    return;
+                }
                 return this.threadViewOwner.threadViewer.chatter.scrollPanelRef.el;
+            }
+            if (!this.component) {
+                return;
             }
             return this.component.root.el;
         },

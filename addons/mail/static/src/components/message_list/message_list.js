@@ -57,7 +57,7 @@ export class MessageList extends Component {
     }
 
     _willPatch() {
-        if (!this.messageListView) {
+        if (!this.messageListView || !this.messageListView.getScrollableElement()) {
             return;
         }
         this._willPatchSnapshot = {
