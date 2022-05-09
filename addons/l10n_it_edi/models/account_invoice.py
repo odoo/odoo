@@ -187,6 +187,7 @@ class AccountMove(models.Model):
             'format_numbers_two': format_numbers_two,
             'format_phone': format_phone,
             'format_alphanumeric': format_alphanumeric,
+            'normalize_codice_fiscale': self.env['res.partner']._l10n_it_normalize_codice_fiscale,
             'discount_type': discount_type,
             'get_vat_number': get_vat_number,
             'get_vat_country': get_vat_country,
