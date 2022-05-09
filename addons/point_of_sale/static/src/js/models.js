@@ -1719,7 +1719,7 @@ exports.Product = Backbone.Model.extend({
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price: function(pricelist, quantity, price_extra){
+    get_base_and_unit_price: function(pricelist, quantity, price_extra){
         var self = this;
         var date = moment();
 
@@ -1744,22 +1744,20 @@ exports.Product = Backbone.Model.extend({
                    (! item.product_id || item.product_id[0] === self.id) &&
                    (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
                    (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-                   (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
+                   (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date)) &&
+                   (! item.min_quantity || quantity >= item.min_quantity);
         });
 
-        var price = self.lst_price;
+        let price = self.lst_price;
+        let base_price = price;
         if (price_extra){
             price += price_extra;
         }
         _.find(pricelist_items, function (rule) {
-            if (rule.min_quantity && quantity < rule.min_quantity) {
-                return false;
-            }
-
             if (rule.base === 'pricelist') {
-                price = self.get_price(rule.base_pricelist, quantity);
+                [base_price, price] = self.get_base_and_unit_price(rule.base_pricelist, quantity);
             } else if (rule.base === 'standard_price') {
-                price = self.standard_price;
+                base_price = price = self.standard_price;
             }
 
             if (rule.compute_price === 'fixed') {
@@ -1768,32 +1766,37 @@ exports.Product = Backbone.Model.extend({
             } else if (rule.compute_price === 'percentage') {
                 price = price - (price * (rule.percent_price / 100));
                 return true;
-            } else {
-                var price_limit = price;
-                price = price - (price * (rule.price_discount / 100));
-                if (rule.price_round) {
-                    price = round_pr(price, rule.price_round);
-                }
-                if (rule.price_surcharge) {
-                    price += rule.price_surcharge;
-                }
-                if (rule.price_min_margin) {
-                    price = Math.max(price, price_limit + rule.price_min_margin);
-                }
-                if (rule.price_max_margin) {
-                    price = Math.min(price, price_limit + rule.price_max_margin);
-                }
-                return true;
             }
 
-            return false;
+            const price_limit = price;
+            price = price - (price * (rule.price_discount / 100));
+            if (rule.price_round) {
+                price = round_pr(price, rule.price_round);
+            }
+            if (rule.price_surcharge) {
+                price += rule.price_surcharge;
+            }
+            if (rule.price_min_margin) {
+                price = Math.max(price, price_limit + rule.price_min_margin);
+            }
+            if (rule.price_max_margin) {
+                price = Math.min(price, price_limit + rule.price_max_margin);
+            }
+            return true;
         });
+
+        if (pricelist.discount_policy === 'with_discount') {
+            base_price = price;
+        }
 
         // This return value has to be rounded with round_di before
         // being used further. Note that this cannot happen here,
         // because it would cause inconsistencies with the backend for
         // pricelist that have base == 'pricelist'.
-        return price;
+        return [base_price, price];
+    },
+    get_price: function(pricelist, quantity, price_extra) {
+        return this.get_base_and_unit_price(pricelist, quantity, price_extra)[1];
     },
 });
 
@@ -3441,7 +3444,17 @@ exports.Order = Backbone.Model.extend({
     _reduce_total_discount_callback: function(sum, orderLine) {
         sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
         if (orderLine.display_discount_policy() === 'without_discount'){
-            sum += ((orderLine.get_lst_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
+            const base_price = orderLine.get_product().get_base_and_unit_price(
+                orderLine.order.pricelist,
+                orderLine.get_quantity(),
+                orderLine.get_price_extra(),
+            )[0];
+            const price_diff = base_price - orderLine.get_unit_price();
+            // Only take the price difference into account as a discount if the
+            // signs match. This mimics the behavior in sale order lines.
+            if (base_price * price_diff > 0) {
+                sum += (price_diff * orderLine.get_quantity());
+            }
         }
         return sum;
     },

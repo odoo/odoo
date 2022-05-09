@@ -103,3 +103,29 @@ class TestPricelist(TransactionCase):
         test_unit_price(3500, kg, (tonne_price - 10) / 1000.0)
         test_unit_price(2, tonne, tonne_price)
         test_unit_price(3, tonne, tonne_price - 10)
+
+    def test_30_nested_pricelists_without_discount_policy(self):
+        discount_pricelist_id = self.env['product.pricelist'].create({
+            'name': 'Discount pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'formula',
+                'base': 'pricelist',
+                'base_pricelist_id': self.sale_pricelist_id.id,
+                'price_discount': 10,
+                'product_id': self.usb_adapter.id,
+                'applied_on': '0_product_variant',
+            })]
+        })
+
+        public_product = self.usb_adapter.with_context(pricelist=self.public_pricelist.id)
+        sale_product = self.usb_adapter.with_context(pricelist=self.sale_pricelist_id.id)
+
+        self.assertEqual(public_product.price, public_product.list_price)
+        self.assertEqual(sale_product.price, public_product.list_price*0.9)
+
+        original_price = self.usb_adapter._get_real_price_currency(discount_pricelist_id.item_ids.id)[0]
+        discount_price = self.usb_adapter.with_context(pricelist=discount_pricelist_id.id).price
+
+        self.assertEqual(original_price, sale_product.price)
+        self.assertEqual(discount_price, public_product.list_price*0.81)
