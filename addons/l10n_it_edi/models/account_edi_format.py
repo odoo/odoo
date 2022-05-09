@@ -54,7 +54,7 @@ class AccountEdiFormat(models.Model):
 
         return '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
             'country_code': invoice.company_id.country_id.code,
-            'codice': invoice.company_id.l10n_it_codice_fiscale.replace(' ', ''),
+            'codice': self.env['res.partner']._l10n_it_normalize_codice_fiscale(invoice.company_id.l10n_it_codice_fiscale),
             'progressive_number': progressive_number.zfill(5),
         }
 
