@@ -26,7 +26,7 @@
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView"/>
-                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
+                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute px-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
                     <MessageActionList record="messageView.messageActionList"/>
                 </div>
                 <div class="d-flex flex-shrink-0">
