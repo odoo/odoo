@@ -242,7 +242,7 @@ You receive this email because you are:
                 self.invalidate_cache()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit and not getattr(threading.currentThread(), 'testing', False):
+                if autocommit and not getattr(threading.current_thread(), 'testing', False):
                     self.env.cr.commit()
         return True
 
