@@ -753,8 +753,17 @@ class Partner(models.Model):
             name = "%s ‒ %s" % (name, partner.vat)
         return name
 
+    def _name_get_prefetch_fields(self):
+        # just so that we don't prefetch too many fields
+        return [
+            'city', 'commercial_company_name', 'company_name', 'country_id',
+            'email', 'is_company', 'name', 'parent_id', 'state_id', 'street',
+            'street2', 'zip',
+        ]
+
     def name_get(self):
         res = []
+        self._origin._read(self._name_get_prefetch_fields())
         for partner in self:
             name = partner._get_name()
             res.append((partner.id, name))

@@ -36,6 +36,10 @@ class TestPartner(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).name_get()
         self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+        self.env.clear()
+        with self.assertQueryCount(1):
+            test_partner_jetha.name_get()
+
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """
         User = self.env['res.users']
