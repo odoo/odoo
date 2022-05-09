@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { DatePicker } from "@web/core/datepicker/datepicker";
+import { areDateEquals } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
@@ -11,6 +12,7 @@ export class DateField extends Component {
     get date() {
         return this.props.value && this.props.value.startOf("day");
     }
+
     get formattedValue() {
         return this.props.value
             ? this.props.format(this.props.value, {
@@ -21,7 +23,9 @@ export class DateField extends Component {
     }
 
     onDateTimeChanged(date) {
-        date.ts !== this.date.ts && this.props.update(date);
+        if (!areDateEquals(this.date, date)) {
+            this.props.update(date);
+        }
     }
 }
 

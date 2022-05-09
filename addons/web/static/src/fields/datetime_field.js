@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { DateTimePicker } from "@web/core/datepicker/datepicker";
-import { formatDateTime } from "@web/core/l10n/dates";
+import { areDateEquals } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
@@ -10,11 +10,13 @@ const { Component } = owl;
 
 export class DateTimeField extends Component {
     get formattedValue() {
-        return this.props.value ? formatDateTime(this.props.value, { timezone: true }) : "";
+        return this.props.value ? this.props.format(this.props.value, { timezone: true }) : "";
     }
 
     onDateTimeChanged(date) {
-        date.ts !== this.props.value.ts && this.props.update(date);
+        if (!areDateEquals(this.props.value, date)) {
+            this.props.update(date);
+        }
     }
 }
 

@@ -413,7 +413,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         // Quick update: moves the record at the right position and notifies components
         const record = sourceGroup.list.records.find((r) => r.id === dataRecordId);
         const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
-        targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex >= 0 ? refIndex + 1 : 0);
+        targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
 
         // Move from one group to another
         try {

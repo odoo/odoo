@@ -52,6 +52,15 @@ const smartDateUnits = {
 const smartDateRegex = new RegExp(`^([+-])(\\d+)([${Object.keys(smartDateUnits).join("")}]?)$`);
 
 /**
+ * @param {any} d1
+ * @param {any} d2
+ * @returns {boolean}
+ */
+export const areDateEquals = (d1, d2) => {
+    return d1 instanceof DateTime && d2 instanceof DateTime ? d1.equals(d2) : d1 === d2;
+};
+
+/**
  * Smart date inputs are shortcuts to write dates quicker.
  * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
  *
@@ -86,14 +95,10 @@ function parseSmartDateInput(value) {
  * Returns false otherwise.
  *
  * @param {DateTime | false} date
- * @returns {DateTime | false}
+ * @returns {boolean}
  */
-function constrain(dt) {
-    let valid = dt !== false;
-    valid = valid && dt.isValid;
-    valid = valid && dt.year >= 1000;
-    valid = valid && dt.year < 10000;
-    return valid ? dt : false;
+function isValidDateTime(dt) {
+    return dt && dt.isValid && dt.year >= 1000 && dt.year < 10000;
 }
 
 /**
@@ -187,7 +192,7 @@ export function formatDateTime(value, options = {}) {
         return "";
     }
     const format = options.format || localization.dateTimeFormat;
-    const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem;
+    const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
     const zone = options.timezone ? "system" : "utc";
     value = value.setZone(zone, { keepLocaltime: options.timezone });
     return value.toFormat(format, { numberingSystem });
@@ -259,46 +264,75 @@ export function parseDateTime(value, options = {}) {
         return false;
     }
 
-    const valueDigitsOnly = value.replace(nonDigitsRegex, "");
+    const fmt = options.format || localization.dateTimeFormat;
     const parseOpts = {
         setZone: true,
         zone: options.timezone ? "system" : "utc",
         locale: options.locale,
-        numberingSystem: options.numberingSystem || Settings.defaultNumberingSystem,
+        numberingSystem: options.numberingSystem || Settings.defaultNumberingSystem || "latn",
     };
 
-    let result = constrain(parseSmartDateInput(value));
+    // Base case: try parsing with the given format and options
+    let result = DateTime.fromFormat(value, fmt, parseOpts);
 
-    if (!result) {
-        const fmt = options.format || localization.dateTimeFormat;
+    // Try parsing as a smart date
+    if (!isValidDateTime(result)) {
+        result = parseSmartDateInput(value);
+    }
+
+    // Try parsing with partial date parts
+    if (!isValidDateTime(result)) {
         const fmtWoZero = stripAlphaDupes(fmt);
+        result = DateTime.fromFormat(value, fmtWoZero, parseOpts);
+    }
 
+    // Try parsing with custom shorthand date parts
+    if (!isValidDateTime(result)) {
         // Luxon is not permissive regarding delimiting characters in the format.
         // So if the value to parse has less characters than the format, we would
         // try to parse without the delimiting characters.
-        const woSeps = {
-            val: valueDigitsOnly,
-            fmt: fmt.replace(nonAlphaRegex, "").slice(0, valueDigitsOnly.length),
-        };
+        const digitList = value.split(nonDigitsRegex).filter(Boolean);
+        const fmtList = fmt.split(nonAlphaRegex).filter(Boolean);
+        const valWoSeps = digitList.join("");
 
-        result =
-            constrain(DateTime.fromFormat(value, fmt, parseOpts)) ||
-            constrain(DateTime.fromFormat(value, fmtWoZero, parseOpts)) ||
-            constrain(DateTime.fromFormat(woSeps.val, woSeps.fmt, parseOpts));
+        // This is the weird part: we try to adapt the given format to comply with
+        // the amount of digits in the given value. To do this we split the format
+        // and the value on non-letter and non-digit characters respectively. This
+        // should create the same amount of grouping parameters, and the format
+        // groups are trimmed according to the length of their corresponding
+        // digit group. The 'carry' variable allows for the length of a digit
+        // group to overflow to the next format group. This is typically the case
+        // when the given value doesn't have non-digit separators and generates
+        // one big digit group instead.
+        let carry = 0;
+        const fmtWoSeps = fmtList
+            .map((part, i) => {
+                const digitLength = (digitList[i] || "").length;
+                const actualPart = part.slice(0, digitLength + carry);
+                carry += digitLength - actualPart.length;
+                return actualPart;
+            })
+            .join("");
+
+        result = DateTime.fromFormat(valWoSeps, fmtWoSeps, parseOpts);
     }
 
-    if (!result) {
-        if (valueDigitsOnly.length > 4) {
-            // Also try some fallback formats, but only if value counts more than
-            // four digit characters as this could get misinterpreted as the time of
-            // the actual date.
-            result =
-                constrain(DateTime.fromISO(value, parseOpts)) || // ISO8601
-                constrain(DateTime.fromSQL(value, parseOpts)); // last try: SQL
+    // Try with defaul ISO or SQL formats
+    if (!isValidDateTime(result)) {
+        // Also try some fallback formats, but only if value counts more than
+        // four digit characters as this could get misinterpreted as the time of
+        // the actual date.
+        const valueDigits = value.replace(nonDigitsRegex, "");
+        if (valueDigits.length > 4) {
+            result = DateTime.fromISO(value, parseOpts); // ISO8601
+            if (!isValidDateTime(result)) {
+                result = DateTime.fromSQL(value, parseOpts); // last try: SQL
+            }
         }
     }
 
-    if (!result) {
+    // No working parsing methods: throw an error
+    if (!isValidDateTime(result)) {
         throw new Error(sprintf(_t("'%s' is not a correct date or datetime"), value));
     }
 
