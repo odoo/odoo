@@ -1,9 +1,5 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { CharField } from "@web/fields/char_field";
-import { FormController } from "@web/views/form/form_controller";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -21,6 +17,10 @@ import {
 import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
+import { CharField } from "@web/fields/char_field";
+import { FormController } from "@web/views/form/form_controller";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -8909,48 +8909,32 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("display tooltips for buttons", async function (assert) {
+    QUnit.test("display tooltips for buttons", async function (assert) {
         assert.expect(2);
-
-        var initialDebugMode = odoo.debug;
-        odoo.debug = true;
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<header>" +
-                '<button name="some_method" class="oe_highlight" string="Button" type="object"/>' +
-                "</header>" +
-                '<button name="other_method" class="oe_highlight" string="Button2" type="object"/>' +
-                "</form>",
+            arch: `
+                <form>
+                    <header>
+                        <button name="some_method" class="oe_highlight" string="Button" type="object"/>
+                    </header>
+                    <button name="other_method" class="oe_highlight" string="Button2" type="object" help="help Button2"/>
+                </form>`,
         });
 
-        var $button = target.querySelector(".o_form_statusbar button");
-        $button.tooltip("show", false);
-        $button.trigger($.Event("mouseenter"));
-
-        assert.strictEqual(
-            $(".tooltip .oe_tooltip_string").length,
-            1,
-            "should have rendered a tooltip"
+        assert.hasAttrValue(
+            target.querySelector("button[name='some_method']"),
+            "data-tooltip",
+            "Button"
         );
-        $button.trigger($.Event("mouseleave"));
-
-        var $secondButton = target.querySelector('button[name="other_method"]');
-        $secondButton.tooltip("show", false);
-        $secondButton.trigger($.Event("mouseenter"));
-
-        assert.strictEqual(
-            $(".tooltip .oe_tooltip_string").length,
-            1,
-            "should have rendered a tooltip"
+        assert.hasAttrValue(
+            target.querySelector("button[name='other_method']"),
+            "data-tooltip",
+            "help Button2"
         );
-        $secondButton.trigger($.Event("mouseleave"));
-
-        odoo.debug = initialDebugMode;
     });
 
     QUnit.skipWOWL("reload event is handled only once", async function (assert) {

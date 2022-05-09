@@ -327,6 +327,7 @@ export class ViewCompiler {
             "confirm",
             "special",
             "effect",
+            "help",
             // WOWL SAD: is adding the support for debounce attribute here justified or should we
             // just override compileButton in kanban compiler to add the debounce?
             "debounce",
