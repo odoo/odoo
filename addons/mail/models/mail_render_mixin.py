@@ -242,7 +242,7 @@ class MailRenderMixin(models.AbstractModel):
     # ------------------------------------------------------------
 
     def _is_dynamic(self):
-        for template in self:
+        for template in self.sudo():
             for fname, field in template._fields.items():
                 engine = getattr(field, 'render_engine', 'inline_template')
                 if engine in ('qweb', 'qweb_view'):
