@@ -164,6 +164,8 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             1) Create task in a non billable project,
             2) Check if there is no SOL in task,
             3) Create timesheet in the task and check if it does not contain any SOL.
+            4) Create a timesheet in the project without any task set for this timesheet.
+            5) Check the timesheet has no SOL too since the project is non billable.
         """
         # 1) Create task in a non billable project,
         task = self.env['project.task'].create({
@@ -183,6 +185,16 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             'task_id': task.id,
         })
         self.assertFalse(timesheet.so_line, 'No SOL should be linked in this timesheet because the project is non billable.')
+
+        # 4) Create a timesheet in the project without any task set for this timesheet.
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 1',
+            'unit_amount': 1,
+            'project_id': task.project_id.id,
+            'employee_id': self.employee_manager.id,
+        })
+        # 5) Check the timesheet has no SOL too since the project is non billable.
+        self.assertFalse(timesheet1.so_line, 'This Timesheet is not billable since it has no task set and the project linked is not billable')
 
     def test_tranfer_project(self):
         """ Test if the SOL in timesheet is erased if the task of this timesheet changes the project
