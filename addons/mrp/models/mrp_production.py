@@ -538,7 +538,6 @@ class MrpProduction(models.Model):
         production = super(MrpProduction, self).create(values)
         production.move_raw_ids.write({
             'group_id': production.procurement_group_id.id,
-            'reference': production.name,  # set reference when MO name is different than 'New'
         })
         # Trigger move_raw creation when importing a file
         if 'import_file' in self.env.context:
