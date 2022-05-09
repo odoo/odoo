@@ -5,7 +5,7 @@
         <t t-if="threadViewTopbar">
             <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="threadViewTopbar.thread">
-                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon mr-2 align-self-center'" threadLocalId="threadViewTopbar.thread.localId"/>
+                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon mr-2 align-self-center'" thread="threadViewTopbar.thread"/>
                 </t>
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopbar.thread">
@@ -62,7 +62,7 @@
                             <i class="fa fa-lg fa-user-plus"/>
                         </button>
                         <t t-if="threadViewTopbar.invitePopoverView">
-                            <PopoverView className="'o_ThreadViewTopbar_invitePopoverView'" localId="threadViewTopbar.invitePopoverView.localId"/>
+                            <PopoverView className="'o_ThreadViewTopbar_invitePopoverView'" record="threadViewTopbar.invitePopoverView"/>
                         </t>
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->

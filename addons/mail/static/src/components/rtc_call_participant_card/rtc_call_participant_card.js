@@ -14,7 +14,7 @@ export class RtcCallParticipantCard extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'volumeMenuAnchorRef', modelName: 'RtcCallParticipantCard', refName: 'volumeMenuAnchor' });
+        useRefToModel({ fieldName: 'volumeMenuAnchorRef', refName: 'volumeMenuAnchor' });
     }
 
     //--------------------------------------------------------------------------
@@ -25,13 +25,13 @@ export class RtcCallParticipantCard extends Component {
      * @returns {Thread|undefined}
      */
     get callParticipantCard() {
-        return this.messaging.models['RtcCallParticipantCard'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcCallParticipantCard, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcCallParticipantCard',
     components: { Popover },
 });

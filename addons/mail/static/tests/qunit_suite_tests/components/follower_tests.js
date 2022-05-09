@@ -16,7 +16,7 @@ QUnit.module('follower_tests.js', {
     beforeEach() {
         this.createFollowerComponent = async (follower, target) => {
             await createRootMessagingComponent(follower.env, "Follower", {
-                props: { followerLocalId: follower.localId },
+                props: { follower },
                 target,
             });
         };

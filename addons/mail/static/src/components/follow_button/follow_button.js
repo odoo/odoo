@@ -14,13 +14,13 @@ export class FollowButton extends Component {
      * @return {FollowButtonView}
      */
     get followButtonView() {
-        return this.messaging && this.messaging.models['FollowButtonView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(FollowButton, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.FollowButton',
 });
 

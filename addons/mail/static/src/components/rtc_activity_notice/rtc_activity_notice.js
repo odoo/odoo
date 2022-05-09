@@ -10,13 +10,13 @@ export class RtcActivityNotice extends Component {
      * @returns {RtcActivityNoticeView}
      */
     get rtcActivityNoticeView() {
-        return this.messaging && this.messaging.models['RtcActivityNoticeView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcActivityNotice, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcActivityNotice',
 });
 

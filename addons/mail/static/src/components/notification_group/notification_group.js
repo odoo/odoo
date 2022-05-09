@@ -12,7 +12,7 @@ export class NotificationGroup extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'markAsReadRef', modelName: 'NotificationGroupView', refName: 'markAsRead' });
+        useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
     }
 
     //--------------------------------------------------------------------------
@@ -23,13 +23,13 @@ export class NotificationGroup extends Component {
      * @returns {NotificationGroupView}
      */
     get notificationGroupView() {
-        return this.messaging && this.messaging.models['NotificationGroupView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(NotificationGroup, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.NotificationGroup',
 });
 

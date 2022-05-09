@@ -34,7 +34,7 @@
     <t t-name="mail.ChannelMemberList_memberList" owl="1">
         <h6 class="m-2"><t t-esc="title"/> - <t t-esc="members.length"/></h6>
         <t t-foreach="members" t-as="member" t-key="member.localId">
-            <ChannelMember channelLocalId="channelMemberListView.channel.localId" memberLocalId="member.localId"/>
+            <ChannelMember channel="channelMemberListView.channel" member="member"/>
         </t>
     </t>
 

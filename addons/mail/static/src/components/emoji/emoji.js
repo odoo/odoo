@@ -10,7 +10,7 @@ export class Emoji extends Component {
      * @returns {EmojiListView}
      */
     get emojiListView() {
-        return this.messaging && this.messaging.models['EmojiListView'].get(this.props.emojiListViewLocalId);
+        return this.props.emojiListView;
     }
 
 }
@@ -18,7 +18,7 @@ export class Emoji extends Component {
 Object.assign(Emoji, {
     props: {
         emoji: Object,
-        emojiListViewLocalId: String,
+        emojiListView: Object,
     },
     template: 'mail.Emoji',
 });

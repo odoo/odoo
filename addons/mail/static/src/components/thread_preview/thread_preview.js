@@ -14,7 +14,7 @@ export class ThreadPreview extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'markAsReadRef', modelName: 'ThreadPreviewView', refName: 'markAsRead' });
+        useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
     }
 
     //--------------------------------------------------------------------------
@@ -49,13 +49,13 @@ export class ThreadPreview extends Component {
      * @returns {ThreadPreviewView}
      */
     get threadPreviewView() {
-        return this.messaging && this.messaging.models['ThreadPreviewView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ThreadPreview, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ThreadPreview',
 });
 

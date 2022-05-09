@@ -10,13 +10,13 @@ export class ChatterTopbar extends Component {
      * @returns {Chatter}
      */
     get chatter() {
-        return this.messaging && this.messaging.models['Chatter'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ChatterTopbar, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ChatterTopbar',
 });
 

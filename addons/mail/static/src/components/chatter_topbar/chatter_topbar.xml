@@ -56,14 +56,14 @@
                                 <t t-if="chatter.followButtonView">
                                     <FollowButton
                                         className="'o_ChatterTopbar_followButton'"
-                                        localId="chatter.followButtonView.localId"
+                                        record="chatter.followButtonView"
                                     />
                                 </t>
                                 <FollowerListMenu
                                     className="'o_ChatterTopbar_followerListMenu'"
                                     isDisabled="chatter.isDisabled"
-                                    localId="chatter.followerListMenuView.localId"
-                                    threadLocalId="chatter.thread.localId"
+                                    record="chatter.followerListMenuView"
+                                    thread="chatter.thread"
                                     isChatterButton="true"
                                 />
                             </t>

@@ -13,11 +13,11 @@ export class ThreadViewTopbar extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'ThreadViewTopbar', refName: 'guestNameInput' });
-        useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'ThreadViewTopbar', refName: 'inviteButton' });
-        useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'ThreadViewTopbar', refName: 'threadNameInput' });
-        useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'ThreadViewTopbar', refName: 'threadDescriptionInput' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ThreadViewTopbar' });
+        useRefToModel({ fieldName: 'guestNameInputRef', refName: 'guestNameInput' });
+        useRefToModel({ fieldName: 'inviteButtonRef', refName: 'inviteButton' });
+        useRefToModel({ fieldName: 'threadNameInputRef', refName: 'threadNameInput' });
+        useRefToModel({ fieldName: 'threadDescriptionInputRef', refName: 'threadDescriptionInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
     }
 
     //--------------------------------------------------------------------------
@@ -28,13 +28,13 @@ export class ThreadViewTopbar extends Component {
      * @returns {ThreadViewTopbar}
      */
     get threadViewTopbar() {
-        return this.messaging && this.messaging.models['ThreadViewTopbar'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ThreadViewTopbar, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ThreadViewTopbar',
 });
 

@@ -12,7 +12,7 @@ QUnit.module('thread_icon_tests.js', {
     beforeEach() {
         this.createThreadIcon = async (thread, target) => {
             await createRootMessagingComponent(thread.env, "ThreadIcon", {
-                props: { threadLocalId: thread.localId },
+                props: { thread },
                 target,
             });
         };

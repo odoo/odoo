@@ -13,7 +13,7 @@ QUnit.module('thread_textual_typing_status_tests.js', {
     beforeEach() {
         this.createThreadTextualTypingStatusComponent = async (thread, target) => {
             await createRootMessagingComponent(thread.env, "ThreadTextualTypingStatus", {
-                props: { threadLocalId: thread.localId },
+                props: { thread },
                 target,
             });
         };

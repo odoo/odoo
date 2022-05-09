@@ -14,13 +14,13 @@ export class ComposerSuggestedRecipientList extends Component {
      * @returns {ComposerSuggestedRecipientListView}
      */
     get composerSuggestedRecipientListView() {
-        return this.messaging && this.messaging.models['ComposerSuggestedRecipientListView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ComposerSuggestedRecipientList, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ComposerSuggestedRecipientList',
 });
 

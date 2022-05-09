@@ -13,8 +13,8 @@ export class Composer extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
-        useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
+        useComponentToModel({ fieldName: 'component' });
+        useRefToModel({ fieldName: 'buttonEmojisRef', refName: 'buttonEmojis' });
     }
 
     //--------------------------------------------------------------------------
@@ -25,13 +25,13 @@ export class Composer extends Component {
      * @returns {ComposerView}
      */
     get composerView() {
-        return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(Composer, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.Composer',
 });
 

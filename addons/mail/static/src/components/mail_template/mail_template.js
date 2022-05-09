@@ -14,13 +14,13 @@ export class MailTemplate extends Component {
      * @returns {MailTemplateView}
      */
     get mailTemplateView() {
-        return this.messaging && this.messaging.models['MailTemplateView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(MailTemplate, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MailTemplate',
 });
 

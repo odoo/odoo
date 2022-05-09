@@ -10,13 +10,13 @@ export class ChannelMemberList extends Component {
      * @returns {ChannelMemberListView}
      */
      get channelMemberListView() {
-        return this.messaging && this.messaging.models['ChannelMemberListView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(ChannelMemberList, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ChannelMemberList',
 });
 

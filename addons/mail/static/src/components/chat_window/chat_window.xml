@@ -15,20 +15,20 @@
             >
                 <ChatWindowHeader
                     className="'o_ChatWindow_header flex-grow-0 flex-shrink-0'"
-                    chatWindowLocalId="chatWindow.localId"
-                    localId="chatWindow.chatWindowHeaderView.localId"
+                    chatWindow="chatWindow"
+                    record="chatWindow.chatWindowHeaderView"
                     onClicked="chatWindow.onClickHeader"
                 />
                 <t t-if="chatWindow.channelMemberListView">
-                    <ChannelMemberList localId="chatWindow.channelMemberListView.localId" className="'bg-white'"/>
+                    <ChannelMemberList record="chatWindow.channelMemberListView" className="'bg-white'"/>
                 </t>
                 <t t-if="chatWindow.channelInvitationForm">
-                    <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" localId="chatWindow.channelInvitationForm.localId"/>
+                    <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" record="chatWindow.channelInvitationForm"/>
                 </t>
                 <t t-if="chatWindow.threadView">
                     <ThreadView
                         className="'o_ChatWindow_thread flex-grow-1 flex-shrink-1'"
-                        localId="chatWindow.threadView.localId"
+                        record="chatWindow.threadView"
                     />
                 </t>
                 <t t-if="chatWindow.newMessageAutocompleteInputView">
@@ -38,7 +38,7 @@
                         </span>
                         <AutocompleteInput
                             className="'o_ChatWindow_newMessageFormInput flex-grow-1 flex-shrink-1 border'"
-                            localId="chatWindow.newMessageAutocompleteInputView.localId"
+                            record="chatWindow.newMessageAutocompleteInputView"
                             select="chatWindow.onAutocompleteSelect"
                             source="chatWindow.onAutocompleteSource"
                             inputRef="_inputRef"

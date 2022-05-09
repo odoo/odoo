@@ -16,7 +16,7 @@
                             <t t-foreach="followerSubtypeList.followerSubtypeViews" t-as="followerSubtypeView" t-key="followerSubtypeView.localId">
                                 <FollowerSubtype
                                     className="'o_FollowerSubtypeList_subtype'"
-                                    localId="followerSubtypeView.localId"
+                                    record="followerSubtypeView"
                                 />
                             </t>
                         </div>

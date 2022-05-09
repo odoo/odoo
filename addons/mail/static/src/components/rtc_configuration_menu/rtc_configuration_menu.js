@@ -27,13 +27,13 @@ export class RtcConfigurationMenu extends Component {
      * @returns {RtcConfigurationMenu|undefined}
      */
     get rtcConfigurationMenu() {
-        return this.messaging && this.messaging.models['RtcConfigurationMenu'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcConfigurationMenu, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcConfigurationMenu',
 });
 

@@ -5,12 +5,12 @@
         <t t-if="threadView">
             <div class="o_ThreadView" t-att-class="threadView.extraClass" t-attf-class="{{ className }}" t-att-data-correspondent-id="threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView.thread and threadView.thread.localId" t-on-focusin="threadView.onFocusin" t-ref="root">
                 <t t-if="threadView.topbar">
-                    <ThreadViewTopbar className="'border-bottom'" localId="threadView.topbar.localId"/>
+                    <ThreadViewTopbar className="'border-bottom'" record="threadView.topbar"/>
                 </t>
                 <div class="o_ThreadView_bottomPart d-flex flex-grow-1">
                     <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
                         <t t-if="threadView.rtcCallViewer">
-                            <RtcCallViewer localId="threadView.rtcCallViewer.localId"/>
+                            <RtcCallViewer record="threadView.rtcCallViewer"/>
                         </t>
                         <t t-if="threadView.isLoading and !threadView.threadCache.isLoaded" name="loadingCondition">
                             <div class="o_ThreadView_loading">
@@ -20,7 +20,7 @@
                         <t t-elif="threadView.messageListView">
                             <MessageList
                                 className="'o_ThreadView_messageList'"
-                                localId="threadView.messageListView.localId"
+                                record="threadView.messageListView"
                             />
                         </t>
                         <t t-elif="threadView.threadCache.hasLoadingFailed">
@@ -39,12 +39,12 @@
                         <t t-if="threadView.composerView">
                             <Composer
                                 className="'o_ThreadView_composer'"
-                                localId="threadView.composerView.localId"
+                                record="threadView.composerView"
                             />
                         </t>
                     </div>
                     <t t-if="threadView.channelMemberListView">
-                        <ChannelMemberList className="'o_ThreadView_channelMemberList flex-shrink-0 border-left'" localId="threadView.channelMemberListView.localId"/>
+                        <ChannelMemberList className="'o_ThreadView_channelMemberList flex-shrink-0 border-left'" record="threadView.channelMemberListView"/>
                     </t>
                 </div>
             </div>

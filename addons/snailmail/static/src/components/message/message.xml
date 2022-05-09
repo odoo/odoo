@@ -22,7 +22,7 @@
         -->
         <xpath expr="//MessageNotificationPopoverContent" position="replace">
             <t t-if="messageView.message.message_type === 'snailmail'">
-                <SnailmailNotificationPopover messageLocalId="messageView.message.localId"/>
+                <SnailmailNotificationPopover message="messageView.message"/>
             </t>
             <t t-else="">$0</t>
         </xpath>

@@ -10,22 +10,22 @@ export class ChannelMember extends Component {
      * @returns {Thread}
      */
     get channel() {
-        return this.messaging.models['Thread'].get(this.props.channelLocalId);
+        return this.props.channel;
     }
 
     /**
      * @returns {Partner}
      */
     get member() {
-        return this.messaging.models['Partner'].get(this.props.memberLocalId);
+        return this.props.member;
     }
 
 }
 
 Object.assign(ChannelMember, {
     props: {
-        channelLocalId: String,
-        memberLocalId: String,
+        channel: Object,
+        member: Object,
     },
     template: 'mail.ChannelMember',
 });

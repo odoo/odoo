@@ -15,14 +15,14 @@ export class ChatWindowHeader extends Component {
      * @returns {ChatWindow}
      */
     get chatWindow() {
-        return this.messaging && this.messaging.models['ChatWindow'].get(this.props.chatWindowLocalId);
+        return this.props.chatWindow;
     }
 
     /**
      * @returns {ChatWindowHeaderView}
      */
      get chatWindowHeaderView() {
-        return this.messaging && this.messaging.models['ChatWindowHeaderView'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -53,8 +53,8 @@ export class ChatWindowHeader extends Component {
 
 Object.assign(ChatWindowHeader, {
     props: {
-        chatWindowLocalId: String,
-        localId: String,
+        chatWindow: Object,
+        record: Object,
         onClicked: {
             type: Function,
             optional: true,

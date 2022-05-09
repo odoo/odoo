@@ -10,13 +10,13 @@ export class AttachmentList extends Component {
      * @returns {AttachmentList}
      */
     get attachmentList() {
-        return this.messaging && this.messaging.models['AttachmentList'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(AttachmentList, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.AttachmentList',
 });
 

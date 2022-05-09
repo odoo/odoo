@@ -7,7 +7,7 @@
                 <t t-foreach="messaging.dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
                     <Dialog
                         className="'o_DialogManager_dialog'"
-                        localId="dialog.localId"
+                        record="dialog"
                     />
                 </t>
             </t>

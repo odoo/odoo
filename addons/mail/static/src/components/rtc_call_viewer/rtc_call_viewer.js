@@ -37,7 +37,7 @@ export class RtcCallViewer extends Component {
      * @returns {RtcCallViewer}
      */
     get rtcCallViewer() {
-        return this.messaging.models['RtcCallViewer'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ export class RtcCallViewer extends Component {
 
 Object.assign(RtcCallViewer, {
     components,
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcCallViewer',
 });
 
