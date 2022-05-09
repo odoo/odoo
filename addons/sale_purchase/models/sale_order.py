@@ -28,8 +28,8 @@ class SaleOrder(models.Model):
             order.order_line.sudo()._purchase_service_generation()
         return result
 
-    def action_cancel(self):
-        result = super(SaleOrder, self).action_cancel()
+    def _action_cancel(self):
+        result = super()._action_cancel()
         # When a sale person cancel a SO, he might not have the rights to write
         # on PO. But we need the system to create an activity on the PO (so 'write'
         # access), hence the `sudo`.
