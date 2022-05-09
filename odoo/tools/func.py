@@ -167,12 +167,12 @@ class lazy(object):
     def __bytes__(self): return bytes(self._value)
     def __format__(self, format_spec): return format(self._value, format_spec)
 
-    def __lt__(self, other): return self._value < other
-    def __le__(self, other): return self._value <= other
-    def __eq__(self, other): return self._value == other
-    def __ne__(self, other): return self._value != other
-    def __gt__(self, other): return self._value > other
-    def __ge__(self, other): return self._value >= other
+    def __lt__(self, other): return other > self._value
+    def __le__(self, other): return other >= self._value
+    def __eq__(self, other): return other == self._value
+    def __ne__(self, other): return other != self._value
+    def __gt__(self, other): return other < self._value
+    def __ge__(self, other): return other <= self._value
 
     def __hash__(self): return hash(self._value)
     def __bool__(self): return bool(self._value)
