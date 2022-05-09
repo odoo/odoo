@@ -158,6 +158,7 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
+<<<<<<< HEAD
     @api.depends('product_uom_qty',
         'raw_material_production_id', 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_produced',
         'production_id', 'production_id.product_qty', 'production_id.qty_produced')
@@ -195,6 +196,20 @@ class StockMove(models.Model):
         if self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             self._update_quantity_done(mo)
+=======
+    @api.depends('raw_material_production_id.name')
+    def _compute_reference(self):
+        not_prod_move = self.env['stock.move']
+        for move in self:
+            if not move.raw_material_production_id:
+                not_prod_move |= move
+                continue
+            move.write({
+                'name': move.raw_material_production_id.name,
+                'reference': move.raw_material_production_id.name,
+            })
+        super(StockMove, not_prod_move)._compute_reference()
+>>>>>>> 74a7dca065b... temp
 
     @api.model
     def default_get(self, fields_list):
