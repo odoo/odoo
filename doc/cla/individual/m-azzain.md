@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Mohammed Azzain m.alzain248@gmail.com https://github.com/m-azzain
+Mohammed Azzain m.alzain248@gmail.com,m.alzain248@outlook.com https://github.com/m-azzain
