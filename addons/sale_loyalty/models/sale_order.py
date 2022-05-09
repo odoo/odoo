@@ -74,9 +74,9 @@ class SaleOrder(models.Model):
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
 
-    def action_cancel(self):
+    def _action_cancel(self):
         previously_confirmed = self.filtered(lambda s: s.state in ('sale', 'done'))
-        res = super(SaleOrder, self).action_cancel()
+        res = super(SaleOrder, self)._action_cancel()
         # Add/remove the points to our coupons
         for coupon, changes in previously_confirmed.filtered(lambda s: s.state not in ('sale', 'done'))._get_point_changes().items():
             coupon.points -= changes
