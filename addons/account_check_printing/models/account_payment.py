@@ -85,12 +85,14 @@ class AccountPayment(models.Model):
             else:
                 pay.check_amount_in_words = False
 
-    @api.depends('journal_id', 'payment_method_code', 'state')
+    @api.depends('journal_id', 'payment_method_code')
     def _compute_check_number(self):
-        for pay in self.filtered(lambda p: p.state == 'posted'):
-            if pay.journal_id.check_manual_sequencing and pay.payment_method_code == 'check_printing' and not pay.check_number:
+        for pay in self:
+            if pay.journal_id.check_manual_sequencing and pay.payment_method_code == 'check_printing':
                 sequence = pay.journal_id.check_sequence_id
-                pay.check_number = sequence.next_by_id()
+                pay.check_number = sequence.get_next_char(sequence.number_next_actual)
+            else:
+                pay.check_number = False
 
     def _inverse_check_number(self):
         for payment in self:
@@ -105,6 +107,14 @@ class AccountPayment(models.Model):
             preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
             if record.payment_type == 'outbound' and preferred in record.journal_id.outbound_payment_method_ids:
                 record.payment_method_id = preferred
+
+    def action_post(self):
+        res = super(AccountPayment, self).action_post()
+        payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
+        for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
+            sequence = payment.journal_id.check_sequence_id
+            payment.check_number = sequence.next_by_id()
+        return res
 
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
