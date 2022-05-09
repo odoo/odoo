@@ -50,6 +50,8 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                     } catch (e) {
                         // do nothing with the error
                     }
+                } else {
+                    return; // do nothing if the order is not valid
                 }
             }
             await super.validateOrder(...arguments);
