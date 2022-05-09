@@ -116,12 +116,11 @@ class AccountPayment(models.Model):
                 record.payment_method_line_id = method_line[0]
 
     def action_post(self):
-        res = super(AccountPayment, self).action_post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
         for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
             sequence = payment.journal_id.check_sequence_id
             payment.check_number = sequence.next_by_id()
-        return res
+        return super(AccountPayment, self).action_post()
 
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
