@@ -926,16 +926,21 @@ export class StaticList extends DataPoint {
 
         // determine if we need to reorder all records
         let reorderAll = false;
-        let currentSequence;
-        for (let i = 0; i < this.records.length; i++) {
-            const sequence = this.records[i].data[handleField];
-            if (currentSequence && !reorderAll) {
-                reorderAll = currentSequence === sequence;
-                if (!reorderAll && (i < lowerIndex || i >= upperIndex)) {
-                    reorderAll = asc ? sequence < currentSequence : sequence > currentSequence;
-                }
+        let sequence = (asc ? -1 : 1) * Infinity;
+
+        // determine if we need to reorder all records
+        for (let index = 0; index < this.records.length; index++) {
+            const { data } = this.records[index];
+            const handleFieldValue = data[handleField];
+            if (
+                ((index < lowerIndex || index >= upperIndex) &&
+                    ((asc && sequence >= handleFieldValue) ||
+                        (!asc && sequence <= handleFieldValue))) ||
+                (index >= lowerIndex && index < upperIndex && sequence === handleFieldValue)
+            ) {
+                reorderAll = true;
             }
-            currentSequence = sequence;
+            sequence = handleFieldValue;
         }
 
         this.records = this.records.filter((r) => r.id !== movedId);

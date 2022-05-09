@@ -1238,40 +1238,38 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "onchange with modifiers for embedded one2many on the second page",
         async function (assert) {
-            assert.expect(9);
-
-            var data = this.data;
-            var ids = [];
-            for (var i = 10; i < 60; i++) {
-                var id = 10 + i;
+            const ids = [];
+            for (let i = 10; i < 60; i++) {
+                const id = 10 + i;
                 ids.push(id);
-                data.turtle.records.push({
+                serverData.models.turtle.records.push({
                     id: id,
                     turtle_int: 0,
                     turtle_foo: "#" + id,
                 });
             }
             ids.push(1, 2, 3);
-            data.partner.records[0].turtles = ids;
-            data.partner.onchanges = {
+            serverData.models.partner.records[0].turtles = ids;
+            serverData.models.partner.onchanges = {
                 turtles: function (obj) {
                     // TODO: make this test more 'difficult'
                     // For now, the server only returns UPDATE commands (no LINK TO)
                     // even though it should do it (for performance reasons)
                     // var turtles = obj.turtles.splice(0, 20);
 
-                    var turtles = [];
-                    turtles.unshift([5]);
+                    const turtles = [[5]];
                     // create UPDATE commands for each records (this is the server
                     // usual answer for onchange)
-                    for (var k in obj.turtles) {
-                        var change = obj.turtles[k];
-                        var record = _.findWhere(data.turtle.records, { id: change[1] });
+                    for (let k in obj.turtles) {
+                        const change = obj.turtles[k];
+                        const record = serverData.models.turtle.records.find(
+                            (r) => r.id === change[1]
+                        );
                         if (change[0] === 1) {
-                            _.extend(record, change[2]);
+                            Object.assign(record, change[2]);
                         }
                         turtles.push([1, record.id, record]);
                     }
@@ -1279,102 +1277,58 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
-                data: data,
+                serverData,
                 arch: `
                     <form>
-                        <sheet>
-                            <group>
-                                <field name="turtles">
-                                    <tree editable="bottom" default_order="turtle_int" limit="10">
-                                        <field name="turtle_int" widget="handle"/>
-                                        <field name="turtle_foo"/>
-                                        <field name="turtle_qux" attrs="{'readonly': [('turtle_foo', '=', False)]}"/>
-                                    </tree>
-                                </field>
-                            </group>
-                        </sheet>
+                        <field name="turtles">
+                            <tree editable="bottom" default_order="turtle_int" limit="10">
+                                <field name="turtle_int" widget="handle"/>
+                                <field name="turtle_foo"/>
+                                <field name="turtle_qux" attrs="{'readonly': [('turtle_foo', '=', False)]}"/>
+                            </tree>
+                        </field>
                     </form>`,
                 resId: 1,
             });
+
+            const getTurtleFooValues = () => {
+                return [...target.querySelectorAll("div[name=turtle_foo]")]
+                    .map((el) => el.innerText)
+                    .join("");
+            };
+
             await clickEdit(target);
+            assert.strictEqual(getTurtleFooValues(), "#20#21#22#23#24#25#26#27#28#29");
 
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "#20#21#22#23#24#25#26#27#28#29",
-                "should display the records in order"
-            );
-
-            await click(form.$(".o_field_one2many .o_list_view tbody tr:first td:first"));
-            await testUtils.fields.editInput(
-                form.$(".o_field_one2many .o_list_view tbody tr:first input:first"),
-                "blurp"
-            );
-
-            // click on the label to unselect the row
-            await click(form.$(".o_form_label"));
-
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "blurp#21#22#23#24#25#26#27#28#29",
-                "should display the records in order with the changes"
-            );
+            await click(target.querySelector("div[name=turtle_foo]"));
+            await editInput(target, "div[name=turtle_foo] input", "blurp");
+            // click outside of the one2many to unselect the row
+            await click(target, ".o_cp_bottom_left");
+            assert.strictEqual(getTurtleFooValues(), "blurp#21#22#23#24#25#26#27#28#29");
 
             // the domain fail if the widget does not use the already loaded data.
             await clickDiscard(target);
-            assert.containsNone(document.body, ".modal", "should not open modal");
-
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "#20#21#22#23#24#25#26#27#28#29",
-                "should cancel changes and display the records in order"
-            );
+            assert.containsNone(target, ".modal");
+            assert.strictEqual(getTurtleFooValues(), "#20#21#22#23#24#25#26#27#28#29");
 
             await clickEdit(target);
+            // Drag and drop the third line in second position
+            await dragAndDrop("tbody tr:nth-child(3) .o_handle_cell", "tbody tr:nth-child(2)");
+            assert.strictEqual(getTurtleFooValues(), "#20#30#31#32#33#34#35#36#37#38");
 
             // Drag and drop the third line in second position
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle").eq(2),
-                form.$(".o_field_one2many tbody tr").eq(1),
-                { position: "top" }
-            );
+            await dragAndDrop("tbody tr:nth-child(3) .o_handle_cell", "tbody tr:nth-child(2)");
+            assert.strictEqual(getTurtleFooValues(), "#20#39#40#41#42#43#44#45#46#47");
 
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "#20#30#31#32#33#34#35#36#37#38",
-                "should display the records in order after resequence (display record with turtle_int=0)"
-            );
-
-            // Drag and drop the third line in second position
-            await testUtils.dom.dragAndDrop(
-                form.$(".ui-sortable-handle").eq(2),
-                form.$(".o_field_one2many tbody tr").eq(1),
-                { position: "top" }
-            );
-
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "#20#39#40#41#42#43#44#45#46#47",
-                "should display the records in order after resequence (display record with turtle_int=0)"
-            );
-
-            await click(form.$(".o_form_label"));
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "#20#39#40#41#42#43#44#45#46#47",
-                "should display the records in order after resequence"
-            );
+            await click(target, ".o_cp_bottom_left");
+            assert.strictEqual(getTurtleFooValues(), "#20#39#40#41#42#43#44#45#46#47");
 
             await clickDiscard(target);
-            assert.containsNone(document.body, ".modal", "should not open modal");
-
-            assert.equal(
-                form.$(".o_field_one2many .o_list_char").text(),
-                "#20#21#22#23#24#25#26#27#28#29",
-                "should cancel changes and display the records in order"
-            );
+            assert.containsNone(target, ".modal");
+            assert.strictEqual(getTurtleFooValues(), "#20#21#22#23#24#25#26#27#28#29");
         }
     );
 
