@@ -112,7 +112,7 @@ class Mailing(models.Model):
         ])
         failed_sms.mapped('mailing_trace_ids').unlink()
         failed_sms.unlink()
-        self.write({'state': 'in_queue'})
+        self.action_put_in_queue()
 
     def action_test(self):
         if self.mailing_type == 'sms':
