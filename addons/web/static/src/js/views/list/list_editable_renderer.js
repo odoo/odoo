@@ -902,7 +902,7 @@ ListRenderer.include({
      * @params {Object} [options] see @_moveToSideLine
      */
     _moveToNextLine: function (options) {
-        this._moveToSideLine(true, options);
+        return this._moveToSideLine(true, options);
     },
     /**
      * Moves to the previous row in the list
@@ -911,7 +911,7 @@ ListRenderer.include({
      * @params {Object} [options] see @_moveToSideLine
      */
     _moveToPreviousLine: function (options) {
-        this._moveToSideLine(false, options);
+        return this._moveToSideLine(false, options);
     },
     /**
      * Moves the focus to the nearest editable row before or after the current one.
@@ -930,7 +930,7 @@ ListRenderer.include({
     _moveToSideLine: function (next, options) {
         options = options || {};
         const recordID = this._getRecordID(this.currentRow);
-        this.commitChanges(recordID).then(() => {
+        return this.commitChanges(recordID).then(() => {
             const record = this._getRecord(recordID);
             const multiEdit = this.isInMultipleRecordEdition(recordID);
             if (!multiEdit) {
@@ -945,7 +945,7 @@ ListRenderer.include({
             // compute the index of the next (record) row to select, if any
             const side = next ? 'first' : 'last';
             const borderRowIndex = this._getBorderRow(side).prop('rowIndex') - 1;
-            const cellIndex = next ? 0 : this.allFieldWidgets[recordID].length - 1;
+            const cellIndex = options.force_cell_index ? options.force_cell_index : (next ? 0 : this.allFieldWidgets[recordID].length - 1);
             const cellOptions = { inc: next ? 1 : -1, force: true };
             const $currentRow = this._getRow(recordID);
             const $nextRow = this._getNearestEditableRow($currentRow, next);
@@ -1572,6 +1572,12 @@ ListRenderer.include({
                 } else {
                     this._moveToNextLine();
                 }
+                break;
+            case 'down':
+                this._moveToNextLine({force_cell_index: this.currentFieldIndex}).guardedCatch(this._moveToNextLine.bind(this));
+                break;
+            case 'up':
+                this._moveToPreviousLine({force_cell_index: this.currentFieldIndex}).guardedCatch(this._moveToNextLine.bind(this));
                 break;
             case 'next_line':
                 // If the list is readonly and the current is the only record editable, we unselect the line
