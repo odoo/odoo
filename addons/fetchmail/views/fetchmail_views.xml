@@ -5,14 +5,14 @@
             <field name="name">fetchmail.server.list</field>
             <field name="model">fetchmail.server</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="POP/IMAP Servers">
+                <tree string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="server_type"/>
-                    <field name="is_ssl"/>
-                    <field name="object_id"/>
+                    <field name="user"/>
                     <field name="date"/>
-                    <field name="message_ids" string="Email Count"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'draft'"
+                        decoration-success="state == 'done'"/>
                 </tree>
             </field>
         </record>
@@ -78,6 +78,7 @@
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
                     <field name="name" string="Incoming Mail Server"/>
+                    <field name="user"/>
                     <filter string="IMAP" name="imap" domain="[('server_type', '=', 'imap')]" help="Server type IMAP."/>
                     <filter string="POP" name="pop" domain="[('server_type', '=', 'pop')]" help="Server type POP."/>
                     <separator/>

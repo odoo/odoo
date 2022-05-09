@@ -43,8 +43,8 @@ class FetchmailServer(models.Model):
     server = fields.Char(string='Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft': [('readonly', False)]})
     port = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
     server_type = fields.Selection([
-        ('pop', 'POP Server'),
         ('imap', 'IMAP Server'),
+        ('pop', 'POP Server'),
         ('local', 'Local Server'),
     ], string='Server Type', index=True, required=True, default='pop')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
