@@ -40,7 +40,7 @@ const luxonFormatToMomentFormat = (format) => {
  * @param {string} format
  * @returns {boolean}
  */
-const isValidStaticFormat = (format) => {
+export const isValidStaticFormat = (format) => {
     try {
         return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
     } catch (_err) {
