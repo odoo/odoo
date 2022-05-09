@@ -44,10 +44,7 @@ let createView,
     BasicModel,
     RamStorage,
     AbstractStorageService,
-    FormRenderer,
-    AbstractField,
-    clickLast,
-    fieldRegistryOwl;
+    clickLast;
 
 let target, serverData;
 QUnit.module("Views", (hooks) => {
@@ -11209,32 +11206,6 @@ QUnit.module("Views", (hooks) => {
         delete widgetRegistry.map.test;
     });
 
-    QUnit.skipWOWL("do not call mounted twice on children", async function (assert) {
-        assert.expect(3);
-
-        class CustomFieldComponent extends fieldRegistryOwl.get("boolean") {
-            mounted() {
-                super.mounted(...arguments);
-                assert.step("mounted");
-            }
-            willUnmount() {
-                super.willUnmount(...arguments);
-                assert.step("willUnmount");
-            }
-        }
-        fieldRegistryOwl.add("custom", CustomFieldComponent);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `<form><field name="bar" widget="custom"/></form>`,
-        });
-        delete fieldRegistryOwl.map.custom;
-
-        assert.verifySteps(["mounted", "willUnmount"]);
-    });
-
     QUnit.test("Auto save: save when page changed", async function (assert) {
         assert.expect(10);
 
@@ -12879,91 +12850,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "attach callbacks with long processing in __renderView",
-        async function (assert) {
-            /**
-             * The main use case of this test is discuss, in which the FormRenderer
-             * __renderView method is overridden to perform asynchronous tasks (the
-             * update of the chatter Component) resulting in a delay between the
-             * appending of the new form content into its element and the
-             * "on_attach_callback" calls. This is the purpose of "__renderView"
-             * which is meant to do all the async work before the content is appended.
-             */
-            assert.expect(11);
-
-            let testPromise = Promise.resolve();
-
-            const Renderer = FormRenderer.extend({
-                on_attach_callback() {
-                    assert.step("form.on_attach_callback");
-                    this._super(...arguments);
-                },
-                async __renderView() {
-                    const _super = this._super.bind(this);
-                    await testPromise;
-                    return _super();
-                },
-            });
-
-            // Setup custom field widget
-            fieldRegistry.add(
-                "customwidget",
-                AbstractField.extend({
-                    className: "custom-widget",
-                    on_attach_callback() {
-                        assert.step("widget.on_attach_callback");
-                    },
-                })
-            );
-
-            await makeView({
-                arch: `<form><field name="bar" widget="customwidget"/></form>`,
-                serverData,
-                resModel: "partner",
-                resId: 1,
-                type: "form".extend({
-                    config: Object.assign({}, FormView.prototype.config, { Renderer }),
-                }),
-            });
-
-            assert.containsOnce(target, ".custom-widget");
-            assert.verifySteps([
-                "form.on_attach_callback", // Form attached
-                "widget.on_attach_callback", // Initial widget attached
-            ]);
-
-            const initialWidget = target.querySelector(".custom-widget")[0];
-            testPromise = makeDeferred();
-
-            await click(target.querySelector(".o_form_button_edit"));
-
-            assert.containsOnce(target, ".custom-widget");
-            assert.strictEqual(
-                initialWidget,
-                target.querySelector(".custom-widget")[0],
-                "Widgets have yet to be replaced"
-            );
-            assert.verifySteps([]);
-
-            testPromise.resolve();
-            await testUtils.nextTick();
-
-            assert.containsOnce(target, ".custom-widget");
-            assert.notStrictEqual(
-                initialWidget,
-                target.querySelector(".custom-widget")[0],
-                "Widgets have been replaced"
-            );
-            assert.verifySteps([
-                "widget.on_attach_callback", // New widget attached
-            ]);
-
-            delete fieldRegistry.map.customwidget;
-        }
-    );
-
-    QUnit.skipWOWL('field "length" with value 0: can apply onchange', async function (assert) {
+    QUnit.test('field "length" with value 0: can apply onchange', async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.length = { string: "Length", type: "float", default: 0 };
@@ -12983,7 +12870,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'field "length" with value 0: readonly fields are not sent when saving',
         async function (assert) {
             assert.expect(3);
@@ -13034,24 +12921,23 @@ QUnit.module("Views", (hooks) => {
                             "should not have sent the value of the readonly field"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
             assert.containsOnce(
-                document.body,
-                ".modal input.o_field_widget[name=foo]",
+                target,
+                ".modal .o_field_widget[name=foo] input",
                 "foo should be editable"
             );
-            await editInput($(".modal .o_field_widget[name=foo]"), "foo value");
-            await editInput($(".modal .o_field_widget[name=display_name]"), "readonly");
+            await editInput(target, ".modal .o_field_widget[name=foo] input", "foo value");
+            await editInput(target, ".modal .o_field_widget[name=display_name] input", "readonly");
             assert.containsOnce(
-                document.body,
-                ".modal span.o_field_widget[name=foo]",
+                target,
+                ".modal .o_field_widget[name=foo] span",
                 "foo should be readonly"
             );
-            await clickFirst($(".modal-footer .btn-primary"));
+            await click(target.querySelector(".modal-footer .btn-primary.o_form_button_save"));
 
             await click(target.querySelector(".o_form_button_save")); // save the record
         }

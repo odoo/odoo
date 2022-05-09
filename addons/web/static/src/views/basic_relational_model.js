@@ -803,7 +803,7 @@ export class StaticList extends DataPoint {
         const bm = this.model.__bm__;
         if (object instanceof Record) {
             const recHandle = object.__bm_handle__;
-            await bm.save(recHandle, { savePoint: !params.isM2M });
+            await bm.save(recHandle, { savePoint: !params.isM2M, viewType: object.__viewType });
             if (params.isM2M) {
                 const id = bm.localData[recHandle].res_id;
                 operation = { operation: "ADD_M2M", ids: [{ id }] };
