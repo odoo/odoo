@@ -46,7 +46,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         return values
 
     def test_redirect_form_values(self):
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
 
@@ -70,7 +70,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         })
         expected_values = self._get_expected_values()
 
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
@@ -86,14 +86,14 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
 
         # Confirmed transaction
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, self.notification_data['txn_id'])
 
         # Pending transaction
         self.reference = 'Test Transaction 2'
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(
             self.notification_data,
             item_number=self.reference,
@@ -131,7 +131,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_paypal.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         url = self._build_url(PaypalController._webhook_url)
         with patch(
             'odoo.addons.payment_paypal.controllers.main.PaypalController'
@@ -143,7 +143,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_paypal.controllers.main')
     def test_webhook_notification_triggers_origin_check(self):
         """ Test that receiving a webhook notification triggers an origin check. """
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(PaypalController._webhook_url)
         with patch(
             'odoo.addons.payment_paypal.controllers.main.PaypalController'

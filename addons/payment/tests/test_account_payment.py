@@ -12,7 +12,7 @@ class TestAccountPayment(PaymentCommon):
 
     def test_no_amount_available_for_refund_when_not_supported(self):
         self.acquirer.support_refund = False
-        tx = self.create_transaction('redirect', state='done')
+        tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         self.assertEqual(
             tx.payment_id.amount_available_for_refund,
@@ -23,7 +23,7 @@ class TestAccountPayment(PaymentCommon):
 
     def test_full_amount_available_for_refund_when_not_yet_refunded(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False
-        tx = self.create_transaction('redirect', state='done')
+        tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         self.assertAlmostEqual(
             tx.payment_id.amount_available_for_refund,
@@ -38,10 +38,10 @@ class TestAccountPayment(PaymentCommon):
             'support_refund': 'full_only',  # Should simply not be False
             'support_manual_capture': True,  # To create transaction in the 'authorized' state
         })
-        tx = self.create_transaction('redirect', state='done')
+        tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         for reference_index, state in enumerate(('draft', 'pending', 'authorized')):
-            self.create_transaction(
+            self._create_transaction(
                 'dummy',
                 amount=-tx.amount,
                 reference=f'R-{tx.reference}-{reference_index + 1}',
@@ -59,9 +59,9 @@ class TestAccountPayment(PaymentCommon):
 
     def test_no_amount_available_for_refund_when_fully_refunded(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False
-        tx = self.create_transaction('redirect', state='done')
+        tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
-        self.create_transaction(
+        self._create_transaction(
             'dummy',
             amount=-tx.amount,
             reference=f'R-{tx.reference}',
@@ -78,9 +78,9 @@ class TestAccountPayment(PaymentCommon):
 
     def test_no_full_amount_available_for_refund_when_partially_refunded(self):
         self.acquirer.support_refund = 'partial'
-        tx = self.create_transaction('redirect', state='done')
+        tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
-        self.create_transaction(
+        self._create_transaction(
             'dummy',
             amount=-(tx.amount / 10),
             reference=f'R-{tx.reference}',
@@ -99,12 +99,12 @@ class TestAccountPayment(PaymentCommon):
 
     def test_refunds_count(self):
         self.acquirer.support_refund = 'full_only'  # Should simply not be False
-        tx = self.create_transaction('redirect', state='done')
+        tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         for reference_index, operation in enumerate(
             ('online_redirect', 'online_direct', 'online_token', 'validation', 'refund')
         ):
-            self.create_transaction(
+            self._create_transaction(
                 'dummy',
                 reference=f'R-{tx.reference}-{reference_index + 1}',
                 state='done',
@@ -119,7 +119,7 @@ class TestAccountPayment(PaymentCommon):
         )
 
     def test_action_post_calls_send_payment_request_only_once(self):
-        payment_token = self.create_token()
+        payment_token = self._create_token()
         payment_without_token = self.env['account.payment'].create({
             'payment_type': 'inbound',
             'partner_type': 'customer',

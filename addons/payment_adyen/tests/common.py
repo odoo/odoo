@@ -46,7 +46,7 @@ class AdyenCommon(PaymentCommon):
             ]
         }
 
-    def create_transaction(self, *args, acquirer_reference=None, **kwargs):
+    def _create_transaction(self, *args, acquirer_reference=None, **kwargs):
         if not acquirer_reference:
             acquirer_reference = self.psp_reference
-        return super().create_transaction(*args, acquirer_reference=acquirer_reference, **kwargs)
+        return super()._create_transaction(*args, acquirer_reference=acquirer_reference, **kwargs)
