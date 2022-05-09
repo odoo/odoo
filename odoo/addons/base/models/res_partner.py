@@ -167,6 +167,7 @@ class Partner(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    vat_label = fields.Char(compute='_compute_vat_label')
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
@@ -281,6 +282,12 @@ class Partner(models.Model):
         names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
+
+    @api.depends('country_id.vat_label')
+    @api.depends_context('company_id')
+    def _compute_vat_label(self):
+        for partner in self:
+            partner.vat_label = partner.country_id.vat_label or _('Tax ID')
 
     @api.depends('lang')
     def _compute_active_lang_count(self):

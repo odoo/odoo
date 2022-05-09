@@ -84,6 +84,7 @@ class Company(models.Model):
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
     mobile = fields.Char(related='partner_id.mobile', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
+    vat_label = fields.Char(related='partner_id.vat_label')
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
     company_registry = fields.Char(compute='_compute_company_registry', store=True, readonly=False)
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
@@ -122,7 +123,7 @@ class Company(models.Model):
         # exists to allow overrides
         for company in self:
             company.company_registry = company.company_registry
-    
+
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):
