@@ -31,8 +31,11 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                     pointChanges[line.coupon_id] -= line.points_cost;
                 }
             }
+            if (!await this._isOrderValid(isForceValidate)) {
+                return;
+            }
             // No need to do an rpc if no existing coupon is being used.
-            if (await this._isOrderValid(isForceValidate) && (!_.isEmpty(pointChanges) || newCodes.length)) {
+            if (!_.isEmpty(pointChanges) || newCodes.length) {
                 try {
                     const {successful, payload} = await this.rpc({
                         model: 'pos.order',
