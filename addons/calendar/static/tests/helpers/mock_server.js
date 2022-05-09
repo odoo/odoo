@@ -17,6 +17,7 @@ MockServer.include({
      */
     _mockResUsers_SystrayGetCalendarEventDomain() {
         const startDate = new Date();
+        startDate.setUTCHours(0, 0, 0, 0);
         const endDate = new Date();
         endDate.setUTCHours(23, 59, 59, 999);
         const currentPartnerAttendeeIds = this._mockSearch('calendar.attendee', [[['partner_id', '=', this.currentPartnerId]]], {});
