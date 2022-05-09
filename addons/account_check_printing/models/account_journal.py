@@ -36,7 +36,7 @@ class AccountJournal(models.Model):
         for journal in self:
             sequence = journal.check_sequence_id
             if sequence:
-                journal.check_next_number = sequence.next_by_id()
+                journal.check_next_number = sequence.get_next_char(sequence.number_next_actual)
             else:
                 journal.check_next_number = 1
 
