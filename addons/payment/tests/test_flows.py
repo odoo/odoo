@@ -26,7 +26,7 @@ class TestFlows(PaymentHttpCommon):
         route_values = self._prepare_pay_values()
 
         # /payment/pay
-        tx_context = self.get_tx_checkout_context(**route_values)
+        tx_context = self._get_tx_checkout_context(**route_values)
         for key, val in tx_context.items():
             if key in route_values:
                 self.assertEqual(val, route_values[key])
@@ -50,10 +50,10 @@ class TestFlows(PaymentHttpCommon):
         })
 
         if flow == 'token':
-            route_values['payment_option_id'] = self.create_token().id
+            route_values['payment_option_id'] = self._create_token().id
 
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self.get_processing_values(**route_values)
+            processing_values = self._get_processing_values(**route_values)
         tx_sudo = self._get_tx(processing_values['reference'])
 
         # Tx values == given values
@@ -156,7 +156,7 @@ class TestFlows(PaymentHttpCommon):
         validation_amount = self.acquirer._get_validation_amount()
         validation_currency = self.acquirer._get_validation_currency()
 
-        tx_context = self.get_tx_manage_context()
+        tx_context = self._get_tx_manage_context()
         expected_values = {
             'partner_id': self.partner.id,
             'access_token': self._generate_test_access_token(self.partner.id, None, None),
@@ -179,7 +179,7 @@ class TestFlows(PaymentHttpCommon):
             'is_validation': True,
         }
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self.get_processing_values(**transaction_values)
+            processing_values = self._get_processing_values(**transaction_values)
         tx_sudo = self._get_tx(processing_values['reference'])
 
         # Tx values == given values
@@ -223,14 +223,14 @@ class TestFlows(PaymentHttpCommon):
         route_values.pop('partner_id')
 
         # Pay without a partner specified --> redirection to login page
-        response = self.portal_pay(**route_values)
+        response = self._portal_pay(**route_values)
         url = urlparse(response.url)
         self.assertEqual(url.path, '/web/login')
         self.assertIn('redirect', parse_qs(url.query))
 
         # Pay without a partner specified (but logged) --> pay with the partner of current user.
         self.authenticate(self.portal_user.login, self.portal_user.login)
-        tx_context = self.get_tx_checkout_context(**route_values)
+        tx_context = self._get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.portal_partner.id)
 
     def test_pay_no_token(self):
@@ -239,14 +239,14 @@ class TestFlows(PaymentHttpCommon):
         route_values.pop('access_token')
 
         # Pay without a partner specified --> redirection to login page
-        response = self.portal_pay(**route_values)
+        response = self._portal_pay(**route_values)
         url = urlparse(response.url)
         self.assertEqual(url.path, '/web/login')
         self.assertIn('redirect', parse_qs(url.query))
 
         # Pay without a partner specified (but logged) --> pay with the partner of current user.
         self.authenticate(self.portal_user.login, self.portal_user.login)
-        tx_context = self.get_tx_checkout_context(**route_values)
+        tx_context = self._get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.portal_partner.id)
 
     def test_pay_wrong_token(self):
@@ -254,20 +254,20 @@ class TestFlows(PaymentHttpCommon):
         route_values['access_token'] = "abcde"
 
         # Pay with a wrong access token --> Not found (404)
-        response = self.portal_pay(**route_values)
+        response = self._portal_pay(**route_values)
         self.assertEqual(response.status_code, 404)
 
     def test_pay_wrong_currency(self):
         # Pay with a wrong currency --> Not found (404)
         self.currency = self.env['res.currency'].browse(self.env['res.currency'].search([], order='id desc', limit=1).id + 1000)
         route_values = self._prepare_pay_values()
-        response = self.portal_pay(**route_values)
+        response = self._portal_pay(**route_values)
         self.assertEqual(response.status_code, 404)
 
         # Pay with an inactive currency --> Not found (404)
         self.currency = self.env['res.currency'].search([('active', '=', False)], limit=1)
         route_values = self._prepare_pay_values()
-        response = self.portal_pay(**route_values)
+        response = self._portal_pay(**route_values)
         self.assertEqual(response.status_code, 404)
 
     def test_invoice_payment_flow(self):
@@ -276,7 +276,7 @@ class TestFlows(PaymentHttpCommon):
         # Pay for this invoice (no impact even if amounts do not match)
         route_values = self._prepare_pay_values()
         route_values['invoice_id'] = self.invoice.id
-        tx_context = self.get_tx_checkout_context(**route_values)
+        tx_context = self._get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['invoice_id'], self.invoice.id)
 
         # payment/transaction
@@ -298,7 +298,7 @@ class TestFlows(PaymentHttpCommon):
             'tokenization_requested': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self.get_processing_values(**route_values)
+            processing_values = self._get_processing_values(**route_values)
         tx_sudo = self._get_tx(processing_values['reference'])
         # Note: strangely, the check
         # self.assertEqual(tx_sudo.invoice_ids, invoice)
@@ -317,7 +317,7 @@ class TestFlows(PaymentHttpCommon):
         })
         # Transaction step with a wrong flow --> UserError
         with mute_logger('odoo.http'):
-            response = self.portal_transaction(**transaction_values)
+            response = self._portal_transaction(**transaction_values)
         self.assertIn(
             "odoo.exceptions.UserError: The payment should either be direct, with redirection, or made by a token.",
             response.text)
@@ -328,7 +328,7 @@ class TestFlows(PaymentHttpCommon):
 
         # Transaction step with a wrong access token --> ValidationError
         with mute_logger('odoo.http'):
-            response = self.portal_transaction(**route_values)
+            response = self._portal_transaction(**route_values)
         self.assertIn(
             "odoo.exceptions.ValidationError: The access token is invalid.",
             response.text)
@@ -339,13 +339,13 @@ class TestFlows(PaymentHttpCommon):
         # Log in as user from Company A
         self.authenticate(self.portal_user.login, self.portal_user.login)
 
-        token = self.create_token()
+        token = self._create_token()
         acquirer_b = self.acquirer.copy()
         acquirer_b.state = 'test'
-        token_b = self.create_token(acquirer_id=acquirer_b.id)
+        token_b = self._create_token(acquirer_id=acquirer_b.id)
 
         # User must see both enabled acquirers and tokens
-        manage_context = self.get_tx_manage_context()
+        manage_context = self._get_tx_manage_context()
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertIn(self.acquirer.id, manage_context['acquirer_ids'])
         self.assertIn(acquirer_b.id, manage_context['acquirer_ids'])
@@ -354,14 +354,14 @@ class TestFlows(PaymentHttpCommon):
 
         # Token of disabled acquirer(s) & disabled acquirers should not be shown
         self.acquirer.state = 'disabled'
-        manage_context = self.get_tx_manage_context()
+        manage_context = self._get_tx_manage_context()
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertEqual(manage_context['acquirer_ids'], [acquirer_b.id])
         self.assertEqual(manage_context['token_ids'], [token_b.id])
 
         # Archived tokens must be hidden from the user
         token_b.active = False
-        manage_context = self.get_tx_manage_context()
+        manage_context = self._get_tx_manage_context()
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertEqual(manage_context['acquirer_ids'], [acquirer_b.id])
         self.assertEqual(manage_context['token_ids'], [])
@@ -375,7 +375,7 @@ class TestFlows(PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._send_payment_request'
         ) as patched:
-            self.portal_transaction(
+            self._portal_transaction(
                 **self._prepare_transaction_values(self.acquirer.id, 'direct')
             )
             self.assertEqual(patched.call_count, 0)
@@ -389,7 +389,7 @@ class TestFlows(PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._send_payment_request'
         ) as patched:
-            self.portal_transaction(
+            self._portal_transaction(
                 **self._prepare_transaction_values(self.acquirer.id, 'redirect')
             )
             self.assertEqual(patched.call_count, 0)
@@ -403,8 +403,8 @@ class TestFlows(PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._send_payment_request'
         ) as patched:
-            self.portal_transaction(
-                **self._prepare_transaction_values(self.create_token().id, 'token')
+            self._portal_transaction(
+                **self._prepare_transaction_values(self._create_token().id, 'token')
             )
             self.assertEqual(patched.call_count, 1)
 

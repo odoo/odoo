@@ -82,7 +82,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
             expected_values, incoming=False
         ).upper()
 
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         self.assertEqual(tx.tokenize, False)
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
@@ -103,7 +103,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_ogone.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         url = self._build_url(OgoneController._return_url)
         with patch(
             'odoo.addons.payment_ogone.controllers.main.OgoneController'
@@ -115,7 +115,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_ogone.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(OgoneController._return_url)
         with patch(
             'odoo.addons.payment_ogone.controllers.main.OgoneController'
@@ -129,7 +129,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
             OgoneController._verify_notification_signature,
@@ -141,7 +141,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_ogone.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.assertRaises(
             Forbidden,
             OgoneController._verify_notification_signature,
@@ -153,7 +153,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_ogone.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.assertRaises(
             Forbidden,
             OgoneController._verify_notification_signature,

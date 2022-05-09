@@ -29,7 +29,7 @@ class AuthorizeTest(AuthorizeCommon):
 
     def test_processing_values(self):
         """Test custom 'access_token' processing_values for authorize acquirer."""
-        tx = self.create_transaction(flow='direct')
+        tx = self._create_transaction(flow='direct')
         with mute_logger('odoo.addons.payment.models.payment_transaction'), \
             patch(
                 'odoo.addons.payment.utils.generate_access_token',
@@ -51,7 +51,7 @@ class AuthorizeTest(AuthorizeCommon):
 
     def test_token_activation(self):
         """Activation of disabled authorize tokens is forbidden"""
-        token = self.create_token(active=False)
+        token = self._create_token(active=False)
         with self.assertRaises(UserError):
             token._handle_reactivation_request()
 

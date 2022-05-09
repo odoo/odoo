@@ -48,7 +48,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         # Pay in company B
         route_values['company_id'] = self.company_b.id
 
-        tx_context = self.get_tx_checkout_context(**route_values)
+        tx_context = self._get_tx_checkout_context(**route_values)
         for key, val in tx_context.items():
             if key in route_values:
                 if key == 'access_token':
@@ -80,7 +80,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             'tokenization_requested': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = self.get_processing_values(**validation_values)
+            processing_values = self._get_processing_values(**validation_values)
         tx_sudo = self._get_tx(processing_values['reference'])
 
         # Tx values == given values
@@ -103,12 +103,12 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         # Log in as user from Company A
         self.authenticate(self.portal_user.login, self.portal_user.login)
 
-        token = self.create_token()
-        token_company_b = self.create_token(acquirer_id=self.acquirer_company_b.id)
+        token = self._create_token()
+        token_company_b = self._create_token(acquirer_id=self.acquirer_company_b.id)
 
         # A partner should see all his tokens on the /my/payment_method route,
         # even if they are in other companies otherwise he won't ever see them.
-        manage_context = self.get_tx_manage_context()
+        manage_context = self._get_tx_manage_context()
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertEqual(manage_context['acquirer_ids'], self.acquirer.ids)
         self.assertIn(token.id, manage_context['token_ids'])
@@ -117,7 +117,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
     def test_archive_token_logged_in_another_company(self):
         """User archives his token from another company."""
         # get user's token from company A
-        token = self.create_token(partner_id=self.portal_partner.id)
+        token = self._create_token(partner_id=self.portal_partner.id)
 
         # assign user to another company
         company_b = self.env['res.company'].create({'name': 'Company B'})

@@ -54,7 +54,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         self._test_alipay_redirect_form()
 
     def _test_alipay_redirect_form(self):
-        tx = self.create_transaction(flow='redirect')  # Only flow implemented
+        tx = self._create_transaction(flow='redirect')  # Only flow implemented
 
         expected_values = {
             '_input_charset': 'utf-8',
@@ -120,7 +120,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         total_fee = self.currency.round(self.amount + transaction_fees)
         self.assertEqual(total_fee, 1118.2)
 
-        tx = self.create_transaction(flow='redirect')
+        tx = self._create_transaction(flow='redirect')
         self.assertEqual(tx.fees, 7.09)
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
@@ -146,14 +146,14 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
             )
 
         # Confirmed transaction
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('alipay', self.notification_data)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, self.notification_data['trade_no'])
 
         # Pending transaction
         self.reference = 'Test Transaction 2'
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(
             self.notification_data, out_trade_no=self.reference, trade_status='TRADE_CLOSED'
         )
@@ -164,7 +164,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
         self.acquirer.alipay_payment_method = 'standard_checkout'
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         url = self._build_url(AlipayController._webhook_url)
         with patch(
             'odoo.addons.payment_alipay.controllers.main.AlipayController'
@@ -180,7 +180,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
     def test_webhook_notification_triggers_origin_and_signature_checks(self):
         """ Test that receiving a webhook notification triggers origin and signature checks. """
         self.acquirer.alipay_payment_method = 'standard_checkout'
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(AlipayController._webhook_url)
         with patch(
             'odoo.addons.payment_alipay.controllers.main.AlipayController'
@@ -198,7 +198,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
 
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden, AlipayController._verify_notification_signature, self.notification_data, tx
         )
@@ -206,14 +206,14 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_alipay.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, sign=None)
         self.assertRaises(Forbidden, AlipayController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_alipay.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, sign='dummy')
         self.assertRaises(Forbidden, AlipayController._verify_notification_signature, payload, tx)
 

@@ -40,7 +40,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
     # freeze time for consistent singularize_prefix behavior during the test
     @freeze_time("2011-11-02 12:00:21")
     def test_reference(self):
-        tx = self.create_transaction(flow="redirect", reference="")
+        tx = self._create_transaction(flow="redirect", reference="")
         self.assertEqual(tx.reference, "tx20111102120021",
             "Payulatam: transaction reference wasn't correctly singularized.")
 
@@ -48,7 +48,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         self.patch(self, 'base_url', lambda: 'http://127.0.0.1:8069')
         self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://127.0.0.1:8069')
 
-        tx = self.create_transaction(flow="redirect")
+        tx = self._create_transaction(flow="redirect")
 
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
@@ -78,7 +78,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
             )
 
         # Confirmed transaction
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('sips', self.notification_data)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, self.reference)
@@ -86,7 +86,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         # Cancelled transaction
         old_reference = self.reference
         self.reference = 'Test Transaction 2'
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(
             self.notification_data,
             Data=self.notification_data['Data'].replace(old_reference, self.reference)
@@ -98,7 +98,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_sips.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         url = self._build_url(SipsController._return_url)
         with patch(
             'odoo.addons.payment_sips.controllers.main.SipsController'
@@ -110,7 +110,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_sips.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(SipsController._webhook_url)
         with patch(
             'odoo.addons.payment_sips.controllers.main.SipsController'
@@ -124,7 +124,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
 
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden, SipsController._verify_notification_signature, self.notification_data, tx
         )
@@ -132,14 +132,14 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_sips.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, Seal=None)
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_sips.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, Seal='dummy')
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
 

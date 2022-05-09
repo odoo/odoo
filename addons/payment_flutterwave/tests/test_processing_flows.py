@@ -18,7 +18,7 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
     def test_redirect_notification_triggers_processing(self):
         """ Test that receiving a redirect notification triggers the processing of the notification
         data. """
-        self.create_transaction(flow='redirect')
+        self._create_transaction(flow='redirect')
         url = self._build_url(FlutterwaveController._return_url)
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
@@ -31,7 +31,7 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
     def test_webhook_notification_triggers_processing(self):
         """ Test that receiving a valid webhook notification triggers the processing of the
         notification data. """
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(FlutterwaveController._webhook_url)
         with patch(
             'odoo.addons.payment_flutterwave.controllers.main.FlutterwaveController.'
@@ -46,7 +46,7 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
-        self.create_transaction('redirect')
+        self._create_transaction('redirect')
         url = self._build_url(FlutterwaveController._webhook_url)
         with patch(
             'odoo.addons.payment_flutterwave.controllers.main.FlutterwaveController'
@@ -60,7 +60,7 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
 
     def test_accept_webhook_notification_with_valid_signature(self):
         """ Test the verification of a webhook notification with a valid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
             FlutterwaveController._verify_notification_signature,
@@ -71,13 +71,13 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.assertRaises(Forbidden, FlutterwaveController._verify_notification_signature, None, tx)
 
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
-        tx = self.create_transaction('redirect')
+        tx = self._create_transaction('redirect')
         self.assertRaises(
             Forbidden, FlutterwaveController._verify_notification_signature, 'dummy', tx
         )
