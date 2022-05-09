@@ -85,7 +85,7 @@ async function createAndMountDiscussPublicView(templates) {
         env: Component.env,
         dev: Component.env.isDebug(),
         props: {
-            localId: discussPublicView.localId,
+            record: discussPublicView,
         },
     });
 }

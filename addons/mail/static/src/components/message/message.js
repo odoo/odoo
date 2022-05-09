@@ -20,8 +20,8 @@ export class Message extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'MessageView' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'MessageView' });
+        useComponentToModel({ fieldName: 'component' });
+        useUpdateToModel({ methodName: 'onComponentUpdate' });
         useUpdate({ func: () => this._update() });
         /**
          * Value of the last rendered prettyBody. Useful to compare to new value
@@ -120,7 +120,7 @@ export class Message extends Component {
      * @returns {MessageView}
      */
     get messageView() {
-        return this.messaging && this.messaging.models['MessageView'].get(this.props.localId);
+        return this.props.record;
     }
 
     /**
@@ -277,7 +277,7 @@ export class Message extends Component {
 }
 
 Object.assign(Message, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.Message',
     components: { Popover },
 });

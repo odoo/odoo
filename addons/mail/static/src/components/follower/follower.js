@@ -14,7 +14,7 @@ export class Follower extends Component {
      * @returns {Follower}
      */
     get follower() {
-        return this.messaging && this.messaging.models['Follower'].get(this.props.followerLocalId);
+        return this.props.follower;
     }
 
 }
@@ -24,7 +24,7 @@ Object.assign(Follower, {
         onClick: () => {},
     },
     props: {
-        followerLocalId: String,
+        follower: Object,
         onClick: {
             type: Function,
             optional: true,

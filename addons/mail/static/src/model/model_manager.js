@@ -656,7 +656,7 @@ export class ModelManager {
             // Field values of record.
             __values: {},
         });
-        const record = !this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
+        const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
                     !model.__fieldMap[prop] &&
@@ -668,7 +668,7 @@ export class ModelManager {
                 }
                 return record[prop];
             },
-        });
+        }));
         // Ensure X2many relations are Set initially (other fields can stay undefined).
         for (const field of model.__fieldList) {
             record.__values[field.fieldName] = undefined;

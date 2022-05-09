@@ -11,20 +11,20 @@ export class SnailmailError extends Component {
      * @override
      */
     setup() {
-        useComponentToModel({ fieldName: 'component', modelName: 'SnailmailErrorView' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     /**
      * @returns {SnailmailErrorView}
      */
     get snailmailErrorView() {
-        return this.messaging && this.messaging.models['SnailmailErrorView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(SnailmailError, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'snailmail.SnailmailError',
 });
 

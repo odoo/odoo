@@ -10,13 +10,13 @@ export class DiscussSidebarCategoryItem extends Component {
      * @returns {DiscussSidebarCategoryItem}
      */
     get categoryItem() {
-        return this.messaging.models['DiscussSidebarCategoryItem'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(DiscussSidebarCategoryItem, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.DiscussSidebarCategoryItem',
 });
 

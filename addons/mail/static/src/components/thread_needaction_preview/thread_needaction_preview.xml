@@ -17,7 +17,7 @@
                                 classNameObj="{
                                     'o-isDeviceSmall': messaging.device.isSmall,
                                 }"
-                                partnerLocalId="threadNeedactionPreviewView.thread.correspondent.localId"
+                                partner="threadNeedactionPreviewView.thread.correspondent"
                             />
                         </t>
                     </div>
@@ -42,7 +42,7 @@
                     <div class="o_ThreadNeedactionPreview_core d-flex align-items-baseline">
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
                             <t t-if="threadNeedactionPreviewView.messageAuthorPrefixView">
-                                <MessageAuthorPrefix localId="threadNeedactionPreviewView.messageAuthorPrefixView.localId"/>
+                                <MessageAuthorPrefix record="threadNeedactionPreviewView.messageAuthorPrefixView"/>
                             </t>
                             <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
                         </span>

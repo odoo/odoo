@@ -14,13 +14,13 @@ export class Dialog extends Component {
      * @returns {Dialog}
      */
     get dialog() {
-        return this.messaging && this.messaging.models['Dialog'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(Dialog, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.Dialog',
 });
 

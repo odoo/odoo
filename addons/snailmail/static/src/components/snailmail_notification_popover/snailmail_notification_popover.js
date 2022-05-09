@@ -42,7 +42,7 @@ class SnailmailNotificationPopover extends Component {
      * @returns {Message}
      */
     get message() {
-        return this.messaging && this.messaging.models['Message'].get(this.props.messageLocalId);
+        return this.props.message;
     }
 
     /**
@@ -56,9 +56,7 @@ class SnailmailNotificationPopover extends Component {
 }
 
 Object.assign(SnailmailNotificationPopover, {
-    props: {
-        messageLocalId: String,
-    },
+    props: { message: Object },
     template: 'snailmail.SnailmailNotificationPopover',
 });
 

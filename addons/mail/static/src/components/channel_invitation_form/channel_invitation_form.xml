@@ -11,7 +11,7 @@
                     </div>
                     <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
                         <t t-foreach="channelInvitationForm.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.localId">
-                            <ChannelInvitationFormSelectablePartner channelInvitationFormLocalId="channelInvitationForm.localId" selectablePartnerLocalId="selectablePartner.localId"/>
+                            <ChannelInvitationFormSelectablePartner channelInvitationForm="channelInvitationForm" selectablePartner="selectablePartner"/>
                         </t>
                         <t t-if="channelInvitationForm.selectablePartners.length === 0">
                             <div class="mx-3">No user found that is not already a member of this channel.</div>
@@ -27,7 +27,7 @@
                             <h4>Selected users:</h4>
                             <div class="o_ChannelInvitationForm_selectedPartners overflow-auto">
                                 <t t-foreach="channelInvitationForm.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.localId">
-                                    <ChannelInvitationFormSelectedPartner channelInvitationFormLocalId="channelInvitationForm.localId" selectedPartnerLocalId="selectedPartner.localId"/>
+                                    <ChannelInvitationFormSelectedPartner channelInvitationForm="channelInvitationForm" selectedPartner="selectedPartner"/>
                                 </t>
                             </div>
                         </div>

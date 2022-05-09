@@ -23,7 +23,7 @@ export class ComposerSuggestion extends Component {
      * @returns {ComposerSuggestion}
      */
     get composerSuggestion() {
-        return this.messaging && this.messaging.models['ComposerSuggestion'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ export class ComposerSuggestion extends Component {
 }
 
 Object.assign(ComposerSuggestion, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ComposerSuggestion',
 });
 

@@ -10,13 +10,13 @@ export class DiscussSidebarMailbox extends Component {
      * @returns {DiscussSidebarMailboxView}
      */
     get discussSidebarMailboxView() {
-        return this.messaging && this.messaging.models['DiscussSidebarMailboxView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(DiscussSidebarMailbox, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.DiscussSidebarMailbox',
 });
 

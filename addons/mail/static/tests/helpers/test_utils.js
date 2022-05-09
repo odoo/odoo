@@ -427,7 +427,7 @@ function getCreateComposerComponent({ env, modelManager, target }) {
             }),
         });
         return await createRootMessagingComponent(env, "Composer", {
-            props: { localId: composerView.localId, ...props },
+            props: { record: composerView, ...props },
             target,
         });
     };
@@ -441,7 +441,7 @@ function getCreateComposerSuggestionComponent({ env, modelManager, target }) {
             }),
         });
         await createRootMessagingComponent(env, "ComposerSuggestion", {
-            props: { ...props, composerViewLocalId: composerView.localId },
+            props: { ...props, composerView: composerView },
             target,
         });
     };
@@ -453,7 +453,7 @@ function getCreateFollowerListMenuComponent({ env, modelManager, target }) {
             qunitTest: insertAndReplace(),
         });
         return await createRootMessagingComponent(env, "FollowerListMenu", {
-            props: { localId: followerListMenuView.localId, threadLocalId: thread.localId, ...props },
+            props: { record: followerListMenuView, thread, ...props },
             target,
         });
     };
@@ -466,7 +466,7 @@ function getCreateMessageComponent({ env, modelManager, target }) {
             qunitTest: insertAndReplace(),
         });
         await createRootMessagingComponent(env, "Message", {
-            props: { localId: messageView.localId },
+            props: { record: messageView },
             target,
         });
     };
@@ -485,7 +485,7 @@ function getCreateNotificationListComponent({ env, modelManager, target }) {
             qunitTestOwner: insertAndReplace(),
         });
         await createRootMessagingComponent(env, "NotificationList", {
-            props: { localId: notificationListView.localId },
+            props: { record: notificationListView },
             target,
         });
     };
@@ -508,7 +508,7 @@ function getCreateThreadViewComponent({ afterEvent, env, target }) {
             actualTarget = target;
         }
         async function func() {
-            return createRootMessagingComponent(env, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target: actualTarget });
+            return createRootMessagingComponent(env, "ThreadView", { props: { record: threadView, ...otherProps }, target: actualTarget });
         }
         if (waitUntilMessagesLoaded) {
             await afterNextRender(() => afterEvent({

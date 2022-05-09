@@ -30,7 +30,7 @@ export class ChatWindow extends Component {
      * @returns {ChatWindow}
      */
     get chatWindow() {
-        return this.messaging && this.messaging.models['ChatWindow'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -59,7 +59,7 @@ export class ChatWindow extends Component {
 }
 
 Object.assign(ChatWindow, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.ChatWindow',
 });
 

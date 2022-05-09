@@ -7,13 +7,13 @@ const { Component } = owl;
 export class MessageReactionGroup extends Component {
 
     get messageReactionGroup() {
-        return this.messaging.models['MessageReactionGroup'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(MessageReactionGroup, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MessageReactionGroup',
 });
 

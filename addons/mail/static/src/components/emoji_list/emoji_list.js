@@ -17,7 +17,7 @@ export class EmojiList extends LegacyComponent {
     }
 
     get emojiListView() {
-        return this.messaging && this.messaging.models['EmojiListView'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ export class EmojiList extends LegacyComponent {
 }
 
 Object.assign(EmojiList, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.EmojiList',
 });
 

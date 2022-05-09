@@ -12,7 +12,7 @@
                 <t t-if="rtcCallViewer.layout !== 'tiled'">
                     <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
                         <t t-if="rtcCallViewer.mainParticipantCard">
-                            <RtcCallParticipantCard className="'o_RtcCallViewer_participantCard w-100'" localId="rtcCallViewer.mainParticipantCard.localId"/>
+                            <RtcCallParticipantCard className="'o_RtcCallViewer_participantCard w-100'" record="rtcCallViewer.mainParticipantCard"/>
                         </t>
                     </div>
                 </t>
@@ -31,7 +31,7 @@
                                 <!-- maybe filter focused partner out? -->
                                 <RtcCallParticipantCard
                                     className="'o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile mw-100'"
-                                    localId="participantCard.localId"
+                                    record="participantCard"
                                 />
                             </t>
                         </t>
@@ -43,7 +43,7 @@
             <t t-if="rtcCallViewer.showOverlay or !rtcCallViewer.isControllerFloating">
                 <div class="o_RtcCallViewer_controls" t-att-class="{ 'o-isFloating': rtcCallViewer.isControllerFloating }">
                     <div class="o_RtcCallViewer_controlsOverlayContainer" t-on-mousemove="rtcCallViewer.onMouseMoveOverlay">
-                        <RtcController localId="rtcCallViewer.rtcController.localId"/>
+                        <RtcController record="rtcCallViewer.rtcController"/>
                     </div>
                 </div>
             </t>
@@ -51,7 +51,7 @@
             <!-- Dialogs -->
             <t t-if="messaging.userSetting.rtcConfigurationMenu.isOpen">
                 <Dialog size="'small'" title="rtcCallViewer.settingsTitle" onClosed="rtcCallViewer.onRtcSettingsDialogClosed">
-                    <RtcConfigurationMenu localId="messaging.userSetting.rtcConfigurationMenu.localId"/>
+                    <RtcConfigurationMenu record="messaging.userSetting.rtcConfigurationMenu"/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->
                     </t>
@@ -59,7 +59,7 @@
             </t>
             <t t-if="rtcCallViewer.rtcLayoutMenu">
                 <Dialog size="'small'" title="rtcCallViewer.layoutSettingsTitle" onClosed="rtcCallViewer.onLayoutSettingsDialogClosed">
-                    <RtcLayoutMenu localId="rtcCallViewer.rtcLayoutMenu.localId"/>
+                    <RtcLayoutMenu record="rtcCallViewer.rtcLayoutMenu"/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->
                     </t>

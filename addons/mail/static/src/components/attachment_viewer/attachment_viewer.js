@@ -18,7 +18,7 @@ export class AttachmentViewer extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentViewer' });
+        useComponentToModel({ fieldName: 'component' });
         this.MIN_SCALE = MIN_SCALE;
         /**
          * Used to ensure that the ref is always up to date, which seems to be needed if the element
@@ -79,7 +79,7 @@ export class AttachmentViewer extends Component {
      * @returns {AttachmentViewer}
      */
     get attachmentViewer() {
-        return this.messaging && this.messaging.models['AttachmentViewer'].get(this.props.localId);
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -347,7 +347,7 @@ export class AttachmentViewer extends Component {
 }
 
 Object.assign(AttachmentViewer, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.AttachmentViewer',
 });
 

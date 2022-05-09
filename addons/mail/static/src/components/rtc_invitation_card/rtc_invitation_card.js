@@ -14,13 +14,13 @@ export class RtcInvitationCard extends Component {
      * @returns {RtcInvitationCard|undefined}
      */
     get rtcInvitationCard() {
-        return this.messaging.models['RtcInvitationCard'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcInvitationCard, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcInvitationCard',
 });
 

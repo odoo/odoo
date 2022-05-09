@@ -9,7 +9,7 @@
                     <ChatWindowHiddenMenu className="'o_ChatWindowManager_hiddenMenu'"/>
                 </t>
                 <t t-foreach="messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
-                    <ChatWindow localId="chatWindow.localId"/>
+                    <ChatWindow record="chatWindow"/>
                 </t>
             </t>
         </div>

@@ -14,22 +14,22 @@ export class DiscussMobileMailboxSelectionItem extends Component {
      * @returns {DiscussView}
      */
     get discussView() {
-        return this.messaging && this.messaging.models['DiscussView'].get(this.props.discussViewLocalId);
+        return this.props.discussView;
     }
 
     /**
      * @returns {Thread}
      */
     get mailbox() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.mailboxLocalId);
+        return this.props.mailbox;
     }
 
 }
 
 Object.assign(DiscussMobileMailboxSelectionItem, {
     props: {
-        discussViewLocalId: String,
-        mailboxLocalId: String,
+        discussView: Object,
+        mailbox: Object,
     },
     template: 'mail.DiscussMobileMailboxSelectionItem',
 });

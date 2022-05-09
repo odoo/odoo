@@ -12,7 +12,7 @@ export class MessagingMenu extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'MessagingMenu' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     //--------------------------------------------------------------------------
@@ -23,13 +23,13 @@ export class MessagingMenu extends Component {
      * @returns {MessagingMenu}
      */
     get messagingMenu() {
-        return this.messaging && this.messaging.models['MessagingMenu'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(MessagingMenu, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.MessagingMenu',
 });
 

@@ -7,13 +7,13 @@
                 <div class="o_Chatter_fixedPanel">
                     <ChatterTopbar
                         className="'o_Chatter_topbar'"
-                        localId="chatter.localId"
+                        record="chatter"
                     />
                     <t t-if="chatter.composerView">
                         <Composer
                             className="'o_Chatter_composer border-bottom'"
                             classNameObj="{ 'o-bordered border-left border-right': chatter.hasExternalBorder }"
-                            localId="chatter.composerView.localId"
+                            record="chatter.composerView"
                         />
                     </t>
                 </div>
@@ -21,19 +21,19 @@
                     <t t-if="chatter.attachmentBoxView">
                         <AttachmentBox
                             className="'o_Chatter_attachmentBox'"
-                            localId="chatter.attachmentBoxView.localId"
+                            record="chatter.attachmentBoxView"
                         />
                     </t>
                     <t t-if="chatter.activityBoxView">
                         <ActivityBox
                             className="'o_Chatter_activityBox'"
-                            localId="chatter.activityBoxView.localId"
+                            record="chatter.activityBoxView"
                         />
                     </t>
                     <t t-if="chatter.threadView">
                         <ThreadView
                             className="'o_Chatter_thread'"
-                            localId="chatter.threadView.localId"
+                            record="chatter.threadView"
                         />
                     </t>
                 </div>

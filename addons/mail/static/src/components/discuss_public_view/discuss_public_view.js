@@ -10,12 +10,12 @@ class DiscussPublicView extends Component {
      * @returns {DiscussPublicView}
      */
      get discussPublicView() {
-        return this.messaging && this.messaging.models['DiscussPublicView'].get(this.props.localId);
+        return this.props.record;
     }
 }
 
 Object.assign(DiscussPublicView, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.DiscussPublicView',
 });
 

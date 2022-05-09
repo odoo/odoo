@@ -12,13 +12,13 @@ export class RtcController extends Component {
      * @returns {RtcController}
      */
     get rtcController() {
-        return this.messaging && this.messaging.models['RtcController'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcController, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcController',
     components: { Popover },
 });

@@ -10,12 +10,12 @@ export class MessageInReplyToView extends Component {
      * @returns {MessageInReplyToView}
      */
     get messageInReplyToView() {
-        return this.messaging && this.messaging.models['MessageInReplyToView'].get(this.props.localId);
+        return this.props.record;
     }
 }
 
 Object.assign(MessageInReplyToView, {
-    props: { localId: String },
+    props: { record: Object },
     template: "mail.MessageInReplyToView",
 });
 

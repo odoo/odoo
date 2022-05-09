@@ -21,13 +21,13 @@ export class WelcomeView extends Component {
      * @returns {WelcomeView}
      */
     get welcomeView() {
-        return this.messaging && this.messaging.models['WelcomeView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(WelcomeView, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.WelcomeView',
 });
 

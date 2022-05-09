@@ -11,20 +11,20 @@ export class RtcOptionList extends LegacyComponent {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'RtcOptionList' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     /**
      * @returns {RtcOptionList}
      */
     get rtcOptionList() {
-        return this.messaging && this.messaging.models['RtcOptionList'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(RtcOptionList, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.RtcOptionList',
 });
 

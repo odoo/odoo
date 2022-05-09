@@ -12,20 +12,20 @@ export class DeleteMessageConfirm extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'DeleteMessageConfirmView' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     /**
      * @returns {DeleteMessageConfirmView}
      */
     get deleteMessageConfirmView() {
-        return this.messaging && this.messaging.models['DeleteMessageConfirmView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(DeleteMessageConfirm, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.DeleteMessageConfirm',
 });
 

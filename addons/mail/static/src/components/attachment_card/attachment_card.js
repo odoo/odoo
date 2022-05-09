@@ -10,13 +10,13 @@ export class AttachmentCard extends Component {
      * @returns {AttachmentCard}
      */
     get attachmentCard() {
-        return this.messaging && this.messaging.models['AttachmentCard'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(AttachmentCard, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.AttachmentCard',
 });
 

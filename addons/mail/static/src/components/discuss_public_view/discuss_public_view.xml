@@ -4,10 +4,10 @@
         <t t-if="discussPublicView">
             <div class="o_DiscussPublicView d-flex flex-column h-100" t-attf-class="{{ className }}" t-ref="root">
                 <ThreadView t-if="discussPublicView.threadView"
-                    localId="discussPublicView.threadView.localId"
+                    record="discussPublicView.threadView"
                 />
                 <WelcomeView t-if="discussPublicView.welcomeView"
-                    localId="discussPublicView.welcomeView.localId"
+                    record="discussPublicView.welcomeView"
                 />
             </div>
         </t>

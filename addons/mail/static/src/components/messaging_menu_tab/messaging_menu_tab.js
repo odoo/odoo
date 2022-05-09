@@ -14,14 +14,14 @@ export class MessagingMenuTab extends Component {
      * @returns {MessagingMenu}
      */
     get messagingMenu() {
-        return this.messaging && this.messaging.models['MessagingMenu'].get(this.props.messagingMenuLocalId);
+        return this.props.messagingMenu;
     }
 
 }
 
 Object.assign(MessagingMenuTab, {
     props: {
-        messagingMenuLocalId: String,
+        messagingMenu: Object,
         tabId: String,
     },
     template: 'mail.MessagingMenuTab',

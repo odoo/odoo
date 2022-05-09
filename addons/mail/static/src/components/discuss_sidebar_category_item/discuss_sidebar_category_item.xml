@@ -13,7 +13,7 @@
                     <div class="o_DiscussSidebarCategoryItem_imageContainer">
                         <img class="o_DiscussSidebarCategoryItem_image rounded-circle" t-att-src="categoryItem.avatarUrl" alt="Thread Image"/>
                         <t t-if="categoryItem.hasThreadIcon">
-                            <ThreadIcon className="'o_DiscussSidebarCategoryItem_threadIcon'" threadLocalId="categoryItem.channel.localId"/>
+                            <ThreadIcon className="'o_DiscussSidebarCategoryItem_threadIcon'" thread="categoryItem.channel"/>
                         </t>
                     </div>
                 </div>

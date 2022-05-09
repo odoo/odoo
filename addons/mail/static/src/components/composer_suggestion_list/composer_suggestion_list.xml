@@ -7,13 +7,13 @@
                 <div class="o_ComposerSuggestionList_drop w-100" t-att-class="{ 'dropdown': composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition, 'dropup': !composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition }">
                     <div class="o_ComposerSuggestionList_list dropdown-menu show w-100 overflow-auto">
                         <t t-foreach="composerSuggestionListView.composerViewOwner.mainSuggestions" t-as="suggestion" t-key="suggestion.localId">
-                            <ComposerSuggestion localId="suggestion.localId"/>
+                            <ComposerSuggestion record="suggestion"/>
                         </t>
                         <t t-if="composerSuggestionListView.composerViewOwner.mainSuggestions.length > 0 and composerSuggestionListView.composerViewOwner.extraSuggestions.length > 0">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
                         <t t-foreach="composerSuggestionListView.composerViewOwner.extraSuggestions" t-as="suggestion" t-key="suggestion.localId">
-                            <ComposerSuggestion localId="suggestion.localId"/>
+                            <ComposerSuggestion record="suggestion"/>
                         </t>
                     </div>
                 </div>

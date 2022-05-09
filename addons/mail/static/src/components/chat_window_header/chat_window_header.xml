@@ -12,7 +12,7 @@
                 <t t-if="chatWindow.thread and chatWindow.thread.model === 'mail.channel'">
                     <ThreadIcon
                         className="'o_ChatWindowHeader_icon o_ChatWindowHeader_item ms-3 me-1 my-0'"
-                        threadLocalId="chatWindow.thread.localId"
+                        thread="chatWindow.thread"
                     />
                 </t>
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name mh-100 mx-1 my-0 text-truncate" t-att-class="{'ms-3':!chatWindow.thread or chatWindow.thread.model !== 'mail.channel'}" t-att-title="chatWindow.name">

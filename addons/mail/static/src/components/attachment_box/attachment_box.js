@@ -12,7 +12,7 @@ export class AttachmentBox extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentBoxView' });
+        useComponentToModel({ fieldName: 'component' });
     }
 
     //--------------------------------------------------------------------------
@@ -23,13 +23,13 @@ export class AttachmentBox extends Component {
      * @returns {AttachmentBoxView|undefined}
      */
     get attachmentBoxView() {
-        return this.messaging && this.messaging.models['AttachmentBoxView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(AttachmentBox, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.AttachmentBox',
 });
 

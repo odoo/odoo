@@ -30,7 +30,7 @@
                             <div class="o_DiscussSidebarCategory_addingItem d-flex mb-2">
                                 <AutocompleteInput
                                     className="'o_DiscussSidebarCategory_addingItemInput flex-grow-1'"
-                                    localId="category.addingItemAutocompleteInputView.localId"
+                                    record="category.addingItemAutocompleteInputView"
                                     select="category.onAddItemAutocompleteSelect"
                                     source="category.onAddItemAutocompleteSource"
                                     onHide="category.onHideAddingItem"
@@ -40,14 +40,14 @@
                         <t t-foreach="category.filteredCategoryItems" t-as="item" t-key="item.localId">
                             <DiscussSidebarCategoryItem
                                 className="'o_DiscussSidebarCategory_item'"
-                                localId="item.localId"
+                                record="item"
                             />
                         </t>
                     </t>
                     <t t-if="!category.isOpen and category.activeItem">
                         <DiscussSidebarCategoryItem
                             className="'o_DiscussSidebarCategory_item'"
-                            localId="category.activeItem.localId"
+                            record="category.activeItem"
                         />
                     </t>
                 </div>

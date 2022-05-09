@@ -33,14 +33,14 @@ export class FollowerListMenu extends Component {
      * @return {FollowerListMenuView}
      */
     get followerListMenuView() {
-        return this.messaging && this.messaging.models['FollowerListMenuView'].get(this.props.localId);
+        return this.props.record;
     }
 
     /**
      * @return {Thread}
      */
     get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
+        return this.props.thread;
     }
 
     //--------------------------------------------------------------------------
@@ -79,9 +79,9 @@ Object.assign(FollowerListMenu, {
     },
     props: {
         isDisabled: { type: Boolean, optional: true },
-        threadLocalId: String,
+        thread: Object,
         isChatterButton: { type: Boolean, optional: true },
-        localId: String,
+        record: Object,
     },
     template: 'mail.FollowerListMenu',
 });

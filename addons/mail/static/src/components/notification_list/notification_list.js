@@ -10,13 +10,13 @@ export class NotificationList extends Component {
      * @returns {NotificationListView}
      */
     get notificationListView() {
-        return this.messaging && this.messaging.models['NotificationListView'].get(this.props.localId);
+        return this.props.record;
     }
 
 }
 
 Object.assign(NotificationList, {
-    props: { localId: String },
+    props: { record: Object },
     template: 'mail.NotificationList',
 });
 
