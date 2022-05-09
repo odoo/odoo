@@ -117,7 +117,11 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
             fieldInfo.limit = fieldDescr.FieldComponent.limit;
         }
 
-        if (Widget.prototype.fieldsToFetch) {
+        if (fieldDescr.modifiers.invisible === true) {
+            fieldInfo.__no_fetch = true;
+        }
+
+        if (!fieldInfo.__no_fetch && Widget.prototype.fieldsToFetch) {
             fieldDescr.fieldsToFetch = fieldDescr.fieldsToFetch || {};
             fieldInfo.relatedFields = { ...Widget.prototype.fieldsToFetch };
             fieldInfo.viewType = "default";
@@ -147,7 +151,6 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
         if (fieldDescr.onChange && !fields[fieldName].onChange) {
             fields[fieldName].onChange = "1";
         }
-        // TODO: __no_fetch
         // FIXME? FieldWidget in kanban undefined
         fieldsInfo[viewType][fieldName] = fieldInfo;
     }
@@ -512,12 +515,11 @@ export class Record extends DataPoint {
     }
 
     getFieldDomain(fieldName) {
-        return Domain.and([
-            this.model.__bm__.localData[this.__bm_handle__].getDomain({
-                fieldName,
-                viewType: this.__viewType,
-            }),
-        ]);
+        const domain = this.model.__bm__.localData[this.__bm_handle__].getDomain({
+            fieldName,
+            viewType: this.__viewType,
+        });
+        return new Domain(JSON.parse(JSON.stringify(domain))); // legacy pyjs inserts weird structures
     }
 
     async update(changes) {

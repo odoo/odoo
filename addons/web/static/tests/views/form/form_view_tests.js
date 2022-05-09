@@ -7178,79 +7178,55 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".modal .modal-footer .btn-primary:not(.d-none"));
     });
 
-    QUnit.skipWOWL("fields and record contexts are not mixed", async function (assert) {
+    QUnit.test("fields and record contexts are not mixed", async function (assert) {
         assert.expect(2);
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="trululu" context="{\'test\': 1}"/>' +
-                "</group>" +
-                "</form>",
+            arch: `<form><field name="trululu" context="{'test': 1}"/></form>`,
             mockRPC(route, args) {
                 if (args.method === "name_search") {
-                    assert.strictEqual(
-                        args.kwargs.context.test,
-                        1,
-                        "field's context should be sent"
-                    );
-                    assert.notOk(
-                        "mainContext" in args.kwargs.context,
-                        "record's context should not be sent"
-                    );
+                    assert.strictEqual(args.kwargs.context.test, 1);
+                    assert.notOk("mainContext" in args.kwargs.context);
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 2,
-            viewOptions: {
-                mode: "edit",
-                context: { mainContext: 3 },
-            },
+            context: { mainContext: 3 },
         });
 
+        await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_field_widget[name=trululu] input"));
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "do not activate an hidden tab when switching between records",
         async function (assert) {
-            assert.expect(6);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    "<notebook>" +
-                    '<page string="Foo" attrs=\'{"invisible": [["id", "=", 2]]}\'>' +
-                    '<field name="foo"/>' +
-                    "</page>" +
-                    '<page string="Bar">' +
-                    '<field name="bar"/>' +
-                    "</page>" +
-                    "</notebook>" +
-                    "</sheet>" +
-                    "</form>",
-                viewOptions: {
-                    ids: [1, 2],
-                    index: 0,
-                },
+                arch: `
+                    <form>
+                        <sheet>
+                            <notebook>
+                                <page string="Foo" attrs='{"invisible": [["id", "=", 2]]}'>
+                                    <field name="foo"/>
+                                </page>
+                                <page string="Bar">
+                                    <field name="bar"/>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                resIds: [1, 2],
                 resId: 1,
             });
 
-            assert.strictEqual(
-                target.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
-                2,
-                "both tabs should be visible"
-            );
+            assert.containsN(target, ".o_notebook .nav-item", 2, "both tabs should be visible");
             assert.hasClass(
-                target.querySelector(".o_notebook .nav-link:first"),
+                target.querySelector(".o_notebook .nav-link"),
                 "active",
                 "first tab should be active"
             );
@@ -7258,13 +7234,9 @@ QUnit.module("Views", (hooks) => {
             // click on the pager to switch to the next record
             await click(target.querySelector(".o_pager_next"));
 
-            assert.strictEqual(
-                target.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
-                1,
-                "only the second tab should be visible"
-            );
+            assert.containsOnce(target, ".o_notebook .nav-item");
             assert.hasClass(
-                target.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier) .nav-link"),
+                target.querySelector(".o_notebook .nav-link"),
                 "active",
                 "the visible tab should be active"
             );
@@ -7272,111 +7244,90 @@ QUnit.module("Views", (hooks) => {
             // click on the pager to switch back to the previous record
             await click(target.querySelector(".o_pager_previous"));
 
-            assert.strictEqual(
-                target.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
-                2,
-                "both tabs should be visible again"
-            );
+            assert.containsN(target, ".o_notebook .nav-item", 2, "both tabs should be visible");
             assert.hasClass(
-                target.querySelector(".o_notebook .nav-link:nth(1)"),
+                target.querySelectorAll(".o_notebook .nav-link")[1],
                 "active",
                 "second tab should be active"
             );
         }
     );
 
-    QUnit.skipWOWL("support anchor tags with action type", async function (assert) {
+    QUnit.test("support anchor tags with action type", async function (assert) {
         assert.expect(1);
+
+        const actionService = {
+            start() {
+                return {
+                    async doAction(action) {
+                        assert.strictEqual(action, "42");
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<a type="action" name="42"><i class="fa fa-arrow-right"/> Click me !</a>' +
-                "</form>",
+            arch: `
+                <form>
+                    <a type="action" name="42"><i class="fa fa-arrow-right"/> Click me !</a>
+                </form>`,
             resId: 1,
-            intercepts: {
-                do_action: function (event) {
-                    assert.strictEqual(
-                        event.data.action,
-                        "42",
-                        "should trigger do_action with correct action parameter"
-                    );
-                },
-            },
         });
         await click(target.querySelector('a[type="action"]'));
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "do not perform extra RPC to read invisible many2one fields",
         async function (assert) {
             // This test isn't really meaningful anymore, since default_get and (first) onchange rpcs
             // have been merged in a single onchange rpc, returning nameget for many2one fields. But it
             // isn't really costly, and it still checks rpcs done when creating a new record with a m2o.
-            assert.expect(2);
-
             serverData.models.partner.fields.trululu.default = 2;
 
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="trululu" invisible="1"/>' +
-                    "</sheet>" +
-                    "</form>",
+                arch: `<form><field name="trululu" invisible="1"/></form>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
                 },
             });
-
-            assert.verifySteps(["onchange"], "only one RPC should have been done");
+            assert.verifySteps(["get_views", "onchange"]);
         }
     );
 
-    QUnit.skipWOWL(
-        "do not perform extra RPC to read invisible x2many fields",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("do not perform extra RPC to read invisible x2many fields", async function (assert) {
+        serverData.models.partner.records[0].p = [2]; // one2many
+        serverData.models.partner.records[0].product_ids = [37]; // one2many
+        serverData.models.partner.records[0].timmy = [12]; // many2many
 
-            serverData.models.partner.records[0].p = [2]; // one2many
-            serverData.models.partner.records[0].product_ids = [37]; // one2many
-            serverData.models.partner.records[0].timmy = [12]; // many2many
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" widget="one2many" invisible="1"/>
+                        <field name="product_ids" widget="one2many" invisible="1">
+                            <tree><field name="display_name"/></tree>
+                        </field>
+                        <field name="timmy" invisible="1" widget="many2many_tags"/>
+                    </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+            resId: 1,
+        });
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="p" invisible="1"/>' + // no inline view
-                    '<field name="product_ids" invisible="1">' + // inline view
-                    '<tree><field name="display_name"/></tree>' +
-                    "</field>" +
-                    '<field name="timmy" invisible="1" widget="many2many_tags"/>' + // no view
-                    "</sheet>" +
-                    "</form>",
-                mockRPC(route, args) {
-                    assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-                resId: 1,
-            });
+        assert.verifySteps(["get_views", "read"]);
+    });
 
-            assert.verifySteps(["read"], "only one read should have been done");
-        }
-    );
-
-    QUnit.skipWOWL("default_order on x2many embedded view", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("default_order on x2many embedded view", async function (assert) {
         serverData.models.partner.fields.display_name.sortable = true;
         serverData.models.partner.records[0].p = [1, 4];
 
@@ -7384,107 +7335,62 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree default_order="foo desc">' +
-                '<field name="display_name"/>' +
-                '<field name="foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,form":
-                    '<form string="Partner">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-            },
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree default_order="foo desc">
+                            <field name="display_name"/>
+                            <field name="foo"/>
+                        </tree>
+                        <form><field name="foo"/></form>,
+                    </field>
+                </form>`,
             resId: 1,
         });
 
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:first td:contains(yop)").length,
-            "record 1 should be first"
-        );
+        function getFooValues(row) {
+            const rows = target.querySelectorAll(".o_data_row");
+            return [...rows].map((r) => r.querySelectorAll(".o_data_cell")[1].innerText);
+        }
+
+        assert.deepEqual(getFooValues(), ["yop", "My little Foo Value"]);
+
         await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        assert.strictEqual($(".modal").length, 1, "FormViewDialog should be opened");
-        await editInput($('.modal .o_field_widget[name="foo"] input'), "xop");
-        await click($(".modal-footer button:eq(1)"));
-        await editInput($('.modal .o_field_widget[name="foo"] input'), "zop");
-        await click($(".modal-footer button:first"));
+        assert.containsOnce(target, ".modal");
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "xop");
+        await click(target.querySelector(".modal-footer .o_form_button_save_new"));
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "zop");
+        await click(target.querySelector(".modal-footer .o_form_button_save"));
 
         // client-side sort
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
-            "record zop should be first"
-        );
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)").length,
-            "record yop should be second"
-        );
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
-            "record xop should be third"
-        );
+        assert.deepEqual(getFooValues(), ["zop", "yop", "xop", "My little Foo Value"]);
 
         // server-side sort
         await click(target.querySelector(".o_form_button_save"));
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
-            "record zop should be first"
-        );
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)").length,
-            "record yop should be second"
-        );
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
-            "record xop should be third"
-        );
+        assert.deepEqual(getFooValues(), ["zop", "yop", "xop", "My little Foo Value"]);
 
         // client-side sort on edit
         await click(target.querySelector(".o_form_button_edit"));
-        await click(target.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)"));
-        await editInput($('.modal .o_field_widget[name="foo"] input'), "zzz");
-        await click($(".modal-footer button:first"));
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zzz)").length,
-            "record zzz should be first"
-        );
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(zop)").length,
-            "record zop should be second"
-        );
-        assert.ok(
-            target.querySelector(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
-            "record xop should be third"
-        );
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "zzz");
+        await click(target.querySelector(".modal-footer .o_form_button_save"));
+        assert.deepEqual(getFooValues(), ["zzz", "zop", "xop", "My little Foo Value"]);
     });
 
-    QUnit.skipWOWL("action context is used when evaluating domains", async function (assert) {
+    QUnit.test("action context is used when evaluating domains", async function (assert) {
         assert.expect(1);
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<field name=\"trululu\" domain=\"[('id', 'in', context.get('product_ids', []))]\"/>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="trululu" domain="[('id', 'in', context.get('product_ids', []))]"/>
+                </form>`,
             resId: 1,
-            viewOptions: {
-                context: { product_ids: [45, 46, 47] },
-            },
+            context: { product_ids: [45, 46, 47] },
             mockRPC(route, args) {
                 if (args.method === "name_search") {
                     assert.deepEqual(
@@ -7493,7 +7399,6 @@ QUnit.module("Views", (hooks) => {
                         "domain should be properly evaluated"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
         await click(target.querySelector(".o_form_button_edit"));
@@ -7863,34 +7768,26 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("custom open record dialog title", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("custom open record dialog title", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="p" widget="many2many" string="custom label">' +
-                "<tree>" +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "<form>" +
-                '<field name="display_name"/>' +
-                "</form>" +
-                "</field>" +
-                "</form>",
-            session: {},
+            arch: `
+                <form>
+                    <field name="p" widget="many2many" string="custom label">
+                        <tree><field name="display_name"/></tree>
+                        <form><field name="display_name"/></form>
+                    </field>
+                </form>`,
             resId: 1,
         });
 
-        await click(target.querySelector(".o_data_row:first"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(
-            $(".modal .modal-title").first().innerText.trim(),
-            "Open: custom label",
-            "modal should use the python field string as title"
+            target.querySelector(".modal .modal-title").innerText,
+            "Open: custom label"
         );
     });
 
