@@ -2958,14 +2958,13 @@ export class OdooEditor extends EventTarget {
         }
 
         // handle stars
-        if (node.nodeType === Node.ELEMENT_NODE && node.className.includes('fa-star') &&
+        const isStar = el => el.nodeType === Node.ELEMENT_NODE && (
+            el.classList.contains('fa-star') || el.classList.contains('fa-star-o')
+        );
+        if (isStar(node) &&
             node.parentElement && node.parentElement.className.includes('o_stars')) {
-            const previousStars = getAdjacentPreviousSiblings(node, sib => (
-                sib.nodeType === Node.ELEMENT_NODE && sib.className.includes('fa-star')
-            ));
-            const nextStars = getAdjacentNextSiblings(node, sib => (
-                sib.nodeType === Node.ELEMENT_NODE && sib.className.includes('fa-star')
-            ));
+            const previousStars = getAdjacentPreviousSiblings(node, isStar);
+            const nextStars = getAdjacentNextSiblings(node, isStar);
             if (nextStars.length || previousStars.length) {
                 const shouldToggleOff = node.classList.contains('fa-star') &&
                     (!nextStars[0] || !nextStars[0].classList.contains('fa-star'));
