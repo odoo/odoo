@@ -48,6 +48,14 @@ class TestEdiJson(AccountTestInvoicingCommon):
         cls.invoice.write({
             "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice.invoice_line_ids.ids]})
         cls.invoice.action_post()
+        cls.invoice_full_discount = cls.init_invoice("out_invoice", post=False, products=cls.product_a)
+        cls.invoice_full_discount.write({
+            "invoice_line_ids": [(1, l_id, {"discount": 100}) for l_id in cls.invoice_full_discount.invoice_line_ids.ids]})
+        cls.invoice_full_discount.action_post()
+        cls.invoice_zero_qty = cls.init_invoice("out_invoice", post=False, products=cls.product_a)
+        cls.invoice_zero_qty.write({
+            "invoice_line_ids": [(1, l_id, {"quantity": 0}) for l_id in cls.invoice_zero_qty.invoice_line_ids.ids]})
+        cls.invoice_zero_qty.action_post()
 
     def test_edi_json(self):
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice)
@@ -94,3 +102,31 @@ class TestEdiJson(AccountTestInvoicingCommon):
             }
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
+
+        #=================================== Full discount test =====================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_full_discount)
+        expected.update({
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00002", "Dt": "01/01/2019"},
+            "ItemList": [{
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 1000.0, "AssAmt": 0.0,
+                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
+                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0, "TotItemVal": 0.0}],
+            "ValDtls": {"AssVal": 0.0, "CgstVal": 0.0, "SgstVal": 0.0, "IgstVal": 0.0, "CesVal": 0.0,
+                "StCesVal": 0.0, "RndOffAmt": 0.0, "TotInvVal": 0.0}
+        })
+        self.assertDictEqual(json_value, expected, "Indian EDI with 100% discount sent json value is not matched")
+
+        #=================================== Zero quantity test =============================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_zero_qty)
+        expected.update({
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00003", "Dt": "01/01/2019"},
+            "ItemList": [{
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 0.0,
+                "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 0.0, "Discount": 0.0, "AssAmt": 0.0,
+                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 0.0, "SgstAmt": 0.0, "CesRt": 0.0, "CesAmt": 0.0,
+                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0, "TotItemVal": 0.0}],
+        })
+        self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
