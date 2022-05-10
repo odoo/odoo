@@ -170,7 +170,7 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 
 @check
 def execute(db, uid, obj, method, *args, **kw):
-    threading.currentThread().dbname = db
+    threading.current_thread().dbname = db
     with odoo.registry(db).cursor() as cr:
         check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)
