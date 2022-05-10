@@ -38,7 +38,7 @@ class AccrualPlanLevel(models.Model):
         default='day', string=" ", required=True,
         help="This field defines the unit of time after which the accrual starts.")
     is_based_on_worked_time = fields.Boolean("Based on worked time",
-        help="Only accrue for the time worked by the employee. This is the time when the employee did not take time off.")
+        help="If checked, the rate will be prorated on time off type where type is set on Working Time in the configuration.")
 
     # Accrue of
     added_value = fields.Float(
