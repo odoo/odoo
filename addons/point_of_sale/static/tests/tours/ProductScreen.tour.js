@@ -113,3 +113,31 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
 
     Tour.register('ProductScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });
+
+odoo.define('point_of_sale.tour.FixedPriceNegativeQty', function (require) {
+    'use strict';
+
+    const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
+    const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
+    const { getSteps, startSteps } = require('point_of_sale.tour.utils');
+    var Tour = require('web_tour.tour');
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+
+    ProductScreen.do.clickDisplayedProduct('Zero Amount Product');
+    ProductScreen.check.selectedOrderlineHas('Zero Amount Product', '1.0', '1.0');
+    ProductScreen.do.pressNumpad('+/- 1');
+    ProductScreen.check.selectedOrderlineHas('Zero Amount Product', '-1.0', '-1.0');
+
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.00');
+    PaymentScreen.do.clickValidate();
+
+    ReceiptScreen.check.receiptIsThere();
+
+    Tour.register('FixedTaxNegativeQty', { test: true, url: '/pos/ui' }, getSteps());
+});
