@@ -14,6 +14,7 @@
         'portal'
     ],
     'data': [
+        'data/article_templates.xml',
         'data/knowledge_data.xml',
         'data/ir_actions_data.xml',
         'data/mail_templates.xml',
@@ -32,6 +33,7 @@
     'application': True,
     'auto_install': False,
     'license': 'LGPL-3',
+    'post_init_hook': '_init_private_article_per_user',
     'assets': {
         'web.assets_backend': [
             ('remove', 'web_editor/static/src/scss/web_editor.backend.scss'),
