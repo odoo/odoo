@@ -65,7 +65,6 @@ class AvatarMixin(models.AbstractModel):
         initial = html_escape(self[self._avatar_name_field][0].upper())
         bgcolor = get_hsl_from_seed(self[self._avatar_name_field] + str(self.create_date.timestamp() if self.create_date else ""))
         return b64encode((
-            "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
             f"<rect fill='{bgcolor}' height='180' width='180'/>"
             f"<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>{initial}</text>"
