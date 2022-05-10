@@ -14,14 +14,17 @@ class EditWebsiteSystray extends Component {
             isLoading: false,
         });
 
-        useEffect((edition, snippetsLoaded) => {
+        useEffect((edition) => {
+            if (edition) {
+                this.state.isLoading = true;
+            }
+        }, () => [this.websiteContext.edition]);
+
+        useEffect((snippetsLoaded) => {
             if (snippetsLoaded) {
                 this.state.isLoading = false;
             }
-            if (edition && !this.websiteService.wysiwygLoaded) {
-                this.state.isLoading = true;
-            }
-        }, () => [this.websiteContext.edition, this.websiteContext.snippetsLoaded]);
+        }, () => [this.websiteContext.snippetsLoaded]);
     }
 
     get translatable() {

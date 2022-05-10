@@ -10,13 +10,14 @@ import {WebsiteAceEditor, AceEditorAdapterComponent} from '@website/components/a
 import {PagePropertiesDialogWrapper} from '@website/components/dialog/page_properties';
 
 const websiteSystrayRegistry = registry.category('website_systray');
-const {useState} = owl;
+const { useState, onWillStart } = owl;
 
 patch(NavBar.prototype, 'website_navbar', {
     setup() {
         this._super();
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');
+        this.user = useService('user');
         this.websiteContext = useState(this.websiteService.context);
         this.aceEditor = WebsiteAceEditor;
 
@@ -56,12 +57,18 @@ patch(NavBar.prototype, 'website_navbar', {
                 isDisplayed: () => this.canShowPageProperties(),
             },
         };
+
+        onWillStart(async () => {
+            this.isWebsitePublisher = await this.user.hasGroup('website.group_website_publisher');
+        });
     },
 
     filterWebsiteMenus(sections) {
         const filteredSections = [];
         for (const section of sections) {
-            if (!this.websiteEditingMenus[section.xmlid] || this.websiteEditingMenus[section.xmlid].isDisplayed()) {
+            const isWebsiteCustomMenu = this.websiteEditingMenus[section.xmlid];
+            const displayWebsiteCustomMenu = isWebsiteCustomMenu && this.isWebsitePublisher && this.websiteEditingMenus[section.xmlid].isDisplayed();
+            if (!isWebsiteCustomMenu || displayWebsiteCustomMenu) {
                 let subSections = [];
                 if (section.childrenTree.length) {
                     subSections = this.filterWebsiteMenus(section.childrenTree);
@@ -76,7 +83,7 @@ patch(NavBar.prototype, 'website_navbar', {
      * @override
      */
     get systrayItems() {
-        if (this.websiteService.currentWebsite) {
+        if (this.websiteService.currentWebsite && this.isWebsitePublisher) {
             return websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))

@@ -43,6 +43,7 @@ Ask questions, get answers, no distractions
     'assets': {
         'website.assets_editor': [
             'website_forum/static/src/js/tours/website_forum.js',
+            'website_forum/static/src/js/systray_items/*.js',
         ],
         'web.assets_tests': [
             'website_forum/static/tests/**/*',
@@ -51,9 +52,6 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/scss/website_forum.scss',
             'website_forum/static/src/js/website_forum.js',
             'website_forum/static/src/js/website_forum.share.js',
-        ],
-        'web.assets_backend': [
-            'website_forum/static/src/js/systray_items/*.js',
         ],
         'web.assets_qweb': [
             'website_forum/static/src/xml/*.xml',

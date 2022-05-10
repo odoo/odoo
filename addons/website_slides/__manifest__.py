@@ -71,7 +71,6 @@ Featuring
             'website_slides/static/src/js/slide_category_one2many.js',
             'website_slides/static/src/js/rating_field_backend.js',
             'website_slides/static/src/models/*.js',
-            'website_slides/static/src/js/systray_items/*.js',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',
@@ -97,6 +96,9 @@ Featuring
             'website_slides/static/src/js/slides_course_unsubscribe.js',
             'website_slides/static/src/js/tours/slides_tour.js',
             'website_slides/static/src/js/portal_chatter.js',
+        ],
+        'website.assets_editor': [
+            'website_slides/static/src/js/systray_items/*.js',
         ],
         'web.assets_tests': [
             'website_slides/static/tests/tours/*.js',

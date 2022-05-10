@@ -21,7 +21,7 @@ import {
 } from "../../utils";
 import { standaloneAdapter } from "web.OwlCompatibility";
 
-import { fetchAndProcessTemplates } from "@web/core/assets";
+import { fetchAndProcessTemplates, loadBundle } from "@web/core/assets";
 import { makeEnv, startServices } from "@web/env";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
@@ -410,14 +410,16 @@ export async function createPublicRoot(RootWidget) {
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
     // The root widget's parent is a standalone adapter so that it has _trigger_up
     const publicRoot = new RootWidget(standaloneAdapter({ Component }));
+    const app = new App(MainComponentsContainer, {
+        env: wowlEnv,
+        dev: wowlEnv.debug,
+        templates: window.__OWL_TEMPLATES__,
+        translateFn: _t,
+        translatableAttributes: ["data-tooltip"],
+    });
+    loadBundle.app = app;
     await Promise.all([
-        new App(MainComponentsContainer, {
-            env: wowlEnv,
-            dev: wowlEnv.debug,
-            templates: window.__OWL_TEMPLATES__,
-            translateFn: _t,
-            translatableAttributes: ["data-tooltip"],
-        }).mount(document.body),
+        app.mount(document.body),
         publicRoot.attachTo(document.body),
     ]);
     return publicRoot;

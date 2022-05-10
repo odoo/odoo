@@ -22,7 +22,7 @@ This module adds a Twitter scroller building block to the website builder, so th
             'website_twitter/static/src/scss/website_twitter.scss',
             'website_twitter/static/src/js/website.twitter.animation.js',
         ],
-        'website.assets_editor': [
+        'website.assets_wysiwyg': [
             'website_twitter/static/src/js/website.twitter.editor.js',
         ],
     },
