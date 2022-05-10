@@ -7,7 +7,7 @@ import logging
 import os
 import re
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
 
@@ -220,6 +220,10 @@ class Company(models.Model):
             currency = self.env['res.currency'].browse(vals['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
+
+        # Add company in OdooBot companies
+        self.env['res.users'].browse(SUPERUSER_ID).sudo().company_ids |= company
+
         return company
 
     def write(self, values):
