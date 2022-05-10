@@ -28,6 +28,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { FieldOne2Many } from "web.relational_fields";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 let serverData;
 let target;
@@ -376,13 +377,20 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("O2M with parented m2o and domain on parent.m2o", async function (assert) {
+    QUnit.test("O2M with parented m2o and domain on parent.m2o", async function (assert) {
         assert.expect(4);
 
         /* records in an o2m can have a m2o pointing to themselves
          * in that case, a domain evaluation on that field followed by name_search
          * shouldn't send virtual_ids to the server
          */
+
+        patchWithCleanup(AutoComplete, {
+            delay: 0,
+        });
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
 
         serverData.models.turtle.fields.parent_id = {
             string: "Parent",
@@ -407,13 +415,14 @@ QUnit.module("Fields", (hooks) => {
                             <field name="parent_id"/>
                         </tree>
                     </field>
-                </form>`,
-            mockRPC(route, args) {
-                if (args.method === "name_search") {
+                </form>
+            `,
+            mockRPC(route, { kwargs }) {
+                if (route === "/web/dataset/call_kw/turtle/name_search") {
                     // We are going to pass twice here
                     // First time, we really have nothing
                     // Second time, a virtual_id has been created
-                    assert.deepEqual(args.kwargs.args, [["id", "in", []]]);
+                    assert.deepEqual(kwargs.args, [["id", "in", []]]);
                 }
             },
         });
@@ -421,22 +430,19 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
 
         await clickOpenM2ODropdown(target, "parent_id");
-        await editInput(target, "div[name=parent_id] input", "ABC");
-        // await clickOpenedDropdownItem(target, "parent_id", `Create and Edit`);
+        await editInput(target, ".o_field_widget[name=parent_id] input", "ABC");
+        await clickOpenedDropdownItem(target, "parent_id", "Create and Edit...");
 
-        // await clickSave(target.querySelectorAll(".modal")[1]);
+        await click(target, ".modal:not(.o_inactive_modal) .modal-footer .btn-primary");
+        await click(target, ".modal:not(.o_inactive_modal) .o_form_button_save_new");
 
-        // await click($modal.eq(1).find(".modal-footer .btn-primary").eq(0));
-        // await click($modal.eq(0).find(".modal-footer .btn-primary").eq(1));
+        assert.containsOnce(
+            target,
+            ".o_data_row",
+            "The main record should have the new record in its o2m"
+        );
 
-        // assert.containsOnce(
-        //     target,
-        //     ".o_data_row",
-        //     "The main record should have the new record in its o2m"
-        // );
-
-        // $modal = $(".modal-content");
-        // await click($modal.find(".o_field_many2one input"));
+        await click(target, ".o_field_many2one input");
     });
 
     QUnit.skipWOWL("one2many list editable with cell readonly modifier", async function (assert) {
