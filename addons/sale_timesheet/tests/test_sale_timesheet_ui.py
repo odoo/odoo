@@ -29,5 +29,10 @@ class TestUi(HttpCase):
             'service_tracking': 'no',
         })
 
+        # Enable the "Milestones" feature to be able to create milestones on this tour.
+        cls.env['res.config.settings'] \
+            .create({'group_project_milestone': True}) \
+            .execute()
+
     def test_ui(self):
         self.start_tour('/web', 'sale_timesheet_tour', login='admin', timeout=100)

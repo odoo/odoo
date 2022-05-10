@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 class ProjectMilestone(models.Model):
     _name = 'project.milestone'
@@ -17,10 +17,12 @@ class ProjectMilestone(models.Model):
     deadline = fields.Date(tracking=True, copy=False)
     is_reached = fields.Boolean(string="Reached", default=False, copy=False)
     reached_date = fields.Date(compute='_compute_reached_date', store=True)
+    task_ids = fields.One2many('project.task', 'milestone_id', 'Tasks')
 
     # computed non-stored fields
     is_deadline_exceeded = fields.Boolean(compute="_compute_is_deadline_exceeded")
     is_deadline_future = fields.Boolean(compute="_compute_is_deadline_future")
+    task_count = fields.Integer('# of Tasks', compute='_compute_task_count', groups='project.group_project_milestone')
 
     @api.depends('is_reached')
     def _compute_reached_date(self):
@@ -38,10 +40,28 @@ class ProjectMilestone(models.Model):
         for ms in self:
             ms.is_deadline_future = ms.deadline and ms.deadline > fields.Date.context_today(self)
 
+    @api.depends('task_ids.milestone_id')
+    def _compute_task_count(self):
+        task_read_group = self.env['project.task']._read_group([('milestone_id', 'in', self.ids), ('allow_milestones', '=', True)], ['milestone_id'], ['milestone_id'])
+        task_count_per_milestone = {res['milestone_id'][0]: res['milestone_id_count'] for res in task_read_group}
+        for milestone in self:
+            milestone.task_count = task_count_per_milestone.get(milestone.id, 0)
+
     def toggle_is_reached(self, is_reached):
         self.ensure_one()
         self.update({'is_reached': is_reached})
         return self._get_data()
+
+    def action_view_tasks(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('project.action_view_task_from_milestone')
+        action['context'] = {'default_project_id': self.project_id.id, 'default_milestone_id': self.id}
+        if self.task_count == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.task_ids.id
+            if 'views' in action:
+                action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type == 'form']
+        return action
 
     @api.model
     def _get_fields_to_export(self):

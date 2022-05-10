@@ -36,6 +36,7 @@
         'views/project_collaborator_views.xml',
         'wizard/project_report_wizard_views.xml',
         'views/project_views.xml',
+        'views/project_milestone_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_activity_views.xml',
