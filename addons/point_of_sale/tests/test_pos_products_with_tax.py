@@ -5,6 +5,8 @@ from odoo import tools
 
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.tests.common import Form
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSProductsWithTax(TestPoSCommon):
@@ -305,6 +307,95 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertAlmostEqual(sum(manually_calculated_taxes), sum(tax_lines.mapped('balance')))
         for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
             self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined and should be debit.')
+
+    def test_entry_move_creation_with_unrelated_pos_session_open(self):
+        """
+            Ensure correct tags assignment during entry move creation while a POS session is still open
+        """
+        # Create a new tax with its corresponding tax report lines
+        # in order to simulate the tags affectation
+        tax_report = self.env["account.tax.report"].create({
+            "name": "Tax report",
+        })
+        base_20 = self.env["account.tax.report.line"].create({
+            "name": "Base 20",
+            "tag_name": "20B",
+            "report_id": tax_report.id,
+            "sequence": 1,
+        })
+        base_20_tag_plus, base_20_tag_minus = base_20.tag_ids.sorted("tax_negate")
+        tax_20 = self.env["account.tax.report.line"].create({
+            "name": "20",
+            "tag_name": "20T",
+            "report_id": tax_report.id,
+            "sequence": 2,
+        })
+        tax_20_tag_plus, tax_20_tag_minus = tax_20.tag_ids.sorted("tax_negate")
+        tax_20_incl = self.env['account.tax'].create({
+            "name": "20%",
+            "amount": 20,
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            'price_include': True,
+            "invoice_repartition_line_ids": [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, base_20_tag_plus.ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_received_account.id,
+                    'tag_ids': [(6, 0, tax_20_tag_plus.ids)],
+                }),
+            ]
+        })
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (self.product1, 1),
+        ])])
+
+        # Create an entry
+        with Form(self.env["account.move"].with_context(
+                default_move_type="entry")) as move_form:
+            with move_form.line_ids.new() as line_form:
+                line_form.account_id = self.sale_account
+                line_form.credit = 50.0
+                line_form.tax_ids.add(tax_20_incl)
+            with move_form.line_ids.new() as line_form_2:
+                line_form_2.account_id = self.pos_receivable_account
+                line_form_2.debit = 60.0
+        move = move_form.save()
+        # Ensure that tags are not affected by opened POS session
+        sale_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.sale_account).tax_tag_ids
+        self.assertEqual(sale_line_tag, base_20_tag_minus)
+        tax_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.tax_received_account).tax_tag_ids
+        self.assertEqual(tax_line_tag, tax_20_tag_minus)
+
+        # Close POS session
+        self.pos_session.action_pos_session_validate()
+
+        # Create an entry - check if the result is the same as above
+        with Form(self.env["account.move"].with_context(
+                default_move_type="entry")) as move_form:
+            with move_form.line_ids.new() as line_form:
+                line_form.account_id = self.sale_account
+                line_form.credit = 50.0
+                line_form.tax_ids.add(tax_20_incl)
+            with move_form.line_ids.new() as line_form_2:
+                line_form_2.account_id = self.pos_receivable_account
+                line_form_2.debit = 60.0
+        move = move_form.save()
+        # Ensure that tags are not affected by opened POS session
+        sale_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.sale_account).tax_tag_ids
+        self.assertEqual(sale_line_tag, base_20_tag_minus)
+        tax_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.tax_received_account).tax_tag_ids
+        self.assertEqual(tax_line_tag, tax_20_tag_minus)
 
     def test_pos_create_correct_account_move(self):
         """ Test for orders with global rounding disabled
