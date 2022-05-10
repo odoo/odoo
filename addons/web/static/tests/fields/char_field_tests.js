@@ -855,6 +855,69 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("support autocomplete attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="display_name" autocomplete="coucou"/></form>`,
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.hasAttrValue(
+            target.querySelector('.o_field_widget[name="display_name"] input'),
+            "autocomplete",
+            "coucou",
+            "attribute autocomplete should be set"
+        );
+    });
+
+    QUnit.test("input autocomplete attribute set to none by default", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="display_name"/></form>`,
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.hasAttrValue(
+            target.querySelector('.o_field_widget[name="display_name"] input'),
+            "autocomplete",
+            "off",
+            "attribute autocomplete should be set to none by default"
+        );
+    });
+
+    QUnit.test("support password attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo" password="True"/></form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="foo"]').innerText,
+            "***",
+            "password should be displayed with stars"
+        );
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="foo"] input').value,
+            "yop",
+            "input value should be the password"
+        );
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="foo"] input').type,
+            "password",
+            "input should be of type password"
+        );
+    });
+
     QUnit.test("input field: change password value", async function (assert) {
         assert.expect(4);
 
