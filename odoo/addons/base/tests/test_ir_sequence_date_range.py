@@ -42,6 +42,56 @@ class TestIrSequenceDateRangeStandard(SingleTransactionCase):
         seq_date_range = self.env['ir.sequence.date_range'].search(domain)
         self.assertEqual(seq_date_range.date_to, january(17))
 
+    def test_ir_sequence_date_range_2_day(self):
+        seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range')])
+        self.assertTrue(seq, "seq test_sequence_date_range not found")
+        date = '2000-04-14'
+        dt_range_domain = [('sequence_id', '=', seq.id), ('date_from', '>=', '2000-01-01'), ('date_from', '<=', '2000-12-31')]
+
+        # Testing day
+        self.env['ir.sequence.date_range'].search(dt_range_domain).unlink()
+        seq.write({'prefix': '%(range_day)s/'})
+        n = seq.next_by_id(date)
+        self.assertEqual(n, '14/1')
+        date_range = self.env['ir.sequence.date_range'].search(dt_range_domain, limit=1)
+        self.assertEqual(date_range.date_from.strftime('%Y-%m-%d'), date)
+        self.assertEqual(date_range.date_to.strftime('%Y-%m-%d'), date)
+        self.env['ir.sequence.date_range'].search(dt_range_domain).unlink()
+
+    def test_ir_sequence_date_range_2_month(self):
+        seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range')])
+        self.assertTrue(seq, "seq test_sequence_date_range not found")
+        date = '2000-04-14'
+        dt_range_domain = [('sequence_id', '=', seq.id), ('date_from', '>=', '2000-01-01'), ('date_from', '<=', '2000-12-31')]
+
+        # Testing month
+        self.env['ir.sequence.date_range'].search(dt_range_domain).unlink()
+        seq.write({'prefix': '%(range_month)s/'})
+        n = seq.next_by_id(date)
+        self.assertEqual(n, '04/1')
+        date_range = self.env['ir.sequence.date_range'].search(dt_range_domain, limit=1)
+        self.assertEqual(date_range.date_from.strftime('%Y-%m-%d'), '2000-04-01')
+        self.assertEqual(date_range.date_to.strftime('%Y-%m-%d'), '2000-04-30')
+
+        self.env['ir.sequence.date_range'].search(dt_range_domain).unlink()
+
+    def test_ir_sequence_date_range_2_year(self):
+        seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range')])
+        self.assertTrue(seq, "seq test_sequence_date_range not found")
+        date = '2000-04-14'
+        dt_range_domain = [('sequence_id', '=', seq.id), ('date_from', '>=', '2000-01-01'), ('date_from', '<=', '2000-12-31')]
+
+        # Testing year
+        self.env['ir.sequence.date_range'].search(dt_range_domain).unlink()
+        seq.write({'prefix': '%(range_year)s/'})
+        n = seq.next_by_id(date)
+        self.assertEqual(n, '2000/1')
+        date_range = self.env['ir.sequence.date_range'].search(dt_range_domain, limit=1)
+        self.assertEqual(date_range.date_from.strftime('%Y-%m-%d'), '2000-01-01')
+        self.assertEqual(date_range.date_to.strftime('%Y-%m-%d'), '2000-12-31')
+
+        self.env['ir.sequence.date_range'].search(dt_range_domain).unlink()
+
     def test_ir_sequence_date_range_3_unlink(self):
         seq = self.env['ir.sequence'].search([('code', '=', 'test_sequence_date_range')])
         seq.unlink()
