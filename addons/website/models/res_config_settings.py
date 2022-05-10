@@ -6,6 +6,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
+from werkzeug import urls
+
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -74,7 +76,14 @@ class ResConfigSettings(models.TransientModel):
         'Google Search Console',
         related='website_id.google_search_console',
         readonly=False)
-
+    plausible_shared_key = fields.Char(
+        'Plausible auth Key',
+        related='website_id.plausible_shared_key',
+        readonly=False)
+    plausible_site = fields.Char(
+        'Plausible Site (e.g. domain.com)',
+        related='website_id.plausible_site',
+        readonly=False)
     cdn_activated = fields.Boolean(
         related='website_id.cdn_activated',
         readonly=False)
@@ -118,6 +127,10 @@ class ResConfigSettings(models.TransientModel):
         "Use a image by default for sharing",
         compute='_compute_has_default_share_image',
         inverse='_inverse_has_default_share_image')
+    has_plausible_shared_key = fields.Boolean(
+        "Plausible Analytics",
+        compute='_compute_has_plausible_shared_key',
+        inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
     module_marketing_automation = fields.Boolean()
 
@@ -125,6 +138,18 @@ class ResConfigSettings(models.TransientModel):
     def _compute_shared_user_account(self):
         for config in self:
             config.shared_user_account = not config.website_id.specific_user_account
+
+    @api.onchange('plausible_shared_key')
+    def _onchange_shared_key(self):
+        for config in self:
+            value = config.plausible_shared_key
+            if value and value.startswith('http'):
+                try:
+                    url = urls.url_parse(value)
+                    config.plausible_shared_key = urls.url_decode(url.query).get('auth', '')
+                    config.plausible_site = url.path.split('/')[-1]
+                except Exception:  # noqa
+                    pass
 
     def _inverse_shared_user_account(self):
         for config in self:
@@ -140,6 +165,18 @@ class ResConfigSettings(models.TransientModel):
     def _inverse_auth_signup_uninvited(self):
         for config in self:
             config.website_id.auth_signup_uninvited = config.auth_signup_uninvited
+
+    @api.depends('website_id')
+    def _compute_has_plausible_shared_key(self):
+        for config in self:
+            config.has_plausible_shared_key = bool(config.plausible_shared_key)
+
+    def _inverse_has_plausible_shared_key(self):
+        for config in self:
+            if config.has_plausible_shared_key:
+                continue
+            config.plausible_shared_key = False
+            config.plausible_site = False
 
     @api.depends('website_id')
     def _compute_has_google_analytics(self):

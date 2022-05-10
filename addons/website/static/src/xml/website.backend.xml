@@ -29,6 +29,7 @@
 
     <t t-name="website.dashboard_content">
         <div class="o_website_dashboard_content">
+            <t t-call="website.plausible_content"/>
             <t t-call="website.google_analytics_content"/>
         </div>
     </t>
@@ -47,6 +48,20 @@
                         <div class="o_buttons text-center">
                             <h3>There is no data currently available.</h3>
                             <button class="btn btn-primary js_link_analytics_settings d-block mx-auto mb8">Connect Google Analytics</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.plausible_content">
+        <div class="row" t-if="widget.groups.website_designer &amp;&amp; widget.dashboards_data.plausible_share_url">
+            <div class="col-12 o_box">
+                <h2>Analytics</h2>
+                <div>
+                    <div class="row">
+                        <div class="embed-responsive embed-responsive-1by1">
+                            <iframe t-att-src='widget.dashboards_data.plausible_share_url' class="embed-responsive-item" frameborder="0" loading="lazy"/>
                         </div>
                     </div>
                 </div>

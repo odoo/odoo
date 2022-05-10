@@ -113,6 +113,9 @@ class Website(models.Model):
 
     google_maps_api_key = fields.Char('Google Maps API Key')
 
+    plausible_shared_key = fields.Char()
+    plausible_site = fields.Char()
+
     user_id = fields.Many2one('res.users', string='Public User', required=True)
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
@@ -730,6 +733,22 @@ class Website(models.Model):
             inc += 1
             page_temp = page_url + (inc and "-%s" % inc or "")
         return page_temp
+
+    def _get_plausible_script_url(self):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'website.plausible_script',
+            'https://plausible.io/js/plausible.js'
+        )
+
+    def _get_plausible_server(self):
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'website.plausible_server',
+            'https://plausible.io'
+        )
+
+    def _get_plausible_share_url(self):
+        embed_url = f'/share/{self.plausible_site}?auth={self.plausible_shared_key}&embed=true&theme=system'
+        return self.plausible_shared_key and urls.url_join(self._get_plausible_server(), embed_url) or ''
 
     def get_unique_key(self, string, template_module=False):
         """ Given a string, return an unique key including module prefix.
