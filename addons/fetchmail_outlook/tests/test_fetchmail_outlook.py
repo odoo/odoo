@@ -21,12 +21,11 @@ class TestFetchmailOutlook(TransactionCase):
 
         mail_server = self.env['fetchmail.server'].create({
             'name': 'Test server',
-            'use_microsoft_outlook_service': True,
+            'server_type': 'outlook',
             'user': 'test@example.com',
             'microsoft_outlook_access_token': 'test_access_token',
             'microsoft_outlook_access_token_expiration': time.time() + 1000000,
             'password': '',
-            'server_type': 'imap',
             'is_ssl': True,
         })
 
@@ -45,15 +44,6 @@ class TestFetchmailOutlook(TransactionCase):
         with self.assertRaises(UserError, msg='Should ensure that the password is empty'):
             self.env['fetchmail.server'].create({
                 'name': 'Test server',
-                'use_microsoft_outlook_service': True,
+                'server_type': 'outlook',
                 'password': 'test',
-                'server_type': 'imap',
-            })
-
-        with self.assertRaises(UserError, msg='Should ensure that the server type is IMAP'):
-            self.env['fetchmail.server'].create({
-                'name': 'Test server',
-                'use_microsoft_outlook_service': True,
-                'password': '',
-                'server_type': 'pop',
             })

@@ -8,8 +8,8 @@
             <field name="smtp_user" position="after">
                 <field name="google_gmail_uri" invisible="1"/>
                 <field name="google_gmail_refresh_token" invisible="1"/>
-                <div></div>
-                <div attrs="{'invisible': [('smtp_authentication', '!=', 'gmail')]}">
+                <div attrs="{'invisible': [('smtp_authentication', '!=', 'gmail')]}"
+                    class="d-flex flex-row align-items-center" colspan="8">
                     <span attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}"
                         class="badge text-bg-success">
                         Gmail Token Valid
@@ -21,22 +21,23 @@
                         Connect your Gmail account
                     </button>
                     <button type="object"
-                        name="open_google_gmail_uri" class="btn-link px-0"
+                        name="open_google_gmail_uri" class="btn-link px-0 ml-2"
                         attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}">
-                        <i class="fa fa-cog"/>
-                        Edit Settings
+                        <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
-                    <div class="alert alert-warning" role="alert"
+                    <button class="alert alert-warning d-block mt-2 text-left"
+                        icon="fa-arrow-right" type="action" role="alert"
+                        name="%(base.res_config_setting_act_window)d"
                         attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
                         Setup your Gmail API credentials in the general settings to link a Gmail account.
-                    </div>
+                    </button>
                 </div>
             </field>
-            <field name="smtp_user" position="attributes">
-                <attribute name="attrs">{'invisible' : [('smtp_authentication', '!=', 'login'), ('smtp_authentication', '!=', 'gmail')]}</attribute>
-            </field>
-            <field name="smtp_pass" position="attributes">
-                <attribute name="attrs">{'invisible' : [('smtp_authentication', '=', 'gmail')]}</attribute>
+            <field name="smtp_authentication_info" position="after">
+                <a href="https://www.odoo.com/documentation/15.0/applications/general/email_communication/email_servers.html?highlight=outgoing email server#use-a-default-from-email-address"
+                    attrs="{'invisible': [('smtp_authentication', '!=', 'gmail')]}" target="_blank">
+                    Read More
+                </a>
             </field>
         </field>
     </record>

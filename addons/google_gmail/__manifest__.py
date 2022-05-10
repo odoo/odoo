@@ -3,7 +3,7 @@
 
 {
     "name": "Google Gmail",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden",
     "description": "Gmail support for incoming / outgoing mail servers",
     "depends": [
@@ -16,4 +16,9 @@
     ],
     "auto_install": True,
     "license": "LGPL-3",
+    "assets": {
+        "web.assets_backend": [
+            "google_gmail/static/src/scss/google_gmail.scss",
+        ]
+    },
 }

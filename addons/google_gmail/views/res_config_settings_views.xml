@@ -8,12 +8,14 @@
             <field name="arch" type="xml">
                 <div id="msg_module_google_gmail" position="replace">
                     <div class="row mt16" id="gmail_client_identifier">
-                        <label string="Client ID" for="google_gmail_client_identifier" class="col-lg-3 o_light_label"/>
-                        <field name="google_gmail_client_identifier" class="ms-2"/>
+                        <label string="ID" for="google_gmail_client_identifier" class="col-lg-3 o_light_label"/>
+                        <field name="google_gmail_client_identifier" class="ms-2"
+                            placeholder="ID of your Google app"/>
                     </div>
                     <div class="row mt16" id="gmail_client_secret">
-                        <label string="Client Secret" for="google_gmail_client_secret" class="col-lg-3 o_light_label"/>
-                        <field name="google_gmail_client_secret" class="ms-2"/>
+                        <label string="Secret" for="google_gmail_client_secret" class="col-lg-3 o_light_label"/>
+                        <field name="google_gmail_client_secret" class="ms-2"
+                            placeholder="Secret of your Google app"/>
                     </div>
                 </div>
             </field>

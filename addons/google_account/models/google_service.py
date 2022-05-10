@@ -131,7 +131,7 @@ class GoogleService(models.AbstractModel):
             raise UserError(_('Google %s is not yet configured.', service.title()))
 
         if not refresh_token:
-            raise UserError(_('The refresh token for authentication is not set.'))
+            raise UserError(_('Your Google account is not connected.'))
 
         try:
             result = requests.post(

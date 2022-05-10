@@ -3,7 +3,7 @@
 
 {
     "name": "Microsoft Outlook",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "description": "Outlook support for outgoing mail servers",
     "depends": [

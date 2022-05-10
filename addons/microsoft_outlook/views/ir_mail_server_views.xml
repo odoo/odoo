@@ -5,37 +5,41 @@
         <field name="model">ir.mail_server</field>
         <field name="inherit_id" ref="base.ir_mail_server_form"/>
         <field name="arch" type="xml">
-            <field name="smtp_host" position="before">
-                <field name="use_microsoft_outlook_service" string="Outlook"/>
-            </field>
             <field name="smtp_user" position="after">
                 <field name="is_microsoft_outlook_configured" invisible="1"/>
                 <field name="microsoft_outlook_refresh_token" invisible="1"/>
                 <field name="microsoft_outlook_access_token" invisible="1"/>
                 <field name="microsoft_outlook_access_token_expiration" invisible="1"/>
-                <div></div>
-                <div attrs="{'invisible': [('use_microsoft_outlook_service', '=', False)]}">
-                    <span attrs="{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}"
+                <div attrs="{'invisible': [('smtp_authentication', '!=', 'outlook')]}"
+                    class="d-flex flex-row align-items-center" colspan="8">
+                    <span attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}"
                         class="badge text-bg-success">
                         Outlook Token Valid
                     </span>
                     <button type="object"
                         name="open_microsoft_outlook_uri" class="btn-link px-0"
-                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '!=', False)]}">
+                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '!=', False)]}">
                         <i class="fa fa-arrow-right"/>
                         Connect your Outlook account
                     </button>
                     <button type="object"
-                        name="open_microsoft_outlook_uri" class="btn-link px-0"
-                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}">
-                        <i class="fa fa-cog"/>
-                        Edit Settings
+                        name="open_microsoft_outlook_uri" class="btn-link px-0 ml-2"
+                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}">
+                        <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
-                    <div class="alert alert-warning" role="alert"
-                        attrs="{'invisible': ['|', ('is_microsoft_outlook_configured', '=', True), ('use_microsoft_outlook_service', '=', False)]}">
+                    <button class="alert alert-warning d-block mt-2 text-left"
+                        icon="fa-arrow-right" type="action" role="alert"
+                        name="%(base.res_config_setting_act_window)d"
+                        attrs="{'invisible': ['|', ('is_microsoft_outlook_configured', '=', True), ('smtp_authentication', '!=', 'outlook')]}">
                         Setup your Outlook API credentials in the general settings to link a Outlook account.
-                    </div>
+                    </button>
                 </div>
+            </field>
+            <field name="smtp_authentication_info" position="after">
+                <a href="https://www.odoo.com/documentation/15.0/applications/general/email_communication/email_servers.html?highlight=outgoing email server#use-a-default-from-email-address"
+                    attrs="{'invisible': [('smtp_authentication', '!=', 'outlook')]}" target="_blank">
+                    Read More
+                </a>
             </field>
         </field>
     </record>
