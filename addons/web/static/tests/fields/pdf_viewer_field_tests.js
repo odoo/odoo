@@ -99,7 +99,7 @@ QUnit.module("Fields", (hooks) => {
         dataTransfer.items.add(new File(["test"], "test.pdf", { type: "application/pdf" }));
         fileInput.files = dataTransfer.files;
         fileInput.dispatchEvent(new Event("change", { bubbles: true }));
-
+        await nextTick();
         await nextTick();
 
         assert.containsOnce(target, ".o_pdfview_iframe", "there is a PDF Viewer");
