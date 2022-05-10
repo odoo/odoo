@@ -29,6 +29,7 @@ class RecruitmentSource(models.Model):
     has_domain = fields.Char(compute='_compute_has_domain')
     job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
     alias_id = fields.Many2one('mail.alias', "Alias ID")
+    medium_id = fields.Many2one('utm.medium', default=lambda self: self.env.ref('utm.utm_medium_website'))
 
     def _compute_has_domain(self):
         self.has_domain = bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
