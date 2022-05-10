@@ -282,7 +282,7 @@ class Project(models.Model):
 
     def _get_sale_items_domain(self, additional_domain=None):
         sale_orders = self._get_sale_order_items().sudo().order_id
-        domain = [('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done'])]
+        domain = [('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done']), ('display_type', '=', False)]
         if additional_domain:
             domain = expression.AND([domain, additional_domain])
         return domain
