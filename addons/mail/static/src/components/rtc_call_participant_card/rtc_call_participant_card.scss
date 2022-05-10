@@ -6,16 +6,11 @@
     padding: map-get($spacers, 1);
     display: flex;
     position: relative;
-}
-
-.o_RtcCallParticipantCard_avatarFrame {
-    display: flex;
-    user-select: none;
     aspect-ratio: 16/9;
-
-    &.o-isMinimized {
-        aspect-ratio: 1;
-    }
+    display: flex;
+    position: relative;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .o_RtcCallParticipantCard_avatarImage {
@@ -47,16 +42,6 @@
     85% { border: 5px solid gray('700') }
 }
 
-.o_RtcCallParticipantCard_container {
-    margin: map-get($spacers, 0);
-    width: 100% - map-get($spacers, 0);
-    height: 100% - map-get($spacers, 0);
-    display: flex;
-    position: relative;
-    justify-content: center;
-    flex-direction: column;
-}
-
 .o_RtcCallParticipantCard_liveIndicator {
     display: flex;
     margin-inline-end: 5%;
@@ -71,11 +56,14 @@
     padding: map-get($spacers, 1);
 }
 
-.o_RtcCallParticipantCard_overlayBottom {
+.o_RtcCallParticipantCard_overlay {
     position: absolute;
     display: flex;
     pointer-events: none;
-    margin: map-get($spacers, 1);
+    margin: Min(5%, map-get($spacers, 2));
+}
+
+.o_RtcCallParticipantCard_overlayBottom {
     max-width: 50%;
     overflow: hidden;
     bottom: 0;
@@ -83,10 +71,7 @@
 }
 
 .o_RtcCallParticipantCard_overlayTop {
-    position: absolute;
-    display: flex;
     flex-direction: row-reverse;
-    margin: map-get($spacers, 2);
     right: 0%;
     top: 0%;
 }
@@ -138,10 +123,6 @@
 
 .o_RtcCallParticipantCard_connectionState {
     color: theme-color('warning');
-}
-
-.o_RtcCallParticipantCard_container {
-    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
 }
 
 .o_RtcCallParticipantCard_liveIndicator {
