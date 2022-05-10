@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class FetchmailServer(models.Model):
@@ -9,6 +9,14 @@ class FetchmailServer(models.Model):
     _inherit = ['fetchmail.server', 'google.gmail.mixin']
 
     server_type = fields.Selection(selection_add=[('gmail', 'Gmail OAuth Authentication')], ondelete={'gmail': 'set default'})
+
+    def _compute_server_type_info(self):
+        gmail_servers = self.filtered(lambda server: server.server_type == 'gmail')
+        gmail_servers.server_type_info = _(
+            'Connect your Gmail account with the OAuth Authentication process. \n'
+            'You will be redirected to the Gmail login page where you will '
+            'need to accept the permission.')
+        super(FetchmailServer, self - gmail_servers)._compute_server_type_info()
 
     @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):

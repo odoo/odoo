@@ -23,7 +23,6 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     _OUTLOOK_SCOPE = None
     _OUTLOOK_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/'
 
-    use_microsoft_outlook_service = fields.Boolean('Outlook Authentication')
     is_microsoft_outlook_configured = fields.Boolean('Is Outlook Credential Configured',
         compute='_compute_is_microsoft_outlook_configured')
     microsoft_outlook_refresh_token = fields.Char(string='Outlook Refresh Token',
@@ -35,14 +34,13 @@ class MicrosoftOutlookMixin(models.AbstractModel):
     microsoft_outlook_uri = fields.Char(compute='_compute_outlook_uri', string='Authentication URI',
         help='The URL to generate the authorization code from Outlook', groups='base.group_system')
 
-    @api.depends('use_microsoft_outlook_service')
     def _compute_is_microsoft_outlook_configured(self):
         Config = self.env['ir.config_parameter'].sudo()
         microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
         microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
         self.is_microsoft_outlook_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
 
-    @api.depends('use_microsoft_outlook_service')
+    @api.depends('is_microsoft_outlook_configured')
     def _compute_outlook_uri(self):
         Config = self.env['ir.config_parameter'].sudo()
         base_url = self.get_base_url()
@@ -50,7 +48,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         OUTLOOK_ENDPOINT = Config.get_param('microsoft.outlook.endpoint', self._OUTLOOK_ENDPOINT)
 
         for record in self:
-            if not record.id or not record.use_microsoft_outlook_service or not record.is_microsoft_outlook_configured:
+            if not record.id or not record.is_microsoft_outlook_configured:
                 record.microsoft_outlook_uri = False
                 continue
 
@@ -80,7 +78,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         if not self.env.user.has_group('base.group_system'):
             raise AccessError(_('Only the administrator can link an Outlook mail server.'))
 
-        if not self.use_microsoft_outlook_service or not self.is_microsoft_outlook_configured:
+        if not self.is_microsoft_outlook_configured:
             raise UserError(_('Please configure your Outlook credentials.'))
 
         return {
@@ -161,7 +159,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
            or not self.microsoft_outlook_access_token_expiration \
            or self.microsoft_outlook_access_token_expiration < now_timestamp:
             if not self.microsoft_outlook_refresh_token:
-                raise UserError(_('Please login your Outlook mail server before using it.'))
+                raise UserError(_('Please connect with your Outlook account before using it.'))
             (
                 self.microsoft_outlook_access_token,
                 self.microsoft_outlook_access_token_expiration,

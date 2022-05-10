@@ -95,6 +95,7 @@ class IrMailServer(models.Model):
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
     smtp_authentication = fields.Selection([('login', 'Username'), ('certificate', 'SSL Certificate')], string='Authenticate with', required=True, default='login')
+    smtp_authentication_info = fields.Text('Authentication Info', compute='_compute_smtp_authentication_info')
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
     smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
     smtp_encryption = fields.Selection([('none', 'None'),
@@ -117,6 +118,21 @@ class IrMailServer(models.Model):
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
+
+    @api.depends('smtp_authentication')
+    def _compute_smtp_authentication_info(self):
+        for server in self:
+            if server.smtp_authentication == 'login':
+                server.smtp_authentication_info = _(
+                    'Connect to your server through your usual username and password. \n'
+                    'This is the most basic SMTP authentication process and '
+                    'may not be accepted by all providers. \n')
+            elif server.smtp_authentication == 'certificate':
+                server.smtp_authentication_info = _(
+                    'Authenticate by using SSL certificates, belonging to your domain name. \n'
+                    'SSL certificates allow you to authenticate your mail server for the entire domain name.')
+            else:
+                server.smtp_authentication = False
 
     @api.constrains('smtp_ssl_certificate', 'smtp_ssl_private_key')
     def _check_smtp_ssl_files(self):
