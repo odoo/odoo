@@ -349,6 +349,8 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase')
         previous_product_qty = {line.id: line.product_uom_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
+        if 'price_unit' in values:
+            self.move_ids.price_unit = self.price_unit
         if 'product_qty' in values:
             lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
         return result
