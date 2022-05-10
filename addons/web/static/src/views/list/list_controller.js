@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { download } from "@web/core/network/download";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
@@ -44,6 +45,7 @@ export class ListController extends Component {
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");
         this.userService = useService("user");
+        this.rpc = useService("rpc");
 
         this.archInfo = this.props.archInfo;
         this.editable = this.props.editable ? this.archInfo.editable : false;
@@ -230,6 +232,41 @@ export class ListController extends Component {
         return this.model.root.count;
     }
 
+    async downloadExport(fields, import_compat, format) {
+        const resIds = await this.getSelectedResIds();
+        const exportedFields = fields.map((field) => ({
+            name: field.id,
+            label: field.string,
+            store: field.store,
+            type: field.field_type,
+        }));
+        if (import_compat) {
+            exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
+        }
+        await download({
+            data: {
+                data: JSON.stringify({
+                    import_compat,
+                    context: this.props.context,
+                    domain: this.model.root.domain,
+                    fields: exportedFields,
+                    groupby: this.model.root.groupBy,
+                    ids: resIds.length > 0 && resIds,
+                    model: this.model.root.resModel,
+                }),
+            },
+            url: `/web/export/${format}`,
+        });
+    }
+
+    async getExportedFields(model, import_compat, parentParams) {
+        return await this.rpc("/web/export/get_fields", {
+            ...parentParams,
+            model,
+            import_compat,
+        });
+    }
+
     /**
      * Opens the Export Dialog
      *
@@ -240,6 +277,8 @@ export class ListController extends Component {
         const dialogProps = {
             resIds,
             context: this.props.context,
+            download: this.downloadExport.bind(this),
+            getExportedFields: this.getExportedFields.bind(this),
             root: this.model.root,
         };
         this.dialogService.add(ExportDataDialog, dialogProps);
@@ -249,8 +288,13 @@ export class ListController extends Component {
      *
      * @private
      */
-    onDirectExportData() {
-        console.log("onDirectExportData");
+    async onDirectExportData() {
+        const fields = await this.getExportedFields(this.model.root.resModel, true);
+        await this.downloadExport(
+            fields.filter((field) => this.model.root.activeFields[field.id]),
+            false,
+            "xlsx"
+        );
     }
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.

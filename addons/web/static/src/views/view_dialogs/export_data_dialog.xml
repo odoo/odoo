@@ -15,7 +15,7 @@
                         expandedContent="props.expandedContent"
                         isFieldExpanded="props.isFieldExpanded"
                         isFieldExpandable="props.isFieldExpandable"
-                        fieldsToExport="props.fieldsToExport"
+                        exportedFields="props.exportedFields"
                         onClick="props.onClick"
                         onAdd="props.onAdd"
                     />
@@ -28,7 +28,7 @@
         <Dialog contentClass="'o_export_data_dialog h100'" title="title" size="'lg'">
             <div class="o_left_panel col-12 col-md-6 d-flex flex-column flex-nowrap">
                 <div class="o_import_compat">
-                    <CheckBox className="'o_import_compat'" id="'o-update-data'" value="state.importCompatibleData" onChange.bind="onCompatibleDataChange">
+                    <CheckBox className="'o_import_compat'" id="'o-update-data'" value="state.compatible" onChange.bind="onCompatibleDataChange">
                         <span>I want to update data (import-compatible export) </span>
                     </CheckBox>
                 </div>
@@ -36,17 +36,20 @@
                 <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
                 <div class="o_left_field_panel h-100 px-2 overflow-auto border">
                     <div class="o_field_tree_structure">
-                        <t t-foreach="rootFields" t-as="field" t-key="field.name">
-                            <ExportDataItem
-                                field="field"
-                                expandedContent.bind="expandedContent"
-                                isFieldExpanded.bind="isFieldExpanded"
-                                fieldsToExport="state.fieldsToExport"
-                                isFieldExpandable="isFieldExpandable"
-                                onClick.bind="onToggleExpandField"
-                                onAdd.bind="onAddItemExportList"
-                            />
+                        <t t-if="fieldsAvailable">
+                            <t t-foreach="rootFields" t-as="field" t-key="field.name">
+                                <ExportDataItem
+                                    field="field"
+                                    expandedContent.bind="expandedContent"
+                                    isFieldExpanded.bind="isFieldExpanded"
+                                    exportedFields="state.exportedFields"
+                                    isFieldExpandable="isFieldExpandable"
+                                    onClick.bind="onToggleExpandField"
+                                    onAdd.bind="onAddItemExportList"
+                                />
+                            </t>
                         </t>
+                        <h3 t-else="" class="text-center text-muted mt-5 o_no_match">No match found.</h3>
                     </div>
                 </div>
             </div>
@@ -65,7 +68,7 @@
                 </div>
                 <div class="o_exported_lists">
                     <div class="input-group mb-3">
-                        <t t-if="state.templateSelection === 'new_template'">
+                        <t t-if="state.templateId === 'new_template'">
                             <label class="pt-2 mb-0 font-weight-bold">Save as: </label>
                             <input t-ref="exportList" class="form-control ml-4 o_save_list_name" t-att-placeholder="newTemplateText" />
                         </t>
@@ -74,7 +77,7 @@
                             <select class="form-control ml-4 o_exported_lists_select" t-on-change="onChangeExportList">
                                 <option />
                                 <t t-foreach="templates" t-as="template" t-key="template.id">
-                                    <option t-att-value="template.id" t-esc="template.name or 'undefined'" t-att-selected="state.templateSelection === template.id" />
+                                    <option t-att-value="template.id" t-esc="template.name or 'undefined'" t-att-selected="state.templateId === template.id" />
                                 </t>
                                 <option class="font-italic" value="new_template">New template </option>
                             </select>
@@ -88,7 +91,7 @@
                             </button>
                         </t>
                         <t t-else="">
-                            <button t-if="state.templateSelection" type="button" class="btn btn-secondary ml-1 o_delete_exported_list" t-on-click.stop="onClearExportListEdition">
+                            <button t-if="state.templateId" type="button" class="btn btn-secondary ml-1 o_delete_exported_list" t-on-click.stop="onClearExportListEdition">
                                 <i class="fa fa-trash" />
                             </button>
                         </t>
@@ -96,9 +99,9 @@
                 </div>
                 <div class="o_right_field_panel h-100 px-2 overflow-auto border">
                     <ul class="o_fields_list list-unstyled" t-ref="draggable">
-                        <t t-foreach="fieldsToExport" t-as="field" t-key="field.name">
+                        <t t-foreach="exportList" t-as="field" t-key="field.name">
                             <li class="o_export_field" t-att-data-field_id="field.name">
-                                <span class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ fieldsToExport.length === 1 ? 0 : 1 }}" />
+                                <span class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ exportList.length === 1 ? 0 : 1 }}" />
                                 <span t-esc="field.string" />
                                 <span class="fa fa-trash m-1 float-end o_remove_field o_cursor_pointer" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
                             </li>

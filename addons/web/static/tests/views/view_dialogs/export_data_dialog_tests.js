@@ -1,6 +1,13 @@
 /** @odoo-module */
 
-import { click, editInput, editSelect, getFixture, nextTick } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    editSelect,
+    getFixture,
+    mockDownload,
+    nextTick,
+} from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
@@ -12,6 +19,18 @@ const serviceRegistry = registry.category("services");
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
     let target;
+    let fetchedFields;
+
+    const openExportDataDialog = async () => {
+        await click(target.querySelector(".o_list_record_selector input[type='checkbox'"));
+        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
+        await click(
+            target.querySelector(
+                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
+            )
+        );
+        await nextTick();
+    };
 
     hooks.beforeEach(async () => {
         target = getFixture();
@@ -75,17 +94,75 @@ QUnit.module("ViewDialogs", (hooks) => {
         };
         target = getFixture();
         setupControlPanelServiceRegistry();
+
+        function hasGroup(group) {
+            return group === "base.group_allow_export";
+        }
+        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
         serviceRegistry.add("dialog", dialogService);
+
+        fetchedFields = {
+            root: [
+                {
+                    field_type: "one2many",
+                    string: "Activities",
+                    required: false,
+                    value: "activity_ids/id",
+                    id: "activity_ids",
+                    params: {
+                        model: "mail.activity",
+                        prefix: "activity_ids",
+                        name: "Activities",
+                    },
+                    relation_field: "res_id",
+                    children: true,
+                },
+                {
+                    children: false,
+                    field_type: "char",
+                    id: "foo",
+                    relation_field: null,
+                    required: false,
+                    string: "Foo",
+                    value: "foo",
+                },
+            ],
+            activity_ids: [
+                {
+                    field_type: "one2many",
+                    string: "Attendants",
+                    required: false,
+                    value: "activity_ids/id",
+                    id: "activity_ids",
+                    params: {
+                        model: "mail.activity",
+                        prefix: "activity_ids",
+                        name: "Activities",
+                    },
+                    relation_field: "res_id",
+                    children: true,
+                },
+                {
+                    field_type: "one2many",
+                    string: "Activities",
+                    required: false,
+                    value: "activity_ids/id",
+                    id: "activity_ids",
+                    params: {
+                        model: "mail.activity",
+                        prefix: "activity_ids",
+                        name: "Activities",
+                    },
+                    relation_field: "res_id",
+                    children: true,
+                },
+            ],
+        };
     });
 
     QUnit.module("ExportDataDialog");
 
     QUnit.test("Export dialog UI test", async function (assert) {
-        function hasGroup(group) {
-            return group === "base.group_allow_export";
-        }
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
-
         await makeView({
             serverData,
             type: "list",
@@ -100,45 +177,12 @@ QUnit.module("ViewDialogs", (hooks) => {
                     ]);
                 }
                 if (route === "/web/export/get_fields") {
-                    return Promise.resolve([
-                        {
-                            field_type: "one2many",
-                            string: "Activities",
-                            required: false,
-                            value: "activity_ids/id",
-                            id: "activity_ids",
-                            params: {
-                                model: "mail.activity",
-                                prefix: "activity_ids",
-                                name: "Activities",
-                            },
-                            relation_field: "res_id",
-                            children: true,
-                        },
-                        {
-                            children: false,
-                            field_type: "char",
-                            id: "foo",
-                            relation_field: null,
-                            required: false,
-                            string: "Foo",
-                            value: "foo",
-                        },
-                    ]);
+                    return Promise.resolve(fetchedFields.root);
                 }
             },
         });
 
-        // Open the export modal
-        await click(target.querySelector("thead th.o_list_record_selector input"));
-        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
-        await click(
-            target.querySelector(
-                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
-            )
-        );
-
-        await nextTick();
+        await openExportDataDialog();
 
         assert.containsOnce(target, ".o_dialog", "the export dialog should be visible");
         assert.containsN(
@@ -172,10 +216,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: interacting with export templates", async function (assert) {
-        function hasGroup(group) {
-            return group === "base.group_allow_export";
-        }
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        assert.expect(17);
 
         await makeView({
             serverData,
@@ -195,7 +236,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                     return 2;
                 }
                 if (route === "/web/dataset/call_kw") {
-                    console.log(args.method);
                     return Promise.resolve([{ id: 1, name: "Activities template" }]);
                 }
                 if (route === "/web/export/namelist") {
@@ -212,33 +252,11 @@ QUnit.module("ViewDialogs", (hooks) => {
                 }
                 if (route === "/web/export/get_fields") {
                     return Promise.resolve([
-                        {
-                            field_type: "one2many",
-                            string: "Activities",
-                            required: false,
-                            value: "activity_ids/id",
-                            id: "activity_ids",
-                            params: {
-                                model: "mail.activity",
-                                prefix: "activity_ids",
-                                name: "Activities",
-                            },
-                            relation_field: "res_id",
-                            children: true,
-                        },
-                        {
-                            children: false,
-                            field_type: "char",
-                            id: "foo",
-                            relation_field: null,
-                            required: false,
-                            string: "Foo",
-                            value: "foo",
-                        },
+                        ...fetchedFields.root,
                         {
                             children: false,
                             field_type: "string",
-                            id: "thirs_field",
+                            id: "third_field",
                             relation_field: null,
                             required: false,
                             string: "Third field selected",
@@ -249,15 +267,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
         });
 
-        // Open the export dialog
-        await click(target.querySelector(".o_list_record_selector input[type='checkbox'"));
-        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
-        await click(
-            target.querySelector(
-                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
-            )
-        );
-        await nextTick();
+        await openExportDataDialog();
 
         assert.containsOnce(target, ".o_dialog", "the export dialog should be visible");
         assert.hasClass(
@@ -278,7 +288,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             "Activities"
         );
 
-        // add a new field to the exported fields list allow to edit the selected template
+        // add a new field to the exported fields list allow the edition of the template
         await click(target.querySelector(".o_export_tree_item:nth-child(2) .o_add_field"));
         assert.containsOnce(
             target,
@@ -287,7 +297,21 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
         assert.containsOnce(target, ".o_save_list_btn", "a save button is now visible");
         assert.containsOnce(target, ".o_cancel_list_btn", "a cancel button is now visible");
+        assert.containsN(
+            target,
+            ".o_fields_list .o_export_field",
+            2,
+            "the list contains two fields"
+        );
 
+        await click(target.querySelector(".o_cancel_list_btn"));
+        assert.containsOnce(
+            target,
+            ".o_fields_list .o_export_field",
+            "the template has been reset and the added field is no longer in the list"
+        );
+
+        await click(target.querySelector(".o_export_tree_item:nth-child(2) .o_add_field"));
         await editSelect(target, ".o_exported_lists_select", "new_template");
         assert.containsNone(target, ".o_exported_lists_select", "the template list is now hidden");
         assert.containsOnce(
@@ -325,15 +349,71 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
+    QUnit.skipWOWL("Export dialog: interacting with available fields", async function (assert) {
+        //assert.expect(17);
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([
+                        { tag: "csv", label: "CSV" },
+                        { tag: "xls", label: "Excel" },
+                    ]);
+                }
+                if (route === "/web/export/get_fields") {
+                    console.log(args);
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        // TODO...
+    });
+
     QUnit.skipWOWL("Direct export list", async function (assert) {
         assert.expect(2);
 
-        function hasGroup(group) {
-            return group === "base.group_allow_export";
-        }
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        mockDownload(({ data, url }) => {
+            assert.strictEqual(
+                url,
+                "/web/export/xlsx",
+                "should call get_file with the correct url"
+            );
+            assert.deepEqual(
+                JSON.parse(data.data),
+                {
+                    context: {},
+                    model: "partner",
+                    domain: [["bar", "!=", "glou"]],
+                    groupby: [],
+                    ids: false,
+                    import_compat: false,
+                    fields: [
+                        {
+                            name: "foo",
+                            label: "Foo",
+                            type: "char",
+                        },
+                        {
+                            name: "bar",
+                            label: "Bar",
+                            type: "char",
+                        },
+                    ],
+                },
+                "should be called with correct params"
+            );
+            return Promise.resolve();
+        });
 
-        assert.containsOnce(target, "div.o_control_panel .o_cp_buttons .o_list_export_xlsx");
         await makeView({
             serverData,
             type: "list",
@@ -345,41 +425,10 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="bar"/>
                 </tree>`,
             domain: [["bar", "!=", "glou"]],
-            session: {
-                ...this.mockSession,
-                get_file(args) {
-                    let data = JSON.parse(args.data.data);
-                    assert.strictEqual(
-                        args.url,
-                        "/web/export/xlsx",
-                        "should call get_file with the correct url"
-                    );
-                    assert.deepEqual(
-                        data,
-                        {
-                            context: {},
-                            model: "partner",
-                            domain: [["bar", "!=", "glou"]],
-                            groupby: [],
-                            ids: false,
-                            import_compat: false,
-                            fields: [
-                                {
-                                    name: "foo",
-                                    label: "Foo",
-                                    type: "char",
-                                },
-                                {
-                                    name: "bar",
-                                    label: "Bar",
-                                    type: "char",
-                                },
-                            ],
-                        },
-                        "should be called with correct params"
-                    );
-                    args.complete();
-                },
+            mockRPC(route) {
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
             },
         });
 
@@ -388,6 +437,39 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.skipWOWL("Direct export grouped list ", async function (assert) {
         assert.expect(2);
+
+        mockDownload(({ data, url }) => {
+            assert.strictEqual(
+                url,
+                "/web/export/xlsx",
+                "should call get_file with the correct url"
+            );
+            assert.deepEqual(
+                JSON.parse(data.data),
+                {
+                    context: {},
+                    model: "partner",
+                    domain: [["bar", "!=", "glou"]],
+                    groupby: ["foo", "bar"],
+                    ids: false,
+                    import_compat: false,
+                    fields: [
+                        {
+                            name: "foo",
+                            label: "Foo",
+                            type: "char",
+                        },
+                        {
+                            name: "bar",
+                            label: "Bar",
+                            type: "char",
+                        },
+                    ],
+                },
+                "should be called with correct params"
+            );
+            return Promise.resolve();
+        });
 
         await makeView({
             serverData,
@@ -400,41 +482,10 @@ QUnit.module("ViewDialogs", (hooks) => {
                 </tree>`,
             groupBy: ["foo", "bar"],
             domain: [["bar", "!=", "glou"]],
-            session: {
-                ...this.mockSession,
-                get_file(args) {
-                    let data = JSON.parse(args.data.data);
-                    assert.strictEqual(
-                        args.url,
-                        "/web/export/xlsx",
-                        "should call get_file with the correct url"
-                    );
-                    assert.deepEqual(
-                        data,
-                        {
-                            context: {},
-                            model: "partner",
-                            domain: [["bar", "!=", "glou"]],
-                            groupby: ["foo", "bar"],
-                            ids: false,
-                            import_compat: false,
-                            fields: [
-                                {
-                                    name: "foo",
-                                    label: "Foo",
-                                    type: "char",
-                                },
-                                {
-                                    name: "bar",
-                                    label: "Bar",
-                                    type: "char",
-                                },
-                            ],
-                        },
-                        "should be called with correct params"
-                    );
-                    args.complete();
-                },
+            mockRPC(route) {
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
             },
         });
 
