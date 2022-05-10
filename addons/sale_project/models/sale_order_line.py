@@ -169,7 +169,7 @@ class SaleOrderLine(models.Model):
             # duplicating a project doesn't set the SO on sub-tasks
             project.tasks.filtered('parent_id').write({
                 'sale_line_id': self.id,
-                'sale_order_id': self.order_id,
+                'sale_order_id': self.order_id.id,
             })
         else:
             project_only_sol_count = self.env['sale.order.line'].search_count([
