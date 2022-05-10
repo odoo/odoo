@@ -10,6 +10,8 @@
                             name="test_smtp_connection" class="btn-primary"/>
                     </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <group>
                                 <field name="name" placeholder="e.g. My Outgoing Server"/>
@@ -17,24 +19,38 @@
                             </group>
                             <group>
                                 <field name="sequence"/>
-                                <field name="active" widget="boolean_toggle"/>
+                                <field name="active" invisible="1"/>
                             </group>
                         </group>
                         <group>
                             <group>
                                 <field name="smtp_authentication" widget="radio"/>
-                                <field name="smtp_user" attrs="{'invisible': [('smtp_authentication', '!=', 'login')]}" force_save="1"/>
-                                <field name="smtp_pass" attrs="{'invisible': [('smtp_authentication', '!=', 'login')]}" password="True" force_save="1"/>
-                                <field name="smtp_ssl_certificate" attrs="{'invisible': [('smtp_authentication', '!=', 'certificate')]}" force_save="1"/>
-                                <field name="smtp_ssl_private_key" attrs="{'invisible': [('smtp_authentication', '!=', 'certificate')]}" force_save="1"/>
                             </group>
-                            <group string="Connection">
-                                <field name="smtp_encryption" widget="radio"/>
-                                <field name="smtp_host"/>
-                                <field name="smtp_port" options="{'format': false}"/>
-                                <field name="smtp_debug" groups="base.group_no_one"/>
+                            <group>
+                                <div class="text-muted font-italic" role="alert"
+                                    attrs="{'invisible': [('smtp_authentication_info', '=', False)]}">
+                                    <field name="smtp_authentication_info"/>
+                                </div>
                             </group>
                         </group>
+                        <notebook colspan="4">
+                            <page name="connection" string="Connection">
+                                <group>
+                                    <group>
+                                        <field name="smtp_encryption" widget="radio"/>
+                                        <field name="smtp_host"/>
+                                        <field name="smtp_port" options="{'format': false}"/>
+                                        <field name="smtp_debug" groups="base.group_no_one"/>
+                                    </group>
+                                    <group>
+                                        <field name="smtp_user" attrs="{'invisible': [('smtp_authentication', '=', 'certificate')]}" force_save="1"/>
+                                        <field name="smtp_pass" attrs="{'invisible': [('smtp_authentication', '!=', 'login')]}" password="True" force_save="1"/>
+                                        <field name="smtp_ssl_certificate" attrs="{'invisible': [('smtp_authentication', '!=', 'certificate')]}" force_save="1"/>
+                                        <field name="smtp_ssl_private_key" attrs="{'invisible': [('smtp_authentication', '!=', 'certificate')]}" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
