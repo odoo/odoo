@@ -11,9 +11,10 @@ class SaleOrderTemplate(models.Model):
     website_description = fields.Html(
         string="Website Description",
         translate=html_translate,
-        sanitize_attributes=False, sanitize_form=False)
+        sanitize_attributes=False,
+        sanitize_form=False)
 
-    def open_template(self):
+    def action_open_template(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
