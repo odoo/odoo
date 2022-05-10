@@ -496,12 +496,12 @@ class ProjectTask(models.Model):
                 task.partner_id = sale_order_id.partner_id
             task.sale_order_id = sale_order_id
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id')
     def _compute_sale_line(self):
         for task in self:
             if not task.sale_line_id:
                 # if the display_project_id is set then it means the task is classic task or a subtask with another project than its parent.
-                task.sale_line_id = task.display_project_id.sale_line_id or task.parent_id.sale_line_id or task.project_id.sale_line_id
+                task.sale_line_id = task.display_project_id.sale_line_id or task.parent_id.sale_line_id or task.project_id.sale_line_id or task.milestone_id.sale_line_id
             # check sale_line_id and customer are coherent
             if task.sale_line_id.order_partner_id.commercial_partner_id != task.partner_id.commercial_partner_id:
                 task.sale_line_id = False

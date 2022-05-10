@@ -9,8 +9,8 @@ from odoo.tests.common import tagged
 class TestSoLineMilestones(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         uom_hour = cls.env.ref('uom.product_uom_hour')
 
@@ -107,3 +107,17 @@ class TestSoLineMilestones(TestSaleCommon):
 
         self.milestone1.unlink()
         self.assertEqual(self.sol1.qty_delivered, 0.0, "Delivered quantity should update when a milestone is removed")
+
+    def test_compute_sale_line_in_task(self):
+        task = self.env['project.task'].create({
+            'name': 'Test Task',
+            'project_id': self.project.id,
+        })
+        self.assertEqual(task.sale_line_id, self.sol1, 'The task should have the one of the project linked')
+        self.project.sale_line_id = False
+        task.sale_line_id = False
+        self.assertFalse(task.sale_line_id)
+        task.write({'milestone_id': self.milestone1.id})
+        self.assertEqual(task.sale_line_id, self.milestone1.sale_line_id, 'The task should have the SOL from the milestone.')
+        self.project.sale_line_id = self.sol2
+        self.assertEqual(task.sale_line_id, self.sol1, 'The task should keep the SOL linked to the milestone.')
