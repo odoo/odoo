@@ -291,12 +291,12 @@ QUnit.module('web_editor', {}, function () {
                 '<p>t<font style="background-color: rgb(0, 255, 255);">oto toto </font>toto</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
-            var fontContent = $field.find('.note-editable font').contents()[0];
+            var fontElement = $field.find('.note-editable font')[0];
             var rangeControl = {
-                sc: fontContent,
+                sc: fontElement,
                 so: 0,
-                ec: fontContent,
-                eo: fontContent.length,
+                ec: fontElement,
+                eo: 1,
             };
             range = Wysiwyg.getRange();
             assert.deepEqual(_.pick(range, 'sc', 'so', 'ec', 'eo'), rangeControl,
@@ -304,7 +304,7 @@ QUnit.module('web_editor', {}, function () {
 
             // select the text
             pText = $field.find('.note-editable p').first().contents()[2];
-            Wysiwyg.setRange(fontContent, 5, pText, 2);
+            Wysiwyg.setRange(fontElement.firstChild, 5, pText, 2);
             // text is selected
 
             await openColorpicker('#toolbar .note-back-color-preview');
