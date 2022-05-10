@@ -38,6 +38,7 @@ class WebsiteBackend(http.Controller):
                     ga_client_id=current_website.google_management_client_id or '',
                     ga_analytics_key=current_website.google_analytics_key or '',
                 )
+            dashboard_data['dashboards']['plausible_share_url'] = current_website._get_plausible_share_url()
         return dashboard_data
 
     @http.route('/website/dashboard/set_ga_data', type='json', auth='user')

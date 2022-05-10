@@ -154,6 +154,9 @@
                 gtag('config', '<t t-esc="website.google_analytics_key"/>');
             </script>
         </t>
+        <t t-if="website and website.plausible_shared_key and not editable">
+            <script id="plausible_script" name="plausible" defer="defer" t-att-data-domain="website.plausible_site" t-att-src="website._get_plausible_script_url()"></script>
+        </t>
     </xpath>
 
     <!-- Page options -->

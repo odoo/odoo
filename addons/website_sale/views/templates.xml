@@ -1875,6 +1875,7 @@
                 </div>
                 <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
             </div>
+            <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(order.amount_total/100)*100 - 50), round(order.amount_total/100)*100 + 50)}"}' />
         </t>
     </template>
 

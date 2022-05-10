@@ -282,6 +282,36 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-offset-6 col-lg-6 o_setting_box" id="plausbile_setting">
+                            <div class="o_setting_left_pane">
+                                <field name="has_plausible_shared_key"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="has_plausible_shared_key"/>
+                                <div class="text-muted">
+                                    Use Plausible.io, Simple and privacy-friendly Google Analytics alternative
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label class="col-lg-3 o_light_label" string="Shared Link Auth" for="plausible_shared_key"/>
+                                        <field name="plausible_shared_key"
+                                            attrs="{'required': [('has_plausible_shared_key', '=', True)]}"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label class="col-lg-3 o_light_label" string="Site" for="plausible_site"/>
+                                        <field name="plausible_site"
+                                            attrs="{'required': [('has_plausible_shared_key', '=', True)]}"/>
+                                    </div>
+                                </div>
+                                <div attrs="{'invisible': [('has_plausible_shared_key', '=', False)]}">
+                                    <a href="https://www.odoo.com/documentation/master/applications/websites/website/optimize/plausible.html"
+                                            class="oe_link" target="_blank">
+                                        <i class="fa fa-arrow-right"/>
+                                        How to create my Plausible Shared Link
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </xpath>
