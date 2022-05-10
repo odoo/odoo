@@ -527,3 +527,60 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_05_ticket_screen(self):
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="accountman")
+
+    def test_fixed_tax_negative_qty(self):
+        """ Assert the negative amount of a negative-quantity orderline
+            with zero-amount product with fixed tax.
+        """
+
+        # setup the zero-amount product
+        tax_received_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.env.company.id,
+        })
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'fixed amount tax',
+            'amount_type': 'fixed',
+            'amount': 1,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_received_account.id,
+                }),
+            ],
+        })
+        zero_amount_product = self.env['product.product'].create({
+            'name': 'Zero Amount Product',
+            'available_in_pos': True,
+            'list_price': 0,
+            'taxes_id': [(6, 0, [fixed_tax.id])],
+        })
+
+        # Make an order with the zero-amount product from the frontend.
+        # We need to do this because of the fix in the "compute_all" port.
+        self.main_pos_config.write({'iface_tax_included': 'total'})
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FixedTaxNegativeQty', login="accountman")
+        pos_session = self.main_pos_config.current_session_id
+
+        # Close the session and check the session journal entry.
+        pos_session.action_pos_session_validate()
+
+        lines = pos_session.move_id.line_ids.sorted('balance')
+
+        # order in the tour is paid using the bank payment method.
+        bank_pm = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.name == 'Bank')
+
+        self.assertEqual(lines[0].account_id, bank_pm.receivable_account_id or self.env.company.account_default_pos_receivable_account_id)
+        self.assertAlmostEqual(lines[0].balance, -1)
+        self.assertEqual(lines[1].account_id, zero_amount_product.categ_id.property_account_income_categ_id)
+        self.assertAlmostEqual(lines[1].balance, 0)
+        self.assertEqual(lines[2].account_id, tax_received_account)
+        self.assertAlmostEqual(lines[2].balance, 1)
