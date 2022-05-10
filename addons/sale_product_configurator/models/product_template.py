@@ -9,10 +9,15 @@ class ProductTemplate(models.Model):
     _check_company_auto = True
 
     optional_product_ids = fields.Many2many(
-        'product.template', 'product_optional_rel', 'src_id', 'dest_id',
-        string='Optional Products', help="Optional Products are suggested "
-        "whenever the customer hits *Add to Cart* (cross-sell strategy, "
-        "e.g. for computers: warranty, software, etc.).", check_company=True)
+        comodel_name='product.template',
+        relation='product_optional_rel',
+        column1='src_id',
+        column2='dest_id',
+        string="Optional Products",
+        help="Optional Products are suggested "
+             "whenever the customer hits *Add to Cart* (cross-sell strategy, "
+             "e.g. for computers: warranty, software, etc.).",
+        check_company=True)
 
     @api.depends('attribute_line_ids.value_ids.is_custom', 'attribute_line_ids.attribute_id.create_variant')
     def _compute_has_configurable_attributes(self):

@@ -10,7 +10,8 @@ class SaleOrder(models.Model):
 
     report_grids = fields.Boolean(
         string="Print Variant Grids", default=True,
-        help="If set, the matrix of the products configurable by matrix will be shown on the report of the order.")
+        help="If set, the matrix of the products configurable by matrix will"
+             " be shown on the report of the order.")
 
     """ Matrix loading and update: fields and methods :
 
@@ -30,7 +31,9 @@ class SaleOrder(models.Model):
         help="Whether the grid field contains a new matrix to apply or not.")
     grid = fields.Char(
         "Matrix local storage", store=False,
-        help="Technical local storage of grid. \nIf grid_update, will be loaded on the SO. \nIf not, represents the matrix to open.")
+        help="Technical local storage of grid. "
+        "\nIf grid_update, will be loaded on the SO."
+        "\nIf not, represents the matrix to open.")
 
     @api.onchange('grid_product_tmpl_id')
     def _set_grid_up(self):
