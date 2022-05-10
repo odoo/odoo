@@ -79,6 +79,20 @@
                     ])]"/>
     </record>
 
+    <record id="payment_acquirer_asiapay" model="payment.acquirer">
+        <field name="name">Asiapay</field>
+        <field name="display_as">Credit Card (powered by Asiapay)</field>
+        <field name="image_128" type="base64" file="payment_asiapay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_asiapay"/>
+        <!-- See https://www.asiapay.com/payment.html#option -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                    ref('payment.payment_icon_cc_mastercard'),
+                    ref('payment.payment_icon_cc_visa'),
+                    ref('payment.payment_icon_cc_unionpay'),
+               ])]"/>
+    </record>
+
     <record id="payment_acquirer_authorize" model="payment.acquirer">
         <field name="name">Authorize.net</field>
         <field name="display_as">Credit Card (powered by Authorize)</field>
