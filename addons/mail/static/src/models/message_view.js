@@ -183,6 +183,19 @@ registerModel({
             return this.env._t("Open chat");
         },
         /**
+         * @returns {string}
+         */
+        _computeDateFromNow() {
+            if (!this.message.date) {
+                return clear();
+            }
+            const now = moment(this.clockWatcher.clock.date.getTime());
+            if (now.diff(this.message.date, 'seconds') < 45) {
+                return this.env._t("now");
+            }
+            return this.message.date.fromNow();
+        },
+        /**
          * @private
          * @returns {string|FieldCommand}
          */
@@ -288,6 +301,15 @@ registerModel({
         authorAvatarTitleText: attr({
             compute: '_computeAuthorAvatarTitleText',
         }),
+        clockWatcher: one('ClockWatcher', {
+            default: insertAndReplace({
+                clock: insertAndReplace({
+                    frequency: 60 * 1000,
+                }),
+            }),
+            inverse: 'messageViewOwner',
+            isCausal: true,
+        }),
         /**
          * States the component displaying this message view (if any).
          */
@@ -302,6 +324,12 @@ registerModel({
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
             isCausal: true,
+        }),
+        /**
+         * States the time elapsed since date up to now.
+         */
+        dateFromNow: attr({
+            compute: '_computeDateFromNow',
         }),
         /**
          * States the delete message confirm view that is displaying this

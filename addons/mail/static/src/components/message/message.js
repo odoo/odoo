@@ -8,7 +8,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { _lt } from 'web.core';
 import Popover from "web.Popover";
 
-const { Component, onWillUnmount, useRef } = owl;
+const { Component, useRef } = owl;
 
 const READ_MORE = _lt("Read More");
 const READ_LESS = _lt("Read Less");
@@ -42,12 +42,6 @@ export class Message extends Component {
          */
         this._checkboxRef = useRef('checkbox');
         /**
-         * Id of setInterval used to auto-update time elapsed of message at
-         * regular time.
-         */
-        this._intervalId = undefined;
-        onWillUnmount(() => this._willUnmount());
-        /**
          * States the index of the last "read more" that was inserted.
          * Useful to remember the state for each "read more" even if their DOM
          * is re-rendered.
@@ -62,10 +56,6 @@ export class Message extends Component {
          * typical non-changing situation.
          */
         this._isReadMoreByIndex = new Map();
-    }
-
-    _willUnmount() {
-        clearInterval(this._intervalId);
     }
 
     //--------------------------------------------------------------------------
@@ -265,13 +255,6 @@ export class Message extends Component {
                 message: this.messageView.message,
             });
         }
-        this.messageView.message.refreshDateFromNow();
-        clearInterval(this._intervalId);
-        this._intervalId = setInterval(() => {
-            if (this.messageView) {
-                this.messageView.message.refreshDateFromNow();
-            }
-        }, 60 * 1000);
     }
 
 }

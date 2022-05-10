@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
-import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
+import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
 import { sprintf } from '@web/core/utils/strings';
@@ -243,12 +243,6 @@ registerModel({
             });
         },
         /**
-         * Refreshes the value of `dateFromNow` field to the "current now".
-         */
-        refreshDateFromNow() {
-            this.update({ dateFromNow: this._computeDateFromNow() });
-        },
-        /**
          * Removes the given reaction from this message.
          *
          * @param {string} content
@@ -376,15 +370,6 @@ registerModel({
                 return this.env._t("Yesterday");
             }
             return this.date.format('LL');
-        },
-        /**
-         * @returns {string}
-         */
-        _computeDateFromNow() {
-            if (!this.date) {
-                return clear();
-            }
-            return timeFromNow(this.date);
         },
         /**
          * @private
@@ -739,12 +724,6 @@ registerModel({
          */
         dateDay: attr({
             compute: '_computeDateDay',
-        }),
-        /**
-         * States the time elapsed since date up to now.
-         */
-        dateFromNow: attr({
-            compute: '_computeDateFromNow',
         }),
         /**
          * The date time of the message at current user locale time.
