@@ -8532,53 +8532,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("render domain field widget without model", async function (assert) {
-        assert.expect(3);
-
-        serverData.models.partner.fields.model_name = { string: "Model name", type: "char" };
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="model_name"/>' +
-                '<field name="display_name" widget="domain" options="{\'model\': \'model_name\'}"/>' +
-                "</group>" +
-                "</form>",
-            mockRPC(route, args) {
-                if (args.method === "search_count") {
-                    assert.strictEqual(args.model, "test", "should search_count on test");
-                    if (!args.kwargs.domain) {
-                        return Promise.reject({
-                            message: {
-                                code: 200,
-                                data: {},
-                                message: "MockServer._getRecords: given domain has to be an array.",
-                            },
-                            event: $.Event(),
-                        });
-                    }
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        assert.strictEqual(
-            target.querySelector('.o_field_widget[name="display_name"]').innerText,
-            "Select a model to add a filter.",
-            "should contain an error message saying the model is missing"
-        );
-        await editInput(target.querySelector('.o_field_widget[name="model_name"] input'), "test");
-        assert.notStrictEqual(
-            target.querySelector('.o_field_widget[name="display_name"]').innerText,
-            "Select a model to add a filter.",
-            "should not contain an error message anymore"
-        );
-    });
-
     QUnit.skipWOWL("readonly fields are not sent when saving", async function (assert) {
         assert.expect(6);
 

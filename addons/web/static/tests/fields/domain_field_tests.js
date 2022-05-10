@@ -798,4 +798,38 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_domain_debug_input", rawDomain);
         await click(target, ".o_form_button_save");
     });
+
+    QUnit.test("domain field without model", async function (assert) {
+        serverData.models.partner.fields.model_name = { string: "Model name", type: "char" };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="model_name"/>
+                    <field name="display_name" widget="domain" options="{'model': 'model_name'}"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "search_count") {
+                    assert.step(args.model);
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="display_name"]').innerText,
+            "Select a model to add a filter.",
+            "should contain an error message saying the model is missing"
+        );
+        assert.verifySteps([]);
+        await editInput(target, ".o_field_widget[name=model_name] input", "test");
+        assert.notStrictEqual(
+            target.querySelector('.o_field_widget[name="display_name"]').innerText,
+            "Select a model to add a filter.",
+            "should not contain an error message anymore"
+        );
+        assert.verifySteps(["test"]);
+    });
 });
