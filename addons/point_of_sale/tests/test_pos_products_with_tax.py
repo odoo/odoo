@@ -497,3 +497,45 @@ class TestPoSProductsWithTax(TestPoSCommon):
             {'account_id': self.tax_received_account.id,   'balance':  15.14, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
             {'account_id': self.sale_account.id,           'balance':  72.07, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
         ])
+
+    def test_fixed_tax_positive_qty(self):
+
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'fixed amount tax',
+            'amount_type': 'fixed',
+            'amount': 1,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, self.tax_tag_invoice_base.ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_received_account.id,
+                    'tag_ids': [(6, 0, self.tax_tag_invoice_tax.ids)],
+                }),
+            ],
+        })
+
+        zero_amount_product = self.env['product.product'].create({
+            'name': 'Zero Amount Product',
+            'available_in_pos': True,
+            'list_price': 0,
+            'taxes_id': [(6, 0, [fixed_tax.id])],
+        })
+
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (zero_amount_product, 1),
+        ])])
+        self.pos_session.action_pos_session_validate()
+
+        lines = self.pos_session.move_id.line_ids.sorted('balance')
+
+        self.assertRecordValues(lines, [
+            {'account_id': self.tax_received_account.id, 'balance': -1},
+            {'account_id': self.sale_account.id, 'balance': 0},
+            {'account_id': self.cash_pm1.receivable_account_id.id, 'balance': 1},
+        ])
