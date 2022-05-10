@@ -20,7 +20,7 @@ class RecruitmentSource(models.Model):
                 source.job_id.website_url,
                 urls.url_encode({
                     'utm_campaign': self.env.ref('hr_recruitment.utm_campaign_job').name,
-                    'utm_medium': self.env.ref('utm.utm_medium_website').name,
+                    'utm_medium': source.medium_id.name or self.env.ref('utm.utm_medium_website').name,
                     'utm_source': source.source_id.name
                 })
             ))
