@@ -3,3 +3,5 @@
 
 # Copyright (C) 2012 Thinkopen Solutions, Lda. All Rights Reserved
 # http://www.thinkopensolutions.com.
+
+from . import models

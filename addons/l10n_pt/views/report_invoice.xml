@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_invoice_pt" inherit_id="account.report_invoice_document">
+        <xpath expr="//h2[@id='title_move_type']" position="after">
+            <t t-if="o.l10n_pt_duplicate_pdf">
+                <span class="text-right">Duplicate</span>
+            </t>
+            <t t-else="">
+                <span class="text-right">Original</span>
+            </t>
+        </xpath>
+    </template>
+</odoo>
