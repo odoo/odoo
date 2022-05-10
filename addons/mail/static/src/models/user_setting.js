@@ -160,9 +160,6 @@ registerModel({
                 this._saveSettings();
             }
         },
-        toggleLayoutSettingsWindow() {
-            this.update({ isRtcLayoutSettingDialogOpen: !this.isRtcLayoutSettingDialogOpen });
-        },
         /**
          * toggles the display of the option window
          */
@@ -268,12 +265,6 @@ registerModel({
         id: attr({
             readonly: true,
             required: true,
-        }),
-        /**
-         * true if the dialog for the call viewer layout is open
-         */
-        isRtcLayoutSettingDialogOpen: attr({
-            default: false,
         }),
         /**
          * Formatted string that represent the push to talk key with its modifiers.
