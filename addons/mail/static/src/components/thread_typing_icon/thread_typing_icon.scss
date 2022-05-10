@@ -1,27 +1,9 @@
 // ------------------------------------------------------------------
-// Variables
-// ------------------------------------------------------------------
-
-$o-thread-typing-icon-size-medium: 5px;
-$o-thread-typing-icon-size-small: 3px;
-
-// ------------------------------------------------------------------
 // Layout
 // ------------------------------------------------------------------
 
-.o_ThreadTypingIcon {
-    display: flex;
-    align-items: center;
-}
-
-.o_ThreadTypingIcon_dot {
-    display: flex;
-    flex: 0 0 auto;
-}
-
 .o_ThreadTypingIcon_separator {
     min-width: 1px;
-    flex: 1 0 auto;
 }
 
 // ------------------------------------------------------------------
@@ -29,17 +11,14 @@ $o-thread-typing-icon-size-small: 3px;
 // ------------------------------------------------------------------
 
 .o_ThreadTypingIcon_dot {
-    border-radius: 50%;
-    background: gray('500');
-
     &.o-sizeMedium {
-        width: $o-thread-typing-icon-size-medium;
-        height: $o-thread-typing-icon-size-medium;
+        width: $o-mail-thread-typing-icon-size-medium;
+        height: $o-mail-thread-typing-icon-size-medium;
     }
 
     &.o-sizeSmall {
-        width: $o-thread-typing-icon-size-small;
-        height: $o-thread-typing-icon-size-small;
+        width: $o-mail-thread-typing-icon-size-small;
+        height: $o-mail-thread-typing-icon-size-small;
     }
 }
 
@@ -84,7 +63,7 @@ $o-thread-typing-icon-size-small: 3px;
         transform: initial;
     }
     20% {
-        transform: translateY(-$o-thread-typing-icon-size-medium);
+        transform: translateY(-$o-mail-thread-typing-icon-size-medium);
     }
 }
 
@@ -93,10 +72,9 @@ $o-thread-typing-icon-size-small: 3px;
         transform: initial;
     }
     20% {
-        transform: translateY(-$o-thread-typing-icon-size-small);
+        transform: translateY(-$o-mail-thread-typing-icon-size-small);
     }
 }
-
 
 @keyframes o_ThreadTypingIcon_dot_animationPulse_animation {
     0%, 40%, 100% {
