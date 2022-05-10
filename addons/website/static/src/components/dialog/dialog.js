@@ -43,6 +43,8 @@ WebsiteDialog.props = {
     showSecondaryButton: { type: Boolean, optional: true },
     close: Function,
     closeOnClick: { type: Boolean, optional: true },
+    body: { type: String, optional: true },
+    slots: { type: Object, optional: true },
 };
 WebsiteDialog.defaultProps = {
     ...Dialog.defaultProps,

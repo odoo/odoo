@@ -4,7 +4,10 @@
     <Dialog contentClass="contentClasses"
         size="props.size"
         title="props.title">
-        <t t-slot="default"/>
+        <t t-set-slot="default">
+            <t t-if="props.slots and props.slots.default" t-slot="default"/>
+            <t t-else="" t-esc="props.body"/>
+        </t>
         <t t-set-slot="footer">
             <t t-if="props.slots and props.slots.footer" t-slot="footer"/>
             <t t-else="">
