@@ -7,6 +7,7 @@ import { useWowlService } from '@web/legacy/utils';
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
+import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 
 const { onWillStart, useEffect } = owl;
@@ -559,7 +560,16 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     _onCancelRequest(event) {
-        return this.props.quitCallback();
+        const isDirty = this.widget.isDirty();
+        if (isDirty) {
+            this.dialogs.add(WebsiteDialog, {
+                body: _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
+                primaryClick: () => this.props.quitCallback(),
+                secondaryClick: event.data.onReject,
+            });
+        } else {
+            return this.props.quitCallback();
+        }
     }
     /***
      * Starts the widgets inside the dropped snippet.

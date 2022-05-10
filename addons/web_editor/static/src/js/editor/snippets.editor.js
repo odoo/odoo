@@ -3406,11 +3406,11 @@ var SnippetsMenu = Widget.extend({
      * On click on discard button.
      */
     _onDiscardClick: function () {
-        this._buttonClick(() => {
+        this._buttonClick(after => {
             this.snippetEditors.forEach(editor => {
                 editor.toggleOverlay(false);
             });
-            this.trigger_up('request_cancel');
+            this.trigger_up('request_cancel', {onReject: after});
         }, this.$el[0].querySelector('button[data-action=cancel]'));
     },
     /**
@@ -3465,12 +3465,18 @@ var SnippetsMenu = Widget.extend({
             return;
         }
         this._buttonAction = true;
-        dom.addButtonLoadingEffect(button);
+        const removeLoadingEffect = dom.addButtonLoadingEffect(button);
         const actionButtons = this.$el[0].querySelectorAll('[data-action]');
         for (const actionButton of actionButtons) {
             actionButton.disabled = true;
         }
-        await action();
+        const after = () =>  {
+            removeLoadingEffect();
+            for (const actionButton of actionButtons) {
+                actionButton.disabled = false;
+            }
+        };
+        await action(after);
         this._buttonAction = false;
     },
 
