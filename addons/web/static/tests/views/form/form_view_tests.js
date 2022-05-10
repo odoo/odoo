@@ -8494,61 +8494,41 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "context is correctly passed after save & new in FormViewDialog",
         async function (assert) {
             assert.expect(3);
 
+            serverData.views = {
+                "product,false,form": `
+                    <form>
+                        <field name="partner_type_id" context="{'color': parent.id}"/>
+                    </form>`,
+                "product,false,list": '<tree><field name="display_name"/></tree>',
+            };
             await makeView({
                 type: "form",
                 resModel: "partner",
                 resId: 4,
                 serverData,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="product_ids"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                archs: {
-                    "product,false,form":
-                        '<form string="Products">' +
-                        "<sheet>" +
-                        "<group>" +
-                        '<field name="partner_type_id" ' +
-                        "context=\"{'color': parent.id}\"/>" +
-                        "</group>" +
-                        "</sheet>" +
-                        "</form>",
-                    "product,false,list": '<tree><field name="display_name"/></tree>',
-                },
+                arch: `<form><field name="product_ids"/></form>`,
                 mockRPC(route, args) {
                     if (args.method === "name_search") {
-                        assert.strictEqual(
-                            args.kwargs.context.color,
-                            4,
-                            "should use the correct context"
-                        );
+                        assert.strictEqual(args.kwargs.context.color, 4);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
             await click(target.querySelector(".o_form_button_edit"));
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
-            await testUtils.nextTick();
-            assert.strictEqual($(".modal").length, 1, "One FormViewDialog should be opened");
-            // set a value on the m2o
-            await testUtils.fields.many2one.clickOpenDropdown("partner_type_id");
-            await testUtils.fields.many2one.clickHighlightedItem("partner_type_id");
+            assert.containsOnce(target, ".modal");
 
-            await click($(".modal-footer button:eq(1)"));
-            await testUtils.nextTick();
-            await click($(".modal .o_field_many2one input"));
-            await testUtils.fields.many2one.clickHighlightedItem("partner_type_id");
-            await click($(".modal-footer button:first"));
-            await testUtils.nextTick();
+            // set a value on the m2o and click save & new
+            await selectDropdownItem(target, "partner_type_id", "gold");
+            await click(target.querySelector(".modal-footer .o_form_button_save_new"));
+
+            // set a value on the m2o
+            await selectDropdownItem(target, "partner_type_id", "silver");
+            await click(target.querySelector(".modal-footer .o_form_button_save"));
         }
     );
 
