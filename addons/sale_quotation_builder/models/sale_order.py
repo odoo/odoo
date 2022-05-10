@@ -22,13 +22,3 @@ class SaleOrder(models.Model):
             order.website_description = order.sale_order_template_id.with_context(
                 lang=order.partner_id.lang
             ).website_description
-
-    def _compute_line_data_for_template_change(self, line):
-        vals = super()._compute_line_data_for_template_change(line)
-        vals.update(website_description=line.website_description)
-        return vals
-
-    def _compute_option_data_for_template_change(self, option):
-        vals = super()._compute_option_data_for_template_change(option)
-        vals.update(website_description=option.website_description)
-        return vals

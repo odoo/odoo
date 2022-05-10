@@ -41,6 +41,13 @@ class SaleOrderTemplateLine(models.Model):
                 continue
             line.website_description = line.product_id.quotation_description
 
+    #=== BUSINESS METHODS ===#
+
+    def _prepare_order_line_values(self):
+        res = super()._prepare_order_line_values()
+        res['website_description'] = self.website_description
+        return res
+
 
 class SaleOrderTemplateOption(models.Model):
     _inherit = "sale.order.template.option"
@@ -58,3 +65,10 @@ class SaleOrderTemplateOption(models.Model):
             if not option.product_id:
                 continue
             option.website_description = option.product_id.quotation_description
+
+    #=== BUSINESS METHODS ===#
+
+    def _prepare_option_line_values(self):
+        res = super()._prepare_option_line_values()
+        res['website_description'] = self.website_description
+        return res
