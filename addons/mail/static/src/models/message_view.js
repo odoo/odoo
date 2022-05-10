@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { timeFromNow } from '@mail/js/utils';
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
@@ -118,6 +119,12 @@ registerModel({
             this.update({ isHovered: false });
         },
         /**
+         * Refreshes the value of `dateFromNow` field to the "current now".
+         */
+        refreshDateFromNow() {
+            this.update({ dateFromNow: this._computeDateFromNow() });
+        },
+        /**
          * Action to initiate reply to current messageView.
          */
         replyTo() {
@@ -186,6 +193,15 @@ registerModel({
          */
         _computeAuthorAvatarTitleText() {
             return this.env._t("Open chat");
+        },
+        /**
+         * @returns {string}
+         */
+        _computeDateFromNow() {
+            if (!this.message.date) {
+                return clear();
+            }
+            return timeFromNow(this.message.date);
         },
         /**
          * @private
@@ -307,6 +323,12 @@ registerModel({
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
             isCausal: true,
+        }),
+        /**
+         * States the time elapsed since date up to now.
+         */
+        dateFromNow: attr({
+            compute: '_computeDateFromNow',
         }),
         /**
          * States the delete message confirm view that is displaying this

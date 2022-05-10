@@ -255,12 +255,12 @@ export class Message extends Component {
                 message: this.messageView.message,
             });
         }
-        this.messageView.message.refreshDateFromNow();
+        this.messageView.refreshDateFromNow();
         clearInterval(this.messageView.refreshDateFromNowTimeout);
         this.messageView.update({
             refreshDateFromNowTimeout: setInterval(() => {
                 if (this.messageView) {
-                    this.messageView.message.refreshDateFromNow();
+                    this.messageView.refreshDateFromNow();
                 }
             }, 60 * 1000)
         });
