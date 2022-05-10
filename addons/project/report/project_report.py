@@ -56,6 +56,9 @@ class ReportProjectTaskUser(models.Model):
     personal_stage_type_ids = fields.Many2many('project.task.type', relation='project_task_user_rel',
         column1='task_id', column2='stage_id',
         string="Personal Stage", readonly=True)
+    milestone_id = fields.Many2one('project.milestone', readonly=True)
+    milestone_reached = fields.Boolean('Is Milestone Reached', readonly=True)
+    milestone_deadline = fields.Date('Milestone Deadline', readonly=True)
 
     def _compute_rating_last_text(self):
         for task_analysis in self:
@@ -84,6 +87,9 @@ class ReportProjectTaskUser(models.Model):
                 t.stage_id as stage_id,
                 t.is_closed as is_closed,
                 t.kanban_state as state,
+                t.milestone_id,
+                pm.is_reached as milestone_reached,
+                pm.deadline as milestone_deadline,
                 NULLIF(t.rating_last_value, 0) as rating_last_value,
                 AVG(rt.rating) as rating_avg,
                 t.working_days_close as working_days_close,
@@ -115,7 +121,10 @@ class ReportProjectTaskUser(models.Model):
                 t.working_days_close,
                 t.working_days_open,
                 t.working_hours_open,
-                t.working_hours_close
+                t.working_hours_close,
+                t.milestone_id,
+                pm.is_reached,
+                pm.deadline
         """
 
     def _from(self):
@@ -125,6 +134,7 @@ class ReportProjectTaskUser(models.Model):
                         AND rt.res_model = 'project.task'
                         AND rt.consumed = True
                         AND rt.rating >= {RATING_LIMIT_MIN}
+                    LEFT JOIN project_milestone pm ON pm.id = t.milestone_id
         """
 
     def _where(self):
