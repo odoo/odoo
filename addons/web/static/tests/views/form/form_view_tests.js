@@ -35,7 +35,6 @@ let createView,
     makeTestEnvironment,
     _t,
     ViewDialogs,
-    clickFirst,
     pyUtils,
     Widget,
     widgetRegistry,
@@ -8532,7 +8531,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("readonly fields are not sent when saving", async function (assert) {
+    QUnit.test("readonly fields are not sent when saving", async function (assert) {
         assert.expect(6);
 
         // define an onchange on display_name to check that the value of readonly
@@ -8541,24 +8540,22 @@ QUnit.module("Views", (hooks) => {
             display_name: function () {},
             p: function () {},
         };
-        var checkOnchange = false;
+        let checkOnchange = false;
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "<form>" +
-                '<field name="display_name"/>' +
-                "<field name=\"foo\" attrs=\"{'readonly': [['display_name', '=', 'readonly']]}\"/>" +
-                "</form>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree><field name="display_name"/></tree>
+                        <form>
+                            <field name="display_name"/>
+                            <field name="foo" attrs="{'readonly': [['display_name', '=', 'readonly']]}"/>
+                        </form>
+                    </field>
+                </form>`,
             mockRPC(route, args) {
                 if (checkOnchange && args.method === "onchange") {
                     if (args.args[2] === "display_name") {
@@ -8592,53 +8589,47 @@ QUnit.module("Views", (hooks) => {
                         "should not have sent the value of the readonly field"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        await testUtils.nextTick();
-        assert.strictEqual(
-            $(".modal input.o_field_widget[name=foo]").length,
-            1,
+        assert.containsOnce(
+            target,
+            ".modal .o_field_widget[name=foo] input",
             "foo should be editable"
         );
         checkOnchange = true;
-        await editInput($(".modal .o_field_widget[name=foo]"), "foo value");
-        await editInput($(".modal .o_field_widget[name=display_name]"), "readonly");
-        assert.strictEqual(
-            $(".modal span.o_field_widget[name=foo]").length,
-            1,
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "foo value");
+        await editInput(target, ".modal .o_field_widget[name=display_name] input", "readonly");
+        assert.containsNone(
+            target,
+            ".modal .o_field_widget[name=foo] input",
             "foo should be readonly"
         );
-        await clickFirst($(".modal-footer .btn-primary"));
-        await testUtils.nextTick();
-        checkOnchange = false;
+        await click(target.querySelector(".modal-footer .btn-primary"));
 
-        await click(target.querySelector(".o_data_row"));
+        checkOnchange = false;
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(
-            $(".modal .o_field_widget[name=foo]").innerText,
+            target.querySelector(".modal .o_field_widget[name=foo]").innerText,
             "foo value",
             "the edited value should have been kept"
         );
-        await clickFirst($(".modal-footer .btn-primary"));
-        await testUtils.nextTick();
+        await click(target.querySelector(".modal-footer .btn-primary"));
 
-        await click(target.querySelector(".o_form_button_save")); // save the record
+        await click(target.querySelector(".o_form_button_save"));
     });
 
-    QUnit.skipWOWL("id is False in evalContext for new records", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("id is False in evalContext for new records", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="id"/>' +
-                "<field name=\"foo\" attrs=\"{'readonly': [['id', '=', False]]}\"/>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="id"/>
+                    <field name="foo" attrs="{'readonly': [['id', '=', False]]}"/>
+                </form>`,
         });
 
         assert.hasClass(
@@ -8657,33 +8648,21 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("delete a duplicated record", async function (assert) {
+    QUnit.test("delete a duplicated record", async function (assert) {
         assert.expect(5);
 
-        var newRecordID;
+        const newRecordID = 6; // ids from 1 to 5 are already taken so the new record will have id 6
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="display_name"/>' + "</form>",
+            arch: `<form><field name="display_name"/></form>`,
             resId: 1,
-            viewOptions: { hasActionMenus: true },
+            actionMenus: {},
             mockRPC(route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "copy") {
-                    return result.then(function (id) {
-                        newRecordID = id;
-                        return id;
-                    });
-                }
                 if (args.method === "unlink") {
-                    assert.deepEqual(
-                        args.args[0],
-                        [newRecordID],
-                        "should delete the newly created record"
-                    );
+                    assert.deepEqual(args.args[0], [newRecordID]);
                 }
-                return result;
             },
         });
 
@@ -8693,7 +8672,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_form_editable", "form should be in edit mode");
         assert.strictEqual(
-            target.querySelector(".o_field_widget").value,
+            target.querySelector(".o_field_widget input").value,
             "first record (copy)",
             "duplicated record should have correct name"
         );
@@ -8703,8 +8682,8 @@ QUnit.module("Views", (hooks) => {
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Delete");
 
-        assert.strictEqual($(".modal").length, 1, "should have opened a confirm dialog");
-        await click($(".modal-footer .btn-primary"));
+        assert.containsOnce(target, ".modal", "should have opened a confirm dialog");
+        await click(target.querySelector(".modal-footer .btn-primary"));
 
         assert.strictEqual(
             target.querySelector(".o_field_widget").innerText,
