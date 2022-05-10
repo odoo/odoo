@@ -76,7 +76,7 @@ class Website(Home):
         homepage_id = request.website._get_cached('homepage_id')
         homepage = homepage_id and request.env['website.page'].browse(homepage_id)
         if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
-            return request.env['ir.http'].reroute(homepage.url)
+            request.env['ir.http'].reroute(homepage.url)
 
         website_page = request.env['ir.http']._serve_page()
         if website_page:
