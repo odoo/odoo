@@ -44,9 +44,6 @@ export class RtcVideo extends Component {
         if (!this.root.el) {
             return;
         }
-        if (!this.rtcVideoView) {
-            return;
-        }
         if (!this.rtcVideoView.rtcSession || !this.rtcVideoView.rtcSession.videoStream) {
             this.root.el.srcObject = undefined;
         } else {
