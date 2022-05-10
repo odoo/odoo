@@ -342,12 +342,6 @@ class IrActionsReport(models.Model):
             node.getparent().remove(node)
             header_node.append(node)
 
-        # Retrieve footers
-        for node in root.xpath(match_klass.format('footer')):
-            body_parent = node.getparent()
-            node.getparent().remove(node)
-            footer_node.append(node)
-
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
             # set context language to body language
@@ -369,6 +363,14 @@ class IrActionsReport(models.Model):
         if not bodies:
             body = ''.join(lxml.html.tostring(c, encoding='unicode') for c in body_parent.getchildren())
             bodies.append(body)
+
+        # Retrieve footers
+        for i, node in enumerate(root.xpath(match_klass.format('footer'))):
+            record = self.env[report_model].browse(res_ids[i])
+            if 'name' in self.env[report_model]._fields:
+                node.xpath("//span[@id='document_name']")[0].text = f"{record.name} - "
+            node.getparent().remove(node)
+            footer_node.append(node)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
         # paperformat-record arguments.
