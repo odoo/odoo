@@ -86,7 +86,7 @@ registerModel({
          * @param {string} req.term
          * @param {function} res
          */
-        _onMobileAddItemHeaderInputSource(req, res) {
+        onMobileAddItemHeaderInputSource(req, res) {
             if (!this.exists()) {
                 return;
             }
