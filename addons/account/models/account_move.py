@@ -3876,14 +3876,14 @@ class AccountMoveLine(models.Model):
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
         return self._get_price_total_and_subtotal_model(
-            price_unit=price_unit or self.price_unit,
-            quantity=quantity or self.quantity,
-            discount=discount or self.discount,
-            currency=currency or self.currency_id,
-            product=product or self.product_id,
-            partner=partner or self.partner_id,
-            taxes=taxes or self.tax_ids,
-            move_type=move_type or self.move_id.move_type,
+            price_unit=self.price_unit if price_unit is None else price_unit,
+            quantity=self.quantity if quantity is None else quantity,
+            discount=self.discount if discount is None else discount,
+            currency=self.currency_id if currency is None else currency,
+            product=self.product_id if product is None else product,
+            partner=self.partner_id if partner is None else partner,
+            taxes=self.tax_ids if taxes is None else taxes,
+            move_type=self.move_id.move_type if move_type is None else move_type,
         )
 
     @api.model
@@ -3922,11 +3922,11 @@ class AccountMoveLine(models.Model):
     def _get_fields_onchange_subtotal(self, price_subtotal=None, move_type=None, currency=None, company=None, date=None):
         self.ensure_one()
         return self._get_fields_onchange_subtotal_model(
-            price_subtotal=price_subtotal or self.price_subtotal,
-            move_type=move_type or self.move_id.move_type,
-            currency=currency or self.currency_id,
-            company=company or self.move_id.company_id,
-            date=date or self.move_id.date,
+            price_subtotal=self.price_subtotal if price_subtotal is None else price_subtotal,
+            move_type=self.move_id.move_type if move_type is None else move_type,
+            currency=self.currency_id if currency is None else currency,
+            company=self.move_id.company_id if company is None else company,
+            date=self.move_id.date if date is None else date,
         )
 
     @api.model
@@ -3960,13 +3960,13 @@ class AccountMoveLine(models.Model):
     def _get_fields_onchange_balance(self, quantity=None, discount=None, amount_currency=None, move_type=None, currency=None, taxes=None, price_subtotal=None, force_computation=False):
         self.ensure_one()
         return self._get_fields_onchange_balance_model(
-            quantity=quantity or self.quantity,
-            discount=discount or self.discount,
-            amount_currency=amount_currency or self.amount_currency,
-            move_type=move_type or self.move_id.move_type,
-            currency=currency or self.currency_id or self.move_id.currency_id,
-            taxes=taxes or self.tax_ids,
-            price_subtotal=price_subtotal or self.price_subtotal,
+            quantity=self.quantity if quantity is None else quantity,
+            discount=self.discount if discount is None else discount,
+            amount_currency=self.amount_currency if amount_currency is None else amount_currency,
+            move_type=self.move_id.move_type if move_type is None else move_type,
+            currency=(self.currency_id or self.move_id.currency_id) if currency is None else currency,
+            taxes=self.tax_ids if taxes is None else taxes,
+            price_subtotal=self.price_subtotal if price_subtotal is None else price_subtotal,
             force_computation=force_computation,
         )
 
