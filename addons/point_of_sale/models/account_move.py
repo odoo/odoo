@@ -19,6 +19,7 @@ class AccountMove(models.Model):
         return stock_moves
 
 
+<<<<<<< HEAD
     def _get_invoiced_lot_values(self):
         self.ensure_one()
 
@@ -50,6 +51,18 @@ class AccountMove(models.Model):
             pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
             result['pos_payment_name'] = pos_payment.payment_method_id.name
         return result
+=======
+    def _tax_tags_need_inversion(self, move, is_refund, tax_type):
+        # POS order operations are handled by the tax report just like invoices ;
+        # we should never invert their tags.
+        # Don't take orders or sessions without move.
+        if move.move_type == 'entry' and move._origin.id:
+            orders_count = self.env['pos.order'].search_count([('account_move', '=', move._origin.id)])
+            sessions_count = self.env['pos.session'].search_count([('move_id', '=', move._origin.id)])
+            if orders_count + sessions_count:
+                return False
+        return super()._tax_tags_need_inversion(move, is_refund, tax_type)
+>>>>>>> 5c793e03a4d... temp
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
