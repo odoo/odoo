@@ -1896,7 +1896,7 @@ export class OdooEditor extends EventTarget {
                 description: 'Insert a rating over 3 stars.',
                 fontawesome: 'fa-star-o',
                 callback: () => {
-                    let html = '<span contenteditable="false" class="o_stars o_three_stars">';
+                    let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
                     html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
                     html += '</span>';
                     this.execCommand('insertHTML', html);
@@ -1908,7 +1908,7 @@ export class OdooEditor extends EventTarget {
                 description: 'Insert a rating over 5 stars.',
                 fontawesome: 'fa-star',
                 callback: () => {
-                    let html = '<span contenteditable="false" class="o_stars o_five_stars">';
+                    let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
                     html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
                     html += '</span>';
                     this.execCommand('insertHTML', html);
