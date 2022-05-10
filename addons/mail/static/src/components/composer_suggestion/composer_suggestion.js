@@ -36,8 +36,6 @@ export class ComposerSuggestion extends Component {
     _update() {
         if (
             this.root.el &&
-            this.composerSuggestion &&
-            this.composerSuggestion.composerViewOwner &&
             this.composerSuggestion.composerViewOwner.hasToScrollToActiveSuggestion &&
             this.composerSuggestion.isActive
         ) {

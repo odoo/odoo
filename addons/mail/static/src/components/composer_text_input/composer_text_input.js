@@ -53,9 +53,6 @@ export class ComposerTextInput extends Component {
      * @private
      */
     _update() {
-        if (!this.composerView) {
-            return;
-        }
         if (!this.root.el) {
             return;
         }
@@ -98,7 +95,7 @@ export class ComposerTextInput extends Component {
      * @private
      */
     _onInputTextarea() {
-        if (!this.composerView) {
+        if (!this.composerView.exists()) {
             return;
         }
         this.composerView.saveStateInStore();

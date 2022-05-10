@@ -33,7 +33,7 @@ export class MessageList extends Component {
          */
         this._lastRenderedValues = useRenderedValues(() => {
             const messageListView = this.messageListView;
-            const threadView = messageListView && messageListView.threadViewOwner;
+            const threadView = messageListView.threadViewOwner;
             const thread = threadView && threadView.thread;
             const threadCache = threadView && threadView.threadCache;
             return {
@@ -56,12 +56,13 @@ export class MessageList extends Component {
     }
 
     _willPatch() {
-        if (!this.messageListView) {
+        const { messageListView } = this._lastRenderedValues();
+        if (!messageListView.exists()) {
             return;
         }
         this._willPatchSnapshot = {
-            scrollHeight: this.messageListView.getScrollableElement().scrollHeight,
-            scrollTop: this.messageListView.getScrollableElement().scrollTop,
+            scrollHeight: messageListView.getScrollableElement().scrollHeight,
+            scrollTop: messageListView.getScrollableElement().scrollTop,
         };
     }
 
@@ -99,7 +100,7 @@ export class MessageList extends Component {
      */
     adjustFromComponentHints() {
         const { componentHintList, messageListView } = this._lastRenderedValues();
-        if (!messageListView || !messageListView.exists()) {
+        if (!messageListView.exists()) {
             return;
         }
         for (const hint of componentHintList) {
@@ -223,7 +224,7 @@ export class MessageList extends Component {
      */
     _checkMostRecentMessageIsVisible() {
         const { messageListView } = this._lastRenderedValues();
-        if (!messageListView || !messageListView.exists()) {
+        if (!messageListView.exists()) {
             return;
         }
         const { lastMessageView } = messageListView.threadViewOwner;
@@ -288,14 +289,14 @@ export class MessageList extends Component {
             thread,
             threadCache,
         } = this._lastRenderedValues();
-        if (!messageListView || !messageListView.exists()) {
+        if (!messageListView.exists()) {
             return;
         }
         if (!messageListView.getScrollableElement()) {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
         }
-        const scrollTop = this.messageListView.getScrollableElement().scrollTop;
+        const scrollTop = messageListView.getScrollableElement().scrollTop;
         this.messaging.messagingBus.trigger('o-component-message-list-scrolled', {
             orderedMessages,
             scrollTop,

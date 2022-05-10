@@ -83,7 +83,7 @@ export class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _update() {
-        if (this._checkboxRef.el && this.suggestedRecipientInfo) {
+        if (this._checkboxRef.el) {
             this._checkboxRef.el.checked = this.suggestedRecipientInfo.isSelected;
         }
     }
@@ -116,7 +116,7 @@ export class ComposerSuggestedRecipient extends Component {
      * @private
      */
     _onDialogSaved() {
-        const thread = this.suggestedRecipientInfo && this.suggestedRecipientInfo.thread;
+        const thread = this.suggestedRecipientInfo.exists() && this.suggestedRecipientInfo.thread;
         if (!thread) {
             return;
         }

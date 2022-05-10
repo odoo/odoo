@@ -47,9 +47,6 @@ export class Chatter extends LegacyComponent {
      * @private
      */
     _update() {
-        if (!this.chatter) {
-            return;
-        }
         if (this.chatter.thread) {
             this._notifyRendered();
         }
