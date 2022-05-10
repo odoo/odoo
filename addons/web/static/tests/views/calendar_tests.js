@@ -2078,11 +2078,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Add filters and specific color', async function (assert) {
-        assert.expect(5);
+        assert.expect(8);
+
+        this.data.event_type.records.push(
+            {id: 4, display_name: "Event Type no color", color: 0},
+        );
 
         this.data.event.records.push(
             {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
             {id: 9, user_id: 4, partner_id: 1, name: "event 9", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
+            {id: 10, user_id: 4, partner_id: 1, name: "event 10", start: "2016-12-11 12:00:00", stop: "2016-12-11 13:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 4, color: 0},
         );
 
         var calendar = await createCalendarView({
@@ -2103,18 +2108,25 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === "search_read" && args.model === "event_type" && args.args[1][0] === "color") {
+                    assert.step('color_search_read');
+                }
+                return result;
+            },
         });
 
         assert.containsN(calendar, '.o_calendar_filter', 2, "should display 2 filters");
 
         var $typeFilter =  calendar.$('.o_calendar_filter:has(h5:contains(Event_Type))');
         assert.ok($typeFilter.length, "should display 'Event Type' filter");
-        assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'Event Type'");
+        assert.containsN($typeFilter, '.o_calendar_filter_item', 4, "should display 4 filter items for 'Event Type'");
 
         assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
-
         assert.containsOnce(calendar, '.fc-event[data-event-id=8].o_calendar_color_4', "Event of event type 3 must have the color 4");
-
+        assert.containsOnce(calendar, '.fc-event[data-event-id=10].o_calendar_color_1', "The first color is used when none is provided (default int field value being 0)")
+        assert.verifySteps(['color_search_read'], "The color attribute on a field should trigger a search_read")
         calendar.destroy();
     });
 
