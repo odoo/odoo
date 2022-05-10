@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="l10n_pt_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+<!--        Add accumulated amount column-->
         <xpath expr="//th[@name='th_subtotal']" position="after">
             <th name="th_subtotal_accumulated" class="text-right">
                 <span>Accumulated amount</span>
@@ -17,6 +18,11 @@
         <xpath expr="//tr[contains(@class, 'is-subtotal')]" position="replace">
         </xpath>
         <xpath expr="//t[@id='reset_current_subtotal']" position="replace">
+        </xpath>
+
+<!--        Add whether the document is an original or a duplicate-->
+        <xpath expr="//h2[@id='title_move_type']" position="after">
+            <span id="original_duplicate" class="text-muted">Original</span>
         </xpath>
     </template>
 </odoo>
