@@ -1859,6 +1859,9 @@ class Task(models.Model):
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
                 ).company_id.id or self.env.company.id
+            if not project_id and ("stage_id" in vals or self.env.context.get('default_stage_id')):
+                vals["stage_id"] = False
+
             if project_id and "stage_id" not in vals:
                 # 1) Allows keeping the batch creation of tasks
                 # 2) Ensure the defaults are correct (and computed once by project),
@@ -1930,6 +1933,9 @@ class Task(models.Model):
             raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
+            if not 'project_id' in vals and self.filtered(lambda t: not t.project_id):
+                raise UserError(_('You can only set a personal stage on a private task.'))
+
             vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = now
             # reset kanban state when changing stage
