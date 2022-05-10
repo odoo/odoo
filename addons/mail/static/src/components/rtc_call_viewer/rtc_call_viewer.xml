@@ -12,7 +12,7 @@
                 <t t-if="rtcCallViewer.layout !== 'tiled'">
                     <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
                         <t t-if="rtcCallViewer.mainParticipantCard">
-                            <RtcCallParticipantCard className="'o_RtcCallViewer_participantCard w-100'" record="rtcCallViewer.mainParticipantCard"/>
+                            <RtcCallParticipantCard className="'o_RtcCallViewer_participantCard'" record="rtcCallViewer.mainParticipantCard"/>
                         </t>
                     </div>
                 </t>
@@ -30,7 +30,7 @@
                             <t t-if="!rtcCallViewer.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
                                 <!-- maybe filter focused partner out? -->
                                 <RtcCallParticipantCard
-                                    className="'o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile mw-100'"
+                                    className="'o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile'"
                                     record="participantCard"
                                 />
                             </t>
