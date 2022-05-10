@@ -664,8 +664,8 @@ return AbstractModel.extend({
                 if (ids.length) {
                     defs.push(self._rpc({
                         model: filter.color_model,
-                        method: 'read',
-                        args: [_.uniq(ids), [filter.field_color]],
+                        method: 'search_read',
+                        args: [[['id', 'in', _.uniq(ids)]], [filter.field_color]],
                     })
                     .then(function (res) {
                         _.each(res, function (c) {
