@@ -8,7 +8,7 @@ import { one } from '@mail/model/model_field';
  */
 registerModel({
     name: 'ClockWatcher',
-    identifyingFields: [['activityViewOwner']],
+    identifyingFields: [['activityViewOwner', 'messageViewOwner']],
     fields: {
         activityViewOwner: one('ActivityView', {
             inverse: 'clockWatcher',
@@ -17,6 +17,10 @@ registerModel({
         clock: one('Clock', {
             inverse: 'watchers',
             required: true,
+        }),
+        messageViewOwner: one('MessageView', {
+            inverse: 'clockWatcher',
+            readonly: true,
         }),
     },
 });
