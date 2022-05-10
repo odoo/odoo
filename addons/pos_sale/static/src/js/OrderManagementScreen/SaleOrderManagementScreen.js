@@ -201,8 +201,14 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         };
                     }
                     let down_payment_product = this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0])
-                    let down_payment_tax = this.env.pos.taxes_by_id[down_payment_product.taxes_id]
-                    let down_payment = down_payment_tax.price_include ? sale_order.amount_total : sale_order.amount_untaxed;
+                    let down_payment_tax = this.env.pos.taxes_by_id[down_payment_product.taxes_id] || false ;
+                    let down_payment;
+                    if (down_payment_tax) {
+                        down_payment = down_payment_tax.price_include ? sale_order.amount_total : sale_order.amount_untaxed;
+                    }
+                    else{
+                        down_payment = sale_order.amount_total;
+                    }
 
                     const { confirmed, payload } = await this.showPopup('NumberPopup', {
                         title: sprintf(this.env._t("Percentage of %s"), this.env.pos.format_currency(sale_order.amount_total)),
