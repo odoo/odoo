@@ -598,8 +598,9 @@ class ProjectTask(models.Model):
         billable_tasks = self.filtered('allow_billable')
         (self - billable_tasks).update({'sale_line_id': False})
         super(ProjectTask, billable_tasks)._compute_sale_line()
-        for task in billable_tasks.filtered(lambda t: not t.sale_line_id):
-            task.sale_line_id = task._get_last_sol_of_customer()
+        for task in billable_tasks:
+            if not task.sale_line_id:
+                task.sale_line_id = task._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
