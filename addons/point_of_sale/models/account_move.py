@@ -21,7 +21,8 @@ class AccountMove(models.Model):
     def _tax_tags_need_inversion(self, move, is_refund, tax_type):
         # POS order operations are handled by the tax report just like invoices ;
         # we should never invert their tags.
-        if move.move_type == 'entry':
+        # Don't take orders or sessions without move.
+        if move.move_type == 'entry' and move._origin.id:
             orders_count = self.env['pos.order'].search_count([('account_move', '=', move._origin.id)])
             sessions_count = self.env['pos.session'].search_count([('move_id', '=', move._origin.id)])
             if orders_count + sessions_count:
