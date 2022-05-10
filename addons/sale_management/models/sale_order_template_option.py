@@ -56,3 +56,19 @@ class SaleOrderTemplateOption(models.Model):
     def _compute_uom_id(self):
         for option in self:
             option.uom_id = option.product_id.uom_id
+
+    #=== BUSINESS METHODS ===#
+
+    def _prepare_option_line_values(self):
+        """ Give the values to create the corresponding option line.
+
+        :return: `sale.order.option` create values
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'quantity': self.quantity,
+            'uom_id': self.uom_id.id,
+        }
