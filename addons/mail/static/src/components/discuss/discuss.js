@@ -16,9 +16,6 @@ export class Discuss extends LegacyComponent {
     }
 
     _update() {
-        if (!this.discussView) {
-            return;
-        }
         if (this.discussView.discuss.thread) {
             this.trigger('o-push-state-action-manager');
         }
@@ -53,9 +50,6 @@ export class Discuss extends LegacyComponent {
      * @private
      */
     _updateLocalStoreProps() {
-        if (!this.discussView) {
-            return;
-        }
         /**
          * Locally tracked store props `activeThreadCache`.
          * Useful to set scroll position from last stored one and to display

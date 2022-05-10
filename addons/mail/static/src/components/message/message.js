@@ -232,9 +232,6 @@ export class Message extends Component {
      * @private
      */
     _update() {
-        if (!this.messageView) {
-            return;
-        }
         if (this._prettyBodyRef.el && this.messageView.message.prettyBody !== this._lastPrettyBody) {
             this._prettyBodyRef.el.innerHTML = this.messageView.message.prettyBody;
             this._lastPrettyBody = this.messageView.message.prettyBody;

@@ -117,6 +117,7 @@ registerModel({
         }),
         composerViewOwner: one('ComposerView', {
             compute: '_computeComposerViewOwner',
+            required: true,
         }),
         composerViewOwnerAsExtraSuggestion: one('ComposerView', {
             inverse: 'extraSuggestions',

@@ -94,9 +94,6 @@ export class RtcCallViewer extends Component {
      * @private
      */
     _setTileLayout() {
-        if (!this.rtcCallViewer) {
-            return;
-        }
         if (!this.root.el) {
             return;
         }

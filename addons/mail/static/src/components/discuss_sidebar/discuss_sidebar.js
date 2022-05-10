@@ -36,9 +36,6 @@ export class DiscussSidebar extends Component {
      * @private
      */
     _update() {
-        if (!this.discussView) {
-            return;
-        }
         if (this.discussView.quickSearchInputRef.el) {
             this.discussView.quickSearchInputRef.el.value = this.discussView.discuss.sidebarQuickSearchValue;
         }
