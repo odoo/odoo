@@ -2610,7 +2610,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["object"]);
     });
 
-    QUnit.skipWOWL("X2Many sequence list in modal", async function (assert) {
+    QUnit.test("X2Many sequence list in modal", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
@@ -2704,19 +2704,23 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_data_cell");
         await click(target, ".o_external_button");
 
-        var $modal = document.body.querySelector(".modal");
-        assert.equal($modal.length, 1, "There should be 1 modal opened");
+        assert.containsOnce(target, ".modal", "There should be 1 modal opened");
+        assert.containsN(
+            target,
+            ".modal .ui-sortable-handle",
+            2,
+            "There should be 2 sequence handlers"
+        );
 
-        var $handles = $modal.find(".ui-sortable-handle");
-        assert.equal($handles.length, 2, "There should be 2 sequence handlers");
-
-        await testUtils.dom.dragAndDrop($handles.eq(1), $modal.find("tbody tr").first(), {
-            position: "top",
-        });
+        await dragAndDrop(
+            ".modal .o_data_row:nth-child(2) .ui-sortable-handle",
+            ".modal tbody tr",
+            "top"
+        );
 
         // Saving the modal and then the original model
-        await click($modal.find(".modal-footer .btn-primary"));
-        await click(target, ".o_form_button_save");
+        await clickSave(target.querySelector(".modal"));
+        await clickSave(target);
 
         assert.verifySteps(["onchange sequence", "partner_type write"]);
     });
