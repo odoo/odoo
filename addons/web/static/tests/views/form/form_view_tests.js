@@ -8320,102 +8320,75 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "buttons are disabled until action is resolved (in dialogs)",
         async function (assert) {
-            assert.expect(3);
+            const def = makeDeferred();
+            const actionService = {
+                start() {
+                    return {
+                        doActionButton(args) {
+                            return def;
+                        },
+                    };
+                },
+            };
+            registry.category("services").add("action", actionService, { force: true });
 
-            var def = makeDeferred();
-
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <sheet>
+                            <div name="button_box" class="oe_button_box">
+                                <button class="oe_stat_button" name="some_action" type="action">
+                                    <field name="bar"/>
+                                </button>
+                            </div>
+                            <group>
+                                <field name="foo"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+            };
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch: "<form>" + "<sheet>" + '<field name="trululu"/>' + "</sheet>" + "</form>",
-                archs: {
-                    "partner,false,form":
-                        "<form>" +
-                        "<sheet>" +
-                        '<div name="button_box" class="oe_button_box">' +
-                        '<button class="oe_stat_button" name="some_action" type="action">' +
-                        '<field name="bar"/>' +
-                        "</button>" +
-                        "</div>" +
-                        "<group>" +
-                        '<field name="foo"/>' +
-                        "</group>" +
-                        "</sheet>" +
-                        "</form>",
-                },
+                arch: `<form><field name="trululu"/></form>`,
                 resId: 1,
-                intercepts: {
-                    execute_action: function (event) {
-                        return def.then(function () {
-                            event.data.on_success();
-                        });
-                    },
-                },
                 mockRPC(route, args) {
                     if (args.method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
-                    return this._super.apply(this, arguments);
-                },
-                viewOptions: {
-                    mode: "edit",
                 },
             });
 
+            await click(target.querySelector(".o_form_button_edit"));
             await click(target.querySelector(".o_external_button"));
+            assert.notOk(target.querySelector(".modal .oe_button_box button").disabled);
 
-            assert.notOk(
-                $(".modal .oe_button_box button").attr("disabled"),
-                "stat buttons should be enabled"
-            );
-
-            await click($(".modal .oe_button_box button"));
-
-            assert.ok(
-                $(".modal .oe_button_box button").attr("disabled"),
-                "stat buttons should be disabled"
-            );
+            await click(target.querySelector(".modal .oe_button_box button"));
+            assert.ok(target.querySelector(".modal .oe_button_box button").disabled);
 
             def.resolve();
-            await testUtils.nextTick();
-            assert.notOk(
-                $(".modal .oe_button_box button").attr("disabled"),
-                "stat buttons should be enabled"
-            );
+            await nextTick();
+            assert.notOk(target.querySelector(".modal .oe_button_box button").disabled);
         }
     );
 
-    QUnit.skipWOWL("multiple clicks on save should reload only once", async function (assert) {
-        assert.expect(4);
-
-        var def = makeDeferred();
+    QUnit.test("multiple clicks on save should reload only once", async function (assert) {
+        const def = makeDeferred();
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `<form><field name="foo"/></form>`,
             resId: 1,
             mockRPC(route, args) {
-                var result = this._super.apply(this, arguments);
                 assert.step(args.method);
                 if (args.method === "write") {
-                    return def.then(function () {
-                        return result;
-                    });
-                } else {
-                    return result;
+                    return def;
                 }
             },
         });
@@ -8426,51 +8399,38 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
 
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
         assert.verifySteps([
+            "get_views",
             "read", // initial read to render the view
             "write", // write on save
             "read", // read on reload
         ]);
     });
 
-    QUnit.skipWOWL("form view is not broken if save operation fails", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("form view is not broken if save operation fails", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `<form><field name="foo"/></form>`,
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "write" && args.args[1].foo === "incorrect value") {
                     return Promise.reject();
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         await click(target.querySelector(".o_form_button_edit"));
-        await editInput(
-            target.querySelector('.o_field_widget[name="foo"] input'),
-            "incorrect value"
-        );
+        await editInput(target, ".o_field_widget[name=foo] input", "incorrect value");
         await click(target.querySelector(".o_form_button_save"));
-
-        await editInput(target.querySelector('.o_field_widget[name="foo"] input'), "correct value");
-
+        await editInput(target, ".o_field_widget[name=foo] input", "correct value");
         await click(target.querySelector(".o_form_button_save"));
 
         assert.verifySteps([
+            "get_views",
             "read", // initial read to render the view
             "write", // write on save (it fails, does not trigger a read)
             "write", // write on save (it works)
