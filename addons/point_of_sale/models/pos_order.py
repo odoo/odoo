@@ -493,12 +493,18 @@ class PosOrder(models.Model):
         return bank_partner_id
 
     def _create_invoice(self, move_vals):
-        self.ensure_one()
+        #self.ensure_one()
+        if len(set(self.config_id)) > 1:
+            raise UserError("You can only group invoice that have the same configuration")
+        amount_total = sum(order.amount_total for order in self)
+        amount_paid = sum(order.amount_paid for order in self)
+        cash_rounding = self.config_id.cash_rounding
         new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
-        message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (self.id, self.name)
+        for order in self:
+            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
         new_move.message_post(body=message)
-        if self.config_id.cash_rounding:
-            rounding_applied = float_round(self.amount_paid - self.amount_total,
+        if cash_rounding:
+            rounding_applied = float_round(amount_paid - amount_total,
                                            precision_rounding=new_move.currency_id.rounding)
             rounding_line = new_move.line_ids.filtered(lambda line: line.is_rounding_line)
             if rounding_line and rounding_line.debit > 0:
