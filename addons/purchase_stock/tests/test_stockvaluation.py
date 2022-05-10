@@ -87,8 +87,6 @@ class TestStockValuation(TransactionCase):
         # update the unit price on the purchase order line
         po1.order_line.price_unit = 200
 
-        # the unit price on the stock move is not directly updated
-        self.assertEqual(move1.price_unit, 100)
 
         # validate the receipt
         res_dict = picking1.button_validate()
