@@ -33,6 +33,6 @@ class BaseUpdateTranslations(models.TransientModel):
             tar = tarfile.open(fileobj=buf)
             for file_info in tar:
                 module_file = tar.extractfile(file_info)
-                tools.trans_load_data(self._cr, module_file, 'po', self.lang, create_empty_translation=True)
+                tools.trans_load_data(self._cr, module_file, 'po', self.lang)
             tar.close()
         return {'type': 'ir.actions.act_window_close'}
