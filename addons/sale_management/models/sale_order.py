@@ -86,16 +86,13 @@ class SaleOrder(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
-    # TODO convert to compute ???
     @api.onchange('sale_order_template_id')
     def _onchange_sale_order_template_id(self):
         sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
         order_lines_data = [fields.Command.clear()]
         order_lines_data += [
-            fields.Command.create(
-                self._compute_line_data_for_template_change(line)
-            )
+            fields.Command.create(line._prepare_order_line_values())
             for line in sale_order_template.sale_order_template_line_ids
         ]
 
@@ -103,33 +100,11 @@ class SaleOrder(models.Model):
 
         option_lines_data = [fields.Command.clear()]
         option_lines_data += [
-            fields.Command.create(
-                self._compute_option_data_for_template_change(option)
-            )
+            fields.Command.create(option._prepare_option_line_values())
             for option in sale_order_template.sale_order_template_option_ids
         ]
 
         self.sale_order_option_ids = option_lines_data
-
-    # TODO delegate to sub models (note: overridden in sale_quotation_builder)
-
-    def _compute_line_data_for_template_change(self, line):
-        return {
-            'sequence': line.sequence,
-            'display_type': line.display_type,
-            'name': line.name,
-            'product_id': line.product_id.id,
-            'product_uom_qty': line.product_uom_qty,
-            'product_uom': line.product_uom_id.id,
-        }
-
-    def _compute_option_data_for_template_change(self, option):
-        return {
-            'name': option.name,
-            'product_id': option.product_id.id,
-            'quantity': option.quantity,
-            'uom_id': option.uom_id.id,
-        }
 
     #=== ACTION METHODS ===#
 

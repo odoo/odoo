@@ -89,3 +89,21 @@ class SaleOrderTemplateLine(models.Model):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
         return super().write(values)
+
+    #=== BUSINESS METHODS ===#
+
+    def _prepare_order_line_values(self):
+        """ Give the values to create the corresponding order line.
+
+        :return: `sale.order.line` create values
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            'sequence': self.sequence,
+            'display_type': self.display_type,
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.product_uom_qty,
+            'product_uom': self.product_uom_id.id,
+        }
