@@ -93,7 +93,7 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _handleImageLoad() {
-        if (!this.attachmentViewer || !this.attachmentViewer.attachment) {
+        if (!this.attachmentViewer.exists() || !this.attachmentViewer.attachment) {
             return;
         }
         const refs = this._getRefs();
@@ -213,7 +213,7 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickGlobal(ev) {
-        if (!this.attachmentViewer) {
+        if (!this.attachmentViewer.exists()) {
             return;
         }
         if (!this.attachmentViewer.isDragging) {
@@ -297,7 +297,7 @@ export class AttachmentViewer extends Component {
      * @param {DragEvent} ev
      */
     _onMousedownImage(ev) {
-        if (!this.attachmentViewer) {
+        if (!this.attachmentViewer.exists()) {
             return;
         }
         if (this.attachmentViewer.isDragging) {
@@ -317,7 +317,7 @@ export class AttachmentViewer extends Component {
      * @param {DragEvent}
      */
     _onMousemoveView(ev) {
-        if (!this.attachmentViewer) {
+        if (!this.attachmentViewer.exists()) {
             return;
         }
         if (!this.attachmentViewer.isDragging) {

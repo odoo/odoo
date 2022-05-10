@@ -41,10 +41,6 @@ export class ChatWindow extends Component {
      * @private
      */
     _update() {
-        if (!this.chatWindow) {
-            // chat window is being deleted
-            return;
-        }
         if (!this.root.el) {
             return;
         }
