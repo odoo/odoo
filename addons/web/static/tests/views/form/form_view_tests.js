@@ -8438,21 +8438,20 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "form view is not broken if save failed in readonly mode on field changed",
         async function (assert) {
-            assert.expect(10);
-
-            var failFlag = false;
-
+            let failFlag = false;
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    '<header><field name="trululu" widget="statusbar" clickable="true"/></header>' +
-                    "</form>",
+                arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" options="{'clickable': '1'}"/>
+                        </header>
+                    </form>`,
                 resId: 1,
                 mockRPC(route, args) {
                     if (args.method === "write") {
@@ -8463,43 +8462,25 @@ QUnit.module("Views", (hooks) => {
                     } else if (args.method === "read") {
                         assert.step("read");
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
-            var $selectedState = target.querySelector('.o_statusbar_status button[data-value="4"]');
-            assert.ok(
-                $selectedState.hasClass("btn-primary") && $selectedState.hasClass("disabled"),
-                "selected status should be btn-primary and disabled"
-            );
+            assert.hasClass(target.querySelector('button[data-value="4"]'), "btn-primary");
+            assert.hasClass(target.querySelector('button[data-value="4"]'), "disabled");
 
             failFlag = true;
-            var $clickableState = target.querySelector(
-                '.o_statusbar_status button[data-value="1"]'
-            );
-            await click($clickableState);
-
-            var $lastActiveState = target.querySelector(
-                '.o_statusbar_status button[data-value="4"]'
-            );
-            $selectedState = target.querySelector(".o_statusbar_status button.btn-primary");
-            assert.strictEqual(
-                $selectedState[0],
-                $lastActiveState[0],
-                "selected status is AAA record after save fail"
+            await click(target.querySelector('button[data-value="1"]'));
+            assert.hasClass(
+                target.querySelector('button[data-value="4"]'),
+                "btn-primary",
+                "initial status should still be active as save failed"
             );
 
             failFlag = false;
-            $clickableState = target.querySelector('.o_statusbar_status button[data-value="1"]');
-            await click($clickableState);
-
-            var $lastClickedState = target.querySelector(
-                '.o_statusbar_status button[data-value="1"]'
-            );
-            $selectedState = target.querySelector(".o_statusbar_status button.btn-primary");
-            assert.strictEqual(
-                $selectedState[0],
-                $lastClickedState[0],
+            await click(target.querySelector('button[data-value="1"]'));
+            assert.hasClass(
+                target.querySelector('button[data-value="1"]'),
+                "btn-primary",
                 "last clicked status should be active"
             );
 
@@ -8509,7 +8490,6 @@ QUnit.module("Views", (hooks) => {
                 "read", // must reload when saving fails
                 "write", // works
                 "read", // must reload when saving works
-                "read", // fixme: this read should not be necessary
             ]);
         }
     );

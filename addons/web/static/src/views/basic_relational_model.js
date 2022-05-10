@@ -598,6 +598,9 @@ export class Record extends DataPoint {
             await this.model.__bm__.save(this.__bm_handle__, saveOptions);
         } catch (_e) {
             resolveSavePromise();
+            if (!this.isInEdition) {
+                await this.load();
+            }
             return false;
         }
         this.__syncData(true);

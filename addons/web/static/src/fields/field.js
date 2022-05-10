@@ -150,6 +150,7 @@ export class Field extends Component {
                 await record.update({ [this.props.name]: value });
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (readonlyFromViewMode && !readonlyFromModifiers && !emptyRequiredValue) {
+                    // TODO: maybe move this in the model
                     return record.save();
                 }
             },
