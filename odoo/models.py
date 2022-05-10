@@ -1807,8 +1807,10 @@ class BaseModel(metaclass=MetaModel):
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
-        res = self._search(args, offset=offset, limit=limit, order=order, count=count)
-        return res if count else self.browse(res)
+        # if LIMIT 1 it can be very very slow https://twitter.com/Xof/status/1413542818673577987
+        new_limit = limit if limit == 1 and not count else 10
+        res = self._search(args, offset=offset, limit=new_limit, order=order, count=count)[:limit]
+        return res if count else self.browse(res)[:limit if limit else None]
 
     #
     # display_name, name_get, name_create, name_search
