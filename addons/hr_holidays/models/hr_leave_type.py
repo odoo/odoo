@@ -101,8 +101,8 @@ class HolidaysType(models.Model):
         - No validation needed: The employee's request is automatically approved.
         - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer.""")
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
-    time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave', string="Kind of Leave",
-                                 help="Whether this should be computed as a holiday or as work time (eg: formation)")
+    time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Time Off",
+                                 help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.")
     request_unit = fields.Selection([
         ('day', 'Day'),
         ('half_day', 'Half Day'),
