@@ -730,7 +730,7 @@ export const editorCommands = {
     applyColor: (editor, color, mode, element) => {
         if (element) {
             colorElement(element, color, mode);
-            return;
+            return [element];
         }
         const selection = editor.document.getSelection();
         let wasCollapsed = false;
@@ -800,6 +800,7 @@ export const editorCommands = {
             newSelection.removeAllRanges();
             newSelection.addRange(range);
         }
+        return fonts;
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
