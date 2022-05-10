@@ -110,6 +110,14 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_milestone_values(self, project):
         Milestone = self.env['project.milestone']
+        if not project.allow_milestones:
+            return {
+                'show_section': False,
+                'list': [],
+                'updated': [],
+                'last_update_date': None,
+                'created': []
+            }
         list_milestones = Milestone.search(
             [('project_id', '=', project.id),
              '|', ('deadline', '<', fields.Date.context_today(self) + relativedelta(years=1)), ('deadline', '=', False)])._get_data_list()
