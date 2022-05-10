@@ -8,7 +8,7 @@
           togglerClass="`o-dropdown--narrow ${env.inDialog?'btn btn-link':''}`"
         >
             <t t-set-slot="toggler">
-                <i class="fa fa-lg fa-bug"/>
+                <i class="fa fa-bug"/>
             </t>
             <t t-foreach="elements" t-as="element" t-key="element_index">
                 <DropdownItem
