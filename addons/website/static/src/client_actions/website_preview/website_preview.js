@@ -49,6 +49,7 @@ export class WebsitePreview extends Component {
         this.websiteService = useService('website');
         this.dialogService = useService('dialog');
         this.title = useService('title');
+        this.user = useService('user');
 
         this.iframeFallbackUrl = '/website/iframefallback';
 
@@ -57,6 +58,7 @@ export class WebsitePreview extends Component {
         this.websiteContext = useState(this.websiteService.context);
 
         onWillStart(async () => {
+            this.isWebsitePublisher = await this.user.hasGroup('website.group_website_publisher');
             await this.websiteService.fetchWebsites();
             const encodedPath = encodeURIComponent(this.path);
             this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
@@ -151,12 +153,14 @@ export class WebsitePreview extends Component {
     }
 
     addWelcomeMessage() {
-        const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
-        if ($wrap.length && $wrap.html().trim() === '') {
-            this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
-            this.$welcomeMessage.addClass('o_homepage_editor_welcome_message');
-            this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
-            $wrap.empty().append(this.$welcomeMessage);
+        if (this.isWebsitePublisher) {
+            const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
+            if ($wrap.length && $wrap.html().trim() === '') {
+                this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
+                this.$welcomeMessage.addClass('o_homepage_editor_welcome_message');
+                this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
+                $wrap.empty().append(this.$welcomeMessage);
+            }
         }
     }
 

@@ -67,7 +67,6 @@
             'website_sale/static/src/scss/website_sale_dashboard.scss',
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/js/tours/website_sale_shop_backend.js',
-            'website_sale/static/src/js/systray_items/*.js',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
@@ -75,6 +74,7 @@
             'website_sale/static/src/js/website_sale.editor.js',
         ],
         'website.assets_editor': [
+            'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/js/tours/website_sale_shop_frontend.js',
         ],

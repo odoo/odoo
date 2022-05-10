@@ -125,13 +125,6 @@
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
-    <xpath expr="//head/t[@t-js='false'][last()]" position="after">
-        <t t-call-assets="website.assets_editor_frontend" t-js="false" groups="website.group_website_publisher"/>
-    </xpath>
-    <xpath expr="//head/t[@t-css='false'][last()]" position="after">
-        <t t-call-assets="website.assets_editor_frontend" t-css="false" groups="website.group_website_publisher" lazy_load="True"/>
-    </xpath>
-
     <xpath expr="//header" position="attributes">
         <attribute name="data-name">Header</attribute>
     </xpath>

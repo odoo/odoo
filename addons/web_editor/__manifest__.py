@@ -27,7 +27,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/components/**/*.xml',
         ],
         'web_editor.assets_wysiwyg': [
-
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
             'web_editor/static/lib/cropperjs/cropper.js',
@@ -86,6 +85,14 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
         ],
+        'web_editor.assets_media_dialog': [
+            'web_editor/static/src/components/media_dialog/*.js',
+            'web_editor/static/src/components/media_dialog/*.scss',
+            'web_editor/static/src/components/media_dialog/*.xml',
+            'web_editor/static/src/components/upload_progress_toast/*.js',
+            'web_editor/static/src/components/upload_progress_toast/*.scss',
+            'web_editor/static/src/components/upload_progress_toast/*.xml',
+        ],
         'web.assets_common': [
             'web_editor/static/lib/odoo-editor/src/base_style.css',
             'web_editor/static/lib/vkbeautify/**/*',
@@ -94,21 +101,21 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/fonts.js',
         ],
         'web.assets_backend': [
+            ('include', 'web_editor.assets_media_dialog'),
+
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 
             'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
-            'web_editor/static/src/components/media_dialog/*.js',
-            'web_editor/static/src/components/media_dialog/*.scss',
-            'web_editor/static/src/components/upload_progress_toast/*.js',
-            'web_editor/static/src/components/upload_progress_toast/*.scss',
         ],
         'web.assets_frontend_minimal': [
             'web_editor/static/src/js/frontend/loader_loading.js',
         ],
         'web.assets_frontend': [
+            ('include', 'web_editor.assets_media_dialog'),
+
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',
 

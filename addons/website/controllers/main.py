@@ -687,7 +687,6 @@ class Website(Home):
         return {
             'web.assets_common': request.env['ir.qweb']._get_asset_link_urls('web.assets_common', request.session.debug),
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
-            'website.assets_editor_frontend': request.env['ir.qweb']._get_asset_link_urls('website.assets_editor_frontend', request.session.debug),
         }
 
     # ------------------------------------------------------
