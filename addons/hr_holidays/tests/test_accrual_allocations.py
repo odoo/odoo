@@ -352,6 +352,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Paid Time Off',
                 'requires_allocation': 'no',
                 'responsible_id': self.user_hrmanager_id,
+                'time_type': 'leave',
             })
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
