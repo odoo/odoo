@@ -69,7 +69,6 @@
                     </group>
                     <notebook>
                         <page name="tax_mapping" string="Tax Mapping">
-                        <group>
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id"
@@ -96,10 +95,8 @@
                                     </group>
                                 </form>
                             </field>
-                        </group>
                         </page>
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
-                        <group>
                             <field name="account_ids" widget="one2many" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
                                     <field name="account_src_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
@@ -110,7 +107,6 @@
                                     <field name="account_dest_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 </form>
                             </field>
-                        </group>
                         </page>
                     </notebook>
                     <field name="note" class="oe-bordered-editor" placeholder="Legal Notes..."/>

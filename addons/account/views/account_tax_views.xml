@@ -148,12 +148,10 @@
                         <page string="Definition" name="definition">
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="country_code" invisible="1"/>
-                                <group string="Distribution for Invoices">
-                                    <field name="invoice_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
-                                </group>
-                                <group string="Distribution for Credit Notes">
-                                    <field name="refund_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
-                                </group>
+                                <label for="invoice_repartition_line_ids"/>
+                                <field name="invoice_repartition_line_ids" context="{'default_company_id': company_id}"/>
+                                <label for="refund_repartition_line_ids"/>
+                                <field name="refund_repartition_line_ids" context="{'default_company_id': company_id}"/>
                             </div>
                             <field name="children_tax_ids" attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <tree string="Children Taxes">
