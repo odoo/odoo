@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="merchantId" t-att-value="merchantId"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="orderRef" t-att-value="orderRef"/>
+            <input type="hidden" name="currCode" t-att-value="currCode"/>
+            <input type="hidden" name="mpsMode" t-att-value="mpsMode"/>
+            <input type="hidden" name="successUrl" t-att-value="successUrl"/>
+            <input type="hidden" name="failUrl" t-att-value="failUrl"/>
+            <input type="hidden" name="cancelUrl" t-att-value="cancelUrl"/>
+            <input type="hidden" name="payType" t-att-value="payType"/>
+            <input type="hidden" name="lang" t-att-value="lang"/>
+            <input type="hidden" name="payMethod" t-att-value="CC"/>
+            <input type="hidden" name="secureHash" t-att-value="secureHash" t-if="secureHash"/>
+        </form>
+    </template>
+</odoo>
