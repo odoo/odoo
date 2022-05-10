@@ -16,6 +16,9 @@ export class FormViewDialog extends Component {
             type: "form",
 
             context: this.props.context || {},
+            display: {
+                controlPanel: { "bottom-right": false }, // TODO? remove completely the control panel?
+            },
             mode: this.props.mode || "edit",
             resId: this.props.resId || false,
             resModel: this.props.resModel,

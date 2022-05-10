@@ -1333,7 +1333,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering stat buttons with action", async function (assert) {
         assert.expect(3);
 
-        // FIXME: there should be no dependency from views to actionService
         const fakeActionService = {
             start() {
                 return {
@@ -10271,7 +10270,7 @@ QUnit.module("Views", (hooks) => {
                                     uid: 7,
                                 },
                                 resId: 2,
-                                resIds: [],
+                                resIds: [2],
                                 resModel: "partner",
                                 special: "save",
                             });

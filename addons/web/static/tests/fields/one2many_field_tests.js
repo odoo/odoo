@@ -8,6 +8,10 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
     click,
+    clickCreate,
+    clickDiscard,
+    clickEdit,
+    clickSave,
     clickM2OHighlightedItem,
     clickOpenedDropdownItem,
     clickOpenM2ODropdown,
@@ -35,22 +39,6 @@ let target;
 
 // WOWL remove after adapting tests
 let testUtils, relationalFields, makeLegacyDialogMappingTestEnv, AbstractStorageService, RamStorage;
-
-async function clickCreate(target) {
-    await click(target.querySelector(".o_form_button_create"));
-}
-
-async function clickDiscard(target) {
-    await click(target.querySelector(".o_form_button_cancel"));
-}
-
-async function clickEdit(target) {
-    await click(target.querySelector(".o_form_button_edit"));
-}
-
-async function clickSave(target) {
-    await click(target.querySelector(".o_form_button_save"));
-}
 
 function patchSetTimeout() {
     patchWithCleanup(browser, {
@@ -5652,7 +5640,7 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target.querySelector(".o_field_one2many .o_list_renderer tbody tr td"));
 
-            await clickSave(target);
+            await clickSave(target.querySelector(".modal"));
             assert.verifySteps(
                 ["_fetchSpecialDataForMyWidget"],
                 "should only fetch special data once"

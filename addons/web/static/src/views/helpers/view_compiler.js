@@ -336,7 +336,7 @@ export class ViewCompiler {
             if (owlAttributes.includes(name)) {
                 button.setAttribute(name, value);
             } else if (stringPropsAttributes.includes(name)) {
-                button.setAttribute(name, `'${value}'`);
+                button.setAttribute(name, `\`${value}\``);
             } else if (clickParamsAttributes.includes(name)) {
                 clickParams[name] = value;
             }

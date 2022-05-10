@@ -20,7 +20,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { escape } from "@web/core/utils/strings";
 
 const { date: parseDate, datetime: parseDateTime } = parse;
-const { markup } = owl;
+const { markup, toRaw } = owl;
 
 function mapWowlValueToLegacy(value, type) {
     switch (type) {
@@ -1030,14 +1030,19 @@ export class RelationalModel extends Model {
         });
         this.__activeFields = params.activeFields;
         this.__fields = params.fields;
+
+        const res_id = params.resId || undefined;
+        const res_ids = (params.resIds ? toRaw(params.resIds) : null) || (res_id ? [res_id] : []);
+
         this.__bm_load_params__ = {
             type: "record",
             modelName: params.resModel,
-            res_id: params.resId || undefined,
-            res_ids: params.resIds ? [...params.resIds] : [], // mark raw
+            res_id,
+            res_ids,
             fields: params.fields || {},
             viewType: "form",
         };
+
         this.initialMode = params.mode;
 
         window.basicmodel = this;

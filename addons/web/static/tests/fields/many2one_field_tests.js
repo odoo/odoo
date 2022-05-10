@@ -2,7 +2,6 @@
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
 import {
     click,
     clickDiscard,
@@ -30,7 +29,10 @@ import {
     validateSearch,
 } from "../search/helpers";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+
+const serviceRegistry = registry.category("services");
 
 let serverData;
 let target;
@@ -2562,9 +2564,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list in form: call button in sub view", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("list in form: call button in sub view", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         serverData.views = {
             "product,false,form": `
@@ -2578,6 +2578,25 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
+        const def = makeDeferred();
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        const { name, resModel, resId, resIds } = params;
+                        assert.step(name);
+                        assert.strictEqual(resModel, "product");
+                        assert.strictEqual(resId, 37);
+                        assert.deepEqual(resIds, [37]);
+                        return def.then(() => {
+                            params.onClose();
+                        });
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
+
         await makeView({
             type: "form",
             resModel: "partner",
@@ -2585,53 +2604,45 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <sheet>
-                        <field name="p">
-                            <tree editable="bottom">
-                                <field name="product_id" />
-                            </tree>
-                        </field>
-                    </sheet>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="product_id" />
+                        </tree>
+                    </field>
                 </form>
             `,
-            mockRPC(route) {
-                if (route === "/web/dataset/call_kw/product/get_formview_id") {
-                    return Promise.resolve(false);
+            async mockRPC(route, args) {
+                if (args.method === "get_formview_id") {
+                    return false;
                 }
-            },
-            intercepts: {
-                execute_action(event) {
-                    assert.strictEqual(
-                        event.data.env.model,
-                        "product",
-                        "should call with correct model in env"
-                    );
-                    assert.strictEqual(
-                        event.data.env.currentID,
-                        37,
-                        "should call with correct currentID in env"
-                    );
-                    assert.deepEqual(
-                        event.data.env.resIDs,
-                        [37],
-                        "should call with correct resIDs in env"
-                    );
-                    assert.step(event.data.action_data.name);
-                },
             },
         });
 
-        await click(target, ".o_form_button_edit");
+        await clickEdit(target);
         await click(target.querySelector("td.o_data_cell"));
         await click(target, ".o_external_button");
-        await click($('button:contains("Just do it !")'));
+        assert.containsOnce(target, ".modal");
+
+        let buttons = target.querySelectorAll(".modal .o_form_statusbar button");
+
+        await click(buttons[0]);
         assert.verifySteps(["action"]);
-        await click($('button:contains("Just don\'t do it !")'));
+
+        await click(buttons[1]);
         assert.verifySteps([]); // the second button is disabled, it can't be clicked
 
-        await click(document.body.querySelector(".modal .btn-secondary:contains(Discard)"));
+        def.resolve();
+        await nextTick();
+
+        await clickDiscard(target.querySelector(".modal"));
+        assert.containsNone(target, ".modal");
+
         await click(target, ".o_external_button");
-        await click($('button:contains("Just don\'t do it !")'));
+        assert.containsOnce(target, ".modal");
+
+        buttons = target.querySelectorAll(".modal .o_form_statusbar button");
+
+        await click(buttons[1]);
         assert.verifySteps(["object"]);
     });
 
