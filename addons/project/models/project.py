@@ -2313,6 +2313,22 @@ class Task(models.Model):
             return children
         return children + children._get_all_subtasks(depth - 1)
 
+    def get_milestone_to_mark_as_reached_action(self):
+        """ Return an action if the milestone can be marked as reached otherwise return False """
+        milestones = self.milestone_id.filtered('can_be_marked_as_done')
+        if milestones:
+            wizard = self.env['project.milestone.reach.wizard'].create({'line_ids': [Command.create({'milestone_id': m.id}) for m in milestones]})
+            return {
+                'name': _('Mark milestone as reached'),
+                'view_mode': 'form',
+                'res_model': 'project.milestone.reach.wizard',
+                'views': [(self.env.ref('project.project_milestone_reach_wizard_view_form').id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wizard.id,
+                'target': 'new',
+            }
+        return False
+
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
