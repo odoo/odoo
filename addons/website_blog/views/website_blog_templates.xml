@@ -93,7 +93,7 @@ list of filtered posts (by date or tag).
     Replace top-banner content with the latest published post
 -->
 <template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" customize_show="True">
-    <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
+    <xpath expr="//div[@id='o_wblog_blog_top']" position="inside">
         <div t-if="first_post or blog" class="container">
             <div class="row py-4">
                 <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
