@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">AsiaPay Acquirer Form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <group name="acquirer" position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'asiapay')]}">
+                    <field name="asiapay_merchant_id"
+                           string="Merchant ID"
+                           attrs="{'required': [('provider', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
+                    <field name="asiapay_currency_id"
+                           string="Currency"
+                           attrs="{'required': [('provider', '=', 'asiapay'), ('state', '!=', 'disabled')]}"/>
+                    <field name="asiapay_secure_hash_secret"
+                           string="Secure Hash Secret"
+                           attrs="{'required': [('provider', '=', 'asiapay'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
+                    <field name="asiapay_secure_hash_function"
+                           string="Secure Hash Function"
+                           attrs="{'required': [('provider', '=', 'asiapay'), ('state', '!=', 'disabled')]}"
+                           groups="base.group_no_one"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>
