@@ -13,6 +13,8 @@ class ResUsers(models.Model):
         recruitment_group = self.env.ref('hr_recruitment.group_hr_recruitment_user')
 
         interviewers = self - recruitment_group.users
+        if not interviewers:
+            return
         interviewers.sudo().write({
             'groups_id': [(4, interviewer_group.id)]
         })
