@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import sys
 from unittest.mock import patch
 
 from odoo.tests import tagged
@@ -153,5 +154,9 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             return_value={'url': 'https://dummy.url'},
         ) as mock:
             self.stripe._stripe_create_account_link('dummy', 'dummy')
-            for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
-                self.assertIn(payload_param, mock.call_args.kwargs['payload'].keys())
+            mock.assert_called_once()
+            if sys.version_info >= (3, 8):
+                # call_args.kwargs is only available in python 3.8+
+                call_args = mock.call_args.kwargs['payload'].keys()
+                for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
+                    self.assertIn(payload_param, call_args)
