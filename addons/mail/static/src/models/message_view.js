@@ -8,6 +8,11 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'MessageView',
     identifyingFields: [['threadView', 'deleteMessageConfirmViewOwner'], 'message'],
+    lifecyleHooks: {
+        _willDelete() {
+            this.messaging.browser.clearTimeout(this.refreshDateFromNowTimeout);
+        },
+    },
     recordMethods: {
         /**
          * Briefly highlights the message.
@@ -404,6 +409,11 @@ registerModel({
             inverse: 'messageViewOwner',
             isCausal: true,
         }),
+        /**
+         * Id of setInterval used to auto-update time elapsed of message at
+         * regular time.
+         */
+        refreshDateFromNowTimeout: attr(),
         /**
          * States the thread view that is displaying this messages (if any).
          */
