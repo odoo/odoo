@@ -1962,7 +1962,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "item not dropped on discard with empty required field (default_get)",
         async function (assert) {
             // This test simulates discarding a record that has been created with
@@ -1999,17 +1999,17 @@ QUnit.module("Fields", (hooks) => {
                 "should have created the new record in the o2m"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().textContent,
+                target.querySelector("td.o_data_cell").textContent,
                 "new record",
                 "should have the correct displayed name"
             );
 
-            var requiredElement = $("td.o_data_cell.o_required_modifier");
-            assert.strictEqual(
-                requiredElement.length,
-                1,
+            assert.containsOnce(
+                target,
+                "td.o_data_cell .o_required_modifier",
                 "should have a required field on this record"
             );
+            let requiredElement = target.querySelector("td.o_data_cell .o_required_modifier");
             assert.strictEqual(
                 requiredElement.textContent,
                 "",
@@ -2018,24 +2018,20 @@ QUnit.module("Fields", (hooks) => {
 
             click(requiredElement);
             // discard by clicking on body
-            click($("body"));
+            click(document.body);
 
+            assert.containsOnce(target, "tr.o_data_row", "should still have the record in the o2m");
             assert.strictEqual(
-                $("tr.o_data_row").length,
-                1,
-                "should still have the record in the o2m"
-            );
-            assert.strictEqual(
-                $("td.o_data_cell").first().textContent,
+                target.querySelector("td.o_data_cell").textContent,
                 "new record",
                 "should still have the correct displayed name"
             );
 
             // update selector of required field element
-            requiredElement = $("td.o_data_cell.o_required_modifier");
-            assert.strictEqual(
-                requiredElement.length,
-                1,
+            requiredElement = target.querySelector("td.o_data_cell .o_required_modifier");
+            assert.containsOnce(
+                target,
+                "td.o_data_cell .o_required_modifier",
                 "should still have the required field on this record"
             );
             assert.strictEqual(
@@ -2138,7 +2134,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list in form: item not dropped on discard with empty required field (onchange in default_get)",
         async function (assert) {
             // variant of the test "list in form: discard newly added element with
@@ -2157,7 +2153,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2175,42 +2171,41 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // check that there is a record in the editable list with empty string as required field
-            assert.containsOnce(form, ".o_data_row", "should have a row in the editable list");
+            assert.containsOnce(target, ".o_data_row", "should have a row in the editable list");
             assert.strictEqual(
-                $("td.o_data_cell").first().textContent,
+                target.querySelector("td.o_data_cell").textContent,
                 "entry",
                 "should have the correct displayed name"
             );
-            var requiredField = $("td.o_data_cell.o_required_modifier");
-            assert.strictEqual(
-                requiredField.length,
-                1,
+            assert.containsOnce(
+                target,
+                "td.o_data_cell .o_required_modifier",
                 "should have a required field on this record"
             );
             assert.strictEqual(
-                requiredField.textContent,
+                target.querySelector("td.o_data_cell .o_required_modifier").textContent,
                 "",
                 "should have empty string in the required field on this record"
             );
 
             // click on empty required field in editable list record
-            click(requiredField);
+            click(target.querySelector("td.o_data_cell .o_required_modifier"));
             // click off so that the required field still stay empty
-            click($("body"));
+            click(document.body);
 
             // record should not be dropped
             assert.containsOnce(
-                form,
+                target,
                 ".o_data_row",
                 "should not have dropped record in the editable list"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().textContent,
+                target.querySelector("td.o_data_cell").textContent,
                 "entry",
                 "should still have the correct displayed name"
             );
             assert.strictEqual(
-                $("td.o_data_cell.o_required_modifier").textContent,
+                target.querySelector("td.o_data_cell .o_required_modifier").textContent,
                 "",
                 "should still have empty string in the required field"
             );
@@ -2235,7 +2230,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             };
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2253,25 +2248,25 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // check no record in list
-            assert.containsNone(form, ".o_data_row", "should have no row in the editable list");
+            assert.containsNone(target, ".o_data_row", "should have no row in the editable list");
 
             // select product_id to force on_change in editable list
-            await click(target, '.o_field_widget[name="product_id"] .o_input');
-            await click($(".ui-menu-item").first());
+            await click(target, ".o_field_widget[name=product_id] .o_input");
+            await click(target.querySelector(".ui-menu-item"));
 
             // check that there is a record in the editable list with empty string as required field
-            assert.containsOnce(form, ".o_data_row", "should have a row in the editable list");
+            assert.containsOnce(target, ".o_data_row", "should have a row in the editable list");
             assert.strictEqual(
-                $("td.o_data_cell").first().textContent,
+                target.querySelector("td.o_data_cell").textContent,
                 "entry",
                 "should have the correct displayed name"
             );
-            var requiredField = $("td.o_data_cell.o_required_modifier");
-            assert.strictEqual(
-                requiredField.length,
-                1,
+            assert.containsOnce(
+                target,
+                "td.o_data_cell .o_required_modifier",
                 "should have a required field on this record"
             );
+            const requiredField = target.querySelector("td.o_data_cell .o_required_modifier");
             assert.strictEqual(
                 requiredField.textContent,
                 "",
@@ -2281,28 +2276,28 @@ QUnit.module("Fields", (hooks) => {
             // click on empty required field in editable list record
             await click(requiredField);
             // click off so that the required field still stay empty
-            await click($("body"));
+            await click(document.body);
 
             // record should not be dropped
             assert.containsOnce(
-                form,
+                target,
                 ".o_data_row",
                 "should not have dropped record in the editable list"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().textContent,
+                target.querySelector("td.o_data_cell").textContent,
                 "entry",
                 "should still have the correct displayed name"
             );
             assert.strictEqual(
-                $("td.o_data_cell.o_required_modifier").textContent,
+                target.querySelector("td.o_data_cell .o_required_modifier").textContent,
                 "",
                 "should still have empty string in the required field"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'item dropped on discard with empty required field with "Add an item" (invalid on "ADD")',
         async function (assert) {
             // when a record in a list is added with "Add an item", it should
@@ -2310,7 +2305,7 @@ QUnit.module("Fields", (hooks) => {
             // at the record creation.
             assert.expect(6);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2328,32 +2323,30 @@ QUnit.module("Fields", (hooks) => {
 
             // Click on "Add an item"
             await click(target, ".o_field_x2many_list_row_add a");
-            var charField = target.querySelector(
-                '.o_field_widget.o_field_char[name="display_name"]'
-            );
-            var requiredField = target.querySelector(
-                '.o_field_widget.o_required_modifier[name="trululu"]'
-            );
-            charField.val("some text");
-            assert.strictEqual(
-                charField.length,
-                1,
+            target.querySelector(".o_field_widget.o_field_char[name=display_name] input").value =
+                "some text";
+            assert.containsOnce(
+                target,
+                ".o_field_widget.o_field_char[name=display_name]",
                 "should have a char field 'display_name' on this record"
             );
             assert.doesNotHaveClass(
-                charField,
+                target.querySelector(".o_field_widget.o_field_char[name=display_name]"),
                 "o_required_modifier",
                 "the char field should not be required on this record"
             );
             assert.strictEqual(
-                charField.value,
+                target.querySelector(".o_field_widget.o_field_char[name=display_name] input").value,
                 "some text",
                 "should have entered text in the char field on this record"
             );
-            assert.strictEqual(
-                requiredField.length,
-                1,
+            assert.containsOnce(
+                target,
+                ".o_field_widget.o_required_modifier[name=trululu]",
                 "should have a required field 'trululu' on this record"
+            );
+            const requiredField = target.querySelector(
+                ".o_field_widget.o_required_modifier[name=trululu] input"
             );
             assert.strictEqual(
                 requiredField.value.trim(),
@@ -2364,18 +2357,18 @@ QUnit.module("Fields", (hooks) => {
             // click on empty required field in editable list record
             await click(requiredField);
             // click off so that the required field still stay empty
-            await click($("body"));
+            await click(document.body);
 
             // record should be dropped
             assert.containsNone(
-                form,
+                target,
                 ".o_data_row",
                 "should have dropped record in the editable list"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'item not dropped on discard with empty required field with "Add an item" (invalid on "UPDATE")',
         async function (assert) {
             // when a record in a list is added with "Add an item", it should
@@ -2385,7 +2378,7 @@ QUnit.module("Fields", (hooks) => {
             // dropped.
             assert.expect(8);
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2402,55 +2395,56 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.containsNone(
-                form,
+                target,
                 ".o_data_row",
                 "should initially not have any record in the list"
             );
 
             // Click on "Add an item"
             await click(target, ".o_field_x2many_list_row_add a");
-            assert.containsOnce(form, ".o_data_row", "should have a temporary record in the list");
-
-            var $inputEditMode = target.querySelectorAll(
-                '.o_field_widget.o_required_modifier[name="trululu"] input'
+            assert.containsOnce(
+                target,
+                ".o_data_row",
+                "should have a temporary record in the list"
             );
-            assert.strictEqual(
-                $inputEditMode.length,
-                1,
+
+            assert.containsOnce(
+                target,
+                ".o_field_widget.o_required_modifier[name=trululu] input",
                 "should have a required field 'trululu' on this record"
             );
             assert.strictEqual(
-                $inputEditMode.value,
+                target.querySelector(".o_field_widget.o_required_modifier[name=trululu] input")
+                    .value,
                 "",
                 "should have empty string in the required field on this record"
             );
 
             // add something to required field and leave edit mode of the record
-            await click($inputEditMode);
-            await click($("li.ui-menu-item").first());
-            await click($("body"));
+            await click(target, ".o_field_widget.o_required_modifier[name=trululu] input");
+            await click(target.querySelector("li.ui-menu-item"));
+            await click(document.body);
 
-            var $inputReadonlyMode = target.querySelectorAll(".o_data_cell.o_required_modifier");
             assert.containsOnce(
-                form,
+                target,
                 ".o_data_row",
                 "should not have dropped valid record when leaving edit mode"
             );
             assert.strictEqual(
-                $inputReadonlyMode.textContent,
+                target.querySelector(".o_data_cell .o_required_modifier").textContent,
                 "first record",
                 "should have put some content in the required field on this record"
             );
 
             // remove the required field and leave edit mode of the record
-            await click($(".o_data_row"));
+            await click(target, ".o_data_row");
             assert.containsOnce(
-                form,
+                target,
                 ".o_data_row",
                 "should not have dropped record in the list on discard (invalid on UPDATE)"
             );
             assert.strictEqual(
-                $inputReadonlyMode.textContent,
+                target.querySelector(".o_data_cell .o_required_modifier").textContent,
                 "first record",
                 "should keep previous valid required field content on this record"
             );
@@ -2458,7 +2452,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     // WARNING: this does not seem to be a many2one field test
-    QUnit.skipWOWL("list in form: default_get with x2many create", async function (assert) {
+    QUnit.test("list in form: default_get with x2many create", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.fields.timmy.default = [
@@ -2509,12 +2503,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            $("td.o_data_cell:first").textContent,
+            target.querySelector("td.o_data_cell").textContent,
             "brandon is the new timmy",
             "should have created the new record in the m2m with the correct name"
         );
         assert.strictEqual(
-            $("input.o_field_integer").value,
+            target.querySelector(".o_field_integer input").value,
             "1",
             "should have called and executed the onchange properly"
         );
@@ -2522,15 +2516,12 @@ QUnit.module("Fields", (hooks) => {
         // edit the subrecord and save
         displayName = "new value";
         await click(target, ".o_data_cell");
-        await testUtils.fields.editInput(
-            target.querySelectorAll(".o_data_cell input"),
-            displayName
-        );
-        await click(target, ".o_form_button_save");
+        await editInput(target, ".o_data_cell input", displayName);
+        await clickSave(target);
     });
 
     // WARNING: this does not seem to be a many2one field test
-    QUnit.skipWOWL(
+    QUnit.test(
         "list in form: default_get with x2many create and onchange",
         async function (assert) {
             assert.expect(1);
@@ -2567,7 +2558,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(target, ".o_form_button_save");
+            await clickSave(target);
         }
     );
 
