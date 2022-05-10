@@ -406,6 +406,7 @@
                 </div>
             </div>
         </div>
+        <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Lead Generation' t-attf-data-event-params='{"CTA": "Event Registration"}' />
     </t>
 </template>
 

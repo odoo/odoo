@@ -134,6 +134,7 @@
             'website/static/src/js/menu/navbar.js',
             'website/static/src/js/show_password.js',
             'website/static/src/js/post_link.js',
+            'website/static/src/js/plausible.js',
             'website/static/src/js/user_custom_javascript.js',
         ],
         'web.assets_frontend_minimal': [
