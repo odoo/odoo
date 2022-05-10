@@ -2083,7 +2083,7 @@ class Lead(models.Model):
         # - avoid blocking the table for too long with a too big transaction
         transactions_count, transactions_failed_count = 0, 0
         cron_update_lead_start_date = datetime.now()
-        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        auto_commit = not getattr(threading.current_thread(), 'testing', False)
         for probability, probability_lead_ids in probability_leads.items():
             for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
                 transactions_count += 1

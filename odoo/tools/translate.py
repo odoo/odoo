@@ -357,7 +357,7 @@ class GettextAlias(object):
 
     def _get_db(self):
         # find current DB based on thread/worker db name (see netsvc)
-        db_name = getattr(threading.currentThread(), 'dbname', None)
+        db_name = getattr(threading.current_thread(), 'dbname', None)
         if db_name:
             return odoo.sql_db.db_connect(db_name)
 

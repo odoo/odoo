@@ -175,5 +175,5 @@ def randdatetime(*, base_date=None, relative_before=None, relative_after=None, s
     seconds_after = relative_after and ((base_date + relative_after) - base_date).total_seconds() or 0
 
     def get_rand_datetime(random=None, **kwargs):
-        return base_date + relativedelta(seconds=random.randint(seconds_before, seconds_after))
+        return base_date + relativedelta(seconds=random.randint(int(seconds_before), int(seconds_after)))
     return compute(get_rand_datetime, seed=seed)
