@@ -144,8 +144,8 @@
                         <field name="user_id" widget="many2one_avatar_user"/>
                         <field name="date_closed" attrs="{'invisible': [('date_closed', '=', False)]}" />
                         <field name="priority" widget="priority"/>
-                        <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
+                        <field name="medium_id"/>
                     </group>
                     <group string="Job">
                         <field name="job_id"/>
@@ -994,23 +994,13 @@
             <tree string="Sources of Applicants" editable="top" class="o_recruitment_list" sample="1">
                 <field name="has_domain" invisible="1"/>
                 <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="medium_id" optional="hidden"/>
                 <field name="job_id" attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="email" attrs="{'invisible': [('email', '=', False)]}" widget="email"/>
                 <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" attrs="{'invisible': ['|', ('has_domain', '=', False), ('email', '!=', False)]}"/>
             </tree>
         </field>
     </record>
-    <record id="hr_recruitment_source_action" model="ir.actions.act_window">
-        <field name="name">Sources of Applicants</field>
-        <field name="res_model">hr.recruitment.source</field>
-    </record>
-
-    <menuitem
-        id="menu_hr_recruitment_source"
-        parent="menu_hr_recruitment_config_applications"
-        action="hr_recruitment_source_action"
-        groups="base.group_no_one"
-        sequence="15"/>
 
     <record id="hr_applicant_action_from_department" model="ir.actions.act_window">
         <field name="name">New Applications</field>
@@ -1048,14 +1038,15 @@
     </record>
 
     <record id="hr_applicant_view_pivot" model="ir.ui.view">
-         <field name="name">hr.applicant.pivot</field>
-         <field name="model">hr.applicant</field>
-         <field name="arch" type="xml">
-             <pivot string="Recruitment Analysis" sample="1">
-                 <field name="stage_id" type="row"/>
-                 <field name="job_id" type="col"/>
-             </pivot>
-         </field>
+        <field name="name">hr.applicant.pivot</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <pivot string="Recruitment Analysis" sample="1">
+                <field name="stage_id" type="row"/>
+                <field name="job_id" type="col"/>
+                <field name="name"/>
+            </pivot>
+        </field>
     </record>
 
     <record id="hr_applicant_view_graph" model="ir.ui.view">
@@ -1196,6 +1187,29 @@
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'department_id']}</field>
     </record>
+
+    <menuitem
+        id="menu_hr_recruitment_utm"
+        parent="menu_hr_recruitment_configuration"
+        name="UTMs"
+        groups="base.group_no_one"
+        sequence="15"/>
+
+    <menuitem
+        id="menu_hr_recruitment_utm_sources"
+        parent="menu_hr_recruitment_utm"
+        name="Sources"
+        action="utm.utm_source_action"
+        groups="base.group_no_one"
+        sequence="15"/>
+
+    <menuitem
+        id="menu_hr_recruitment_utm_mediums"
+        parent="menu_hr_recruitment_utm"
+        name="Mediums"
+        action="utm.utm_medium_action"
+        groups="base.group_no_one"
+        sequence="15"/>
 
     </data>
 </odoo>
