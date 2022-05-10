@@ -1312,12 +1312,13 @@ class Website(models.Model):
 
             router = http.root.get_db_router(request.db).bind('')
             path = router.build(rule.endpoint, args)
+            if lang != self.default_lang_id:
+                path = f'/{lang.url_code}{path}'
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
-            path = urls.url_quote_plus(request.httprequest.path, safe='/')
-        lang_path = f'/{lang.url_code}' if lang != self.default_lang_id else ''
+            path = urls.url_quote_plus(request.httprequest.environ['REQUEST_URI'], safe='/')
         canonical_query_string = f'?{urls.url_encode(canonical_params)}' if canonical_params else ''
-        return self.get_base_url() + lang_path + path + canonical_query_string
+        return self.get_base_url() + path + canonical_query_string
 
     def _get_canonical_url(self, canonical_params):
         """Returns the canonical URL for the current request."""
