@@ -36,6 +36,7 @@
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '!=', False)]"/>
                     <separator/>
                     <filter string="Tasks Due Today" name="tasks_due_today" domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
@@ -1321,6 +1322,7 @@
                     <field name="child_text"/>
                     <field name="is_private"/>
                     <field name="rating_active"/>
+                    <field name="has_late_and_unreached_milestone" />
                     <field name="allow_milestones" />
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "muted"}'/>
                     <templates>
@@ -1335,7 +1337,7 @@
                                         </strong>
                                         <t t-if="!record.is_private.raw_value">
                                             <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
-                                            <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value">
+                                            <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-attf-class="{{record.has_late_and_unreached_milestone.raw_value ? 'text-danger' : ''}}">
                                                 <br/>
                                                 <field name="milestone_id" />
                                             </span>
