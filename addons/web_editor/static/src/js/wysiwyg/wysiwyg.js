@@ -1175,6 +1175,7 @@ const Wysiwyg = Widget.extend({
         if (!sel.rangeCount) {
             return;
         }
+        const range = sel.getRangeAt(0);
         // We lose the current selection inside the content editable when we
         // click the media dialog button so we need to be able to restore the
         // selection when the modal is closed.
@@ -1183,7 +1184,7 @@ const Wysiwyg = Widget.extend({
         const $node = $(params.node);
         // We need to keep track of FA icon because media.js will _clear those classes
         const wasFontAwesome = $node.hasClass('fa');
-        const $editable = $(this.odooEditor.editable);
+        const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable'));
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
