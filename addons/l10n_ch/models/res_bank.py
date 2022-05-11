@@ -249,7 +249,7 @@ class ResPartnerBank(models.Model):
     def build_swiss_code_url(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
         qr_code_vals = self._build_swiss_code_vals(amount, currency_name, debtor_partner, structured_communication, free_communication)
         # use quiet to remove blank around the QR and make it easier to place it
-        return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
+        return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1&barlevel=M' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
 
     @api.model
     def build_swiss_code_base64(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
