@@ -107,7 +107,6 @@ class Product(models.Model):
             product.show_on_hand_qty_status_button = product.product_tmpl_id.show_on_hand_qty_status_button
             product.show_forecasted_qty_status_button = product.product_tmpl_id.show_forecasted_qty_status_button
 
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
         'location', 'warehouse',
