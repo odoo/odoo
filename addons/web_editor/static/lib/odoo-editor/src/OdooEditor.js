@@ -200,6 +200,7 @@ export class OdooEditor extends EventTarget {
                 showEmptyElementHint: true,
                 defaultLinkAttributes: {},
                 plugins: [],
+                getReadOnlyAreas: () => [],
                 getContentEditableAreas: () => [],
                 getPowerboxElement: () => {
                     const selection = document.getSelection();
@@ -1627,6 +1628,9 @@ export class OdooEditor extends EventTarget {
             if (!node.isContentEditable) {
                 node.setAttribute('contenteditable', true);
             }
+        }
+        for (const node of this.options.getReadOnlyAreas()) {
+            node.setAttribute('contenteditable', false);
         }
         this.observerActive('_activateContenteditable');
     }
