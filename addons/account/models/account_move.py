@@ -3947,6 +3947,18 @@ class AccountMoveLine(models.Model):
             ('tax_ids.tax_exigibility', '!=', 'on_payment'), # So: exigible if at least one tax from tax_ids isn't on_payment
         ]
 
+    def _get_lock_date_protected_fields(self):
+        """ Returns the names of the fields that should be protected by the accounting fiscal year and tax lock dates
+        """
+        tax_fnames = ['debit', 'credit', 'tax_line_id', 'tax_ids', 'tax_tag_ids']
+        fiscal_fnames = tax_fnames + ['account_id', 'journal_id', 'amount_currency', 'currency_id', 'partner_id']
+        reconciliation_fnames = ['account_id', 'date', 'debit', 'credit', 'amount_currency', 'currency_id']
+        return {
+            'tax': tax_fnames,
+            'fiscal': fiscal_fnames,
+            'reconciliation': reconciliation_fnames,
+        }
+
     def belongs_to_refund(self):
         """ Tells whether or not this move line corresponds to a refund operation.
         """
@@ -4478,10 +4490,7 @@ class AccountMoveLine(models.Model):
         # OVERRIDE
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')
         BUSINESS_FIELDS = ('price_unit', 'quantity', 'discount', 'tax_ids')
-        PROTECTED_FIELDS_TAX_LOCK_DATE = ['debit', 'credit', 'tax_line_id', 'tax_ids', 'tax_tag_ids']
-        PROTECTED_FIELDS_LOCK_DATE = PROTECTED_FIELDS_TAX_LOCK_DATE + ['account_id', 'journal_id', 'amount_currency', 'currency_id', 'partner_id']
-        PROTECTED_FIELDS_RECONCILIATION = ('account_id', 'date', 'debit', 'credit', 'amount_currency', 'currency_id')
-
+        protected_fields = self._get_lock_date_protected_fields()
         account_to_write = self.env['account.account'].browse(vals['account_id']) if 'account_id' in vals else None
 
         # Check writing a deprecated account.
@@ -4496,15 +4505,15 @@ class AccountMoveLine(models.Model):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
-            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_LOCK_DATE):
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['fiscal']):
                 line.move_id._check_fiscalyear_lock_date()
 
             # Check the tax lock date.
-            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_TAX_LOCK_DATE):
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['tax']):
                 line._check_tax_lock_date()
 
             # Check the reconciliation.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in PROTECTED_FIELDS_RECONCILIATION):
+            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']):
                 line._check_reconciliation()
 
             # Check switching receivable / payable accounts.
