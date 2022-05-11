@@ -108,8 +108,6 @@ QUnit.module('hr', {}, function () {
             2,
             "should still have only 2 chat windows because third is the same partner as first"
         );
-
-        list.destroy();
     });
 
     QUnit.test('many2one_avatar_employee widget in kanban view', async function (assert) {
@@ -140,8 +138,6 @@ QUnit.module('hr', {}, function () {
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsOnce(kanban, '.o_m2o_avatar');
         assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`);
-
-        kanban.destroy();
     });
 
     QUnit.test('many2one_avatar_employee: click on an employee not associated with a user', async function (assert) {
@@ -194,8 +190,6 @@ QUnit.module('hr', {}, function () {
             `read m2x.avatar.employee ${m2xHrAvatarUserId1}`,
             `read hr.employee.public ${hrEmployeePublicId1}`,
         ]);
-
-        form.destroy();
     });
 
     QUnit.test('many2many_avatar_employee widget in form view', async function (assert) {
@@ -248,8 +242,6 @@ QUnit.module('hr', {}, function () {
             2,
             "should have 2 chat windows"
         );
-
-        form.destroy();
     });
 
     QUnit.test('many2many_avatar_employee widget in list view', async function (assert) {
@@ -322,8 +314,6 @@ QUnit.module('hr', {}, function () {
             "Yoshi",
             'chat window should be with clicked employee'
         );
-
-        list.destroy();
     });
 
     QUnit.test('many2many_avatar_employee widget in kanban view', async function (assert) {
@@ -384,8 +374,6 @@ QUnit.module('hr', {}, function () {
             `read hr.employee.public ${hrEmployeePublicId1}`,
             `read hr.employee.public ${hrEmployeePublicId2}`
         ]);
-
-        kanban.destroy();
     });
 
     QUnit.test('many2many_avatar_employee: click on an employee not associated with a user', async function (assert) {
@@ -454,7 +442,5 @@ QUnit.module('hr', {}, function () {
 
         assert.containsOnce(document.body, '.o_ChatWindowHeader_name',
             "should have 1 chat window");
-
-        form.destroy();
     });
 });
