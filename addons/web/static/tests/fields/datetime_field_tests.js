@@ -450,15 +450,13 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("DatetimeField in editable list view", async function (assert) {
-        assert.expect(9);
-
         patchTimeZone(120);
 
         await makeView({
             serverData,
             type: "list",
             resModel: "partner",
-            arch: '<tree editable="bottom">' + '<field name="datetime"/>' + "</tree>",
+            arch: `<tree editable="bottom"><field name="datetime"/></tree>`,
         });
 
         const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
@@ -470,7 +468,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // switch to edit mode
-        await click(target, ".o_data_row:first-child div[name='datetime']");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(
             target,
             "input.o_datepicker_input",

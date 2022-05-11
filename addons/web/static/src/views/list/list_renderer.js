@@ -175,6 +175,12 @@ export class ListRenderer extends Component {
         return this.props.list.fields;
     }
 
+    canUseFormatter(column, record) {
+        return (
+            !record.isInEdition && !column.widget && record.fields[column.name].type !== "boolean"
+        );
+    }
+
     focusCell(column) {
         let index = this.state.columns.indexOf(column);
         if (index === -1) {
@@ -429,6 +435,20 @@ export class ListRenderer extends Component {
         if (fieldType === "boolean") {
             return "";
         }
+        const formatter = formatterRegistry.get(fieldType, (val) => val);
+        const formatOptions = {
+            escape: false,
+            data: record.data,
+            isPassword: "password" in column.attrs,
+            digits: column.attrs.digits && JSON.parse(column.attrs.digits),
+            field: record.fields[fieldName],
+        };
+        return formatter(record.data[fieldName], formatOptions);
+    }
+
+    getCellValue(column, record) {
+        const fieldName = column.name;
+        const fieldType = this.fields[fieldName].type;
         const formatter = formatterRegistry.get(fieldType, (val) => val);
         const formatOptions = {
             escape: false,

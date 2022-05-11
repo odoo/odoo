@@ -71,8 +71,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("SelectionField");
 
     QUnit.test("SelectionField in a list view", async function (assert) {
-        assert.expect(3);
-
         serverData.models.partner.records.forEach(function (r) {
             r.color = "red";
         });
@@ -81,16 +79,15 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             resModel: "partner",
             serverData,
-            arch: '<tree string="Colors" editable="top">' + '<field name="color"/>' + "</tree>",
+            arch: '<tree string="Colors" editable="top"><field name="color"/></tree>',
         });
-        const elements = Array.from(target.querySelectorAll("td div[name='color'] span"));
 
-        assert.strictEqual(elements.length, 3, "should have 3 rows with correct value");
-        await click(elements[0]);
+        assert.containsN(target, ".o_data_row", 3);
+        await click(target.querySelector(".o_data_cell"));
 
         const td = target.querySelector("tbody tr.o_selected_row td:not(.o_list_record_selector)");
         assert.containsOnce(td, "select", "td should have a child 'select'");
-        assert.strictEqual(td.childNodes.length, 1, "select tag should be only child of td");
+        assert.strictEqual(td.children.length, 1, "select tag should be only child of td");
     });
 
     QUnit.test("SelectionField, edition and on many2one field", async function (assert) {

@@ -11024,10 +11024,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".breadcrumb-item.o_back_button"));
 
         assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Partner");
-        assert.strictEqual(
-            target.querySelector('.o_field_cell .o_field_widget[name="name"]').innerText,
-            "aaa"
-        );
+        assert.strictEqual(target.querySelector(".o_field_cell").innerText, "aaa");
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
         assert.containsOnce(target, ".o_form_readonly");

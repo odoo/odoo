@@ -406,7 +406,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
-        await click(target.querySelector("tr.o_data_row .o_field_char"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, {

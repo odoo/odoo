@@ -418,7 +418,7 @@ QUnit.module("Fields", (hooks) => {
         await click(dollarCell);
 
         assert.strictEqual(
-            dollarCell.childNodes.length,
+            dollarCell.children.length,
             1,
             "The cell td should only contain the special div of monetary widget."
         );
@@ -429,7 +429,7 @@ QUnit.module("Fields", (hooks) => {
             "The view should have 1 input for editable monetary float."
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget  input").value,
+            target.querySelector(".o_field_widget input").value,
             "9.10",
             "The input should be rendered without the currency symbol."
         );

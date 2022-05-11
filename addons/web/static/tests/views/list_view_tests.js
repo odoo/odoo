@@ -1822,7 +1822,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("editable list view: line with no active element", async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         serverData.models.bar = {
             fields: {
@@ -1863,12 +1863,12 @@ QUnit.module("Views", (hooks) => {
         });
         await clickEdit(target);
 
-        const cells = target.querySelectorAll(".o_data_cell");
-        assert.containsOnce(cells[0], ".o_readonly_modifier");
-        assert.hasClass(cells[1], "o_boolean_toggle_cell");
+        assert.hasClass(target.querySelectorAll(".o_data_cell")[1], "o_boolean_toggle_cell");
 
-        await click(cells[0]);
-        await click(cells[1], ".o_boolean_toggle input");
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+        assert.containsOnce(target.querySelectorAll(".o_data_cell")[0], ".o_readonly_modifier");
+        await click(target.querySelectorAll(".o_data_cell")[1], ".o_boolean_toggle input");
         await clickSave(target);
     });
 
@@ -4797,22 +4797,22 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("can display a list with a many2many field", async function (assert) {
-        assert.expect(4);
-
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: "<tree>" + '<field name="m2m"/>' + "</tree>",
+            arch: `<tree><field name="m2m"/></tree>`,
             mockRPC: function (route, args) {
                 assert.step(args.method);
             },
         });
         assert.verifySteps(["get_views", "web_search_read"], "should have done 1 web_search_read");
-        assert.ok(
-            $(target).find("td:contains(3 records)").length,
-            "should have a td with correct formatted value"
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "2 records",
+            "3 records",
+            "No records",
+            "1 record",
+        ]);
     });
 
     QUnit.test("display a tooltip on a field", async function (assert) {
@@ -4955,8 +4955,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("support field decoration", async function (assert) {
-        assert.expect(3);
-
         await makeView({
             type: "list",
             resModel: "foo",
@@ -4968,8 +4966,10 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
-        assert.containsN(target, "tbody td .text-danger", 3);
+        assert.containsN(target, "tbody tr", 4);
+        assert.containsN(target, "tbody td.o_list_char", 4);
+        assert.containsN(target, "tbody td.text-danger", 3);
+        assert.containsN(target, "tbody td.o_list_number", 4);
         assert.containsNone(target, "tbody td.o_list_number.text-danger");
     });
 
@@ -6069,8 +6069,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("edit a row by clicking on a readonly field", async function (assert) {
-        assert.expect(9);
-
         serverData.models.foo.fields.foo.readonly = true;
         await makeView({
             type: "list",
@@ -6078,8 +6076,6 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
         });
-
-        assert.containsN(target, ".o_field_widget[name=foo].o_readonly_modifier", 4);
 
         // edit the first row
         await click(target.querySelector(".o_field_cell"));
@@ -6476,27 +6472,46 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
             });
 
-            assert.containsN(target, "tbody td .o_readonly_modifier", 3);
-
             // Make first line editable
             await click(target.querySelector(".o_field_cell"));
+            assert.containsOnce(target, ".o_selected_row");
             assert.containsOnce(target, ".o_selected_row .o_field_widget[name=foo] span");
+            assert.hasClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_readonly_modifier"
+            );
 
             await click(target.querySelector(".o_field_widget[name=bar] input"));
             assert.containsOnce(target, ".o_selected_row .o_field_widget[name=foo] input");
-            assert.containsN(target, "tbody td .o_readonly_modifier", 2);
+            assert.doesNotHaveClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_readonly_modifier"
+            );
 
             await click(target.querySelector(".o_field_widget[name=bar] input"));
             assert.containsOnce(target, ".o_selected_row .o_field_widget[name=foo] span");
-            assert.containsN(target, "tbody td .o_readonly_modifier", 3);
+            assert.hasClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_readonly_modifier"
+            );
 
             await click(target.querySelector(".o_field_widget[name=bar] input"));
             assert.containsOnce(target, ".o_selected_row .o_field_widget[name=foo] input");
-            assert.containsN(target, "tbody td .o_readonly_modifier", 2);
+            assert.doesNotHaveClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_readonly_modifier"
+            );
 
-            // Click outside to leave edition mode
+            // Click outside to leave edition mode and make first line editable again
             await click(target);
-            assert.containsN(target, "tbody td .o_readonly_modifier", 2);
+            assert.containsNone(target, ".o_selected_row");
+            await click(target.querySelector(".o_field_cell"));
+            assert.containsOnce(target, ".o_selected_row");
+            assert.containsOnce(target, ".o_selected_row .o_field_widget[name=foo] input");
+            assert.doesNotHaveClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_readonly_modifier"
+            );
         }
     );
 
@@ -6514,8 +6529,6 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
             });
 
-            assert.containsN(target, "tbody td .o_required_modifier", 3);
-
             // Make first line editable
             await click(target.querySelector(".o_field_cell"));
             assert.hasClass(
@@ -6528,20 +6541,25 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
                 "o_required_modifier"
             );
-            assert.containsN(target, "tbody td .o_required_modifier", 2);
 
             await click(target.querySelector(".o_field_widget[name=bar] input"));
             assert.hasClass(
                 target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
                 "o_required_modifier"
             );
-            assert.containsN(target, "tbody td .o_required_modifier", 3);
 
-            // Reswitch the field to required and save the row
+            // Reswitch the field to required and save the row and make first line editable again
             await click(target.querySelector(".o_field_widget[name=bar] input"));
+            assert.doesNotHaveClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_required_modifier"
+            );
             await click(target.querySelector(".o_list_button_save"));
-
-            assert.containsN(target, "tbody td .o_required_modifier", 2);
+            await click(target.querySelector(".o_field_cell"));
+            assert.doesNotHaveClass(
+                target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_required_modifier"
+            );
         }
     );
 
@@ -6626,18 +6644,16 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("leaving unvalid rows in edition", async function (assert) {
-        assert.expect(4);
-
-        var warnings = 0;
+        let warnings = 0;
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="foo" required="1"/>' +
-                '<field name="bar"/>' +
-                "</tree>",
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo" required="1"/>
+                    <field name="bar"/>
+                </tree>`,
         });
         patchWithCleanup(list.env.services.notification, {
             add: (message, { type }) => {
@@ -6648,24 +6664,21 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Start first line edition
-        const rows = target.querySelectorAll(".o_data_row");
-        const firstRowFoo = rows[0].querySelector(".o_data_cell [name=foo]");
-        await click(firstRowFoo);
+        await click(target.querySelector(".o_data_cell"));
 
         // Remove required foo field value
-        await editInput(firstRowFoo, "input", "");
+        await editInput(target, ".o_selected_row .o_field_widget[name=foo] input", "");
 
         // Try starting other line edition
-        const secondRowFoo = rows[1].querySelector(".o_data_cell [name=foo]");
-        await click(secondRowFoo);
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
         assert.hasClass(
-            rows[0],
+            target.querySelectorAll(".o_data_row")[0],
             "o_selected_row",
             "first line should still be in edition as invalid"
         );
         assert.containsOnce(target, ".o_selected_row", "no other line should be in edition");
         assert.containsOnce(
-            rows[0],
+            target.querySelectorAll(".o_data_row")[0],
             ".o_field_invalid input",
             "the required field should be marked as invalid"
         );
@@ -9003,9 +9016,12 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_data_cell input", "oui");
         await click(target.querySelector(".o_list_button_save"));
 
-        const fooFields = target.querySelectorAll(".o_data_cell .o_field_widget[name=foo]");
-        assert.strictEqual(fooFields[0].innerText, "yop", "First row should remain unchanged");
-        assert.strictEqual(fooFields[1].innerText, "oui", "Second row should have been updated");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "yop",
+            "oui",
+            "gnap",
+            "blip",
+        ]);
     });
 
     // Need keynav Enter
@@ -10906,7 +10922,9 @@ QUnit.module("Views", (hooks) => {
 
             // starting condition
             assert.deepEqual(
-                [...target.querySelectorAll(".o_data_cell [name=foo]")].map((el) => el.textContent),
+                [...target.querySelectorAll(".o_data_cell.o_list_char")].map(
+                    (el) => el.textContent
+                ),
                 ["blip", "blip", "yop", "gnap"]
             );
 
@@ -10921,7 +10939,9 @@ QUnit.module("Views", (hooks) => {
             await click(target, ".o_list_button_add");
 
             assert.deepEqual(
-                [...target.querySelectorAll(".o_data_cell [name=foo]")].map((el) => el.textContent),
+                [...target.querySelectorAll(".o_data_cell.o_list_char")].map(
+                    (el) => el.textContent
+                ),
                 ["blip", "blip", "yop", "gnap", inputText, ""]
             );
         }
@@ -10954,21 +10974,15 @@ QUnit.module("Views", (hooks) => {
         // set a value and save
         await editInput(target, ".o_selected_row [name=foo] input", "some value");
         await clickSave(target);
-
-        // modifiers should be evaluted to true
-        assert.hasClass(
-            target.querySelector(".o_data_row [name=foo].o_field_widget"),
-            "o_readonly_modifier"
-        );
-        assert.containsNone(target, ".o_data_row:first-child [name=int_field]");
+        // int_field should not be displayed
+        assert.strictEqual(target.querySelectorAll(".o_data_row .o_data_cell")[1].innerText, "");
 
         // edit again the just created record
         await click(target.querySelector(".o_data_row .o_data_cell"));
-
-        // modifiers should be evaluted to true
         assert.containsOnce(target, ".o_selected_row");
+        // modifiers should be evaluated to true
         assert.hasClass(
-            target.querySelector(".o_selected_row [name=foo].o_field_widget"),
+            target.querySelector(".o_selected_row .o_field_widget[name=foo]"),
             "o_readonly_modifier"
         );
         assert.containsNone(target, ".o_selected_row [name=int_field]");
@@ -13767,7 +13781,7 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap", "blip"]
         );
         assert.containsN(target, ".o_data_row", 4);
@@ -13779,7 +13793,7 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 2);
         await doAction(webClient, 1, { clearBreadcrumbs: true });
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap", "blip", "test"]
         );
         assert.containsN(target, ".o_data_row", 5);
@@ -13813,18 +13827,18 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap", "blip"]
         );
 
-        await click(target.querySelector('.o_data_cell [name="foo"]'));
+        await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "test");
 
         // change action and come back
         await doAction(webClient, 2);
         await doAction(webClient, 1, { clearBreadcrumbs: true });
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["test", "blip", "gnap", "blip"]
         );
     });
@@ -13857,15 +13871,15 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 1);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap", "blip"]
         );
 
-        await click(target.querySelector('.o_data_cell [name="foo"]'));
+        await click(target.querySelector(".o_data_cell"));
         await editInput(target, '.o_data_cell [name="foo"] input', "");
         await assert.rejects(doAction(webClient, 2));
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "blip", "gnap", "blip"]
         );
         assert.hasClass(target.querySelector('.o_data_cell [name="foo"]'), "o_field_invalid");
@@ -13883,7 +13897,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap"]
         );
 
@@ -13891,13 +13905,13 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, '.o_data_cell [name="foo"] input', "test");
         await pagerNext(target);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["blip", "test"]
         );
 
         await pagerPrevious(target);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap"]
         );
     });
@@ -13913,21 +13927,21 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap"]
         );
 
-        await click(target.querySelector('.o_data_cell [name="foo"]'));
-        await editInput(target, '.o_data_cell [name="foo"] input', "test");
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_data_cell input", "test");
         await pagerNext(target);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["blip"]
         );
 
         await pagerPrevious(target);
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["test", "blip", "gnap"]
         );
     });
@@ -13943,16 +13957,16 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["yop", "blip", "gnap"]
         );
 
-        await click(target.querySelector('.o_data_cell [name="foo"]'));
-        await editInput(target, '.o_data_cell [name="foo"] input', "");
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_data_cell input", "");
         await pagerNext(target);
         assert.hasClass(target.querySelector('.o_data_cell [name="foo"]'), "o_field_invalid");
         assert.deepEqual(
-            [...target.querySelectorAll('.o_data_cell [name="foo"]')].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "blip", "gnap"]
         );
     });

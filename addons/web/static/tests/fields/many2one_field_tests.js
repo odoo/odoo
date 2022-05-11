@@ -1893,15 +1893,13 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "item not dropped on discard with empty required field (default_get)",
         async function (assert) {
             // This test simulates discarding a record that has been created with
             // one of its required field that is empty. When we discard the changes
             // on this empty field, it should not assume that this record should be
             // abandonned, since it has been added (even though it is a new record).
-            assert.expect(8);
-
             serverData.models.partner.fields.p.default = [
                 [0, 0, { display_name: "new record", trululu: false, p: [] }],
             ];
@@ -1934,22 +1932,21 @@ QUnit.module("Fields", (hooks) => {
                 "new record",
                 "should have the correct displayed name"
             );
-
-            assert.containsOnce(
-                target,
-                "td.o_data_cell .o_required_modifier",
-                "should have a required field on this record"
-            );
-            let requiredElement = target.querySelector("td.o_data_cell .o_required_modifier");
             assert.strictEqual(
-                requiredElement.textContent,
+                target.querySelectorAll("td.o_data_cell")[1].textContent,
                 "",
                 "should have empty string in the required field on this record"
             );
+            // FIXME: I added the await here and 6 lines below
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.hasClass(
+                target.querySelectorAll(".o_selected_row .o_data_cell")[1],
+                "o_required_modifier",
+                "should have a required field on this record"
+            );
 
-            click(requiredElement);
             // discard by clicking on body
-            click(target);
+            await click(target);
 
             assert.containsOnce(target, "tr.o_data_row", "should still have the record in the o2m");
             assert.strictEqual(
@@ -1957,18 +1954,17 @@ QUnit.module("Fields", (hooks) => {
                 "new record",
                 "should still have the correct displayed name"
             );
-
-            // update selector of required field element
-            requiredElement = target.querySelector("td.o_data_cell .o_required_modifier");
-            assert.containsOnce(
-                target,
-                "td.o_data_cell .o_required_modifier",
-                "should still have the required field on this record"
-            );
             assert.strictEqual(
-                requiredElement.textContent,
+                target.querySelectorAll("td.o_data_cell")[1].textContent,
                 "",
                 "should still have empty string in the required field on this record"
+            );
+
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            assert.hasClass(
+                target.querySelectorAll(".o_selected_row .o_data_cell")[1],
+                "o_required_modifier",
+                "should still have the required field on this record"
             );
         }
     );
@@ -2065,7 +2061,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "list in form: item not dropped on discard with empty required field (onchange in default_get)",
         async function (assert) {
             // variant of the test "list in form: discard newly added element with
@@ -2119,6 +2115,7 @@ QUnit.module("Fields", (hooks) => {
                 "should have empty string in the required field on this record"
             );
 
+            // FIXME: shouldn't we wait for the clicks here??
             // click on empty required field in editable list record
             click(target.querySelector("td.o_data_cell .o_required_modifier"));
             // click off so that the required field still stay empty
@@ -2307,8 +2304,6 @@ QUnit.module("Fields", (hooks) => {
             // fields are non-empty). If the record is updated so that the required
             // field is empty, and it is discarded, then the record should not be
             // dropped.
-            assert.expect(8);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -2362,20 +2357,20 @@ QUnit.module("Fields", (hooks) => {
                 "should not have dropped valid record when leaving edit mode"
             );
             assert.strictEqual(
-                target.querySelector(".o_data_cell .o_required_modifier").textContent,
+                target.querySelectorAll(".o_data_cell")[1].textContent,
                 "first record",
                 "should have put some content in the required field on this record"
             );
 
-            // remove the required field and leave edit mode of the record
-            await click(target, ".o_data_row");
+            // leave edit mode of the record
+            await click(target);
             assert.containsOnce(
                 target,
                 ".o_data_row",
                 "should not have dropped record in the list on discard (invalid on UPDATE)"
             );
             assert.strictEqual(
-                target.querySelector(".o_data_cell .o_required_modifier").textContent,
+                target.querySelectorAll(".o_data_cell")[1].textContent,
                 "first record",
                 "should keep previous valid required field content on this record"
             );
