@@ -17,6 +17,7 @@
         'data/hr_work_entry_data.xml',
         'data/ir_cron_data.xml',
         'views/hr_work_entry_views.xml',
+        'views/hr_contract_views.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
     ],
     'demo': [
