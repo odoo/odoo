@@ -24,7 +24,7 @@ class SmsSms(models.Model):
             body = sms.body
             for url in set(re.findall(tools.TEXT_URL_REGEX, body)):
                 if url.startswith(sms.get_base_url() + '/r/'):
-                    body = re.sub(url + r'(?![\w@:%.+&~#=/-])', url + f'/s/{sms.id}', body)
+                    body = re.sub(re.escape(url) + r'(?![\w@:%.+&~#=/-])', url + f'/s/{sms.id}', body)
             res[sms.id] = body
         return res
 
