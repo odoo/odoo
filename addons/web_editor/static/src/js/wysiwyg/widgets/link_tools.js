@@ -166,11 +166,21 @@ const LinkTools = Link.extend({
      */
     _getLinkCustomClasses: function () {
         let textClass = this.customColors['color'];
-        if (!computeColorClasses(this.colorpickers['color'].getColorNames(), 'text-').includes(textClass)) {
+        const colorPickerFg = this.colorpickers['color'];
+        if (
+            !textClass ||
+            !colorPickerFg ||
+            !computeColorClasses(colorPickerFg.getColorNames(), 'text-').includes(textClass)
+        ) {
             textClass = '';
         }
         let fillClass = this.customColors['background-color'];
-        if (!computeColorClasses(this.colorpickers['background-color'].getColorNames(), 'bg-').includes(fillClass)) {
+        const colorPickerBg = this.colorpickers['background-color'];
+        if (
+            !fillClass ||
+            !colorPickerBg ||
+            !computeColorClasses(colorPickerBg.getColorNames(), 'bg-').includes(fillClass)
+        ) {
             fillClass = '';
         }
         return ` ${textClass} ${fillClass}`;
