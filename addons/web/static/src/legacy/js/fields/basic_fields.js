@@ -1258,7 +1258,7 @@ var FieldMonetary = NumericField.extend({
         // Prepare and add the input
         var def = this._prepareInput(this.$input).appendTo(this.$el);
 
-        if (this.currency) {
+        if (this.currency && !this.nodeOptions.no_symbol) {
             // Prepare and add the currency symbol
             var $currencySymbol = $('<span>', {text: this.currency.symbol});
             if (this.currency.position === "after") {
