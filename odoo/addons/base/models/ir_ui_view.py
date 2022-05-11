@@ -1146,16 +1146,18 @@ actual arch.
                 # TODO: collections.Counter if remove p2.6 compat
                 # running index by tag type, for XPath query generation
                 indexes = collections.defaultdict(lambda: 0)
-                for child in e.iterchildren(tag=etree.Element):
+                for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
                     if child.get('data-oe-xpath') or child.get('data-oe-field-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
-                        # Also, if a node is known to have been replaced during applying xpath
-                        # increment its index to compute an accurate xpath for susequent nodes
-                        replaced_node_tag = child.attrib.pop('meta-oe-xpath-replacing', None)
-                        if replaced_node_tag:
-                            indexes[replaced_node_tag] += 1
                         self.distribute_branding(child)
+                    elif child.tag is etree.ProcessingInstruction:
+                        # If a node is known to have been replaced during
+                        # applying an inheritance, increment its index to
+                        # compute an accurate xpath for subsequent nodes
+                        if child.target == 'apply-inheritance-specs-node-removal':
+                            indexes[child.text] += 1
+                            e.remove(child)
                     else:
                         indexes[child.tag] += 1
                         self.distribute_branding(
