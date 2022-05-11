@@ -236,10 +236,6 @@ class Website(Home):
 
     @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
     def website_info(self, **kwargs):
-        try:
-            request.website.get_template('website.website_info').name
-        except Exception as e:
-            return request.env['ir.http']._handle_exception(e)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
         l10n = Module.search([('state', '=', 'installed'), ('name', '=like', 'l10n_%')])
