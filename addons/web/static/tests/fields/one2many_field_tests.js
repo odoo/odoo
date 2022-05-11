@@ -365,7 +365,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("O2M with parented m2o and domain on parent.m2o", async function (assert) {
+    QUnit.skipWOWL("O2M with parented m2o and domain on parent.m2o", async function (assert) {
         assert.expect(4);
 
         /* records in an o2m can have a m2o pointing to themselves
@@ -421,7 +421,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=parent_id] input", "ABC");
         await clickOpenedDropdownItem(target, "parent_id", "Create and Edit...");
 
-        await click(target, ".modal:not(.o_inactive_modal) .modal-footer .btn-primary");
+        await click(target, ".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save");
         await click(target, ".modal:not(.o_inactive_modal) .o_form_button_save_new");
 
         assert.containsOnce(

@@ -13,7 +13,8 @@ export class Dialog extends Component {
         useHotkey("escape", () => {
             this.data.close();
         });
-        useChildSubEnv({ inDialog: true });
+        this.id = `dialog_${this.data.id}`;
+        useChildSubEnv({ inDialog: true, dialogId: this.id });
     }
 }
 Dialog.template = "web.Dialog";

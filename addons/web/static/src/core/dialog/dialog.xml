@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Dialog" owl="1">
-        <div class="o_dialog" t-att-class="{ o_inactive_modal: !data.isActive }">
+        <div class="o_dialog" t-att-id="id" t-att-class="{ o_inactive_modal: !data.isActive }">
             <div role="dialog" class="modal d-block"
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"

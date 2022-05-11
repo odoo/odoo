@@ -8782,56 +8782,56 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("reload event is handled only once", async function (assert) {
+    QUnit.test("reload event is handled only once", async function (assert) {
         // In this test, several form controllers are nested (two of them are
         // opened in dialogs). When the users clicks on save in the last
         // opened dialog, a 'reload' event is triggered up to reload the (direct)
         // parent view. If this event isn't stopPropagated by the first controller
         // catching it, it will crash when the other one will try to handle it,
         // as this one doesn't know at all the dataPointID to reload.
-        assert.expect(11);
-
-        var arch =
-            "<form>" + '<field name="display_name"/>' + '<field name="trululu"/>' + "</form>";
+        const arch = `<form><field name="display_name"/><field name="trululu"/></form>`;
+        serverData.views = {
+            "partner,false,form": arch,
+        };
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: arch,
-            archs: {
-                "partner,false,form": arch,
-            },
             resId: 2,
             mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);
                 }
-                return this._super.apply(this, arguments);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
 
+        await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_external_button"));
-        await click($(".modal .o_external_button"));
+        await click(target.querySelector(".modal .o_external_button"));
 
-        await editInput($(".modal:nth(1) .o_field_widget[name=display_name]"), "new name");
-        await click($(".modal:nth(1) footer .btn-primary").first());
+        await editInput(
+            target.querySelectorAll(".modal")[1],
+            ".o_field_widget[name=display_name] input",
+            "new name"
+        );
+        await click(
+            target.querySelectorAll(".modal")[1].querySelector("footer .o_form_button_save")
+        );
 
         assert.strictEqual(
-            $(".modal .o_field_widget[name=trululu] input").value,
+            target.querySelector(".modal .o_field_widget[name=trululu] input").value,
             "new name",
             "record should have been reloaded"
         );
         assert.verifySteps([
+            "get_views",
             "read", // main record
             "get_formview_id", // id of first form view opened in a dialog
             "get_views", // arch of first form view opened in a dialog
             "read", // first dialog
             "get_formview_id", // id of second form view opened in a dialog
-            "get_views", // arch of second form view opened in a dialog
             "read", // second dialog
             "write", // save second dialog
             "read", // reload first dialog

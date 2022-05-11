@@ -4142,7 +4142,7 @@
                 this.helpers.add("capture");
                 this.define(ctxStr, `capture(ctx);`);
             }
-            const blockString = `component(Portal, {target: ${ast.target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
+            const blockString = `component(Portal, {target: ${compileExpr(ast.target)},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
             if (block) {
                 this.insertAnchor(block);
             }

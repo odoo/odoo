@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Layout" owl="1">
-        <t t-if="env.inDialog" t-portal="'.modal-footer'">
+        <t t-if="env.inDialog" t-portal="'#' + env.dialogId + ' .modal-footer'">
             <t t-slot="layout-buttons"/>
         </t>
         <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel"/>

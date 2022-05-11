@@ -52,7 +52,7 @@ export const dialogService = {
                 id,
                 class: dialogClass,
                 props: { ...props, close },
-                dialogData: { isActive: true, close },
+                dialogData: { isActive: true, close, id },
             };
             dialogs[id] = dialog;
 
