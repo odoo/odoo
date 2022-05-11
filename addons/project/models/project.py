@@ -2018,6 +2018,8 @@ class Task(models.Model):
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
+            for follower in task.parent_id.message_follower_ids:
+                task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
         return tasks
