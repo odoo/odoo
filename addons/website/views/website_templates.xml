@@ -2102,7 +2102,7 @@
                     <h2 class='mt32'>Installed Localizations / Account Charts</h2>
                     <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
                         <dt>
-                            <a t-attf-href="https://www.odoo.com/app/accounting/#{app.name}">
+                            <a t-att-href="app.website or 'https://www.odoo.com/app/accounting/' + app.name">
                                 <t t-out="app.shortdesc"/>
                             </a>
                         </dt>
