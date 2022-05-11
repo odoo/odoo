@@ -608,13 +608,15 @@ class Team(models.Model):
             user_team_id = self.search([('id', '=', user_team_id)], limit=1).id
         else:
             user_team_id = self.search([], limit=1).id
-            action['help'] = _("""<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>
-    Looks like you are not a member of a Sales Team. You should add yourself
-    as a member of one of the Sales Team.
-</p>""")
+            action['help'] = "<p class='o_view_nocontent_smiling_face'>%s</p><p>" % _("Create an Opportunity")
             if user_team_id:
-                action['help'] += _("<p>As you don't belong to any Sales Team, Odoo opens the first one by default.</p>")
-
+                if self.user_has_groups('sales_team.group_sale_manager'):
+                    action['help'] += "<p>%s</p>" % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
+                                        To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>""",
+                                        self.env.ref('sales_team.crm_team_action_config').id)
+                else:
+                    action['help'] += "<p>%s</p>" % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
+                                        To work with the CRM, you should join a team.""")
         action_context = safe_eval(action['context'], {'uid': self.env.uid})
         if user_team_id:
             action_context['default_team_id'] = user_team_id
