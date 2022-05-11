@@ -256,7 +256,45 @@ class Website(models.Model):
     def sale_product_domain(self):
         return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
 
+<<<<<<< HEAD
     def sale_get_order(self, force_create=False, update_pricelist=False):
+=======
+    @api.model
+    def sale_get_payment_term(self, partner):
+        pt = self.env.ref('account.account_payment_term_immediate', False).sudo()
+        if pt:
+            pt = (not pt.company_id.id or self.company_id.id == pt.company_id.id) and pt
+        return (
+            partner.property_payment_term_id or
+            pt or
+            self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
+        ).id
+
+    def _prepare_sale_order_values(self, partner, pricelist):
+        self.ensure_one()
+        affiliate_id = request.session.get('affiliate_id')
+        salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
+        addr = partner.address_get(['delivery'])
+        if not request.website.is_public_user():
+            last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
+            if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
+                addr['delivery'] = last_sale_order.partner_shipping_id.id
+        default_user_id = partner.parent_id.user_id.id or partner.user_id.id
+        values = {
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'payment_term_id': self.sale_get_payment_term(partner),
+            'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': addr['delivery'],
+            'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
+            'website_id': self._context.get('website_id'),
+            'company_id': self.company_id.id,
+        }
+        return values
+
+    def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
+>>>>>>> 6d3777ed572... temp
         """ Return the current sales order after mofications specified by params.
 
         :param bool force_create: Create sales order if not already existing
