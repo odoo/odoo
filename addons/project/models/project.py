@@ -47,6 +47,12 @@ PROJECT_TASK_READABLE_FIELDS = {
     'allow_milestones',
     'milestone_id',
     'has_late_and_unreached_milestone',
+    'company_id',
+    'date_last_stage_update',
+    'date_assign',
+    'dependent_ids',
+    'is_blocked',
+    'message_is_follower',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -272,6 +278,12 @@ class Project(models.Model):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
         return self.env['project.project.stage'].search([], limit=1)
 
+    @api.model
+    def _search_is_favorite(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise NotImplementedError(_('Operation not supported'))
+        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
+
     def _compute_is_favorite(self):
         for project in self:
             project.is_favorite = self.env.user in project.favorite_user_ids
@@ -323,8 +335,8 @@ class Project(models.Model):
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         default=_get_default_favorite_user_ids,
         string='Members')
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True,
-        string='Show Project on Dashboard')
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
+        compute_sudo=True, string='Show Project on Dashboard')
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
@@ -507,7 +519,7 @@ class Project(models.Model):
         read_group = self.env['project.milestone']._read_group([
             ('project_id', 'in', self.filtered('allow_milestones').ids),
             ('is_reached', '=', False),
-            ('deadline', '<', today)], ['project_id'], ['project_id'])
+            ('deadline', '<=', today)], ['project_id'], ['project_id'])
         mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
         for project in self:
             project.is_milestone_exceeded = bool(mapped_count.get(project.id, 0))
@@ -525,7 +537,7 @@ class Project(models.Model):
          LEFT JOIN project_milestone M ON P.id = M.project_id
              WHERE M.is_reached IS false
                AND P.allow_milestones IS true
-               AND M.deadline < CAST(now() AS date)
+               AND M.deadline <= CAST(now() AS date)
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'
@@ -764,6 +776,10 @@ class Project(models.Model):
     def action_project_sharing(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action')
+        action['context'] = {
+            'default_project_id': self.id,
+            'delete': False,
+        }
         action['display_name'] = self.name
         return action
 
@@ -2180,7 +2196,7 @@ class Task(models.Model):
         late_milestones = self.env['project.milestone'].sudo()._search([  # sudo is needed for the portal user in Project Sharing.
             ('id', 'in', self.milestone_id.ids),
             ('is_reached', '=', False),
-            ('deadline', '<', fields.Date.today()),
+            ('deadline', '<=', fields.Date.today()),
         ])
         for task in self:
             task.has_late_and_unreached_milestone = task.allow_milestones and task.milestone_id.id in late_milestones

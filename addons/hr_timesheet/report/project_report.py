@@ -7,30 +7,30 @@ from odoo import fields, models, api
 class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
 
-    hours_planned = fields.Float('Planned Hours', readonly=True)
-    hours_effective = fields.Float('Effective Hours', readonly=True)
+    planned_hours = fields.Float('Initially Planned Hours', readonly=True)
+    effective_hours = fields.Float('Hours Spent', readonly=True)
     remaining_hours = fields.Float('Remaining Hours', readonly=True)
+    remaining_hours_percentage = fields.Float('Remaining Hours Percentage', readonly=True)
     progress = fields.Float('Progress', group_operator='avg', readonly=True)
     overtime = fields.Float(readonly=True)
 
     def _select(self):
-        select_to_append = """,
-                (t.effective_hours * 100) / NULLIF(t.planned_hours, 0) as progress,
-                t.effective_hours as hours_effective,
+        return super()._select() +  """,
+                CASE WHEN COALESCE(t.planned_hours, 0) = 0 THEN 0.0 ELSE LEAST((t.effective_hours * 100) / t.planned_hours, 100) END as progress,
+                t.effective_hours,
                 t.planned_hours - t.effective_hours - t.subtask_effective_hours as remaining_hours,
-                NULLIF(t.planned_hours, 0) as hours_planned,
-                t.overtime as overtime
+                CASE WHEN t.planned_hours > 0 THEN t.remaining_hours / t.planned_hours ELSE 0 END as remaining_hours_percentage,
+                t.planned_hours,
+                t.overtime
         """
-        return super(ReportProjectTaskUser, self)._select() + select_to_append
 
     def _group_by(self):
-        group_by_append = """,
+        return super()._group_by() + """,
                 t.effective_hours,
                 t.subtask_effective_hours,
                 t.planned_hours,
                 t.overtime
         """
-        return super(ReportProjectTaskUser, self)._group_by() + group_by_append
 
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):

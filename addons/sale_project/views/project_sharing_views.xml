@@ -25,18 +25,4 @@
         </field>
     </record>
 
-    <record id="project_sharing_inherit_project_task_view_search" model="ir.ui.view">
-        <field name="name">project.task.search.inherit</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
-            </xpath>
-            <xpath expr="//group/filter[@name='customer']" position="after">
-                <filter name="sale_order_id" string="Sales Order Id" context="{'group_by': 'sale_order_id'}" />
-            </xpath>
-        </field>
-    </record>
-
 </odoo>
