@@ -334,6 +334,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             return !$(el).closest('.o_not_editable').length;
         }).toArray();
     },
+
+    _getReadOnlyAreas () {
+        return [];
+    },
     /**
      * Call preventDefault of an event.
      *
@@ -419,6 +423,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             powerboxCommands: this._getSnippetsCommands(),
             bindLinkTool: true,
             showEmptyElementHint: false,
+            getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),
