@@ -16,6 +16,17 @@ class StockMove(models.Model):
         compute='_compute_show_subcontracting_details_visible'
     )
 
+    def _compute_display_assign_serial(self):
+        super(StockMove, self)._compute_display_assign_serial()
+        for move in self:
+            if not move.is_subcontract:
+                continue
+            productions = move._get_subcontract_production()
+            if not productions or move.has_tracking != 'serial':
+                continue
+            if productions._has_tracked_component() or productions[:1].consumption != 'strict':
+                move.display_assign_serial = False
+
     def _compute_show_subcontracting_details_visible(self):
         """ Compute if the action button in order to see moves raw is visible """
         self.show_subcontracting_details_visible = False
@@ -40,7 +51,8 @@ class StockMove(models.Model):
             if self.env.user.has_group('base.group_portal'):
                 move.show_details_visible = any(not p._has_been_recorded() for p in move._get_subcontract_production())
                 continue
-            if not move._get_subcontract_production()._has_tracked_component():
+            productions = move._get_subcontract_production()
+            if not productions._has_tracked_component() and productions[:1].consumption == 'strict':
                 continue
             move.show_details_visible = True
         return res
@@ -83,7 +95,7 @@ class StockMove(models.Model):
         subcontracted product. Otherwise use standard behavior.
         """
         self.ensure_one()
-        if self._subcontrating_should_be_record() or self._subcontrating_can_be_record():
+        if self.state != 'done' and (self._subcontrating_should_be_record() or self._subcontrating_can_be_record()):
             return self._action_record_components()
         action = super(StockMove, self).action_show_details()
         if self.is_subcontract and all(p._has_been_recorded() for p in self._get_subcontract_production()):
