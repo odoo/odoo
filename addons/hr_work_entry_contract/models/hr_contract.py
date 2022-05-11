@@ -275,6 +275,8 @@ class HrContract(models.Model):
             contract_start = fields.Datetime.to_datetime(contract.date_start)
             contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()),
                                              datetime.max.time())
+            if date_start > contract_stop or date_stop < contract_start:
+                continue
             date_start_work_entries = max(date_start, contract_start)
             date_stop_work_entries = min(date_stop, contract_stop)
             if force:
