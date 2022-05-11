@@ -1837,6 +1837,9 @@ class Task(models.Model):
             raise UserError(_('You cannot archive recurring tasks. Please disable the recurrence first.'))
         if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
             raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
+        if 'child_ids' in vals and not self.ensure_one():
+            raise UserError(_("Sorry. a Task can only have one parent."))
+
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals.update(self.update_date_end(vals['stage_id']))
@@ -1883,8 +1886,14 @@ class Task(models.Model):
 
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
+        old_child_ids = self.child_ids
 
         result = super(Task, tasks).write(vals)
+
+        if 'child_ids' in vals and old_child_ids:
+            task = self.sudo()
+            for follower in task.message_follower_ids:
+                (task.child_ids - old_child_ids).message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
 
