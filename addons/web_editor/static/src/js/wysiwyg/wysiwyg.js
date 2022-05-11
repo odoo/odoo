@@ -1195,7 +1195,7 @@ const Wysiwyg = Widget.extend({
         const $node = $(params.node);
         // We need to keep track of FA icon because media.js will _clear those classes
         const wasFontAwesome = $node.hasClass('fa');
-        const $editable = $(this.odooEditor.editable);
+        const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable'));
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
