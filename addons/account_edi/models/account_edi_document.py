@@ -52,7 +52,7 @@ class AccountEdiDocument(models.Model):
                 config_errors = doc.edi_format_id._check_move_configuration(move)
                 if config_errors:
                     res = base64.b64encode('\n'.join(config_errors).encode('UTF-8'))
-                elif move.is_invoice(include_receipts=True) and doc.edi_format_id._is_required_for_invoice(move):
+                elif move._is_edi_invoice() and doc.edi_format_id._is_required_for_invoice(move):
                     res = base64.b64encode(doc.edi_format_id._get_invoice_edi_content(doc.move_id))
                 elif move.payment_id and doc.edi_format_id._is_required_for_payment(move):
                     res = base64.b64encode(doc.edi_format_id._get_payment_edi_content(doc.move_id))
@@ -82,7 +82,7 @@ class AccountEdiDocument(models.Model):
         for edi_doc in documents:
             move = edi_doc.move_id
             edi_format = edi_doc.edi_format_id
-            if move.is_invoice(include_receipts=True):
+            if move._is_edi_invoice():
                 doc_type = 'invoice'
             elif move.payment_id or move.statement_line_id:
                 doc_type = 'payment'
@@ -159,7 +159,7 @@ class AccountEdiDocument(models.Model):
                         'blocking_level': False,
                     })
 
-                    if move.is_invoice(include_receipts=True) and move.state == 'posted':
+                    if move._is_edi_invoice() and move.state == 'posted':
                         # The user requested a cancellation of the EDI and it has been approved. Then, the invoice
                         # can be safely cancelled.
                         invoice_ids_to_cancel.add(move.id)
