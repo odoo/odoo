@@ -821,7 +821,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal .btn-primary");
     });
 
-    QUnit.skipWOWL("focus tracking on a many2one in a list", async function (assert) {
+    QUnit.test("focus tracking on a many2one in a list", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -1231,10 +1231,10 @@ QUnit.module("Fields", (hooks) => {
         };
         serverData.views = {
             "product,false,form": `
-                    <form>
-                        <field name="name" />
-                    </form>
-                `,
+                <form>
+                    <field name="name" />
+                </form>
+            `,
         };
 
         await makeView({
@@ -1242,10 +1242,10 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-                    <form>
-                        <field name="product_id" />
-                    </form>
-                `,
+                <form>
+                    <field name="product_id" />
+                </form>
+            `,
         });
 
         await editInput(target, "div[name=product_id] input", "ABC");
@@ -1253,16 +1253,13 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal .o_form_view");
 
         // quick create 'new value'
-        await editInput(target, "div[name=name] input", "new value");
-        await click(target.querySelector("div[name=name] .o_m2o_dropdown_option"));
-        assert.strictEqual(
-            target.querySelector(".modal .o_field_many2one input").value,
-            "new value"
-        );
+        await editInput(target, ".modal div[name=name] input", "new value");
+        await click(target.querySelector(".modal div[name=name] .o_m2o_dropdown_option"));
+        assert.strictEqual(target.querySelector(".modal div[name=name] input").value, "new value");
 
         await clickSave(target.querySelector(".modal"));
         assert.containsNone(target, ".modal .o_form_view");
-        assert.strictEqual(target.querySelector(".o_field_many2one input").value, "new value");
+        assert.strictEqual(target.querySelector("div[name=product_id] input").value, "new value");
     });
 
     QUnit.test("many2one searches with correct value", async function (assert) {
@@ -2140,7 +2137,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "list in form: item not dropped on discard with empty required field (onchange on list after default_get)",
         async function (assert) {
             // discarding a record from an `onchange` in a `default_get` should not
@@ -2148,8 +2145,6 @@ QUnit.module("Fields", (hooks) => {
             // `onchange`, except if an onchange make some changes on the list:
             // in particular, if an onchange make changes on the list such that
             // a record is added, this record should not be dropped on discard
-            assert.expect(8);
-
             serverData.models.partner.onchanges = {
                 product_id(obj) {
                     if (obj.product_id === 37) {
@@ -2179,27 +2174,16 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".o_data_row", "should have no row in the editable list");
 
             // select product_id to force on_change in editable list
-            await click(target, ".o_field_widget[name=product_id] .o_input");
+            await click(target, "div[name=product_id] input");
             await click(target.querySelector(".ui-menu-item"));
 
             // check that there is a record in the editable list with empty string as required field
-            assert.containsOnce(target, ".o_data_row", "should have a row in the editable list");
-            assert.strictEqual(
-                target.querySelector("td.o_data_cell").textContent,
-                "entry",
-                "should have the correct displayed name"
-            );
-            assert.containsOnce(
-                target,
-                "td.o_data_cell .o_required_modifier",
-                "should have a required field on this record"
-            );
-            const requiredField = target.querySelector("td.o_data_cell .o_required_modifier");
-            assert.strictEqual(
-                requiredField.textContent,
-                "",
-                "should have empty string in the required field on this record"
-            );
+            assert.containsOnce(target, ".o_data_row");
+
+            assert.strictEqual(target.querySelector("td.o_data_cell").textContent, "entry");
+            assert.containsOnce(target, "td.o_invalid_cell");
+            const requiredField = target.querySelector("td.o_invalid_cell");
+            assert.strictEqual(requiredField.textContent, "");
 
             // click on empty required field in editable list record
             await click(requiredField);
@@ -2207,20 +2191,10 @@ QUnit.module("Fields", (hooks) => {
             await click(target);
 
             // record should not be dropped
-            assert.containsOnce(
-                target,
-                ".o_data_row",
-                "should not have dropped record in the editable list"
-            );
-            assert.strictEqual(
-                target.querySelector("td.o_data_cell").textContent,
-                "entry",
-                "should still have the correct displayed name"
-            );
-            assert.strictEqual(
-                target.querySelector("td.o_data_cell .o_required_modifier").textContent,
-                "",
-                "should still have empty string in the required field"
+            assert.containsOnce(target, ".o_data_row");
+            assert.deepEqual(
+                [...target.querySelectorAll("td.o_data_cell")].map((el) => el.innerText),
+                ["entry", ""]
             );
         }
     );
@@ -3869,7 +3843,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("updating a many2one from a many2many", async function (assert) {
+    QUnit.test("updating a many2one from a many2many", async function (assert) {
         assert.expect(4);
 
         serverData.models.turtle.records[1].turtle_trululu = 1;
@@ -3888,20 +3862,18 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <group>
-                        <field name="turtles">
-                            <tree editable="bottom">
-                                <field name="display_name" />
-                                <field name="turtle_trululu" />
-                            </tree>
-                        </field>
-                    </group>
+                    <field name="turtles">
+                        <tree editable="bottom">
+                            <field name="display_name" />
+                            <field name="turtle_trululu" />
+                        </tree>
+                    </field>
                 </form>
             `,
-            mockRPC(route, { args, method }) {
+            async mockRPC(route, { args, method }) {
                 if (method === "get_formview_id") {
                     assert.deepEqual(args[0], [1], "should call get_formview_id with correct id");
-                    return Promise.resolve(false);
+                    return false;
                 }
             },
         });
@@ -3910,14 +3882,15 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
         await click(target.querySelectorAll(".o_data_row td")[1]);
         await click(target, ".o_external_button");
-        assert.containsOnce(target, ".modal", "should have one modal in body");
+        assert.containsOnce(target, ".modal");
 
         // Changing the 'trululu' value
-        await editInput(target, ".modal .o_field_widget[name='display_name'] input", "test");
+        await editInput(target, ".modal div[name=display_name] input", "test");
         await clickSave(target.querySelector(".modal"));
 
         // Test whether the value has changed
-        assert.containsNone(target, ".modal", "the modal should be closed");
+        assert.containsNone(target, ".modal");
+
         assert.strictEqual(
             target.querySelectorAll(".o_data_cell")[1].textContent,
             "test",
@@ -3925,11 +3898,9 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("search more in many2one: resequence inside dialog", async function (assert) {
+    QUnit.test("search more in many2one: resequence inside dialog", async function (assert) {
         // when the user clicks on 'Search More...' in a many2one dropdown, resequencing inside
         // the dialog works
-        assert.expect(10);
-
         serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
         for (let i = 0; i < 8; i++) {
             serverData.models.partner.records.push({ id: 100 + i, display_name: `test_${i}` });
@@ -3968,13 +3939,8 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='trululu'] input", "");
         await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
-        assert.containsOnce(target, ".modal", "There should be 1 modal opened");
-        assert.containsN(
-            target,
-            ".modal .ui-sortable-handle",
-            11,
-            "There should be 11 sequence handlers"
-        );
+        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal .ui-sortable-handle", 11);
 
         await dragAndDrop(
             ".modal .o_data_row:nth-child(2) .ui-sortable-handle",

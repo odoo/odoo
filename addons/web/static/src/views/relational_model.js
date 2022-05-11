@@ -1494,13 +1494,21 @@ class DynamicList extends DataPoint {
             }
         }
         // FIMME: can't go though orm, so no context given
-        await this.model.rpc("/web/dataset/resequence", {
+        const wasResequenced = await this.model.rpc("/web/dataset/resequence", {
             model,
             ids,
             field: handleField,
             offset: Math.min(...sequences),
             context: this.context,
         });
+
+        if (wasResequenced) {
+            await this.model.orm.read(this.resModel, ids, [handleField], {
+                context: this.context,
+            });
+            // TODO: use result of read (see wasResequenced in BasicModel)
+        }
+
         this.model.notify();
         return list;
     }

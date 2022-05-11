@@ -3468,19 +3468,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                     <form>
-                        <group>
-                            <field name="turtles">
-                                <tree editable="top">
-                                    <field name="turtle_foo"/>
-                                </tree>
-                            </field>
-                        </group>
+                        <field name="turtles">
+                            <tree editable="top">
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
                     </form>`,
             resId: 2,
             mockRPC(route, args) {
-                if (args.method) {
-                    assert.step(args.method);
-                }
+                assert.step(args.method);
             },
         });
 
@@ -3488,7 +3484,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, "tr.o_data_row");
         await clickEdit(target);
         await addRow(target);
-        await click(target.querySelector("label.o_form_label"));
+        await click(target);
         assert.containsNone(target, "tr.o_data_row");
 
         // click on Add an item again, then click on save
@@ -3702,14 +3698,12 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <group>
-                        <field name="turtles">
-                            <tree editable="top">
-                                <field name="turtle_foo"/>
-                                <field name="turtle_int"/>
-                            </tree>
-                        </field>
-                    </group>
+                    <field name="turtles">
+                        <tree editable="top">
+                            <field name="turtle_foo"/>
+                            <field name="turtle_int"/>
+                        </tree>
+                    </field>
                 </form>`,
             resId: 2,
         });
@@ -3725,15 +3719,15 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, '.o_field_widget[name="turtle_int"] input', "12345");
 
         // click elsewhere
-        await click(target.querySelector("label.o_form_label"));
-        assert.containsNone(document.body, ".modal");
+        await click(target);
+        assert.containsNone(target, ".modal");
 
         // the line should still be selected
         assert.containsOnce(target, "tr.o_data_row.o_selected_row");
 
         // click discard
         await clickDiscard(target);
-        assert.containsNone(document.body, ".modal");
+        assert.containsNone(target, ".modal");
         assert.containsNone(target, "tr.o_data_row");
     });
 

@@ -171,6 +171,9 @@ export class Many2OneField extends Component {
                 onRecordSaved: async () => {
                     await this.props.record.load();
                     await this.props.update(this.props.value);
+                    if (this.props.record.model.root.id !== this.props.record.id) {
+                        this.props.record.switchMode("readonly");
+                    }
                 },
             })
         );
@@ -195,10 +198,14 @@ export class Many2OneField extends Component {
                             this.props.record.activeFields[this.props.name].string
                         ),
                         onRecordSaved: (record) => {
-                            const { type } = record.fields.name;
                             const id = record.data.id;
-                            const name =
-                                type === "many2one" ? record.data.name[1] : record.data.name;
+                            let name;
+                            if ("display_name" in record.data) {
+                                name = record.data.display_name;
+                            } else {
+                                const { type } = record.fields.name;
+                                name = type === "many2one" ? record.data.name[1] : record.data.name;
+                            }
                             return this.props.update([id, name]);
                         },
                     },

@@ -247,8 +247,6 @@ export class Record extends DataPoint {
         this._savePromise = Promise.resolve();
         this._domains = {};
 
-        this.canBeAbandoned = this.isVirtual;
-
         this._requiredFields = {};
         for (const [fieldName, activeField] of Object.entries(this.activeFields)) {
             const { modifiers } = activeField;
@@ -263,6 +261,44 @@ export class Record extends DataPoint {
         if (this.__bm_handle__) {
             this.__syncData();
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
+
+    get canBeAbandoned() {
+        return this.model.__bm__.canBeAbandoned(this.__bm_handle__);
+    }
+
+    /**
+     * Since the ORM can support both `active` and `x_active` fields for
+     * the archiving mechanism, check if any such field exists and prioritize
+     * them. The `active` field should always take priority over its custom
+     * version.
+     *
+     * @returns {boolean} true iff the field is active or there is no `active`
+     *   or `x_active` field on the model
+     */
+    get isActive() {
+        if ("active" in this.activeFields) {
+            return this.data.active;
+        } else if ("x_active" in this.activeFields) {
+            return this.data.x_active;
+        }
+        return true;
+    }
+
+    get isDirty() {
+        return this.model.__bm__.isDirty(this.__bm_handle__);
+    }
+
+    get isInEdition() {
+        return this.mode === "edit";
+    }
+
+    get isNew() {
+        return this.model.__bm__.isNew(this.__bm_handle__);
     }
 
     get isVirtual() {
@@ -287,35 +323,9 @@ export class Record extends DataPoint {
         return this.model.__bm__.localData[this.__bm_handle__].res_ids;
     }
 
-    get isDirty() {
-        return this.model.__bm__.isDirty(this.__bm_handle__);
-    }
-
-    /**
-     * Since the ORM can support both `active` and `x_active` fields for
-     * the archiving mechanism, check if any such field exists and prioritize
-     * them. The `active` field should always take priority over its custom
-     * version.
-     *
-     * @returns {boolean} true iff the field is active or there is no `active`
-     *   or `x_active` field on the model
-     */
-    get isActive() {
-        if ("active" in this.activeFields) {
-            return this.data.active;
-        } else if ("x_active" in this.activeFields) {
-            return this.data.x_active;
-        }
-        return true;
-    }
-
-    get isNew() {
-        return this.model.__bm__.isNew(this.__bm_handle__);
-    }
-
-    get isInEdition() {
-        return this.mode === "edit";
-    }
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
 
     checkValidity() {
         for (const fieldName in this.activeFields) {
@@ -438,7 +448,6 @@ export class Record extends DataPoint {
     __syncData(force) {
         const bm = this.model.__bm__;
         const legDP = bm.get(this.__bm_handle__);
-        this.canBeAbandoned = bm.canBeAbandoned(this.__bm_handle__);
         const data = Object.assign({}, legDP.data);
         for (const fieldName of this.fieldNames) {
             const fieldType = legDP.fields[fieldName].type;
@@ -485,11 +494,10 @@ export class Record extends DataPoint {
                 }
                 case "many2one": {
                     if (data[fieldName]) {
-                        let name = data[fieldName].data.display_name;
-                        if (Array.isArray(name)) {
-                            name = name[1];
-                        }
-                        data[fieldName] = [data[fieldName].data.id, name || ""];
+                        data[fieldName] = [
+                            data[fieldName].data.id,
+                            data[fieldName].data.display_name || "",
+                        ];
                     } else {
                         data[fieldName] = false;
                     }
@@ -568,7 +576,6 @@ export class Record extends DataPoint {
             this.__syncData();
         }
         this._removeInvalidFields(Object.keys(changes));
-        this.canBeAbandoned = false;
         this.model.notify();
         resolveUpdatePromise();
     }
@@ -713,26 +720,18 @@ export class Record extends DataPoint {
 
 export class StaticList extends DataPoint {
     setup(params, state) {
-        // this.isOne2Many = params.field.type === "one2many"; // bof
-
-        // const legDP = this.model.__bm__.get(params.handle);
         /** @type {Record[]} */
         this.records = [];
 
         this.handleField = params.handleField;
 
-        // this.views = legDP.fieldsInfo;
-        // this.viewMode = legDP.viewType;
-
-        // this.validated = {};
-        // this.rawContext = params.rawContext;
-        // this.getEvalContext = params.getEvalContext;
-
         this.editedRecord = null;
         this.onRecordWillSwitchMode = async (record, mode) => {
-            if (params.onRecordWillSwitchMode) {
-                params.onRecordWillSwitchMode(record, mode);
+            if (mode === "edit") {
+                await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
+                this.model.__bm__.freezeOrder(this.__bm_handle__);
             }
+
             const editedRecord = this.editedRecord;
             this.editedRecord = null;
             if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
@@ -918,7 +917,7 @@ export class StaticList extends DataPoint {
      */
     async resequence(movedId, targetId) {
         if (this.__viewType === "list") {
-            this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
+            await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
             this.model.__bm__.freezeOrder(this.__bm_handle__);
         }
 
@@ -1011,14 +1010,29 @@ export class StaticList extends DataPoint {
     }
 
     async unselectRecord() {
+        // something seems wrong with switchMode --> review system?
         const editedRecord = this.editedRecord;
         if (editedRecord) {
-            const canBeAbandoned = editedRecord.canBeAbandoned;
-            if (!canBeAbandoned && editedRecord.checkValidity()) {
+            const handle = editedRecord.__bm_handle__;
+            if (editedRecord.isNew && !editedRecord.isDirty) {
+                this.model.__bm__.discardChanges(handle);
+                if (editedRecord.canBeAbandoned) {
+                    this.model.__bm__.removeLine(handle);
+                }
+                this.__syncData();
+                this.editedRecord = null;
                 await editedRecord.switchMode("readonly");
-            } else if (canBeAbandoned) {
-                await this.abandonRecord(editedRecord.id);
+            } else if (editedRecord.checkValidity()) {
+                await editedRecord.switchMode("readonly");
             } else {
+                if (!editedRecord.isDirty) {
+                    this.model.__bm__.discardChanges(handle);
+                    if (editedRecord.canBeAbandoned) {
+                        this.model.__bm__.removeLine(handle);
+                    }
+                    this.editedRecord = null;
+                    await editedRecord.switchMode("readonly");
+                }
                 return false;
             }
         }
@@ -1168,7 +1182,7 @@ export class RelationalModel extends Model {
         }
 
         const newRecord = new Record(this, {
-            handle: handle,
+            handle,
             viewType: params.viewMode,
             mode: params.mode,
         });
@@ -1182,7 +1196,6 @@ export class RelationalModel extends Model {
             return res;
         };
 
-        newRecord.canBeAbandoned = record.canBeAbandoned;
         return newRecord;
     }
     async addNewRecord(list, params) {
