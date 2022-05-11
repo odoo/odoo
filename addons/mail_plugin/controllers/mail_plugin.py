@@ -377,6 +377,12 @@ class MailPluginController(http.Controller):
         except AccessError:
             partner_values['can_write_on_partner'] = False
 
+        if not partner_values['name']:
+            # Always ensure that the partner has a name
+            name, email = request.env['res.partner']._parse_partner_name(
+                partner_values['email'])
+            partner_values['name'] = name or email
+
         return partner_values
 
     def _get_contact_data(self, partner):
