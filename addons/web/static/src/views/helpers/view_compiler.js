@@ -232,6 +232,7 @@ export class ViewCompiler {
     compile(xmlElement, params = {}) {
         const newRoot = createElement("t");
         const child = this.compileNode(xmlElement, params);
+        child.setAttribute("t-ref", "compiled_view_root");
         append(newRoot, child);
         return newRoot;
     }

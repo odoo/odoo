@@ -9102,19 +9102,17 @@ QUnit.module("Views", (hooks) => {
         delete widgetRegistry.map.test;
     });
 
-    QUnit.skipWOWL("bounce edit button in readonly mode", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("bounce edit button in readonly mode", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<div class="oe_title">' +
-                '<field name="display_name"/>' +
-                "</div>" +
-                "</form>",
+            arch: `
+                <form>
+                    <div class="oe_title">
+                        <field name="display_name"/>
+                    </div>
+                </form>`,
             resId: 1,
         });
 
@@ -9125,8 +9123,7 @@ QUnit.module("Views", (hooks) => {
         // in edit
         await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector('[name="display_name"]'));
-        // await testUtils.nextTick();
-        assert.containsNone(target, "button.o_catch_attention:visible");
+        assert.containsNone(target, ".o_catch_attention");
     });
 
     QUnit.skipWOWL("proper stringification in debug mode tooltip", async function (assert) {

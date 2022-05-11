@@ -217,10 +217,9 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(33);
 
         serverData.views = {
-            "partner_type,false,form": '<form string="Types"><field name="display_name"/></form>',
-            "partner_type,false,list": '<tree string="Types"><field name="display_name"/></tree>',
-            "partner_type,false,search":
-                '<search string="Types">' + '<field name="name" string="Name"/>' + "</search>",
+            "partner_type,false,form": '<form><field name="display_name"/></form>',
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="name" string="Name"/></search>',
         };
 
         serverData.models.partner.records[0].timmy = [12, 14];

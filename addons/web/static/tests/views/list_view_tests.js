@@ -10563,13 +10563,10 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             arch: '<tree><field name="foo"/></tree>',
-            mockRPC: async function (route, args, performRPC) {
-                const result = await performRPC(route, args);
+            mockRPC: async function (route, args) {
                 if (args.method === "web_search_read" && blockSearchRead) {
                     await def;
-                    return _.constant(result);
                 }
-                return result;
             },
             searchViewArch: `
                 <search>

@@ -6,10 +6,11 @@ import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Notebook } from "../../core/notebook/notebook";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
+import { useBounceButton } from "@web/views/helpers/view_hook";
 import { FormLabel } from "./form_label";
 import { FormCompiler } from "./form_compiler";
 
-const { Component, useSubEnv, useState, xml } = owl;
+const { Component, useSubEnv, useRef, useState, xml } = owl;
 
 export class FormRenderer extends Component {
     setup() {
@@ -20,6 +21,9 @@ export class FormRenderer extends Component {
             ...this.compileParams,
         });
         useSubEnv({ model: this.props.record.model });
+        useBounceButton(useRef("compiled_view_root"), () => {
+            return !this.props.record.isInEdition;
+        });
     }
 
     get record() {

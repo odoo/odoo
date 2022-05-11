@@ -39,7 +39,7 @@
                 </button>
             </div>
             <div t-else="" class="o_form_buttons_view">
-                <button t-if="canEdit" type="button" class="btn btn-primary o_form_button_edit" data-tooltip="Edit record" data-hotkey="a" t-on-click.stop="edit">
+                <button t-if="canEdit" type="button" class="btn btn-primary o_form_button_edit" data-tooltip="Edit record" data-hotkey="a" data-bounce-button="" t-on-click.stop="edit">
                     Edit
                 </button>
                 <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_create" data-tooltip="Create record" data-hotkey="c" t-on-click.stop="create">

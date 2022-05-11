@@ -31,7 +31,7 @@ QUnit.module("Form Compiler", () => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet">
+                <div t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
             </t>`;
@@ -43,7 +43,7 @@ QUnit.module("Form Compiler", () => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet">
+                <div t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
                         <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views"/>
