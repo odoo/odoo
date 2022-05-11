@@ -47,6 +47,8 @@
             <search string="Vendor">
                 <field name="partner_id"/>
                 <field name="product_tmpl_id"/>
+                <filter string="Active Products" name="active_products" domain="['|',('product_tmpl_id.active','=',True),('product_id.active','=',True)]" />
+                <separator />
                 <filter string="Active" name="active" domain="['|', ('date_end', '=', False), ('date_end', '&gt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
                 <filter string="Archived" name="archived" domain="[('date_end', '&lt;',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
@@ -122,7 +124,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.supplierinfo</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="context">{'visible_product_tmpl_id':False}</field>
+        <field name="context">{'visible_product_tmpl_id':False, 'search_default_active_products': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No vendor pricelist found
