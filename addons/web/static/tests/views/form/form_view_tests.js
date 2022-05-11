@@ -37,7 +37,6 @@ let createView,
     makeTestEnvironment,
     _t,
     ViewDialogs,
-    pyUtils,
     Widget,
     widgetRegistry,
     widgetRegistryOwl,
@@ -8864,109 +8863,95 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("process the context for subview not inline", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("process the context for subview not inline", async function (assert) {
         serverData.models.partner.records[0].p = [2];
 
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar" invisible="context.get('hide_bar', False)"/>
+                </tree>`,
+        };
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="p"/>' + "</form>",
-            archs: {
-                "partner,false,list":
-                    "<tree>" +
-                    '<field name="foo"/>' +
-                    '<field name="bar" invisible="context.get(\'hide_bar\', False)"/>' +
-                    "</tree>",
-            },
+            arch: `<form><field name="p" widget="one2many"/></form>`,
             resId: 1,
-            viewOptions: {
-                context: { hide_bar: true },
-            },
+            context: { hide_bar: true },
         });
         assert.containsOnce(
             target,
-            ".o_list_view thead tr th:not(.o_list_record_remove_header)",
+            ".o_list_renderer thead tr th:not(.o_list_record_remove_header)",
             "there should be only one column"
         );
     });
 
-    QUnit.skipWOWL("can toggle column in x2many in sub form view", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("can toggle column in x2many in sub form view", async function (assert) {
         serverData.models.partner.records[2].p = [1, 2];
         serverData.models.partner.fields.foo.sortable = true;
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="p">
+                        <tree><field name="foo"/></tree>
+                    </field>
+                </form>`,
+        };
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="trululu"/>' + "</form>",
+            arch: `<form><field name="trululu"/></form>`,
             resId: 1,
             mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/get_formview_id") {
                     return Promise.resolve(false);
                 }
-                return this._super.apply(this, arguments);
             },
-            archs: {
-                "partner,false,form":
-                    "<form>" +
-                    '<field name="p">' +
-                    "<tree>" +
-                    '<field name="foo"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
-            },
-            viewOptions: { mode: "edit" },
         });
+        await click(target.querySelector(".o_form_button_edit"));
         await click(target.querySelector(".o_external_button"));
-        assert.strictEqual(
-            $(".modal-body .o_form_view .o_list_view .o_data_cell").innerText,
-            "yopblip",
-            "table has some initial order"
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal-body .o_data_cell")), [
+            "yop",
+            "blip",
+        ]);
 
-        await click($(".modal-body .o_form_view .o_list_view th.o_column_sortable"));
-        assert.strictEqual(
-            $(".modal-body .o_form_view .o_list_view .o_data_cell").innerText,
-            "blipyop",
-            "table is now sorted"
-        );
+        await click(target.querySelector(".modal-body th.o_column_sortable"));
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal-body .o_data_cell")), [
+            "blip",
+            "yop",
+        ]);
     });
 
-    QUnit.skipWOWL(
-        "rainbowman attributes correctly passed on button click",
-        async function (assert) {
-            assert.expect(1);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    "<header>" +
-                    '<button name="action_won" string="Won" type="object" effect="{\'message\': \'Congrats!\'}"/>' +
-                    "</header>" +
-                    "</form>",
-                intercepts: {
-                    execute_action: function (event) {
-                        var effectDescription = pyUtils.py_eval(event.data.action_data.effect);
-                        assert.deepEqual(
-                            effectDescription,
-                            { message: "Congrats!" },
-                            "should have correct effect description"
-                        );
+    QUnit.test("rainbowman attributes correctly passed on button click", async function (assert) {
+        assert.expect(1);
+        const actionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        assert.strictEqual(params.effect, "{'message': 'Congrats!'}");
                     },
-                },
-            });
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
 
-            await click(target.querySelector(".o_form_statusbar .btn-secondary"));
-        }
-    );
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                    <button name="action_won" string="Won" type="object" effect="{'message': 'Congrats!'}"/>
+                    </header>
+                </form>`,
+        });
+
+        await click(target.querySelector(".o_form_statusbar .btn-secondary"));
+    });
 
     QUnit.skipWOWL("basic support for widgets", async function (assert) {
         // This test could be removed as soon as we drop the support of legacy widgets (see test
