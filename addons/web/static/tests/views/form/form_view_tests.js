@@ -15,7 +15,7 @@ import {
     selectDropdownItem,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
-import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import { toggleActionMenu, toggleGroupByMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
@@ -40,7 +40,6 @@ let createView,
     Widget,
     widgetRegistry,
     widgetRegistryOwl,
-    mixins,
     BasicModel,
     RamStorage,
     AbstractStorageService,
@@ -9185,76 +9184,7 @@ QUnit.module("Views", (hooks) => {
         odoo.debug = initialDebugMode;
     });
 
-    QUnit.skipWOWL("check if the view destroys all widgets and instances", async function (assert) {
-        assert.expect(2);
-
-        var instanceNumber = 0;
-        await testUtils.mock.patch(mixins.ParentedMixin, {
-            init: function () {
-                instanceNumber++;
-                return this._super.apply(this, arguments);
-            },
-            destroy: function () {
-                if (!this.isDestroyed()) {
-                    instanceNumber--;
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        var params = {
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="display_name"/>' +
-                '<field name="foo"/>' +
-                '<field name="bar"/>' +
-                '<field name="int_field"/>' +
-                '<field name="qux"/>' +
-                '<field name="trululu"/>' +
-                '<field name="timmy"/>' +
-                '<field name="product_id"/>' +
-                '<field name="priority"/>' +
-                '<field name="state"/>' +
-                '<field name="date"/>' +
-                '<field name="datetime"/>' +
-                '<field name="product_ids"/>' +
-                '<field name="p">' +
-                '<tree default_order="foo desc">' +
-                '<field name="display_name"/>' +
-                '<field name="foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,form":
-                    '<form string="Partner">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-                "product,false,list": '<tree><field name="display_name"/></tree>',
-            },
-            resId: 1,
-        };
-
-        await makeView(params);
-        assert.ok(instanceNumber > 0);
-        assert.strictEqual(instanceNumber, 0);
-
-        await testUtils.mock.unpatch(mixins.ParentedMixin);
-    });
-
-    QUnit.skipWOWL("do not change pager when discarding current record", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("do not change pager when discarding current record", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -9290,45 +9220,100 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "Form view from ordered, grouped list view correct context",
-        async function (assert) {
-            assert.expect(10);
-            serverData.models.partner.records[0].timmy = [12];
+    QUnit.test("coming to a form view from a grouped and sorted list", async function (assert) {
+        assert.expect(21);
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_id: 1,
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+        };
+        serverData.views = {
+            "partner,false,list": `<tree><field name="foo"/></tree>`,
+            "partner,false,search": `
+                    <search>
+                        <filter string="bar" name="Bar" context="{'group_by': 'bar'}"/>
+                    </search>`,
+            "partner,false,form": `
+                    <form>
+                        <field name="foo"/>
+                        <field name="timmy"/>
+                    </form>`,
+            "partner_type,false,list": `<tree><field name="display_name"/></tree>`,
+        };
+        serverData.models.partner.fields.foo.sortable = true;
+        serverData.models.partner.records[0].timmy = [12, 14];
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: "<form>" + '<field name="foo"/>' + '<field name="timmy"/>' + "</form>",
-                archs: {
-                    "partner_type,false,list": "<tree>" + '<field name="name"/>' + "</tree>",
-                },
-                viewOptions: {
-                    // Simulates coming from a list view with a groupby and filter
-                    context: {
-                        orderedBy: [{ name: "foo", asc: true }],
-                        group_by: ["foo"],
-                    },
-                },
-                resId: 1,
-                mockRPC(route, args) {
-                    assert.step(args.model + ":" + args.method);
-                    if (args.method === "read") {
-                        assert.ok(args.kwargs.context, "context is present");
-                        assert.notOk(
-                            "orderedBy" in args.kwargs.context,
-                            "orderedBy not in context"
-                        );
-                        assert.notOk("group_by" in args.kwargs.context, "group_by not in context");
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
+        const mockRPC = (route, args) => {
+            assert.step(args.model ? args.model + ":" + args.method : route);
+            if (args.method === "read") {
+                if (args.model === "partner") {
+                    assert.deepEqual(args.kwargs.context, {
+                        bin_size: true,
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                } else if (args.model === "partner_type") {
+                    assert.deepEqual(args.kwargs.context, {
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                }
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsN(target, ".o_data_row", 4);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "yop",
+            "blip",
+            "My little Foo Value",
+            "",
+        ]);
+        await click(target.querySelector("th.o_column_sortable"));
 
-            assert.verifySteps(["partner_type:get_views", "partner:read", "partner_type:read"]);
-        }
-    );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "",
+            "My little Foo Value",
+            "blip",
+            "yop",
+        ]);
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "bar");
+        assert.containsN(target, ".o_group_header", 2);
+
+        await click(target.querySelectorAll(".o_group_header")[1]);
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsN(target, ".o_data_row", 2);
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "gold",
+            "silver",
+        ]);
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "partner:get_views",
+            "partner:web_search_read",
+            "partner:web_search_read",
+            "partner:web_read_group",
+            "partner:web_search_read",
+            "partner:read",
+            "partner_type:read",
+        ]);
+    });
 
     QUnit.skipWOWL('edition in form view on a "noCache" model', async function (assert) {
         assert.expect(5);
