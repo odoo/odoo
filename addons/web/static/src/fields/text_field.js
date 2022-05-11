@@ -35,7 +35,7 @@ export class TextField extends Component {
             heightOffset = borderHeight + paddingHeight;
         }
         textarea.style.height = "auto";
-        textarea.style.height = `${textarea.scrollHeight + heightOffset}px`;
+        textarea.style.height = `${Math.max(50, textarea.scrollHeight + heightOffset)}px`;
     }
 
     onInput() {

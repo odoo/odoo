@@ -300,6 +300,102 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "autoresize of text fields is done when switching to edit mode",
+        async function (assert) {
+            serverData.models.partner.fields.text_field = { string: "Text field", type: "text" };
+            serverData.models.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+            serverData.models.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="text_field"/>
+                    </form>`,
+                resId: 1,
+            });
+
+            // switch to edit mode to ensure that autoresize is correctly done
+            await click(target.querySelector(".o_form_button_edit"));
+            let height = target.querySelector(".o_field_widget[name=text_field]").offsetHeight;
+            // focus the field to manually trigger autoresize
+            await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=text_field]").offsetHeight,
+                height,
+                "autoresize should have been done automatically at rendering"
+            );
+            // next assert simply tries to ensure that the textarea isn't stucked to
+            // its minimal size, even after being focused
+            assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+            // save and create a new record to ensure that autoresize is correctly done
+            await click(target.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_create"));
+            height = target.querySelector(".o_field_widget[name=text_field]").offsetHeight;
+            // focus the field to manually trigger autoresize
+            await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=text_field]").offsetHeight,
+                height,
+                "autoresize should have been done automatically at rendering"
+            );
+            assert.ok(height > 80, "textarea should have an height of at least 80px");
+        }
+    );
+
+    QUnit.test("autoresize of text fields is done on notebook page show", async function (assert) {
+        serverData.models.partner.fields.text_field = { string: "Text field", type: "text" };
+        serverData.models.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+        serverData.models.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+        serverData.models.partner.fields.text_field_empty = {
+            string: "Text field",
+            type: "text",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="First Page">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Second Page">
+                                <field name="text_field"/>
+                            </page>
+                            <page string="Third Page">
+                                <field name="text_field_empty"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[0], "active");
+
+        await click(target.querySelectorAll(".o_notebook .nav .nav-link")[1]);
+        assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[1], "active");
+
+        let height = target.querySelector(".o_field_widget[name=text_field]").offsetHeight;
+        assert.ok(height > 80, "textarea should have an height of at least 80px");
+
+        await click(target.querySelectorAll(".o_notebook .nav .nav-link")[2]);
+        assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[2], "active");
+
+        height = target.querySelector(".o_field_widget[name=text_field_empty]").offsetHeight;
+        assert.strictEqual(height, 50, "empty textarea should have height of 50px");
+    });
+
     QUnit.test("text field translatable", async function (assert) {
         assert.expect(3);
 
