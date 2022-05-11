@@ -13,6 +13,13 @@ class StockPicking(models.Model):
     _name = 'stock.picking'
     _inherit = 'stock.picking'
 
+    # override existing field domains to prevent suboncontracting production lines from showing in Detailed Operations tab
+    move_line_nosuggest_ids = fields.One2many(
+        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
+                     '|', ('reserved_qty', '=', 0.0), '&', ('reserved_qty', '!=', 0.0), ('qty_done', '!=', 0.0)])
+    move_line_ids_without_package = fields.One2many(
+        domain=['&', '|', ('location_dest_id.usage', '!=', 'production'), ('move_id.picking_code', '!=', 'outgoing'),
+                     '|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     display_action_record_components = fields.Selection(
         [('hide', 'Hide'), ('facultative', 'Facultative'), ('mandatory', 'Mandatory')],
         compute='_compute_display_action_record_components')
