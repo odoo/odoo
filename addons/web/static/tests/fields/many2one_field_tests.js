@@ -3071,117 +3071,66 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // cancel the many2one creation with Discard button
-        target
-            .querySelectorAll(".o_field_many2one input")
-            .focus()
-            .val("new product")
-            .trigger("input")
-            .trigger("keyup");
-        await nextTick();
-        target.querySelectorAll(".o_field_many2one input").trigger("blur");
-        await nextTick();
-        assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            1,
-            "there should be one opened modal"
-        );
+        await editInput(target, ".o_field_many2one input", "new product");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
 
-        await click(document.body.querySelector(".modal .modal-footer .btn:contains(Discard)"));
+        assert.containsOnce(target, ".modal", "there should be one opened modal");
+
+        await click(target, ".modal .modal-footer .btn:not(.btn-primary)");
+        assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            0,
-            "the modal should be closed"
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "",
             "the many2one should not set a value as its creation has been cancelled (with Cancel button)"
         );
 
         // cancel the many2one creation with Close button
-        target
-            .querySelectorAll(".o_field_many2one input")
-            .focus()
-            .val("new product")
-            .trigger("input")
-            .trigger("keyup");
-        await nextTick();
-        target.querySelectorAll(".o_field_many2one input").trigger("blur");
-        await nextTick();
+        await editInput(target, ".o_field_many2one input", "new product");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+
+        assert.containsOnce(target, ".modal", "there should be one opened modal");
+        await click(target, ".modal .modal-header button");
         assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            1,
-            "there should be one opened modal"
-        );
-        await click(document.body.querySelector(".modal .modal-header button"));
-        assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "",
             "the many2one should not set a value as its creation has been cancelled (with Close button)"
         );
-        assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            0,
-            "the modal should be closed"
-        );
+        assert.containsNone(target, ".modal", "the modal should be closed");
 
         // select a new value then cancel the creation of the new one --> restore the previous
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickItem("product_id", "o");
+        await click(target, ".o_field_widget[name=product_id] input");
+        await click(target.querySelector(".ui-menu-item"));
         assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "xphone",
             "should have selected xphone"
         );
 
-        target
-            .querySelectorAll(".o_field_many2one input")
-            .focus()
-            .val("new product")
-            .trigger("input")
-            .trigger("keyup");
-        await nextTick();
-        target.querySelectorAll(".o_field_many2one input").trigger("blur");
-        await nextTick();
-        assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            1,
-            "there should be one opened modal"
-        );
+        await editInput(target, ".o_field_many2one input", "new product");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+        assert.containsOnce(target, ".modal", "there should be one opened modal");
 
-        await click(document.body.querySelector(".modal .modal-footer .btn:contains(Discard)"));
+        await click(target, ".modal .modal-footer .btn:not(.btn-primary)");
         assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "xphone",
             "should have restored the many2one with its previous selected value (xphone)"
         );
 
         // confirm the many2one creation
-        target
-            .querySelectorAll(".o_field_many2one input")
-            .focus()
-            .val("new product")
-            .trigger("input")
-            .trigger("keyup");
-        await nextTick();
-        target.querySelectorAll(".o_field_many2one input").trigger("blur");
-        await nextTick();
-        assert.strictEqual(
-            document.body.querySelector(".modal").length,
-            1,
-            "there should be one opened modal"
-        );
+        await editInput(target, ".o_field_many2one input", "new product");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
 
-        await click(
-            document.body.querySelector(".modal .modal-footer .btn-primary:contains(Create)")
-        );
-        assert.strictEqual(
-            document.body.querySelector(".modal .o_form_view").length,
-            1,
+        assert.containsOnce(target, ".modal", "there should be one opened modal");
+
+        await click(target, ".modal .modal-footer .btn-primary");
+        assert.containsOnce(
+            target,
+            ".modal .o_form_view",
             "a new modal should be opened and contain a form view"
         );
 
-        await click(document.body.querySelector(".modal .o_form_button_cancel"));
+        await click(target, ".modal .o_form_button_cancel");
     });
 
     QUnit.test("select a many2one value by focusing out", async function (assert) {
