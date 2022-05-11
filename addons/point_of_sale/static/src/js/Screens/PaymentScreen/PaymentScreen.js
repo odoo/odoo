@@ -206,6 +206,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         });
                     }
                 }
+                this.env.pos.db.remove_unpaid_order(this.currentOrder);
             } catch (error) {
                 hasError = true;
 
