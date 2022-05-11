@@ -184,7 +184,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
-                                <div class="col-3 bg-primary p-2 text-center d-flex flex-column justify-content-center">
+                                <div class="col-3 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
                                     <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
                                     <div>
                                         <t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
