@@ -709,7 +709,10 @@ function fontToImg($editable) {
             wrapper.style.setProperty('height', height + 'px');
             wrapper.style.setProperty('vertical-align', 'middle');
             wrapper.style.setProperty('background-color', image.style.backgroundColor);
-            wrapper.setAttribute('class', font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '')); // remove inline font-awsome style);
+            wrapper.setAttribute('class',
+                'oe_unbreakable ' + // prevent sanitize from grouping image wrappers
+                font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '') // remove inline font-awsome style
+            );
         } else {
             font.remove();
         }
