@@ -5782,6 +5782,33 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field without currency symbol', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary" options="{\'no_symbol\': True}"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget[name=qux] input').val(), "9.10", "The currency symbol is not displayed");
+
+        form.destroy();
+    });
+
     QUnit.test('monetary field in editable list view', async function (assert) {
         assert.expect(9);
 
