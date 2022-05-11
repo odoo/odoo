@@ -365,7 +365,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("O2M with parented m2o and domain on parent.m2o", async function (assert) {
+    QUnit.test("O2M with parented m2o and domain on parent.m2o", async function (assert) {
         assert.expect(4);
 
         /* records in an o2m can have a m2o pointing to themselves

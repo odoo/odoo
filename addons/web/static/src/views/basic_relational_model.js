@@ -483,11 +483,18 @@ export class Record extends DataPoint {
                     }
                     break;
                 }
-                case "many2one":
-                    data[fieldName] = data[fieldName]
-                        ? [data[fieldName].data.id, data[fieldName].data.display_name]
-                        : false;
+                case "many2one": {
+                    if (data[fieldName]) {
+                        let name = data[fieldName].data.display_name;
+                        if (Array.isArray(name)) {
+                            name = name[1];
+                        }
+                        data[fieldName] = [data[fieldName].data.id, name || ""];
+                    } else {
+                        data[fieldName] = false;
+                    }
                     break;
+                }
                 case "reference":
                     data[fieldName] = data[fieldName]
                         ? {

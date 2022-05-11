@@ -1238,56 +1238,50 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "many2one with co-model whose name field is a many2one",
-        async function (assert) {
-            assert.expect(4);
+    QUnit.test("many2one with co-model whose name field is a many2one", async function (assert) {
+        assert.expect(4);
 
-            serverData.models.product.fields.name = {
-                string: "User Name",
-                type: "many2one",
-                relation: "user",
-            };
+        serverData.models.product.fields.name = {
+            string: "User Name",
+            type: "many2one",
+            relation: "user",
+        };
 
-            serverData.views = {
-                "product,false,form": `
-                <form>
-                    <field name="name" />
-                </form>
-            `,
-            };
+        serverData.views = {
+            "product,false,form": `
+            <form>
+                <field name="name" />
+            </form>
+        `,
+        };
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
-                <form>
-                    <field name="product_id" />
-                </form>
-            `,
-            });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <form>
+                <field name="product_id" />
+            </form>
+        `,
+        });
 
-            await editInput(target, ".o_field_widget[name=product_id] input", "ABC");
-            await click(
-                target,
-                ".o_field_widget[name=product_id] .o_m2o_dropdown_option_create_edit"
-            );
-            assert.containsOnce(document.body, ".modal .o_form_view");
+        await editInput(target, ".o_field_widget[name=product_id] input", "ABC");
+        await click(target, ".o_field_widget[name=product_id] .o_m2o_dropdown_option_create_edit");
+        assert.containsOnce(document.body, ".modal .o_form_view");
 
-            // quick create 'new value'
-            await editInput(target, ".o_field_widget[name=name] input", "new value");
-            await click(target.querySelector(".o_field_widget[name=name] .o_m2o_dropdown_option"));
-            assert.strictEqual(
-                document.body.querySelector(".modal .o_field_many2one input").value,
-                "new value"
-            );
+        // quick create 'new value'
+        await editInput(target, ".o_field_widget[name=name] input", "new value");
+        await click(target.querySelector(".o_field_widget[name=name] .o_m2o_dropdown_option"));
+        assert.strictEqual(
+            document.body.querySelector(".modal .o_field_many2one input").value,
+            "new value"
+        );
 
-            await clickSave(document.body.querySelector(".modal")); // save in modal
-            assert.containsNone(document.body, ".modal .o_form_view");
-            assert.strictEqual(target.querySelector(".o_field_many2one input").value, "new value");
-        }
-    );
+        await clickSave(document.body.querySelector(".modal")); // save in modal
+        assert.containsNone(document.body, ".modal .o_form_view");
+        assert.strictEqual(target.querySelector(".o_field_many2one input").value, "new value");
+    });
 
     QUnit.test("many2one searches with correct value", async function (assert) {
         assert.expect(6);
