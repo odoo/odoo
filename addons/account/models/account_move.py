@@ -2791,17 +2791,12 @@ class AccountMove(models.Model):
         if cancel:
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
             for move, reverse_move in zip(self, reverse_moves):
-                lines = move.line_ids.filtered(
-                    lambda x: (x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
-                              and not x.reconciled
-                )
-                for line in lines:
-                    counterpart_lines = reverse_move.line_ids.filtered(
-                        lambda x: x.account_id == line.account_id
-                                  and x.currency_id == line.currency_id
-                                  and not x.reconciled
-                    )
-                    (line + counterpart_lines).with_context(move_reverse_cancel=cancel).reconcile()
+                group = defaultdict(list)
+                for line in move.line_ids + reverse_move.line_ids:
+                    group[(line.account_id, line.currency_id)].append(line.id)
+                for (account, dummy), line_ids in group.items():
+                    if account.reconcile or account.internal_type == 'liquidity':
+                        self.env['account.move.line'].browse(line_ids).reconcile()
 
         return reverse_moves
 
@@ -4030,6 +4025,7 @@ class AccountMoveLine(models.Model):
                 if tax.price_include:
                     amount_currency += tax_res['amount']
 
+        tax_included_division_is_zero = any(tax.price_include and tax.amount == 100 and tax.amount_type == 'division' for tax in taxes) and amount_currency == 0
         discount_factor = 1 - (discount / 100.0)
         if amount_currency and discount_factor:
             # discount != 100%
@@ -4044,8 +4040,9 @@ class AccountMoveLine(models.Model):
                 'discount': 0.0,
                 'price_unit': amount_currency / (quantity or 1.0),
             }
-        elif not discount_factor:
-            # balance of line is 0, but discount  == 100% so we display the normal unit_price
+        elif not discount_factor or tax_included_division_is_zero:
+            # balance of line is 0, but discount == 100% or taxes (price included) == 100%,
+            # so we display the normal unit_price
             vals = {}
         else:
             # balance is 0, so unit price is 0 as well

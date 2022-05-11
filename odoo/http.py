@@ -55,6 +55,7 @@ from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools.misc import str2bool
 from .tools._vendor import sessions
+from .tools._vendor.useragents import UserAgent
 from .modules.module import read_manifest
 
 _logger = logging.getLogger(__name__)
@@ -540,7 +541,7 @@ def route(route=None, **kw):
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
                 response = response.get_response(request.httprequest.environ)
-            if isinstance(response, werkzeug.wrappers.BaseResponse):
+            if isinstance(response, werkzeug.wrappers.Response):
                 response = Response.force_type(response)
                 response.set_default()
                 return response
@@ -1454,7 +1455,7 @@ class Root(object):
 
     def set_csp(self, response):
         # ignore HTTP errors
-        if not isinstance(response, werkzeug.wrappers.BaseResponse):
+        if not isinstance(response, werkzeug.wrappers.Response):
             return
 
         headers = response.headers
@@ -1474,6 +1475,7 @@ class Root(object):
         """
         try:
             httprequest = werkzeug.wrappers.Request(environ)
+            httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
 
             current_thread = threading.current_thread()

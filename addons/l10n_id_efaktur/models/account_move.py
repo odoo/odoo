@@ -5,6 +5,7 @@ import base64
 import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
 
 FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI', 'KODE_DOKUMEN_PENDUKUNG']
 
@@ -172,24 +173,18 @@ class AccountMove(models.Model):
             eTax['NPWP'] = invoice_npwp
             eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
             eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
-            eTax['JUMLAH_DPP'] = int(round(move.amount_untaxed, 0)) # currency rounded to the unit
-            eTax['JUMLAH_PPN'] = int(round(move.amount_tax, 0))
+            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
+            eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0))
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
             lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
-            eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: round(l.price_subtotal, 0)))))
-            eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: round(l.price_total - l.price_subtotal, 0)))))
-
-            company_npwp = company_id.partner_id.vat or '000000000000000'
+            eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
+            eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))
 
             fk_values_list = ['FK'] + [eTax[f] for f in FK_HEAD_LIST[1:]]
-            eTax['JALAN'] = company_id.partner_id.l10n_id_tax_address or company_id.partner_id.street
-            eTax['NOMOR_TELEPON'] = company_id.phone or ''
-
-            lt_values_list = ['FAPR', company_npwp, company_id.name] + [eTax[f] for f in LT_HEAD_LIST[3:]]
 
             # HOW TO ADD 2 line to 1 line for free product
             free, sales = [], []
@@ -214,10 +209,10 @@ class AccountMove(models.Model):
                 line_dict = {
                     'KODE_OBJEK': line.product_id.default_code or '',
                     'NAMA': line.product_id.name or '',
-                    'HARGA_SATUAN': int(round(invoice_line_unit_price, 0)),
+                    'HARGA_SATUAN': int(float_round(invoice_line_unit_price, 0)),
                     'JUMLAH_BARANG': line.quantity,
-                    'HARGA_TOTAL': int(round(invoice_line_total_price, 0)),
-                    'DPP': int(round(line.price_subtotal, 0)),
+                    'HARGA_TOTAL': int(float_round(invoice_line_total_price, 0)),
+                    'DPP': int(float_round(line.price_subtotal, 0)),
                     'product_id': line.product_id.id,
                 }
 
@@ -226,16 +221,16 @@ class AccountMove(models.Model):
                         free_tax_line += (line.price_subtotal * (tax.amount / 100.0)) * -1.0
 
                     line_dict.update({
-                        'DISKON': int(round(invoice_line_total_price - line.price_subtotal, 0)),
-                        'PPN': int(round(free_tax_line, 0)),
+                        'DISKON': int(float_round(invoice_line_total_price - line.price_subtotal, 0)),
+                        'PPN': int(float_round(free_tax_line, 0)),
                     })
                     free.append(line_dict)
                 elif line.price_subtotal != 0.0:
                     invoice_line_discount_m2m = invoice_line_total_price - line.price_subtotal
 
                     line_dict.update({
-                        'DISKON': int(round(invoice_line_discount_m2m, 0)),
-                        'PPN': int(round(tax_line, 0)),
+                        'DISKON': int(float_round(invoice_line_discount_m2m, 0)),
+                        'PPN': int(float_round(tax_line, 0)),
                     })
                     sales.append(line_dict)
 
@@ -258,17 +253,16 @@ class AccountMove(models.Model):
                             if tax.amount > 0:
                                 tax_line += sale['DPP'] * (tax.amount / 100.0)
 
-                        sale['PPN'] = int(round(tax_line, 0))
+                        sale['PPN'] = int(float_round(tax_line, 0))
 
                         free.remove(f)
 
                 sub_total_before_adjustment += sale['DPP']
                 sub_total_ppn_before_adjustment += sale['PPN']
                 bruto_total += sale['DISKON']
-                total_discount += round(sale['DISKON'], 2)
+                total_discount += float_round(sale['DISKON'], 2)
 
             output_head += _csv_row(fk_values_list, delimiter)
-            output_head += _csv_row(lt_values_list, delimiter)
             for sale in sales:
                 of_values_list = ['OF'] + [str(sale[f]) for f in OF_HEAD_LIST[1:-2]] + ['0', '0']
                 output_head += _csv_row(of_values_list, delimiter)
@@ -277,7 +271,7 @@ class AccountMove(models.Model):
 
     def _prepare_etax(self):
         # These values are never set
-        return {'JUMLAH_PPNBM': 0, 'UANG_MUKA_PPNBM': 0, 'BLOK': '', 'NOMOR': '', 'RT': '', 'RW': '', 'KECAMATAN': '', 'KELURAHAN': '', 'KABUPATEN': '', 'PROPINSI': '', 'KODE_POS': '', 'JUMLAH_BARANG': 0, 'TARIF_PPNBM': 0, 'PPNBM': 0}
+        return {'JUMLAH_PPNBM': 0, 'UANG_MUKA_PPNBM': 0, 'JUMLAH_BARANG': 0, 'TARIF_PPNBM': 0, 'PPNBM': 0}
 
     def _generate_efaktur(self, delimiter):
         if self.filtered(lambda x: not x.l10n_id_kode_transaksi):
