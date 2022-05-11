@@ -717,12 +717,10 @@ QUnit.module("Fields", (hooks) => {
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
                 </form>
             `,
-            async mockRPC(route, { method }, performRPC) {
-                const result = performRPC(...arguments);
+            async mockRPC(route, { method }) {
                 if (method === "search_count") {
                     await def;
                 }
-                return result;
             },
         });
 

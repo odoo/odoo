@@ -501,7 +501,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags" options="{'no_create_edit': True}"/>
                 </form>`,
             resId: 1,
-            mockRPC: (route, args, performRPC) => {
+            mockRPC: (route, args) => {
                 if (args.method === "name_search") {
                     assert.deepEqual(
                         args.kwargs.args,
@@ -509,7 +509,6 @@ QUnit.module("Fields", (hooks) => {
                         "domain sent to name_search should be correct"
                     );
                 }
-                return performRPC(route, args);
             },
         });
 

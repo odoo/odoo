@@ -296,7 +296,7 @@ QUnit.module("Fields", (hooks) => {
         // 100 records in the co-model, and all values in the many2many relationship aren't
         // displayed in the widget (due to the limit). If the user (un)selects a checkbox, we don't
         // want to remove all values that aren't displayed from the relation.
-        assert.expect(8);
+        assert.expect(7);
 
         const records = [];
         for (let id = 1; id < 150; id++) {
@@ -318,23 +318,16 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_checkboxes" />
                 </form>
             `,
-            async mockRPC(route, { args, method }, performRPC) {
+            async mockRPC(route, { args, method }) {
                 if (method === "write") {
                     const expectedIds = records.map((r) => r.id);
                     expectedIds.shift();
                     assert.deepEqual(args[1].timmy, [[6, false, expectedIds]]);
                     assert.step("write");
                 }
-                const result = await performRPC(...arguments);
                 if (method === "name_search") {
-                    assert.strictEqual(
-                        result.length,
-                        100,
-                        "sanity check: name_search automatically sets the limit to 100"
-                    );
                     assert.step("name_search");
                 }
-                return result;
             },
         });
 

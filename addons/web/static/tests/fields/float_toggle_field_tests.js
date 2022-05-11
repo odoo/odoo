@@ -38,12 +38,11 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="float_field" widget="float_toggle" options="{'factor': 0.125, 'range': [0, 1, 0.75, 0.5, 0.25]}" digits="[5,3]"/>
                 </form>`,
-            mockRPC(route, { args }, performRPC) {
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     // 1.000 / 0.125 = 8
                     assert.step(args[1].float_field.toString());
                 }
-                return performRPC(...arguments);
             },
         });
 

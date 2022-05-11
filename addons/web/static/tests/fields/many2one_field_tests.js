@@ -466,8 +466,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("many2ones in form views with show_address", async function (assert) {
-        assert.expect(4);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -482,12 +480,9 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
             `,
-            mockRPC(route, { method }, performRPC) {
-                if (method === "name_get") {
-                    return performRPC(...arguments).then((result) => {
-                        result[0][1] += "\nStreet\nCity ZIP";
-                        return result;
-                    });
+            mockRPC(route, { method, kwargs }) {
+                if (method === "name_get" && kwargs.context.show_address) {
+                    return [[4, "aaa\nStreet\nCity ZIP"]];
                 }
             },
         });
@@ -512,12 +507,10 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2one show_address in edit", async function (assert) {
-        assert.expect(6);
-
-        const addresses = {
-            aaa: "\nAAA\nRecord",
-            "first record": "\nFirst\nRecord",
-            "second record": "\nSecond\nRecord",
+        const namegets = {
+            1: "first record\nFirst\nRecord",
+            2: "second record\nSecond\nRecord",
+            4: "aaa\nAAA\nRecord",
         };
 
         await makeView({
@@ -534,12 +527,9 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
             `,
-            mockRPC(route, { method }, performRPC) {
-                if (method === "name_get") {
-                    return performRPC(...arguments).then((result) => {
-                        result[0][1] += addresses[result[0][1]];
-                        return result;
-                    });
+            mockRPC(route, { args, kwargs, method }) {
+                if (method === "name_get" && kwargs.context.show_address) {
+                    return args.map((id) => [id, namegets[id]]);
                 }
             },
         });
@@ -575,8 +565,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "show_address works in a view embedded in a view of another type",
         async function (assert) {
-            assert.expect(1);
-
             serverData.models.turtle.records[1].turtle_trululu = 2;
             serverData.views = {
                 "turtle,false,form": `
@@ -603,14 +591,9 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles" />
                     </form>
                 `,
-                mockRPC(route, { kwargs, method, model }, performRPC) {
-                    if (method === "name_get") {
-                        return performRPC(...arguments).then((result) => {
-                            if (model === "partner" && kwargs.context.show_address) {
-                                result[0][1] += "\nrue morgue\nparis 75013";
-                            }
-                            return result;
-                        });
+                mockRPC(route, { kwargs, method, model }) {
+                    if (method === "name_get" && kwargs.context.show_address) {
+                        return [[2, "second record\nrue morgue\nparis 75013"]];
                     }
                 },
             });
@@ -628,8 +611,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "many2one data is reloaded if there is a context to take into account",
         async function (assert) {
-            assert.expect(1);
-
             serverData.models.turtle.records[1].turtle_trululu = 2;
             serverData.views = {
                 "turtle,false,form": `
@@ -657,14 +638,9 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles" />
                     </form>
                 `,
-                mockRPC(route, { kwargs, method, model }, performRPC) {
-                    if (method === "name_get") {
-                        return performRPC(...arguments).then((result) => {
-                            if (model === "partner" && kwargs.context.show_address) {
-                                result[0][1] += "\nrue morgue\nparis 75013";
-                            }
-                            return result;
-                        });
+                mockRPC(route, { kwargs, method, model }) {
+                    if (method === "name_get" && kwargs.context.show_address) {
+                        return [[2, "second record\nrue morgue\nparis 75013"]];
                     }
                 },
             });
@@ -1591,7 +1567,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(5);
 
         const def = makeDeferred();
-        let newRecordId;
+        const newRecordId = 5; // with the current records, the created record will be assigned id 5
 
         await makeView({
             type: "form",
@@ -1602,13 +1578,10 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" />
                 </form>
             `,
-            async mockRPC(route, { args, method }, performRPC) {
+            async mockRPC(route, { args, method }) {
                 if (method === "name_create") {
                     assert.step("name_create");
                     await def;
-                    const nameGet = await performRPC(...arguments);
-                    newRecordId = nameGet[0];
-                    return nameGet;
                 }
                 if (method === "create") {
                     assert.step("create");
@@ -1675,7 +1648,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(8);
 
         const def = makeDeferred();
-        let newRecordId;
+        const newRecordId = "?"; // todo harcode the id here
 
         await makeView({
             type: "list",
@@ -1686,13 +1659,10 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" />
                 </tree>
             `,
-            async mockRPC(route, { args, method }, performRPC) {
+            async mockRPC(route, { args, method }) {
                 if (method === "name_create") {
                     assert.step("name_create");
                     await def;
-                    const nameGet = await performRPC(...arguments);
-                    newRecordId = nameGet[0];
-                    return nameGet;
                 }
                 if (method === "create") {
                     assert.step("create");
@@ -1739,7 +1709,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(6);
 
         const def = makeDeferred();
-        let newRecordId;
+        const newRecordId = 5; // with the current records, the created record will be assigned id 5
 
         await makeView({
             type: "form",
@@ -1756,13 +1726,10 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
             `,
-            async mockRPC(route, { args, method }, performRPC) {
+            async mockRPC(route, { args, method }) {
                 if (method === "name_create") {
                     assert.step("name_create");
                     await def;
-                    const nameGet = await performRPC(...arguments);
-                    newRecordId = nameGet[0];
-                    return nameGet;
                 }
                 if (method === "create") {
                     assert.step("create");
@@ -1811,7 +1778,7 @@ QUnit.module("Fields", (hooks) => {
         };
 
         const def = makeDeferred();
-        let newRecordId;
+        const newRecordId = 5; // with the current records, the created record will be assigned id 5
 
         await makeView({
             type: "form",
@@ -1828,12 +1795,9 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
             `,
-            async mockRPC(route, { args, method }, performRPC) {
+            async mockRPC(route, { args, method }) {
                 if (method === "name_create") {
                     await def;
-                    const nameGet = await performRPC(...arguments);
-                    newRecordId = nameGet[0];
-                    return nameGet;
                 }
                 if (method === "create") {
                     assert.deepEqual(args[0].p[0][2].trululu, newRecordId);
@@ -3494,9 +3458,9 @@ QUnit.module("Fields", (hooks) => {
                         <field name="display_name" />
                     </form>
                 `,
-                mockRPC(route, { method }, performRPC) {
+                async mockRPC(route, { method }) {
                     if (method === "onchange") {
-                        return def.then(performRPC(...arguments));
+                        await def;
                     }
                 },
             });
@@ -3641,12 +3605,12 @@ QUnit.module("Fields", (hooks) => {
                         <field name="int_field" />
                     </tree>
                 `,
-                mockRPC(route, { method }, performRPC) {
+                async mockRPC(route, { method }) {
                     if (method) {
                         assert.step(method);
                     }
                     if (method === "onchange") {
-                        return def.then(performRPC(...arguments));
+                        await def;
                     }
                 },
             });
@@ -3691,12 +3655,12 @@ QUnit.module("Fields", (hooks) => {
                         <field name="int_field" />
                     </tree>
                 `,
-                mockRPC(route, { method }, performRPC) {
+                async mockRPC(route, { method }) {
                     if (method) {
                         assert.step(method);
                     }
                     if (method === "onchange") {
-                        return def.then(performRPC(...arguments));
+                        await def;
                     }
                 },
             });
