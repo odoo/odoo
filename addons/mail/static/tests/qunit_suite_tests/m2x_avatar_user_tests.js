@@ -46,8 +46,6 @@ QUnit.module('mail', {}, function () {
             'Partner 1',
             'Chat window should be related to partner 1'
         );
-
-        list.destroy();
     });
 
     QUnit.test('many2many_avatar_user widget in form view', async function (assert) {
@@ -72,8 +70,6 @@ QUnit.module('mail', {}, function () {
             'Partner 1',
             'First chat window should be related to partner 1'
         );
-
-        form.destroy();
     });
 
     QUnit.test('many2many_avatar_user in kanban view', async function (assert) {
@@ -119,8 +115,6 @@ QUnit.module('mail', {}, function () {
             "should open a popover hover on o_m2m_avatar_empty");
         assert.strictEqual(kanban.$('.popover .popover-body > div').text().trim(), "LuigiTapu",
             "should have a right text in popover");
-
-        kanban.destroy();
     });
 
     QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
@@ -326,7 +320,6 @@ QUnit.module('mail', {}, function () {
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
-        list.destroy();
     });
 
     QUnit.test('avatar_user widget displays the appropriate user image in kanban view', async function (assert) {
@@ -355,7 +348,6 @@ QUnit.module('mail', {}, function () {
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
-        kanban.destroy();
     });
 
     QUnit.test('avatar_user widget displays the appropriate user image in form view', async function (assert) {
@@ -376,6 +368,5 @@ QUnit.module('mail', {}, function () {
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
-        form.destroy();
     });
 });

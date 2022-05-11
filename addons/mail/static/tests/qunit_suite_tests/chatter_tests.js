@@ -31,8 +31,6 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.strictEqual(list.$('.o_activity_summary').text(), '');
 
     assert.verifySteps(['/web/dataset/search_read']);
-
-    list.destroy();
 });
 
 QUnit.test('list activity widget with activities', async function (assert) {
@@ -80,8 +78,6 @@ QUnit.test('list activity widget with activities', async function (assert) {
     assert.strictEqual($secondRow.find('.o_activity_summary').text(), 'Type 2');
 
     assert.verifySteps(['/web/dataset/search_read']);
-
-    list.destroy();
 });
 
 QUnit.test('list activity widget with exception', async function (assert) {
@@ -116,8 +112,6 @@ QUnit.test('list activity widget with exception', async function (assert) {
     assert.strictEqual(list.$('.o_activity_summary').text(), 'Warning');
 
     assert.verifySteps(['/web/dataset/search_read']);
-
-    list.destroy();
 });
 
 QUnit.test('list activity widget: open dropdown', async function (assert) {
@@ -204,8 +198,6 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         'action_feedback',
         'read',
     ]);
-
-    list.destroy();
 });
 
 QUnit.test('list activity exception widget with activity', async function (assert) {
@@ -258,8 +250,6 @@ QUnit.test('list activity exception widget with activity', async function (asser
         "there is no any exception activity on record");
     assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-warning',
         "there is an exception on a record");
-
-    list.destroy();
 });
 
 QUnit.module('FieldMany2ManyTagsEmail');
@@ -313,7 +303,6 @@ QUnit.test('fieldmany2many tags email', async function (assert) {
             "tag should only show name");
         assert.hasAttrValue(firstTag.find('.o_badge_text'), 'title', "coucou@petite.perruche",
             "tag should show email address on mouse hover");
-        form.destroy();
         done();
     });
     testUtils.nextTick().then(function () {
@@ -393,8 +382,6 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     // should have read resPartnerId2 three times: when opening the dropdown, when opening the modal, and
     // after the save
     assert.verifySteps([`[${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
-
-    form.destroy();
 });
 
 QUnit.test('many2many_tags_email widget can load more than 40 records', async function (assert) {
@@ -428,8 +415,6 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
     await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
 
     assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 101);
-
-    form.destroy();
 });
 
 });

@@ -62,6 +62,5 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
         'ActivityMenu add note button should be displayed');
     assert.hasClass(activityMenu.$('.o_note'), 'd-none',
         'ActivityMenu add note input should be hidden');
-    widget.destroy();
 });
 });
