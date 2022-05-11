@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-from odoo import fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo import fields, models
+from odoo.tools.float_utils import float_compare
 
 
 class AccountMove(models.Model):
@@ -22,117 +20,6 @@ class AccountMove(models.Model):
         else:
             valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
         return valuation_stock_moves
-
-    def _get_price_difference_svl_values(self):
-        svl_vals_list = []
-        cost_to_add_byproduct = defaultdict(lambda: {'qty': 0, 'cost': 0})
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-
-        for move in self:
-            if move._skip_move_for_price_diff():
-                continue
-            move = move.with_company(move.company_id)
-            for line in move.invoice_line_ids:
-                if line._is_not_eligible_for_price_difference():
-                    continue
-
-                # Retrieve stock valuation moves.
-                valuation_stock_moves = move._retrieve_stock_valuation_moves(line)
-
-                if line.product_id.cost_method != 'standard' and line.purchase_line_id:
-                    po_currency = line.purchase_line_id.currency_id
-                    po_company = line.purchase_line_id.company_id
-
-                    if valuation_stock_moves:
-                        valuation_price_unit_total, valuation_total_qty = valuation_stock_moves._get_valuation_price_and_qty(line, move.currency_id)
-                        valuation_price_unit = valuation_price_unit_total / valuation_total_qty
-                        valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
-                    elif line.product_id.cost_method == 'fifo':
-                        # In this condition, we have a real price-valuated product which has not yet been received
-                        valuation_price_unit = po_currency._convert(
-                            line.purchase_line_id.price_unit, move.currency_id,
-                            po_company, move.date, round=False,
-                        )
-                    else:
-                        # For average/fifo/lifo costing method, fetch real cost price from incoming moves.
-                        price_unit = line.purchase_line_id.product_uom._compute_price(line.purchase_line_id.price_unit, line.product_uom_id)
-                        valuation_price_unit = po_currency._convert(
-                            price_unit, move.currency_id,
-                            po_company, move.date, round=False
-                        )
-
-                else:
-                    # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
-                    price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
-                    valuation_price_unit = line.company_currency_id._convert(
-                        price_unit, move.currency_id,
-                        move.company_id, fields.Date.today(), round=False
-                    )
-
-                price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                if line.tax_ids:
-                    if line.discount and line.quantity:
-                        # We do not want to round the price unit since :
-                        # - It does not follow the currency precision
-                        # - It may include a discount
-                        # Since compute_all still rounds the total, we use an ugly workaround:
-                        # multiply then divide the price unit.
-                        prec = 1e+6
-                        price_unit *= prec
-                        price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
-                            price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
-                        price_unit /= prec
-                    else:
-                        price_unit = line.tax_ids.compute_all(
-                            price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
-                price_unit_val_dif = price_unit - valuation_price_unit
-                price_subtotal = line.quantity * price_unit_val_dif
-
-                # We consider there is a price difference if the subtotal is not zero. In case a
-                # discount has been applied, we can't round the price unit anymore, and hence we
-                # can't compare them.
-                if not move.currency_id.is_zero(price_subtotal) and\
-                   valuation_stock_moves.stock_valuation_layer_ids and\
-                   float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0:
-                    qty_invoiced = line.purchase_line_id.qty_invoiced
-                    qty_received = line.purchase_line_id.qty_received
-                    qty_to_diff = min(line.quantity, qty_received - (qty_invoiced - line.quantity))
-                    if qty_to_diff <= 0:
-                        continue
-                    product = line.product_id
-                    linked_layer = valuation_stock_moves.stock_valuation_layer_ids[-1]
-                    price_unit_val_dif = line.price_unit - linked_layer.unit_cost
-                    price_subtotal = move.company_id.currency_id.round(qty_to_diff * price_unit_val_dif)
-                    if price_unit_val_dif == 0:
-                        continue
-                    # Creates a new stock valuation layer for the price difference.
-                    svl_description = _(
-                        'Price difference between %(purchase_name)s and %(invoice_name)s',
-                        purchase_name=line.purchase_line_id.order_id.name,
-                        invoice_name=move._get_next_sequence())
-                    svl_vals_list.append({
-                        'company_id': line.company_id.id,
-                        'product_id': product.id,
-                        'description': svl_description,
-                        'value': price_subtotal,
-                        'quantity': 0,
-                        'account_move_id': move.id,
-                        'stock_valuation_layer_id': linked_layer.id
-                    })
-                    linked_layer.remaining_value += price_subtotal
-                    # If product cost method is AVCO, updates the standard price.
-                    if product.cost_method == 'average' and\
-                       not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                        cost_to_add_byproduct[product]['qty'] += qty_to_diff
-                        cost_to_add_byproduct[product]['cost'] += price_unit_val_dif
-            # Batch standard price computation avoids recompute `quantity_svl` at each iteration.
-            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys())
-            for product in products:  # Iterates on recordset to prefetch efficiently `quantity_svl`.
-                unit_cost = cost_to_add_byproduct[product]['cost']
-                invoiced_qty = cost_to_add_byproduct[product]['qty']
-                cost_to_add = (unit_cost * invoiced_qty) / product.quantity_svl
-                product.with_company(move.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add
-        return svl_vals_list
 
     def _skip_move_for_price_diff(self):
         self.ensure_one()
@@ -245,9 +132,9 @@ class AccountMove(models.Model):
                         if qty_to_diff <= 0:
                             continue
                         product = line.product_id
-                        linked_layer = valuation_stock_moves.stock_valuation_layer_ids[-1]
+                        linked_layers = valuation_stock_moves.stock_valuation_layer_ids
                         price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                        price_unit_val_dif = price_unit - linked_layer.unit_cost
+                        price_unit_val_dif = price_unit - sum(linked_layers.mapped('unit_cost'))
                         price_subtotal = qty_to_diff * price_unit_val_dif
                         if price_unit_val_dif == 0:
                             continue
@@ -290,7 +177,7 @@ class AccountMove(models.Model):
         if self._context.get('move_reverse_cancel'):
             return super()._post(soft)
         account_move_line_vals = self._stock_account_prepare_anglo_saxon_in_lines_vals()
-        stock_valuation_layer_vals = self._get_price_difference_svl_values()
+        stock_valuation_layer_vals = self.invoice_line_ids._get_price_difference_svl_values()
         self.env['account.move.line'].create(account_move_line_vals)
         self.env['stock.valuation.layer'].create(stock_valuation_layer_vals)
         self.invoice_line_ids._update_qty_waiting_for_receipt()

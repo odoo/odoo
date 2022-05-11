@@ -34,14 +34,6 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         the product category. When buying a kit of that category at a higher price than its
         cost, the difference should be published on the Price Difference Account
         """
-        price_diff_account = self.env['account.account'].create({
-            'name': 'Super Price Difference Account',
-            'code': 'SPDA',
-            'account_type': 'asset_current',
-            'reconcile': True,
-        })
-        self.avco_category.property_account_creditor_price_difference_categ = price_diff_account
-
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
             'standard_price': price,
@@ -75,5 +67,16 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         invoice = self.env['account.move'].browse(action['res_id'])
         invoice.invoice_date = Date.today()
         invoice.action_post()
-        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == price_diff_account)
+
+        svls = invoice.stock_valuation_layer_ids
+        svl_comp01 = svls.filtered(lambda svl: svl.product_id == compo01)
+        svl_comp02 = svls.filtered(lambda svl: svl.product_id == compo02)
+        self.assertEqual(len(svls), 2, "The invoice should have created two SVL (one by kit's component) for the price diff")
+        self.assertEqual(sum(svls.mapped('value')), 70, "Should be the purchase price minus the kit cost (i.e. 100 - 30)")
+        self.assertTrue(svl_comp01.product_id == svl_comp01.stock_valuation_layer_id.product_id)
+        self.assertTrue(svl_comp02.product_id == svl_comp02.stock_valuation_layer_id.product_id)
+        self.assertAlmostEqual(svl_comp01.value, 23.33, 3)
+        self.assertAlmostEqual(svl_comp02.value, 46.67, 3)
+
+        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
         self.assertEqual(price_diff_aml.balance, 70, "Should be the purchase price minus the kit cost (i.e. 100 - 30)")
