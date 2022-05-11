@@ -1910,7 +1910,7 @@ class StockMove(models.Model):
         for move in mtso_moves:
             needed_qty = move.product_qty
             forecasted_qty = mtso_free_qties_by_loc[move.location_id][move.product_id.id]
-            if float_compare(needed_qty, forecasted_qty, precision_rounding=product_id.uom_id.rounding) <= 0:
+            if float_compare(needed_qty, forecasted_qty, precision_rounding=move.product_uom.rounding) <= 0:
                 move.procure_method = 'make_to_stock'
                 mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
