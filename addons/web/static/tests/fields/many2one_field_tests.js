@@ -317,7 +317,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_external_button");
         assert.strictEqual(
-            document.body.querySelector(".modal .modal-title").textContent.trim(),
+            target.querySelector(".modal .modal-title").textContent.trim(),
             "Open: custom label",
             "dialog title should display the custom string label"
         );
@@ -444,7 +444,7 @@ QUnit.module("Fields", (hooks) => {
             // click on the external button (should do an RPC)
             await click(target, ".o_external_button");
 
-            const input = document.body.querySelector(".modal .o_field_widget[name='foo'] input");
+            const input = target.querySelector(".modal .o_field_widget[name='foo'] input");
             input.value = "brandon";
             await triggerEvent(input, null, "change");
 
@@ -544,7 +544,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(input, null, "first record");
-        await click(document.body.querySelector(".dropdown-menu li"));
+        await click(target.querySelector(".dropdown-menu li"));
 
         assert.strictEqual(input.value, "first record");
         assert.strictEqual(
@@ -553,7 +553,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(input, null, "second record");
-        await click(document.body.querySelector(".dropdown-menu li"));
+        await click(target.querySelector(".dropdown-menu li"));
 
         assert.strictEqual(input.value, "second record");
         assert.strictEqual(
@@ -601,7 +601,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_data_row td.o_data_cell");
 
             assert.strictEqual(
-                document.body.querySelector('[name="turtle_trululu"]').textContent,
+                target.querySelector('[name="turtle_trululu"]').textContent,
                 "second recordrue morgueparis 75013",
                 "The partner's address should be displayed"
             );
@@ -648,7 +648,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target.querySelector(".o_data_row td.o_data_cell"));
 
             assert.strictEqual(
-                document.body.querySelector('.modal [name="turtle_trululu"]').textContent,
+                target.querySelector('.modal [name="turtle_trululu"]').textContent,
                 "second recordrue morgueparis 75013",
                 "The partner's address should be displayed"
             );
@@ -702,7 +702,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual($("tr.o_data_row").length, 9, "should display 9 records");
 
-        const modal = document.body.querySelector(".modal");
+        const modal = target.querySelector(".modal");
 
         await toggleFilterMenu(modal);
         await toggleAddCustomFilter(modal);
@@ -764,7 +764,7 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_form_button_edit");
             await click(target, ".o_external_button");
             await editInput(
-                document.body,
+                target,
                 ".modal-body .o_field_widget[name='other_field'] input",
                 "wood"
             );
@@ -817,7 +817,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvent(input, null, "keyup");
 
             assert.containsNone(
-                document.body,
+                target,
                 ".modal",
                 "No save should be triggered when removing value"
             );
@@ -827,11 +827,11 @@ QUnit.module("Fields", (hooks) => {
             );
 
             assert.containsOnce(
-                document.body,
+                target,
                 ".modal",
                 "Saving should be triggered when selecting a value"
             );
-            await click(document.body, ".modal .btn-primary");
+            await click(target, ".modal .btn-primary");
         }
     );
 
@@ -871,9 +871,9 @@ QUnit.module("Fields", (hooks) => {
 
         // At this point, if the focus is correctly registered by the m2o, there
         // should be only one modal (the "Create" one) and none for saving changes.
-        assert.containsOnce(document.body, ".modal", "There should be only one modal");
+        assert.containsOnce(target, ".modal", "There should be only one modal");
 
-        await clickDiscard(document.body.querySelector(".modal"));
+        await clickDiscard(target.querySelector(".modal"));
 
         assert.strictEqual(
             document.activeElement,
@@ -937,12 +937,12 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_field_many2one input");
         assert.containsNone(
-            document.body,
+            target,
             ".dropdown-menu li.o_m2o_dropdown_option",
             "autocomplete should not contains dropdown options"
         );
         assert.containsOnce(
-            document.body,
+            target,
             ".dropdown-menu li.o_m2o_start_typing",
             "autocomplete should contains start typing option"
         );
@@ -952,13 +952,13 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvents(input, null, ["input", "change"]);
 
         assert.containsN(
-            document.body,
+            target,
             ".dropdown-menu li.o_m2o_dropdown_option",
             2,
             "autocomplete should contains 2 dropdown options"
         );
         assert.containsNone(
-            document.body,
+            target,
             ".dropdown-menu li.o_m2o_start_typing",
             "autocomplete should not contains start typing option"
         );
@@ -1152,36 +1152,36 @@ QUnit.module("Fields", (hooks) => {
         dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
         await click(dropdown.querySelector(".o_m2o_dropdown_option_search_more"));
         assert.containsOnce(
-            document.body,
+            target,
             ".modal .o_list_view",
             "should have opened a list view in a modal"
         );
         assert.containsNone(
-            document.body,
+            target,
             ".modal .o_list_view .o_list_record_selector",
             "there should be no record selector in the list view"
         );
         assert.containsNone(
-            document.body,
+            target,
             ".modal .modal-footer .o_select_button",
             "there should be no 'Select' button in the footer"
         );
         assert.ok(
-            document.body.querySelectorAll(".modal tbody tr").length > 10,
+            target.querySelectorAll(".modal tbody tr").length > 10,
             "list should contain more than 10 records"
         );
-        const modal = document.body.querySelector(".modal");
+        const modal = target.querySelector(".modal");
         await editInput(modal, ".o_searchview_input", "P");
         await triggerEvent(modal, ".o_searchview_input", "keydown", { key: "Enter" });
         assert.containsN(
-            document.body,
+            target,
             ".modal tbody tr",
             10,
             "list should be restricted to records containing a P (10 records)"
         );
         // choose a record
         await click(modal.querySelector(".o_data_cell[title='Partner 20']"));
-        assert.containsNone(document.body, ".modal", "should have closed the modal");
+        assert.containsNone(target, ".modal", "should have closed the modal");
         dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
         assert.isNotVisible(dropdown, "should have closed the dropdown");
         assert.strictEqual(
@@ -1246,13 +1246,12 @@ QUnit.module("Fields", (hooks) => {
             type: "many2one",
             relation: "user",
         };
-
         serverData.views = {
             "product,false,form": `
-            <form>
-                <field name="name" />
-            </form>
-        `,
+                    <form>
+                        <field name="name" />
+                    </form>
+                `,
         };
 
         await makeView({
@@ -1260,26 +1259,26 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-            <form>
-                <field name="product_id" />
-            </form>
-        `,
+                    <form>
+                        <field name="product_id" />
+                    </form>
+                `,
         });
 
-        await editInput(target, ".o_field_widget[name=product_id] input", "ABC");
-        await click(target, ".o_field_widget[name=product_id] .o_m2o_dropdown_option_create_edit");
-        assert.containsOnce(document.body, ".modal .o_form_view");
+        await editInput(target, "div[name=product_id] input", "ABC");
+        await click(target, "div[name=product_id] .o_m2o_dropdown_option_create_edit");
+        assert.containsOnce(target, ".modal .o_form_view");
 
         // quick create 'new value'
-        await editInput(target, ".o_field_widget[name=name] input", "new value");
-        await click(target.querySelector(".o_field_widget[name=name] .o_m2o_dropdown_option"));
+        await editInput(target, "div[name=name] input", "new value");
+        await click(target.querySelector("div[name=name] .o_m2o_dropdown_option"));
         assert.strictEqual(
-            document.body.querySelector(".modal .o_field_many2one input").value,
+            target.querySelector(".modal .o_field_many2one input").value,
             "new value"
         );
 
-        await clickSave(document.body.querySelector(".modal")); // save in modal
-        assert.containsNone(document.body, ".modal .o_form_view");
+        await clickSave(target.querySelector(".modal"));
+        assert.containsNone(target, ".modal .o_form_view");
         assert.strictEqual(target.querySelector(".o_field_many2one input").value, "new value");
     });
 
@@ -1638,11 +1637,9 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list: quick create then save directly", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("list: quick create then save directly", async function (assert) {
         const def = makeDeferred();
-        const newRecordId = "?"; // todo harcode the id here
+        const newRecordId = 5;
 
         await makeView({
             type: "list",
@@ -1660,43 +1657,34 @@ QUnit.module("Fields", (hooks) => {
                 }
                 if (method === "create") {
                     assert.step("create");
-                    assert.strictEqual(
-                        args[0].trululu,
-                        newRecordId,
-                        "should create with the correct m2o id"
-                    );
+                    assert.strictEqual(args[0].trululu, newRecordId);
                 }
             },
         });
 
+        assert.containsN(target, ".o_data_row", 3);
+
         await click(target, ".o_list_button_add");
+
+        assert.containsN(target, ".o_data_row", 4);
 
         await editInput(target, ".o_field_widget[name=trululu] input", "b");
         await click(target.querySelector(".ui-menu-item"));
 
-        await click(target, ".o_list_button_save");
+        await clickSave(target);
 
         assert.verifySteps(
             ["name_create"],
             "should wait for the name_create before creating the record"
         );
-        assert.containsN(
-            target,
-            ".o_data_row",
-            4,
-            "should wait for the name_create before adding the new row"
-        );
+        assert.containsN(target, ".o_data_row", 4);
 
-        await def.resolve();
+        def.resolve();
         await nextTick();
 
         assert.verifySteps(["create"]);
-        assert.strictEqual(
-            target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell").textContent,
-            "b",
-            "created row should have the correct m2o value"
-        );
-        assert.containsN(target, ".o_data_row", 5, "should have added the fifth row");
+        assert.containsN(target, ".o_data_row", 4);
+        assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").textContent, "b");
     });
 
     QUnit.test("list in form: quick create then save directly", async function (assert) {
@@ -1978,7 +1966,7 @@ QUnit.module("Fields", (hooks) => {
 
             click(requiredElement);
             // discard by clicking on body
-            click(document.body);
+            click(target);
 
             assert.containsOnce(target, "tr.o_data_row", "should still have the record in the o2m");
             assert.strictEqual(
@@ -2151,7 +2139,7 @@ QUnit.module("Fields", (hooks) => {
             // click on empty required field in editable list record
             click(target.querySelector("td.o_data_cell .o_required_modifier"));
             // click off so that the required field still stay empty
-            click(document.body);
+            click(target);
 
             // record should not be dropped
             assert.containsOnce(
@@ -2236,7 +2224,7 @@ QUnit.module("Fields", (hooks) => {
             // click on empty required field in editable list record
             await click(requiredField);
             // click off so that the required field still stay empty
-            await click(document.body);
+            await click(target);
 
             // record should not be dropped
             assert.containsOnce(
@@ -2317,7 +2305,7 @@ QUnit.module("Fields", (hooks) => {
             // click on empty required field in editable list record
             await click(requiredField);
             // click off so that the required field still stay empty
-            await click(document.body);
+            await click(target);
 
             // record should be dropped
             assert.containsNone(
@@ -2383,7 +2371,7 @@ QUnit.module("Fields", (hooks) => {
             // add something to required field and leave edit mode of the record
             await click(target, ".o_field_widget.o_required_modifier[name=trululu] input");
             await click(target.querySelector("li.ui-menu-item"));
-            await click(document.body);
+            await click(target);
 
             assert.containsOnce(
                 target,
@@ -2934,10 +2922,10 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvent(target, ".o_field_many2one input", "blur");
 
         assert.strictEqual(
-            document.body.querySelector(".modal .modal-body").textContent.trim(),
+            target.querySelector(".modal .modal-body").textContent.trim(),
             "Create new partner as a new Product?"
         );
-        await click(document.body, ".modal .modal-footer .btn-primary");
+        await click(target, ".modal .modal-footer .btn-primary");
     });
 
     QUnit.test("failing quick create on a many2one", async function (assert) {
@@ -2973,14 +2961,14 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
         await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
 
-        assert.containsOnce(document.body, ".modal .o_form_view");
+        assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            document.body.querySelector(".modal .o_field_widget[name='name'] input").value,
+            target.querySelector(".modal .o_field_widget[name='name'] input").value,
             "abcd"
         );
 
-        await editInput(document.body, ".modal .o_field_widget[name='name'] input", "xyz");
-        await click(document.body, ".modal .o_form_button_save");
+        await editInput(target, ".modal .o_field_widget[name='name'] input", "xyz");
+        await click(target, ".modal .o_form_button_save");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='product_id'] input").value,
             "xyz"
@@ -3026,14 +3014,14 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
         await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
 
-        assert.containsOnce(document.body, ".modal .o_form_view");
+        assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
-            document.body.querySelector(".modal .o_field_widget[name='name'] input").value,
+            target.querySelector(".modal .o_field_widget[name='name'] input").value,
             "abcd"
         );
 
-        await editInput(document.body, ".modal .o_field_widget[name='name'] input", "xyz");
-        await click(document.body, ".modal .o_form_button_save");
+        await editInput(target, ".modal .o_field_widget[name='name'] input", "xyz");
+        await click(target, ".modal .o_form_button_save");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='product_id'] input").value,
             "xyz"
@@ -3144,7 +3132,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_many2one input", "xph");
         await triggerEvent(target, ".o_field_many2one input", "blur");
 
-        assert.containsNone(document.body, ".modal");
+        assert.containsNone(target, ".modal");
         assert.strictEqual(target.querySelector(".o_field_many2one input").value, "xphone");
         assert.containsOnce(target, ".o_external_button");
     });
@@ -3168,7 +3156,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_many2one input", "new partner");
         await triggerEvent(target, ".o_field_many2one input", "blur");
 
-        assert.containsNone(document.body, ".modal", "should not display the create modal");
+        assert.containsNone(target, ".modal", "should not display the create modal");
         assert.strictEqual(
             target.querySelector(".o_field_many2one input").value,
             "",
@@ -3230,12 +3218,12 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_field_many2one .o_external_button");
         assert.strictEqual(
-            document.body.querySelector(".modal .o_form_view.o_form_readonly").length,
+            target.querySelector(".modal .o_form_view.o_form_readonly").length,
             1,
             "there should be a readonly form view opened"
         );
 
-        await click(document.body.querySelector(".modal .o_form_button_cancel"));
+        await click(target.querySelector(".modal .o_form_button_cancel"));
 
         await testUtils.fields.editAndTrigger(
             target.querySelectorAll(".o_field_many2one input"),
@@ -3243,7 +3231,7 @@ QUnit.module("Fields", (hooks) => {
             ["keyup", "focusout"]
         );
         assert.strictEqual(
-            document.body.querySelector(".modal").length,
+            target.querySelector(".modal").length,
             0,
             "should not display the create modal"
         );
@@ -3375,12 +3363,12 @@ QUnit.module("Fields", (hooks) => {
             await testUtils.fields.triggerKey("up", $input, "enter");
             $input.blur();
             assert.strictEqual(
-                document.body.querySelector(".modal").length,
+                target.querySelector(".modal").length,
                 1,
                 "should have one modal in body"
             );
             // Check that discarding clears $input
-            await click(document.body.querySelector(".modal .o_form_button_cancel"));
+            await click(target.querySelector(".modal .o_form_button_cancel"));
             assert.strictEqual($input.value, "", "the field should be empty");
         }
     );
@@ -3425,7 +3413,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelectorAll(".o_field_char").focus();
 
             assert.strictEqual(
-                document.body.querySelector(".modal").length,
+                target.querySelector(".modal").length,
                 0,
                 "there shouldn't be any modal in body"
             );
@@ -3440,7 +3428,7 @@ QUnit.module("Fields", (hooks) => {
                 "first record should have been selected"
             );
             assert.strictEqual(
-                document.body.querySelector(".modal").length,
+                target.querySelector(".modal").length,
                 0,
                 "there shouldn't be any modal in body"
             );
@@ -3571,7 +3559,7 @@ QUnit.module("Fields", (hooks) => {
             await nextTick();
             await testUtils.fields.triggerKeydown($input, "enter");
             assert.strictEqual(
-                document.body.querySelector(".modal").length,
+                target.querySelector(".modal").length,
                 0,
                 "should not have any modal in DOM"
             );
@@ -3621,7 +3609,7 @@ QUnit.module("Fields", (hooks) => {
             def.resolve();
             await nextTick();
             assert.strictEqual(
-                document.body.querySelector(".modal").length,
+                target.querySelector(".modal").length,
                 0,
                 "should not have any modal in DOM"
             );
@@ -3832,16 +3820,16 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='trululu'] input", "test");
         await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
-        assert.containsOnce(document.body, ".modal .o_list_view");
+        assert.containsOnce(target, ".modal .o_list_view");
         assert.containsOnce(
-            document.body,
+            target,
             ".modal .o_cp_searchview .o_facet_values",
             "should have a special facet for the pre-selected ids"
         );
 
         // remove the filter on ids
         expectedDomain = [];
-        await click(document.body.querySelector(".modal .o_cp_searchview .o_facet_remove"));
+        await click(target.querySelector(".modal .o_cp_searchview .o_facet_remove"));
 
         assert.verifySteps([
             "get_views", // main form view
@@ -3957,14 +3945,14 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
         await click(target.querySelectorAll(".o_data_row td")[1]);
         await click(target, ".o_external_button");
-        assert.containsOnce(document.body, ".modal", "should have one modal in body");
+        assert.containsOnce(target, ".modal", "should have one modal in body");
 
         // Changing the 'trululu' value
         await editInput(target, ".modal .o_field_widget[name='display_name'] input", "test");
-        await clickSave(document.body.querySelector(".modal"));
+        await clickSave(target.querySelector(".modal"));
 
         // Test whether the value has changed
-        assert.containsNone(document.body, ".modal", "the modal should be closed");
+        assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(
             target.querySelectorAll(".o_data_cell")[1].textContent,
             "test",
@@ -4015,9 +4003,9 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='trululu'] input", "");
         await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
-        assert.containsOnce(document.body, ".modal", "There should be 1 modal opened");
+        assert.containsOnce(target, ".modal", "There should be 1 modal opened");
         assert.containsN(
-            document.body,
+            target,
             ".modal .ui-sortable-handle",
             11,
             "There should be 11 sequence handlers"
@@ -4132,7 +4120,7 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
 
         await selectDropdownItem(target, "trululu", "Search More...");
-        const modal = document.body.querySelector(".modal");
+        const modal = target.querySelector(".modal");
         await toggleGroupByMenu(modal);
         await toggleMenuItem(modal, "Bar");
 
@@ -4180,7 +4168,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, ".modal", "There should be one modal");
         assert.strictEqual($focusedModal, $originalModal, "Modal is focused");
-        assert.hasClass(document.body, "modal-open", "Modal is said opened");
+        assert.hasClass(target, "modal-open", "Modal is said opened");
 
         // Open many2one modal of field in many2one modal
         await click($originalModal, ".o_external_button");
@@ -4190,7 +4178,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(target, ".modal", 2, "There should be two modals");
         assert.strictEqual($focusedModal, nextModal, "Last modal is focused");
-        assert.hasClass(document.body, "modal-open", "Modal is said opened");
+        assert.hasClass(target, "modal-open", "Modal is said opened");
 
         // Close second modal
         await click(nextModal, "button[class='close']");
@@ -4203,12 +4191,12 @@ QUnit.module("Fields", (hooks) => {
             "First modal is still opened"
         );
         assert.strictEqual($focusedModal, $originalModal, "Modal is focused");
-        assert.hasClass(document.body, "modal-open", "Modal is said opened");
+        assert.hasClass(target, "modal-open", "Modal is said opened");
 
         // Close first modal
         await click($originalModal, "button[class='close']");
         assert.containsNone(target, ".modal", "There should be no modal");
-        assert.doesNotHaveClass(document.body, "modal-open", "Modal is not said opened");
+        assert.doesNotHaveClass(target, "modal-open", "Modal is not said opened");
     });
 
     QUnit.test("search more pager is reset when doing a new search", async function (assert) {
@@ -4251,7 +4239,7 @@ QUnit.module("Fields", (hooks) => {
 
         await selectDropdownItem(target, "trululu", "Search More...");
 
-        const modal = document.body.querySelector(".modal");
+        const modal = target.querySelector(".modal");
         await click(modal, ".o_pager_next");
 
         assert.strictEqual(

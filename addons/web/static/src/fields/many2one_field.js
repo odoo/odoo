@@ -192,7 +192,11 @@ export class Many2OneField extends Component {
                             this.props.record.activeFields[this.props.name].string
                         ),
                         onRecordSaved: (record) => {
-                            return this.props.update([record.data.id, record.data.name]);
+                            const { type } = record.fields.name;
+                            const id = record.data.id;
+                            const name =
+                                type === "many2one" ? record.data.name[1] : record.data.name;
+                            return this.props.update([id, name]);
                         },
                     },
                     {
