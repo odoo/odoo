@@ -82,7 +82,10 @@ class TestMembership(TestMembershipCommon):
         self.assertEqual(
             self.partner_1.membership_state, 'old',
             'membership: after paying the invoice, customer should be in old status')
-
+        for line in self.partner_1.member_lines:
+            self.assertEqual(
+                line.state,'old', 
+                'membership.membership_line : as the date_to is in the past, state should be old')
         # check second partner then associate them
         self.assertEqual(
             self.partner_2.membership_state, 'free',

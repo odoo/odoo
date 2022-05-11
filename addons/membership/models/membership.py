@@ -44,11 +44,14 @@ class MembershipLine(models.Model):
 
     @api.depends('account_invoice_id.state',
                  'account_invoice_id.amount_residual',
-                 'account_invoice_id.payment_state')
+                 'account_invoice_id.payment_state',
+                 'date_to')
     def _compute_state(self):
         """Compute the state lines """
         if not self:
             return
+
+        today = fields.Date.today()
 
         self._cr.execute('''
             SELECT reversed_entry_id, COUNT(id)
@@ -62,7 +65,10 @@ class MembershipLine(models.Model):
             payment_state = line.account_invoice_id.payment_state
 
             line.state = 'none'
-            if move_state == 'draft':
+            if line.date_to and line.date_to < today:
+                line.state = 'old'
+                continue
+            elif move_state == 'draft':
                 line.state = 'waiting'
             elif move_state == 'posted':
                 if payment_state == 'paid':
