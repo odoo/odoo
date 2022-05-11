@@ -47,7 +47,6 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
     await activityMenu.appendTo($('#qunit-fixture'));
     await testUtils.nextTick();
     assert.containsOnce(activityMenu, '.o_no_activity');
-    widget.destroy();
 });
 
 QUnit.test('activity menu widget: activity menu with 2 models', async function (assert) {
@@ -99,8 +98,6 @@ QUnit.test('activity menu widget: activity menu with 2 models', async function (
     };
     await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     await testUtils.dom.click(activityMenu.$(".o_mail_systray_dropdown_items > div[data-model_name='mail.test.activity']"));
-
-    widget.destroy();
 });
 
 QUnit.test('activity menu widget: activity view icon', async function (assert) {
@@ -153,8 +150,6 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
         'do_action:mail.test.activity',
         'do_action:res.partner'
     ]);
-
-    widget.destroy();
 });
 
 QUnit.test('activity menu widget: close on messaging menu click', async function (assert) {
@@ -179,8 +174,6 @@ QUnit.test('activity menu widget: close on messaging menu click', async function
         'show',
         "activity menu should be hidden after click on messaging menu"
     );
-
-    widget.destroy();
 });
 
 });
