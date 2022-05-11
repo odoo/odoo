@@ -42,6 +42,29 @@ export class ViewButton extends Component {
         if (debounce) {
             this.onClick = debounceFn(this.onClick.bind(this), debounce, true);
         }
+        this.tooltip = JSON.stringify({
+            debug: Boolean(odoo.debug),
+            button: {
+                string: this.props.string,
+                help: this.props.clickParams && this.props.clickParams.help,
+                context: this.props.clickParams && this.props.clickParams.context,
+                modifiers: this.props.clickParams && this.props.clickParams.modifiers,
+                special: this.props.clickParams && this.props.clickParams.special,
+                type: this.props.clickParams && this.props.clickParams.type,
+                name: this.props.clickParams && this.props.clickParams.name,
+                title: this.props.title,
+            },
+            context: this.props.record && this.props.record.context,
+            model: (this.props.record && this.props.record.resModel) || this.props.resModel,
+        });
+    }
+
+    get hasBigTooltip() {
+        return Boolean(odoo.debug) || (this.props.clickParams && this.props.clickParams.help);
+    }
+
+    get hasSmallToolTip() {
+        return !this.hasBigTooltip && this.props.title;
     }
 
     get disabled() {

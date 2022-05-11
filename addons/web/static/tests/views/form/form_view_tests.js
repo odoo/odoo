@@ -8,6 +8,7 @@ import {
     getNodesTextContent,
     legacyExtraNextTick,
     makeDeferred,
+    mouseEnter,
     nextTick,
     patchTimeZone,
     patchWithCleanup,
@@ -19,6 +20,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { CharField } from "@web/fields/char_field";
 import { FormController } from "@web/views/form/form_controller";
 
@@ -230,6 +232,7 @@ QUnit.module("Views", (hooks) => {
         };
 
         setupViewRegistries();
+        serviceRegistry.add("tooltip", tooltipService);
     });
 
     QUnit.module("FormView");
@@ -6615,7 +6618,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
         });
         var $button = target.querySelector(
-            ".o_form_view .o_form_sheet .oe_button_box .oe_stat_button span"
+            ".o_form_view .o_form_sheet .oe_button_box .oe_stat_button"
         );
         assert.strictEqual(
             $button.innerText,
@@ -8692,8 +8695,11 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("display tooltips for buttons", async function (assert) {
-        assert.expect(2);
+    QUnit.test("display tooltips for buttons (debug = false)", async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
 
         await makeView({
             type: "form",
@@ -8702,21 +8708,77 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <form>
                     <header>
-                        <button name="some_method" class="oe_highlight" string="Button" type="object"/>
+                        <button name="some_method" class="oe_highlight" string="Button" type="object" title="This is title"/>
+                        <button name="empty_method" string="Empty Button" type="object"/>
                     </header>
                     <button name="other_method" class="oe_highlight" string="Button2" type="object" help="help Button2"/>
                 </form>`,
         });
 
-        assert.hasAttrValue(
-            target.querySelector("button[name='some_method']"),
-            "data-tooltip",
-            "Button"
+        await mouseEnter(target.querySelector("button[name='empty_method']"));
+        await nextTick();
+        assert.containsNone(target, ".o-tooltip", "not help, or not title, not tooltip");
+
+        await mouseEnter(target.querySelector("button[name='some_method']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip").textContent,
+            "This is title",
+            "title on default tooltip"
         );
-        assert.hasAttrValue(
-            target.querySelector("button[name='other_method']"),
-            "data-tooltip",
-            "help Button2"
+
+        await mouseEnter(target.querySelector("button[name='other_method']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip").textContent,
+            "Button2help Button2",
+            "help create veiw button tooltip with the name of the button as title and the help as description"
+        );
+    });
+
+    QUnit.test("display tooltips for buttons (debug = true)", async function (assert) {
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <button name="some_method" class="oe_highlight" string="Button" type="object" title="This is title" attrs="{'readonly': [['display_name', '=', 'readonly']]}"/>
+                        <button name="empty_method" string="Empty Button" type="object"/>
+                    </header>
+                    <button name="other_method" class="oe_highlight" string="Button2" type="object" help="help Button2"/>
+                </form>`,
+        });
+
+        await mouseEnter(target.querySelector("button[name='empty_method']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip").textContent,
+            ` Button : Empty ButtonObject:partnerButton Type:objectMethod:empty_method`
+        );
+
+        await mouseEnter(target.querySelector("button[name='some_method']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip").textContent,
+            ` Button : ButtonThis is titleObject:partnerModifiers:{"readonly":[["display_name","=","readonly"]]}Button Type:objectMethod:some_method`
+        );
+
+        await mouseEnter(target.querySelector("button[name='other_method']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip").textContent,
+            ` Button : Button2help Button2Object:partnerButton Type:objectMethod:other_method`
         );
     });
 

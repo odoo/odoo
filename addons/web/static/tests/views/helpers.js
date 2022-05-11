@@ -17,6 +17,7 @@ import {
 } from "../helpers/mock_services";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { popoverService } from "@web/core/popover/popover_service";
+import { createDebugContext } from "@web/core/debug/debug_context";
 
 const serviceRegistry = registry.category("services");
 
@@ -61,6 +62,7 @@ export const makeView = async (params) => {
     }
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
+    Object.assign(env, createDebugContext(env)); // This is needed if the views are in debug mode
 
     /** Legacy Environment, for compatibility sakes
      *  Remove this as soon as we drop the legacy support

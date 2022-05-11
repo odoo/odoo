@@ -226,7 +226,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
         setupViewRegistries();
-        serviceRegistry.add("tooltip", tooltipService), { force: true };
+        serviceRegistry.add("tooltip", tooltipService);
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
