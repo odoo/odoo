@@ -2066,12 +2066,8 @@
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="oe_structure">
             <section class="container">
-              <t t-if="not version">
-                <meta http-equiv="refresh" content="0;URL='/website/info'" />
-              </t>
-              <t t-if="version">
                 <h1><t t-esc="res_company.name"/>
-                    <small>Odoo Version <t t-out="version.get('server_version')"/></small>
+                    <small groups='base.group_no_one'>Odoo Version <t t-out="version.get('server_version')"/></small>
                 </h1>
                 <p>
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
@@ -2113,7 +2109,6 @@
                         </dd>
                     </dl>
                 </div>
-              </t>
             </section>
         </div>
     </xpath>
