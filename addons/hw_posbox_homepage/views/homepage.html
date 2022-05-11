@@ -1,6 +1,25 @@
 {% extends "layout.html" %}
+{% from "loading.html" import loading_block_ui %}
 {% block head %}
 <style>
+    .btn-sm-restart {
+        display: flex;
+        min-width: 100%;
+        justify-content: center;
+    }
+    .item-restart {
+        display: flex;
+        flex-direction: column;
+        margin-left: auto;
+        max-width: 100%;
+    }
+    .text-green-primary {
+        display: flex;
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        justify-content: center;
+    }
     table {
         width: 100%;
         border-collapse: collapse;
@@ -81,10 +100,67 @@
             content.css('max-height', maxHeight);
         });
     });
-</script>
+    function restart_odoo_or_reboot(action)
+    {
+        return function() {
+            var restarted = false;
+            $('.loading-block').removeClass('o_hide');
+            $('.message-title').text('Restarting');
+            $('.message-status').text('Please wait');
+            $.ajax({
+                url: '/iot_restart_odoo_or_reboot/',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({ params: {arg:action} })
+            }).done(function() {
+                var myInterval = setInterval(function() {
+                    $.ajax({
+                        url:'/',
+                        timeout: 4000
+                    }).done(function() {
+                        clearInterval(myInterval);
+                        location.reload();
+                    }).fail(function(xhr, textStatus, thrownError) {
+                        if (xhr.status || restarted) {
+                            restarted = true;
+                            if (!xhr.status) {
+                                thrownError = "Couldn't reach the server, please make sure Odoo is running on the IoT Box"
+                            }
+                            $('.message-title').text('An error was encountered, please reload the webpage');
+                            $('.message-status').text(xhr.status + ": " + thrownError);
+                        }
+                    })
+                }, 4000)
+            }).fail(function() {
+                $('.loading-block').addClass('o_hide');
+            })
+        }
+    }
+    // let btn = document.getElementById("iot_restart_button");
+    //     btn.addEventListener('click', event => {
+    //     restart_odoo_or_reboot(action);
+    // });
+    $(function() {
+        $('#reboot_iot_box').click(restart_odoo_or_reboot('reboot_iot_box'))
+    })
+    $(function() {
+        $('#restart_odoo').click(restart_odoo_or_reboot('restart_odoo'))
+    })
+    </script>
 {% endblock %}
 {% block content %}
-    <h2 class="text-center text-green">Your IoT Box is up and running</h2>
+    <div class="collapse item-restart">
+        <div class="collapsible item-restart">
+            <div class="title arrow-down">Restart</div>
+            <div class="content">
+                <div class="device-status">
+                    <button class="btn btn-sm btn-sm-restart" href="#" id="reboot_iot_box">Reboot the IoT Box</button>
+                    <button class="btn btn-sm btn-sm-restart" href="#" id="restart_odoo">Restart Odoo service</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-center text-green text-green-primary">Your IoT Box is up and running</h2>
     <table align="center" cellpadding="3">
         <tr>
             <td class="heading">Name</td>
@@ -149,4 +225,5 @@
         <a class="btn" style="margin-left: 10px;" href='/list_credential'>Credential</a>
         {% endif %}
     </div>
+    {{ loading_block_ui(loading_message) }}
 {% endblock %}
