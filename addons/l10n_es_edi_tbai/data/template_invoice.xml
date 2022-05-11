@@ -107,10 +107,11 @@
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_value">
                         <t t-set="line" t-value="line_value['line']"/>
+                        <t t-set="discount" t-value="line.price_subtotal / (1 - line.discount / 100) * line.discount / 100"/>
                         <DescripcionDetalle t-esc="line_value['description']"/>
                         <Cantidad t-out="float_repr(line.quantity)"/>
-                        <ImporteUnitario t-out="float_repr(line.price_unit * (-1 if is_refund else 1))"/>
-                        <Descuento t-out="float_repr(line.discount or 0)"/>
+                        <ImporteUnitario t-out="float_repr((line.price_subtotal + discount) / line.quantity * (-1 if is_refund else 1))"/>
+                        <Descuento t-out="float_repr(discount)"/>
                         <ImporteTotal t-out="float_repr(line.price_total * (-1 if is_refund else 1))"/>
                     </IDDetalleFactura>
                 </DetallesFactura>

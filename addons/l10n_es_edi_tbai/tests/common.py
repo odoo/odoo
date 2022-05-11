@@ -142,7 +142,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
           <DescripcionDetalle>producta</DescripcionDetalle>
           <Cantidad>5.00</Cantidad>
           <ImporteUnitario>1000.00</ImporteUnitario>
-          <Descuento>20.00</Descuento>
+          <Descuento>1000.00</Descuento>
           <ImporteTotal>4840.00</ImporteTotal>
         </IDDetalleFactura>
       </DetallesFactura>
