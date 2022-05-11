@@ -569,7 +569,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'float',
             name: 'amount',
         }, {
-            type: 'char', //TODO is it a bug or a feature when type date exists ?
+            type: 'date',
             name: 'date',
         }, {
             type: 'boolean',
