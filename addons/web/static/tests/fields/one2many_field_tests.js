@@ -4603,8 +4603,8 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.containsOnce(target, ".o_data_cell[title='xphone']");
-        assert.containsNone(target, ".o_data_cell[title='xpad']");
+        assert.containsOnce(target, ".o_data_cell[data-tooltip='xphone']");
+        assert.containsNone(target, ".o_data_cell[data-tooltip='xpad']");
 
         await clickEdit(target);
         await addRow(target);
@@ -4614,8 +4614,8 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll('div[name="product_id"] .o_input_dropdown li')[1]);
 
         await click(target.querySelector(".modal .modal-footer button"));
-        assert.containsOnce(target, ".o_data_cell[title='xphone']");
-        assert.containsOnce(target, ".o_data_cell[title='xpad']");
+        assert.containsOnce(target, ".o_data_cell[data-tooltip='xphone']");
+        assert.containsOnce(target, ".o_data_cell[data-tooltip='xpad']");
     });
 
     QUnit.test("one2many list with inline form view", async function (assert) {
@@ -4672,10 +4672,10 @@ QUnit.module("Fields", (hooks) => {
         // save and close
         await clickSave(target.querySelector(".modal"));
 
-        assert.containsOnce(target, ".o_data_cell[title='xphone']");
+        assert.containsOnce(target, ".o_data_cell[data-tooltip='xphone']");
 
         // reopen the record in form view
-        await click(target, ".o_data_cell[title='xphone']");
+        await click(target, ".o_data_cell[data-tooltip='xphone']");
         assert.strictEqual(target.querySelector(".modal .modal-body input").value, "xphone");
 
         await editInput(target, '.modal .modal-body div[name="int_field"] input', "456");
@@ -4684,7 +4684,7 @@ QUnit.module("Fields", (hooks) => {
         await clickDiscard(target.querySelector(".modal"));
 
         // reopen the record in form view
-        await click(target, ".o_data_cell[title='xphone']");
+        await click(target, ".o_data_cell[data-tooltip='xphone']");
 
         assert.strictEqual(
             target.querySelector('.modal .modal-body div[name="int_field"] input').value,
@@ -4699,7 +4699,7 @@ QUnit.module("Fields", (hooks) => {
         // save and close
         await clickSave(target.querySelector(".modal"));
 
-        assert.containsOnce(target, ".o_data_cell[title='xpad']");
+        assert.containsOnce(target, ".o_data_cell[data-tooltip='xpad']");
 
         // save the record
         await clickSave(target);
@@ -4750,7 +4750,7 @@ QUnit.module("Fields", (hooks) => {
 
             await clickEdit(target);
             // open a modal
-            await click(target.querySelector("tr.o_data_row td[title='xphone']"));
+            await click(target.querySelector("tr.o_data_row td[data-tooltip='xphone']"));
 
             // write in the many2one field
             await click(target, ".modal .o_field_many2one input");
@@ -4827,7 +4827,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await clickEdit(target);
-            await click(target.querySelector("tr.o_data_row td[title='xphone']"));
+            await click(target.querySelector("tr.o_data_row td[data-tooltip='xphone']"));
 
             // trigger a name search
             await click(target, "table td input");

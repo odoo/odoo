@@ -241,7 +241,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         onChange: isTruthy(node.getAttribute("on_change")),
         FieldComponent: getFieldClassFromRegistry(viewType, fields[name].type, widget, jsClass),
         decorations: {}, // populated below
-        noLabel: isTruthy(node.getAttribute("nolabel"), true),
+        noLabel: isTruthy(node.getAttribute("nolabel")),
         props: {},
         rawAttrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),

@@ -13,6 +13,7 @@ import { useSortable } from "@web/core/utils/ui";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "../helpers/view_hook";
+import { getTooltipInfo } from "../../fields/field_tooltip";
 
 const {
     Component,
@@ -688,32 +689,14 @@ export class ListRenderer extends Component {
     }
 
     makeTooltip(column) {
-        const info = {};
-
-        info.viewMode = "list";
-        info.resModel = this.props.list.resModel;
-
-        if (column.type === "field") {
-            const linkedField = this.props.list.fields[column.name];
-            info.field = {};
-            info.field.label = column.label;
-            info.field.name = column.name;
-            info.field.noLabel = column.noLabel;
-            info.field.help = column.options.help;
-            info.field.type = linkedField.type;
-            info.field.widget = column.FieldComponent.name;
-            info.field.widgetXMLName = column.FieldComponent.XMLName;
-            info.field.widgetDescription =
-                column.FieldComponent.description || linkedField.description;
-            info.field.context = column.context;
-            info.field.domain = column.domain.toString();
-            info.field.modifiers = JSON.stringify(column.modifiers);
-            info.field.change_default = linkedField.change_default;
-            info.field.relation = linkedField.relation;
-            info.field.selection = linkedField.selection;
-        }
-
-        return JSON.stringify(info);
+        const field = this.props.list.fields[column.name];
+        const activeField = this.props.list.activeFields[column.name];
+        return getTooltipInfo({
+            viewMode: "list",
+            resModel: this.props.list.resModel,
+            field,
+            activeField,
+        });
     }
 }
 

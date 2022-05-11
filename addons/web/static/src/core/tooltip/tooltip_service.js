@@ -100,6 +100,9 @@ export const tooltipService = {
                 template = dataset.tooltipTemplate;
                 info = dataset.tooltipInfo ? JSON.parse(dataset.tooltipInfo) : null;
             }
+            if (tooltip && tooltip === "" && !template) {
+                return;
+            }
             cleanup();
             openTooltipTimeout = browser.setTimeout(() => {
                 if (shouldCleanup()) {

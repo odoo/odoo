@@ -424,7 +424,8 @@ export class ViewCompiler {
             field.setAttribute("type", `'${widgetName}'`);
         }
 
-        const labels = this.getLabels(fieldName);
+        const labelsForAttr = el.getAttribute("id") || fieldName;
+        const labels = this.getLabels(labelsForAttr);
         const dynamicLabel = (label) => {
             const formLabel = this.createLabelFromField(
                 fieldId,

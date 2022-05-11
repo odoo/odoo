@@ -969,7 +969,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "th", 2, "should have 2 th");
     });
 
-    QUnit.test("boolean field has no title", async function (assert) {
+    QUnit.test("boolean field has no title (data-tooltip)", async function (assert) {
         assert.expect(1);
 
         await makeView({
@@ -978,7 +978,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="bar"/></tree>',
         });
-        assert.equal($(target).find("tbody tr:first td:eq(1)").attr("title"), "");
+        assert.equal($(target).find("tbody tr:first td:eq(1)").attr("data-tooltip"), "");
     });
 
     QUnit.test("field with nolabel has no title", async function (assert) {
@@ -1010,7 +1010,7 @@ QUnit.module("Views", (hooks) => {
             "<div>Hello</div>"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:first .o_data_cell").attr("title"),
+            $(target).find("tbody tr:first .o_data_cell").attr("data-tooltip"),
             "<div>Hello</div>"
         );
     });
@@ -4816,8 +4816,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("display a tooltip on a field", async function (assert) {
-        assert.expect(4);
-
         patchWithCleanup(odoo, {
             debug: false,
         });
@@ -4828,6 +4826,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `<tree>
                     <field name="foo"/>
+                    <field name="bar" widget="toggle_button"/>
                 </tree>`,
         });
 
@@ -4845,7 +4844,7 @@ QUnit.module("Views", (hooks) => {
 
         // it is necessary to rerender the list so tooltips can be properly created
         await reloadListView(target);
-        await mouseEnter(target.querySelector("th[data-name=foo]"));
+        await mouseEnter(target.querySelector("th[data-name=bar]"));
         await nextTick(); // GES: I had once an indetermist failure because of no tooltip, so for safety I add a nextTick.
 
         assert.strictEqual(
@@ -4864,7 +4863,7 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent([
                 target.querySelector('.o-tooltip--technical>li[data-item="widget"]'),
             ]),
-            ["Widget:CharField (char)"],
+            ["Widget:Button (toggle_button)"],
             "widget description should be correct"
         );
     });

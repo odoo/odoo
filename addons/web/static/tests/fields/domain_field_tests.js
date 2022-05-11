@@ -449,7 +449,7 @@ QUnit.module("Fields", (hooks) => {
         // click on a record -> should not open the record
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
-        await click(target, ".modal .o_list_view .o_data_row .o_data_cell[title='gold']");
+        await click(target, ".modal .o_list_view .o_data_row .o_data_cell[data-tooltip='gold']");
     });
 
     QUnit.test("field context is propagated when opening selection", async function (assert) {

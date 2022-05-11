@@ -23,6 +23,7 @@ import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { CharField } from "@web/fields/char_field";
 import { FormController } from "@web/views/form/form_controller";
+import { session } from "@web/session";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -1666,22 +1667,20 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_field_many2one.o_field_invalid", 2);
     });
 
-    QUnit.skipWOWL(
-        "tooltips on multiple occurrences of fields and labels",
-        async function (assert) {
-            assert.expect(4);
+    QUnit.test("tooltips on multiple occurrences of fields and labels", async function (assert) {
+        serverData.models.partner.fields.foo.help = "foo tooltip";
+        serverData.models.partner.fields.bar.help = "bar tooltip";
 
-            const initialDebugMode = odoo.debug;
-            odoo.debug = false;
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
 
-            serverData.models.partner.fields.foo.help = "foo tooltip";
-            serverData.models.partner.fields.bar.help = "bar tooltip";
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                 <form>
                     <group>
                         <field name="foo"/>
@@ -1694,35 +1693,36 @@ QUnit.module("Views", (hooks) => {
                         <div><field name="bar" id="bar2"/></div>
                     </group>
                 </form>`,
-            });
+        });
 
-            const $fooLabel1 = target.querySelector(".o_form_label:nth(0)");
-            $fooLabel1.tooltip("show", false);
-            $fooLabel1.trigger($.Event("mouseenter"));
-            assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "foo tooltip");
-            $fooLabel1.trigger($.Event("mouseleave"));
+        await mouseEnter(target.querySelector(".o_form_label[for='field_foo_1']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip .o-tooltip--help").textContent,
+            "foo tooltip"
+        );
 
-            const $fooLabel2 = target.querySelector(".o_form_label:nth(2)");
-            $fooLabel2.tooltip("show", false);
-            $fooLabel2.trigger($.Event("mouseenter"));
-            assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "foo tooltip");
-            $fooLabel2.trigger($.Event("mouseleave"));
+        await mouseEnter(target.querySelector(".o_form_label[for='field_bar_2']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip .o-tooltip--help").textContent,
+            "bar tooltip"
+        );
 
-            const $barLabel1 = target.querySelector(".o_form_label:nth(1)");
-            $barLabel1.tooltip("show", false);
-            $barLabel1.trigger($.Event("mouseenter"));
-            assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "bar tooltip");
-            $barLabel1.trigger($.Event("mouseleave"));
+        await mouseEnter(target.querySelector(".o_form_label[for='field_foo_3']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip .o-tooltip--help").textContent,
+            "foo tooltip"
+        );
 
-            const $barLabel2 = target.querySelector(".o_form_label:nth(3)");
-            $barLabel2.tooltip("show", false);
-            $barLabel2.trigger($.Event("mouseenter"));
-            assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "bar tooltip");
-            $barLabel2.trigger($.Event("mouseleave"));
-
-            odoo.debug = initialDebugMode;
-        }
-    );
+        await mouseEnter(target.querySelector(".o_form_label[for='field_bar_4']"));
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".o-tooltip .o-tooltip--help").textContent,
+            "bar tooltip"
+        );
+    });
 
     QUnit.test(
         "readonly attrs on fields are re-evaluated on field change",
@@ -10785,7 +10785,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "company_dependent field in form view, in multi company group",
         async function (assert) {
             assert.expect(2);
@@ -10793,6 +10793,15 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.fields.product_id.company_dependent = true;
             serverData.models.partner.fields.product_id.help = "this is a tooltip";
             serverData.models.partner.fields.foo.company_dependent = true;
+
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+                clearTimeout: () => {},
+            });
+
+            patchWithCleanup(session, {
+                display_switch_company_menu: true,
+            });
 
             await makeView({
                 type: "form",
@@ -10805,38 +10814,38 @@ QUnit.module("Views", (hooks) => {
                         <field name="product_id"/>
                     </group>
                 </form>`,
-                session: {
-                    display_switch_company_menu: true,
-                },
             });
 
-            const $productLabel = target.querySelector(".o_form_label:eq(1)");
-            $productLabel.tooltip("show", false);
-            await testUtils.dom.triggerMouseEvent($productLabel, "mouseenter");
+            await mouseEnter(target.querySelector(".o_form_label[for='field_product_id_2']"));
+            await nextTick();
             assert.strictEqual(
-                $(".tooltip .oe_tooltip_help").innerText.trim(),
+                target.querySelector(".o-tooltip .o-tooltip--help").textContent,
                 "this is a tooltip\n\nValues set here are company-specific."
             );
-            await testUtils.dom.triggerMouseEvent($productLabel, "mouseleave");
 
-            const $fooLabel = target.querySelector(".o_form_label:first");
-            $fooLabel.tooltip("show", false);
-            await testUtils.dom.triggerMouseEvent($fooLabel, "mouseenter");
+            await mouseEnter(target.querySelector(".o_form_label[for='field_foo_1']"));
+            await nextTick();
             assert.strictEqual(
-                $(".tooltip .oe_tooltip_help").innerText.trim(),
+                target.querySelector(".o-tooltip .o-tooltip--help").textContent,
                 "Values set here are company-specific."
             );
-            await testUtils.dom.triggerMouseEvent($fooLabel, "mouseleave");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "company_dependent field in form view, not in multi company group",
         async function (assert) {
-            assert.expect(1);
-
             serverData.models.partner.fields.product_id.company_dependent = true;
             serverData.models.partner.fields.product_id.help = "this is a tooltip";
+
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
+                clearTimeout: () => {},
+            });
+
+            patchWithCleanup(session, {
+                display_switch_company_menu: false,
+            });
 
             await makeView({
                 type: "form",
@@ -10848,20 +10857,14 @@ QUnit.module("Views", (hooks) => {
                         <field name="product_id"/>
                     </group>
                 </form>`,
-                session: {
-                    display_switch_company_menu: false,
-                },
             });
 
-            const $productLabel = target.querySelector(".o_form_label");
-
-            $productLabel.tooltip("show", false);
-            await testUtils.dom.triggerMouseEvent($productLabel, "mouseenter");
+            await mouseEnter(target.querySelector(".o_form_label"));
+            await nextTick();
             assert.strictEqual(
-                $(".tooltip .oe_tooltip_help").innerText.trim(),
+                target.querySelector(".o-tooltip .o-tooltip--help").textContent,
                 "this is a tooltip"
             );
-            await testUtils.dom.triggerMouseEvent($productLabel, "mouseleave");
         }
     );
 

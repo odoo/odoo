@@ -1166,7 +1166,7 @@ QUnit.module("Fields", (hooks) => {
             "list should be restricted to records containing a P (10 records)"
         );
         // choose a record
-        await click(modal.querySelector(".o_data_cell[title='Partner 20']"));
+        await click(modal.querySelector(".o_data_cell[data-tooltip='Partner 20']"));
         assert.containsNone(target, ".modal", "should have closed the modal");
         dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
         assert.isNotVisible(dropdown, "should have closed the dropdown");
