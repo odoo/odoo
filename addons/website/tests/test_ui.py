@@ -106,6 +106,8 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         })
         self.start_tour("/", 'test_html_editor_scss', login='admin', timeout=120)
 
+    def media_dialog_undraw(self):
+        self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
