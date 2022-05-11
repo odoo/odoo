@@ -8,6 +8,7 @@ import {
     editInput,
     editSelect,
     getFixture,
+    getNodesTextContent,
     nextTick,
 } from "../helpers/utils";
 import { editSearch, validateSearch } from "../search/helpers";
@@ -231,25 +232,25 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy">' +
-                "<kanban>" +
-                '<field name="display_name"/>' +
-                "<templates>" +
-                '<t t-name="kanban-box">' +
-                '<div class="oe_kanban_global_click">' +
-                '<a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>' +
-                '<span><t t-esc="record.display_name.value"/></span>' +
-                "</div>" +
-                "</t>" +
-                "</templates>" +
-                "</kanban>" +
-                '<form string="Partners">' +
-                '<field name="display_name"/>' +
-                "</form>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <a t-if="!read_only_mode" type="delete" class="fa fa-times float-right delete_icon"/>
+                                        <span><t t-esc="record.display_name.value"/></span>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
             resId: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_kw/partner_type/write") {
@@ -444,7 +445,7 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<form string="Partners">' +
+                    "<form>" +
                     '<field name="timmy" add-label="Add timmy" mode="kanban">' +
                     "<kanban>" +
                     "<templates>" +
@@ -488,7 +489,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="timmy">' +
                 '<kanban create="0">' +
                 '<field name="display_name"/>' +
@@ -618,49 +619,49 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
         serverData.models.partner_type.fields.float_field = { string: "Float", type: "float" };
 
-        (serverData.views = {
+        serverData.views = {
             "partner_type,false,list": '<tree><field name="display_name"/></tree>',
             "partner_type,false,search": '<search><field name="display_name"/></search>',
-        }),
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="timmy">' +
-                    "<tree>" +
-                    '<field name="display_name"/><field name="float_field"/>' +
-                    "</tree>" +
-                    '<form string="Partners">' +
-                    '<field name="display_name"/>' +
-                    "</form>" +
-                    "</field>" +
-                    "</form>",
-
-                resId: 1,
-                mockRPC: function (route, args) {
-                    if (args.method !== "get_views") {
-                        assert.step(_.last(route.split("/")));
-                    }
-                    if (args.method === "write" && args.model === "partner") {
-                        assert.deepEqual(args.args[1].timmy, [[6, false, [12, 15]]]);
-                    }
-                },
-            });
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/><field name="float_field"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC: function (route, args) {
+                if (args.method !== "get_views") {
+                    assert.step(_.last(route.split("/")));
+                }
+                if (args.method === "write" && args.model === "partner") {
+                    assert.deepEqual(args.args[1].timmy, [[6, false, [12, 15]]]);
+                }
+            },
+        });
 
         assert.verifySteps([
             "read", // main record
             "read", // relational field
         ]);
         assert.containsNone(
-            $(target).find(".o_list_record_remove"),
+            target,
+            ".o_list_record_remove",
             "delete icon should not be visible in readonly"
         );
-        assert.containsOnce(
+        assert.containsNone(
             target,
             ".o_field_x2many_list_row_add",
-            '"Add an item" should be visible in readonly'
+            '"Add an item" should not be visible in readonly'
         );
 
         await clickEdit(target);
@@ -672,53 +673,58 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 records"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer tbody td:first()").text(),
+            target.querySelector(".o_list_renderer tbody td").innerText,
             "gold",
             "display_name of first subrecord should be the one in DB"
         );
-        assert.ok(
-            $(target).find(".o_list_record_remove").length,
+        assert.containsN(
+            target,
+            ".o_list_record_remove",
+            2,
             "delete icon should be visible in edit"
         );
-        assert.ok(
-            $(target).find(".o_field_x2many_list_row_add").length,
+        assert.containsOnce(
+            target,
+            ".o_field_x2many_list_row_add",
             '"Add an item" should be visible in edit'
         );
 
         // edit existing subrecord
-        await click($(target).find(".o_list_renderer tbody tr:first() .o_data_cell")[0]);
+        await click(target.querySelector(".o_list_renderer tbody tr .o_data_cell"));
         assert.verifySteps([]); // No further read: all fields were fetched at the first read
 
         assert.containsNone(
-            $(".modal .modal-footer .o_btn_remove"),
+            target,
+            ".modal .modal-footer .o_btn_remove",
             'there should not be a "Remove" button in the modal footer'
         );
 
         await editInput(target, ".modal .o_form_view input", "new name");
-        await click($(".modal .modal-footer .btn-primary")[0]);
+        await click(target.querySelector(".modal .modal-footer .btn-primary"));
         assert.verifySteps(["write", "read"]); // save relational record from dialog then read it
         assert.strictEqual(
-            $(target).find(".o_list_renderer tbody td:first()").text(),
+            target.querySelector(".o_list_renderer tbody td").innerText,
             "new name",
             "value of subrecord should have been updated"
         );
 
         // add new subrecords
-        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.verifySteps(["web_search_read"]);
         assert.containsNone(
-            $(".modal .modal-footer .o_btn_remove"),
+            target,
+            ".modal .modal-footer .o_btn_remove",
             'there should not be a "Remove" button in the modal footer'
         );
-        assert.strictEqual($(".modal .o_list_view").length, 1, "a modal should be open");
-        assert.strictEqual(
-            $(".modal .o_list_view .o_data_row").length,
-            1,
+        assert.containsOnce(target, ".modal", "a modal should be open");
+        assert.containsOnce(
+            target,
+            ".modal .o_list_view .o_data_row",
             "the list should contain one row"
         );
-        await click($(".modal .o_list_view .o_data_row .o_data_cell")[0]);
+        await click(target.querySelector(".modal .o_list_view .o_data_row .o_data_cell"));
         assert.verifySteps(["read"]); // relational model (udpated)
-        assert.strictEqual($(".modal .o_list_renderer").length, 0, "the modal should be closed");
+        assert.containsNone(target, ".modal", "the modal should be closed");
         assert.containsN(
             target,
             ".o_list_renderer td.o_list_number",
@@ -727,7 +733,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // remove subrecords
-        await click($(target).find(".o_list_record_remove:nth(1)")[0]);
+        await click(target.querySelectorAll(".o_list_record_remove")[1]);
         assert.verifySteps([]);
         assert.containsN(
             target,
@@ -736,7 +742,7 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 subrecords"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer .o_data_row td:first").text(),
+            target.querySelector(".o_list_renderer .o_data_row td").innerText,
             "new name",
             "the updated row still has the correct values"
         );
@@ -751,7 +757,7 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 subrecords"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer .o_data_row td:first").text(),
+            target.querySelector(".o_list_renderer .o_data_row td").innerText,
             "new name",
             "the updated row still has the correct values"
         );
@@ -764,44 +770,39 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
         serverData.models.partner_type.fields.float_field = { string: "Float", type: "float" };
 
-        (serverData.views = {
+        serverData.views = {
             "partner_type,false,list": '<tree><field name="display_name"/></tree>',
             "partner_type,false,search": '<search><field name="display_name"/></search>',
-        }),
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="timmy">' +
-                    '<tree editable="top">' +
-                    '<field name="display_name"/><field name="float_field"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
-                mockRPC: function (route, args) {
-                    if (args.method !== "get_views") {
-                        assert.step(_.last(route.split("/")));
-                    }
-                    if (args.method === "write") {
-                        assert.deepEqual(args.args[1].timmy, [
-                            [6, false, [12, 15]],
-                            [1, 12, { display_name: "new name" }],
-                        ]);
-                    }
-                },
-                resId: 1,
-            });
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                            <field name="float_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method !== "get_views") {
+                    assert.step(_.last(route.split("/")));
+                }
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1].timmy, [
+                        [6, false, [12, 15]],
+                        [1, 12, { display_name: "new name" }],
+                    ]);
+                }
+            },
+            resId: 1,
+        });
 
-        assert.ok(
-            $(target).find(".o_list_record_remove").length,
-            "delete icon should be visible in readonly"
-        );
-        assert.ok(
-            $(target).find(".o_field_x2many_list_row_add").length,
-            '"Add an item" should be visible in readonly'
-        );
+        assert.containsNone(target, ".o_list_record_remove");
+        assert.containsNone(target, ".o_field_x2many_list_row_add");
 
         await clickEdit(target);
 
@@ -812,70 +813,73 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 records"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer tbody td:first()").text(),
+            target.querySelector(".o_list_renderer tbody td").innerText,
             "gold",
             "display_name of first subrecord should be the one in DB"
         );
-        assert.ok(
-            $(target).find(".o_list_record_remove").length,
+        assert.containsN(
+            target,
+            ".o_list_record_remove",
+            2,
             "delete icon should be visible in edit"
         );
         assert.hasClass(
-            $(target).find("td.o_list_record_remove button").first(),
+            target.querySelector("td.o_list_record_remove button"),
             "fa fa-times",
             "should have X icons to remove (unlink) records"
         );
-        assert.ok(
-            $(target).find(".o_field_x2many_list_row_add").length,
+        assert.containsOnce(
+            target,
+            ".o_field_x2many_list_row_add",
             '"Add an item" should not visible in edit'
         );
 
         // edit existing subrecord
-        await click($(target).find(".o_list_renderer tbody td:first()")[0]);
-        assert.ok(!$(".modal").length, "in edit, clicking on a subrecord should not open a dialog");
+        await click(target.querySelector(".o_list_renderer tbody td"));
+        assert.containsNone(
+            target,
+            ".modal",
+            "in edit, clicking on a subrecord should not open a dialog"
+        );
         assert.hasClass(
-            $(target).find(".o_list_renderer tbody tr:first()"),
+            target.querySelector(".o_list_renderer tbody tr"),
             "o_selected_row",
             "first row should be in edition"
         );
-        await editInput(
-            target,
-            ".o_list_renderer .o_data_row:nth-child(1) .o_data_cell:nth-child(1) input",
-            "new name"
-        );
+        await editInput(target, ".o_selected_row div[name=display_name] input", "new name");
         assert.hasClass(
-            $(target).find(".o_list_renderer .o_data_row:first"),
+            target.querySelector(".o_list_renderer .o_data_row"),
             "o_selected_row",
             "first row should still be in edition"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer div[name=display_name] input").get(0),
             document.activeElement,
+            target.querySelector(".o_list_renderer div[name=display_name] input"),
             "edited field should still have the focus"
         );
-        await click($(target).find(".o_form_view")[0]); // LPE : leave quick edit ??
+        await click(target.querySelector(".o_form_view"));
         assert.doesNotHaveClass(
-            $(target).find(".o_list_renderer tbody tr:first"),
+            target.querySelector(".o_list_renderer tbody tr"),
             "o_selected_row",
             "first row should not be in edition anymore"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer tbody td:first()").text(),
+            target.querySelector(".o_list_renderer tbody td").innerText,
             "new name",
             "value of subrecord should have been updated"
         );
         assert.verifySteps(["read", "read"]);
 
         // add new subrecords
-        await click($(target).find(".o_field_x2many_list_row_add a")[0]);
-        assert.strictEqual($(".modal .o_list_view").length, 1, "a modal should be open");
-        assert.strictEqual(
-            $(".modal .o_list_view .o_data_row").length,
-            1,
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        assert.containsOnce(target, ".modal", "a modal should be open");
+        assert.containsOnce(
+            target,
+            ".modal .o_list_view .o_data_row",
             "the list should contain one row"
         );
-        await click($(".modal .o_list_view .o_data_row .o_data_cell")[0]);
-        assert.strictEqual($(".modal .o_list_view").length, 0, "the modal should be closed");
+        await click(target.querySelector(".modal .o_list_view .o_data_row .o_data_cell"));
+        assert.containsNone(target, ".modal .o_list_view", "the modal should be closed");
         assert.containsN(
             target,
             ".o_list_renderer td.o_list_number",
@@ -884,7 +888,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // remove subrecords
-        await click($(target).find(".o_list_record_remove:nth(1)")[0]);
+        await click(target.querySelectorAll(".o_list_record_remove")[1]);
         assert.containsN(
             target,
             ".o_list_renderer td.o_list_number",
@@ -892,7 +896,7 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 subrecord"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer tbody .o_data_row td:first").text(),
+            target.querySelector(".o_list_renderer tbody .o_data_row td").innerText,
             "new name",
             "the updated row still has the correct values"
         );
@@ -906,7 +910,7 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 subrecords"
         );
         assert.strictEqual(
-            $(target).find(".o_list_renderer .o_data_row td:first").text(),
+            target.querySelector(".o_list_renderer .o_data_row td").innerText,
             "new name",
             "the updated row still has the correct values"
         );
@@ -930,7 +934,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="timmy">' +
                 '<tree create="true" delete="true">' +
                 '<field name="color"/>' +
@@ -960,7 +964,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="timmy">' +
                 '<tree create="false" delete="false">' +
                 '<field name="color"/>' +
@@ -986,36 +990,24 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2many list: create action disabled", async function (assert) {
-        assert.expect(2);
-
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy">' +
-                '<tree create="0">' +
-                '<field name="name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree create="0">
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </form>`,
             resId: 1,
         });
 
-        assert.containsOnce(
-            target,
-            ".o_field_x2many_list_row_add",
-            '"Add an item" link should be available in readonly'
-        );
-
+        assert.containsNone(target, ".o_field_x2many_list_row_add");
         await clickEdit(target);
-
-        assert.containsOnce(
-            target,
-            ".o_field_x2many_list_row_add",
-            '"Add an item" link should be available in edit'
-        );
+        assert.containsOnce(target, ".o_field_x2many_list_row_add");
     });
 
     QUnit.test("fieldmany2many list comodel not writable", async function (assert) {
@@ -1028,9 +1020,10 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(12);
 
         serverData.views = {
-            "partner_type,false,list": `<tree create="false" delete="false" edit="false">
-                                                <field name="display_name"/>
-                                            </tree>`,
+            "partner_type,false,list": `
+                <tree create="false" delete="false" edit="false">
+                    <field name="display_name"/>
+                </tree>`,
             "partner_type,false,search": '<search><field name="display_name"/></search>',
         };
 
@@ -1038,7 +1031,8 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form string="Partners">
+            arch: `
+                <form>
                     <field name="timmy" widget="many2many" can_create="false" can_write="false"/>
                 </form>`,
             mockRPC: function (route, args) {
@@ -1052,25 +1046,28 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_field_many2many .o_field_x2many_list_row_add");
-        await click($(target).find(".o_field_many2many .o_field_x2many_list_row_add a")[0]);
+        await click(target.querySelector(".o_field_many2many .o_field_x2many_list_row_add a"));
         assert.containsOnce(target, ".modal");
 
-        assert.containsN($(".modal-footer"), "button", 2);
-        assert.containsOnce($(".modal-footer"), "button.o_select_button");
-        assert.containsOnce($(".modal-footer"), "button.o_form_button_cancel");
+        assert.containsN(target.querySelector(".modal-footer"), "button", 2);
+        assert.containsOnce(target.querySelector(".modal-footer"), "button.o_select_button");
+        assert.containsOnce(target.querySelector(".modal-footer"), "button.o_form_button_cancel");
 
-        await click($(".modal .o_list_view .o_data_cell:first()")[0]);
+        await click(target.querySelector(".modal .o_list_view .o_data_cell"));
         assert.containsNone(target, ".modal");
 
         assert.containsOnce(target, ".o_field_many2many .o_data_row");
-        assert.equal($(".o_field_many2many .o_data_row").text(), "gold");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_field_many2many .o_data_row")),
+            ["gold"]
+        );
         assert.containsOnce(target, ".o_field_many2many .o_field_x2many_list_row_add");
 
         await clickSave(target);
         await clickEdit(target);
 
         assert.containsOnce(target, ".o_field_many2many .o_data_row .o_list_record_remove");
-        await click($(target).find(".o_field_many2many .o_data_row .o_list_record_remove")[0]);
+        await click(target.querySelector(".o_field_many2many .o_data_row .o_list_record_remove"));
         await clickSave(target);
     });
 
@@ -1392,7 +1389,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 "<tree>" +
                 '<field name="turtle_foo"/>' +
@@ -1433,7 +1430,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="timmy"/>' + "</form>",
+            arch: "<form>" + '<field name="timmy"/>' + "</form>",
             resId: 1,
             mockRPC: function (route, args) {
                 if (args.method !== "get_views") {
@@ -1509,7 +1506,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 "<field name=\"timmy\" domain=\"[['display_name', '=', 'gold']]\"/>" +
                 "</form>",
             resId: 1,
@@ -1541,7 +1538,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="turtles">' +
                 "<tree>" +
                 '<field name="turtle_foo"/>' +
@@ -1591,7 +1588,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="foo"/>' +
                 '<field name="timmy">' +
                 "<kanban>" +
@@ -1749,7 +1746,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<form string="Partners">' +
+                "<form>" +
                 '<field name="timmy" widget="many2many">' +
                 "<tree>" +
                 '<field name="display_name"/>' +

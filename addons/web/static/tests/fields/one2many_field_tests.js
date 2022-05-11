@@ -528,14 +528,13 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps(["get_views", "read", "read"]);
         assert.containsNone(target, "td.o_list_record_selector");
-        assert.containsOnce(target, ".o_field_x2many_list_row_add");
-        assert.containsOnce(target, "td.o_list_record_remove", 1);
+        assert.containsNone(target, ".o_field_x2many_list_row_add");
+        assert.containsNone(target, "td.o_list_record_remove", 1);
 
         await clickEdit(target);
 
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
         assert.hasAttrValue(target.querySelector(".o_field_x2many_list_row_add"), "colspan", "2");
-
         assert.containsOnce(target, "td.o_list_record_remove", 1);
     });
 
@@ -3222,8 +3221,8 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.containsN(target, ".o_list_record_remove", 2);
-        assert.containsOnce(target, ".o_field_x2many_list_row_add");
+        assert.containsNone(target, ".o_list_record_remove");
+        assert.containsNone(target, ".o_field_x2many_list_row_add");
 
         await clickEdit(target);
 
@@ -5843,7 +5842,7 @@ QUnit.module("Fields", (hooks) => {
                     assert.step(args.method);
                 },
             });
-            clickEdit(target);
+            await clickEdit(target);
             assert.containsN(target, ".o_data_row", 2);
 
             await click(target.querySelector(".o_list_record_remove"));
@@ -11464,10 +11463,10 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            // should have 2 columns 1 for foo and 1 for advanced dropdown
+            // should have 1 column
             assert.containsOnce(
                 target.querySelector(".o_field_one2many"),
-                "th:not(.o_list_record_remove_header)",
+                "th",
                 "should be 1 th in the one2many in readonly mode"
             );
             assert.containsOnce(
@@ -11552,8 +11551,8 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(
                 target.querySelector(".o_field_one2many"),
                 "th",
-                3,
-                "should still have 3 th in the one2many after reloading whole form view"
+                2,
+                "should still have 2 th in the one2many after reloading whole form view"
             );
         }
     );

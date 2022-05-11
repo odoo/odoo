@@ -124,22 +124,23 @@ export class X2ManyField extends Component {
         const { options, views } = this.activeField;
         const subViewInfo = views[this.viewMode];
 
-        let canCreate = "create" in options ? evalDomain(options.create, evalContext) : true;
-        canCreate = canCreate && subViewInfo.activeActions.create;
-
-        let canDelete = "delete" in options ? evalDomain(options.delete, evalContext) : true;
-        canDelete = canDelete && subViewInfo.activeActions.delete;
-        const deleteFn = this.removeRecordFromList.bind(this);
-
-        let canLink = "link" in options ? evalDomain(options.link, evalContext) : true;
-        let canUnlink = "unlink" in options ? evalDomain(options.unlink, evalContext) : true;
+        const canCreate =
+            !this.props.readonly &&
+            evalDomain(options.create || "1", evalContext) &&
+            subViewInfo.activeActions.create;
+        const canDelete =
+            !this.props.readonly &&
+            evalDomain(options.delete || "1", evalContext) &&
+            subViewInfo.activeActions.delete;
+        const canLink = !this.props.readonly && evalDomain(options.link || "1", evalContext);
+        const canUnlink = !this.props.readonly && evalDomain(options.unlink || "1", evalContext);
 
         const result = { canCreate, canDelete };
         if (this.isMany2Many) {
             Object.assign(result, { canLink, canUnlink });
         }
         if ((this.isMany2Many && canUnlink) || (!this.isMany2Many && canDelete)) {
-            result.onDelete = deleteFn;
+            result.onDelete = this.removeRecordFromList.bind(this);
         }
         return result;
     }

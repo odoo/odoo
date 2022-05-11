@@ -8838,32 +8838,28 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("process the context for inline subview", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("process the context for inline subview", async function (assert) {
         serverData.models.partner.records[0].p = [2];
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="foo"/>' +
-                '<field name="bar" invisible="context.get(\'hide_bar\', False)"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="foo"/>
+                            <field name="bar" invisible="context.get('hide_bar', False)"/>
+                        </tree>
+                    </field>
+                </form>`,
             resId: 1,
-            viewOptions: {
-                context: { hide_bar: true },
-            },
+            context: { hide_bar: true },
         });
         assert.containsOnce(
             target,
-            ".o_list_view thead tr th:not(.o_list_record_remove_header)",
+            ".o_list_renderer thead tr th:not(.o_list_record_remove_header)",
             "there should be only one column"
         );
     });
