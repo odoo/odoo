@@ -16,7 +16,11 @@ class UoM(models.Model):
         xml_id = self.env['ir.model.data'].search([
                 ('model', '=', 'uom.uom'),
                 ('res_id', '=', self.id),
-        ]).name
+        ])
+
+        if len(xml_id) != 1:
+            return 'C62'
+
         mapping = {
             'product_uom_unit': 'C62',
             'product_uom_dozen': 'DZN',
@@ -41,4 +45,4 @@ class UoM(models.Model):
             'product_uom_cubic_inch': 'INQ',
             'product_uom_cubic_foot': 'FTQ',
         }
-        return mapping.get(xml_id, 'C62')
+        return mapping.get(xml_id.name, 'C62')
