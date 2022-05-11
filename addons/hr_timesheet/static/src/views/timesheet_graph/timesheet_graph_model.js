@@ -4,7 +4,7 @@ import { GraphModel } from "@web/views/graph/graph_model";
 
 const FIELDS = [
     'unit_amount', 'effective_hours', 'planned_hours', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
-    'overtime', 'number_hours', 'difference', 'hours_effective', 'hours_planned', 'timesheet_unit_amount'
+    'overtime', 'number_hours', 'difference', 'timesheet_unit_amount'
 ];
 
 export class hrTimesheetGraphModel extends GraphModel {

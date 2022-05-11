@@ -145,16 +145,16 @@ tour.register('sale_timesheet_tour', {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
 }, {
-    trigger: 'a.nav-link[name="billing_employee_rate"]',
-    extra_trigger: 'div.o_notebook_headers',
-    content: 'Click on Invoicing tab to configure the invoicing of this project.',
-}, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
     run: 'text S',
 }, {
     trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
+}, {
+    trigger: 'a.nav-link[name="billing_employee_rate"]',
+    extra_trigger: 'div.o_notebook_headers',
+    content: 'Click on Invoicing tab to configure the invoicing of this project.',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
     content: 'Click on Add a line on the mapping list view.',
@@ -195,9 +195,9 @@ tour.register('sale_timesheet_tour', {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
 }, {
-    trigger: 'a.nav-link[name="billing_employee_rate"]',
+    trigger: 'a.nav-link[name="settings"]',
     extra_trigger: 'div.o_notebook_headers',
-    content: 'Click on Invoicing tab to configure the invoicing of this project.',
+    content: 'Click on Settings tab to configure this project.',
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select the first sale order of the list',

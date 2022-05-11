@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="project.action_view_task" model="ir.actions.act_window">
+        <field name="context">{'sale_show_partner_name': True}</field>
+    </record>
+
+    <record id="project.action_view_my_task" model="ir.actions.act_window">
+        <field name="context">{'sale_show_partner_name': True}</field>
+    </record>
+
+    <record id="project.action_view_all_task" model="ir.actions.act_window">
+        <field name="context">{'sale_show_partner_name': True}</field>
+    </record>
+
+    <record id="project.action_project_task_user_tree" model="ir.actions.act_window">
+        <field name="context">{'sale_show_partner_name': True}</field>
+    </record>
+
     <record id="project_project_view_inherit_project_filter" model="ir.ui.view">
         <field name="name">project.project.select.inherit.project</field>
         <field name="model">project.project</field>
@@ -86,7 +102,7 @@
     <record id="view_task_tree2_inherit_sale_project" model="ir.ui.view">
         <field name="name">project.task.form.inherit.sale.project</field>
         <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="inherit_id" ref="project.project_task_view_tree_base"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_line_id" optional="hide" options="{'no_create': True}" readonly="1"/>
@@ -97,14 +113,11 @@
     <record id="project_task_view_search" model="ir.ui.view">
         <field name="name">project.task.search.inherit</field>
         <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="inherit_id" ref="project.view_task_search_form_project_base"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
-            </xpath>
-            <xpath expr="//search/group/filter[@name='customer']" position="after">
-                <filter string="Sales Order Item" name="sale_line_id" context="{'group_by': 'sale_line_id'}"/>
-            </xpath>
+            <field name="partner_id" position="after">
+                <field name="sale_order_id" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </field>
         </field>
     </record>
 

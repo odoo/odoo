@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="project.open_view_project_all_config" model="ir.actions.act_window">
-        <field name="context">{'default_allow_billable': True}</field>
+        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True}</field>
     </record>
     <record id="project.open_view_project_all_config_group_stage" model="ir.actions.act_window">
-        <field name="context">{'default_allow_billable': True}</field>
+        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True}</field>
     </record>
     <record id="project.open_view_project_all" model="ir.actions.act_window">
-        <field name="context">{'default_allow_billable': True}</field>
+        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True}</field>
     </record>
     <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
-        <field name="context">{'default_allow_billable': True, 'search_default_groupby_stage': 1}</field>
+        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True, 'search_default_groupby_stage': 1}</field>
     </record>
 </odoo>

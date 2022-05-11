@@ -50,12 +50,12 @@
             "cells": {
                 "A7": {
                     "style": 1,
-                    "content": "[Tasks by Stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\",\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "content": "[Tasks by Stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\",\"kanban_state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"kanban_state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
                     "border": 1
                 },
                 "A19": {
                     "style": 1,
-                    "content": "[Top Assignees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_ids\",\"!=\",false]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "content": "[Top Assignees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_ids\",\"!=\",false]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
                     "border": 1
                 },
                 "A20": {
@@ -105,7 +105,7 @@
                 },
                 "A32": {
                     "style": 1,
-                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
                     "border": 1
                 },
                 "A33": {
@@ -169,47 +169,47 @@
                 "B21": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",1)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",1)"
                 },
                 "B22": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",2)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",2)"
                 },
                 "B23": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",3)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",3)"
                 },
                 "B24": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",4)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",4)"
                 },
                 "B25": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",5)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",5)"
                 },
                 "B26": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",6)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",6)"
                 },
                 "B27": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",7)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",7)"
                 },
                 "B28": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",8)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",8)"
                 },
                 "B29": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",9)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",9)"
                 },
                 "B30": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(1,\"hours_effective\",\"#user_ids\",10)"
+                    "content": "=ODOO.PIVOT(1,\"effective_hours\",\"#user_ids\",10)"
                 },
                 "B32": {
                     "style": 5,
@@ -223,47 +223,47 @@
                 "B34": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",1)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",1)"
                 },
                 "B35": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",2)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",2)"
                 },
                 "B36": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",3)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",3)"
                 },
                 "B37": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",4)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",4)"
                 },
                 "B38": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",5)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",5)"
                 },
                 "B39": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",6)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",6)"
                 },
                 "B40": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",7)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",7)"
                 },
                 "B41": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",8)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",8)"
                 },
                 "B42": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",9)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",9)"
                 },
                 "B43": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(3,\"hours_effective\",\"#tag_ids\",10)"
+                    "content": "=ODOO.PIVOT(3,\"effective_hours\",\"#tag_ids\",10)"
                 },
                 "C7": {
                     "style": 5,
@@ -369,12 +369,12 @@
                 },
                 "E7": {
                     "style": 1,
-                    "content": "[Tasks by State](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"pie\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "content": "[Tasks by State](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"kanban_state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"pie\",\"graph_groupbys\":[\"kanban_state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
                     "border": 1
                 },
                 "E19": {
                     "style": 1,
-                    "content": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "content": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
                     "border": 1
                 },
                 "E20": {
@@ -424,7 +424,7 @@
                 },
                 "E32": {
                     "style": 1,
-                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"hours_effective\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
+                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
                     "border": 1
                 },
                 "E33": {
@@ -488,47 +488,47 @@
                 "F21": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",1)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",1)"
                 },
                 "F22": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",2)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",2)"
                 },
                 "F23": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",3)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",3)"
                 },
                 "F24": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",4)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",4)"
                 },
                 "F25": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",5)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",5)"
                 },
                 "F26": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",6)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",6)"
                 },
                 "F27": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",7)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",7)"
                 },
                 "F28": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",8)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",8)"
                 },
                 "F29": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",9)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",9)"
                 },
                 "F30": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(2,\"hours_effective\",\"#project_id\",10)"
+                    "content": "=ODOO.PIVOT(2,\"effective_hours\",\"#project_id\",10)"
                 },
                 "F32": {
                     "style": 5,
@@ -542,47 +542,47 @@
                 "F34": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",1)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",1)"
                 },
                 "F35": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",2)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",2)"
                 },
                 "F36": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",3)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",3)"
                 },
                 "F37": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",4)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",4)"
                 },
                 "F38": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",5)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",5)"
                 },
                 "F39": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",6)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",6)"
                 },
                 "F40": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",7)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",7)"
                 },
                 "F41": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",8)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",8)"
                 },
                 "F42": {
                     "style": 7,
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",9)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",9)"
                 },
                 "F43": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(4,\"hours_effective\",\"#partner_id\",10)"
+                    "content": "=ODOO.PIVOT(4,\"effective_hours\",\"#partner_id\",10)"
                 },
                 "G7": {
                     "style": 5,
@@ -732,7 +732,7 @@
                         "metaData": {
                             "groupBy": [
                                 "stage_id",
-                                "state"
+                                "kanban_state"
                             ],
                             "measure": "__count",
                             "order": null,
@@ -748,7 +748,7 @@
                             "domain": [],
                             "groupBy": [
                                 "stage_id",
-                                "state"
+                                "kanban_state"
                             ],
                             "orderBy": []
                         },
@@ -771,7 +771,7 @@
                         "legendPosition": "right",
                         "metaData": {
                             "groupBy": [
-                                "state"
+                                "kanban_state"
                             ],
                             "measure": "__count",
                             "order": null,
@@ -786,7 +786,7 @@
                             },
                             "domain": [],
                             "groupBy": [
-                                "state"
+                                "kanban_state"
                             ],
                             "orderBy": []
                         },
@@ -920,7 +920,7 @@
                     "content": "=ODOO.PIVOT(5,\"nbr\")"
                 },
                 "B3": {
-                    "content": "=ODOO.PIVOT(5,\"hours_effective\")"
+                    "content": "=ODOO.PIVOT(5,\"effective_hours\")"
                 },
                 "B4": {
                     "content": "=ODOO.PIVOT(5,\"working_days_open\")"
@@ -936,7 +936,7 @@
                     "content": "=ODOO.PIVOT(6,\"nbr\")"
                 },
                 "C3": {
-                    "content": "=ODOO.PIVOT(6,\"hours_effective\")"
+                    "content": "=ODOO.PIVOT(6,\"effective_hours\")"
                 },
                 "C4": {
                     "content": "=ODOO.PIVOT(6,\"working_days_open\")"
@@ -1078,7 +1078,7 @@
             "id": "1",
             "measures": [
                 {
-                    "field": "hours_effective"
+                    "field": "effective_hours"
                 },
                 {
                     "field": "nbr"
@@ -1115,7 +1115,7 @@
             "id": "2",
             "measures": [
                 {
-                    "field": "hours_effective"
+                    "field": "effective_hours"
                 },
                 {
                     "field": "nbr"
@@ -1152,7 +1152,7 @@
             "id": "3",
             "measures": [
                 {
-                    "field": "hours_effective"
+                    "field": "effective_hours"
                 },
                 {
                     "field": "nbr"
@@ -1189,7 +1189,7 @@
             "id": "4",
             "measures": [
                 {
-                    "field": "hours_effective"
+                    "field": "effective_hours"
                 },
                 {
                     "field": "nbr"
@@ -1223,7 +1223,7 @@
                     "field": "nbr"
                 },
                 {
-                    "field": "hours_effective"
+                    "field": "effective_hours"
                 },
                 {
                     "field": "working_days_open"
@@ -1258,7 +1258,7 @@
                     "field": "nbr"
                 },
                 {
-                    "field": "hours_effective"
+                    "field": "effective_hours"
                 },
                 {
                     "field": "working_days_open"

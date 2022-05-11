@@ -39,15 +39,4 @@
         </field>
     </record>
 
-    <record id="project_sharing_inherit_project_task_view_tree_sale_timesheet" model="ir.ui.view">
-        <field name="name">project.task.tree.inherit.sale.timesheet</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='remaining_hours']" position="after">
-                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>

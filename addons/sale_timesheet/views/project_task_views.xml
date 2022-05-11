@@ -6,18 +6,12 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']//field[@name='analytic_account_id']" position="before">
+                <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
+            </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">
-                    <group>
-                        <group>
-                            <field name="display_create_order" invisible="1"/>
-                            <field name="pricing_type" invisible="1" widget="radio"/>
-                            <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
-                            <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
-                            <field name="sale_line_id" groups="!sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
-                            <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True, 'no_edit': True, 'delete': False}"/>
-                        </group>
-                    </group>
                     <field name="sale_line_employee_ids">
                         <tree editable="bottom">
                             <field name="company_id" invisible="1"/>
@@ -188,6 +182,17 @@
                 <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
                     <attribute name="context">{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}</attribute>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_search_inherit_sale_timesheet" model="ir.ui.view">
+            <field name="name">project.task.view.search.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="hr_timesheet.project_task_view_search"/>
+            <field name="arch" type="xml">
+                <filter name="timesheet_exceeded" position="attributes">
+                    <attribute name="domain">['|', ('overtime', '&gt;', 0), ('remaining_hours_so', '&lt;', 0)]</attribute>
+                </filter>
             </field>
         </record>
 </odoo>
