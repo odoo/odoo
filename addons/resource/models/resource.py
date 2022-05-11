@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import itertools
 import math
 from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
@@ -384,13 +385,10 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
+
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
-        """ Return the attendance intervals in the given datetime range.
-            The returned intervals are expressed in specified tz or in the resource's timezone.
-        """
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
-        combine = datetime.combine
 
         if not resources:
             resources = self.env['resource.resource']
@@ -405,69 +403,82 @@ class ResourceCalendar(models.Model):
             ('display_type', '=', False),
         ]])
 
+        attendances = self.env['resource.calendar.attendance'].search(domain)
         # Since we only have one calendar to take in account
         # Group resources per tz they will all have the same result
         resources_per_tz = defaultdict(list)
         for resource in resources_list:
             resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
-        attendances = self.env['resource.calendar.attendance'].search(domain)
-        cache_dates = defaultdict(dict)
-        cache_deltas = defaultdict(dict)
-        result = defaultdict(list)
-
-        def date_from_cache(tz, dt):
-            _key = (tz, dt)
-            return cache_dates[_key] if _key in cache_dates\
-                else cache_dates.setdefault(_key, dt.astimezone(tz))
-
-        def dt_from_cache(tz, day, hour_from):
-            _key = (tz, day, hour_from)
-            return cache_deltas[_key] if _key in cache_deltas\
-                else cache_deltas.setdefault(_key, tz.localize(combine(day, float_to_time(hour_from))))
-
+        # Resource specific attendances
+        attendance_per_resource = defaultdict(lambda: self.env['resource.calendar.attendance'])
+        # Calendar attendances per day of the week
+        # * 7 days per week * 2 for two week calendars
+        attendances_per_day = [self.env['resource.calendar.attendance']] * 7 * 2
+        weekdays = set()
         for attendance in attendances:
-            attendance_timezones = [tz or timezone(attendance.resource_id.tz)]\
-                if attendance.resource_id else resources_per_tz.keys()
-            for resource_tz in attendance_timezones:
-                # express all dates and times in specified tz or in the resource's timezone
-                start = date_from_cache(resource_tz, start_dt)
-                end = date_from_cache(resource_tz, end_dt)
+            if attendance.resource_id:
+                attendance_per_resource[attendance.resource_id] |= attendance
+            weekday = int(attendance.dayofweek)
+            weekdays.add(weekday)
+            if self.two_weeks_calendar:
+                weektype = int(attendance.week_type)
+                attendances_per_day[weekday + 7 * weektype] |= attendance
+            else:
+                attendances_per_day[weekday] |= attendance
+                attendances_per_day[weekday + 7] |= attendance
 
-                start = start.date()
-                if attendance.date_from:
-                    start = max(start, attendance.date_from)
-                until = end.date()
-                if attendance.date_to:
-                    until = min(until, attendance.date_to)
-                if attendance.week_type:
-                    start_week_type = self.env['resource.calendar.attendance'].get_week_type(start)
-                    if start_week_type != int(attendance.week_type):
-                        # start must be the week of the attendance
-                        # if it's not the case, we must remove one week
-                        start = start + relativedelta(weeks=-1)
-                weekday = int(attendance.dayofweek)
-
-                if self.two_weeks_calendar and attendance.week_type:
-                    days = rrule(WEEKLY, start, interval=2, until=until, byweekday=weekday)
-                else:
-                    days = rrule(DAILY, start, until=until, byweekday=weekday)
-
-                hour_from = attendance.hour_from
-                hour_to = attendance.hour_to
-                local_result = [
-                    (
-                        max(cache_dates[(resource_tz, start_dt)], dt_from_cache(resource_tz, day, hour_from)),
-                        min(cache_dates[(resource_tz, end_dt)], dt_from_cache(resource_tz, day, hour_to)),
-                        attendance
-                    )
-                    for day in days
-                ]
+        start = start_dt.astimezone(utc)
+        end = end_dt.astimezone(utc)
+        bounds_per_tz = {
+            tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
+            for tz in resources_per_tz.keys()
+        }
+        # Use the outer bounds from the requested timezones
+        for tz, bounds in bounds_per_tz.items():
+            start = min(start, bounds[0].replace(tzinfo=utc))
+            end = max(end, bounds[1].replace(tzinfo=utc))
+        # Generate once with utc as timezone
+        days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
+        ResourceCalendarAttendance = self.env['resource.calendar.attendance']
+        base_result = []
+        per_resource_result = defaultdict(list)
+        for day in days:
+            week_type = ResourceCalendarAttendance.get_week_type(day)
+            attendances = attendances_per_day[day.weekday() + 7 * week_type]
+            for attendance in attendances:
+                if (attendance.date_from and day < attendance.date_from) or\
+                    (attendance.date_to and attendance.date_to < day):
+                    continue
+                day_from = datetime.combine(day, float_to_time(attendance.hour_from))
+                day_to = datetime.combine(day, float_to_time(attendance.hour_to))
                 if attendance.resource_id:
-                    result[attendance.resource_id.id].extend(local_result)
+                    per_resource_result[attendance.resource_id].append((day_from, day_to, attendance))
                 else:
-                    for resource in resources_per_tz[resource_tz]:
-                        result[resource.id].extend(local_result)
-        return {r.id: Intervals(result[r.id]) for r in resources_list}
+                    base_result.append((day_from, day_to, attendance))
+
+        # Copy the result localized once per necessary timezone
+        # Strictly speaking comparing start_dt < time or start_dt.astimezone(tz) < time
+        # should always yield the same result. however while working with dates it is easier
+        # if all dates have the same format
+        result_per_tz = {
+            tz: [(max(bounds_per_tz[tz][0], tz.localize(val[0])),
+                min(bounds_per_tz[tz][1], tz.localize(val[1])),
+                val[2])
+                    for val in base_result]
+            for tz in resources_per_tz.keys()
+        }
+        result_per_resource_id = dict()
+        for tz, resources in resources_per_tz.items():
+            res = result_per_tz[tz]
+            res_intervals = Intervals(res)
+            for resource in resources:
+                if resource in per_resource_result:
+                    resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
+                        for val in per_resource_result[resource]]
+                    result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result))
+                else:
+                    result_per_resource_id[resource.id] = res_intervals
+        return result_per_resource_id
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
