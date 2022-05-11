@@ -1692,6 +1692,9 @@ actual arch.
         return any(
             (attr in ('data-oe-model', 'groups') or (attr.startswith('t-')))
             for attr in node.attrib
+        ) or (
+            node.tag is etree.ProcessingInstruction
+            and node.target == 'apply-inheritance-specs-node-removal'
         )
 
     @tools.ormcache('self.id')
