@@ -113,9 +113,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='child_ids']/tree/field[@name='company_id']" position="after">
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="total_hours_spent" string="Total Hours Spent" widget="timesheet_uom" sum="Total Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom" sum="Hours Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="progressbar" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
@@ -260,7 +260,7 @@
             <field name="inherit_id" ref="project.view_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="show" attrs="{'invisible' : [('allocated_hours', '=', 0)]}"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" attrs="{'invisible' : [('allocated_hours', '=', 0)]}"/>
                 </xpath>
             </field>
         </record>
@@ -268,18 +268,17 @@
         <record id="view_task_tree2_inherited" model="ir.ui.view">
             <field name="name">project.task.tree.inherited</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_tree2" />
-            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="project.project_task_view_tree_main_base" />
             <field name="arch" type="xml">
-                <field name="company_id" position="after">
+                <field name="date_deadline" position="before">
                     <field name="allow_subtasks" invisible="1"/>
                     <field name="progress" invisible="1"/>
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
-                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
+                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
-                    <field name="progress" widget="progressbar" optional="hide" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
+                    <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
                 </field>
             </field>
         </record>
@@ -346,27 +345,13 @@
         <record id="project_task_view_search" model="ir.ui.view">
             <field name="name">project.task.view.search.inherit.sale.timesheet.enterprise</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="inherit_id" ref="project.view_task_search_form_project_fsm_base"/>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='followed_by_me']" position='after'>
-                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_parent_id.user_id', '=', uid)]"/>
-                    <filter string="My Department's Tasks" name="my_department" domain="[('user_ids.employee_id.member_of_department', '=', True)]"/>
-                </xpath>
-                <xpath expr="//filter[@name='tasks_due_today']" position='after'>
-                    <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
-                    <filter string="Tasks Soon in Overtime" name="remaining_hours_percentage" domain="[('remaining_hours_percentage', '&lt;=', 0.2)]"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_task_search_form_hr_extended" model="ir.ui.view">
-            <field name="name">project.task.view.search.inherit.hr.timesheet</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_search_form_extended"/>
-            <field name="arch" type="xml">
-                <xpath expr="//filter[@name='my_favorite_projects']" position='after'>
-                    <filter string="My Team's Projects" name="my_teams_projects" domain="[('project_id.user_id.employee_parent_id.user_id', '=', uid)]"/>
-                    <filter string="My Department's Projects" name="my_department" domain="[('manager_id.employee_id.member_of_department', '=', True)]"/>
+                <xpath expr="//filter[@name='blocking']/following-sibling::separator[1]" position="after">
+                    <filter string="Timesheets 80%" name="timesheet_80" domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]"/>
+                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]"/>
+                    <separator/>
                 </xpath>
             </field>
         </record>
@@ -376,12 +361,8 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
-                <filter name="followed_by_me" position='before'>
-                    <filter string="My Team" name="my_team_projects"  domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
-                    <filter string="My Department" name="my_department" domain="[('user_id.employee_id.member_of_department', '=', True)]"/>
-                </filter>
                 <filter name="late_milestones" position="before">
-                    <filter string="Projects in Overtime" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]"/>
+                    <filter string="Timesheets Exceeded" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]"/>
                 </filter>
             </field>
         </record>
