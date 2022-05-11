@@ -47,6 +47,5 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.containsN(activityMenu, '.o_meeting_filter', 2, 'there should be 2 meetings');
     assert.hasClass(activityMenu.$('.o_meeting_filter').eq(0), 'o_meeting_bold', 'this meeting is yet to start');
     assert.doesNotHaveClass(activityMenu.$('.o_meeting_filter').eq(1), 'o_meeting_bold', 'this meeting has been started');
-    widget.destroy();
 });
 });

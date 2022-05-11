@@ -318,8 +318,6 @@ QUnit.test('activity view: activity widget', async function (assert) {
         "action_feedback_schedule_next",
         "serverGeneratedAction"
         ]);
-
-    activity.destroy();
 });
 
 QUnit.test("activity view: no group_by_menu and no comparison_menu", async function (assert) {
@@ -427,8 +425,6 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
     // select a record to schedule an activity for it (this triggers a do_action)
     testUtils.dom.click($modal.find('.o_data_row:last'));
     assert.verifySteps(['doAction']);
-
-    activity.destroy();
 });
 
 QUnit.test("Activity view: discard an activity creation dialog", async function (assert) {
@@ -551,8 +547,6 @@ QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (a
         'mounted',
         'willUnmount'
     ]);
-
-    activity.destroy();
 });
 
 QUnit.test("Schedule activity dialog uses the same search view as activity view", async function (assert) {
