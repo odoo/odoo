@@ -811,6 +811,44 @@ class TestTemplating(ViewCase):
             initial.get('data-oe-xpath'),
             "The node's xpath position should be correct")
 
+    def test_branding_inherit_remove_node(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            # The t-esc node is to ensure branding is distributed to both
+            # <world/> elements from the start
+            'arch': """
+                <hello>
+                    <world></world>
+                    <world></world>
+
+                    <t t-esc="foo"/>
+                </hello>
+            """
+        })
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <xpath expr="/hello/world[1]" position="replace"/>
+                </data>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        # Only remaining world but still the second in original view
+        [initial] = arch.xpath('/hello[1]/world[1]')
+        self.assertEqual(
+            '/hello[1]/world[2]',
+            initial.get('data-oe-xpath'),
+            "The node's xpath position should be correct")
+
     def test_branding_inherit_top_t_field(self):
         view1 = self.View.create({
             'name': "Base view",
