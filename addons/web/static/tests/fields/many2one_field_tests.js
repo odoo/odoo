@@ -3137,7 +3137,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_external_button");
     });
 
-    QUnit.skipWOWL("no_create option on a many2one", async function (assert) {
+    QUnit.test("no_create option on a many2one", async function (assert) {
         assert.expect(2);
 
         await makeView({
