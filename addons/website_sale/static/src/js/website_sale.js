@@ -538,7 +538,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
         params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
         params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
-        
+
         if (this.isBuyNow) {
             params.express = true;
         }
