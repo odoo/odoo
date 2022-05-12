@@ -3179,7 +3179,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -3198,46 +3198,39 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_field_many2one input");
-        assert.strictEqual(
-            $(".ui-autocomplete .o_m2o_dropdown_option:contains(Create)").length,
-            0,
+        assert.containsNone(
+            target,
+            ".o_m2o_dropdown_option.o_m2o_dropdown_option_create",
             "there shouldn't be any option to search and create"
         );
 
-        await click($(".ui-autocomplete li:contains(xpad)").mouseenter());
+        await click(target.querySelectorAll(".ui-menu-item")[1]);
         assert.strictEqual(
-            target.querySelectorAll(".o_field_many2one input").value,
+            target.querySelector(".o_field_many2one input").value,
             "xpad",
             "the correct record should be selected"
         );
         assert.containsOnce(
-            form,
+            target,
             ".o_field_many2one .o_external_button",
             "there should be an external button displayed"
         );
 
         await click(target, ".o_field_many2one .o_external_button");
-        assert.strictEqual(
-            target.querySelector(".modal .o_form_view.o_form_readonly").length,
-            1,
+        assert.containsOnce(
+            target,
+            ".modal .o_form_view .o_form_readonly",
             "there should be a readonly form view opened"
         );
 
-        await click(target.querySelector(".modal .o_form_button_cancel"));
+        await click(target, ".modal .o_form_button_cancel");
 
-        await testUtils.fields.editAndTrigger(
-            target.querySelectorAll(".o_field_many2one input"),
-            "new product",
-            ["keyup", "focusout"]
-        );
-        assert.strictEqual(
-            target.querySelector(".modal").length,
-            0,
-            "should not display the create modal"
-        );
+        await editInput(target, ".o_field_many2one input", "new product");
+        await triggerEvent(target, ".o_field_many2one input", "blur");
+        assert.containsNone(target, ".modal", "should not display the create modal");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "many2one with can_create=false shows no result item when searched something that doesn't exist",
         async function (assert) {
             assert.expect(2);
@@ -3256,20 +3249,15 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click(target, ".o_field_many2one input");
-            await testUtils.fields.editAndTrigger(
-                target.querySelectorAll('.o_field_many2one[name="product_id"] input'),
-                "abc",
-                "keydown"
-            );
-            await nextTick();
-            assert.strictEqual(
-                $(".ui-autocomplete .o_m2o_dropdown_option:contains(Create)").length,
-                0,
+            await editInput(target, ".o_field_many2one[name=product_id] input", "abc");
+            assert.containsNone(
+                target,
+                ".o_field_many2one[name=product_id] .o_m2o_dropdown_option_create",
                 "there shouldn't be any option to search and create"
             );
-            assert.strictEqual(
-                $(".ui-autocomplete .ui-menu-item a:contains(No records)").length,
-                1,
+            assert.containsOnce(
+                target,
+                ".o_field_many2one[name=product_id] .o_m2o_no_result",
                 "there should be option for 'No records'"
             );
         }
