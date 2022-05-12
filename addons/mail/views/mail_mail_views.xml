@@ -13,6 +13,11 @@
                         <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_document" string="Open Document"
+                                    type="object" class="oe_link" icon="fa-file-text-o"
+                                    attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', 0)]}"/>
+                        </div>
                         <field name="mail_message_id_int" required="0" invisible="1"/>
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
