@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
 
-const { Component, useExternalListener, useRef } = owl;
+const { Component, useExternalListener, useRef, onWillUnmount } = owl;
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
@@ -46,8 +46,14 @@ export class NavBar extends Component {
             this.render();
         };
 
-        useBus(systrayRegistry, "UPDATE", renderAndAdapt);
-        useBus(this.env.bus, "MENUS:APP-CHANGED", renderAndAdapt);
+        systrayRegistry.on("UPDATE", this, renderAndAdapt);
+        this.env.bus.on("MENUS:APP-CHANGED", this, renderAndAdapt);
+
+        onWillUnmount(() => {
+            systrayRegistry.off("UPDATE", this);
+            this.env.bus.off("MENUS:APP-CHANGED", this);
+        });
+
         // We don't want to adapt every time we are patched
         // rather, we adapt only when menus or systrays have changed.
         useEffect(
