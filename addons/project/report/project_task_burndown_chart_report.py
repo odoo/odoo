@@ -26,12 +26,12 @@ class ReportProjectTaskBurndownChart(models.Model):
     date_deadline = fields.Date(string='Deadline', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     date_group_by = fields.Selection(
-        (
+        [
             ('day', 'By Day'),
             ('month', 'By Month'),
             ('quarter', 'By quarter'),
             ('year', 'By Year')
-        ), string="Date Group By", readonly=True)
+        ], string="Date Group By", readonly=True)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
