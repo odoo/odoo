@@ -437,9 +437,12 @@ class AccountEdiFormat(models.Model):
         content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         to_process = []
 
+        # XML attachments received by mail have a 'text/plain' mimetype.
+        # Therefore, if content start with '<?xml', it is considered as XML.
+        is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
         if 'pdf' in attachment.mimetype:
             to_process.extend(self._decode_pdf(attachment.name, content))
-        elif 'xml' in attachment.mimetype:
+        elif 'xml' in attachment.mimetype or is_text_plain_xml:
             to_process.extend(self._decode_xml(attachment.name, content))
         else:
             to_process.extend(self._decode_binary(attachment.name, content))
