@@ -24,7 +24,7 @@ const {
     xml,
 } = owl;
 
-const warningDialogBodyTemplate = xml`<t t-esc="props.message"/>`;
+const warningDialogBodyTemplate = xml`<p style="white-space:pre-wrap" t-esc="props.message"/>`;
 
 class ActionAdapter extends ComponentAdapter {
     setup() {
