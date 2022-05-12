@@ -49,7 +49,7 @@
         <ul class="dropdown-menu o_searchview_autocomplete dropdown-menu show" role="menu">
             <t t-foreach="items" t-as="item" t-key="item.id">
                 <li class="o_menu_item dropdown-item"
-                    t-att-class="{ o_indent: item.isChild, o_selection_focus: item_index === state.focusedIndex}"
+                    t-att-class="{ o_indent: item.isChild, focus: item_index === state.focusedIndex}"
                     t-att-id="item.id"
                     t-on-click="() => this.selectItem(item)"
                     t-on-mousemove="() => this.onItemMousemove(item_index)"

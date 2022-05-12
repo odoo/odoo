@@ -403,7 +403,7 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
 
         assert.strictEqual(
-            target.querySelector(".o_searchview_autocomplete .o_selection_focus").innerText.trim(),
+            target.querySelector(".o_searchview_autocomplete .focus").innerText.trim(),
             "(no result)",
             "there should be no result for 'a' in bar"
         );
@@ -601,11 +601,11 @@ QUnit.module("Search", (hooks) => {
         await editSearch(target, "null");
 
         assert.strictEqual(
-            target.querySelector(".o_searchview_autocomplete .o_selection_focus").innerText,
+            target.querySelector(".o_searchview_autocomplete .focus").innerText,
             "Search Foo for: null"
         );
 
-        await click(target.querySelector(".o_searchview_autocomplete li.o_selection_focus a"));
+        await click(target.querySelector(".o_searchview_autocomplete li.focus a"));
 
         assert.deepEqual(getDomain(controlPanel), [["foo", "ilike", "null"]]);
     });
@@ -830,7 +830,7 @@ QUnit.module("Search", (hooks) => {
         );
         const searchInput = target.querySelector(".o_searchview input");
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
-        assert.containsOnce(target, ".o_selection_focus");
+        assert.containsOnce(target, ".focus");
     });
 
     QUnit.test("checks that an arrowUp always selects an item", async function (assert) {
@@ -858,6 +858,6 @@ QUnit.module("Search", (hooks) => {
         );
         const searchInput = target.querySelector(".o_searchview input");
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowUp" });
-        assert.containsOnce(target, ".o_selection_focus");
+        assert.containsOnce(target, ".focus");
     });
 });
