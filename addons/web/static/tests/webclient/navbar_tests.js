@@ -19,7 +19,7 @@ import {
     mockTimeout,
 } from "../helpers/utils";
 
-const { Component, xml } = owl;
+const { Component, xml, onRendered } = owl;
 
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
@@ -172,6 +172,33 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
     const menuSystray = target.getElementsByClassName("o_menu_systray")[0];
     assert.containsN(menuSystray, "li", 4, "four systray items should be displayed");
     assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 4\nmy item 2\nmy item 1");
+});
+
+QUnit.test("navbar updates after adding a systray item", async (assert) => {
+    class MyItem1 extends Component {}
+    MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
+
+    clearRegistryWithCleanup(systrayRegistry);
+    systrayRegistry.add('addon.myitem1', { Component: MyItem1 });
+
+    const env = await makeTestEnv(baseConfig);
+
+    patchWithCleanup(NavBar.prototype, {
+        setup() {
+            onRendered(() => {
+                if (!systrayRegistry.contains('addon.myitem2')) {
+                    class MyItem2 extends Component {}
+                    MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
+                    systrayRegistry.add('addon.myitem2', {Component: MyItem2});
+                }
+            });
+            this._super();
+        }
+    });
+
+    await mount(NavBar, target, { env });
+    const menuSystray = target.getElementsByClassName("o_menu_systray")[0];
+    assert.containsN(menuSystray, "li", 2, "2 systray items should be displayed");
 });
 
 QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
