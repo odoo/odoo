@@ -281,13 +281,6 @@ registerModel({
             isCausal: true,
         }),
         /**
-         * layout of the rtc session display chosen by the user
-         * possible values: tiled, spotlight, sidebar
-         */
-        rtcLayout: attr({
-            default: 'tiled',
-        }),
-        /**
          * true if the user wants to use push to talk (over voice activation)
          */
         usePushToTalk: attr({

@@ -9,20 +9,22 @@
 
             <!-- Call members display -->
             <div class="o_CallView_participantContainer d-flex justify-content-between w-100 h-100 overflow-hidden" t-on-click="callView.onClick" t-on-mousemove="callView.onMouseMove">
-                <t t-if="callView.layout !== 'tiled'">
-                    <div class="o_CallView_mainParticipantContainer d-flex flex-grow-1 justify-content-center mw-100 mh-100">
-                        <t t-if="callView.mainParticipantCard">
-                            <CallParticipantCard className="'o_CallView_participantCard'" record="callView.mainParticipantCard"/>
+                <t t-if="callView.mainParticipantCard">
+                    <div class="o_CallView_mainParticipantContainer d-flex flex-grow-1 justify-content-center position-relative mw-100 mh-100">
+                        <CallParticipantCard className="'o_CallView_participantCard'" record="callView.mainParticipantCard"/>
+                        <t t-if="callView.showOverlay">
+                            <i t-if="callView.hasSidebar" class="o_CallView_sidebarButton position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callView.onClickHideSidebar"/>
+                            <i t-else="" class="o_CallView_sidebarButton position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callView.onClickShowSidebar"/>
                         </t>
                     </div>
                 </t>
-                <t t-if="callView.layout !== 'spotlight'">
+                <t t-if="callView.tileParticipantCards.length > 0">
                     <div
                         class="o_CallView_grid d-flex align-items-center h-100"
                         t-att-class="{
-                            'o-isTiled flex-wrap justify-content-center w-100': callView.layout === 'tiled',
-                            'flex-column': callView.layout !== 'tiled',
-                            'o-isSidebar': callView.layout === 'sidebar',
+                            'o-isTiled flex-wrap justify-content-center w-100': !callView.mainParticipantCard,
+                            'flex-column': callView.mainParticipantCard,
+                            'o-isSidebar': callView.hasSidebar and callView.mainParticipantCard,
                         }"
                         t-ref="tileContainer"
                         t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px; --columns:{{state.columnCount}};"
@@ -32,7 +34,7 @@
                                 <!-- maybe filter focused partner out? -->
                                 <CallParticipantCard
                                     className="'o_CallView_participantCard o_CallView_gridTile'"
-                                    classNameObj="{ 'w-100' : callView.layout === 'sidebar' }"
+                                    classNameObj="{ 'w-100' : callView.hasSidebar and callView.mainParticipantCard }"
                                     record="participantCard"
                                 />
                             </t>
@@ -54,14 +56,6 @@
             <t t-if="messaging.userSetting.callSettingsMenu.isOpen">
                 <Dialog size="'small'" title="callView.settingsTitle" onClosed="callView.onRtcSettingsDialogClosed">
                     <CallSettingsMenu record="messaging.userSetting.callSettingsMenu"/>
-                    <t t-set-slot="buttons">
-                        <!-- Explicit No buttons -->
-                    </t>
-                </Dialog>
-            </t>
-            <t t-if="callView.layoutMenu">
-                <Dialog size="'small'" title="callView.layoutSettingsTitle" onClosed="callView.onLayoutSettingsDialogClosed">
-                    <CallLayoutMenu record="callView.layoutMenu"/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->
                     </t>

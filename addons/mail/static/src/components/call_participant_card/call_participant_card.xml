@@ -5,7 +5,6 @@
         <t t-if="callParticipantCard">
             <div class="o_CallParticipantCard position-relative d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-sm"
                 t-att-class="{
-                    'o-isClickable o_cursor_pointer': callParticipantCard.invitedGuest or callParticipantCard.invitedPartner or !callParticipantCard.isMinimized,
                     'o-isTalking': !callParticipantCard.isMinimized and callParticipantCard.isTalking,
                     'o-isInvitation opacity-50': callParticipantCard.isInvitation,
                 }"

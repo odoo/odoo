@@ -4,10 +4,15 @@
     <t t-name="mail.CallOptionMenu" owl="1">
         <t t-if="callOptionMenu">
             <div class="o_CallOptionMenu" t-attf-class="{{ className }}" t-ref="root">
-                <button class="o_CallOptionMenu_button" t-on-click="callOptionMenu.onClickLayout">
-                    <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-th-large"/>
-                    <span class="o_CallOptionMenu_buttonText">Change layout</span>
-                </button>
+                <t t-if="callOptionMenu.callActionListView.callView.threadView.thread.videoCount > 0">
+                    <div class="o_CallOptionMenu_button">
+                        <label class="o_CallOptionMenu_checkBoxLabel o_cursor_pointer d-flex align-items-center p-1 mb-0">
+                            <input class="o_CallOptionMenu_checkBox p-1 ml-2 mr-2" type="checkbox" t-on-change="callOptionMenu.onChangeVideoFilterCheckbox" t-att-checked="callOptionMenu.callActionListView.callView.filterVideoGrid"/>
+                            <span class="o_CallOptionMenu_buttonText">Video only</span>
+                        </label>
+                    </div>
+                    <hr class="o_CallOptionMenu_separator w-100"/>
+                </t>
                 <t t-if="callOptionMenu.callActionListView.callView.isFullScreen">
                     <button class="o_CallOptionMenu_button" t-on-click="callOptionMenu.onClickDeactivateFullScreen">
                         <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-compress"/>
