@@ -26,7 +26,7 @@ const {
 
 class WarningDialog extends Component {}
 WarningDialog.template = xml`<Dialog title="props.title">
-    <t t-esc="props.message"/>
+    <p style="white-space:pre-wrap" t-esc="props.message"/>
 </Dialog>`;
 WarningDialog.components = { Dialog };
 
