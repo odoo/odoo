@@ -2819,12 +2819,15 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "domain and context are correctly used when doing a name_search in a m2o",
         async function (assert) {
             assert.expect(4);
 
             serverData.models.partner.records[0].timmy = [12];
+            const DEFAULT_USER_CTX = { ...session.user_context };
+
+            patchWithCleanup(session.user_context, { hey: "ho" });
 
             await makeView({
                 type: "form",
@@ -2839,20 +2842,16 @@ QUnit.module("Fields", (hooks) => {
                         <field name="timmy" widget="many2many_tags" invisible="1" />
                     </form>
                 `,
-                session: { user_context: { hey: "ho" } },
                 mockRPC(route, { kwargs, method, model }) {
                     if (method === "name_search" && model === "product") {
                         assert.deepEqual(
                             kwargs.args,
-                            [
-                                ["foo", "=", "bar"],
-                                ["foo", "=", "yop"],
-                            ],
+                            ["&", ["foo", "=", "bar"], ["foo", "=", "yop"]],
                             "the field attr domain should have been used for the RPC (and evaluated)"
                         );
                         assert.deepEqual(
                             kwargs.context,
-                            { hey: "ho", hello: "world", test: "yop" },
+                            { ...DEFAULT_USER_CTX, hey: "ho", hello: "world", test: "yop" },
                             "the field attr context should have been used for the RPC (evaluated and merged with the session one)"
                         );
                         return Promise.resolve([]);
@@ -2865,7 +2864,7 @@ QUnit.module("Fields", (hooks) => {
                         );
                         assert.deepEqual(
                             kwargs.context,
-                            { hey: "ho", timmy: [[6, false, [12]]] },
+                            { ...DEFAULT_USER_CTX, hey: "ho", timmy: [[6, false, [12]]] },
                             "the field attr context should have been used for the RPC (and evaluated)"
                         );
                         return Promise.resolve([]);
@@ -2874,7 +2873,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click(target, ".o_form_button_edit");
-            click(target, ".o_field_widget[name='poduct_id'] input");
+            click(target, ".o_field_widget[name='product_id'] input");
             click(target, ".o_field_widget[name='trululu'] input");
         }
     );
