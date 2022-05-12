@@ -1,35 +1,73 @@
 /** @odoo-module **/
 
 import { clamp } from "@web/core/utils/numbers";
+import { debounce } from "@web/core/utils/timing";
 
 /**
  * @typedef SortableParams
- * @property {string} items defines draggable items
- * @property {string} [lists] defines parent lists of draggable items.
- *  This allows to add `onListEnter` and `onListLeave` callbacks to work
- *  on list elements during the dragging sequence.
- * @property {string} [cursor] cursor style during the dragging sequence.
- * @property {string} [handle] additional selector for when the dragging
+ *
+ * MANDATORY
+ *
+ * @property {{ el: HTMLElement | null }} ref
+ * @property {string} elements defines sortable elements
+ *
+ * OPTIONAL
+ *
+ * @property {boolean | () => boolean} [isActive] whether the sortable system should
+ *  be enabled.
+ * @property {string | () => string} [groups] defines parent groups of sortable
+ *  elements. This allows to add `onGroupEnter` and `onGroupLeave` callbacks to
+ *  work on group elements during the dragging sequence.
+ * @property {string | () => string} [handle] additional selector for when the dragging
  *  sequence must be initiated when dragging on a certain part of the element.
- * @property {boolean} [connectLists] whether elements can be dragged accross
- *  different parent lists. Note that it requires a `lists` param to work.
- * @property {"x" | "y" | false} [axis] locks the displacement of the dragged elements
- *  on a single axis (e.g. if axis="x" elements will only be able to move
- *  horizontally).
+ * @property {boolean | () => boolean} [connectGroups] whether elements can be dragged
+ *  accross different parent groups. Note that it requires a `groups` param to work.
+ * @property {string | () => string} [cursor] cursor style during the dragging sequence.
+ *
+ * HANDLERS (also optional)
+ *
+ * @property {(group: HTMLElement | null, element: HTMLElement) => any} [onStart]
+ *  called when a dragging sequence is initiated.
+ * @property {(element: HTMLElement) => any} [onElementEnter] called when the cursor
+ *  enters another sortable element.
+ * @property {(element: HTMLElement) => any} [onElementLeave] called when the cursor
+ *  leaves another sortable element.
+ * @property {(group: HTMLElement) => any} [onGroupEnter] (if a `groups` is specified):
+ *  will be called when the cursor enters another group element.
+ * @property {(group: HTMLElement) => any} [onGroupLeave] (if a `groups` is specified):
+ *  will be called when the cursor leaves another group element.
+ * @property {(group: HTMLElement | null, element: HTMLElement) => any} [onStop]
+ *  called when the dragging sequence ends, regardless of the reason.
+ * @property {(params: DropParams) => any} [onDrop] called when the dragging sequence
+ *  ends on a mouseup action AND the dragged element has been moved elsewhere. The
+ *  callback will be given an object with any useful element regarding the new position
+ *  of the dragged element (@see DropParams ).
  */
 
 /**
  * @typedef DropParams
- * @property {HTMLElement} item
- * @property {HTMLElement | null} list
+ * @property {HTMLElement} element
+ * @property {HTMLElement | null} group
  * @property {HTMLElement | null} previous
  * @property {HTMLElement | null} next
  * @property {HTMLElement | null} parent
  */
 
-const { useEffect, useExternalListener, onWillUnmount } = owl;
+const { useEffect, useEnv, useExternalListener, onWillUnmount } = owl;
 
 const DRAG_START_THRESHOLD = 5 ** 2;
+const LEFT_CLICK = 0;
+const MOUSEMOVE_DEBOUNCE = 6;
+const MANDATORY_SORTABLE_PARAMS = ["ref", "elements"];
+const SORTABLE_PARAMS = {
+    isActive: ["boolean", "function"],
+    ref: ["object"],
+    elements: ["string"],
+    groups: ["string", "function"],
+    handle: ["string", "function"],
+    connectGroups: ["boolean", "function"],
+    cursor: ["string"],
+};
 
 /**
  * Cancels the default behavior and propagation of a given event.
@@ -42,35 +80,28 @@ const cancelEvent = (ev) => {
 };
 
 /**
- * Basic error builder for the sortable hook.
- * @param {string} reason
- * @returns {Error}
+ * @param {SortableParams} params
+ * @returns {[string, string | boolean][]}
  */
-const sortableError = (reason) => new Error(`Unable to use sortable feature: ${reason}.`);
+const computeParams = (params) => {
+    const computedParams = { isActive: true };
+    for (const prop in SORTABLE_PARAMS) {
+        if (prop in params) {
+            computedParams[prop] = params[prop];
+            if (typeof params[prop] === "function") {
+                computedParams[prop] = computedParams[prop]();
+            }
+        }
+    }
+    return Object.entries(computedParams);
+};
 
 /**
- * Serializes params given to the useEffect hook.
- * @param {SortableParams | false} object
- * @returns {([string, any] | false)[]}
- */
-const toDependencies = (object) => (object ? Object.entries(object) : [false]);
-
-/**
- * Deserializes params given by the useEffect hook.
- * @param {([string, any] | false)[]} deps
- * @returns {SortableParams | false}
- */
-const fromDependencies = (deps) => deps[0] && Object.fromEntries(deps);
-
-/**
- * Returns the square distance between 2 points (defined by x1,y1 and x2,y2).
- * @param {number} x1
- * @param {number} y1
- * @param {number} x2
- * @param {number} y2
+ * Converts a CSS pixel value to a number, removing the 'px' part.
+ * @param {string} val
  * @returns {number}
  */
-const squareDistance = (x1, y1, x2, y2) => (x2 - x1) ** 2 + (y2 - y1) ** 2;
+const cssValueToNumber = (val) => Number(val.slice(0, -2));
 
 /**
  * @param {Document} activeElement
@@ -89,77 +120,67 @@ export const getVisibleElements = (activeElement, selector) => {
 };
 
 /**
+ * Basic error builder for the sortable hook.
+ * @param {string} reason
+ * @returns {Error}
+ */
+const sortableError = (reason) => new Error(`Unable to use sortable feature: ${reason}.`);
+
+/**
+ * Returns the square distance between 2 points (defined by x1,y1 and x2,y2).
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ * @returns {number}
+ */
+const squareDistance = (x1, y1, x2, y2) => (x2 - x1) ** 2 + (y2 - y1) ** 2;
+
+/**
  * Sortable feature hook.
  *
  * This hook needs 2 things to work:
  *
- * 1) a `ref` object (@see owl.useRef) which will be used as the root element
- *  to calculate boundaries of dragged elements;
+ * 1) a `ref` object (@see owl.useRef) which will be used as the root element to
+ * calculate boundaries of dragged elements;
  *
- * 2) a `setup` function, returning either a dictionnary of parameters or a
- *  falsy value. The hook will be completely disabled as long as a falsy value
- *  is returned, allowing the feature to be dynamically enabled by the caller.
+ * 2) an `elements` selector string or function that will determine which elements
+ * are sortable in the reference element.
  *
- * The return dictionnary of `setup` has one required parameter: `items`.
- * It is this string that will be used to determine which elements are draggable
- * in the reference element.
- *
- * All other parameters are optional and define the constraints of the dragged
- * elements (and the appearance of the cursor during a dragging sequence).
+ * All other parameters are optional and define the constraints of the dragged elements
+ * (and the appearance of the cursor during a dragging sequence), or the different
+ * available handlers triggered during the drag sequence.
  * @see SortableParams
  *
- * The params can also take a series of `hook` callbacks that will be called
- * at key points during a dragging sequence:
- *
- * - onStart: called when a dragging sequence is initiated;
- * - onItemEnter: called when the cursor enters another draggable element;
- * - onItemLeave: called when the cursor leaves another draggable element;
- * - onListEnter, if a `lists` is specified: will be called when the cursor
- *      enters another list element;
- * - onListLeave, if a `lists` is specified: will be called when the cursor
- *      leaves another list element;
- * - onStop: called when the dragging sequence ends, regardless of the reason;
- * - onDrop: called when the dragging sequence ends on a mouseup action AND
- *      the dragged element has been moved elsewhere. The callback will be
- *      given an object with any useful element regarding the new position
- *      of the dragged element (@see DropParams).
- *
- * @param {Object} params
- * @param {{ el: HTMLElement | null }} params.ref
- * @param {() => false | null | undefined | SortableParams} params.setup
- * @param {(list: HTMLElement | null, item: HTMLElement) => any} [params.onStart]
- * @param {(item: HTMLElement) => any} [params.onItemEnter]
- * @param {(item: HTMLElement) => any} [params.onItemLeave]
- * @param {(list: HTMLElement) => any} [params.onListEnter]
- * @param {(list: HTMLElement) => any} [params.onListLeave]
- * @param {(list: HTMLElement | null, item: HTMLElement) => any} [params.onStop]
- * @param {(params: DropParams) => any} [params.onDrop]
+ * @param {SortableParams} params
  */
 export const useSortable = (params) => {
-    const { ref, setup } = params;
-    /** @type {{ x: boolean, y: boolean }} */
-    const lockedAxis = { x: false, y: false };
+    if (useEnv().isSmall) {
+        return;
+    }
+    const { ref } = params;
     /** @type {(() => any)[]} */
     const cleanups = [];
 
-    // Basic error handling asserting that the required params are set.
-    if (!ref) {
-        throw sortableError(`missing required property "ref" in parameters`);
-    }
-    if (typeof setup !== "function") {
-        throw sortableError(`missing required function "setup" in parameters`);
+    // Basic error handling asserting that the parameters are valid.
+    for (const prop in SORTABLE_PARAMS) {
+        if (params[prop] && !SORTABLE_PARAMS[prop].includes(typeof params[prop])) {
+            throw sortableError(`invalid type for property "${prop}" in parameters`);
+        } else if (!params[prop] && MANDATORY_SORTABLE_PARAMS.includes(prop)) {
+            throw sortableError(`missing required property "${prop}" in parameters`);
+        }
     }
 
     /**
-     * Stores the current item selector.
+     * Stores the current element selector.
      * @type {string | null}
      */
-    let listSelector = null;
+    let groupSelector = null;
     /**
-     * Stores the current list selector (optional).
+     * Stores the current group selector (optional).
      * @type {string | null}
      */
-    let itemSelector = null;
+    let elementSelector = null;
     /**
      * Stores the full selector used to initiate a drag sequence.
      * @type {string | null}
@@ -172,10 +193,10 @@ export const useSortable = (params) => {
      */
     let cursor = null;
     /**
-     * Stores whether the draggable elements can be dragged in different lists.
+     * Stores whether the sortable elements can be dragged in different groups.
      * @type {boolean}
      */
-    let connectLists = false;
+    let connectGroups = false;
     /**
      * Stores the position and dimensions of the confining element (ref or
      * parent).
@@ -184,22 +205,22 @@ export const useSortable = (params) => {
     let currentContainerRect = null;
 
     /**
-     * Stores the current dragged item.
+     * Stores the current dragged element.
      * @type {HTMLElement | null}
      */
-    let currentItem = null;
+    let currentElement = null;
     /**
-     * Stores the dimensions and position of the dragged item.
+     * Stores the dimensions and position of the dragged element.
      * @type {DOMRect | null}
      */
-    let currentItemRect = null;
+    let currentElementRect = null;
     /**
-     * Stores the list in which the current item originated.
+     * Stores the group in which the current element originated.
      * @type {HTMLElement | null}
      */
-    let currentList = null;
+    let currentGroup = null;
     /**
-     * Stores the ghost item taking place of the actual dragged item.
+     * Stores the ghost element taking place of the actual dragged element.
      * @type {HTMLElement | null}
      */
     let ghost = null;
@@ -207,7 +228,7 @@ export const useSortable = (params) => {
     /**
      * Stores whether a drag sequence can be initiated.
      * This is determined by both the given ref being in the document and the
-     * `setup` function returning the required params (namely: `items`).
+     * `setup` function returning the required params (namely: `elements`).
      * @type {boolean}
      */
     let enabled = false;
@@ -216,15 +237,10 @@ export const useSortable = (params) => {
      * @type {boolean}
      */
     let started = false;
-    /**
-     * Use to debounce the drag ticks on mousemove.
-     * @type {boolean}
-     */
-    let updatingDrag = false;
 
     /**
      * These 2 variables store the initial offset between the initial mousedown
-     * position and the top-left corner of the dragged item.
+     * position and the top-left corner of the dragged element.
      */
     /** @type {number} */
     let offsetX = 0;
@@ -264,12 +280,12 @@ export const useSortable = (params) => {
     };
 
     /**
-     * Safely executes a hook function from the `params`, so that the drag
-     * sequence can be interrupted if an error occurs.
+     * Safely executes a handler from the `params`, so that the drag sequence can
+     * be interrupted if an error occurs.
      * @param {string} callbackName
      * @param  {...any} args
      */
-    const execHook = (callbackName, ...args) => {
+    const execHandler = (callbackName, ...args) => {
         if (typeof params[callbackName] === "function") {
             try {
                 params[callbackName](...args);
@@ -281,49 +297,120 @@ export const useSortable = (params) => {
     };
 
     /**
-     * Item "mouseenter" event handler.
+     * Element "mouseenter" event handler.
      * @param {MouseEvent} ev
      */
-    const onItemMouseenter = (ev) => {
-        const item = ev.currentTarget;
-        if (connectLists || !listSelector || currentList === item.closest(listSelector)) {
-            const pos = ghost.compareDocumentPosition(item);
+    const onElementMouseenter = (ev) => {
+        const element = ev.currentTarget;
+        if (connectGroups || !groupSelector || currentGroup === element.closest(groupSelector)) {
+            const pos = ghost.compareDocumentPosition(element);
             if (pos === 2 /* BEFORE */) {
-                item.before(ghost);
+                element.before(ghost);
             } else if (pos === 4 /* AFTER */) {
-                item.after(ghost);
+                element.after(ghost);
             }
         }
-        execHook("onItemEnter", item);
+        execHandler("onElementEnter", element);
     };
 
     /**
-     * Item "mouseleave" event handler.
+     * Element "mouseleave" event handler.
      * @param {MouseEvent} ev
      */
-    const onItemMouseleave = (ev) => {
-        const item = ev.currentTarget;
-        execHook("onItemLeave", item);
+    const onElementMouseleave = (ev) => {
+        const element = ev.currentTarget;
+        execHandler("onElementLeave", element);
     };
 
     /**
-     * List "mouseenter" event handler.
+     * Group "mouseenter" event handler.
      * @param {MouseEvent} ev
      */
-    const onListMouseenter = (ev) => {
-        const list = ev.currentTarget;
-        list.appendChild(ghost);
-        execHook("onListEnter", list);
+    const onGroupMouseenter = (ev) => {
+        const group = ev.currentTarget;
+        group.appendChild(ghost);
+        execHandler("onGroupEnter", group);
     };
 
     /**
-     * List "mouseleave" event handler.
+     * Group "mouseleave" event handler.
      * @param {MouseEvent} ev
      */
-    const onListMouseleave = (ev) => {
-        const list = ev.currentTarget;
-        execHook("onListLeave", list);
+    const onGroupMouseleave = (ev) => {
+        const group = ev.currentTarget;
+        execHandler("onGroupLeave", group);
     };
+
+    /**
+     * Window "keydown" event handler.
+     * @param {KeyboardEvent} ev
+     */
+    const onKeydown = (ev) => {
+        if (!enabled || !started) {
+            return;
+        }
+        switch (ev.key) {
+            case "Escape":
+            case "Tab": {
+                cancelEvent(ev);
+                dragStop(true);
+            }
+        }
+    };
+
+    /**
+     * Global (= ref) "mousedown" event handler.
+     * @param {MouseEvent} ev
+     */
+    const onMousedown = (ev) => {
+        // A drag sequence can still be in progress if the mouseup occurred
+        // outside of the window.
+        dragStop(true);
+
+        if (ev.button !== LEFT_CLICK || !enabled || !ev.target.closest(fullSelector)) {
+            return;
+        }
+
+        currentElement = ev.target.closest(elementSelector);
+        currentGroup = groupSelector && ev.target.closest(groupSelector);
+        offsetX = ev.clientX;
+        offsetY = ev.clientY;
+    };
+
+    /**
+     * Window "mousemove" event handler.
+     * @param {MouseEvent} ev
+     */
+    const onMousemove = (ev) => {
+        if (!enabled || !currentElement) {
+            return;
+        }
+        if (started) {
+            // Updates the position of the dragged element.
+            currentElement.style.left = `${clamp(
+                ev.clientX - offsetX,
+                currentContainerRect.x,
+                currentContainerRect.x + currentContainerRect.width - currentElementRect.width
+            )}px`;
+            currentElement.style.top = `${clamp(
+                ev.clientY - offsetY,
+                currentContainerRect.y,
+                currentContainerRect.y + currentContainerRect.height - currentElementRect.height
+            )}px`;
+        } else if (
+            // The drag sequence starts as soon as the mouse has travelled a
+            // certain amount of pixels from the initial mousedown position
+            // (`DRAG_START_THRESHOLD` = squared distance required to travel).
+            squareDistance(offsetX, offsetY, ev.clientX, ev.clientY) >= DRAG_START_THRESHOLD
+        ) {
+            dragStart();
+        }
+    };
+
+    /**
+     * Window "mouseup" event handler.
+     */
+    const onMouseup = () => dragStop(false);
 
     /**
      * Main entry function to start a drag sequence.
@@ -331,53 +418,66 @@ export const useSortable = (params) => {
     const dragStart = () => {
         started = true;
 
-        // Calculates the bounding rectangles of the current item, and of the
+        // Calculates the bounding rectangles of the current element, and of the
         // container element (`parentElement` or `ref.el`).
-        currentItemRect = currentItem.getBoundingClientRect();
-        if (connectLists || !listSelector) {
-            currentContainerRect = ref.el.getBoundingClientRect();
-        } else {
-            currentContainerRect = currentList.getBoundingClientRect();
+        const container = connectGroups || !groupSelector ? ref.el : currentGroup;
+        const containerStyle = getComputedStyle(container);
+        const [pleft, pright, ptop, pbottom] = [
+            "padding-left",
+            "padding-right",
+            "padding-top",
+            "padding-bottom",
+        ].map((prop) => cssValueToNumber(containerStyle.getPropertyValue(prop)));
+
+        currentElementRect = currentElement.getBoundingClientRect();
+        currentContainerRect = container.getBoundingClientRect();
+        const { x, y, width, height } = currentElementRect;
+
+        // Reduces the container's dimensions according to its padding.
+        currentContainerRect.x += pleft;
+        currentContainerRect.width -= pleft + pright;
+        currentContainerRect.y += ptop;
+        currentContainerRect.height -= ptop + pbottom;
+
+        // Prepares the ghost element
+        ghost = currentElement.cloneNode(true);
+        ghost.style.visibility = "hidden";
+        cleanups.push(() => ghost.remove());
+
+        // Cancels all click events targetting the current element
+        // A timeout is added so that all handlers can be executed without
+        // original click events getting in the way.
+        addListener(currentElement, "click", cancelEvent, true, true);
+
+        // Binds handlers on eligible groups, if the elements are not confined to
+        // their parents and a 'groupSelector' has been provided.
+        if (connectGroups && groupSelector) {
+            for (const siblingGroup of ref.el.querySelectorAll(groupSelector)) {
+                addListener(siblingGroup, "mouseenter", onGroupMouseenter);
+                addListener(siblingGroup, "mouseleave", onGroupMouseleave);
+                addStyle(siblingGroup, { "pointer-events": "auto" });
+            }
         }
-        const { x, y, width, height } = currentItemRect;
+
+        // Binds handlers on eligible elements
+        for (const siblingElement of ref.el.querySelectorAll(elementSelector)) {
+            if (siblingElement !== currentElement && siblingElement !== ghost) {
+                addListener(siblingElement, "mouseenter", onElementMouseenter);
+                addListener(siblingElement, "mouseleave", onElementMouseleave);
+                addStyle(siblingElement, { "pointer-events": "auto" });
+            }
+        }
+
+        execHandler("onStart", currentGroup, currentElement);
+
+        // Ghost is initially added right after the current element.
+        currentElement.after(ghost);
 
         // Adjusts the offset
         offsetX -= x;
         offsetY -= y;
 
-        // Prepares the ghost item
-        ghost = currentItem.cloneNode(true);
-        ghost.style.visibility = "hidden";
-        cleanups.push(() => ghost.remove());
-
-        // Cancels all click events targetting the current item
-        // A timeout is added so that all handlers can be executed without
-        // original click events getting in the way.
-        addListener(currentItem, "click", cancelEvent, true, true);
-
-        // Binds handlers on eligible lists, if the items are not confined to
-        // their parents and a 'listSelector' has been provided.
-        if (connectLists && listSelector) {
-            for (const siblingList of ref.el.querySelectorAll(listSelector)) {
-                addListener(siblingList, "mouseenter", onListMouseenter);
-                addListener(siblingList, "mouseleave", onListMouseleave);
-            }
-        }
-
-        // Binds handlers on eligible items
-        for (const siblingItem of ref.el.querySelectorAll(itemSelector)) {
-            if (siblingItem !== currentItem && siblingItem !== ghost) {
-                addListener(siblingItem, "mouseenter", onItemMouseenter);
-                addListener(siblingItem, "mouseleave", onItemMouseleave);
-            }
-        }
-
-        execHook("onStart", currentList, currentItem);
-
-        // Ghost is initially added right after the current item.
-        currentItem.after(ghost);
-
-        addStyle(currentItem, {
+        addStyle(currentElement, {
             position: "fixed",
             "pointer-events": "none",
             "z-index": 1000,
@@ -387,7 +487,10 @@ export const useSortable = (params) => {
             top: `${y}px`,
         });
 
-        const bodyStyle = { "user-select": "none" };
+        const bodyStyle = {
+            "pointer-events": "none",
+            "user-select": "none",
+        };
         if (cursor) {
             bodyStyle.cursor = cursor;
         }
@@ -401,21 +504,21 @@ export const useSortable = (params) => {
      * @param {boolean} cancelled
      * @param {boolean} [inErrorState] can be set to true when an error
      *  occurred to avoid falling into an infinite loop if the error
-     *  originated from one of hooks.
+     *  originated from one of the handlers.
      */
     const dragStop = (cancelled, inErrorState) => {
         if (started) {
             if (!inErrorState) {
-                execHook("onStop", currentList, currentItem);
+                execHandler("onStop", currentGroup, currentElement);
                 const previous = ghost.previousElementSibling;
                 const next = ghost.nextElementSibling;
-                if (!cancelled && previous !== currentItem && next !== currentItem) {
-                    execHook("onDrop", {
-                        list: currentList,
-                        item: currentItem,
+                if (!cancelled && previous !== currentElement && next !== currentElement) {
+                    execHandler("onDrop", {
+                        group: currentGroup,
+                        element: currentElement,
                         previous,
                         next,
-                        parent: listSelector && ghost.closest(listSelector),
+                        parent: groupSelector && ghost.closest(groupSelector),
                     });
                 }
             }
@@ -428,9 +531,9 @@ export const useSortable = (params) => {
 
         currentContainerRect = null;
 
-        currentItem = null;
-        currentItemRect = null;
-        currentList = null;
+        currentElement = null;
+        currentElementRect = null;
+        currentGroup = null;
         ghost = null;
 
         started = false;
@@ -438,110 +541,49 @@ export const useSortable = (params) => {
 
     // OWL HOOKS
 
+    // Effect depending on the params to update them.
     useEffect(
         (...deps) => {
-            const params = fromDependencies(deps);
-            enabled = Boolean(ref.el && params);
-            if (!params || !enabled) {
+            const actualParams = Object.fromEntries(deps);
+            enabled = Boolean(ref.el && actualParams.isActive);
+            if (!enabled) {
                 return;
             }
 
             // Selectors
-            itemSelector = params.items;
-            listSelector = params.lists || null;
-            if (!itemSelector) {
-                throw sortableError(`missing required property "items" in setup`);
+            elementSelector = actualParams.elements;
+            groupSelector = actualParams.groups || null;
+            if (!elementSelector) {
+                throw sortableError(`no value found by "elements" selector: ${elementSelector}`);
             }
-            const allSelectors = [itemSelector];
-            cursor = params.cursor;
-            if (listSelector) {
-                allSelectors.unshift(listSelector);
+            const allSelectors = [elementSelector];
+            cursor = actualParams.cursor;
+            if (groupSelector) {
+                allSelectors.unshift(groupSelector);
             }
-            if (params.handle) {
-                allSelectors.push(params.handle);
+            if (actualParams.handle) {
+                allSelectors.push(actualParams.handle);
             }
             fullSelector = allSelectors.join(" ");
 
-            // Connection accross lists
-            connectLists = params.connectLists;
-
-            // Axes
-            if (params.axis) {
-                lockedAxis.x = params.axis === "y";
-                lockedAxis.y = params.axis === "x";
-            }
+            // Connection accross groups
+            connectGroups = actualParams.connectGroups;
         },
-        () => toDependencies(setup())
+        () => computeParams(params)
     );
+    // Effect depending on the `ref.el` to add triggering mouse events listener.
     useEffect(
         (el) => {
-            const handler = (ev) => {
-                if (!(ev.button === 0) || !enabled || !ev.target.closest(fullSelector)) {
-                    return;
-                }
-
-                // A drag sequence can still be in progress if the mouseup occurred
-                // outside of the window.
-                dragStop(true);
-
-                currentItem = ev.target.closest(itemSelector);
-                currentList = listSelector && ev.target.closest(listSelector);
-                offsetX = ev.clientX;
-                offsetY = ev.clientY;
-            };
-            el.addEventListener("mousedown", handler);
-            return () => el.removeEventListener("mousedown", handler);
+            if (el) {
+                el.addEventListener("mousedown", onMousedown);
+                return () => el.removeEventListener("mousedown", onMousedown);
+            }
         },
         () => [ref.el]
     );
-    useExternalListener(window, "mousemove", (ev) => {
-        if (!enabled || !currentItem || updatingDrag) {
-            return;
-        }
-        updatingDrag = true;
-        if (started) {
-            // Updates the position of the dragged item.
-            if (!lockedAxis.x) {
-                currentItem.style.left = `${clamp(
-                    ev.clientX - offsetX,
-                    currentContainerRect.x,
-                    currentContainerRect.x + currentContainerRect.width - currentItemRect.width
-                )}px`;
-            }
-            if (!lockedAxis.y) {
-                currentItem.style.top = `${clamp(
-                    ev.clientY - offsetY,
-                    currentContainerRect.y,
-                    currentContainerRect.y + currentContainerRect.height - currentItemRect.height
-                )}px`;
-            }
-        } else if (
-            // The drag sequence starts as soon as the mouse has travelled a
-            // certain amount of pixels from the initial mousedown position
-            // (`DRAG_START_THRESHOLD` = squared distance required to travel).
-            squareDistance(offsetX, offsetY, ev.clientX, ev.clientY) >= DRAG_START_THRESHOLD
-        ) {
-            dragStart();
-        }
-        requestAnimationFrame(() => (updatingDrag = false));
-    });
-    useExternalListener(window, "mouseup", () => dragStop(false), true);
-    useExternalListener(
-        window,
-        "keydown",
-        (ev) => {
-            if (!enabled || !started) {
-                return;
-            }
-            switch (ev.key) {
-                case "Escape":
-                case "Tab": {
-                    cancelEvent(ev);
-                    dragStop(true);
-                }
-            }
-        },
-        true
-    );
+    // Other global mouse event listeners.
+    useExternalListener(window, "mousemove", debounce(onMousemove, MOUSEMOVE_DEBOUNCE, true));
+    useExternalListener(window, "mouseup", onMouseup, true);
+    useExternalListener(window, "keydown", onKeydown, true);
     onWillUnmount(() => dragStop(true));
 };

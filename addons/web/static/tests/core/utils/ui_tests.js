@@ -3,15 +3,13 @@
 import { dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { useSortable } from "@web/core/utils/ui";
 
-const { Component, useRef, useState, xml } = owl;
+const { Component, reactive, useRef, useState, xml } = owl;
 
 let target;
 QUnit.module("UI", ({ beforeEach }) => {
-    beforeEach(() => {
-        target = getFixture();
-    });
+    beforeEach(() => (target = getFixture()));
 
-    QUnit.module("Sortable");
+    QUnit.module("Sortable hook");
 
     QUnit.test("Parameters error handling", async (assert) => {
         assert.expect(8);
@@ -50,74 +48,72 @@ QUnit.module("UI", ({ beforeEach }) => {
         }, true);
         await mountListAndAssert(() => {
             useSortable({
-                setup: () => ({ items: ".item" }),
+                elements: ".item",
             });
         }, true);
         await mountListAndAssert(() => {
             useSortable({
-                setup: () => ({
-                    items: ".item",
-                    lists: ".list",
-                }),
+                elements: ".item",
+                groups: ".list",
             });
         }, true);
         await mountListAndAssert(() => {
             useSortable({
                 ref: useRef("root"),
-                items: ".item",
+                setup: () => ({ elements: ".item" }),
+            });
+        }, true);
+        await mountListAndAssert(() => {
+            useSortable({
+                ref: useRef("root"),
+                elements: () => ".item",
             });
         }, true);
 
         // Correct params
         await mountListAndAssert(() => {
             useSortable({
-                ref: useRef("root"),
-                setup: () => false,
+                ref: {},
+                elements: ".item",
+                isActive: false,
             });
         }, false);
         await mountListAndAssert(() => {
             useSortable({
                 ref: useRef("root"),
-                setup: () => ({}),
-            });
-        }, false);
-        await mountListAndAssert(() => {
-            useSortable({
-                ref: useRef("root"),
-                setup: () => ({ items: ".item" }),
+                elements: ".item",
+                connectGroups: () => true,
             });
         }, false);
     });
 
-    QUnit.test("Simple sorting in single list", async (assert) => {
+    QUnit.test("Simple sorting in single group", async (assert) => {
         assert.expect(19);
 
         class List extends Component {
             setup() {
                 useSortable({
                     ref: useRef("root"),
-                    setup: () => ({
-                        items: ".item",
-                    }),
-                    onStart(list, item) {
+                    elements: ".item",
+                    onStart(group, element) {
                         assert.step("start");
-                        assert.notOk(list);
-                        assert.strictEqual(item.innerText, "1");
+                        assert.notOk(group);
+                        assert.strictEqual(element.innerText, "1");
                     },
-                    onItemEnter(item) {
-                        assert.step("itementer");
-                        assert.strictEqual(item.innerText, "2");
+                    onElementEnter(element) {
+                        assert.step("elemententer");
+                        assert.strictEqual(element.innerText, "2");
                     },
-                    onStop(list, item) {
+                    onStop(group, element) {
                         assert.step("stop");
-                        assert.notOk(list);
-                        assert.strictEqual(item.innerText, "1");
+                        assert.notOk(group);
+                        assert.strictEqual(element.innerText, "1");
                         assert.containsN(target, ".item", 4);
                     },
-                    onDrop({ list, item, previous, next, parent }) {
+                    onDrop({ group, element, previous, next, parent }) {
                         assert.step("drop");
-                        assert.notOk(list);
-                        assert.strictEqual(item.innerText, "1");
+                        assert.notOk(group);
+                        assert.strictEqual(element.innerText, "1");
                         assert.strictEqual(previous.innerText, "2");
                         assert.strictEqual(next.innerText, "3");
                         assert.notOk(parent);
@@ -142,39 +138,37 @@ QUnit.module("UI", ({ beforeEach }) => {
         await dragAndDrop(".item:first-child", ".item:nth-child(2)");
 
         assert.containsN(target, ".item", 3);
-        assert.verifySteps(["start", "itementer", "stop", "drop"]);
+        assert.verifySteps(["start", "elemententer", "stop", "drop"]);
     });
 
-    QUnit.test("Simple sorting in multiple lists", async (assert) => {
+    QUnit.test("Simple sorting in multiple groups", async (assert) => {
         assert.expect(20);
 
         class List extends Component {
             setup() {
                 useSortable({
                     ref: useRef("root"),
-                    setup: () => ({
-                        items: ".item",
-                        lists: ".list",
-                        connectLists: true,
-                    }),
-                    onStart(list, item) {
+                    elements: ".item",
+                    groups: ".list",
+                    connectGroups: true,
+                    onStart(group, element) {
                         assert.step("start");
-                        assert.hasClass(list, "list2");
-                        assert.strictEqual(item.innerText, "2 1");
+                        assert.hasClass(group, "list2");
+                        assert.strictEqual(element.innerText, "2 1");
                     },
-                    onListEnter(list) {
-                        assert.step("listenter");
-                        assert.hasClass(list, "list1");
+                    onGroupEnter(group) {
+                        assert.step("groupenter");
+                        assert.hasClass(group, "list1");
                     },
-                    onStop(list, item) {
+                    onStop(group, element) {
                         assert.step("stop");
-                        assert.hasClass(list, "list2");
-                        assert.strictEqual(item.innerText, "2 1");
+                        assert.hasClass(group, "list2");
+                        assert.strictEqual(element.innerText, "2 1");
                     },
-                    onDrop({ list, item, previous, next, parent }) {
+                    onDrop({ group, element, previous, next, parent }) {
                         assert.step("drop");
-                        assert.hasClass(list, "list2");
-                        assert.strictEqual(item.innerText, "2 1");
+                        assert.hasClass(group, "list2");
+                        assert.strictEqual(element.innerText, "2 1");
                         assert.strictEqual(previous.innerText, "1 3");
                         assert.notOk(next);
                         assert.hasClass(parent, "list1");
@@ -201,21 +195,20 @@ QUnit.module("UI", ({ beforeEach }) => {
 
         assert.containsN(target, ".list", 3);
         assert.containsN(target, ".item", 9);
-        assert.verifySteps(["start", "listenter", "stop", "drop"]);
+        assert.verifySteps(["start", "groupenter", "stop", "drop"]);
     });
 
     QUnit.test("Dynamically disable sortable feature", async (assert) => {
         assert.expect(4);
 
+        let state = reactive({ enableSortable: true });
         class List extends Component {
             setup() {
-                this.state = useState({ enableSortable: true });
+                this.state = useState(state);
                 useSortable({
                     ref: useRef("root"),
-                    setup: () =>
-                        this.state.enableSortable && {
-                            items: ".item",
-                        },
+                    elements: ".item",
+                    isActive: () => this.state.enableSortable,
                     onStart() {
                         assert.step("start");
                     },
@@ -230,7 +223,7 @@ QUnit.module("UI", ({ beforeEach }) => {
                 </ul>
             </div>`;
 
-        const list = await mount(List, target);
+        await mount(List, target);
 
         assert.verifySteps([]);
 
@@ -240,7 +233,7 @@ QUnit.module("UI", ({ beforeEach }) => {
         // Drag should have occurred
         assert.verifySteps(["start"]);
 
-        list.state.enableSortable = false;
+        state.enableSortable = false;
         await nextTick();
 
         // First item before last item
@@ -248,5 +241,37 @@ QUnit.module("UI", ({ beforeEach }) => {
 
         // Drag shouldn't have occurred
         assert.verifySteps([]);
+    });
+
+    QUnit.test("Disabled in small environment", async (assert) => {
+        assert.expect(2);
+
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    onStart() {
+                        throw new Error("Shouldn't start the sortable feature.");
+                    },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+        await mount(List, target, { env: { isSmall: true } });
+
+        assert.containsN(target, ".item", 3);
+
+        // First item after 2nd item
+        await dragAndDrop(".item:first-child", ".item:nth-child(2)");
+
+        assert.ok(true, "No drag sequence should have been initiated");
     });
 });

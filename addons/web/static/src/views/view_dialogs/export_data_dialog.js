@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { useSortable } from "@web/core/utils/ui";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { useSortable } from "@web/core/utils/ui";
 
 const { Component, useRef, useState, onMounted } = owl;
 
@@ -73,8 +73,11 @@ export class ExportDataDialog extends Component {
         this.expandText = this.env._t("Show sub-fields");
 
         useSortable({
+            // Params
             ref: this.draggableRef,
-            setup: () => ({ items: ".o_export_field", cursor: "grabbing" }),
+            elements: ".o_export_field",
+            cursor: "grabbing",
+            // Hooks
             onDrop: async ({ item, previous, next }) => {
                 const indexes = [item, previous, next].map(
                     (e) => e && this.state.exportedFields.indexOf(e.dataset.field_id)

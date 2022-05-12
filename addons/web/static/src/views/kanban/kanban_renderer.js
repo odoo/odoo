@@ -105,57 +105,55 @@ export class KanbanRenderer extends Component {
         this.colors = COLORS;
         this.exampleData = registry.category("kanban_examples").get(examples, null);
         this.ghostColumns = this.generateGhostColumns();
-        // Sortable
+        // Draggable
         let dataRecordId;
         let dataGroupId;
         const rootRef = useRef("root");
         useSortable({
+            isActive: () => this.canResequenceRecords,
+            // Params
             ref: rootRef,
-            setup: () =>
-                this.canResequenceRecords && {
-                    items: ".o_record_draggable",
-                    lists: this.props.list.isGrouped && ".o_kanban_group",
-                    connectLists: this.canMoveRecords,
-                    axis: this.props.list.isGrouped && !this.canMoveRecords ? "y" : false,
-                    cursor: "move",
-                },
-            onStart: (list, item) => {
-                dataRecordId = item.dataset.id;
-                if (list) {
-                    dataGroupId = list.dataset.id;
+            elements: ".o_record_draggable",
+            groups: () => this.props.list.isGrouped && ".o_kanban_group",
+            connectGroups: () => this.canMoveRecords,
+            cursor: "move",
+            // Hooks
+            onStart: (group, element) => {
+                dataRecordId = element.dataset.id;
+                if (group) {
+                    dataGroupId = group.dataset.id;
                 }
-                item.classList.add("o_dragged");
+                element.classList.add("o_dragged");
             },
-            onListEnter: (list) => list.classList.add("o_kanban_hover"),
-            onListLeave: (list) => list.classList.remove("o_kanban_hover"),
-            onStop: (_list, item) => item.classList.remove("o_dragged"),
-            onDrop: async ({ item, previous, parent }) => {
-                item.classList.remove("o_record_draggable");
+            onGroupEnter: (group) => group.classList.add("o_kanban_hover"),
+            onGroupLeave: (group) => group.classList.remove("o_kanban_hover"),
+            onStop: (_group, element) => element.classList.remove("o_dragged"),
+            onDrop: async ({ element, previous, parent }) => {
+                element.classList.remove("o_record_draggable");
                 const refId = previous ? previous.dataset.id : null;
                 const targetGroupId = parent && parent.dataset.id;
                 await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
-                item.classList.add("o_record_draggable");
+                element.classList.add("o_record_draggable");
             },
         });
         useSortable({
+            isActive: () => this.canResequenceGroups,
+            // Params
             ref: rootRef,
-            setup: () =>
-                this.canResequenceGroups && {
-                    items: ".o_group_draggable",
-                    axis: "x",
-                    handle: ".o_column_title",
-                    cursor: "move",
-                },
-            onStart: (_list, item) => {
-                dataGroupId = item.dataset.id;
-                item.classList.add("o_dragged");
+            elements: ".o_group_draggable",
+            handle: ".o_column_title",
+            cursor: "move",
+            // Hooks
+            onStart: (_group, element) => {
+                dataGroupId = element.dataset.id;
+                element.classList.add("o_dragged");
             },
-            onStop: (_list, item) => item.classList.remove("o_dragged"),
-            onDrop: async ({ item, previous }) => {
-                item.classList.remove("o_group_draggable");
+            onStop: (_group, element) => element.classList.remove("o_dragged"),
+            onDrop: async ({ element, previous }) => {
+                element.classList.remove("o_group_draggable");
                 const refId = previous ? previous.dataset.id : null;
                 await this.props.list.resequence(dataGroupId, refId);
-                item.classList.add("o_group_draggable");
+                element.classList.add("o_group_draggable");
             },
         });
         useBounceButton(rootRef, (clickedEl) => {

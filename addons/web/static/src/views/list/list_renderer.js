@@ -5,14 +5,14 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Pager } from "@web/core/pager/pager";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { useSortable } from "@web/core/utils/ui";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "../helpers/view_hook";
-import { useSortable } from "@web/core/utils/ui";
-import { Pager } from "@web/core/pager/pager";
-import { useService } from "@web/core/utils/hooks";
 
 const {
     Component,
@@ -89,29 +89,28 @@ export class ListRenderer extends Component {
         let dataRowId;
         const rootRef = useRef("root");
         useSortable({
+            isActive: () => this.canResequenceRows,
+            // Params
             ref: rootRef,
-            setup: () =>
-                this.canResequenceRows && {
-                    items: ".o_row_draggable",
-                    axis: "y",
-                    handle: ".o_handle_cell",
-                    cursor: "grabbing",
-                },
-            onStart: (_list, item) => {
-                dataRowId = item.dataset.id;
-                item.classList.add("o_dragged");
+            elements: ".o_row_draggable",
+            handle: ".o_handle_cell",
+            cursor: "grabbing",
+            // Hooks
+            onStart: (_group, element) => {
+                dataRowId = element.dataset.id;
+                element.classList.add("o_dragged");
             },
-            onStop: (_list, item) => item.classList.remove("o_dragged"),
-            onDrop: async ({ item, previous }) => {
+            onStop: (_group, element) => element.classList.remove("o_dragged"),
+            onDrop: async ({ element, previous }) => {
                 if (this.props.list.editedRecord) {
                     // bof
                     this.props.list.editedRecord.switchMode("readonly");
                     // there was more see unselectRow in list_editable_renderer called with no options
                 }
-                item.classList.remove("o_row_draggable");
+                element.classList.remove("o_row_draggable");
                 const refId = previous ? previous.dataset.id : null;
                 await this.props.list.resequence(dataRowId, refId);
-                item.classList.add("o_row_draggable");
+                element.classList.add("o_row_draggable");
             },
         });
         useBounceButton(rootRef, () => {
