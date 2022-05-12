@@ -456,6 +456,10 @@ registerModel({
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
+        otherMemberLongTypingInThreadTimers: many('OtherMemberLongTypingInThreadTimer', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
         rtcSessions: many('RtcSession', {
             inverse: 'partner',
         }),
