@@ -34,5 +34,13 @@ registerModel({
             inverse: 'qunitTest',
             isCausal: true,
         }),
+        timer1: one('Timer', {
+            inverse: 'qunitTestOwner1',
+            isCausal: true,
+        }),
+        timer2: one('Timer', {
+            inverse: 'qunitTestOwner2',
+            isCausal: true,
+        }),
     },
 });

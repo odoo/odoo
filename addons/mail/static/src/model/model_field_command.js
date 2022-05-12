@@ -108,6 +108,20 @@ function insertAndReplace(data = {}) {
 }
 
 /**
+ * Returns a insert-and-unlink command to give to the model manager at create/update.
+ * `insertAndUnlink` command can be used for relation fields.
+ * - Create new record(s) from data if the record(s) do not exist;
+ * - or update the record(s) if they can be found from identifying data;
+ * - and then unlink the record(s) from the relation field (if they were present).
+ *
+ * @param {Object|Object[]} [data={}] - data object or data objects array to insert and unlink record(s).
+ * @returns {FieldCommand}
+ */
+export function insertAndUnlink(data = {}) {
+    return new FieldCommand('insert-and-unlink', data);
+}
+
+/**
  * Returns a link command to give to the model manager at create/update.
  * `link` command can be used for relation fields.
  * - Set the field value `newValue` if current field value differs from `newValue` for an x2one field;
