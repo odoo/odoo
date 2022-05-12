@@ -71,6 +71,9 @@ export class Many2OneField extends Component {
     get resId() {
         return this.props.value && this.props.value[0];
     }
+    get updateOnEmpty() {
+        return true;
+    }
 
     getDomain() {
         return this.props.record
@@ -285,7 +288,7 @@ export class Many2OneField extends Component {
         this.openDialog(this.resId);
     }
     onChange({ inputValue }) {
-        if (!inputValue.length) {
+        if (!inputValue.length && this.updateOnEmpty) {
             this.props.update(false);
         }
     }
@@ -352,4 +355,11 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
 Many2OneField.SEARCH_MORE_LIMIT = 320;
 
 registry.category("fields").add("many2one", Many2OneField);
-registry.category("fields").add("list.many2one", Many2OneField); // TODO WOWL: link isn't clickable in lists
+
+export class ListMany2OneField extends Many2OneField {
+    get updateOnEmpty() {
+        return false;
+    }
+}
+
+registry.category("fields").add("list.many2one", ListMany2OneField); // TODO WOWL: link isn't clickable in lists

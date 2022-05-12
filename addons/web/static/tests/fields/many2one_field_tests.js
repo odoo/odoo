@@ -789,51 +789,37 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "many2one doesn't trigger field_change when being emptied",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("many2one doesn't trigger field_change when being emptied", async function (assert) {
+        assert.expect(2);
 
-            await makeView({
-                type: "list",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
                 <tree multi_edit="1">
                     <field name="trululu"/>
                 </tree>
             `,
-            });
+        });
 
-            // Select two records
-            await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
-            await click(target.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
+        // Select two records
+        await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(target.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
 
-            await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
-            const input = target.querySelector(".o_field_widget[name=trululu] input");
+        await editInput(target, ".o_field_widget[name=trululu] input", "");
+        await triggerEvent(target, ".o_field_widget[name=trululu] input", "blur");
 
-            await editInput(input, null, "");
-            await triggerEvent(input, null, "keyup");
+        assert.containsNone(target, ".modal", "No save should be triggered when removing value");
 
-            assert.containsNone(
-                target,
-                ".modal",
-                "No save should be triggered when removing value"
-            );
+        await click(target.querySelector(".o_field_widget[name=trululu] input"));
+        await click(target.querySelector(".o_field_widget[name=trululu] .ui-menu-item"));
 
-            await click(
-                target.querySelector(".o_field_widget[name=trululu] .o_m2o_dropdown_option")
-            );
-
-            assert.containsOnce(
-                target,
-                ".modal",
-                "Saving should be triggered when selecting a value"
-            );
-            await click(target, ".modal .btn-primary");
-        }
-    );
+        assert.containsOnce(target, ".modal", "Saving should be triggered when selecting a value");
+        await click(target, ".modal .btn-primary");
+    });
 
     QUnit.skipWOWL("focus tracking on a many2one in a list", async function (assert) {
         assert.expect(4);
@@ -1224,10 +1210,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
         await click(target, ".o_form_button_edit");
-
-        const input = target.querySelector(".o_field_many2one input");
-        input.value = "";
-        await triggerEvent(input, null, "change");
+        await editInput(target, ".o_field_many2one input", "");
 
         await click(target, ".o_form_button_save");
         assert.hasAttrValue(

@@ -875,7 +875,12 @@ export class Record extends DataPoint {
         }
     }
 
-    async __applyMany2OneChange(fieldName, [id, label]) {
+    async __applyMany2OneChange(fieldName, nameGet) {
+        if (!nameGet) {
+            return false;
+        }
+        let [id, label] = nameGet;
+
         if (!id && !label) {
             return [false, ""];
         }
