@@ -51,7 +51,7 @@ Many2ManyBinaryField.extractProps = (fieldName, record, attrs) => {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         className: attrs.class,
         uploadText: record.data[fieldName].field.string,
-        setAsInvalid: record.setInvalidField.bind(record),
+        setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
 

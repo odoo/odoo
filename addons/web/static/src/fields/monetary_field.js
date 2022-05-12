@@ -25,7 +25,7 @@ export class MonetaryField extends Component {
             value = this.props.parse(value, { currencyId: this.props.currencyId });
         } catch {
             isValid = false;
-            this.props.setAsInvalid(this.props.name);
+            this.props.setAsInvalid();
         }
         if (isValid) {
             this.props.update(value);
@@ -90,7 +90,7 @@ MonetaryField.extractProps = function (fieldName, record, attrs) {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
-        setAsInvalid: record.setInvallidField,
+        setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
 

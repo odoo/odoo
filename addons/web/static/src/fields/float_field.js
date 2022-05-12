@@ -38,7 +38,7 @@ export class FloatField extends Component {
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             isValid = false;
-            this.props.setAsInvalid(this.props.name);
+            this.props.setAsInvalid();
         }
         if (isValid) {
             this.props.update(value);
@@ -72,7 +72,7 @@ FloatField.defaultProps = {
 FloatField.isEmpty = () => false;
 FloatField.extractProps = (fieldName, record, attrs) => {
     return {
-        setAsInvalid: record.setInvalidField.bind(record),
+        setAsInvalid: () => record.setInvalidField(fieldName),
         field: record.fields[fieldName], // To remove
         inputType: attrs.options.type,
         step: attrs.options.step,

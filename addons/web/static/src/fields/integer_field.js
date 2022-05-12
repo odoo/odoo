@@ -23,7 +23,7 @@ export class IntegerField extends Component {
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             isValid = false;
-            this.props.setAsInvalid(this.props.name);
+            this.props.setAsInvalid();
         }
         if (isValid) {
             this.props.update(value);
@@ -52,7 +52,7 @@ IntegerField.extractProps = (fieldName, record, attrs) => {
     return {
         inputType: attrs.options.type,
         step: attrs.options.step,
-        setAsInvalid: record.setInvalidField.bind(record),
+        setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
 

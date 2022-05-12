@@ -19,7 +19,7 @@ export class FloatTimeField extends Component {
             value = this.props.parse(ev.target.value);
         } catch {
             isValid = false;
-            this.props.setAsInvalid(this.props.name);
+            this.props.setAsInvalid();
         }
         if (isValid) {
             this.props.update(value);
@@ -42,7 +42,7 @@ FloatTimeField.defaultProps = {
 FloatTimeField.isEmpty = () => false;
 FloatTimeField.extractProps = (fieldName, record) => {
     return {
-        setAsInvalid: record.setInvalidField.bind(record),
+        setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
 

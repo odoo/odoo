@@ -26,7 +26,7 @@ export class PercentageField extends Component {
             parsedValue = this.props.parse(ev.target.value);
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
-            this.props.setAsInvalid(this.props.name);
+            this.props.setAsInvalid();
             return;
         }
         this.props.update(parsedValue);
@@ -50,7 +50,7 @@ PercentageField.props = {
 };
 PercentageField.extractProps = (fieldName, record, attrs) => {
     return {
-        setAsInvalid: record.setInvalidField.bind(record),
+        setAsInvalid: () => record.setInvalidField(fieldName),
         digits:
             (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
             record.fields[fieldName].digits,
