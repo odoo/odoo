@@ -7,7 +7,7 @@ const { Component } = owl;
 
 export class ListX2ManyField extends Component {
     get formattedValue() {
-        return this.props.format(this.props.value.currentIds);
+        return this.props.format(this.props.value);
     }
 }
 

@@ -273,10 +273,7 @@ export const formatMany2one = (value, options) => {
  * @returns {string}
  */
 export const formatX2many = (value) => {
-    let count = 0;
-    if (Array.isArray(value) && value.length) {
-        count = value.length;
-    }
+    const count = value.currentIds.length;
     if (count === 0) {
         return _lt("No records");
     } else if (count === 1) {

@@ -201,10 +201,9 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("formatX2many", function (assert) {
         // Results are cast as strings since they're lazy translated.
-        assert.strictEqual(String(formatX2many(false)), "No records");
-        assert.strictEqual(String(formatX2many([])), "No records");
-        assert.strictEqual(String(formatX2many([1])), "1 record");
-        assert.strictEqual(String(formatX2many([1, 3])), "2 records");
+        assert.strictEqual(String(formatX2many({ currentIds: [] })), "No records");
+        assert.strictEqual(String(formatX2many({ currentIds: [1] })), "1 record");
+        assert.strictEqual(String(formatX2many({ currentIds: [1, 3] })), "2 records");
     });
 
     QUnit.test("formatMonetary", function (assert) {
