@@ -107,7 +107,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
             "should do a do_action with correct parameters");
             event.data.options.on_close();
     };
-    var { widget: activity } = await start({
+    var { target } = await start({
         View: ActivityView,
         hasView: true,
         model: 'mail.test.activity',
@@ -122,37 +122,38 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
             do_action: actionServiceInterceptor,
         },
     });
+    const $activity = $(target);
 
-    assert.containsOnce(activity, 'table',
+    assert.containsOnce($activity, 'table',
         'should have a table');
-    var $th1 = activity.$('table thead tr:first th:nth-child(2)');
+    var $th1 = $activity.find('table thead tr:first th:nth-child(2)');
     assert.containsOnce($th1, 'span:first:contains(Email)', 'should contain "Email" in header of first column');
     assert.containsOnce($th1, '.o_kanban_counter', 'should contain a progressbar in header of first column');
     assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:first'), 'data-original-title', '1 Planned',
         'the counter progressbars should be correctly displayed');
     assert.hasAttrValue($th1.find('.o_kanban_counter_progress .progress-bar:nth-child(2)'), 'data-original-title', '1 Today',
         'the counter progressbars should be correctly displayed');
-    var $th2 = activity.$('table thead tr:first th:nth-child(3)');
+    var $th2 = $activity.find('table thead tr:first th:nth-child(3)');
     assert.containsOnce($th2, 'span:first:contains(Call)', 'should contain "Call" in header of second column');
     assert.hasAttrValue($th2.find('.o_kanban_counter_progress .progress-bar:nth-child(3)'), 'data-original-title', '1 Overdue',
         'the counter progressbars should be correctly displayed');
-    assert.containsNone(activity, 'table thead tr:first th:nth-child(4) .o_kanban_counter',
+    assert.containsNone($activity, 'table thead tr:first th:nth-child(4) .o_kanban_counter',
         'should not contain a progressbar in header of 3rd column');
-    assert.ok(activity.$('table tbody tr:first td:first:contains(Office planning)').length,
+    assert.ok($activity.find('table tbody tr:first td:first:contains(Office planning)').length,
         'should contain "Office planning" in first colum of first row');
-    assert.ok(activity.$('table tbody tr:nth-child(2) td:first:contains(Meeting Room Furnitures)').length,
+    assert.ok($activity.find('table tbody tr:nth-child(2) td:first:contains(Meeting Room Furnitures)').length,
         'should contain "Meeting Room Furnitures" in first colum of second row');
 
     var today = activityDateFormat(new Date());
 
-    assert.ok(activity.$('table tbody tr:first td:nth-child(2).today .o_closest_deadline:contains(' + today + ')').length,
+    assert.ok($activity.find('table tbody tr:first td:nth-child(2).today .o_closest_deadline:contains(' + today + ')').length,
         'should contain an activity for today in second cell of first line ' + today);
     var td = 'table tbody tr:nth-child(1) td.o_activity_empty_cell';
-    assert.containsN(activity, td, 2, 'should contain an empty cell as no activity scheduled yet.');
+    assert.containsN($activity, td, 2, 'should contain an empty cell as no activity scheduled yet.');
 
     // schedule an activity (this triggers a do_action)
-    await testUtils.fields.editAndTrigger(activity.$(td + ':first'), null, ['mouseenter', 'click']);
-    assert.containsOnce(activity, 'table tfoot tr .o_record_selector',
+    await testUtils.fields.editAndTrigger($activity.find(td + ':first'), null, ['mouseenter', 'click']);
+    assert.containsOnce($activity, 'table tfoot tr .o_record_selector',
         'should contain search more selector to choose the record to schedule an activity for it');
 });
 
@@ -162,7 +163,7 @@ QUnit.test('activity view: no content rendering', async function (assert) {
     // reset incompatible setup
     pyEnv['mail.activity.type'].unlink(pyEnv['mail.activity.type'].search([]));
 
-    var { widget: activity } = await start({
+    var { target } = await start({
         hasView: true,
         View: ActivityView,
         model: 'mail.test.activity',
@@ -174,10 +175,11 @@ QUnit.test('activity view: no content rendering', async function (assert) {
                 '</templates>' +
             '</activity>',
     });
+    const $activity = $(target);
 
-    assert.containsOnce(activity, '.o_view_nocontent',
+    assert.containsOnce($activity, '.o_view_nocontent',
         "should display the no content helper");
-    assert.strictEqual(activity.$('.o_view_nocontent .o_view_nocontent_empty_folder').text().trim(),
+    assert.strictEqual($activity.find('.o_view_nocontent .o_view_nocontent_empty_folder').text().trim(),
         "No data to display",
         "should display the no content helper text");
 });
@@ -187,7 +189,7 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
 
     const mailTestActivityIds = pyEnv['mail.test.activity'].search([]);
     const mailTemplateIds = pyEnv['mail.template'].search([]);
-    var { widget: activity } = await start({
+    var { target } = await start({
         hasView: true,
         View: ActivityView,
         model: 'mail.test.activity',
@@ -206,19 +208,20 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
             return this._super.apply(this, arguments);
         },
     });
-    assert.notOk(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
+    const $activity = $(target);
+    assert.notOk($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
         'dropdown shouldn\'t be displayed');
 
-    testUtils.dom.click(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v'));
-    assert.ok(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
+    testUtils.dom.click($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v'));
+    assert.ok($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
         'dropdown should have appeared');
 
-    testUtils.dom.click(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:contains(Template2)'));
-    assert.notOk(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
+    testUtils.dom.click($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:contains(Template2)'));
+    assert.notOk($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
         'dropdown shouldn\'t be displayed');
 
-    testUtils.dom.click(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v'));
-    testUtils.dom.click(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:contains(Template1)'));
+    testUtils.dom.click($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v'));
+    testUtils.dom.click($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:contains(Template1)'));
     assert.verifySteps([
         `[[${mailTestActivityIds[0]},${mailTestActivityIds[1]}],${mailTemplateIds[1]}]`, // send mail template 1 on mail.test.activity 1 and 2
         `[[${mailTestActivityIds[0]},${mailTestActivityIds[1]}],${mailTemplateIds[0]}]`, // send mail template 2 on mail.test.activity 1 and 2
@@ -285,8 +288,9 @@ QUnit.test('activity view: activity widget', async function (assert) {
         },
     };
 
-    var { widget: activity } = await start(params);
-    var today = activity.$('table tbody tr:first td:nth-child(2).today');
+    var { target } = await start(params);
+    const activity = $(target);
+    var today = activity.find('table tbody tr:first td:nth-child(2).today');
     var dropdown = today.find('.dropdown-menu.o_activity');
 
     await testUtils.dom.click(today.find('.o_closest_deadline'));
@@ -299,7 +303,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
 
     await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_preview'));
     await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_send'));
-    var overdue = activity.$('table tbody tr:first td:nth-child(3).overdue');
+    var overdue = activity.find('table tbody tr:first td:nth-child(3).overdue');
     await testUtils.dom.click(overdue.find('.o_closest_deadline'));
     dropdown = overdue.find('.dropdown-menu.o_activity');
     assert.notOk(dropdown.find('.o_activity_title div div div:first span').length,
@@ -390,7 +394,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
                 "should execute an action with correct params");
             ev.data.options.on_close();
     };
-    var { widget: activity } = await start({
+    var { target } = await start({
         hasView: true,
         View: ActivityView,
         model: 'mail.test.activity',
@@ -415,10 +419,11 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
             do_action: actionServiceInterceptor,
         },
     });
+    const $activity = $(target);
 
-    assert.containsOnce(activity, 'table tfoot tr .o_record_selector',
+    assert.containsOnce($activity, 'table tfoot tr .o_record_selector',
         'should contain search more selector to choose the record to schedule an activity for it');
-    await testUtils.dom.click(activity.$('table tfoot tr .o_record_selector'));
+    await testUtils.dom.click($activity.find('table tfoot tr .o_record_selector'));
     // search create dialog
     var $modal = $('.modal-lg');
     assert.strictEqual($modal.find('.o_data_row').length, 3, "all tasks should be available to select");

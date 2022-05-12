@@ -46,9 +46,9 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ float_field: 12.30 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=float_field]'), 45.67);
+    await testUtils.fields.editInput(form.querySelector('input[name=float_field]'), 45.67);
     await click('.o_form_button_save');
     assert.containsOnce(
         document.body,
@@ -97,9 +97,9 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ float_field: 1 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=float_field]'), 0);
+    await testUtils.fields.editInput(form.querySelector('input[name=float_field]'), 0);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -113,9 +113,9 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ float_field: 0 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=float_field]'), 1);
+    await testUtils.fields.editInput(form.querySelector('input[name=float_field]'), 1);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -129,9 +129,9 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ integer_field: 1 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=integer_field]'), 0);
+    await testUtils.fields.editInput(form.querySelector('input[name=integer_field]'), 0);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -145,9 +145,9 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ integer_field: 0 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=integer_field]'), 1);
+    await testUtils.fields.editInput(form.querySelector('input[name=integer_field]'), 1);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -161,9 +161,9 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ monetary_field: 1 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 0);
+    await testUtils.fields.editSelect(form.querySelector('div[name=monetary_field] > input'), 0);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -177,9 +177,9 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ monetary_field: 0 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editSelect(form.$('div[name=monetary_field] > input'), 1);
+    await testUtils.fields.editSelect(form.querySelector('div[name=monetary_field] > input'), 1);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -193,9 +193,9 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ boolean_field: true });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    form.$('.custom-checkbox input').click();
+    form.querySelector('.custom-checkbox input').click();
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -209,9 +209,9 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({});
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    form.$('.custom-checkbox input').click();
+    form.querySelector('.custom-checkbox input').click();
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -225,9 +225,9 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ char_field: 'Marc' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=char_field]'), '');
+    await testUtils.fields.editInput(form.querySelector('input[name=char_field]'), '');
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -241,9 +241,9 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ char_field: '' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('input[name=char_field]'), 'Marc');
+    await testUtils.fields.editInput(form.querySelector('input[name=char_field]'), 'Marc');
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -257,9 +257,9 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ date_field: false });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '12/14/2018', ['change']);
+    await testUtils.fields.editAndTrigger(form.querySelector('.o_datepicker[name=date_field] .o_datepicker_input'), '12/14/2018', ['change']);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -273,9 +273,9 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ date_field: '2018-12-14' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '', ['change']);
+    await testUtils.fields.editAndTrigger(form.querySelector('.o_datepicker[name=date_field] .o_datepicker_input'), '', ['change']);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -289,9 +289,9 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ datetime_field: false });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);
+    await testUtils.fields.editAndTrigger(form.querySelector('.o_datepicker[name=datetime_field] .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -305,9 +305,9 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ datetime_field: '2018-12-14 13:42:28 ' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '', ['change']);
+    await testUtils.fields.editAndTrigger(form.querySelector('.o_datepicker[name=datetime_field] .o_datepicker_input'), '', ['change']);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -321,9 +321,9 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ text_field: 'Marc' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('textarea[name=text_field]'), '');
+    await testUtils.fields.editInput(form.querySelector('textarea[name=text_field]'), '');
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -337,9 +337,9 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ text_field: '' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editInput(form.$('textarea[name=text_field]'), 'Marc');
+    await testUtils.fields.editInput(form.querySelector('textarea[name=text_field]'), 'Marc');
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -353,9 +353,9 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ selection_field: 'first' });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '');
+    await testUtils.fields.editSelect(form.querySelector('select[name=selection_field]'), '');
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -369,9 +369,9 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
 
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({});
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editSelect(form.$('select[name=selection_field]'), '"first"');
+    await testUtils.fields.editSelect(form.querySelector('select[name=selection_field]'), '"first"');
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
@@ -386,9 +386,9 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Marc' });
     const mailTestTrackAllId1 = pyEnv['mail.test.track.all'].create({ many2one_field_id: resPartnerId1 });
-    const { click, widget: form } = await this.start({ res_id: mailTestTrackAllId1 });
+    const { click, target: form } = await this.start({ res_id: mailTestTrackAllId1 });
 
-    await testUtils.fields.editAndTrigger(form.$('.o_field_many2one_selection input'), '', ['keyup']);
+    await testUtils.fields.editAndTrigger(form.querySelector('.o_field_many2one_selection input'), '', ['keyup']);
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,

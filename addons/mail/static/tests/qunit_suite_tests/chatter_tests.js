@@ -13,7 +13,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const { widget: list } = await start({
+    const { target: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -28,7 +28,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     });
 
     assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
-    assert.strictEqual(list.$('.o_activity_summary').text(), '');
+    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, '');
 
     assert.verifySteps(['/web/dataset/search_read']);
 });
@@ -56,7 +56,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
         activity_type_id: mailActivityTypeId2,
     });
 
-    const { widget: list } = await start({
+    const { target: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -69,13 +69,13 @@ QUnit.test('list activity widget with activities', async function (assert) {
         },
     });
 
-    const $firstRow = list.$('.o_data_row:first');
-    assert.containsOnce($firstRow, '.o_mail_activity .o_activity_color_today.fa-phone');
-    assert.strictEqual($firstRow.find('.o_activity_summary').text(), 'Call with Al');
+    const firstRow = list.querySelector('.o_data_row');
+    assert.containsOnce(firstRow, '.o_mail_activity .o_activity_color_today.fa-phone');
+    assert.strictEqual(firstRow.querySelector('.o_activity_summary').innerText, 'Call with Al');
 
-    const $secondRow = list.$('.o_data_row:nth(1)');
-    assert.containsOnce($secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
-    assert.strictEqual($secondRow.find('.o_activity_summary').text(), 'Type 2');
+    const secondRow = list.querySelectorAll('.o_data_row')[1];
+    assert.containsOnce(secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
+    assert.strictEqual(secondRow.querySelector('.o_activity_summary').innerText, 'Type 2');
 
     assert.verifySteps(['/web/dataset/search_read']);
 });
@@ -95,7 +95,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
         activity_exception_icon: 'fa-warning',
     });
 
-    const { widget: list } = await start({
+    const { target: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -109,7 +109,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
     });
 
     assert.containsOnce(list, '.o_activity_color_today.text-warning.fa-warning');
-    assert.strictEqual(list.$('.o_activity_summary').text(), 'Warning');
+    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, 'Warning');
 
     assert.verifySteps(['/web/dataset/search_read']);
 });
@@ -146,7 +146,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         activity_type_id: mailActivityTypeId2,
     });
 
-    const { widget: list } = await start({
+    const { target: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -174,21 +174,21 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         },
     });
 
-    assert.strictEqual(list.$('.o_activity_summary').text(), 'Call with Al');
+    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, 'Call with Al');
 
     // click on the first record to open it, to ensure that the 'switch_view'
     // assertion is relevant (it won't be opened as there is no action manager,
     // but we'll log the 'switch_view' event)
-    await testUtils.dom.click(list.$('.o_data_cell:first'));
+    await testUtils.dom.click(list.querySelector('.o_data_cell'));
 
     // from this point, no 'switch_view' event should be triggered, as we
     // interact with the activity widget
     assert.step('open dropdown');
-    await testUtils.dom.click(list.$('.o_activity_btn span')); // open the popover
-    await testUtils.dom.click(list.$('.o_mark_as_done:first')); // mark the first activity as done
-    await testUtils.dom.click(list.$('.o_activity_popover_done')); // confirm
+    await testUtils.dom.click(list.querySelector('.o_activity_btn span')); // open the popover
+    await testUtils.dom.click(list.querySelector('.o_mark_as_done')); // mark the first activity as done
+    await testUtils.dom.click(list.querySelector('.o_activity_popover_done')); // confirm
 
-    assert.strictEqual(list.$('.o_activity_summary').text(), 'Meet FP');
+    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, 'Meet FP');
 
     assert.verifySteps([
         '/web/dataset/search_read',
@@ -236,7 +236,7 @@ QUnit.test('list activity exception widget with activity', async function (asser
         activity_exception_decoration: 'warning',
         activity_exception_icon: 'fa-warning',
     });
-    const { widget: list } = await start({
+    const { target: list } = await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -246,9 +246,9 @@ QUnit.test('list activity exception widget with activity', async function (asser
     });
 
     assert.containsN(list, '.o_data_row', 2, "should have two records");
-    assert.doesNotHaveClass(list.$('.o_data_row:eq(0) .o_activity_exception_cell div'), 'fa-warning',
+    assert.doesNotHaveClass(list.querySelector('.o_data_row .o_activity_exception_cell div'), 'fa-warning',
         "there is no any exception activity on record");
-    assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-warning',
+    assert.hasClass(list.querySelectorAll('.o_data_row .o_activity_exception_cell div')[1], 'fa-warning',
         "there is an exception on a record");
 });
 
@@ -266,7 +266,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
         partner_ids: [resPartnerId1],
     });
 
-    var { widget: form } = await start({
+    var { target: form } = await start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
@@ -313,10 +313,10 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
 
     assert.containsN(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
         "should contain the second tag");
-    const firstTag = form.$('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0').first();
-    assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
+    const firstTag = form.querySelector('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0');
+    assert.strictEqual(firstTag.querySelector('.o_badge_text').innerText, "gold",
         "tag should only show name");
-    assert.hasAttrValue(firstTag.find('.o_badge_text'), 'title', "coucou@petite.perruche",
+    assert.hasAttrValue(firstTag.querySelector('.o_badge_text'), 'title', "coucou@petite.perruche",
         "tag should show email address on mouse hover");
     // should have read resPartnerId2 three times: when opening the dropdown, when opening the modal, and
     // after the save
@@ -335,7 +335,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
         partner_ids: messagePartnerIds,
     });
 
-    const { widget: form } = await start({
+    const { click, target: form } = await start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
@@ -343,17 +343,17 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
         res_id: mailMessageId1,
     });
 
-    assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100);
+    assert.strictEqual(form.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 100);
 
-    await testUtils.form.clickEdit(form);
+    await click('.o_form_button_edit');
 
-    assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+    assert.hasClass(form.querySelector('.o_form_view'), 'o_form_editable');
 
     // add a record to the relation
     await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
     await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
 
-    assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 101);
+    assert.strictEqual(form.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 101);
 });
 
 });
