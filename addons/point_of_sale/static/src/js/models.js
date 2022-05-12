@@ -2137,7 +2137,7 @@ class Payment extends PosModel {
             cid: this.cid,
             amount: this.get_amount(),
             name: this.name,
-            ticket: this.ticket,
+            ticket: owl.markup(this.ticket),
         };
     }
     // If payment status is a non-empty string, then it is an electronic payment.
@@ -2380,7 +2380,7 @@ class Order extends PosModel {
                     qweb.default_dict = _.clone(QWeb.default_dict);
                     qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
 
-                return qweb.render('subreceipt',{'pos':self.pos,'order':self, 'receipt': receipt}) ;
+                return owl.markup(qweb.render('subreceipt',{'pos':self.pos,'order':self, 'receipt': receipt}));
             }
         }
 
