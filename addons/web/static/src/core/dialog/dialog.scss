@@ -1,5 +1,18 @@
 .modal.o_technical_modal .modal-footer {
-    gap: map-get($spacers, 1);
+    // FIXME: These selectors should not be necessary if we used buttons
+    // as direct children of the modal-footer as normally required
+    div,
+    footer {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 1 1 auto;
+        justify-content: flex-start;
+        gap: map-get($spacers, 1);
+
+        @include media-breakpoint-down(sm) {
+            justify-content: space-around;
+        }
+    }
 
     button {
         margin: 0; // Reset boostrap.
