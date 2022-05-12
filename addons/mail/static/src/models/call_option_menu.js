@@ -2,11 +2,23 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallOptionMenu',
     identifyingFields: ['callActionListView'],
     recordMethods: {
+        /**
+         * @param {Event} ev
+         */
+        onChangeVideoFilterCheckbox(ev) {
+            const filterVideoGrid = ev.target.checked;
+            const activeRtcSession = this.callActionListView.callView.activeRtcSession;
+            if (filterVideoGrid && activeRtcSession && !activeRtcSession.videoStream) {
+                this.callActionListView.callView.update({ activeRtcSession: clear() });
+            }
+            this.callActionListView.callView.update({ filterVideoGrid });
+        },
         /**
          * Creates and download a file that contains the logs of the current RTC call.
          *

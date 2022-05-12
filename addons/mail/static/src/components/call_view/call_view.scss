@@ -11,6 +11,10 @@
     }
 }
 
+.o_CallView_mainParticipantContainer {
+    min-width: 0;
+}
+
 .o_CallView_grid {
     overflow-y: auto;
     overflow-x: hidden;
@@ -40,6 +44,13 @@
     aspect-ratio: 16/9;
 }
 
+.o_CallView_sidebarButton {
+    font-size: 1.2rem;
+    padding: map-get($spacers, 2);
+    top: 48%;
+    right: 0;
+}
+
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
@@ -52,4 +63,15 @@
     &::-webkit-scrollbar-thumb {
         background: gray('700');
     }
+}
+
+.o_CallView_mainParticipantContainer {
+    background-color: black;
+}
+
+.o_CallView_sidebarButton {
+    color: white;
+    border-radius: 10px 0px 0px 10px;
+    border-right: 0px;
+    background-color: lighten(black, 10%);
 }

@@ -215,11 +215,9 @@ registerModel({
                 return;
             }
             const track = trackKind === 'audio' ? this.rtcAsConnectedSession.audioTrack : this.rtcAsConnectedSession.videoTrack;
-            const fullDirection = track ? 'sendrecv' : 'recvonly';
-            const limitedDirection = track ? 'sendonly' : 'inactive';
-            let transceiverDirection = fullDirection;
-            if (trackKind === 'video') {
-                transceiverDirection = !this.messaging.focusedRtcSession || this.messaging.focusedRtcSession === this ? fullDirection : limitedDirection;
+            let transceiverDirection = track ? 'sendrecv' : 'recvonly';
+            if (trackKind === 'video' && !this.rtcPeerConnection.acceptsVideoStream) {
+                transceiverDirection = track ? 'sendonly' : 'inactive';
             }
             let transceiver;
             if (initTransceiver) {
@@ -448,6 +446,14 @@ registerModel({
          */
         calledChannels: many('Thread', {
             inverse: 'rtcInvitingSession',
+        }),
+        /**
+         * The participant cards of this session,
+         * this is used to know how many views are displaying this session.
+         */
+        callParticipantCards: many('CallParticipantCard', {
+            inverse: 'rtcSession',
+            isCausal: true,
         }),
         /**
          * States whether there is currently an error with the audio element.
