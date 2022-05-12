@@ -568,6 +568,17 @@ class MailActivity(models.Model):
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
+    def action_open_document(self):
+        """ Opens the related record based on the model and ID """
+        self.ensure_one()
+        return {
+            'res_id': self.res_id,
+            'res_model': self.res_model,
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
+
     def activity_format(self):
         activities = self.read()
         mail_template_ids = set([template_id for activity in activities for template_id in activity["mail_template_ids"]])

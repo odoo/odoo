@@ -99,6 +99,11 @@
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_document" string="Open Document"
+                                type="object" class="oe_link" icon="fa-file-text-o"
+                                attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', 0)]}"/>
+                    </div>
                     <group invisible="1">
                         <field name="activity_category" invisible="1" />
                         <field name="res_model" invisible="1"/>
