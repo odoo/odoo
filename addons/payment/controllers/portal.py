@@ -68,9 +68,9 @@ class PaymentPortal(portal.CustomerPortal):
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
         currency_id, acquirer_id, partner_id, company_id, invoice_id = tuple(map(
-            self.cast_as_int, (currency_id, acquirer_id, partner_id, company_id, invoice_id)
+            self._cast_as_int, (currency_id, acquirer_id, partner_id, company_id, invoice_id)
         ))
-        amount = self.cast_as_float(amount)
+        amount = self._cast_as_float(amount)
 
         # Raise an HTTP 404 if a partner is provided with an invalid access token
         if partner_id:
@@ -104,7 +104,7 @@ class PaymentPortal(portal.CustomerPortal):
         currency_id = currency_id or company.currency_id.id
 
         # Make sure that the company passed as parameter matches the partner's company.
-        PaymentPortal.ensure_matching_companies(partner_sudo, company)
+        PaymentPortal._ensure_matching_companies(partner_sudo, company)
 
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
@@ -342,7 +342,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param dict kwargs: Optional data. This parameter is not used here
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
-        tx_id = self.cast_as_int(tx_id)
+        tx_id = self._cast_as_int(tx_id)
         if tx_id:
             tx_sudo = request.env['payment.transaction'].sudo().browse(tx_id)
 
@@ -400,7 +400,7 @@ class PaymentPortal(portal.CustomerPortal):
             token_sudo.active = False
 
     @staticmethod
-    def cast_as_int(str_value):
+    def _cast_as_int(str_value):
         """ Cast a string as an `int` and return it.
 
         If the conversion fails, `None` is returned instead.
@@ -415,7 +415,7 @@ class PaymentPortal(portal.CustomerPortal):
             return None
 
     @staticmethod
-    def cast_as_float(str_value):
+    def _cast_as_float(str_value):
         """ Cast a string as a `float` and return it.
 
         If the conversion fails, `None` is returned instead.
@@ -430,7 +430,7 @@ class PaymentPortal(portal.CustomerPortal):
             return None
 
     @staticmethod
-    def ensure_matching_companies(partner, document_company):
+    def _ensure_matching_companies(partner, document_company):
         """ Check that the partner's company is the same as the document's company.
 
         If the partner company is not set, the check passes. If the companies don't match, a
