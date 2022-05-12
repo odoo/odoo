@@ -658,17 +658,13 @@ QUnit.module("Fields", (hooks) => {
 
             serverData.models.partner.records[0].turtles = [1, 2, 3];
             serverData.views = {
-                "turtle,false,list": `
-                    <tree limit="2">
-                        <field name="turtle_foo" widget="one2many"/>
-                    </tree>
-                `,
+                "turtle,false,list": `<tree limit="2"><field name="turtle_foo"/></tree>`,
             };
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch: `<form><field name="turtles"/></form>`,
+                arch: `<form><field name="turtles" widget="one2many"/></form>`,
                 resId: 1,
                 mockRPC(route, args) {
                     if (args.model === "turtle" && args.method === "read") {
