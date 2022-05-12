@@ -254,74 +254,8 @@ QUnit.test('list activity exception widget with activity', async function (asser
 
 QUnit.module('FieldMany2ManyTagsEmail');
 
-QUnit.test('fieldmany2many tags email', async function (assert) {
-    assert.expect(13);
-    var done = assert.async();
-
-    const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
-        { name: "gold", email: 'coucou@petite.perruche' },
-        { name: "silver", email: '' },
-    ]);
-    const mailMessageId1 = pyEnv['mail.message'].create({
-        partner_ids: [resPartnerId1, resPartnerId2],
-    });
-
-    // the modals need to be closed before the form view rendering
-    start({
-        hasView: true,
-        View: FormView,
-        model: 'mail.message',
-        res_id: mailMessageId1,
-        arch: '<form string="Partners">' +
-                '<sheet>' +
-                    '<field name="body"/>' +
-                    '<field name="partner_ids" widget="many2many_tags_email"/>' +
-                '</sheet>' +
-            '</form>',
-        viewOptions: {
-            mode: 'edit',
-        },
-        mockRPC: function (route, args) {
-            if (args.method === 'read' && args.model === 'res.partner') {
-                assert.step(JSON.stringify(args.args[0]));
-                assert.ok(args.args[1].includes('email'), "should read the email");
-            }
-            return this._super.apply(this, arguments);
-        },
-        archs: {
-            'res.partner,false,form': '<form string="Types"><field name="name"/><field name="email"/></form>',
-        },
-    }).then(async function ({ widget: form }) {
-        // should read it 3 times (1 with the form view, one with the form dialog and one after save)
-        assert.verifySteps([`[${resPartnerId1},${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
-        await testUtils.nextTick();
-        assert.containsN(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
-            "two tags should be present");
-        var firstTag = form.$('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0').first();
-        assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
-            "tag should only show name");
-        assert.hasAttrValue(firstTag.find('.o_badge_text'), 'title', "coucou@petite.perruche",
-            "tag should show email address on mouse hover");
-        done();
-    });
-    testUtils.nextTick().then(function () {
-        assert.strictEqual($('.modal-body.o_act_window').length, 1,
-            "there should be one modal opened to edit the empty email");
-        assert.strictEqual($('.modal-body.o_act_window input[name="name"]').val(), "silver",
-            "the opened modal should be a form view dialog with the res.partner 2");
-        assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
-            "there should be an email field in the modal");
-
-        // set the email and save the modal (will render the form view)
-        testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
-        testUtils.dom.click($('.modal-footer .btn-primary'));
-    });
-
-});
-
 QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
-    assert.expect(15);
+    assert.expect(17);
 
     const pyEnv = await startServer();
     const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
@@ -379,6 +313,11 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
 
     assert.containsN(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
         "should contain the second tag");
+    const firstTag = form.$('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0').first();
+    assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
+        "tag should only show name");
+    assert.hasAttrValue(firstTag.find('.o_badge_text'), 'title', "coucou@petite.perruche",
+        "tag should show email address on mouse hover");
     // should have read resPartnerId2 three times: when opening the dropdown, when opening the modal, and
     // after the save
     assert.verifySteps([`[${resPartnerId2}]`, `[${resPartnerId2}]`, `[${resPartnerId2}]`]);
