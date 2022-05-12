@@ -502,6 +502,8 @@ class MassMailing(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, contact_list_ids=self.contact_list_ids.ids)
+        if self.mail_server_id and not self.mail_server_id.active:
+            default['mail_server_id'] = self._get_default_mail_server_id()
         return super(MassMailing, self).copy(default=default)
 
     def _group_expand_states(self, states, domain, order):

@@ -408,6 +408,12 @@ class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _inherit = "ir.mail_server"
 
+    res_company_l10n_it_mail_pec_server_ids = fields.One2many(
+        comodel_name='res.company',
+        inverse_name='l10n_it_mail_pec_server_id',
+        string='PEC-mail server active usage',
+        readonly=True)
+
     def _get_test_email_addresses(self):
         self.ensure_one()
 
@@ -422,6 +428,15 @@ class IrMailServer(models.Model):
         if not email_to:
             raise UserError(_('Please configure Government PEC-mail	in company settings'))
         return email_from, email_to
+
+    def _active_usages_compute(self):
+        usages_super = super()._active_usages_compute()
+        for record in self.filtered('res_company_l10n_it_mail_pec_server_ids'):
+            usages_super.setdefault(record.id, []).extend(
+                map(lambda c: _('%s (Company E-Invoicing PEC-mail Server)', c.display_name),
+                    record.res_company_l10n_it_mail_pec_server_ids)
+            )
+        return usages_super
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                 attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,

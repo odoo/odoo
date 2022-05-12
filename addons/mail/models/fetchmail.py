@@ -114,8 +114,14 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         self.write({'state': 'draft'})
         return True
 
-    def connect(self):
+    def connect(self, allow_archived=False):
+        """
+        :param bool allow_archived: by default (False), an exception is raised when calling this method on an
+           archived record. It can be set to True for testing so that the exception is no longer raised.
+        """
         self.ensure_one()
+        if not allow_archived and not self.active:
+            raise UserError(_('The server "%s" cannot be used because it is archived.', self.display_name))
         connection_type = self._get_connection_type()
         if connection_type == 'imap':
             if self.is_ssl:
@@ -147,7 +153,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
     def button_confirm_login(self):
         for server in self:
             try:
-                connection = server.connect()
+                connection = server.connect(allow_archived=True)
                 server.write({'state': 'done'})
             except UnicodeError as e:
                 raise UserError(_("Invalid server name !\n %s", tools.ustr(e)))
