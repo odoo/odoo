@@ -153,7 +153,7 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     _call_adyen: function (data, operation) {
-        return rpc.query({
+        return this.pos.env.services.rpc({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',
             args: [[this.payment_method.id], data, operation],
