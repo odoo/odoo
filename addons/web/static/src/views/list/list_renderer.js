@@ -455,6 +455,7 @@ export class ListRenderer extends Component {
             isPassword: "password" in column.attrs,
             digits: column.attrs.digits && JSON.parse(column.attrs.digits),
             field: record.fields[fieldName],
+            timezone: true,
         };
         return formatter(record.data[fieldName], formatOptions);
     }
@@ -469,6 +470,7 @@ export class ListRenderer extends Component {
             isPassword: "password" in column.attrs,
             digits: column.attrs.digits && JSON.parse(column.attrs.digits),
             field: record.fields[fieldName],
+            timezone: true,
         };
         return formatter(record.data[fieldName], formatOptions);
     }
