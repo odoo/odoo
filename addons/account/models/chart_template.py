@@ -5,6 +5,7 @@ import csv
 import logging
 from collections import defaultdict
 
+from . import CHART_TEMPLATES, DEFAULT_CHART_TEMPLATE
 from odoo import SUPERUSER_ID, Command, _, api, models
 from odoo.addons.base.models.ir_translation import IrTranslationImport
 from odoo.modules import get_resource_path
@@ -12,15 +13,6 @@ from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
-TEMPLATES = {
-    'generic_coa': {'name': 'Generic Chart Template', 'country': None, 'modules': ['account']},
-    'be': {'name': 'BE Belgian PCMN', 'country': 'base.be', 'modules': ['l10n_be']},
-    'it': {'name': 'IT', 'country': 'base.it', 'modules': ['l10n_it']},
-    'fr': {'name': 'FR', 'country': 'base.fr', 'modules': ['l10n_fr']},
-    'ch': {'name': 'CH', 'country': 'base.ch', 'modules': ['l10n_ch']},
-    'de': {'name': 'DE', 'country': 'base.de', 'modules': ['l10n_de']},
-    'ae': {'name': 'AE', 'country': 'base.ae', 'modules': ['l10n_ae']},
-}
 
 class AccountChartTemplateDataError(Exception):
     pass
@@ -40,6 +32,7 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     if xml_record_ids:
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
+
 def preserve_existing_tags_on_taxes(cr, registry, module):
     '''
         This is a utility function used to preserve existing previous tags during upgrade of the module.
@@ -49,29 +42,28 @@ def preserve_existing_tags_on_taxes(cr, registry, module):
     if xml_records:
         cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
+
 class AccountChartTemplate(models.AbstractModel):
     _name = "account.chart.template"
     _description = "Account Chart Template"
-    _template_code = "generic_coa"
 
     def _select_chart_template(self, company=False):
         company = company or self.env.company
-        result = [(key, template['name']) for key, template in TEMPLATES.items()]
+        result = [(key, template['name']) for key, template in CHART_TEMPLATES.items()]
         if self:
             proposed = self._guess_chart_template(company)
             result.sort(key=lambda sel: (sel[0] != proposed, sel[1]))
         return result
 
     def _guess_chart_template(self, company=False):
-        # TODO: one country can have multiple CoAs
         # TODO: also fix account/populate/res_company.py then
         company = company or self.env.company
         country = company.country_id
-        default = 'generic_coa'
         if not company.country_id:
-            return default
+            return DEFAULT_CHART_TEMPLATE
+        # Python 3.7 dicts preserve the order, so it will take the first entry that matches the country code
         country_code = country.get_external_id()[country.id]
-        return next((key for key, template in TEMPLATES.items() if template['country'] == country_code), default)
+        return next((key for key, template in CHART_TEMPLATES.items() if template['country'] == country_code), default)
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Checks if the chart template can be loaded then proceeds installing it.
@@ -107,7 +99,7 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo (bool): whether or not we should load demo data right after loading the
             chart template.
         """
-        module_names = TEMPLATES[template_code].get('modules', [])
+        module_names = CHART_TEMPLATES[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
         if module_ids:
             module_ids.sudo().button_immediate_install()
@@ -223,7 +215,7 @@ class AccountChartTemplate(models.AbstractModel):
         Model = self.env[".".join(file_name.split(".")[:-1])]
         model_fields = Model._fields
 
-        template = TEMPLATES.get(template_code)
+        template = CHART_TEMPLATES.get(template_code)
         module = template['modules'][0]
         path_parts = [x for x in (module, 'data', 'template', file_name) if x]
         # Should the path be False then open(False, 'r') will open STDIN for reading
@@ -309,7 +301,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
         # Transfer account: if the chart_template has no parent, create the single company.transfer_account_id
-        if not TEMPLATES[template_code].get('parent_id'):
+        if not CHART_TEMPLATES[template_code].get('parent_id'):
             accounts_data['transfer_account_id'] = {
                 'company_id': cid,
                 'name': _("Liquidity Transfer"),

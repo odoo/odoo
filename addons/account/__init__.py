@@ -9,7 +9,7 @@ from . import report
 from . import populate
 
 from odoo import api, SUPERUSER_ID
-from odoo.addons.account.models.chart_template import TEMPLATES
+from odoo.addons.account.models import CHART_TEMPLATES
 
 SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE',
                   'CD', 'SN', 'TD', 'TG']

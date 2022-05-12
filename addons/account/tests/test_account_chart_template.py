@@ -4,7 +4,7 @@ import re
 import collections
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
-from odoo.addons.account.models.chart_template import TEMPLATES
+from odoo.addons.account.models import CHART_TEMPLATES, DEFAULT_CHART_TEMPLATE
 
 
 @tagged('post_install', '-at_install')
@@ -39,7 +39,8 @@ class AccountChartTemplateTest(TransactionCase):
 
     @classmethod
     def _prepare_subclasses(cls):
-        pattern = re.compile(f"^_get_(?P<template_code>{'|'.join(TEMPLATES)})_(?P<model>.*)$")
+        template_codes = '|'.join(CHART_TEMPLATES)
+        pattern = re.compile(f"^_get_(?P<template_code>{template_codes})_(?P<model>.*)$")
         matcher = lambda x: re.match(pattern, x)
         attrs = [x for x in dir(cls.AccountChartTemplate)]
         attrs = filter(matcher, attrs)
@@ -71,7 +72,7 @@ class AccountChartTemplateTest(TransactionCase):
                 check(template_code, data, _id)
 
     def test_default_chart_code(self):
-        self.assertEqual('generic_coa', self.AccountChartTemplate._guess_chart_template(self.company))
+        self.assertEqual(DEFAULT_CHART_TEMPLATE, self.AccountChartTemplate._guess_chart_template(self.company))
 
     def test_country_chart_code(self):
         self.company.country_id = self.env.ref('base.be')
