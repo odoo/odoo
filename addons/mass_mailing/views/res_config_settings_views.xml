@@ -28,14 +28,15 @@
                                 <div class="o_setting_right_pane">
                                     <label for="mass_mailing_outgoing_mail_server"/>
                                     <div class="text-muted">
-                                        Use a dedicated server for mailings
+                                        Pick a dedicated outgoing mail server for your mass mailings
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
                                         <div class="mt16">
-                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"
+                                                   placeholder="Default Server"/>
                                         </div>
                                         <div class="mt8">
-                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Email Server" icon="fa-arrow-right" class="oe_link"/>
+                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Outgoing Mail Servers" icon="fa-arrow-right" class="oe_link"/>
                                         </div>
                                     </div>
                                 </div>

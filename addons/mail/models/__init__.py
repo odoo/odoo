@@ -48,6 +48,7 @@ from . import ir_actions_server
 from . import ir_attachment
 from . import ir_config_parameter
 from . import ir_http
+from . import ir_mail_server
 from . import ir_model
 from . import ir_model_fields
 from . import ir_translation

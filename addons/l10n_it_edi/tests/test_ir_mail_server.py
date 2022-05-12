@@ -8,6 +8,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import tools
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
@@ -164,3 +165,21 @@ class PecMailServerTests(AccountEdiTestCommon):
     def test_decorrenza_termini(self):
         """ Test a receipt adapted from https://www.fatturapa.gov.it/export/documenti/messaggi/v1.0/IT01234567890_11111_DT_001.xml """
         self._test_receipt('DT', 'delivered', 'delivered_expired')
+
+    # -----------------------------
+    # Mail server
+    # -----------------------------
+
+    def test_server_archived_usage_protection(self):
+        """ Test the protection against using archived server (servers used cannot be archived) """
+        server = self.env['ir.mail_server'].create({
+            'name': 'Server',
+            'smtp_host': 'archive-test.smtp.local',
+        })
+        self.company.l10n_it_mail_pec_server_id = server.id
+        with self.assertRaises(UserError, msg='Server cannot be archived because it is used'):
+            server.action_archive()
+        self.assertTrue(server.active)
+        self.company.l10n_it_mail_pec_server_id = False
+        server.action_archive()  # No more usage -> can be archived
+        self.assertFalse(server.active)
