@@ -462,13 +462,13 @@ export class ListRenderer extends Component {
 
     getCellValue(column, record) {
         const fieldName = column.name;
-        const fieldType = this.fields[fieldName].type;
-        const formatter = formatterRegistry.get(fieldType, (val) => val);
+        const field = this.fields[fieldName];
+        const formatter = formatterRegistry.get(field.type, (val) => val);
         const formatOptions = {
             escape: false,
             data: record.data,
             isPassword: "password" in column.attrs,
-            digits: column.attrs.digits && JSON.parse(column.attrs.digits),
+            digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : field.digits,
             field: record.fields[fieldName],
             timezone: true,
         };
