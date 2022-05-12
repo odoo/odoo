@@ -436,7 +436,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_chart_template_data(self, template_code, company):
         company = company or self.env.company
         data = {}
-        models = ('res.company', 'account.account', 'account.tax', 'account.tax.group', 'account.journal', 'account.group')
+        models = ('res.company', 'account.account', 'account.tax.group', 'account.tax', 'account.journal', 'account.group')
         try:
             for model in models:
                 data[model] = self._get_data(template_code, company, model)
