@@ -2301,7 +2301,7 @@ class Task(models.Model):
             action['res_id'] = self.dependent_ids.id
             action['views'] = [(False, 'form')]
         else:
-            action['domain'] = [('depend_on_ids', '=', self.id)],
+            action['domain'] = [('depend_on_ids', '=', self.id)]
             action['name'] = _('Dependent Tasks')
             action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,activity'
         return action
