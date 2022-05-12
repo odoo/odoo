@@ -423,8 +423,21 @@ export class ListRenderer extends Component {
             this.cellClassByColumn[column.id] = classNames;
         }
         const classNames = [...this.cellClassByColumn[column.id]];
-        if (column.type === "field" && record.isRequired(column.name)) {
-            classNames.push("o_invalid_cell");
+        if (column.type === "field") {
+            if (record.isRequired(column.name)) {
+                classNames.push("o_invalid_cell");
+            }
+            if (this.canUseFormatter(column, record)) {
+                // generate field decorations classNames (only if field-specific decorations
+                // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
+                // only handle the text-decoration.
+                const { decorations } = record.activeFields[column.name];
+                for (const decoName in decorations) {
+                    if (evaluateExpr(decorations[decoName], record.evalContext)) {
+                        classNames.push(`text-${decoName}`);
+                    }
+                }
+            }
         }
         return classNames.join(" ");
     }

@@ -97,11 +97,10 @@ export class Field extends Component {
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
         // only handle the text-decoration.
         const { decorations } = this.props.record.activeFields[this.props.name];
-        const classNameFn = (d) => `text-${d}`;
         const evalContext = this.props.record.evalContext;
         for (const decoName in decorations) {
             const value = evaluateExpr(decorations[decoName], evalContext);
-            classNames[classNameFn(decoName)] = value;
+            classNames[`text-${decoName}`] = value;
         }
 
         return classNames;
