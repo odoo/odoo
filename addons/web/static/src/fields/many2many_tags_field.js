@@ -12,8 +12,9 @@ import { Domain } from "@web/core/domain";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { SelectCreateDialog } from "../views/view_dialogs/select_create_dialog";
 
-const { Component, useState } = owl;
+const { Component, useState, onWillDestroy } = owl;
 
 class Many2ManyTagsFieldColorListPopover extends Component {}
 Many2ManyTagsFieldColorListPopover.template = "web.Many2ManyTagsFieldColorListPopover";
@@ -30,6 +31,12 @@ export class Many2ManyTagsField extends Component {
         this.orm = useService("orm");
         this.previousColorsMap = {};
         this.popover = usePopover();
+        this.dialog = useService("dialog");
+        this.dialogClose = [];
+
+        onWillDestroy(() => {
+            this.dialogClose.forEach((close) => close());
+        });
     }
     get tags() {
         return this.props.value.records.map((record) => ({
@@ -93,6 +100,7 @@ export class Many2ManyTagsField extends Component {
             name: request,
             operator: "ilike",
             args: this.getDomain(),
+            limit: this.props.searchLimit + 1,
             context: this.props.context,
         });
 
@@ -113,8 +121,16 @@ export class Many2ManyTagsField extends Component {
                 label: sprintf(this.env._t(`Create "%s"`), escape(request)),
                 realLabel: request,
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
-                // action: this.onCreate.bind(this),
                 type: "create",
+            });
+        }
+
+        if (this.props.searchLimit < records.length) {
+            options.push({
+                label: this.env._t("Search More..."),
+                realLabel: request,
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+                type: "more",
             });
         }
 
@@ -150,7 +166,9 @@ export class Many2ManyTagsField extends Component {
 
     onSelect(option) {
         this.state.autocompleteValue = "";
-        if (option.type === "create") {
+        if (option.type === "more") {
+            this.onSearchMore(option.realLabel);
+        } else if (option.type === "create") {
             this.orm
                 .call(this.props.relation, "name_create", [option.realLabel], {
                     context: this.props.context,
@@ -193,6 +211,47 @@ export class Many2ManyTagsField extends Component {
             );
         }
     }
+
+    async onSearchMore(request) {
+        const domain = this.getDomain();
+        const context = this.props.record.getFieldContext(this.props.name);
+
+        let dynamicFilters = [];
+        if (request.length) {
+            const nameGets = await this.orm.call(this.props.relation, "name_search", [], {
+                name: request,
+                args: domain,
+                operator: "ilike",
+                limit: this.constructor.SEARCH_MORE_LIMIT,
+                context,
+            });
+
+            dynamicFilters = [
+                {
+                    description: sprintf(this.env._t("Quick search: %s"), request),
+                    domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
+                },
+            ];
+        }
+
+        this.dialogClose.push(
+            this.dialog.add(SelectCreateDialog, {
+                resModel: this.props.relation,
+                domain,
+                context,
+                title: sprintf(
+                    this.env._t("Search: %s"),
+                    this.props.record.activeFields[this.props.name].string
+                ),
+                multiSelect: true,
+                onSelected: (ids) => {
+                    this.props.value.replaceWith([...this.props.value.currentIds, ...ids]);
+                },
+                searchViewId: false,
+                dynamicFilters,
+            })
+        );
+    }
 }
 
 Many2ManyTagsField.components = {
@@ -204,6 +263,7 @@ Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.defaultProps = {
     canEditColor: true,
     canQuickCreate: true,
+    searchLimit: 7,
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
@@ -214,6 +274,7 @@ Many2ManyTagsField.props = {
     relation: { type: String },
     domain: { type: Domain },
     context: { type: Object },
+    searchLimit: { type: Number, optional: true },
 };
 Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 Many2ManyTagsField.displayName = _lt("Tags");
@@ -221,6 +282,7 @@ Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
+Many2ManyTagsField.SEARCH_MORE_LIMIT = 320;
 
 Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
     const colorField = attrs.options.color_field;
