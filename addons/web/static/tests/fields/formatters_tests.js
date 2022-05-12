@@ -11,6 +11,7 @@ import {
     formatMany2one,
     formatMonetary,
     formatPercentage,
+    formatReference,
     formatX2many,
 } from "@web/fields/formatters";
 import { session } from "@web/session";
@@ -309,5 +310,11 @@ QUnit.module("Fields", (hooks) => {
         patchWithCleanup(localization, { grouping: [3, 0], decimalPoint: ",", thousandsSep: "." });
         assert.strictEqual(formatPercentage(0.125), "12,5%");
         assert.strictEqual(formatPercentage(0.666666), "66,67%");
+    });
+
+    QUnit.test("formatReference", function (assert) {
+        assert.strictEqual(formatReference(false), "");
+        const value = { resModel: "product", resId: 2, displayName: "Chair" };
+        assert.strictEqual(formatReference(value), "Chair");
     });
 });

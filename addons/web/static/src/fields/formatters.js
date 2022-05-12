@@ -356,6 +356,17 @@ export const formatPercentage = (value, options = {}) => {
 };
 
 /**
+ * Returns a string representing the value of the reference field.
+ *
+ * @param {Object|false} value Object with keys "resId" and "displayName"
+ * @param {Object} [options={}]
+ * @returns {string}
+ */
+export const formatReference = (value, options) => {
+    return formatMany2one(value ? [value.resId, value.displayName] : false, options);
+};
+
+/**
  * Returns a string of the value of the selection.
  *
  * @param {Object} [options={}]
@@ -394,5 +405,6 @@ registry
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)
     .add("percentage", formatPercentage)
+    .add("reference", formatReference)
     .add("selection", formatSelection)
     .add("text", formatText);
