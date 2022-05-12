@@ -6,6 +6,7 @@ from odoo.tools.misc import format_date
 
 import re
 from psycopg2 import sql
+import psycopg2
 
 
 class SequenceMixin(models.AbstractModel):
@@ -48,6 +49,9 @@ class SequenceMixin(models.AbstractModel):
     def __init__(self, pool, cr):
         api.constrains(self._sequence_field, self._sequence_date_field)(type(self)._constrains_date_sequence)
         return super().__init__(pool, cr)
+
+    def _get_sequence_locks(self):
+        return []
 
     def _constrains_date_sequence(self):
         # Make it possible to bypass the constraint to allow edition of already messed up documents.
@@ -160,7 +164,21 @@ class SequenceMixin(models.AbstractModel):
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
 
+        records_to_lock = self._get_sequence_locks()
+        if records_to_lock:
+            for records in records_to_lock:
+                self.env.cr.execute(f"""
+                    -- Quick fail if we know we won't be able to continue anyways 
+                    SELECT * FROM {records._table} WHERE id = ANY(%(ids)s) FOR UPDATE NOWAIT;
+                    -- Ensure that it is impossible to compute two sequences based on the same
+                    -- records at the same time, and that we don't simply wait for the lock
+                    UPDATE {records._table} SET write_date = write_date WHERE id = ANY(%(ids)s);
+                """, {
+                    'ids': records.ids
+                })
+
         query = """
+            -- Update to ensure a SerializationFailure if the `records_to_lock` were not correctly set
             UPDATE {table} SET write_date = write_date WHERE id = (
                 SELECT id FROM {table}
                 {where_string}

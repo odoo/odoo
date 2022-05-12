@@ -48,6 +48,9 @@ class AccountMove(models.Model):
             ON account_move(journal_id, state, payment_state, move_type, date);
         """)
 
+    def _get_sequence_locks(self):
+        return super()._get_sequence_locks() + [self.journal_id]
+
     @property
     def _sequence_monthly_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_monthly_regex
