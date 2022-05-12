@@ -158,6 +158,17 @@ class MailMail(models.Model):
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()
 
+    def action_open_document(self):
+        """ Opens the related record based on the model and ID """
+        self.ensure_one()
+        return {
+            'res_id': self.res_id,
+            'res_model': self.model,
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
+
     def mark_outgoing(self):
         return self.write({'state': 'outgoing'})
 
