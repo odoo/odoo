@@ -371,7 +371,7 @@
             <li t-foreach="state.sources" t-as="src" t-key="src.id"
                 t-att-id="src.id"
                 class="o_menu_item dropdown-item"
-                t-att-class="{ o_indent: src.parent and !src.parent.selection, o_selection_focus: src_index === state.focusedItem }"
+                t-att-class="{ o_indent: src.parent and !src.parent.selection, focus: src_index === state.focusedItem}"
                 t-on-click="()=>this._selectSource(src)"
                 t-on-mousemove="()=>this._onSourceMousemove(src_index)"
                 >
