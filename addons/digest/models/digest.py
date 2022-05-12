@@ -12,6 +12,7 @@ from werkzeug.urls import url_join
 from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import AccessError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
@@ -55,20 +56,33 @@ class Digest(models.Model):
             digest.available_fields = ', '.join(kpis_values_fields)
 
     def _get_kpi_compute_parameters(self):
-        return fields.Datetime.to_string(self._context.get('start_datetime')), fields.Datetime.to_string(self._context.get('end_datetime')), self.env.company
+        """Get the parameters used to computed the KPI value."""
+        companies = self.company_id
+        if any(not digest.company_id for digest in self):
+            # No company: we will use the current company to compute the KPIs
+            companies |= self.env.company
+
+        return (
+            fields.Datetime.to_string(self.env.context.get('start_datetime')),
+            fields.Datetime.to_string(self.env.context.get('end_datetime')),
+            companies,
+        )
 
     def _compute_kpi_res_users_connected_value(self):
-        for record in self:
-            start, end, company = record._get_kpi_compute_parameters()
-            user_connected = self.env['res.users'].search_count([('company_id', '=', company.id), ('login_date', '>=', start), ('login_date', '<', end)])
-            record.kpi_res_users_connected_value = user_connected
+        self._calculate_company_based_kpi(
+            'res.users',
+            'kpi_res_users_connected_value',
+            date_field='login_date',
+        )
 
     def _compute_kpi_mail_message_total_value(self):
-        discussion_subtype_id = self.env.ref('mail.mt_comment').id
-        for record in self:
-            start, end, company = record._get_kpi_compute_parameters()
-            total_messages = self.env['mail.message'].search_count([('create_date', '>=', start), ('create_date', '<', end), ('subtype_id', '=', discussion_subtype_id), ('message_type', 'in', ['comment', 'email'])])
-            record.kpi_mail_message_total_value = total_messages
+        start, end, __ = self._get_kpi_compute_parameters()
+        self.kpi_mail_message_total_value = self.env['mail.message'].search_count([
+            ('create_date', '>=', start),
+            ('create_date', '<', end),
+            ('subtype_id', '=', self.env.ref('mail.mt_comment').id),
+            ('message_type', 'in', ('comment', 'email')),
+        ])
 
     @api.onchange('periodicity')
     def _onchange_periodicity(self):
@@ -275,6 +289,9 @@ class Digest(models.Model):
                 if self._fields['%s_value' % field_name].type == 'monetary':
                     converted_amount = tools.format_decimalized_amount(compute_value)
                     compute_value = self._format_currency_amount(converted_amount, company.currency_id)
+                elif self._fields['%s_value' % field_name].type == 'float':
+                    compute_value = "%.2f" % compute_value
+
                 kpi_values['kpi_col%s' % (col_index + 1)].update({
                     'value': compute_value,
                     'margin': margin,
@@ -373,6 +390,43 @@ class Digest(models.Model):
     # ------------------------------------------------------------
     # FORMATTING / TOOLS
     # ------------------------------------------------------------
+
+    def _calculate_company_based_kpi(self, model, digest_kpi_field, date_field='create_date',
+                                     additional_domain=None, sum_field=None):
+        """Generic method that computes the KPI on a given model.
+
+        :param model: Model on which we will compute the KPI
+            This model must have a "company_id" field
+        :param digest_kpi_field: Field name on which we will write the KPI
+        :param date_field: Field used for the date range
+        :param additional_domain: Additional domain
+        :param sum_field: Field to sum to obtain the KPI,
+            if None it will count the number of records
+        """
+        start, end, companies = self._get_kpi_compute_parameters()
+
+        base_domain = [
+            ('company_id', 'in', companies.ids),
+            (date_field, '>=', start),
+            (date_field, '<', end),
+        ]
+
+        if additional_domain:
+            base_domain = expression.AND([base_domain, additional_domain])
+
+        values = self.env[model]._read_group(
+            domain=base_domain,
+            fields=[f'{sum_field}:sum'] if sum_field else None,
+            groupby=['company_id'],
+        )
+
+        values_per_company = {
+            value['company_id'][0]: value[sum_field] if sum_field else value['company_id_count']
+            for value in values
+        }
+        for digest in self:
+            company = digest.company_id or self.env.company
+            digest[digest_kpi_field] = values_per_company.get(company.id, 0)
 
     def _get_kpi_fields(self):
         return [field_name for field_name, field in self._fields.items()
