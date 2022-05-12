@@ -363,7 +363,6 @@ registerModel({
         }),
         chatWindows: many('ChatWindow', {
             inverse: 'manager',
-            isCausal: true,
         }),
         hasVisibleChatWindows: attr({
             compute: '_computeHasVisibleChatWindows',
@@ -379,7 +378,6 @@ registerModel({
         }),
         newMessageChatWindow: one('ChatWindow', {
             inverse: 'managerAsNewMessage',
-            isCausal: true,
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',

@@ -348,7 +348,6 @@ registerModel({
         channelMemberListView: one('ChannelMemberListView', {
             compute: '_computeChannelMemberListView',
             inverse: 'threadViewOwner',
-            isCausal: true,
         }),
         compact: attr({
             related: 'threadViewer.compact',
@@ -377,7 +376,6 @@ registerModel({
         composerView: one('ComposerView', {
             compute: '_computeComposerView',
             inverse: 'threadView',
-            isCausal: true,
         }),
         /**
          * Determines which extra class this thread view component should have.
@@ -482,7 +480,6 @@ registerModel({
         messageListView: one('MessageListView', {
             compute: '_computeMessageListView',
             inverse: 'threadViewOwner',
-            isCausal: true,
         }),
         messages: many('Message', {
             related: 'threadCache.messages',
@@ -493,7 +490,6 @@ registerModel({
         messageViews: many('MessageView', {
             compute: '_computeMessageViews',
             inverse: 'threadView',
-            isCausal: true,
         }),
         /**
          * States the order mode of the messages on this thread view.
@@ -512,7 +508,6 @@ registerModel({
         rtcCallViewer: one('RtcCallViewer', {
             compute: '_computeRtcCallViewer',
             inverse: 'threadView',
-            isCausal: true,
             readonly: true,
         }),
         /**
@@ -565,7 +560,6 @@ registerModel({
         topbar: one('ThreadViewTopbar', {
             compute: '_computeTopbar',
             inverse: 'threadView',
-            isCausal: true,
             readonly: true,
         }),
     },

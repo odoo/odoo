@@ -40,7 +40,6 @@ registerModel({
     fields: {
         followerSubtypeViews: many('FollowerSubtypeView', {
             inverse: 'subtype',
-            isCausal: true,
         }),
         id: attr({
             readonly: true,

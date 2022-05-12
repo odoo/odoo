@@ -41,7 +41,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'attachmentBoxViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         chatter: one('Chatter', {
@@ -56,19 +55,16 @@ registerModel({
         dropZoneView: one('DropZoneView', {
             compute: '_computeDropZoneView',
             inverse: 'attachmentBoxViewOwner',
-            isCausal: true,
         }),
         fileUploader: one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'attachmentBoxView',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
             default: insertAndReplace(),
             inverse: 'attachmentBoxViewOwner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

@@ -484,14 +484,12 @@ registerModel({
         }),
         rtcPeerConnection: one('RtcPeerConnection', {
             inverse: 'rtcSession',
-            isCausal: true,
         }),
         /**
          * Contains the RTCDataChannel of the rtc session.
          */
         rtcDataChannel: one('RtcDataChannel', {
             inverse: 'rtcSession',
-            isCausal: true,
         }),
         /**
          * MediaStream of the user's video.

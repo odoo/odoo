@@ -295,7 +295,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'messageViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         authorAvatarTitleText: attr({
@@ -308,7 +307,6 @@ registerModel({
                 }),
             }),
             inverse: 'messageViewOwner',
-            isCausal: true,
         }),
         /**
          * States the component displaying this message view (if any).
@@ -316,14 +314,12 @@ registerModel({
         component: attr(),
         composerForEditing: one('Composer', {
             inverse: 'messageViewInEditing',
-            isCausal: true,
         }),
         /**
         * Determines the composer that is used to edit this message (if any).
         */
         composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
-            isCausal: true,
         }),
         /**
          * States the time elapsed since date up to now.
@@ -406,7 +402,6 @@ registerModel({
         messageActionList: one('MessageActionList', {
             compute: '_computeMessageActionList',
             inverse: 'messageView',
-            isCausal: true,
             readonly: true,
         }),
         /**
@@ -424,13 +419,11 @@ registerModel({
         messageInReplyToView: one('MessageInReplyToView', {
             compute: '_computeMessageInReplyToView',
             inverse: 'messageView',
-            isCausal: true,
             readonly: true,
         }),
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
             compute: '_computeMessageSeenIndicatorView',
             inverse: 'messageViewOwner',
-            isCausal: true,
         }),
         /**
          * States the thread view that is displaying this messages (if any).

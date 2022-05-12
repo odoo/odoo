@@ -171,7 +171,6 @@ registerModel({
         rtcOptionList: one('RtcOptionList', {
             default: insertAndReplace(),
             inverse: 'rtcController',
-            isCausal: true,
         }),
         screenSharingButtonTitle: attr({
             compute: '_computeScreenSharingButtonTitle',

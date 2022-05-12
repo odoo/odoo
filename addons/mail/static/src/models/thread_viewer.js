@@ -160,7 +160,6 @@ registerModel({
         threadView: one('ThreadView', {
             compute: '_computeThreadView',
             inverse: 'threadViewer',
-            isCausal: true,
         }),
         threadView_hasComposerThreadTyping: attr({
             compute: '_computeThreadView_hasComposerThreadTyping',

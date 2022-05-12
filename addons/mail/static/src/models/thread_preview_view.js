@@ -56,7 +56,6 @@ registerModel({
         messageAuthorPrefixView: one('MessageAuthorPrefixView', {
             compute: '_computeMessageAuthorPrefixView',
             inverse: 'threadPreviewViewOwner',
-            isCausal: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
             inverse: 'threadPreviewViews',

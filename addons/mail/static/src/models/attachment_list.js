@@ -86,7 +86,6 @@ registerModel({
         attachmentCards: many('AttachmentCard', {
             compute: '_computeAttachmentCards',
             inverse: 'attachmentList',
-            isCausal: true,
         }),
         /**
          * States the attachment images that are displaying this imageAttachments.
@@ -94,11 +93,9 @@ registerModel({
         attachmentImages: many('AttachmentImage', {
             compute: '_computeAttachmentImages',
             inverse: 'attachmentList',
-            isCausal: true,
         }),
         attachmentListViewDialog: one('Dialog', {
             inverse: 'attachmentListOwnerAsAttachmentView',
-            isCausal: true,
         }),
         /**
          * States the attachments to be displayed by this attachment list.

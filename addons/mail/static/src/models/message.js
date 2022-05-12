@@ -868,7 +868,6 @@ registerModel({
          */
         messageReactionGroups: many('MessageReactionGroup', {
             inverse: 'message',
-            isCausal: true,
         }),
         message_type: attr(),
         /**
@@ -876,7 +875,6 @@ registerModel({
          */
         messageViews: many('MessageView', {
             inverse: 'message',
-            isCausal: true,
         }),
         notifications: many('Notification', {
             inverse: 'message',

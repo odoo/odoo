@@ -355,14 +355,12 @@ registerModel({
             default: insertAndReplace(),
             readonly: true,
             inverse: 'callViewer',
-            isCausal: true,
         }),
         /**
          * The model for the menu to control the layout of the viewer.
          */
         rtcLayoutMenu: one('RtcLayoutMenu', {
             inverse: 'callViewer',
-            isCausal: true,
         }),
         /**
          * Text content that is displayed on title of the settings dialog.

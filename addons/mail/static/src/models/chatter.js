@@ -281,11 +281,9 @@ registerModel({
         activityBoxView: one('ActivityBoxView', {
             compute: '_computeActivityBoxView',
             inverse: 'chatter',
-            isCausal: true,
         }),
         attachmentBoxView: one('AttachmentBoxView', {
             inverse: 'chatter',
-            isCausal: true,
         }),
         attachmentsLoaderTimeout: attr(),
         /**
@@ -297,7 +295,6 @@ registerModel({
          */
         composerView: one('ComposerView', {
             inverse: 'chatter',
-            isCausal: true,
         }),
         context: attr({
             default: {},
@@ -305,12 +302,10 @@ registerModel({
         followButtonView: one('FollowButtonView', {
             compute: '_computeFollowButtonView',
             inverse: 'chatterOwner',
-            isCausal: true,
         }),
         followerListMenuView: one('FollowerListMenuView', {
             compute: '_computeFollowerListMenuView',
             inverse: 'chatterOwner',
-            isCausal: true,
         }),
         /**
          * Determines whether `this` should display an activity box.
@@ -406,7 +401,6 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'chatter',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

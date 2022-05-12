@@ -115,7 +115,6 @@ registerModel({
         }),
         deleteConfirmDialog: one('Dialog', {
             inverse: 'messageActionListOwnerAsDeleteConfirm',
-            isCausal: true,
         }),
         /**
          * Determines whether this message action list has mark as read icon.
@@ -148,7 +147,6 @@ registerModel({
          */
         reactionPopoverView: one('PopoverView', {
             inverse: 'messageActionListOwnerAsReaction',
-            isCausal: true,
         }),
     },
 });

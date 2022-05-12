@@ -198,7 +198,6 @@ registerModel({
         }),
         followerSubtypeListDialog: one('Dialog', {
             inverse: 'followerOwnerAsSubtypeList',
-            isCausal: true,
         }),
         id: attr({
             readonly: true,

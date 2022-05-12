@@ -185,7 +185,6 @@ registerModel({
         mediaPreview: one('MediaPreview', {
             compute: '_computeMediaPreview',
             inverse: 'welcomeView',
-            isCausal: true,
             readonly: true,
         }),
         /**

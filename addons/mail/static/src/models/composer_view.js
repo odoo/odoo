@@ -1406,7 +1406,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'composerViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         /**
@@ -1435,12 +1434,10 @@ registerModel({
         composerSuggestedRecipientListView: one('ComposerSuggestedRecipientListView', {
             compute: '_computeComposerSuggestedRecipientListView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         composerSuggestionListView: one('ComposerSuggestionListView', {
             compute: '_computeComposerSuggestionListView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * Current partner image URL.
@@ -1455,14 +1452,12 @@ registerModel({
         dropZoneView: one('DropZoneView', {
             compute: '_computeDropZoneView',
             inverse: 'composerViewOwner',
-            isCausal: true,
         }),
         /**
          * Determines the emojis popover that is active on this composer view.
          */
         emojisPopoverView: one('PopoverView', {
             inverse: 'composerViewOwnerAsEmoji',
-            isCausal: true,
         }),
         /**
          * Determines the extra suggestions.
@@ -1470,12 +1465,10 @@ registerModel({
         extraSuggestions: many('ComposerSuggestion', {
             compute: '_computeExtraSuggestions',
             inverse: 'composerViewOwnerAsExtraSuggestion',
-            isCausal: true,
         }),
         fileUploader: one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'composerView',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
@@ -1575,7 +1568,6 @@ registerModel({
         mainSuggestions: many('ComposerSuggestion', {
             compute: '_computeMainSuggestions',
             inverse: 'composerViewOwnerAsMainSuggestion',
-            isCausal: true,
         }),
         /**
          * States the message view on which this composer allows editing (if any).
@@ -1654,7 +1646,6 @@ registerModel({
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
             default: insertAndReplace(),
             inverse: 'composerViewOwner',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

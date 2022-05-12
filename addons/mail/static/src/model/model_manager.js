@@ -1034,9 +1034,6 @@ export class ModelManager {
             ModelField.many(model.name, { inverse: field.fieldName }),
             {
                 fieldName: `_inverse_${model}/${field.fieldName}`,
-                // Allows the inverse of an identifying field to be
-                // automatically generated.
-                isCausal: model.__identifyingFieldsFlattened.has(field.fieldName),
             },
         ));
         return inverseField;
@@ -1203,7 +1200,20 @@ export class ModelManager {
             }
         }
         /**
-         * 4. Register final fields and make field accessors, to redirects field
+         * 4. Automatically add isCausal on the inverse of identifying fields.
+         */
+        for (const model of Object.values(this.models)) {
+            for (const fieldName of model.__identifyingFieldsFlattened) {
+                const field = model.__combinedFields[fieldName];
+                if (field.to) {
+                    const otherModel = this.models[field.to];
+                    const otherField = otherModel.__combinedFields[field.inverse];
+                    otherField.isCausal = true;
+                }
+            }
+        }
+        /**
+         * 5. Register final fields and make field accessors, to redirects field
          * access to field getter and to prevent field from being written
          * without calling update (which is necessary to process update cycle).
          */

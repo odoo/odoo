@@ -637,17 +637,14 @@ registerModel({
          */
         channelInvitationForm: one('ChannelInvitationForm', {
             inverse: 'chatWindow',
-            isCausal: true,
         }),
         channelMemberListView: one('ChannelMemberListView', {
             compute: '_computeChannelMemberListView',
             inverse: 'chatWindowOwner',
-            isCausal: true,
         }),
         chatWindowHeaderView: one('ChatWindowHeaderView', {
             default: insertAndReplace(),
             inverse: 'chatWindowOwner',
-            isCausal: true,
         }),
         componentStyle: attr({
             compute: '_computeComponentStyle',
@@ -747,7 +744,6 @@ registerModel({
         newMessageAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeNewMessageAutocompleteInputView',
             inverse: 'chatWindowOwnerAsNewMessage',
-            isCausal: true,
         }),
         /**
          * The content of placeholder for the autocomplete input of
@@ -782,7 +778,6 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'chatWindow',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

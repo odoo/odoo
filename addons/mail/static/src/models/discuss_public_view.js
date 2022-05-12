@@ -81,14 +81,12 @@ registerModel({
          */
         threadViewer: one('ThreadViewer', {
             inverse: 'discussPublicView',
-            isCausal: true,
         }),
         /**
          * States the welcome view linked to this discuss public view.
          */
         welcomeView: one('WelcomeView', {
             inverse: 'discussPublicView',
-            isCausal: true,
         }),
     },
 });

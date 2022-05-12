@@ -257,7 +257,6 @@ registerModel({
     fields: {
         activityViews: many('ActivityView', {
             inverse: 'activity',
-            isCausal: true,
         }),
         assignee: one('User'),
         attachments: many('Attachment', {

@@ -89,7 +89,6 @@ registerModel({
         }),
         attachmentDeleteConfirmDialog: one('Dialog', {
             inverse: 'attachmentImageOwnerAsAttachmentDeleteConfirm',
-            isCausal: true,
         }),
         /**
          * States the attachmentList displaying this attachment image.

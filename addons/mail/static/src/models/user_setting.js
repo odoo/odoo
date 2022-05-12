@@ -287,7 +287,6 @@ registerModel({
         rtcConfigurationMenu: one('RtcConfigurationMenu', {
             default: insertAndReplace(),
             inverse: 'userSetting',
-            isCausal: true,
         }),
         /**
          * layout of the rtc session display chosen by the user

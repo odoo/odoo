@@ -1873,7 +1873,6 @@ registerModel({
         cache: one('ThreadCache', {
             default: insertAndReplace(),
             inverse: 'thread',
-            isCausal: true,
             readonly: true,
             required: true,
         }),
@@ -1883,7 +1882,6 @@ registerModel({
          */
         chatWindow: one('ChatWindow', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * Determines the composer state of this thread.
@@ -1891,7 +1889,6 @@ registerModel({
         composer: one('Composer', {
             compute: '_computeComposer',
             inverse: 'thread',
-            isCausal: true,
             readonly: true,
         }),
         correspondent: one('Partner', {
@@ -1960,7 +1957,6 @@ registerModel({
         discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
             compute: '_computeDiscussSidebarCategoryItem',
             inverse: 'channel',
-            isCausal: true,
             readonly: true,
         }),
         displayName: attr({
@@ -2236,7 +2232,6 @@ registerModel({
          */
         messageSeenIndicators: many('MessageSeenIndicator', {
             inverse: 'thread',
-            isCausal: true,
         }),
         messagingAsRingingThread: one('Messaging', {
             compute: '_computeMessagingAsRingingThread',
@@ -2337,7 +2332,6 @@ registerModel({
          */
         partnerSeenInfos: many('ThreadPartnerSeenInfo', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * Determine if there is a pending seen message change, which is a change
@@ -2355,7 +2349,6 @@ registerModel({
         rtcInvitationCard: one('RtcInvitationCard', {
             compute: '_computeRtcInvitationCard',
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * The session that invited the current user, it is only set when the
@@ -2461,11 +2454,9 @@ registerModel({
         }),
         threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             inverse: 'thread',
-            isCausal: true,
         }),
         threadPreviewViews: many('ThreadPreviewView', {
             inverse: 'thread',
-            isCausal: true,
         }),
         /**
          * Members that are currently typing something in the composer of this

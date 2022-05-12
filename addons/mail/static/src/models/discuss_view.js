@@ -114,7 +114,6 @@ registerModel({
         mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
             compute: '_computeMobileAddItemHeaderAutocompleteInputView',
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
-            isCausal: true,
         }),
         discuss: one('Discuss', {
             inverse: 'discussView',
@@ -124,12 +123,10 @@ registerModel({
         historyView: one('DiscussSidebarMailboxView', {
             default: insertAndReplace(),
             inverse: 'discussViewOwnerAsHistory',
-            isCausal: true,
         }),
         inboxView: one('DiscussSidebarMailboxView', {
             default: insertAndReplace(),
             inverse: 'discussViewOwnerAsInbox',
-            isCausal: true,
         }),
         /**
          * Reference of the quick search input. Useful to filter channels and
@@ -139,7 +136,6 @@ registerModel({
         starredView: one('DiscussSidebarMailboxView', {
             default: insertAndReplace(),
             inverse: 'discussViewOwnerAsStarred',
-            isCausal: true,
         }),
     },
 });

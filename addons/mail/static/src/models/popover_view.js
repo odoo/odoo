@@ -165,7 +165,6 @@ registerModel({
         activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
             compute: '_computeActivityMarkDonePopoverContentView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         activityViewOwnerAsMarkDone: one('ActivityView', {
@@ -185,7 +184,6 @@ registerModel({
         channelInvitationForm: one('ChannelInvitationForm', {
             compute: '_computeChannelInvitationForm',
             inverse: 'popoverViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         /**
@@ -228,7 +226,6 @@ registerModel({
         emojiListView: one('EmojiListView', {
             compute: '_computeEmojiListView',
             inverse: 'popoverViewOwner',
-            isCausal: true,
             readonly: true,
         }),
         /**

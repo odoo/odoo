@@ -263,7 +263,6 @@ registerModel({
         rtcVideoView: one('RtcVideoView', {
             compute: '_computeRtcVideoView',
             inverse: 'rtcCallParticipantCardOwner',
-            isCausal: true,
         }),
         volumeMenuAnchorRef: attr(),
     },
