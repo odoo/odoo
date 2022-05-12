@@ -22,7 +22,8 @@
             <iframe t-att-src="initialUrl"
                 class="o_iframe"
                 t-ref="iframe"
-                t-on-load="_onPageLoaded"/>
+                t-on-load="_onPageLoaded"
+                is-ready="false"/>
         </div>
         <WebsiteEditorComponent t-if="websiteContext.edition"
             reloadIframe.bind="this.reloadIframe"/>
