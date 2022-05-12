@@ -1135,6 +1135,32 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
+    def test_reconciliation_move_draft(self):
+        ''' Ensures that the account move of a reconciled statement cannot be set to draft
+        '''
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'amount': 100.0,
+                }),
+            ],
+        })
+
+        statement.button_post()
+        statement.line_ids[0].reconcile([{'name': 'test', 'account_id': self.company_data['default_account_revenue'].id, 'balance': -100}])
+
+        statement.button_validate_or_action()
+        account_move = statement.line_ids.move_id
+
+        with self.assertRaises(UserError):
+            account_move.button_draft()
+
     def test_reconciliation_statement_line_state(self):
         ''' Test the reconciliation on the bank statement line with a foreign currency on the journal:
         - Ensure the statement line is_reconciled field is well computed.
