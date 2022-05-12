@@ -57,27 +57,6 @@ registerModel({
             }
         },
         /**
-         * @param {array} [allowedTokens] tokens of the peerConnections for which
-         * the incoming video traffic is allowed. If undefined, all traffic is
-         * allowed.
-         */
-        filterIncomingVideoTraffic(allowedTokens) {
-            const tokenSet = new Set(allowedTokens);
-            for (const rtcSession of this.connectedRtcSessions) {
-                const fullDirection = this.videoTrack ? 'sendrecv' : 'recvonly';
-                const limitedDirection = this.videoTrack ? 'sendonly' : 'inactive';
-                const transceiver = rtcSession.rtcPeerConnection.getTransceiver('video')
-                if (!transceiver) {
-                    continue;
-                }
-                if (!tokenSet.size || tokenSet.has(rtcSession.id)) {
-                    transceiver.direction = fullDirection;
-                } else {
-                    transceiver.direction = limitedDirection;
-                }
-            }
-        },
-        /**
          * @param {number} sender id of the session that sent the notification
          * @param {String} content JSON
          */

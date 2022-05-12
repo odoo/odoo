@@ -2,14 +2,14 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallParticipantCard',
-    identifyingFields: ['relationalId'],
+    identifyingFields: [['rtcSession', 'invitedPartner', 'invitedGuest'], ['callViewOfMainCard', 'callViewOfTile']],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -24,9 +24,11 @@ registerModel({
             if (isEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor')) {
                 return;
             }
-            if (!this.invitedPartner && !this.invitedGuest) {
-                if (!this.isMinimized) {
-                    this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+            if (this.rtcSession) {
+                if (this.callView.activeRtcSession === this.rtcSession && this.callViewOfMainCard) {
+                    this.callView.update({ activeRtcSession: clear() });
+                } else {
+                    this.callView.update({ activeRtcSession: replace(this.rtcSession) });
                 }
                 return;
             }
@@ -85,6 +87,18 @@ registerModel({
         },
         /**
          * @private
+         * @returns {mail.callView}
+         */
+        _computeCallView() {
+            const callView = this.callViewOfMainCard || this.callViewOfTile;
+            if (callView) {
+                return replace(callView);
+            } else {
+                return clear();
+            }
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasConnectionInfo() {
@@ -111,8 +125,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsMinimized() {
-            const callView = this.callViewOfMainCard || this.callViewOfTile;
-            return Boolean(callView && callView.isMinimized);
+            return Boolean(this.callView && this.callView.isMinimized);
         },
         /**
          * @private
@@ -198,11 +211,15 @@ registerModel({
         /**
          * If set, this card represents an invitation of this guest to this call.
          */
-        invitedGuest: one('Guest'),
+        invitedGuest: one('Guest', {
+            readonly: true,
+         }),
         /**
          * If set, this card represents an invitation of this partner to this call.
          */
-        invitedPartner: one('Partner'),
+        invitedPartner: one('Partner', {
+            readonly: true,
+         }),
         /**
          * States whether this card is representing a person with a pending
          * invitation.
@@ -238,28 +255,33 @@ registerModel({
             compute: '_computeOutboundConnectionTypeText',
         }),
         /**
-         * Unique id for this session provided when instantiated.
+         * The callView that displays this card.
          */
-        relationalId: attr({
-            readonly: true,
-            required: true,
+        callView: one('CallView', {
+            compute: '_computeCallView',
+            inverse: 'participantCards',
         }),
         /**
          * The call view for which this card is the spotlight.
          */
         callViewOfMainCard: one('CallView', {
             inverse: 'mainParticipantCard',
+            readonly: true,
         }),
         /**
          * The call view for which this card is one of the tiles.
          */
         callViewOfTile: one('CallView', {
             inverse: 'tileParticipantCards',
+            readonly: true,
         }),
         /**
          * If set, this card represents a rtcSession.
          */
-        rtcSession: one('RtcSession'),
+        rtcSession: one('RtcSession', {
+            inverse: 'callParticipantCards',
+            readonly: true,
+        }),
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute: '_computeCallParticipantVideoView',
             inverse: 'callParticipantCardOwner',
