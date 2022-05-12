@@ -358,7 +358,7 @@ class Export(http.Controller):
             if len(ident.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
                 record['value'] += '/id'
-                record['params'] = {'model': ref, 'prefix': id, 'name': name, 'parent_field': field}
+                record['params'] = {'model': ref, 'prefix': ident, 'name': name, 'parent_field': field}
                 record['children'] = True
 
         return records
