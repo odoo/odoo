@@ -20,7 +20,7 @@ class PortalAccount(portal.PortalAccount):
 
         # Make sure that the partner's company matches the invoice's company.
         invoice_company = invoice.company_id or request.env.company
-        PaymentPortal.ensure_matching_companies(partner, invoice_company)
+        PaymentPortal._ensure_matching_companies(partner, invoice_company)
 
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
             invoice_company.id, partner.id, currency_id=invoice.currency_id.id
