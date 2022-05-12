@@ -19,13 +19,12 @@ class ExportDataItem extends Component {
     get formattedName() {
         if (!this.props.field.parent) return this.props.field.string;
         const path = this.props.field.string.split("/");
-        const start = this.props.field.parent.parent ? "…/" : "";
-        return start + this.props.field.parent.string.concat("/", path.pop());
+        return this.props.field.parent.string.concat("/", path.pop());
     }
 
     async onClick(ev) {
         this.state.subFields = await this.props.onClick(ev);
-        this.state.isExpanded = this.props.isFieldExpanded(this.props.field.name);
+        this.state.isExpanded = this.props.isFieldExpanded(this.props.field.id);
     }
 
     isFieldSelected(name) {
@@ -118,7 +117,7 @@ export class ExportDataDialog extends Component {
     }
 
     /**
-     * Returns the currently selected fields to export
+     * Returns the currently selected fields to export, sorted by order
      */
     get exportList() {
         const fields = this.state.exportedFields.map((id) => this.fieldsAvailableAll[id]);
@@ -144,7 +143,9 @@ export class ExportDataDialog extends Component {
     }
 
     isFieldExpandable(field) {
-        return ["one2many", "many2one"].includes(field.field_type);
+        return (
+            ["one2many", "many2one"].includes(field.field_type) && field.id.split("/").length < 3
+        );
     }
 
     async loadExportList(value) {
@@ -194,7 +195,7 @@ export class ExportDataDialog extends Component {
             0,
             0,
             {
-                name: field.name,
+                name: field.id,
             },
         ]);
 
@@ -262,9 +263,6 @@ export class ExportDataDialog extends Component {
             parentParams
         );
         fields.forEach((field) => {
-            field.name = parentField
-                ? parentField.name + "/" + field.id.split("/").pop()
-                : field.id;
             field.parent = parentField;
         });
         if (id) {
@@ -277,7 +275,7 @@ export class ExportDataDialog extends Component {
         const id = ev.target.closest(".o_export_tree_item").dataset.field_id;
         const fields = await this.loadFields(id);
         fields.forEach((field) => {
-            this.fieldsAvailableAll[field.name] = field;
+            this.fieldsAvailableAll[field.id] = field;
         });
         return fields;
     }
@@ -304,7 +302,7 @@ export class ExportDataDialog extends Component {
         const fields = await this.loadFields();
         this.fieldsAvailableAll = {};
         fields.forEach((field) => {
-            this.fieldsAvailableAll[field.name] = field;
+            this.fieldsAvailableAll[field.id] = field;
         });
         if (this.state.compatible) {
             this.state.exportedFields = this.state.exportedFields.filter(

@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ExportDataItem" owl="1">
-        <div t-att-data-field_id="props.field.name" class="o_export_tree_item o_cursor_pointer position-relative pl-3" role="treeitem" t-on-click.stop="onClick"> 
+        <div t-att-data-field_id="props.field.id" class="o_export_tree_item o_cursor_pointer position-relative pl-3" role="treeitem" t-on-click.stop="onClick"> 
             <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
             <div class="o_tree_column text-wrap">
                 <span t-esc="formattedName" />
-                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.name) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)" />
+                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.id) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.id) and this.props.onAdd(ev)" />
             </div>
             <t t-if="state.isExpanded">
-                <t t-foreach="state.subFields" t-as="field" t-key="field.name">
+                <t t-foreach="state.subFields" t-as="field" t-key="field.id">
                     <ExportDataItem
                         field="field"
                         expandedContent="props.expandedContent"
@@ -37,7 +37,7 @@
                 <div class="o_left_field_panel h-100 px-2 overflow-auto border">
                     <div class="o_field_tree_structure">
                         <t t-if="fieldsAvailable">
-                            <t t-foreach="rootFields" t-as="field" t-key="field.name">
+                            <t t-foreach="rootFields" t-as="field" t-key="field.id">
                                 <ExportDataItem
                                     field="field"
                                     expandedContent.bind="expandedContent"
@@ -99,8 +99,8 @@
                 </div>
                 <div class="o_right_field_panel h-100 px-2 overflow-auto border">
                     <ul class="o_fields_list list-unstyled" t-ref="draggable">
-                        <t t-foreach="exportList" t-as="field" t-key="field.name">
-                            <li class="o_export_field" t-att-data-field_id="field.name">
+                        <t t-foreach="exportList" t-as="field" t-key="field.id">
+                            <li class="o_export_field" t-att-data-field_id="field.id">
                                 <span class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ exportList.length === 1 ? 0 : 1 }}" />
                                 <span t-esc="field.string" />
                                 <span class="fa fa-trash m-1 float-end o_remove_field o_cursor_pointer" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />

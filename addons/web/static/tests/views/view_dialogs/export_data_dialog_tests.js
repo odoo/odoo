@@ -2,9 +2,11 @@
 
 import {
     click,
+    dragAndDrop,
     editInput,
     editSelect,
     getFixture,
+    getNodesTextContent,
     mockDownload,
     nextTick,
 } from "@web/../tests/helpers/utils";
@@ -126,6 +128,15 @@ QUnit.module("ViewDialogs", (hooks) => {
                     string: "Foo",
                     value: "foo",
                 },
+                {
+                    children: false,
+                    field_type: "char",
+                    id: "bar",
+                    relation_field: null,
+                    required: false,
+                    string: "Bar",
+                    value: "bar",
+                },
             ],
             activity_ids: [
                 {
@@ -133,28 +144,44 @@ QUnit.module("ViewDialogs", (hooks) => {
                     string: "Attendants",
                     required: false,
                     value: "activity_ids/id",
-                    id: "activity_ids",
+                    id: "activity_ids/partner_ids",
                     params: {
                         model: "mail.activity",
-                        prefix: "activity_ids",
-                        name: "Activities",
+                        prefix: "partner_ids",
+                        name: "Company",
                     },
-                    relation_field: "res_id",
                     children: true,
                 },
                 {
                     field_type: "one2many",
-                    string: "Activities",
+                    string: "Activity types",
                     required: false,
                     value: "activity_ids/id",
-                    id: "activity_ids",
+                    id: "activity_ids/types",
                     params: {
                         model: "mail.activity",
-                        prefix: "activity_ids",
-                        name: "Activities",
+                        prefix: "activity_types",
+                        name: "Activity types",
                     },
-                    relation_field: "res_id",
                     children: true,
+                },
+            ],
+            partner_ids: [
+                {
+                    children: false,
+                    field_type: "many2one",
+                    id: "activity_ids/partner_ids/company_ids",
+                    relation_field: null,
+                    string: "Company",
+                    value: "company_ids",
+                },
+                {
+                    children: false,
+                    field_type: "char",
+                    id: "activity_ids/partner_ids/name",
+                    relation_field: null,
+                    string: "Partner name",
+                    value: "partner_name",
                 },
             ],
         };
@@ -188,10 +215,10 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.containsN(
             target,
             ".o_dialog .o_export_tree_item",
-            2,
-            "There should be only two items visible"
+            3,
+            "There should be only three items visible"
         );
-        await editInput(target.querySelector(".modal .o_export_search_input"), null, "a");
+        await editInput(target.querySelector(".modal .o_export_search_input"), null, "ac");
         assert.containsOnce(target, ".modal .o_export_tree_item", "Only match item visible");
         // Add field
         await click(target.querySelector(".modal .o_export_tree_item .o_add_field"));
@@ -349,8 +376,8 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("Export dialog: interacting with available fields", async function (assert) {
-        //assert.expect(17);
+    QUnit.test("Export dialog: interacting with available fields", async function (assert) {
+        assert.expect(8);
 
         await makeView({
             serverData,
@@ -367,21 +394,90 @@ QUnit.module("ViewDialogs", (hooks) => {
                     ]);
                 }
                 if (route === "/web/export/get_fields") {
-                    console.log(args);
-                    return Promise.resolve(fetchedFields.root);
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    if (args.prefix === "partner_ids") {
+                        assert.step("fetch fields for 'partner_ids'");
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
                 }
             },
         });
 
         await openExportDataDialog();
 
-        // TODO...
+        const firstField = target.querySelector(
+            ".o_left_field_panel .o_export_tree_item:first-child"
+        );
+        await click(firstField);
+
+        // show then hide content for the 'partner_ids' field. Then show it again
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await click(firstField.querySelector(".o_export_tree_item"));
+        assert.verifySteps(
+            ["fetch fields for 'partner_ids'"],
+            "we should only make one rpc to fetch fields"
+        );
+
+        assert.containsNone(
+            firstField.querySelector(
+                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+                ".o_expand_parent",
+                "available fields are limited to 2 levels of subfields"
+            )
+        );
+
+        await click(
+            firstField.querySelector(
+                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
+            )
+        );
+        assert.hasClass(
+            firstField.querySelector(
+                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
+            ),
+            "o_inactive",
+            "the field cannot be added anymore"
+        );
+
+        await click(firstField.querySelector(".o_add_field"));
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Foo", "Company", "Activities"]
+        );
+
+        await dragAndDrop(".o_export_field:first-child", ".o_export_field:nth-child(2)");
+        await dragAndDrop(".o_export_field:nth-child(3)", ".o_export_field:first-child");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Activities", "Company", "Foo"]
+        );
+
+        await click(target.querySelector(".o_export_field:nth-child(2) .o_remove_field"));
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Activities", "Foo"]
+        );
+
+        await click(
+            firstField.querySelector(
+                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/name'] .o_add_field"
+            )
+        );
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Activities", "Foo", "Partner name"]
+        );
+
+        await click(target, ".o_import_compat input");
     });
 
-    QUnit.skipWOWL("Direct export list", async function (assert) {
+    QUnit.test("Direct export list", async function (assert) {
         assert.expect(2);
 
-        mockDownload(({ data, url }) => {
+        mockDownload(({ url, data }) => {
             assert.strictEqual(
                 url,
                 "/web/export/xlsx",
@@ -390,7 +486,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             assert.deepEqual(
                 JSON.parse(data.data),
                 {
-                    context: {},
+                    context: { lang: "en", uid: 7, tz: "taht" },
                     model: "partner",
                     domain: [["bar", "!=", "glou"]],
                     groupby: [],
@@ -435,10 +531,10 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target.querySelector(".o_list_export_xlsx"));
     });
 
-    QUnit.skipWOWL("Direct export grouped list ", async function (assert) {
+    QUnit.test("Direct export grouped list ", async function (assert) {
         assert.expect(2);
 
-        mockDownload(({ data, url }) => {
+        mockDownload(({ url, data }) => {
             assert.strictEqual(
                 url,
                 "/web/export/xlsx",
@@ -447,7 +543,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             assert.deepEqual(
                 JSON.parse(data.data),
                 {
-                    context: {},
+                    context: { lang: "en", uid: 7, tz: "taht" },
                     model: "partner",
                     domain: [["bar", "!=", "glou"]],
                     groupby: ["foo", "bar"],
