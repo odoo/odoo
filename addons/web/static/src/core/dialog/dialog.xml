@@ -19,7 +19,7 @@
                         <main class="modal-body">
                             <t t-call="{{ constructor.bodyTemplate }}"/>
                         </main>
-                        <footer t-if="renderFooter" class="modal-footer justify-content-start">
+                        <footer t-if="renderFooter" class="modal-footer justify-content-around justify-content-sm-start flex-wrap gap-1">
                             <t t-call="{{ constructor.footerTemplate }}" />
                         </footer>
                     </div>
