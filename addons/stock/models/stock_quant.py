@@ -104,7 +104,8 @@ class StockQuant(models.Model):
         'Counted Quantity', digits='Product Unit of Measure',
         help="The product's counted quantity.")
     inventory_quantity_auto_apply = fields.Float(
-        'Inventoried Quantity', compute='_compute_inventory_quantity_auto_apply',
+        'Inventoried Quantity', digits='Product Unit of Measure',
+        compute='_compute_inventory_quantity_auto_apply',
         inverse='_set_inventory_quantity', groups='stock.group_stock_manager'
     )
     inventory_diff_quantity = fields.Float(
