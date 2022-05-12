@@ -14,7 +14,8 @@ import {
     triggerHotkey,
 } from "../../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, mount, useState, tags } = owl;
+const { xml } = tags;
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -49,6 +50,104 @@ QUnit.test("register / unregister", async (assert) => {
     await nextTick();
 
     assert.verifySteps([key]);
+});
+
+QUnit.test("[accesskey] attrs replaced by [data-hotkey]", async (assert) => {
+    const div = document.createElement("div");
+    div.className = "foo";
+    div.accessKey = "a";
+    div.onclick = () => assert.step("click");
+    div.textContent = "foo";
+    target.appendChild(div);
+
+    // div must only have [accesskey] attribute
+    assert.containsOnce(target, ".foo");
+    assert.containsOnce(target, ".foo[accesskey]");
+    assert.containsNone(target, ".foo[data-hotkey]");
+
+    // press any hotkey, i.e. the left arrow
+    triggerHotkey("arrowleft");
+    await nextTick();
+
+    // div should now only have [data-hotkey] attribute
+    assert.containsOnce(target, ".foo");
+    assert.containsOnce(target, ".foo[data-hotkey]");
+    assert.containsNone(target, ".foo[accesskey]");
+
+    // try to press the related hotkey, just to make sure it works
+    assert.verifySteps([]);
+    triggerHotkey("a", true);
+    await nextTick();
+    assert.verifySteps(["click"]);
+});
+
+QUnit.test("[accesskey] attrs replaced by [data-hotkey], part 2", async (assert) => {
+    class UIOwnershipTakerComponent extends Component {
+        setup() {
+            useActiveElement("bouh");
+        }
+    }
+    UIOwnershipTakerComponent.template = xml`<p class="owner" t-ref="bouh">bouh</p>`;
+    class MyComponent extends Component {
+        setup() {
+            this.state = useState({ foo: true });
+            this.step = assert.step.bind(assert);
+        }
+    }
+    MyComponent.components = { UIOwnershipTakerComponent };
+    MyComponent.template = xml`
+        <main>
+            <UIOwnershipTakerComponent t-if="state.foo" />
+            <div t-on-click="() => { this.step('click'); }" accesskey="a">foo</div>
+        </main>
+    `;
+    const comp = await mount(MyComponent, { env, target });
+
+    // UIOwnershipTakerComponent should be there and it should be the ui active element
+    assert.containsOnce(target, "main .owner");
+    assert.strictEqual(target.querySelector("main .owner"), env.services.ui.activeElement);
+
+    // div must only have [accesskey] attribute
+    assert.containsOnce(target, "main div");
+    assert.containsOnce(target, "main div[accesskey]");
+    assert.containsNone(target, "main div[data-hotkey]");
+
+    // press any hotkey, i.e. the left arrow
+    triggerHotkey("arrowleft");
+    await nextTick();
+
+    // div should now only have [data-hotkey] attribute
+    assert.containsOnce(target, "main div");
+    assert.containsOnce(target, "main div[data-hotkey]");
+    assert.containsNone(target, "main div[accesskey]");
+
+    // try to press the related hotkey, it should not work as the ui active element is different
+    assert.notEqual(
+        env.services.ui.getActiveElementOf(target.querySelector("main div")),
+        env.services.ui.activeElement
+    );
+    assert.verifySteps([]);
+    triggerHotkey("a", true);
+    await nextTick();
+    assert.verifySteps([]);
+
+    // remove the UIOwnershipTakerComponent
+    comp.state.foo = false;
+    await nextTick();
+    assert.strictEqual(
+        env.services.ui.getActiveElementOf(target.querySelector("main div")),
+        env.services.ui.activeElement
+    );
+
+    assert.containsNone(target, "main .owner");
+    assert.containsOnce(target, "main div");
+    assert.containsOnce(target, "main div[data-hotkey]");
+    assert.containsNone(target, "main div[accesskey]");
+
+    assert.verifySteps([]);
+    triggerHotkey("a", true);
+    await nextTick();
+    assert.verifySteps(["click"]);
 });
 
 QUnit.test("data-hotkey", async (assert) => {
