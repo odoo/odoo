@@ -34,6 +34,14 @@ export class RemainingDaysField extends Component {
     correctDate(date) {
         return this.hasTime ? date.toLocal() : date.toUTC();
     }
+
+    onDateTimeChanged(datetime) {
+        if (datetime) {
+            this.props.update(datetime);
+        }
+        // when the date is cleared
+        typeof datetime === "string" && this.props.update(false);
+    }
 }
 
 RemainingDaysField.template = "web.RemainingDaysField";

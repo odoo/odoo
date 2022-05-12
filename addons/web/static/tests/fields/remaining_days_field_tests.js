@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, patchDate, patchTimeZone, triggerEvents } from "../helpers/utils";
+import { click, editInput, getFixture, patchDate, patchTimeZone } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -268,7 +268,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "RemainingDaysField on a date field in multi edit list view",
         async function (assert) {
             assert.expect(7);
@@ -308,12 +308,10 @@ QUnit.module("Fields", (hooks) => {
                 "should have date picker input"
             );
 
-            const input = target.querySelector(".o_datepicker_input");
-            input.value = "blabla";
-            await triggerEvents(input, null, ["input", "change"]);
+            await editInput(target, ".o_datepicker_input", "10/10/2017");
             await click(target);
 
-            assert.containsNone(document.body, ".modal");
+            assert.containsOnce(document.body, ".modal");
             assert.strictEqual(
                 document.querySelector(".modal .o_field_widget").textContent,
                 "In 2 days",
@@ -334,7 +332,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "RemainingDaysField, enter wrong value manually in multi edit list view",
         async function (assert) {
             assert.expect(6);
@@ -374,11 +372,8 @@ QUnit.module("Fields", (hooks) => {
                 "should have date picker input"
             );
 
-            const input = target.querySelector(".o_datepicker_input");
-            input.value = "blabla";
-            await triggerEvents(input, null, ["input", "change"]);
+            await editInput(target, ".o_datepicker_input", "blabla");
             await click(target);
-
             assert.containsNone(document.body, ".modal");
             assert.strictEqual(cells[0].textContent, "Today");
             assert.strictEqual(cells[1].textContent, "Tomorrow");
