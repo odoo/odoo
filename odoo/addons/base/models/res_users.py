@@ -269,7 +269,7 @@ class Users(models.Model):
         """ The list of fields a user can write on their own user record.
         In order to add fields, please override this property on model extensions.
         """
-        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
+        return ['signature', 'action_id', 'email', 'name', 'image_1920', 'lang', 'tz']
 
     def _default_groups(self):
         default_user_id = self.env['ir.model.data']._xmlid_to_res_id('base.default_user', raise_if_not_found=False)
@@ -515,16 +515,27 @@ class Users(models.Model):
         super(Users, self).toggle_active()
 
     def read(self, fields=None, load='_classic_read'):
-        if fields and self == self.env.user:
-            readable = self.SELF_READABLE_FIELDS
-            for key in fields:
-                if not (key in readable or key.startswith('context_')):
-                    break
-            else:
-                # safe fields only, so we read as super-user to bypass access rights
-                self = self.sudo()
-
-        return super(Users, self).read(fields=fields, load=load)
+        ret = []
+        fields = fields or self._fields.keys()
+        # Users can by-pass access rights on their own res.users record if the
+        # fields they try to read are in the list of SELF_READABLE_FIELDS.
+        if self == self.env.user:
+            self_readable_fields = set(self.SELF_READABLE_FIELDS)
+            safe_fields = list(filter(lambda f: f in self_readable_fields or f.startswith('context_'), fields))
+            if safe_fields:
+                ret = super(Users, self.sudo()).read(fields=safe_fields, load=load)
+                fields = list(set(fields) - set(safe_fields))
+        # Ensure that there are still fields to read after reading the
+        # SELF_READABLE_FIELDS. Otherwise, trying to read an empty list of
+        # fields will result in ALL fields being read ⚠️
+        if fields:
+            res = super().read(fields=fields, load=load)
+            if not ret:
+                return res
+            # If `ret` is not empty, complete the results of the first read with
+            # those of the second read.
+            ret[0].update(res[0])
+        return ret
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -562,19 +573,27 @@ class Users(models.Model):
             for user in self:
                 if not user.active and not user.partner_id.active:
                     user.partner_id.toggle_active()
+        # Users can by-pass access rights on their own res.users record if the
+        # fields they try to write are in the list of SELF_WRITEABLE_FIELDS.
         if self == self.env.user:
-            writeable = self.SELF_WRITEABLE_FIELDS
-            for key in list(values):
-                if not (key in writeable or key.startswith('context_')):
-                    break
-            else:
-                if 'company_id' in values:
-                    if values['company_id'] not in self.env.user.company_ids.ids:
-                        del values['company_id']
-                # safe fields only, so we write as super-user to bypass access rights
-                self = self.sudo().with_context(binary_field_real_user=self.env.user)
-
-        res = super(Users, self).write(values)
+            writeable = set(self.SELF_WRITEABLE_FIELDS)
+            regular_values = {}
+            self_writeable_values = {}
+            for k, v in values.items():
+                if k in writeable or k.startswith('context_'):
+                    self_writeable_values[k] = v
+                else:
+                    regular_values[k] = v
+            if 'company_id' in self_writeable_values:
+                if self_writeable_values['company_id'] not in self.env.user.company_ids.ids:
+                    del self_writeable_values['company_id']
+            res = True
+            if self_writeable_values:
+                res = super(Users, self.sudo().with_context(binary_field_real_user=self.env.user)).write(self_writeable_values)
+            if regular_values:
+                res = res and super().write(regular_values)
+        else:
+            res = super().write(values)
         if 'company_id' in values:
             for user in self:
                 # if partner is global we keep it that way
