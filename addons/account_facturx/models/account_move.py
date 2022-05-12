@@ -342,11 +342,50 @@ class AccountMove(models.Model):
                 self._create_invoice_from_attachment(attachment)
         return return_values
 
+    @api.model
+    def _detect_facturx(self, tree, file_name):
+        # Quick check the tree looks like an factur-x file.
+        flag = tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice'
+        error = None
+
+        return {'flag': flag, 'error': error}
+
+    @api.model
+    def _get_xml_decoders(self):
+        ''' List of usable decoders to extract invoice from attachments.
+
+        :return: a list of triplet (xml_type, check_func, decode_func)
+            * xml_type: The format name, e.g 'UBL 2.1'
+            * check_func: A function taking an etree and a file name as parameter and returning a dict:
+                * flag: The etree is part of this format.
+                * error: Error message.
+            * decode_func: A function taking an etree as parameter and returning an invoice record.
+        '''
+        decoders = [('factur-x', self._detect_facturx, self._import_facturx_invoice)]
+        return decoders
+
+    def _create_invoice_from_xml_tree(self, filename, tree):
+        decoders = self._get_xml_decoders()
+        for _xml_type, check_func, decode_func in decoders:
+            check_res = check_func(tree, filename)
+
+            if check_res.get('flag') and not check_res.get('error'):
+                invoice_ids = decode_func(tree)
+                if invoice_ids:
+                    invoice_ids._remove_ocr_option()
+                    return invoice_ids
+
+        _logger.exception('No decoder was found for the xml file: %s. The file is badly formatted, not supported or the decoder is not installed', filename)
+
     def _create_invoice_from_attachment(self, attachment):
         if 'pdf' in attachment.mimetype:
             for move in self:
                 move._create_invoice_from_pdf(attachment)
-        if 'xml' in attachment.mimetype:
+        # XML attachments received by mail have a 'text/plain' mimetype.
+        # Therefore, if content start with '<?xml', it is considered as XML.
+        content = base64.b64decode(attachment.datas)
+        is_text_plain_xml = 'text/plain' in attachment.mimetype and content.startswith(b'<?xml')
+        if 'xml' in attachment.mimetype or is_text_plain_xml:
             for move in self:
                 move._create_invoice_from_xml(attachment)
 
@@ -369,53 +408,22 @@ class AccountMove(models.Model):
                             tree = etree.fromstring(content)
                         except Exception:
                             continue
-                        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
-                            self._import_facturx_invoice(tree)
-                            self._remove_ocr_option()
-                            buffer.close()
+                        self._create_invoice_from_xml_tree(filename_obj, tree)
             except except_orm as e:
                 raise e
             except Exception as e:
                 # Malformed pdf
                 _logger.exception(e)
 
-    @api.model
-    def _get_xml_decoders(self):
-        ''' List of usable decoders to extract invoice from attachments.
-
-        :return: a list of triplet (xml_type, check_func, decode_func)
-            * xml_type: The format name, e.g 'UBL 2.1'
-            * check_func: A function taking an etree and a file name as parameter and returning a dict:
-                * flag: The etree is part of this format.
-                * error: Error message.
-            * decode_func: A function taking an etree as parameter and returning an invoice record.
-        '''
-        # TO BE OVERWRITTEN
-        return []
-
     def _create_invoice_from_xml(self, attachment):
-        decoders = self._get_xml_decoders()
-
         # Convert attachment -> etree
         content = base64.b64decode(attachment.datas)
         try:
             tree = etree.fromstring(content)
         except Exception:
             _logger.exception('The xml file is badly formatted : {}'.format(attachment.name))
-
-        for xml_type, check_func, decode_func in decoders:
-            check_res = check_func(tree, attachment.name)
-
-            if check_res.get('flag') and not check_res.get('error'):
-                invoice_ids = decode_func(tree)
-                if invoice_ids:
-                    invoice_ids._remove_ocr_option()
-                    break
-
-        try:
-            return invoice_ids
-        except UnboundLocalError:
-            _logger.exception('No decoder was found for the xml file: {}. The file is badly formatted, not supported or the decoder is not installed'.format(attachment.name))
+            return
+        self._create_invoice_from_xml_tree(attachment.name, tree)
 
     def _remove_ocr_option(self):
         if 'extract_state' in self:
