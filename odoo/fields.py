@@ -4288,9 +4288,10 @@ class One2many(_RelationalMulti):
 
     def get_domain_list(self, records):
         comodel = records.env.registry[self.comodel_name]
-        inverse_field = comodel._fields[self.inverse_name]
         domain = super(One2many, self).get_domain_list(records)
-        if inverse_field.type == 'many2one_reference':
+        if self.store:
+            inverse_field = comodel._fields[self.inverse_name]
+        if self.store and inverse_field.type == 'many2one_reference':
             domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 

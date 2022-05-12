@@ -142,13 +142,17 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of', 'parent_of')
+                  'child_of', 'parent_of', 'any', 'all', 'not any', 'not all')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
 NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
+
+# A subset of the term operators that can be used on relational multivalued
+# fields. As their right hand side they accept a domain on the comodel.
+SUBQUERY_OPERATORS = ('any', 'all', 'not any', 'not all')
 
 # Negation of domain expressions
 DOMAIN_OPERATORS_NEGATION = {
@@ -168,6 +172,10 @@ TERM_OPERATORS_NEGATION = {
     'not in': 'in',
     'not like': 'like',
     'not ilike': 'ilike',
+    'any': 'not any',
+    'all': 'not all',
+    'not any': 'any',
+    'not all': 'all',
 }
 
 TRUE_LEAF = (1, '=', 1)
@@ -328,6 +336,24 @@ def distribute_not(domain):
             result.append(token)
 
     return result
+
+
+def invert_domain(domain):
+    """
+    Calculate the logically inverted domain of the provided domain.
+
+    Domains are written using Polish notation, however multiple expression tree
+    roots are allowed. This method simply scans through the list, prefixing any
+    expresion tree root with a logical not operator.
+    """
+    skip_count = 0
+    root_count = 0
+    for leaf in domain:
+        root_count += skip_count == 0
+        skip_count -= skip_count > 0
+        skip_count += 2 if leaf in ['&', '|'] else 0
+        skip_count += 1 if leaf == '!' else 0
+    return ['!'] + ['&'] * (root_count - 1) + domain
 
 
 # --------------------------------------------------
@@ -648,15 +674,18 @@ class expression(object):
             field = model._fields.get(path[0])
             comodel = model.env.get(getattr(field, 'comodel_name', None))
 
+            if len(path) == 1 and operator in SUBQUERY_OPERATORS:
+                domain = (field.get_domain_list(model) or []) + right
+                is_simple_id_domain = len(domain) == 1 and domain[0][0] == 'id' and domain[0][1] not in HIERARCHY_FUNCS
+                use_inverted_domain = operator in ('all', 'not all')
+                if use_inverted_domain and is_simple_id_domain:
+                    domain = [(domain[0][0], TERM_OPERATORS_NEGATION[domain[0][1]], domain[0][2])]
+                elif use_inverted_domain:
+                    domain = invert_domain(domain)
+                use_inverted_search = operator in ('not any', 'all')
+
             # ----------------------------------------
             # FIELD NOT FOUND
-            # -> from inherits'd fields -> work on the related model, and add
-            #    a join condition
-            # -> ('id', 'child_of', '..') -> use a 'to_ids'
-            # -> but is one on the _log_access special fields, add directly to
-            #    result
-            #    TODO: make these fields explicitly available in self.columns instead!
-            # -> else: crash
             # ----------------------------------------
 
             if not field:
@@ -712,8 +741,12 @@ class expression(object):
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
+                if operator not in SUBQUERY_OPERATORS:
+                    # TODO This branch is deprecated, it is kept for backwards
+                    # compatibility until completion of domain translations.
+                    emit_deprecation_notice(field, leaf)
                 right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)], order='id')
-                push((path[0], 'in', right_ids), model, alias)
+                push((path[0], 'any', [('id', 'in', right_ids)]), model, alias)
 
             elif not field.store:
                 # Non-stored field should provide an implementation of search.
@@ -739,8 +772,69 @@ class expression(object):
             # RELATIONAL FIELDS
             # -------------------------------------------------
 
+            elif field.type == 'one2many' and operator in SUBQUERY_OPERATORS:
+                inverse_field = comodel._fields[field.inverse_name]
+                is_skippable = is_simple_id_domain
+                # When the domain is a simple id domain and it is expressed in
+                # terms of a Query using a positive operator we can skip the
+                # search on the comodel and use the Query directly.
+                is_skippable = is_skippable and domain[0][1] not in NEGATIVE_TERM_OPERATORS
+                is_skippable = is_skippable and isinstance(domain[0][2], Query)
+                right_ids = domain[0][2] if is_skippable else (
+                    comodel.with_context(**field.context)._search(domain, order='id')
+                )
+                # Don't forget to handle empty lists, as these can be returned
+                # by _search when a domain expression is always false.
+                if isinstance(right_ids, list) and len(right_ids) == 0:
+                    push_result('TRUE' if use_inverted_search else 'FALSE', [])
+                elif isinstance(right_ids, Query):
+                    if not inverse_field.required:
+                        right_ids.add_where(f'"{comodel._table}"."{inverse_field.name}" IS NOT NULL')
+                    subquery, subparams = right_ids.subselect(f'"{comodel._table}"."{inverse_field.name}"')
+                    push_result(f'''
+                        ("{alias}"."id" {'NOT IN' if use_inverted_search else 'IN'} ({subquery}))
+                    ''', subparams)
+
+            elif field.type == 'many2many' and operator in SUBQUERY_OPERATORS:
+                use_inverse_matches = is_simple_id_domain and domain[0][1] in NEGATIVE_TERM_OPERATORS
+                rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
+                if not is_simple_id_domain:
+                    right_ids = comodel.with_context(**field.context)._search(domain, order='id')
+                    subquery, subparams = right_ids.subselect()
+                    subquery = f'({subquery})'
+                elif isinstance(domain[0][2], Query):
+                    subquery, subparams = domain[0][2].subselect()
+                    subquery = f'({subquery})'
+                elif isinstance(domain[0][2], (list, tuple)):
+                    subquery, subparams = '%s', [tuple(domain[0][2])] if domain[0][2] else []
+                elif isinstance(domain[0][2], int):
+                    subquery, subparams = '(%s)', [domain[0][2]] if domain[0][2] else []
+                rel_alias = _generate_table_alias(alias, field.name)
+                rel_subquery = f'SELECT 1 FROM "{rel_table}" AS "{rel_alias}" ' \
+                               f'WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id'
+                if len(subparams) > 0:
+                    rel_operator = 'NOT IN' if use_inverse_matches else 'IN'
+                    rel_subquery += f' AND "{rel_alias}"."{rel_id2}" {rel_operator} {subquery}'
+                elif not use_inverse_matches:
+                    rel_subquery = 'SELECT 1 WHERE FALSE'
+                push_result(f'''{'NOT EXISTS' if use_inverted_search else 'EXISTS'} (
+                    {rel_subquery}
+                )''', subparams)
+
+            elif field.type == 'many2one' and operator in SUBQUERY_OPERATORS:
+                if not isinstance(right, Query):
+                    right_ids = comodel.with_context(**field.context)._search(domain, order='id')
+
+                subquery, subparams = right_ids.subselect(f'"{comodel._table}"."id"')
+                push_result(f"""
+                    ("{alias}"."{field.name}" {'NOT IN' if use_inverted_search else 'IN'} ({subquery}))
+                """, subparams)
+
             # Applying recursivity on field(one2many)
             elif field.type == 'one2many' and operator in HIERARCHY_FUNCS:
+                # TODO This branch is deprecated, it is kept for backwards
+                # compatibility until completion of domain translations.
+                emit_deprecation_notice(field, leaf)
                 ids2 = to_ids(right, comodel, leaf)
                 if field.comodel_name != model._name:
                     dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
@@ -756,6 +850,9 @@ class expression(object):
                 unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
 
                 if right is not False:
+                    # TODO This branch is deprecated, it is kept for backwards
+                    # compatibility until completion of domain translations.
+                    emit_deprecation_notice(field, leaf)
                     # determine ids2 in comodel
                     if isinstance(right, str):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
@@ -779,7 +876,7 @@ class expression(object):
                                 ids2.add_where(f'"{comodel._table}"."{inverse_field.name}" IS NOT NULL')
                             subquery, subparams = ids2.subselect(f'"{comodel._table}"."{inverse_field.name}"')
                         else:
-                            subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "id" IN %s'
+                            subquery = f'SELECT "{comodel._table}"."{inverse_field.name}" FROM "{comodel._table}" WHERE ("{comodel._table}"."id" IN %s)'
                             if not inverse_field.required:
                                 subquery += f' AND "{inverse_field.name}" IS NOT NULL'
                             subparams = [tuple(ids2) or (None,)]
@@ -813,6 +910,9 @@ class expression(object):
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
 
                 if operator in HIERARCHY_FUNCS:
+                    # TODO This branch is deprecated, it is kept for backwards
+                    # compatibility until completion of domain translations.
+                    emit_deprecation_notice(field, leaf)
                     # determine ids2 in comodel
                     ids2 = to_ids(right, comodel, leaf)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
@@ -832,6 +932,9 @@ class expression(object):
                         """, [tuple(ids2) or (None,)])
 
                 elif right is not False:
+                    # TODO This branch is deprecated, it is kept for backwards
+                    # compatibility until completion of domain translations.
+                    emit_deprecation_notice(field, leaf)
                     # determine ids2 in comodel
                     if isinstance(right, str):
                         domain = field.get_domain_list(model)
@@ -1137,3 +1240,26 @@ class expression(object):
                 params = [field.convert_to_column(right, model, validate=False)]
 
         return query, params
+
+    def to_sql(self):
+        warnings.warn("deprecated expression.to_sql(), use expression.query instead",
+                      DeprecationWarning)
+        return self.result
+
+
+def emit_deprecation_notice(field, leaf):
+    excluded_methods = (
+        '_where_calc', '_search', '_name_search',
+        'search', 'name_search', 'search_count', 'search_read',
+    )
+
+    def remove_frame(filename, method):
+        return 'osv/expression.py' in filename or method in excluded_methods
+
+    stack = traceback.extract_stack()
+    while len(stack) > 0 and remove_frame(stack[-1].filename, stack[-1].name):
+        stack.pop()
+
+    message = 'Old %s syntax detected in %s at \n%s'
+    trace = ''.join(traceback.format_list([stack.pop()]))
+    _logger.info(message, field.type, leaf, trace)

@@ -5452,12 +5452,18 @@ class BaseModel(metaclass=MetaModel):
                             v = next(iter(value))
                         if isinstance(v, str):
                             data = data.mapped('display_name')
-                        else:
+                        elif comparator not in ('any', 'all'):
                             data = data and data.ids or [False]
                     elif field and field.type in ('date', 'datetime'):
                         data = [Datetime.to_datetime(d) for d in data]
 
-                    if comparator == '=':
+                    if comparator == 'any':
+                        matches = data.filtered_domain(value)
+                        ok = len(matches) > 0
+                    elif comparator == 'all':
+                        matches = data.filtered_domain(value)
+                        ok = len(matches) == len(data)
+                    elif comparator == '=':
                         ok = value in data
                     elif comparator in ('!=', '<>'):
                         ok = value not in data
@@ -6107,6 +6113,9 @@ class BaseModel(metaclass=MetaModel):
                     real_records = self - new_records
                     records = model.browse()
                     if real_records:
+                        # FIXME Using the new relational field syntax here
+                        # would break cache invalidation, since the following
+                        # line depends on ignoring the field domain.
                         records = model.search([(key.name, 'in', real_records.ids)], order='id')
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
