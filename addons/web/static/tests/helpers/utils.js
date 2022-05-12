@@ -266,6 +266,9 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
         event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
     }
     const target = findElement(el, selector);
+    if (!target) {
+        throw new Error(`Can't find a target to trigger ${eventType} event`);
+    }
     const isVisible =
         target === document ||
         target === window ||
