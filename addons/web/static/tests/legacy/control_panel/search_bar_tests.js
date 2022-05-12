@@ -383,7 +383,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowRight' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
 
-            assert.strictEqual(target.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText.trim(), "(no result)",
+            assert.strictEqual(target.querySelector('.o_searchview_autocomplete .focus').innerText.trim(), "(no result)",
                 "there should be no result for 'a' in bar");
 
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
@@ -544,11 +544,11 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.controlPanel.editSearch(target, "null");
 
             assert.strictEqual(
-                target.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText,
+                target.querySelector('.o_searchview_autocomplete .focus').innerText,
                 "Search Foo for: null"
             );
 
-            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li.o_selection_focus a'));
+            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li.focus a'));
 
             assert.verifySteps([
                 JSON.stringify([]), // initial search
