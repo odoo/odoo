@@ -179,6 +179,32 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
     navbar.destroy();
 });
 
+QUnit.test("navbar updates after adding a systray item", async (assert) => {
+    class MyItem1 extends Component {}
+    MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
+
+    clearRegistryWithCleanup(systrayRegistry);
+    systrayRegistry.add('addon.myitem1', { Component: MyItem1 });
+
+    const env = await makeTestEnv(baseConfig);
+    const target = getFixture();
+
+    patchWithCleanup(NavBar.prototype, {
+         mounted() {
+            class MyItem2 extends Component {}
+            MyItem2.template = xml`<li class="my-item-2">my item 2</li>`;
+            systrayRegistry.add('addon.myitem2', {Component: MyItem2});
+            this._super();
+        }
+    });
+
+    const navbar = await mount(NavBar, { env, target });
+    await nextTick();
+    const menuSystray = navbar.el.getElementsByClassName("o_menu_systray")[0];
+    assert.containsN(menuSystray, "li", 2, "2 systray items should be displayed");
+    navbar.destroy();
+});
+
 QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
     class MyNavbar extends NavBar {
         async adapt() {
