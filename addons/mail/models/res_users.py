@@ -27,6 +27,8 @@ class Users(models.Model):
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
     res_users_settings_ids = fields.One2many('res.users.settings', 'user_id')
+    # Provide a target for relateds that is not a x2Many field.
+    res_users_settings_id = fields.Many2one('res.users.settings', string="Settings", compute='_compute_res_users_settings_id', search='_search_res_users_settings_id')
 
     _sql_constraints = [(
         "notification_type",
@@ -40,6 +42,15 @@ class Users(models.Model):
             # Only the internal users can receive notifications in Odoo
             if user.share or not user.notification_type:
                 user.notification_type = 'email'
+
+    @api.depends('res_users_settings_ids')
+    def _compute_res_users_settings_id(self):
+        for user in self:
+            user.res_users_settings_id = user.res_users_settings_ids and user.res_users_settings_ids[0]
+
+    @api.model
+    def _search_res_users_settings_id(self, operator, operand):
+        return [('res_users_settings_ids', operator, operand)]
 
     # ------------------------------------------------------------
     # CRUD
