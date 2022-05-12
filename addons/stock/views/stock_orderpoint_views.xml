@@ -84,7 +84,7 @@
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="show"/>
-                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" attrs="{'invisible': [('id', '=', False)]}"/>
+                <button name="stock.action_stock_replenishment_info" type="action" icon="fa-info-circle" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
             </tree>
