@@ -23,8 +23,10 @@ class ExportDataItem extends Component {
     }
 
     async onClick(ev) {
-        this.state.subFields = await this.props.onClick(ev);
-        this.state.isExpanded = this.props.isFieldExpanded(this.props.field.id);
+        if (this.props.isFieldExpandable(this.props.field)) {
+            this.state.subFields = await this.props.onClick(ev);
+            this.state.isExpanded = this.props.isFieldExpanded(this.props.field.id);
+        }
     }
 
     isFieldSelected(name) {
@@ -294,6 +296,14 @@ export class ExportDataDialog extends Component {
             this.state.compatible,
             this.availableFormats[this.state.selectedFormat].tag
         );
+    }
+
+    setFormat(ev) {
+        if (ev.target.checked) {
+            this.state.selectedFormat = this.availableFormats.findIndex(
+                (i) => i.tag === ev.target.value
+            );
+        }
     }
 
     async fetchFields() {
