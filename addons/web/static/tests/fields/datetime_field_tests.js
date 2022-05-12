@@ -540,41 +540,39 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "multi edition of DatetimeField in list view: edit date in input",
         async function (assert) {
             assert.expect(4);
-            const createView = null,
-                ListView = null;
-            var list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
                 arch: '<tree multi_edit="1">' + '<field name="datetime"/>' + "</tree>",
             });
 
-            // select two records and edit them
-            await click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
-            await click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
+            const rows = target.querySelectorAll(".o_data_row");
 
-            await click(list.$(".o_data_row:first .o_data_cell"));
-            assert.containsOnce(list, "input.o_datepicker_input");
-            list.$(".o_datepicker_input").val("10/02/2019 09:00:00");
-            await triggerEvents(list.$(".o_datepicker_input"), ["change"]);
+            // select two records and edit them
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
+
+            await click(rows[0], ".o_data_cell");
+
+            assert.containsOnce(target, "input.o_datepicker_input");
+            await editInput(target, ".o_datepicker_input", "10/02/2019 09:00:00");
 
             assert.containsOnce(document.body, ".modal");
-            await click($(".modal .modal-footer .btn-primary"));
+            await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
             assert.strictEqual(
-                list.$(".o_data_row:first .o_data_cell").text(),
+                target.querySelector(".o_data_row:first-child .o_data_cell").textContent,
                 "10/02/2019 09:00:00"
             );
             assert.strictEqual(
-                list.$(".o_data_row:nth(1) .o_data_cell").text(),
+                target.querySelector(".o_data_row:nth-child(1) .o_data_cell").textContent,
                 "10/02/2019 09:00:00"
             );
-
-            list.destroy();
         }
     );
 
