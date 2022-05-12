@@ -376,7 +376,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("Export dialog: interacting with available fields", async function (assert) {
+    QUnit.test("Export dialog: interacting with available fields", async function (assert) {
         assert.expect(8);
 
         await makeView({
@@ -448,8 +448,8 @@ QUnit.module("ViewDialogs", (hooks) => {
             ["Foo", "Company", "Activities"]
         );
 
-        await dragAndDrop(".o_export_field:first-child", ".o_export_field:nth-child(1)");
-        await dragAndDrop(".o_export_field:nth-child(2)", ".o_export_field:first-child");
+        await dragAndDrop(".o_export_field:first-child", ".o_export_field:nth-child(2)");
+        await dragAndDrop(".o_export_field:nth-child(3)", ".o_export_field:first-child");
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
             ["Activities", "Company", "Foo"]

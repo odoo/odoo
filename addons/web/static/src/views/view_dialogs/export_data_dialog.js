@@ -77,8 +77,8 @@ export class ExportDataDialog extends Component {
             elements: ".o_export_field",
             cursor: "grabbing",
             // Hooks
-            onDrop: async ({ item, previous, next }) => {
-                const indexes = [item, previous, next].map(
+            onDrop: async ({ element, previous, next }) => {
+                const indexes = [element, previous, next].map(
                     (e) => e && this.state.exportedFields.indexOf(e.dataset.field_id)
                 );
                 let target;
