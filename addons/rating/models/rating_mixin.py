@@ -134,7 +134,7 @@ class RatingMixin(models.AbstractModel):
         if domain:
             base_domain += domain
         rg_data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
-        # init dict with all posible rate value, except 0 (no value for the rating)
+        # init dict with all possible rate value, except 0 (no value for the rating)
         values = dict.fromkeys(range(1, 6), 0)
         for rating_rg in rg_data:
             rating_val_round = float_round(rating_rg['rating'], precision_digits=1)

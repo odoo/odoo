@@ -4,6 +4,7 @@
 from . import chatbot_common
 from . import test_chatbot_form_ui
 from . import test_chatbot_internals
+from . import test_digest
 from . import test_get_mail_channel
 from . import test_im_livechat_report
 from . import test_im_livechat_support_page
