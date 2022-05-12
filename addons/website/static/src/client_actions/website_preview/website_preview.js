@@ -189,6 +189,7 @@ export class WebsitePreview extends Component {
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
         this.websiteService.contentWindow = this.iframe.el.contentWindow;
         this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
+            this.iframe.el.setAttribute('is-ready', 'true');
             if (!this.websiteContext.edition) {
                 this.addWelcomeMessage();
             }
@@ -202,6 +203,7 @@ export class WebsitePreview extends Component {
         // underlying iframe, to avoid for white flashes (visible on
         // Chrome Windows/Linux).
         this.iframe.el.contentWindow.addEventListener('beforeunload', () => {
+            this.iframe.el.setAttribute('is-ready', 'false');
             if (!this.websiteContext.edition) {
                 this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
                 $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
