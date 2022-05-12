@@ -87,9 +87,6 @@ class PermissionPanel extends Component {
         const index = this.state.members.findIndex(current => {
             return current.partner_id === session.partner_id;
         });
-        if (index < 0) {
-            return;
-        }
         const newPermission = $select.val();
         const oldPermission = this.state.internal_permission;
         const willRestrict = this.state.based_on && permissionLevel[newPermission] < permissionLevel[oldPermission]
