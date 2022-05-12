@@ -560,7 +560,7 @@ registerModel({
                     return;
                 }
             }
-            if (this.messaging.currentPartner) {
+            if (this.messaging.currentPartner) { // not supported for guest
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
             const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);

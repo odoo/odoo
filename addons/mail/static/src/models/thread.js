@@ -2,10 +2,9 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, insertAndUnlink, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle';
-import Timer from '@mail/utils/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
@@ -27,12 +26,7 @@ registerModel({
     identifyingFields: ['model', 'id'],
     lifecycleHooks: {
         _willDelete() {
-            this.currentPartnerInactiveTypingTimer.clear();
-            this.currentPartnerLongTypingTimer.clear();
             this.throttleNotifyCurrentPartnerTypingStatus.clear();
-            for (const timer of this.otherMembersLongTypingTimers.values()) {
-                timer.clear();
-            }
             if (this.isTemporary) {
                 for (const message of this.messages) {
                     message.delete();
@@ -888,7 +882,7 @@ registerModel({
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {
-            this.currentPartnerInactiveTypingTimer.reset();
+            this.update({ currentPartnerInactiveTypingTimer: [clear(), insertAndReplace()] });
         },
         /**
          * Called to refresh a registered other member partner that is typing
@@ -897,7 +891,12 @@ registerModel({
          * @param {Partner} partner
          */
         refreshOtherMemberTypingMember(partner) {
-            this.otherMembersLongTypingTimers.get(partner).reset();
+            this.update({
+                otherMembersLongTypingTimers: [
+                    insertAndUnlink({ partner: replace(partner) }),
+                    insert({ partner: replace(partner) }),
+                ],
+            });
         },
         /**
          * Called when current partner is inserting some input in composer.
@@ -906,8 +905,10 @@ registerModel({
          */
         async registerCurrentPartnerIsTyping() {
             // Handling of typing timers.
-            this.currentPartnerInactiveTypingTimer.start();
-            this.currentPartnerLongTypingTimer.start();
+            this.update({
+                currentPartnerInactiveTypingTimer: insertAndReplace(),
+                currentPartnerLongTypingTimer: insertAndReplace(),
+            });
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
@@ -927,13 +928,7 @@ registerModel({
          * @param {Partner} partner
          */
         registerOtherMemberTypingMember(partner) {
-            const timer = new Timer(
-                this.messaging,
-                () => this._onOtherMemberLongTypingTimeout(partner),
-                60 * 1000
-            );
-            this.otherMembersLongTypingTimers.set(partner, timer);
-            timer.start();
+            this.update({ otherMembersLongTypingTimers: insert({ partner: replace(partner) }) });
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== partner.localId);
             newOrderedTypingMemberLocalIds.push(partner.localId);
@@ -999,10 +994,12 @@ registerModel({
          *   status of current partner is immediately notified and doesn't
          *   consume throttling at all.
          */
-        async unregisterCurrentPartnerIsTyping({ immediateNotify = false } = {}) {
+        unregisterCurrentPartnerIsTyping({ immediateNotify = false } = {}) {
             // Handling of typing timers.
-            this.currentPartnerInactiveTypingTimer.clear();
-            this.currentPartnerLongTypingTimer.clear();
+            this.update({
+                currentPartnerInactiveTypingTimer: clear(),
+                currentPartnerLongTypingTimer: clear(),
+            });
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
@@ -1015,7 +1012,7 @@ registerModel({
             if (immediateNotify) {
                 this.throttleNotifyCurrentPartnerTypingStatus.clear();
             }
-            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
+            this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
         },
         /**
          * Called to unregister an other member partner that is no longer typing
@@ -1024,8 +1021,7 @@ registerModel({
          * @param {Partner} partner
          */
         unregisterOtherMemberTypingMember(partner) {
-            this.otherMembersLongTypingTimers.get(partner).clear();
-            this.otherMembersLongTypingTimers.delete(partner);
+            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ partner: replace(partner) }) });
             const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
                 .filter(localId => localId !== partner.localId);
             this.update({
@@ -1090,17 +1086,6 @@ registerModel({
                 return replace(this.members[0]);
             }
             return clear();
-        },
-        /**
-         * @private
-         * @returns {Timer}
-         */
-        _computeCurrentPartnerLongTypingTimer() {
-            return new Timer(
-                this.messaging,
-                () => this._onCurrentPartnerLongTypingTimeout(),
-                50 * 1000
-            );
         },
         /**
          * @private
@@ -1272,21 +1257,6 @@ registerModel({
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.messaging.currentPartner
-            );
-        },
-        /**
-         * @private
-         * @returns {Timer}
-         */
-        _computeCurrentPartnerInactiveTypingTimer() {
-            return new Timer(
-                this.messaging,
-                () => {
-                    if (this.messaging.currentPartner) {
-                        return this._onCurrentPartnerInactiveTypingTimeout();
-                    }
-                },
-                5 * 1000
             );
         },
         /**
@@ -1549,13 +1519,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Map}
-         */
-        _computeOtherMembersLongTypingTimers() {
-            return new Map();
-        },
-        /**
-         * @private
          * @returns {Activity[]}
          */
         _computeOverdueActivities() {
@@ -1680,8 +1643,8 @@ registerModel({
                         return;
                     }
                 }
-                if (isTyping && this.currentPartnerLongTypingTimer.isRunning) {
-                    this.currentPartnerLongTypingTimer.reset();
+                if (isTyping && this.currentPartnerLongTypingTimer) {
+                    this.update({ currentPartnerLongTypingTimer: [clear(), insertAndReplace()] });
                 }
             }
             this.update({
@@ -1821,33 +1784,17 @@ registerModel({
             });
             this.update({ members });
         },
-        /**
-         * @private
-         */
-        async _onCurrentPartnerInactiveTypingTimeout() {
-            await this.unregisterCurrentPartnerIsTyping();
+        onCurrentPartnerInactiveTypingTimeout() {
+            this.unregisterCurrentPartnerIsTyping();
         },
         /**
          * Called when current partner has been typing for a very long time.
          * Immediately notify other members that he/she is still typing.
-         *
-         * @private
          */
-        async _onCurrentPartnerLongTypingTimeout() {
+        async onCurrentPartnerLongTypingTimeout() {
             this.update({ forceNotifyNextCurrentPartnerTypingStatus: true });
             this.throttleNotifyCurrentPartnerTypingStatus.clear();
             await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
-        },
-        /**
-         * @private
-         * @param {Partner} partner
-         */
-        async _onOtherMemberLongTypingTimeout(partner) {
-            if (!this.typingMembers.includes(partner)) {
-                this.otherMembersLongTypingTimers.delete(partner);
-                return;
-            }
-            this.unregisterOtherMemberTypingMember(partner);
         },
     },
     fields: {
@@ -1914,8 +1861,9 @@ registerModel({
          * partner has stopped typing something, due to making no changes
          * on the composer for some time.
          */
-        currentPartnerInactiveTypingTimer: attr({
-            compute: '_computeCurrentPartnerInactiveTypingTimer',
+        currentPartnerInactiveTypingTimer: one('Timer', {
+            inverse: 'threadAsCurrentPartnerInactiveTypingTimerOwner',
+            isCausal: true,
         }),
         /**
          * Last 'is_typing' status of current partner that has been notified
@@ -1941,8 +1889,9 @@ registerModel({
          * is still typing something, so that they should not assume he/she
          * has stopped typing something.
          */
-        currentPartnerLongTypingTimer: attr({
-            compute: '_computeCurrentPartnerLongTypingTimer',
+        currentPartnerLongTypingTimer: one('Timer', {
+            inverse: 'threadAsCurrentPartnerLongTypingTimerOwner',
+            isCausal: true,
         }),
         custom_channel_name: attr(),
         /**
@@ -2323,8 +2272,9 @@ registerModel({
          * @see registerOtherMemberTypingMember
          * @see unregisterOtherMemberTypingMember
          */
-        otherMembersLongTypingTimers: attr({
-            compute: '_computeOtherMembersLongTypingTimers',
+        otherMembersLongTypingTimers: many('OtherMemberLongTypingInThreadTimer', {
+            inverse: 'thread',
+            isCausal: true,
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
