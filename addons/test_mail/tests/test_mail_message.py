@@ -363,7 +363,7 @@ class TestMessageAccess(TestMailCommon):
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.message.with_user(self.user_employee).read()
-        # Test: Bert has access to attachment, ok because he can read message
+        # Test: Bert has access to attachment, ok because they can read message
         attachment.with_user(self.user_employee).read(['name', 'datas'])
 
     def test_mail_message_access_read_author(self):
@@ -372,7 +372,7 @@ class TestMessageAccess(TestMailCommon):
 
     def test_mail_message_access_read_doc(self):
         self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id})
-        # Test: Bert reads the message, ok because linked to a doc he is allowed to read
+        # Test: Bert reads the message, ok because linked to a doc they are allowed to read
         self.message.with_user(self.user_employee).read()
 
     # --------------------------------------------------

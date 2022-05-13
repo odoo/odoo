@@ -91,7 +91,7 @@
          * Overridden to add custom rendering behavior upon start of the widget.
          *
          * If the user has answered the quiz before having joined the course, we check
-         * his answers (saved into his session) here as well.
+         * their answers (saved into their session) here as well.
          *
          * @override
          */

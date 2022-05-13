@@ -11,12 +11,12 @@ const tourUtils = require('website_sale.tour_utils');
  * -> clicks on "buy course"
  * -> is redirected to webshop on the product page
  * -> buys the course
- * -> fails 3 times, exhausting his attempts
+ * -> fails 3 times, exhausting their attempts
  * -> is removed to the members of the course
  * -> buys the course again
  * -> succeeds the certification
  * -> has the course marked as completed
- * -> has the certification in his user profile
+ * -> has the certification in their user profile
  *
  */
 

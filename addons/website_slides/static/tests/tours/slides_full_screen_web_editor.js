@@ -5,8 +5,8 @@ import tour from 'web_tour.tour';
 /**
  * Global use case:
  * - a user (website publisher) lands on the fullscreen view of a course ;
- * - he clicks on the website editor "Edit" button ;
- * - he is redirected to the non-fullscreen view with the editor opened.
+ * - they click on the website editor "Edit" button ;
+ * - they are redirected to the non-fullscreen view with the editor opened.
  *
  * This tour tests a fix made when editing a course in fullscreen view.
  * See "Fullscreen#_onWebEditorClick" for more information.

@@ -49,7 +49,7 @@ class TestActivityRights(TestActivityCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
+            """ If employee is test employee, consider they have no access on document """
             recordset = args[0]
             if recordset.env.uid == self.user_employee.id:
                 raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
@@ -65,7 +65,7 @@ class TestActivityRights(TestActivityCommon):
 
     def test_activity_security_user_noaccess_manual(self):
         def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
+            """ If employee is test employee, consider they have no access on document """
             recordset = args[0]
             if recordset.env.uid == self.user_employee.id:
                 raise exceptions.AccessError('Hop hop hop Ernest, please step back.')

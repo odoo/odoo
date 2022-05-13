@@ -58,7 +58,7 @@ class ResPartner(models.Model):
 
     def action_view_courses(self):
         """ View partners courses. In singleton mode, return courses followed
-        by all its contacts (if company) or by himself (if not a company).
+        by all its contacts (if company) or by themselves (if not a company).
         Otherwise simply set a domain on required partners. """
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action['name'] = _('Followed Courses')

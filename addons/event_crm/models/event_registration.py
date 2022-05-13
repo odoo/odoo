@@ -47,7 +47,7 @@ class EventRegistration(models.Model):
         There are 2 main use cases
 
           * first is when we update the partner_id of multiple registrations. It
-            happens when a public user fill its information when he register to
+            happens when a public user fill its information when they register to
             an event;
           * second is when we update specific values of one registration like
             updating question answers or a contact information (email, phone);

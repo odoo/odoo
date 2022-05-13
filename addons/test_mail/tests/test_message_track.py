@@ -359,7 +359,7 @@ class TestTrackingInternals(TestMailCommon):
         self.record.clear_caches()
         record_form = Form(self.record.with_user(self.user_employee))
         record_form.name = 'TestDoNoCrash'
-        # the employee user must be able to save the fields on which he can write
+        # the employee user must be able to save the fields on which they can write
         # if we fetch all the tracked fields, ignoring the group of the current user
         # it will crash and it shouldn't
         record = record_form.save()

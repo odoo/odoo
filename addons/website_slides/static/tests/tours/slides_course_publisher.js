@@ -6,9 +6,9 @@ import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 /**
  * Global use case:
  * a user (website publisher) creates a course;
- * he updates it;
- * he creates some lessons in it;
- * he publishes it;
+ * they update it;
+ * they create some lessons in it;
+ * they publishe it;
  */
 tour.register('course_publisher', {
     url: '/slides',

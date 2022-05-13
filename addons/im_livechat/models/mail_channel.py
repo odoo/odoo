@@ -95,7 +95,7 @@ class MailChannel(models.Model):
         channel_partner_ids = self.with_context(active_test=False).channel_partner_ids
         partners = channel_partner_ids - self.livechat_operator_id
         if not partners:
-            # operator probably testing the livechat with his own user
+            # operator probably testing the livechat with their own user
             partners = channel_partner_ids
         first_partner = partners and partners[0]
         if first_partner and not first_partner.is_public:

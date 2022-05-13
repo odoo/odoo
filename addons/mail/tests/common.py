@@ -143,7 +143,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     def gateway_mail_reply_wrecord(self, template, record, use_in_reply_to=True,
                                    target_model=None, target_field=None):
         """ Simulate a reply through the mail gateway. Usage: giving a record,
-        find an email sent to him and use its message-ID to simulate a reply.
+        find an email sent to them and use its message-ID to simulate a reply.
 
         Some noise is added in References just to test some robustness. """
         mail_mail = self._find_mail_mail_wrecord(record)
@@ -168,7 +168,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     def gateway_mail_reply_wemail(self, template, email_to, use_in_reply_to=True,
                                   target_model=None, target_field=None):
         """ Simulate a reply through the mail gateway. Usage: giving a record,
-        find an email sent to him and use its message-ID to simulate a reply.
+        find an email sent to them and use its message-ID to simulate a reply.
 
         Some noise is added in References just to test some robustness. """
         sent_mail = self._find_sent_mail_wemail(email_to)

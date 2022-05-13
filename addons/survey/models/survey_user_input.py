@@ -45,7 +45,7 @@ class SurveyUserInput(models.Model):
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Contact', readonly=True)
     email = fields.Char('Email', readonly=True)
-    nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify him in the survey session leaderboard.")
+    nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify them in the survey session leaderboard.")
     # questions / answers
     user_input_line_ids = fields.One2many('survey.user_input.line', 'user_input_id', string='Answers', copy=True)
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
@@ -554,11 +554,11 @@ class SurveyUserInput(models.Model):
               - ensure correct scoring
               - if the selected answer triggers another question later in the survey, if the answer is not cleared,
                 a question that should not be displayed to the user will be.
-        
-        TODO DBE: Maybe this can be the only cleaning method, even for section_per_page or one_page where 
-        conditional questions are, for now, cleared in JS directly. But this can be annoying if user typed a long 
-        answer, changed his mind unchecking depending answer and changed again his mind by rechecking the depending 
-        answer -> For now, the long answer will be lost. If we use this as the master cleaning method, 
+
+        TODO DBE: Maybe this can be the only cleaning method, even for section_per_page or one_page where
+        conditional questions are, for now, cleared in JS directly. But this can be annoying if user typed a long
+        answer, changed their mind unchecking depending answer and changed again their mind by rechecking the depending
+        answer -> For now, the long answer will be lost. If we use this as the master cleaning method,
         long answer will be cleared only during submit.
         """
         inactive_questions = self._get_inactive_conditional_questions()

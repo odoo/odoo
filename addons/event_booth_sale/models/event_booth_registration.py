@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 class EventBoothRegistration(models.Model):
     """event.booth.registrations are used to allow multiple partners to book the same booth.
-    Whenever a partner has paid his registration all the others linked to the booth will be deleted."""
+    Whenever a partner has paid their registration all the others linked to the booth will be deleted."""
 
     _name = 'event.booth.registration'
     _description = 'Event Booth Registration'

@@ -56,4 +56,4 @@ class SlideAnswer(models.Model):
     question_id = fields.Many2one('slide.question', string="Question", required=True, ondelete='cascade')
     text_value = fields.Char("Answer", required=True, translate=True)
     is_correct = fields.Boolean("Is correct answer")
-    comment = fields.Text("Comment", translate=True, help='This comment will be displayed to the user if he selects this answer')
+    comment = fields.Text("Comment", translate=True, help='This comment will be displayed to the user if they select this answer')

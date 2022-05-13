@@ -126,7 +126,7 @@ class Survey(models.Model):
     certification_mail_template_id = fields.Many2one(
         'mail.template', 'Certified Email Template',
         domain="[('model', '=', 'survey.user_input')]",
-        help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
+        help="Automated email sent to the user when they succeed the certification, containing their certification document.")
     certification_report_layout = fields.Selection([
         ('modern_purple', 'Modern Purple'),
         ('modern_blue', 'Modern Blue'),
@@ -993,7 +993,7 @@ class Survey(models.Model):
     def action_start_session(self):
         """ Sets the necessary fields for the session to take place and starts it.
         The write is sudo'ed because a survey user can start a session even if it's
-        not his own survey. """
+        not their own survey. """
 
         if not self.env.user.has_group('survey.group_survey_user'):
             raise AccessError(_('Only survey users can manage sessions.'))
@@ -1019,7 +1019,7 @@ class Survey(models.Model):
 
     def action_end_session(self):
         """ The write is sudo'ed because a survey user can end a session even if it's
-        not his own survey. """
+        not their own survey. """
 
         if not self.env.user.has_group('survey.group_survey_user'):
             raise AccessError(_('Only survey users can manage sessions.'))

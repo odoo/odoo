@@ -26,10 +26,10 @@ class SurveyUserInput(models.Model):
         return res
 
     def _check_for_failed_attempt(self):
-        """ If the user fails his last attempt at a course certification,
-        we remove him from the members of the course (and he has to enroll again).
-        He receives an email in the process notifying him of his failure and suggesting
-        he enrolls to the course again.
+        """ If the user fails their last attempt at a course certification,
+        we remove them from the members of the course (and they have to enroll again).
+        They receive an email in the process notifying them of their failure and suggesting
+        they enroll to the course again.
 
         The purpose is to have a 'certification flow' where the user can re-purchase the
         certification when they have failed it."""

@@ -418,7 +418,7 @@ class MailGroup(models.Model):
         for batch_email_member in tools.split_every(GROUP_SEND_BATCH_SIZE, member_emails.items()):
             for email_member_normalized, email_member in batch_email_member:
                 if email_member_normalized == message.email_from_normalized:
-                    # Do not send the email to his author
+                    # Do not send the email to their author
                     continue
 
                 # SMTP headers related to the subscription

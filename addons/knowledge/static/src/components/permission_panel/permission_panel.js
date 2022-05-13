@@ -289,7 +289,7 @@ class PermissionPanel extends Component {
   /**
     * This method is called after each permission change rpc.
     * It will check if a reloading of the article tree or a complete reload is needed in function
-    * of the new article state (if change of category or if user lost his own access to the current article).
+    * of the new article state (if change of category or if user lost their own access to the current article).
     * return True if the caller should continue after executing this method, and False, if caller should stop.
     * @param {Dict} result
     * @param {Boolean} lostAccess
