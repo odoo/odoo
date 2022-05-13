@@ -143,6 +143,24 @@ odoo.define('website.s_website_form', function (require) {
                 // customizations that use the current behavior as a feature.
                 for (const name of fieldNames) {
                     const fieldEl = this.$target[0].querySelector(`[name="${name}"]`);
+
+                    // In general, we want the data-for and prefill values to
+                    // take priority over set default values. The 'email_to'
+                    // field is however treated as an exception at the moment
+                    // so that values set by users are always used.
+                    if (name === 'email_to' && fieldEl.value
+                            // The following value is the default value that
+                            // is set if the form is edited in any way. (see the
+                            // website.form_editor_registry module in editor
+                            // assets bundle).
+                            // TODO that value should probably never be forced
+                            // unless explicitely manipulated by the user or on
+                            // custom form addition but that seems risky to
+                            // change as a stable fix.
+                            && fieldEl.value !== 'info@yourcompany.example.com') {
+                        continue;
+                    }
+
                     let newValue;
                     if (dataForValues && dataForValues[name]) {
                         newValue = dataForValues[name];
