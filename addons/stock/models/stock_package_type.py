@@ -19,6 +19,7 @@ class PackageType(models.Model):
     height = fields.Integer('Height', help="Packaging Height")
     width = fields.Integer('Width', help="Packaging Width")
     packaging_length = fields.Integer('Length', help="Packaging Length")
+    base_weight = fields.Float(string='Weight', help='Weight of the package type')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
     barcode = fields.Char('Barcode', copy=False)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', default=_get_default_weight_uom)

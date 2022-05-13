@@ -10,11 +10,18 @@ class StockMove(models.Model):
 
     weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    @api.depends('product_id', 'product_uom_qty', 'product_uom', 'move_line_ids.result_package_id')
     def _cal_move_weight(self):
         moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
         for move in moves_with_weight:
-            move.weight = (move.product_qty * move.product_id.weight)
+            total_weight = (move.product_qty * move.product_id.weight)
+            # Add base weight of package to total weight for each line
+            for line in move.move_line_ids:
+                pack = line.result_package_id
+                if pack and pack.package_type_id:
+                    pack_weight = pack.package_type_id.base_weight
+                    total_weight += pack_weight
+            move.weight = total_weight
         (self - moves_with_weight).weight = 0
 
     def _get_new_picking_values(self):

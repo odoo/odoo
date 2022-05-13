@@ -9,6 +9,8 @@ class ChooseDeliveryPackage(models.TransientModel):
     _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
 
+
+    # TODO: This could be removed since now shipping weight is recalculated in _onchange_delivery_package_type
     @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
@@ -36,6 +38,24 @@ class ChooseDeliveryPackage(models.TransientModel):
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         for package in self:
             package.weight_uom_name = weight_uom_id.name
+
+    @api.onchange('delivery_package_type_id')
+    def _onchange_delivery_package_type(self):
+        
+        move_line_ids = self.picking_id.move_line_ids.filtered(lambda m:
+            float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+            and not m.result_package_id
+        )
+        if self.delivery_package_type_id:
+            # Add package weights to shipping weight, package base weight is defined in package.type
+            # and a package for each line
+            total_weight = len(move_line_ids) * self.delivery_package_type_id.base_weight
+        else:
+            total_weight = 0.0
+        for ml in move_line_ids:
+            qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+            total_weight += qty * ml.product_id.weight
+        self.shipping_weight = total_weight
 
     @api.onchange('delivery_package_type_id', 'shipping_weight')
     def _onchange_package_type_weight(self):

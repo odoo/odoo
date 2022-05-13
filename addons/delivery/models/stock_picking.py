@@ -11,7 +11,7 @@ from odoo.exceptions import UserError
 class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
-    @api.depends('quant_ids')
+    @api.depends('quant_ids','package_type_id')
     def _compute_weight(self):
         for package in self:
             weight = 0.0
@@ -21,10 +21,15 @@ class StockQuantPackage(models.Model):
                     ('result_package_id', '=', package.id),
                     ('picking_id', '=', self.env.context['picking_id'])
                 ])
+                # set initial weight to package type base weight * N move lines
+                if package.package_type_id:
+                    weight = package.package_type_id.base_weight * len(current_picking_move_line_ids)
                 for ml in current_picking_move_line_ids:
                     weight += ml.product_uom_id._compute_quantity(
                         ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight
             else:
+                if package.package_type_id:
+                    weight = package.package_type_id.base_weight
                 for quant in package.quant_ids:
                     weight += quant.quantity * quant.product_id.weight
             package.weight = weight
