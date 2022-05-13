@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { session } from "@web/session";
-import { Dialog } from "@web/core/dialog/dialog";
+import Dialog from 'web.Dialog';
 import { _lt } from "@web/core/l10n/translation";
 import { _t } from 'web.core';
 import { useService } from '@web/core/utils/hooks';
