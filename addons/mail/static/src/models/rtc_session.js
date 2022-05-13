@@ -61,56 +61,6 @@ registerModel({
             });
         },
         /**
-         * @param {Object} param0
-         * @param {MediaStream} param0.audioStream
-         * @param {boolean} param0.isSelfMuted
-         * @param {boolean} param0.isTalking
-         */
-        async setAudio({ audioStream, isSelfMuted, isTalking }) {
-            const audioElement = this.audioElement || new window.Audio();
-            try {
-                audioElement.srcObject = audioStream;
-            } catch (error) {
-                this.update({ isAudioInError: true });
-                console.error(error);
-            }
-            audioElement.load();
-            if (this.partner && this.partner.volumeSetting) {
-                audioElement.volume = this.partner.volumeSetting.volume;
-            } else if (this.guest && this.guest.volumeSetting) {
-                audioElement.volume = this.guest.volumeSetting.volume;
-            } else {
-                audioElement.volume = this.volume;
-            }
-            audioElement.muted = this.messaging.rtc.currentRtcSession.isDeaf;
-            // Using both autoplay and play() as safari may prevent play() outside of user interactions
-            // while some browsers may not support or block autoplay.
-            audioElement.autoplay = true;
-            this.update({
-                audioElement,
-                audioStream,
-                isSelfMuted,
-                isTalking,
-            });
-            try {
-                await audioElement.play();
-                if (!this.exists()) {
-                    return;
-                }
-                this.update({ isAudioInError: false });
-            } catch (error) {
-                if (typeof error === 'object' && error.name === 'NotAllowedError') {
-                    // Ignored as some browsers may reject play() calls that do not
-                    // originate from a user input.
-                    return;
-                }
-                if (this.exists()) {
-                    this.update({ isAudioInError: true });
-                }
-                console.error(error);
-            }
-        },
-        /**
          * @param {number} volume
          */
         setVolume(volume) {
@@ -195,6 +145,26 @@ registerModel({
                 localCandidateType: clear(),
                 remoteCandidateType: clear(),
             });
+        },
+        /**
+         * Updates the RtcSession with a new track.
+         *
+         * @param {Track} [track]
+         */
+        updateStream(track) {
+            const stream = new window.MediaStream();
+            stream.addTrack(track);
+
+            if (track.kind === 'audio') {
+                this._setAudio({
+                    audioStream: stream,
+                    isSelfMuted: false,
+                    isTalking: false,
+                });
+            }
+            if (track.kind === 'video') {
+                this.update({ videoStream: stream });
+            }
         },
         /**
          * @private
@@ -322,6 +292,57 @@ registerModel({
                 audioStream: clear(),
                 isAudioInError: false,
             });
+        },
+        /**
+         * @private
+         * @param {Object} param0
+         * @param {MediaStream} param0.audioStream
+         * @param {boolean} param0.isSelfMuted
+         * @param {boolean} param0.isTalking
+         */
+        async _setAudio({ audioStream, isSelfMuted, isTalking }) {
+            const audioElement = this.audioElement || new window.Audio();
+            try {
+                audioElement.srcObject = audioStream;
+            } catch (error) {
+                this.update({ isAudioInError: true });
+                console.error(error);
+            }
+            audioElement.load();
+            if (this.partner && this.partner.volumeSetting) {
+                audioElement.volume = this.partner.volumeSetting.volume;
+            } else if (this.guest && this.guest.volumeSetting) {
+                audioElement.volume = this.guest.volumeSetting.volume;
+            } else {
+                audioElement.volume = this.volume;
+            }
+            audioElement.muted = this.messaging.rtc.currentRtcSession.isDeaf;
+            // Using both autoplay and play() as safari may prevent play() outside of user interactions
+            // while some browsers may not support or block autoplay.
+            audioElement.autoplay = true;
+            this.update({
+                audioElement,
+                audioStream,
+                isSelfMuted,
+                isTalking,
+            });
+            try {
+                await audioElement.play();
+                if (!this.exists()) {
+                    return;
+                }
+                this.update({ isAudioInError: false });
+            } catch (error) {
+                if (typeof error === 'object' && error.name === 'NotAllowedError') {
+                    // Ignored as some browsers may reject play() calls that do not
+                    // originate from a user input.
+                    return;
+                }
+                if (this.exists()) {
+                    this.update({ isAudioInError: true });
+                }
+                console.error(error);
+            }
         },
     },
     fields: {
