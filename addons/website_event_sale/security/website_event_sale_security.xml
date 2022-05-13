@@ -3,7 +3,7 @@
     <record id="event_product_template_public" model="ir.rule">
         <field name="name">Product template linked to event: Public</field>
         <field name="model_id" ref="product.model_product_template"/>
-        <field name="domain_force">[('product_variant_ids.event_ticket_ids.event_id.website_published', '=', True)]</field>
+        <field name="domain_force">[('product_variant_ids.event_ticket_ids', 'any', [('event_id.website_published', '=', True)])]</field>
         <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>

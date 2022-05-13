@@ -86,7 +86,7 @@ class Users(models.Model):
                     )
         # Auto-subscribe to channels unless skip explicitly requested
         if not self.env.context.get('mail_channel_nosubscribe'):
-            self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users_automatically()
+            self.env['mail.channel'].search([('group_ids.id', 'in', users.groups_id.ids)])._subscribe_users_automatically()
         return users
 
     def write(self, vals):

@@ -183,7 +183,7 @@
             <field name="name">user rule</field>
             <field name="model_id" ref="model_res_users"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'in', company_ids)]</field>
+            <field name="domain_force">['|', ('share', '=', False), ('company_ids', 'any', [('id', 'in', company_ids)])]</field>
         </record>
 
         <record id="change_password_own_rule" model="ir.rule">

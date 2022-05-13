@@ -25,7 +25,7 @@
     <record model="ir.rule" id="consumption_warning_subcontractor_rule">
         <field name="name">MRP Consumption Warnings Subcontractor</field>
         <field name="model_id" ref="mrp.model_mrp_consumption_warning"/>
-        <field name="domain_force">[('mrp_production_ids', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]</field>
+        <field name="domain_force">[('mrp_production_ids', 'any', [('id', 'in', user.partner_id.commercial_partner_id.production_ids.ids)])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
@@ -43,7 +43,7 @@
         '|', 
             '|',
                 ('production_id.subcontractor_id', '=', user.partner_id.commercial_partner_id.id),
-                ('move_orig_ids.production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+                ('move_orig_ids', 'any', [('production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids)]),
             ('raw_material_production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids)
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
@@ -56,7 +56,7 @@
         '|', 
             '|',
                 ('move_id.production_id.subcontractor_id', '=', user.partner_id.commercial_partner_id.id),
-                ('move_id.move_orig_ids.production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+                ('move_id.move_orig_ids', 'any', [('production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids)]),
             ('move_id.raw_material_production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
@@ -84,8 +84,8 @@
                 '|',
                     '|',
                         '|', 
-                            ('child_ids', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
-                            ('child_ids', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
+                            ('child_ids', 'any', [('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids)]),
+                            ('child_ids', 'any', [('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids)]),
                         '|', 
                             ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
                             ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
