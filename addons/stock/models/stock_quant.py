@@ -877,6 +877,10 @@ class StockQuant(models.Model):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
+
+        if self.inventory_date:
+            name += _(' [Scheduled on %s]', self.inventory_date)
+
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,
