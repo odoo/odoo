@@ -11,6 +11,16 @@ registerModel({
             this.peerConnection.close();
         }
     },
+    recordMethods: {
+        /**
+         * @param {String} trackKind
+         * @returns {RTCRtpTransceiver} the transceiver used for this trackKind.
+         */
+        getTransceiver(trackKind) {
+            const transceivers = this.peerConnection.getTransceivers();
+            return transceivers[this.messaging.rtc.orderedTransceiverNames.indexOf(trackKind)];
+        },
+    },
     fields: {
         /**
          * Contains the browser.RTCPeerConnection instance of this RTC Session.
