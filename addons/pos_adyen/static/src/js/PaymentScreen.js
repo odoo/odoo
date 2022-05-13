@@ -22,7 +22,7 @@ const PosAdyenPaymentScreen = (PaymentScreen) => class PosAdyenPaymentScreen ext
 
             if (pendingAdyenPayment) {
                 const paymentTerminal = pendingAdyenPayment.payment_method.payment_terminal;
-                const status = await this.pos.env.services.rpc({
+                const status = await this.env.services.rpc({
                     model: 'pos.payment.method',
                     method: 'get_latest_adyen_status',
                     args: [[paymentTerminal.payment_method.id], paymentTerminal._adyen_get_sale_id()],
