@@ -207,6 +207,11 @@ export class SettingsFormCompiler extends FormCompiler {
             {
                 tag: "field",
                 fn: compileField,
+            },
+            // widget are not supported for the moment
+            {
+                tag: "widget",
+                fn: () => {},
             }
         );
     }
