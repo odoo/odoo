@@ -16,7 +16,12 @@
         <xpath expr="//div[@t-elif='o.date_order']" position="after">
             <div t-if="o.incoterm_id" class="col-3 bm-2">
                 <strong>Incoterm:</strong>
-                <p t-field="o.incoterm_id.code" class="m-0"/>
+                <t t-if="o.incoterm_location">
+                    <p t-esc="'{} ({})'.format(o.incoterm_id.code, o.incoterm_location)" class="m-0"/>
+                </t>
+                <t t-else="">
+                    <p t-field="o.incoterm_id.code" class="m-0"/>
+                </t>
             </div>
         </xpath>
     </template>
@@ -37,7 +42,12 @@
             <div id="informations" class="row mt16 mb16">
                 <div t-if="o.incoterm_id" class="col-3 bm-2">
                     <strong>Incoterm:</strong>
-                    <p t-field="o.incoterm_id.code" class="m-0"/>
+                    <t t-if="o.incoterm_location">
+                        <p t-esc="'{} ({})'.format(o.incoterm_id.code, o.incoterm_location)" />
+                    </t>
+                    <t t-else="">
+                        <p t-field="o.incoterm_id.code" class="m-0"/>
+                    </t>
                 </div>
             </div>
         </xpath>
