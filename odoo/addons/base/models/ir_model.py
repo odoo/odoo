@@ -11,7 +11,7 @@ from operator import itemgetter
 
 from psycopg2 import sql
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique
@@ -1773,10 +1773,26 @@ class IrModelAccess(models.Model):
             document_kind = self.env['ir.model']._get(model).name or model
             msg_heads = {
                 # Messages are declared in extenso so they are properly exported in translation terms
-                'read': _("You are not allowed to access '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-                'write':  _("You are not allowed to modify '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-                'create': _("You are not allowed to create '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-                'unlink': _("You are not allowed to delete '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
+                'read': _lt(
+                    "You are not allowed to access '%(document_kind)s' (%(document_model)s) records.",
+                    document_kind=document_kind,
+                    document_model=model,
+                ),
+                'write':  _lt(
+                    "You are not allowed to modify '%(document_kind)s' (%(document_model)s) records.",
+                    document_kind=document_kind,
+                    document_model=model,
+                ),
+                'create': _lt(
+                    "You are not allowed to create '%(document_kind)s' (%(document_model)s) records.",
+                    document_kind=document_kind,
+                    document_model=model,
+                ),
+                'unlink': _lt(
+                    "You are not allowed to delete '%(document_kind)s' (%(document_model)s) records.",
+                    document_kind=document_kind,
+                    document_model=model,
+                ),
             }
             operation_error = msg_heads[mode]
 
