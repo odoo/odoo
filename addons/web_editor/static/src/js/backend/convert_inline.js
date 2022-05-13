@@ -168,7 +168,7 @@ function bootstrapToTable($editable) {
             // 1. Replace generic "col" classes with specific "col-n", computed
             //    by sharing the available space between them.
             const flexColumns = bootstrapColumns.filter(column => !/\d/.test(column.className.match(RE_COL_MATCH)[0] || '0'));
-            const colTotalSize = bootstrapColumns.map(child => _getColumnSize(child)).reduce((a, b) => a + b);
+            const colTotalSize = bootstrapColumns.map(child => _getColumnSize(child).reduce((a, b) => a + b)).reduce((a, b) => a + b);
             const colSize = Math.max(1, Math.round((12 - colTotalSize) / flexColumns.length));
             for (const flexColumn of flexColumns) {
                 flexColumn.classList.remove(flexColumn.className.match(RE_COL_MATCH)[0].trim());
@@ -183,7 +183,13 @@ function bootstrapToTable($editable) {
             let currentCol;
             let columnIndex = 0;
             for (const bootstrapColumn of bootstrapColumns) {
-                const columnSize = _getColumnSize(bootstrapColumn);
+                const [columnOffset, columnSize] = _getColumnSize(bootstrapColumn);
+                if (columnOffset) {
+                    // First apply the offset if any. We assume no overflow.
+                    currentCol = grid[gridIndex];
+                    _applyColspan(currentCol, columnOffset);
+                    gridIndex += columnOffset;
+                }
                 if (gridIndex + columnSize < 12) {
                     currentCol = grid[gridIndex];
                     _applyColspan(currentCol, columnSize);
@@ -910,13 +916,13 @@ function _createTable(attributes = []) {
     return table;
 }
 /**
- * Take a Bootstrap grid column element and return its size, computed by using
- * its Bootstrap classes.
+ * Take a Bootstrap grid column element and return its offset and size, computed
+ * by using its Bootstrap classes.
  *
  * @see RE_COL_MATCH
  * @see RE_OFFSET_MATCH
  * @param {Element} column
- * @returns {number}
+ * @returns {[number, number]}
  */
 function _getColumnSize(column) {
     const colMatch = column.className.match(RE_COL_MATCH);
@@ -925,7 +931,7 @@ function _getColumnSize(column) {
     const offsetMatch = column.className.match(RE_OFFSET_MATCH);
     const offsetOptions = offsetMatch && offsetMatch[2] && offsetMatch[2].substr(1).split('-');
     const offsetSize = offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0]) || 0;
-    return colSize + offsetSize;
+    return [offsetSize, colSize];
 }
 /**
  * Return the CSS rules which applies on an element, tweaked so that they are
