@@ -34,84 +34,85 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                        """ % (date, allocation_id))
 
     def test_frequency_daily(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'daily',
-                'maximum_leave': 10000
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-        self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
-        self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
-        allocation._update_accrual()
-        tomorrow = datetime.date.today() + relativedelta(days=2)
-        self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
-
-        with freeze_time(tomorrow):
-            allocation._update_accrual()
-            nextcall = datetime.date.today() + relativedelta(days=1)
-            self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
-            self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
-            allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
-
-    def test_frequency_weekly(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'weekly',
-                'maximum_leave': 10000
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2021-09-03',
-        })
-        with freeze_time(datetime.date(2021, 9, 5)):
+        with freeze_time(datetime.date(2017, 12, 5)):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'daily',
+                    'maximum_leave': 10000
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
             allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
             allocation._update_accrual()
-            nextWeek = allocation.date_from + relativedelta(days=1, weekday=0)
+            tomorrow = datetime.date.today() + relativedelta(days=2)
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
 
+            with freeze_time(tomorrow):
+                allocation._update_accrual()
+                nextcall = datetime.date.today() + relativedelta(days=1)
+                self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
+                self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
+                allocation._update_accrual()
+                self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
 
-        with freeze_time(nextWeek):
-            allocation._update_accrual()
-            nextWeek = datetime.date.today() + relativedelta(days=1, weekday=0)
-            #Prorated
-            self.assertAlmostEqual(allocation.number_of_days, 0.2857, 4, 'There should be 0.2857 day allocated.')
-            self.assertEqual(allocation.nextcall, nextWeek, 'The next call date of the cron should be in 2 weeks')
+    def test_frequency_weekly(self):
+        with freeze_time(datetime.date(2017, 12, 5)):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'weekly',
+                    'maximum_leave': 10000
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2021-09-03',
+            })
+            with freeze_time(datetime.date.today() + relativedelta(days=2)):
+                allocation.action_confirm()
+                allocation.action_validate()
+                self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
+                self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
+                allocation._update_accrual()
+                nextWeek = allocation.date_from + relativedelta(days=1, weekday=0)
+                self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
 
-        with freeze_time(nextWeek):
-            allocation._update_accrual()
-            nextWeek = datetime.date.today() + relativedelta(days=1, weekday=0)
-            self.assertAlmostEqual(allocation.number_of_days, 1.2857, 4, 'There should be 1.2857 day allocated.')
-            self.assertEqual(allocation.nextcall, nextWeek, 'The next call date of the cron should be in 2 weeks')
+            with freeze_time(nextWeek):
+                allocation._update_accrual()
+                nextWeek = datetime.date.today() + relativedelta(days=1, weekday=0)
+                #Prorated
+                self.assertAlmostEqual(allocation.number_of_days, 0.2857, 4, 'There should be 0.2857 day allocated.')
+                self.assertEqual(allocation.nextcall, nextWeek, 'The next call date of the cron should be in 2 weeks')
+
+            with freeze_time(nextWeek):
+                allocation._update_accrual()
+                nextWeek = datetime.date.today() + relativedelta(days=1, weekday=0)
+                self.assertAlmostEqual(allocation.number_of_days, 1.2857, 4, 'There should be 1.2857 day allocated.')
+                self.assertEqual(allocation.nextcall, nextWeek, 'The next call date of the cron should be in 2 weeks')
 
     def test_frequency_bimonthly(self):
         with freeze_time('2021-09-01'):
@@ -389,113 +390,116 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
 
     def test_check_max_value(self):
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'daily',
-                'maximum_leave': 1,
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-        allocation._update_accrual()
-        tomorrow = datetime.date.today() + relativedelta(days=2)
-        self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
+        with freeze_time(datetime.date(2017, 12, 5)):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'daily',
+                    'maximum_leave': 1,
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+            allocation._update_accrual()
+            tomorrow = datetime.date.today() + relativedelta(days=2)
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
 
-        with freeze_time(tomorrow):
-            allocation._update_accrual()
-            nextcall = datetime.date.today() + relativedelta(days=1)
-            allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
+            with freeze_time(tomorrow):
+                allocation._update_accrual()
+                nextcall = datetime.date.today() + relativedelta(days=1)
+                allocation._update_accrual()
+                self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
 
-        with freeze_time(nextcall):
-            allocation._update_accrual()
-            nextcall = datetime.date.today() + relativedelta(days=1)
-            #The maximum value is 1 so this shouldn't change anything
-            allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
+            with freeze_time(nextcall):
+                allocation._update_accrual()
+                nextcall = datetime.date.today() + relativedelta(days=1)
+                #The maximum value is 1 so this shouldn't change anything
+                allocation._update_accrual()
+                self.assertEqual(allocation.number_of_days, 1, 'There should be only 1 day allocated.')
 
     def test_accrual_transition_immediately(self):
-        #1 accrual with 2 levels and level transition immediately
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'transition_mode': 'immediately',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'weekly',
-                'maximum_leave': 1,
-            }), (0, 0, {
-                'start_count': 10,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'weekly',
-                'maximum_leave': 1,
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-        next_date = datetime.date.today() + relativedelta(days=11)
-        second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
-        self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
+        with freeze_time(datetime.date(2017, 12, 5)):
+            #1 accrual with 2 levels and level transition immediately
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'transition_mode': 'immediately',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'weekly',
+                    'maximum_leave': 1,
+                }), (0, 0, {
+                    'start_count': 10,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'weekly',
+                    'maximum_leave': 1,
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+            next_date = datetime.date.today() + relativedelta(days=11)
+            second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
+            self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
 
     def test_accrual_transition_after_period(self):
-        # 1 accrual with 2 levels and level transition after
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'transition_mode': 'end_of_accrual',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'weekly',
-                'maximum_leave': 1,
-            }), (0, 0, {
-                'start_count': 10,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'weekly',
-                'maximum_leave': 1,
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-        next_date = datetime.date.today() + relativedelta(days=11)
-        second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
-        self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
+        with freeze_time(datetime.date(2017, 12, 5)):
+            # 1 accrual with 2 levels and level transition after
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'transition_mode': 'end_of_accrual',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'weekly',
+                    'maximum_leave': 1,
+                }), (0, 0, {
+                    'start_count': 10,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'weekly',
+                    'maximum_leave': 1,
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+            next_date = datetime.date.today() + relativedelta(days=11)
+            second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
+            self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
 
     def test_unused_accrual_lost(self):
         #1 accrual with 2 levels and level transition immediately
