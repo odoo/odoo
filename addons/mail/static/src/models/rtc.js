@@ -8,12 +8,6 @@ import { clear, insert, insertAndReplace, replace, unlink } from '@mail/model/mo
 import { monitorAudio } from '@mail/utils/media_monitoring';
 import { sprintf } from '@web/core/utils/strings';
 
-/**
- * The order in which transceivers are added, relevant for RTCPeerConnection.getTransceivers which returns
- * transceivers in insertion order as per webRTC specifications.
- */
-const TRANSCEIVER_ORDER = ['audio', 'video'];
-
 const getRTCPeerNotificationNextTemporaryId = (function () {
     let tmpId = 0;
     return () => {
@@ -72,7 +66,7 @@ registerModel({
             for (const rtcSession of this.connectedRtcSessions) {
                 const fullDirection = this.videoTrack ? 'sendrecv' : 'recvonly';
                 const limitedDirection = this.videoTrack ? 'sendonly' : 'inactive';
-                const transceiver = this._getTransceiver(rtcSession.rtcPeerConnection.peerConnection, 'video');
+                const transceiver = rtcSession.rtcPeerConnection.getTransceiver('video')
                 if (!transceiver) {
                     continue;
                 }
@@ -366,7 +360,7 @@ registerModel({
          */
         async _callPeer(rtcSession) {
             this._createPeerConnection(rtcSession);
-            for (const trackKind of TRANSCEIVER_ORDER) {
+            for (const trackKind of this.orderedTransceiverNames) {
                 await this._updateRemoteTrack(rtcSession.rtcPeerConnection.peerConnection, trackKind, { initTransceiver: true, sessionId: rtcSession.id });
             }
             rtcSession.update({ isCurrentUserInitiatorOfConnectionOffer: true });
@@ -490,16 +484,6 @@ registerModel({
                 rtcSession: replace(rtcSession),
             });
             return rtcSession;
-        },
-        /**
-         * @private
-         * @param {RTCPeerConnection} peerConnection
-         * @param {String} trackKind
-         * @returns {RTCRtpTransceiver} the transceiver used for this trackKind.
-         */
-        _getTransceiver(peerConnection, trackKind) {
-            const transceivers = peerConnection.getTransceivers();
-            return transceivers[TRANSCEIVER_ORDER.indexOf(trackKind)];
         },
         /**
          * @private
@@ -1280,6 +1264,15 @@ registerModel({
          */
         logs: attr({
             default: {},
+        }),
+        /**
+         * List of transceivers in ordered for consistent insertion and retrieval order, relevant for
+         * RTCPeerConnection.getTransceivers which returns transceivers in insertion order as per webRTC specifications.
+         */
+        orderedTransceiverNames: attr({
+            default: ['audio', 'video'],
+            readonly: true,
+            required: true,
         }),
         peerNotificationsToSend: many('RtcPeerNotification', {
             isCausal: true,
