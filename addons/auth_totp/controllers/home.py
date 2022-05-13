@@ -37,7 +37,7 @@ class Home(odoo.addons.web.controllers.main.Home):
 
         elif user and request.httprequest.method == 'POST' and kwargs.get('totp_token'):
             try:
-                with user._assert_can_auth():
+                with user._assert_can_auth(user=user.id):
                     user._totp_check(int(re.sub(r'\s', '', kwargs['totp_token'])))
             except AccessDenied as e:
                 error = str(e)
