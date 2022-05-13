@@ -1140,9 +1140,11 @@ var utils = Object.assign({
             ['res_model', '=', 'ir.ui.view'],
             '|',
             '|',
+            '|',
             ['name', '=like', '%.assets\_%.css'],
             ['name', '=like', '%.assets\_%.js'],
             ['name', '=like', '%.report_assets\_%.css'],
+            ['name', '=like', '%.assets\_%.map'],
         ];
     },
 }, cookieUtils);

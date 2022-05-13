@@ -2,8 +2,8 @@ odoo.define('web.test_env', async function (require) {
     "use strict";
 
     const Bus = require('web.Bus');
-    const { buildQuery } = require('web.rpc');
     const session = require('web.session');
+    const { makeTestEnvServices } = require('@web/../tests/legacy/helpers/test_services');
 
     const { renderToString } = require('@web/core/utils/render');
     const { App, Component } = owl;
@@ -61,25 +61,7 @@ odoo.define('web.test_env', async function (require) {
                 SIZES: { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 },
             }, env.device),
             isDebug: env.isDebug || (() => false),
-            services: Object.assign({
-                ajax: {
-                    rpc() {
-                      return env.session.rpc(...arguments); // Compatibility Legacy Widgets
-                    },
-                    loadLibs() {}
-                },
-                getCookie() {},
-                httpRequest(/* route, params = {}, readMethod = 'json' */) {
-                    return Promise.resolve('');
-                },
-                rpc(params, options) {
-                    const query = buildQuery(params);
-                    return env.session.rpc(query.route, query.params, options);
-                },
-                notification: { notify() { } },
-                hotkey: { add: () => () => {} }, // fake service
-                ui: { activeElement: document }, // fake service
-            }, env.services),
+            services: makeTestEnvServices(env),
             session: Object.assign({
                 rpc(route, params, options) {
                     if (providedRPC) {

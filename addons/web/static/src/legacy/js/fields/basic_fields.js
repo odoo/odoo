@@ -1931,6 +1931,36 @@ var CopyClipboard = {
     }
 };
 
+var ButtonCopyClipboard = AbstractField.extend(CopyClipboard, {
+    description: _lt('Copy to Clipboard'),
+    clipboardTemplate: 'CopyClipboardButton',
+    className: '',
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click': '_onClick',
+    }),
+    /**
+     * @param {Event} event
+     */
+    _onClick: event => {
+        event.stopPropagation();
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            const $btn = $(qweb.render(this.clipboardTemplate));
+            $btn.addClass(this.nodeOptions && this.nodeOptions.classes || 'btn-primary');
+            if (this.nodeOptions && this.nodeOptions.label) {
+                $btn.text(_t(this.nodeOptions.label));
+            }
+            this.$el.empty().append($btn);
+            this._initClipboard();
+        }
+    },
+});
+
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardText',
@@ -4217,6 +4247,7 @@ return {
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
     UrlWidget: UrlWidget,
+    ButtonCopyClipboard: ButtonCopyClipboard,
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
     URLCopyClipboard: URLCopyClipboard,

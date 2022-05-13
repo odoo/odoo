@@ -45,7 +45,18 @@ import {
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
 const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 
-function insert(editor, data, isText = true) {
+/**
+ * @param {OdooEditor} editor insertion target
+ * @param {string|DocumentFragment} data insertion contents
+ *                                       - MODE - | - DATA TYPE -
+ *                                       text     | string
+ *                                       html     | string
+ *                                       fragment | DocumentFragment
+ * @param {Object} options
+ * @param {string} [options.mode='text'] text | html | fragment
+ * @returns {Array<Node>} inserted nodes
+ */
+function insert(editor, data, {mode = "text"}) {
     if (!data) {
         return;
     }
@@ -72,30 +83,37 @@ function insert(editor, data, isText = true) {
         }
     }
 
-    const fakeEl = document.createElement('fake-element');
-    const fakeElFirstChild = document.createElement('fake-element-fc');
-    const fakeElLastChild = document.createElement('fake-element-lc');
-    if (isText) {
-        fakeEl.innerText = data;
-    } else {
-        fakeEl.innerHTML = data;
+    const container = document.createElement('fake-element');
+    const containerFirstChild = document.createElement('fake-element-fc');
+    const containerLastChild = document.createElement('fake-element-lc');
+
+    switch (mode) {
+        case 'text':
+            container.innerText = data;
+            break;
+        case 'html':
+            container.innerHTML = data;
+            break;
+        case 'fragment':
+            container.append(...data.childNodes);
+            break;
     }
 
     // In case the html inserted is all contained in a single root <P> tag,
     // we take the all content of the <p> and avoid inserting the <p>.
-    if (fakeEl.childElementCount === 1 && fakeEl.firstChild.nodeName === 'P') {
-        const p = fakeEl.firstElementChild;
-        fakeEl.replaceChildren(...p.childNodes);
-    } else if (fakeEl.childElementCount > 1) {
+    if (container.childElementCount === 1 && container.firstChild.nodeName === 'P') {
+        const p = container.firstElementChild;
+        container.replaceChildren(...p.childNodes);
+    } else if (container.childElementCount > 1) {
         // Grab the content of the first child block and isolate it.
-        if (isBlock(fakeEl.firstChild)) {
-            fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
-            fakeEl.firstElementChild.remove();
+        if (isBlock(container.firstChild)) {
+            containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+            container.firstElementChild.remove();
         }
         // Grab the content of the last child block and isolate it.
-        if (isBlock(fakeEl.lastChild)) {
-            fakeElLastChild.replaceChildren(...fakeEl.lastElementChild.childNodes);
-            fakeEl.lastElementChild.remove();
+        if (isBlock(container.lastChild)) {
+            containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+            container.lastElementChild.remove();
         }
     }
 
@@ -103,17 +121,17 @@ function insert(editor, data, isText = true) {
     // first we split the current focus element if it's a block
     // then we insert the content in the right places
     let lastChildNode = false;
-    if (fakeElLastChild.hasChildNodes()) {
+    if (containerLastChild.hasChildNodes()) {
         let tempCurrentNode = currentNode;
-        for (const n of [...fakeElLastChild.childNodes]) {
+        for (const n of [...containerLastChild.childNodes]) {
             tempCurrentNode.after(n);
             tempCurrentNode = n;
         }
         lastChildNode = tempCurrentNode;
     }
 
-    if (fakeElFirstChild.hasChildNodes()) {
-        for (const n of [...fakeElFirstChild.childNodes]) {
+    if (containerFirstChild.hasChildNodes()) {
+        for (const n of [...containerFirstChild.childNodes]) {
             currentNode.after(n);
             currentNode = n;
         }
@@ -121,7 +139,7 @@ function insert(editor, data, isText = true) {
 
     // If all the Html have been isolated, We force a split of the parent element
     // to have the need new line in the final result
-    if (!fakeEl.hasChildNodes()) {
+    if (!container.hasChildNodes()) {
         if (isUnbreakable(closestBlock(currentNode.nextSibling))) {
             currentNode.nextSibling.oShiftEnter(0);
         } else {
@@ -133,8 +151,8 @@ function insert(editor, data, isText = true) {
     }
 
     let nodeToInsert;
-    const insertedNodes = [...fakeEl.childNodes];
-    while ((nodeToInsert = fakeEl.childNodes[0])) {
+    const insertedNodes = [...container.childNodes];
+    while ((nodeToInsert = container.childNodes[0])) {
         if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(currentNode)) {
             // Split blocks at the edges if inserting new blocks (preventing
             // <p><p>text</p></p> scenarios).
@@ -143,8 +161,8 @@ function insert(editor, data, isText = true) {
                 !allowsParagraphRelatedElements(currentNode.parentElement)
             ) {
                 if (isUnbreakable(currentNode.parentElement)) {
-                    makeContentsInline(fakeEl);
-                    nodeToInsert = fakeEl.childNodes[0];
+                    makeContentsInline(container);
+                    nodeToInsert = container.childNodes[0];
                     break;
                 }
                 let offset = childNodeIndex(currentNode);
@@ -533,11 +551,14 @@ function getTextNodes(editor) {
 // absence of a strong test suite, so the whitelist stays for now.
 export const editorCommands = {
     // Insertion
-    insertHTML: (editor, data) => {
-        return insert(editor, data, false);
+    insertFragment: (editor, fragment) => {
+        return insert(editor, fragment, {mode: 'fragment'});
     },
-    insertText: (editor, data) => {
-        return insert(editor, data);
+    insertHTML: (editor, html) => {
+        return insert(editor, html, {mode: 'html'});
+    },
+    insertText: (editor, text) => {
+        return insert(editor, text, {mode: 'text'});
     },
     insertFontAwesome: (editor, faClass = 'fa fa-star') => {
         const insertedNode = editorCommands.insertHTML(editor, '<i></i>')[0];
