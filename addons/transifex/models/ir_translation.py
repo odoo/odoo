@@ -10,7 +10,7 @@ import odoo
 from odoo import models, fields
 
 
-class IrTranslation(models.Model):
+class IrTranslation(models.TransientModel):
 
     _inherit = 'ir.translation'
 

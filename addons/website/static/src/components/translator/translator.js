@@ -53,13 +53,13 @@ class TranslatorInfoDialog extends Component {
 TranslatorInfoDialog.components = { WebsiteDialog };
 TranslatorInfoDialog.template = 'website.TranslatorInfoDialog';
 
-const savableSelector = '[data-oe-translation-id], ' +
+const savableSelector = '[data-oe-translation-term-order], ' +
     '[data-oe-model][data-oe-id][data-oe-field], ' +
-    '[placeholder*="data-oe-translation-id="], ' +
-    '[title*="data-oe-translation-id="], ' +
-    '[value*="data-oe-translation-id="], ' +
-    'textarea:contains(data-oe-translation-id), ' +
-    '[alt*="data-oe-translation-id="]';
+    '[placeholder*="data-oe-translation-term-order="], ' +
+    '[title*="data-oe-translation-term-order="], ' +
+    '[value*="data-oe-translation-term-order="], ' +
+    'textarea:contains(data-oe-translation-term-order), ' +
+    '[alt*="data-oe-translation-term-order="]';
 
 export class WebsiteTranslator extends WebsiteEditorComponent {
     setup() {
@@ -112,11 +112,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
     }
 
     getTranslationObject(nodeEl) {
-        let { oeTranslationId: id } = nodeEl.dataset;
-        if (!id) {
-            const { oeModel, oeId, oeField } = nodeEl.dataset;
-            id = [oeModel, oeId, oeField].join(',');
-        }
+        const { oeModel, oeId, oeField, oeTranslationTermOrder } = nodeEl.dataset;
+        const id = [oeModel, oeId, oeField, oeTranslationTermOrder].join(',');
         let translation = this.translations.filter(t => t.id === id)[0];
         if (!translation) {
             translation = { id };
@@ -125,15 +122,28 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         return translation;
     }
 
+    _getEscapedElement($el) {
+        // TODO avoid the duplicated code
+        var escaped_el = $el.clone();
+        var to_escape = escaped_el.find('*').addBack();
+        to_escape = to_escape.not(to_escape.filter('object,iframe,script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
+        to_escape.contents().each(function () {
+            if (this.nodeType === 3) {
+                this.nodeValue = $('<div />').text(this.nodeValue).html();
+            }
+        });
+        return escaped_el;
+    }
+
     async _beforeEditorActive($wysiwygEditable) {
         this.$wysiwygEditable = $wysiwygEditable;
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/;
+        const translationRegex = /<span [^>]*data-oe-translation-term-order="([0-9]+)"[^>]*>(.*)<\/span>/;
         let $edited = $();
         _.each(attrs, function (attr) {
-            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img');
+            const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-term-order="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
@@ -141,6 +151,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 var match = trans.match(translationRegex);
                 var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo(self.websiteService.pageDocument.body);
                 $trans.data('$node', $node).data('attribute', attr);
+                $trans.data('oe-initial-value', self._getEscapedElement($trans).html());
 
                 translation[attr] = $trans[0];
                 $node.attr(attr, match[2]);
@@ -149,7 +160,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
             $edited = $edited.add(attrEdit);
         });
-        const textEdit = $editable.filter('textarea:contains(data-oe-translation-id)');
+        const textEdit = $editable.filter('textarea:contains(data-oe-translation-term-order)');
         textEdit.each(function () {
             var $node = $(this);
             var translation = $node.data('translation') || {};
@@ -157,6 +168,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             var match = trans.match(translationRegex);
             var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_text').appendTo(self.websiteService.pageDocument.body);
             $trans.data('$node', $node);
+            $trans.data('oe-initial-value', self._getEscapedElement($trans).html());
 
             translation['textContent'] = $trans[0];
             $trans.remove();

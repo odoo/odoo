@@ -6,7 +6,7 @@
                 <t t-esc="term.langName"></t>
             </div>
             <div t-if="widget.showSrc" class="col-12 col-lg-3 source">
-                <t t-esc="term.source"></t>
+                <t t-esc="term.src"></t>
             </div>
             <div t-attf-class="col-12 #{widget.showSrc ? 'col-lg-7' : 'col-lg-9'} translation">
                 <input t-if="!widget.isText" type="text"

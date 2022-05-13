@@ -90,7 +90,7 @@ wTourUtils.registerEditionTour('rte_translator', {
     trigger: '.modal-footer .btn-secondary',
 }, {
     content: "check if translation is activate",
-    trigger: 'iframe [data-oe-translation-id]',
+    trigger: 'iframe [data-oe-translation-term-order]',
 }, {
     content: "translate text",
     extra_trigger: '#oe_snippets.o_loaded',

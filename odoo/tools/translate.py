@@ -19,8 +19,11 @@ from os.path import join
 
 from pathlib import Path
 from babel.messages import extract
+from babel.messages.pofile import read_po
+from babel.messages.mofile import write_mo
 from lxml import etree, html
 from psycopg2.extras import Json
+from gettext import GNUTranslations
 
 import odoo
 from . import config, pycompat
@@ -306,6 +309,16 @@ def xml_translate(callback, value):
         # remove tags <div> and </div> from result
         return serialize_xml(result)[5:-6]
 
+def xml_term_converter(value):
+    """ Convert the HTML fragment ``value`` to XML if necessary
+    """
+    # wrap value inside a div and parse it as HTML
+    div = "<div>%s</div>" % encode(value)
+    root = etree.fromstring(div, etree.HTMLParser(encoding='utf-8'))
+    # root is html > body > div
+    # serialize div as XML and discard surrounding tags
+    return etree.tostring(root[0][0], encoding='utf-8')[5:-6].decode('utf-8')
+
 def html_translate(callback, value):
     """ Translate an HTML value (string), using `callback` for translating text
         appearing in `value`.
@@ -324,6 +337,16 @@ def html_translate(callback, value):
 
     return value
 
+def html_term_converter(value):
+    """ Convert the HTML fragment ``value`` to XML if necessary
+    """
+    # wrap value inside a div and parse it as HTML
+    div = "<div>%s</div>" % encode(value)
+    root = etree.fromstring(div, etree.HTMLParser(encoding='utf-8'))
+    # root is html > body > div
+    # serialize div as HTML and discard surrounding tags
+    return etree.tostring(root[0][0], encoding='utf-8', method='html')[5:-6].decode('utf-8')
+
 
 def get_text_content(term):
     """ Return the textual content of the given term. """
@@ -332,6 +355,8 @@ def get_text_content(term):
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
 
+xml_translate.term_converter = xml_term_converter
+html_translate.term_converter = html_term_converter
 
 #
 # Warning: better use self.env['ir.translation']._get_source if you can
@@ -445,37 +470,25 @@ class GettextAlias(object):
         return translation
 
     def _get_translation(self, source):
-        res = source
-        cr = None
-        is_new_cr = False
         try:
-            frame = inspect.currentframe()
-            if frame is None:
-                return source
-            frame = frame.f_back
-            if not frame:
-                return source
-            frame = frame.f_back
-            if not frame:
-                return source
+            frame = inspect.currentframe().f_back.f_back
             lang = self._get_lang(frame)
-            if lang:
-                cr, is_new_cr = self._get_cr(frame)
+            if lang and lang != 'en_US':
+                path = inspect.getfile(frame)
+                while path not in odoo.addons.__path__:
+                    path, module = os.path.split(path)
+                    if path == os.path.dirname(path):  # not in a module
+                        raise Exception
+                (cr, dummy) = self._get_cr(frame, allow_create=False)
                 if cr:
-                    # Try to use ir.translation to benefit from global cache if possible
                     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-                    res = env['ir.translation']._get_source(None, ('code',), lang, source)
-                else:
-                    _logger.debug('no context cursor detected, skipping translation for "%r"', source)
+                    return env['ir.translation.code'].get_translations_for_python(module, lang).get(source, source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
             _logger.debug('translation went wrong for "%r", skipped', source)
                 # if so, double-check the root/base translations filenames
-        finally:
-            if cr and is_new_cr:
-                cr.close()
-        return res or ''
+        return source
 
 
 @functools.total_ordering
@@ -917,6 +930,12 @@ class TranslationModuleReader:
             m['name']
             for m in self.env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
         ]
+        self._po_module = None
+        # priority: _mo_extra > _mo_base_extra > _mo > _mo_base
+        self._mo_extra = None
+        self._mo_base_extra = None
+        self._mo = None
+        self._mo_base = None
 
         self._export_translatable_records()
         self._export_translatable_resources()
@@ -925,16 +944,10 @@ class TranslationModuleReader:
     def __iter__(self):
         """ Export ir.translation values for all retrieved records """
 
-        IrTranslation = self.env['ir.translation']
-        for module, source, name, res_id, ttype, comments, record_id in self._to_translate:
-            trans = (
-                IrTranslation._get_source(name if type != "code" else None, ttype, self._lang, source, res_id=record_id)
-                if self._lang
-                else ""
-            )
-            yield (module, ttype, name, res_id, source, encode(trans) or '', comments)
+        for module, source, name, res_id, ttype, comments, record_id, value in self._to_translate:
+            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
 
-    def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None):
+    def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
         """ Insert a translation that will be used in the file generation
         In po file will create an entry
         #: <ttype>:<name>:<res_id>
@@ -949,7 +962,7 @@ class TranslationModuleReader:
         sanitized_term = re.sub(r'\W+', '', sanitized_term)
         if not sanitized_term or len(sanitized_term) <= 1:
             return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id))
+        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
 
     def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
@@ -1036,12 +1049,14 @@ class TranslationModuleReader:
                     if field.translate:
                         name = model + "," + field_name
                         try:
-                            value = record[field_name] or ''
+                            value_en = record[field_name] or ''
+                            value_lang = record.with_context(lang=self._lang)[field_name] or ''
                         except Exception:
                             continue
-                        for term in set(field.get_trans_terms(value)):
-                            trans_type = 'model_terms' if callable(field.translate) else 'model'
-                            self._push_translation(module, trans_type, name, xml_name, term, record_id=record.id)
+                        trans_type = 'model_terms' if callable(field.translate) else 'model'
+                        for term_en, term_langs in field.get_translation_dictionary(value_en, {self._lang: value_lang}).items():
+                            term_lang = term_langs.get(self._lang)
+                            self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
 
     def _get_module_from_path(self, path):
         for (mp, rec) in self._path_list:
@@ -1069,6 +1084,25 @@ class TranslationModuleReader:
         module, fabsolutepath, _, display_path = self._verified_module_filepaths(fname, path, root)
         if not module:
             return
+        if module != self._po_module:
+            self._po_module = module
+            paths = [('_mo_extra', join(root, 'i18n_extra', self._lang + '.po')),
+                     ('_mo_base_extra', join(root, 'i18n_extra', self._lang.split('_')[0] + '.po')),
+                     ('_mo', join(root, 'i18n', self._lang + '.po')),
+                     ('_mo_base', join(root, 'i18n', self._lang.split('_')[0] + '.po'))] if self._lang else []
+            for attr, po_path in paths:
+                try:
+                    with open(po_path, 'r') as p:
+                        catalog = read_po(p)
+                        buf = io.BytesIO()
+                        write_mo(buf, catalog)
+                        buf.seek(0)
+                        setattr(self, attr, GNUTranslations(fp=buf))
+                except FileNotFoundError:
+                    setattr(self, attr, None)
+                except Exception:
+                    raise Exception
+
         extra_comments = extra_comments or []
         src_file = open(fabsolutepath, 'rb')
         options = {}
@@ -1079,8 +1113,17 @@ class TranslationModuleReader:
                 # Babel 0.9.6 yields lineno, message, comments
                 # Babel 1.3 yields lineno, message, comments, context
                 lineno, message, comments = extracted[:3]
+                mos = ['_mo_extra', '_mo_base_extra', '_mo', '_mo_base']
+                value = ''
+                for mo in mos:
+                    translation = getattr(self, mo)
+                    if translation:
+                        trans = translation.gettext(message)
+                        if trans != message:
+                            value = trans
+                            break
                 self._push_translation(module, trans_type, display_path, lineno,
-                                 encode(message), comments + extra_comments)
+                                 encode(message), comments + extra_comments, value=value)
         except Exception:
             _logger.exception("Failed to extract terms from %s", fabsolutepath)
         finally:
@@ -1138,6 +1181,37 @@ def trans_load(cr, filename, lang, verbose=True, overwrite=False):
             _logger.error("couldn't read translation file %s", filename)
         return None
 
+def trans_load_code_python(fileobj, fileformat, lang):
+    try:
+        python_translations = {}
+        fileobj.seek(0)
+        reader = TranslationFileReader(fileobj, fileformat=fileformat)
+        for row in reader:
+            if row.get('value') and row.get('src') and row.get('type') == 'code':
+                python_translations[row['src']] = row['value']
+        return python_translations
+
+    except IOError:
+        iso_lang = get_iso_codes(lang)
+        filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
+        _logger.exception("couldn't read translation file %s", filename)
+
+def trans_load_code_webclient(fileobj, fileformat, lang):
+    # current, we assume the fileobj is from the source code, which only contains the translation for the current module
+    # don't use it in the import logic
+    try:
+        webclient_translations = {}
+        fileobj.seek(0)
+        reader = TranslationFileReader(fileobj, fileformat=fileformat)
+        for row in reader:
+            if row.get('value') and row.get('src') and row.get('type') == 'code' and WEB_TRANSLATION_COMMENT in row['comments']:
+                webclient_translations[row['src']] = row['value']
+        return webclient_translations
+
+    except IOError:
+        iso_lang = get_iso_codes(lang)
+        filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
+        _logger.exception("couldn't read translation file %s", filename)
 
 def trans_load_data(cr, fileobj, fileformat, lang,
                     verbose=True, overwrite=False):

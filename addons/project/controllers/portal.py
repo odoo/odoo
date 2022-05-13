@@ -136,7 +136,7 @@ class ProjectCustomerPortal(CustomerPortal):
             # Update Cache
             user_context['lang'] = lang
         lang = user_context.get("lang")
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
+        translation_hash = request.env['ir.translation.code'].get_web_translations_hash(mods, lang)
         cache_hashes = {
             "qweb": qweb_checksum,
             "translations": translation_hash,

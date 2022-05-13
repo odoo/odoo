@@ -564,6 +564,12 @@ actual arch.
             self.inherit_children_ids.unlink()
         return super(View, self).unlink()
 
+    def update_field_translations(self, fname, translations):
+        res = super().update_field_translations(fname, translations)
+        if fname == 'arch_db' and 'install_filename' not in self._context:
+            self.write({'arch_updated': True})
+        return res
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()

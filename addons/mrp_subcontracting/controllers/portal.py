@@ -93,7 +93,7 @@ class CustomerPortal(portal.CustomerPortal):
         mods = conf.server_wide_modules or []
         qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="mrp_subcontracting.assets_qweb")
         lang = user_context.get("lang")
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
+        translation_hash = request.env['ir.translation.code'].get_web_translations_hash(mods, lang)
         cache_hashes = {
             "qweb": qweb_checksum,
             "translations": translation_hash,

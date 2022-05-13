@@ -904,7 +904,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         # spare the method lookup overhead
         convert = self.convert_to_record
-        return [convert(value, records) for value in values]
+        return [convert(value, record) for value, record in zip(values, records)]
 
     def convert_to_read(self, value, record, use_name_get=True):
         """ Convert ``value`` from the record format to the format returned by
