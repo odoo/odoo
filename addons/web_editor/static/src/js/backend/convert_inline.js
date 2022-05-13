@@ -3,6 +3,7 @@
 
 import FieldHtml from 'web_editor.field.html';
 import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
+/* global html2canvas */
 
 //--------------------------------------------------------------------------
 // Constants
@@ -389,6 +390,10 @@ function classToStyle($editable, cssRules) {
 async function toInline($editable, cssRules, $iframe) {
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
+    const wysiwyg = $editable.data('wysiwyg');
+    if (wysiwyg) {
+        wysiwyg.odooEditor.historyPauseSteps(); // Prevent history reverts.
+    }
     const doc = editable.ownerDocument;
     cssRules = cssRules || doc._rulesCache;
     if (!cssRules) {
@@ -441,12 +446,41 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
+    await flattenBackgroundImages(editable);
 
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
 
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
+    }
+}
+/**
+ * Take all elements with a `background-image` style and convert them, along
+ * with their contents, to `png` images. The images are then appended to the
+ * original elements stripped of their background images and padding, while all
+ * of their children are removed.
+ *
+ * @param {Element} editable
+ */
+async function flattenBackgroundImages(editable) {
+    for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
+        if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
+            const canvas = await html2canvas(backgroundImage);
+            const image = document.createElement('img');
+            image.setAttribute('src', canvas.toDataURL('png'));
+            image.setAttribute('width', canvas.getAttribute('width'));
+            image.setAttribute('height', canvas.getAttribute('height'));
+            image.style.setProperty('margin', 0);
+            image.style.setProperty('display', 'block'); // Ensure no added vertical space.
+            // Clean up the original element.
+            for (const child of [...backgroundImage.childNodes]) {
+                child.remove();
+            }
+            backgroundImage.style.setProperty('padding', 0);
+            backgroundImage.style.removeProperty('background-image');
+            backgroundImage.prepend(image); // Add the image to the original element.
+        }
     }
 }
 /**
