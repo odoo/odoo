@@ -157,7 +157,7 @@ class SaleOrder(models.Model):
 
         if not product:
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
-        product.sudo(False).product_tmpl_id.check_access_rule('read')
+        product.sudo(False).with_context(allowed_company_ids=self.env.user.company_ids.ids).product_tmpl_id.check_access_rule('read')
 
         try:
             if add_qty:
