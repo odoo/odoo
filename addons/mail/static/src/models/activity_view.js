@@ -74,6 +74,9 @@ registerModel({
             if (!this.activity.dateDeadline) {
                 return clear();
             }
+            if (!this.clockWatcher.clock.date) {
+                return clear();
+            }
             const today = moment(this.clockWatcher.clock.date.getTime()).startOf('day');
             const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
             // true means no rounding
