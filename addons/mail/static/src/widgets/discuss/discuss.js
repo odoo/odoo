@@ -81,17 +81,9 @@ export const DiscussWidget = AbstractAction.extend({
             this._pushStateActionManager();
             this._lastPushStateActiveThread = this.discuss.thread;
         };
-        this._showRainbowManEventListener = ev => {
-            ev.stopPropagation();
-            this._showRainbowMan();
-        };
         this.el.addEventListener(
             'o-push-state-action-manager',
             this._pushStateActionManagerEventListener
-        );
-        this.el.addEventListener(
-            'o-show-rainbow-man',
-            this._showRainbowManEventListener
         );
 
         this.app = new App(DiscussContainer, {
@@ -116,10 +108,6 @@ export const DiscussWidget = AbstractAction.extend({
             'o-push-state-action-manager',
             this._pushStateActionManagerEventListener
         );
-        this.el.removeEventListener(
-            'o-show-rainbow-man',
-            this._showRainbowManEventListener
-        );
     },
 
     //--------------------------------------------------------------------------
@@ -133,15 +121,6 @@ export const DiscussWidget = AbstractAction.extend({
         this.actionManager.do_push_state({
             action: this.action.id,
             active_id: this.discuss.activeId,
-        });
-    },
-    /**
-     * @private
-     */
-    _showRainbowMan() {
-        this.trigger_up('show_effect', {
-            message: this.env._t("Congratulations, your inbox is empty!"),
-            type: 'rainbow_man',
         });
     },
 });
