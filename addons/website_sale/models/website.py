@@ -70,6 +70,7 @@ class Website(models.Model):
             ('go_to_cart', 'Go to cart'),
         ],
         default='stay')
+    auth_signup_uninvited = fields.Selection(default='b2c')
     account_on_checkout = fields.Selection(
         string="Customer Accounts",
         selection=[

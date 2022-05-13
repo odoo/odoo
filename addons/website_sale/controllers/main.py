@@ -652,6 +652,9 @@ class WebsiteSale(http.Controller):
         if order and not order.order_line:
             return request.redirect('/shop/cart')
 
+        if request.website.is_public_user() and request.website.account_on_checkout == 'mandatory':
+            return request.redirect('/web/login?redirect=/shop/checkout')
+
         # if transaction pending / done: redirect to confirmation
         tx = request.env.context.get('website_sale_transaction')
         if tx and tx.state != 'draft':
