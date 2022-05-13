@@ -2,7 +2,6 @@ odoo.define('pos_adyen.payment', function (require) {
 "use strict";
 
 var core = require('web.core');
-var rpc = require('web.rpc');
 var PaymentInterface = require('point_of_sale.PaymentInterface');
 const { Gui } = require('point_of_sale.Gui');
 
