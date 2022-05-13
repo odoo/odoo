@@ -24,11 +24,13 @@
     </t>
 
     <t t-name="HrAttendanceCheckInOutButtons">
-        <button t-attf-class="o_hr_attendance_sign_in_out_icon btn btn-{{ checked_in ? 'warning' : 'secondary border' }} px-5 py-3 mt-4 mb-2">
-            <i t-attf-class="fa fa-4x fa-sign-{{ checked_in ? 'out' : 'in' }}"/>
-        </button>
-
-        <h4 class="text-muted mb-0">Click to <b t-if="checked_in">check out</b><b t-if="!checked_in">check in</b></h4>
+        <div class="flex-grow-1">
+            <button t-attf-class="o_hr_attendance_sign_in_out_icon btn btn-{{ checked_in ? 'warning' : 'success' }} align-self-center px-5 py-3 mt-4 mb-2">
+                <span class="align-middle fs-2 me-3 text-white" t-if="!checked_in">Check IN</span>
+                <i t-attf-class="fa fa-4x fa-sign-{{ checked_in ? 'out' : 'in' }} align-middle"/>
+                <span class="align-middle fs-2 ms-3" t-if="checked_in">Check OUT</span>
+            </button>
+        </div>
     </t>
 
     <t t-name="HrAttendanceKioskMode">
