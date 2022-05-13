@@ -675,17 +675,6 @@ class HolidaysAllocation(models.Model):
             if holiday.employee_id == current_employee and not is_manager and not val_type == 'no':
                 raise UserError(_('Only a time off Manager can approve its own requests.'))
 
-            if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):
-                if self.env.user == holiday.employee_id.leave_manager_id and self.env.user != holiday.employee_id.user_id:
-                    continue
-                manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-                if (manager != current_employee) and not is_manager:
-                    raise UserError(_('You must be either %s\'s manager or time off manager to approve this time off') % (holiday.employee_id.name))
-
-            if state == 'validate' and val_type == 'both':
-                if not is_officer:
-                    raise UserError(_('Only a Time off Approver can apply the second approval on allocation requests.'))
-
     @api.onchange('allocation_type')
     def _onchange_allocation_type(self):
         if self.allocation_type == 'accrual':
