@@ -3,16 +3,16 @@
 
     <t t-name="mail.RtcController" owl="1">
         <t t-if="rtcController">
-            <div class="o_RtcController" t-attf-class="{{ className }}" t-ref="root">
-                <div class="o_RtcController_buttons">
+            <div class="o_RtcController d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_RtcController_buttons d-flex align-items-center flex-wrap">
                     <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
-                        <button class="o_RtcController_button"
-                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMute, 'o-isSmall': rtcController.isSmall }"
+                        <button class="o_RtcController_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMute, 'o-isSmall p-2': rtcController.isSmall, 'p-3': !rtcController.isSmall }"
                             t-att-aria-label="rtcController.microphoneButtonTitle"
                             t-att-title="rtcController.microphoneButtonTitle"
                             t-on-click="rtcController.onClickMicrophone">
-                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="fa" t-att-class="{
+                            <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-stack-1x" t-att-class="{
                                     'fa-lg': !rtcController.isSmall,
                                     'fa-microphone': !messaging.rtc.currentRtcSession.isMute,
                                     'fa-microphone-slash': messaging.rtc.currentRtcSession.isMute,
@@ -20,13 +20,13 @@
                                 }"/>
                             </div>
                         </button>
-                        <button class="o_RtcController_button"
-                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isDeaf, 'o-isSmall': rtcController.isSmall }"
+                        <button class="o_RtcController_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isDeaf, 'o-isSmall p-2': rtcController.isSmall, 'p-3': !rtcController.isSmall }"
                             t-att-aria-label="rtcController.headphoneButtonTitle"
                             t-att-title="rtcController.headphoneButtonTitle"
                             t-on-click="rtcController.onClickDeafen">
-                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="fa" t-att-class="{
+                            <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-stack-1x" t-att-class="{
                                     'fa-lg': !rtcController.isSmall,
                                     'fa-headphones': !messaging.rtc.currentRtcSession.isDeaf,
                                     'fa-deaf': messaging.rtc.currentRtcSession.isDeaf,
@@ -34,38 +34,40 @@
                                 }"/>
                             </div>
                         </button>
-                        <button class="o_RtcController_button o_RtcController_videoButton"
+                        <button class="o_RtcController_button o_RtcController_videoButton btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
                             t-att-class="{
                                 'o-isActive': messaging.rtc.sendUserVideo,
-                                'o-isSmall': rtcController.isSmall,
+                                'o-isSmall p-2': rtcController.isSmall,
+                                'p-3': !rtcController.isSmall,
                             }"
                             t-att-aria-label="rtcController.cameraButtonTitle"
                             t-att-title="rtcController.cameraButtonTitle"
                             t-on-click="rtcController.onClickCamera">
-                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !rtcController.isSmall, 'text-success': messaging.rtc.sendUserVideo }"/>
                             </div>
                         </button>
-                        <button class="o_RtcController_button o_RtcController_videoButton"
+                        <button class="o_RtcController_button o_RtcController_videoButton btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
                             t-att-class="{
                                 'o-isActive': messaging.rtc.sendDisplay,
-                                'o-isSmall': rtcController.isSmall,
+                                'o-isSmall p-2': rtcController.isSmall,
+                                'p-3': !rtcController.isSmall,
                             }"
                             t-att-aria-label="rtcController.screenSharingButtonTitle"
                             t-att-title="rtcController.screenSharingButtonTitle"
                             t-on-click="rtcController.onClickScreen">
-                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="fa fa-desktop" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-desktop fa-stack-1x" t-att-class="{ 'fa-lg': !rtcController.isSmall, 'text-success': messaging.rtc.sendDisplay }"/>
                             </div>
                         </button>
                         <Popover position="'top'">
-                            <button class="o_RtcController_button"
+                            <button class="o_RtcController_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
                                 aria-label="More"
                                 title="More"
-                                t-att-class="{ 'o-isSmall': rtcController.isSmall }"
+                                t-att-class="{ 'o-isSmall p-2': rtcController.isSmall, 'p-3': !rtcController.isSmall }"
                             >
-                                <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                    <i class="fa fa-ellipsis-h" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                                <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                    <i class="fa fa-ellipsis-h fa-stack-1x" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
                                 </div>
                             </button>
                             <t t-set-slot="opened">
@@ -74,38 +76,38 @@
                         </Popover>
                     </t>
                     <t t-if="!rtcController.callViewer.threadView.thread.rtc">
-                        <button class="o_RtcController_button o_RtcController_callToggle"
-                            t-att-class="{ 'o-isSmall': rtcController.isSmall }"
+                        <button class="o_RtcController_button o_RtcController_callToggle btn btn-success d-flex m-1 border-0 rounded-circle shadow-none"
+                            t-att-class="{ 'o-isSmall p-2': rtcController.isSmall, 'p-3': !rtcController.isSmall }"
                             aria-label="Join Video Call"
                             title="Join Video Call"
                             t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
                             t-on-click="rtcController.onClickToggleVideoCall">
-                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
                             </div>
                         </button>
                     </t>
                     <t t-if="rtcController.callViewer.threadView.thread">
                         <t t-if="rtcController.callViewer.threadView.thread.rtcInvitingSession and !rtcController.callViewer.threadView.thread.rtc">
-                            <button class="o_RtcController_button o_RtcController_callToggle o-isActive"
-                                t-att-class="{ 'o-isSmall': rtcController.isSmall }"
+                            <button class="o_RtcController_button o_RtcController_callToggle o-isActive btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
+                                t-att-class="{ 'o-isSmall p-2': rtcController.isSmall, 'p-3': !rtcController.isSmall }"
                                 aria-label="Reject"
                                 title="Reject"
                                 t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
                                 t-on-click="rtcController.onClickRejectCall">
-                                <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                    <i class="fa fa-phone" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                                <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                    <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
                                 </div>
                             </button>
                         </t>
-                        <button class="o_RtcController_button o_RtcController_callToggle"
+                        <button class="o_RtcController_button o_RtcController_callToggle btn d-flex m-1 border-0 rounded-circle shadow-none"
                             t-att-aria-label="rtcController.callButtonTitle"
-                            t-att-class="{ 'o-isActive': !!rtcController.callViewer.threadView.thread.rtc, 'o-isSmall': rtcController.isSmall }"
+                            t-att-class="{ 'o-isActive btn-danger': !!rtcController.callViewer.threadView.thread.rtc, 'o-isSmall p-2': rtcController.isSmall, 'p-3': !rtcController.isSmall, 'btn-success': !rtcController.callViewer.threadView.thread.rtc }"
                             t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
                             t-att-title="rtcController.callButtonTitle"
                             t-on-click="rtcController.onClickToggleAudioCall">
-                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
-                                <i class="fa fa-phone" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            <div class="o_RtcController_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
                             </div>
                         </button>
                     </t>
