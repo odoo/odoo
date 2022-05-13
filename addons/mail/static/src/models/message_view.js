@@ -189,6 +189,9 @@ registerModel({
             if (!this.message.date) {
                 return clear();
             }
+            if (!this.clockWatcher.clock.date) {
+                return clear();
+            }
             const now = moment(this.clockWatcher.clock.date.getTime());
             if (now.diff(this.message.date, 'seconds') < 45) {
                 return this.env._t("now");
