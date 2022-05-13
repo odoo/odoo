@@ -45,7 +45,10 @@ class ProductTemplate(models.Model):
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
                 if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    if products.quantity_svl > 0:
+                        move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    else:
+                        move_vals_list += Product._svl_replenish_stock_am(out_stock_valuation_layers)
                 impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductTemplate, self).write(vals)
@@ -55,7 +58,10 @@ class ProductTemplate(models.Model):
             in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
             in_stock_valuation_layers = SVL.create(in_svl_vals_list)
             if product_template.valuation == 'real_time':
-                move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+                if products_orig_quantity_svl[products.id] > 0:
+                    move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+                else:
+                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
@@ -550,7 +556,13 @@ class ProductProduct(models.Model):
             if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 # FIXME: create an empty layer to track the change?
                 continue
-            svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
+            # ANHE : better to do that : ?
+            # if product.quantity_svl > 0:
+            #     svl_vals = product._prepare_out_svl_vals(abs(product.quantity_svl), self.env.company)
+            # else :
+            #     svl_vals = product._prepare_in_svl_vals(-quantity_svl, product.standard_price)
+            # instead of :
+            svsl_vals = product._prepare_out_svl_vals(abs(product.quantity_svl), self.env.company)
             svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
             svsl_vals['company_id'] = self.env.company.id
             empty_stock_svl_list.append(svsl_vals)
@@ -561,7 +573,13 @@ class ProductProduct(models.Model):
         for product in self:
             quantity_svl = products_orig_quantity_svl[product.id]
             if quantity_svl:
-                svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
+                # ANHE : better to do that : ?
+                # if quantity_svl > 0:
+                #     svl_vals = product._prepare_in_svl_vals(abs(quantity_svl), product.standard_price)
+                # else :
+                #     svl_vals = product._prepare_out_svl_vals(-quantity_svl, self.env.company)
+                # instead of :
+                svl_vals = product._prepare_in_svl_vals(abs(quantity_svl), product.standard_price)
                 svl_vals['description'] = description
                 svl_vals['company_id'] = self.env.company.id
                 refill_stock_svl_list.append(svl_vals)
