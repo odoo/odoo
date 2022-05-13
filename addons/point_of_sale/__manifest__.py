@@ -120,6 +120,7 @@
 
             # Here includes the lib and POS UI assets.
             'point_of_sale/static/lib/**/*.js',
+            'web_editor/static/lib/html2canvas.js',
             'point_of_sale/static/src/js/**/*.js',
         ],
         # This bundle contains the code responsible for starting the POS UI.
