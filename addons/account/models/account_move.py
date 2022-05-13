@@ -4199,7 +4199,11 @@ class AccountMoveLine(models.Model):
             # Subtract the values from the account.partial.reconcile to compute the residual amounts.
             line.amount_residual = comp_curr.round(line.balance - debit_amount + credit_amount)
             line.amount_residual_currency = foreign_curr.round(line.amount_currency - debit_amount_currency + credit_amount_currency)
-            line.reconciled = comp_curr.is_zero(line.amount_residual) and foreign_curr.is_zero(line.amount_residual_currency)
+            line.reconciled = (
+                comp_curr.is_zero(line.amount_residual)
+                and foreign_curr.is_zero(line.amount_residual_currency)
+                and line.move_id.state not in ('draft', 'cancel')
+            )
 
     @api.depends('tax_repartition_line_id.invoice_tax_id', 'tax_repartition_line_id.refund_tax_id')
     def _compute_tax_line_id(self):
