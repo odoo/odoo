@@ -9,7 +9,7 @@ import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 
-const { Component, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
+const { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -231,8 +231,8 @@ export class View extends Component {
                 }
             }
             this.env.config.views = views;
-            fields = fields || result.fields;
-            relatedModels = relatedModels || result.relatedModels;
+            fields = fields || markRaw(result.fields);
+            relatedModels = relatedModels || markRaw(result.relatedModels);
         }
 
         if (!arch) {
