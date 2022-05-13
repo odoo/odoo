@@ -1,3 +1,25 @@
+$o-wevent-color-ratio-bg: 15%;
+$o-wevent-bg-color-base: mix(map-get($theme-colors, 'primary'), $body-bg, $o-wevent-color-ratio-bg);
+$o-wevent-bg-color-base-contrast: color-contrast($o-wevent-bg-color-base);
+$o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
+$o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
+$o-wevent-color: mix(map-get($theme-colors, 'primary'), $body-color, $o-wevent-color-ratio-bg);
+
+.o_wevent_theme_bg_base {
+    background-color: $o-wevent-bg-color-base !important;
+    color: $o-wevent-color;
+}
+
+.o_wevent_theme_bg_light {
+    background-color: $o-wevent-bg-color-light !important;
+    color: $o-wevent-color;
+}
+
+.o_wevent_theme_bg_dark {
+    background-color: $o-wevent-bg-color-dark !important;
+    color: $o-wevent-color;
+}
+
 .o_wevent_index, .o_wevent_event {
 
     // Simple colored tags according to assigned background color
@@ -24,11 +46,11 @@
     // Complex colored tags according to assigned background color with hover effect
     @for $size from 1 through length($o-colors) {
         .o_tag_color_hovered_#{$size - 1} {
-            $background-color: white;
+            $background-color: $o-wevent-bg-color-base;
             // no color selected
             @if $size == 1 {
                 & {
-                    color: black;
+                    color: color-contrast($background-color);
                     background-color: $background-color;
                     box-shadow: inset 0 0 0 1px nth($o-colors, $size);
                 }
@@ -53,8 +75,8 @@
 
     .o_wevent_index_topbar_filters {
         .dropdown-toggle {
-            border: $border-width solid map-get($grays, '400');
-            @include o-bg-color(map-get($grays, 'white'), $with-extras: false);
+            border: $border-width solid mix(map-get($theme-colors, 'primary'), map-get($grays, '400'));
+            @extend .o_wevent_theme_bg_light;
             @include border-radius($dropdown-border-radius);
             &:hover, &:focus {
                 border-color: map-get($theme-colors, 'primary');
@@ -66,7 +88,7 @@
             }
             .fa {
                 margin-right: .4em;
-                color: map-get($theme-colors, 'primary');
+                color: $o-wevent-color;
             }
         }
         .dropdown-menu {
@@ -74,7 +96,12 @@
             min-width: 12rem;
             max-height: 250px;
             overflow-y: auto;
+            @extend .o_wevent_theme_bg_light;
         }
+    }
+
+    .o_wevent_event_searchbar_form > input {
+        @extend .o_wevent_theme_bg_light;
     }
 
     /*
@@ -87,10 +114,6 @@
             opacity: 0.4;
         }
         // background color-based for new styling
-        .event_color_0 {
-            // bg-100 background but DO NOT extend bg-100 as it messes with text-muted colors
-            background-color: #F8F9FA;
-        }
         .event_color_1 {
             background-color: rgba(240, 96, 80, 0.2);
         }
@@ -143,7 +166,7 @@
 
             // Left panel
             .o_wevent_online_page_aside {
-
+                @extend .o_wevent_theme_bg_base;
                 // Left panel: content display
                 .o_wevent_online_page_aside_content {
                     border: 1px solid $border-color;
