@@ -201,7 +201,7 @@ class TemplateData(Record):
     def cleanup(self, child):
         child = super().cleanup(child)
         record_id = child.get('id')
-        if record_id in ('name'):
+        if record_id in ('name', 'currency_id'):
             child['delete'] = True
         return child
 
@@ -272,6 +272,15 @@ class AccountFiscalPositionTaxTemplate(Record):
             child._value = unquote_ref(child._value)
         return child
 
+class AccountFiscalPositionAccountTemplate(Record):
+    _from = 'account.fiscal.position.account.template'
+    def cleanup(self, child):
+        child = super().cleanup(child)
+        record_id = child.get('id')
+        if record_id in ('position_id', 'account_src_id', 'account_dest_id'):
+            child._value = unquote_ref(child._value)
+        return child
+
 class AccountTaxReport(Record):
     _from = 'account.tax.report'
     def cleanup(self, child):
@@ -321,8 +330,9 @@ def parse_file(filename):
         parent, el = stack.pop(0)
 
         # Create a new node and attach it to the parent
-        if el.tag == 'record':
+        if el.tag in ('record', 'function'):
             node = Record(el, el.tag)
+            node._filename = filename
             parent.append(node)
         elif el.tag == 'field':
             node = Field(el)
@@ -358,7 +368,6 @@ def get_records(module):
 def split_template_from_company(all_records):
     company_record = ResCompany({'model': 'res.company'}, 'Record')
     company_fields = (
-        'currency_id',
         'country_id',
         'default_pos_receivable_account_id',
         'account_default_pos_receivable_account_id',
@@ -378,9 +387,25 @@ def split_template_from_company(all_records):
                     child['id'] = 'account_fiscal_country_id'
                 company_record.append(child)
     if company_record.get('children'):
-        company_record['id'] = Unquoted("f'base.company_{cid}'")
+        company_record['id'] = Unquoted("company.get_external_id()[cid]")
         all_records['res.company'] = {company_record['id']: company_record}
     return all_records
+
+def convert_try_loading(country_code, all_records):
+    try_loading = next((v for k, v in all_records['account.chart.template'].items() if v['tag'] == 'function'), None)
+    if try_loading:
+        with open(try_loading._filename, "a", encoding="utf-8") as f:
+            f.write(
+f"""<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>{country_code}</value>
+            <value eval="None"/>
+        </function>
+    </data>
+</odoo>""")
 
 def do_module(code, module, lang):
     """
@@ -406,17 +431,19 @@ def do_module(code, module, lang):
         save_new_file(module, "account.tax.group.csv", content)
     else:
         convert_old_csv(module, source='account.tax.group.csv', destination="account.tax.group.csv")
+    convert_try_loading(lang[-2:].lower(), all_records)
 
     # XML files
     contents = {}
     mapping = {
-        "account.chart.template":       f"_get_{code}_template_data",
-        "account.tax":                  f"_get_{code}_account_tax",
-        "res.company":                  f"_get_{code}_res_company",
-        "account.fiscal.position":      f"_get_{code}_fiscal_position",
-        "account.reconcile.model":      f"_get_{code}_reconcile_model",
-        "account.reconcile.model.line": f"_get_{code}_reconcile_model_line",
-        "account.fiscal.position.tax":  f"_get_{code}_fiscal_position_tax",
+        "account.chart.template":           f"_get_{code}_template_data",
+        "account.tax":                      f"_get_{code}_account_tax",
+        "res.company":                      f"_get_{code}_res_company",
+        "account.fiscal.position":          f"_get_{code}_fiscal_position",
+        "account.reconcile.model":          f"_get_{code}_reconcile_model",
+        "account.reconcile.model.line":     f"_get_{code}_reconcile_model_line",
+        "account.fiscal.position.tax":      f"_get_{code}_fiscal_position_tax",
+        "account.fiscal.position.account":  f"_get_{code}_fiscal_position_account",
     }
     extra_functions = []
     for model, function_name in mapping.items():
@@ -447,7 +474,7 @@ def do_module(code, module, lang):
         content += (
             f"    def _get_{code}_chart_template_data(self, template_code, company):\n"
              "        return {\n"
-             "            **self._get_chart_template_data(company),\n"
+             "            **self._get_chart_template_data(template_code, company),\n"
         )
         for model, function_name in extra_functions:
             content += f"            '{model}': self.{function_name}(template_code, company),\n"
@@ -470,7 +497,7 @@ def convert_records_to_function(all_records, model, function_name, set_company=F
 
     stream = io.StringIO()
     stream.write(indent(1, f"def {function_name}(self, template_code, company):\n") +
-                 (set_company and indent(2, "company = (company or self.env.company)\n")) +
+                 (set_company and indent(2, "company = (company or self.env.company)\n") or '') +
                  indent(2, "cid = (company or self.env.company).id\n") +
                  indent(2, "return "))
 

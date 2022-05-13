@@ -5,13 +5,38 @@ import csv
 import logging
 from collections import defaultdict
 
-from . import CHART_TEMPLATES, DEFAULT_CHART_TEMPLATE
 from odoo import SUPERUSER_ID, Command, _, api, models
 from odoo.addons.base.models.ir_translation import IrTranslationImport
 from odoo.modules import get_resource_path
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+
+
+DEFAULT_CHART_TEMPLATE = 'generic_coa'
+
+def templ(code, name, country=None, modules=None, parent=None):
+    return (code, {
+        'name': name,
+        'country': country or f"base.{code[:2]}" if code != DEFAULT_CHART_TEMPLATE else None,
+        'modules': modules or [f'l10n_{code[:2]}'],
+        'parent': parent,
+    })
+
+
+CHART_TEMPLATES = dict([
+    templ(DEFAULT_CHART_TEMPLATE, 'Generic Chart Template', None, ['account']),
+    templ('be', 'BE Belgian PCMN'),
+    templ('it', 'Italy - Generic Chart of Accounts'),
+    templ('fr', 'Plan Comptable Général (France)'),
+    templ('ch', 'Plan comptable 2015 (Suisse)'),
+    templ('de_skr03', 'Deutscher Kontenplan SKR03', modules=['l10n_de', 'l10n_de_skr03']),
+    templ('de_skr04', 'Deutscher Kontenplan SKR04', modules=['l10n_de', 'l10n_de_skr04']),
+    templ('ae', 'U.A.E Chart of Accounts - Standard'),
+    templ('se', 'Swedish BAS Chart of Account Minimalist'),
+    templ('se_k2', 'Swedish BAS Chart of Account complete K2', parent='se'),
+    templ('se_k3', 'Swedish BAS Chart of Account complete K3', parent='se_k2'),
+])
 
 
 class AccountChartTemplateDataError(Exception):
@@ -63,7 +88,7 @@ class AccountChartTemplate(models.AbstractModel):
             return DEFAULT_CHART_TEMPLATE
         # Python 3.7 dicts preserve the order, so it will take the first entry that matches the country code
         country_code = country.get_external_id()[country.id]
-        return next((key for key, template in CHART_TEMPLATES.items() if template['country'] == country_code), default)
+        return next((key for key, template in CHART_TEMPLATES.items() if template['country'] == country_code), DEFAULT_CHART_TEMPLATE)
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Checks if the chart template can be loaded then proceeds installing it.
@@ -210,9 +235,9 @@ class AccountChartTemplate(models.AbstractModel):
                     irt_cursor.push({**translation, 'res_id': record.id})
         irt_cursor.finish()
 
-    def _load_csv(self, template_code, company, file_name, post_sanitize=None):
+    def _load_csv(self, template_code, company, file_name, post_sanitize=None, model=None):
         cid = (company or self.env.company).id
-        Model = self.env[".".join(file_name.split(".")[:-1])]
+        Model = self.env[model or ".".join(file_name.split(".")[:-1])]
         model_fields = Model._fields
 
         template = CHART_TEMPLATES.get(template_code)
@@ -334,11 +359,21 @@ class AccountChartTemplate(models.AbstractModel):
         company.get_unaffected_earnings_account()
 
     def _get_data(self, template_code, company, model):
-        name = model.replace('.', '_')
-        func = getattr(self, f"_get_{template_code}_{name}", None)
-        if not func:
-            func = getattr(self, f"_get_{name}", None)
-        return func and func(template_code, company) or {}
+        def get_parents(code):
+            parents = []
+            if code != DEFAULT_CHART_TEMPLATE:
+                while current := CHART_TEMPLATES.get(code):
+                    parents.append(code)
+                    code = current.get('parent')
+            # Default has no prefix
+            parents.append('')
+            return parents
+
+        parents = get_parents(template_code)
+        for func_name in (f"_get{'_' + prefix if prefix else ''}_{model.replace('.', '_')}" for prefix in parents):
+            if func := getattr(self, func_name, None):
+                return func(template_code, company)
+        return {}
 
     def _post_load_data(self, template_code, company):
         company = (company or self.env.company)

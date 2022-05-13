@@ -6,7 +6,7 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
     def _get_be_chart_template_data(self, template_code, company):
-        res = self._get_chart_template_data(company)
+        res = self._get_chart_template_data(template_code, company)
         if template_code == 'be':
             res['account.fiscal.position'] = self._get_be_fiscal_position(template_code, company)
             res['account.reconcile.model'] = self._get_be_reconcile_model(template_code, company)

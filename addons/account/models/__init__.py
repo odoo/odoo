@@ -34,28 +34,4 @@ from . import res_currency
 from . import res_bank
 from . import mail_thread
 
-
-DEFAULT_CHART_TEMPLATE = 'generic_coa'
-
-def templ(code, name, country=None, modules=None, parent=None):
-    return (code, {
-        'name': name,
-        'country': country or f"base.{code[:2]}" if code != DEFAULT_CHART_TEMPLATE else None,
-        'modules': modules or [f'l10n_{code[:2]}'],
-        'parent': parent,
-    })
-
-
-CHART_TEMPLATES = dict([
-    templ(DEFAULT_CHART_TEMPLATE, 'Generic Chart Template', None, ['account']),
-    templ('be', 'BE Belgian PCMN'),
-    templ('it', 'Italy - Generic Chart of Accounts'),
-    templ('fr', 'Plan Comptable Général (France)'),
-    templ('ch', 'Plan comptable 2015 (Suisse)'),
-    templ('de_skr03', 'Deutscher Kontenplan SKR03', modules=['l10n_de', 'l10n_de_skr03']),
-    templ('de_skr04', 'Deutscher Kontenplan SKR04', modules=['l10n_de', 'l10n_de_skr04']),
-    templ('ae', 'U.A.E Chart of Accounts - Standard'),
-    templ('se', 'Swedish BAS Chart of Account Minimalist'),
-    templ('se_k2', 'Swedish BAS Chart of Account complete K2', parent='se'),
-    templ('se_k3', 'Swedish BAS Chart of Account complete K3', parent='se_k2'),
-])
+from .chart_template import CHART_TEMPLATES, DEFAULT_CHART_TEMPLATE

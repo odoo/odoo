@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_ae_chart_template_data(self, template_code, company):
         res = {
-            **self._get_chart_template_data(company),
+            **self._get_chart_template_data(template_code, company),
             "account.fiscal.position": self._get_ae_fiscal_position(template_code, company),
             "account.fiscal.position.tax": self._get_ae_fiscal_position_tax(template_code, company),
         }
