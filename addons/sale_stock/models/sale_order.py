@@ -16,6 +16,7 @@ class SaleOrder(models.Model):
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+    incoterm_location = fields.Char(string='Incoterm Location')
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
         ('one', 'When all products are ready')],
