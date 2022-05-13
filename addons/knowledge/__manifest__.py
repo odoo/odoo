@@ -36,7 +36,6 @@
     'post_init_hook': '_init_private_article_per_user',
     'assets': {
         'web.assets_backend': [
-            ('remove', 'web_editor/static/src/scss/web_editor.backend.scss'),
             'web/static/fonts/fonts.scss',
             'knowledge/static/src/components/*/*.scss',
             'knowledge/static/src/components/*/*.js',
