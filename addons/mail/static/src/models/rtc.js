@@ -448,7 +448,7 @@ registerModel({
             };
             peerConnection.ontrack = ({ transceiver, track }) => {
                 this._addLogEntry(rtcSession.id, `received ${track.kind} track`);
-                this._updateExternalSessionTrack(track, rtcSession);
+                rtcSession.updateStream(track);
             };
             const dataChannel = peerConnection.createDataChannel("notifications", { negotiated: true, id: 1 });
             dataChannel.onmessage = (event) => {
@@ -910,31 +910,7 @@ registerModel({
             if (!this.videoTrack) {
                 this.currentRtcSession.removeVideo();
             } else {
-                this._updateExternalSessionTrack(this.videoTrack, this.currentRtcSession);
-            }
-        },
-        /**
-         * Updates the RtcSession with a new track.
-         *
-         * @private
-         * @param {Track} [track]
-         * @param {RtcSession} rtcSession
-         */
-        _updateExternalSessionTrack(track, rtcSession) {
-            const stream = new window.MediaStream();
-            stream.addTrack(track);
-
-            if (track.kind === 'audio') {
-                rtcSession.setAudio({
-                    audioStream: stream,
-                    isSelfMuted: false,
-                    isTalking: false,
-                });
-            }
-            if (track.kind === 'video') {
-                rtcSession.update({
-                    videoStream: stream,
-                });
+                this.currentRtcSession.updateStream(this.videoTrack);
             }
         },
         /**
