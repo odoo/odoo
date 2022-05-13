@@ -451,6 +451,10 @@
             data-color-prefix="bg-"/>
     </div>
 
+    <div data-selector=".s_media_list">
+        <we-input string="Padding" data-select-style="" data-unit="px" data-css-property="padding"/>
+    </div>
+
     <!-- Allow changing background images in Masonry -->
     <t t-call="web_editor.snippet_options_background_options">
         <t t-set="selector" t-value="'.s_masonry_block .row > div'"/>

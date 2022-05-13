@@ -4253,9 +4253,11 @@ registry.sizing = SnippetOptionWidget.extend({
                 var prev = current ? (current - 1) : 0;
 
                 var change = false;
+                const position = {'n': 'top', 'e': 'right', 's': 'bottom', 'w': 'left'}[compass];
                 if (dd > (2 * resize[1][next] + resize[1][current]) / 3) {
                     self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
                     self.$target.addClass(resize[0][next]);
+                    self.$target.css(`padding-${position}`, '');
                     current = next;
                     change = true;
                 }
