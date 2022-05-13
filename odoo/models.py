@@ -6112,10 +6112,9 @@ class BaseModel(metaclass=MetaModel):
                     new_records = self.filtered(lambda r: not r.id)
                     real_records = self - new_records
                     records = model.browse()
-                    if real_records:
-                        # FIXME Using the new relational field syntax here
-                        # would break cache invalidation, since the following
-                        # line depends on ignoring the field domain.
+                    if real_records and key.type in ('one2many', 'many2many'):
+                        records = model.search([(key.name, 'any', [('id', 'in', real_records.ids)])], order='id')
+                    elif real_records:
                         records = model.search([(key.name, 'in', real_records.ids)], order='id')
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)

@@ -19,5 +19,6 @@ class ResGroups(models.Model):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_ids = [command[1] for command in vals['users'] if command[0] == 4]
             user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
-            self.env['mail.channel'].search([('group_ids', 'in', self._ids)])._subscribe_users_automatically()
+            search_domain = [('group_ids', 'any', [('id', 'in', self._ids)])]
+            self.env['mail.channel'].search(search_domain)._subscribe_users_automatically()
         return res

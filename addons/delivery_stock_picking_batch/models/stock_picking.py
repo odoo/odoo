@@ -39,7 +39,7 @@ class StockPicking(models.Model):
     def _get_possible_batches_domain(self):
         domain = super()._get_possible_batches_domain()
         if self.picking_type_id.batch_group_by_carrier:
-            domain = expression.AND([domain, [('picking_ids.carrier_id', '=', self.carrier_id.id if self.carrier_id else False)]])
+            domain = expression.AND([domain, [('picking_ids', 'any', [('carrier_id', '=', self.carrier_id.id if self.carrier_id else False)])]])
 
         return domain
 

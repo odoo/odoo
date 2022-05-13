@@ -183,10 +183,10 @@ class AccountFiscalPosition(models.Model):
             zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
 
         if state_id:
-            state_domain = [('state_ids', '=', state_id)]
+            state_domain = [('state_ids', 'any', [('id', '=', state_id)])]
 
         domain_country = base_domain + [('country_id', '=', country_id)]
-        domain_group = base_domain + [('country_group_id.country_ids', '=', country_id)]
+        domain_group = base_domain + [('country_group_id.country_ids', 'any', [('id', '=', country_id)])]
 
         # Build domain to search records with exact matching criteria
         fpos = self.search(domain_country + state_domain + zip_domain, limit=1)

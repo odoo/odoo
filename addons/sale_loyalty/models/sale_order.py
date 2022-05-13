@@ -606,7 +606,11 @@ class SaleOrder(models.Model):
         coupon_programs = self.applied_coupon_ids.program_id
         # Programs that are automatic and not yet applied
         program_domain = self._get_program_domain()
-        domain = expression.AND([program_domain, [('id', 'not in', points_programs.ids), ('trigger', '=', 'auto'), ('rule_ids.mode', '=', 'auto')]])
+        domain = expression.AND([program_domain, [
+            ('id', 'not in', points_programs.ids),
+            ('trigger', '=', 'auto'),
+            ('rule_ids', 'any', [('mode', '=', 'auto')]),
+        ]])
         automatic_programs = self.env['loyalty.program'].search(domain).filtered(lambda p:
             not p.limit_usage or p.total_order_count < p.max_usage)
 

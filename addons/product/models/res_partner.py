@@ -27,7 +27,9 @@ class ResPartner(models.Model):
     def _inverse_product_pricelist(self):
         for partner in self:
             pls = self.env['product.pricelist'].search(
-                [('country_group_ids.country_ids.code', '=', partner.country_id and partner.country_id.code or False)],
+                [('country_group_ids.country_ids', 'any', [
+                    ('code', '=', partner.country_id and partner.country_id.code or False)
+                ])],
                 limit=1
             )
             default_for_country = pls

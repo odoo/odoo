@@ -16,7 +16,7 @@ class MrpBom(models.Model):
     def _bom_subcontract_find(self, product, picking_type=None, company_id=False, bom_type='subcontract', subcontractor=False):
         domain = self._bom_find_domain(product, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
         if subcontractor:
-            domain = AND([domain, [('subcontractor_ids', 'parent_of', subcontractor.ids)]])
+            domain = AND([domain, [('subcontractor_ids', 'any', [('id', 'parent_of', subcontractor.ids)])]])
             return self.search(domain, order='sequence, product_id, id', limit=1)
         else:
             return self.env['mrp.bom']

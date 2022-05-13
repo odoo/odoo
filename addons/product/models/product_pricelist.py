@@ -257,7 +257,7 @@ class Pricelist(models.Model):
             groups = Partner.read_group(domain, ['country_id'], ['country_id'])
             for group in groups:
                 country_id = group['country_id'] and group['country_id'][0]
-                pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country_id)], limit=1)
+                pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', 'any', [('id', '=', country_id)])], limit=1)
                 pl = pl or pl_fallback
                 for pid in Partner.search(group['__domain']).ids:
                     result[pid] = pl

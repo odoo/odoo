@@ -1780,14 +1780,13 @@ class Task(models.Model):
         if section_id:
             section_ids.append(section_id)
         section_ids.extend(self.mapped('project_id').ids)
-        search_domain = []
-        if section_ids:
-            search_domain = [('|')] * (len(section_ids) - 1)
-            for section_id in section_ids:
-                search_domain.append(('project_ids', '=', section_id))
-        search_domain += list(domain)
+        project_domain = []
+        project_domain += [('|')] * max(len(section_ids) - 1, 0)
+        project_domain += [('id', '=', id) for id in section_ids]
         # perform search, return the first found
-        return self.env['project.task.type'].search(search_domain, order=order, limit=1).id
+        return self.env['project.task.type'].search([
+            ('project_ids', 'any', project_domain),
+        ] + list(domain), order=order, limit=1).id
 
     # ------------------------------------------------
     # CRUD overrides

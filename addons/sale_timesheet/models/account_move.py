@@ -101,8 +101,8 @@ class AccountMoveLine(models.Model):
         move_line_read_group = self.env['account.move.line'].search_read([
             ('move_id.move_type', '=', 'out_invoice'),
             ('move_id.state', '=', 'draft'),
-            ('sale_line_ids.product_id.invoice_policy', '=', 'delivery'),
-            ('sale_line_ids.product_id.service_type', '=', 'timesheet'),
+            ('sale_line_ids', 'any', [('product_id.invoice_policy', '=', 'delivery')]),
+            ('sale_line_ids', 'any', [('product_id.service_type', '=', 'timesheet')]),
             ('id', 'in', self.ids)],
             ['move_id', 'sale_line_ids'])
 

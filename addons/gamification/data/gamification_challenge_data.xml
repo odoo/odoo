@@ -22,7 +22,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" ref="base.model_res_company"/>
-            <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
+            <field name="domain">[('user_ids', 'any', user), ('name', '=', 'YourCompany')]</field>
             <field name="condition">lower</field>
             <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
@@ -33,7 +33,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" ref="base.model_res_company"/>
-            <field name="domain">[('user_ids', 'in', [user.id]),('logo', '!=', False)]</field>
+            <field name="domain">[('user_ids', 'any', user), ('logo', '!=', False)]</field>
             <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>
@@ -54,7 +54,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_user'))])" />
+            <field name="user_domain" eval="str([('groups_id', '=', ref('base.group_user'))])" />
             <field name="state">inprogress</field>
             <field name="challenge_category">other</field>
         </record>
@@ -64,7 +64,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_erp_manager'))])" />
+            <field name="user_domain" eval="str([('groups_id', '=', ref('base.group_erp_manager'))])" />
             <field name="state">inprogress</field>
             <field name="challenge_category">other</field>
         </record>
