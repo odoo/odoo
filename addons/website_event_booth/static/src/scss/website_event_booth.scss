@@ -22,7 +22,7 @@ label.o_wbooth_category_unavailable {
 
     & > input + div {
         padding: 10px;
-        border: 5px solid #e9ecef;
+        border: 5px solid mix(map-get($theme-colors, 'secondary'), #e9ecef);
     }
 
     &:not(.o_wbooth_category_unavailable) > input + div {
@@ -30,21 +30,21 @@ label.o_wbooth_category_unavailable {
     }
 
     &:not(.o_wbooth_category_unavailable):hover > input + div {
-        border-color: #6c757d;
+        border-color: map-get($theme-colors, 'secondary');
     }
 
     &:hover > input + div:before {
-        color: #6c757d;
+        color: map-get($theme-colors, 'secondary');
     }
 
     & > input:checked + div,
     &:hover > input:checked + div {
-        border-color: $o-enterprise-primary-color;
+        border-color: map-get($theme-colors, 'primary');
     }
 
     & > input:checked + div:before,
     &:hover > input:checked + div:before {
-        color: $o-enterprise-primary-color;
+        color: map-get($theme-colors, 'primary');
     }
 
     & > input:checked + div:before,
@@ -57,7 +57,7 @@ label.o_wbooth_category_unavailable {
         line-height: 40px;
         top: -16px;
         right: -16px;
-        background-color: white;
+        background-color: $o-wevent-bg-color-base;
         font-size: 2em;
         text-align: center;
     }
@@ -66,4 +66,8 @@ label.o_wbooth_category_unavailable {
         min-height: 250px;
     }
 
+}
+
+.o_wevent_booth_category {
+    background-color: $o-wevent-bg-color-light;
 }
