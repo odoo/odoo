@@ -66,13 +66,18 @@
                     <field name="company_id"/>
                     <field name="manager_id"/>
                     <field name="color"/>
+                    <field name="total_employee"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><a type="edit"><field name="name"/></a></div>
-                                        <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
+                                        <div class="o_secondary" groups="base.group_multi_company">
+                                            <small>
+                                                <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
+                                            </small>
+                                        </div>
                                     </div>
                                     <div class="o_kanban_manage_button_section" t-if="!selection_mode">
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
@@ -80,10 +85,12 @@
                                 </div>
                                 <div class="container o_kanban_card_content" t-if="!selection_mode">
                                     <div class="row o_kanban_card_upper_content">
-                                        <div class="col-4 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">
+                                                <t t-out="record.total_employee.raw_value"/> Employees
+                                            </button>
                                         </div>
-                                        <div class="col-8 o_kanban_primary_right">
+                                        <div class="col-6 o_kanban_primary_right">
                                         </div>
                                     </div>
                                 </div>
