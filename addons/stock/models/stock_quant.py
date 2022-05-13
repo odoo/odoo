@@ -878,6 +878,15 @@ class StockQuant(models.Model):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
+
+        if self.inventory_date:
+            name += f' [Scheduled on {self.inventory_date}]'
+        
+        # force period date is set when accounting date is set from stock_account module
+        force_period_date = self.env.context.get('force_period_date',False)
+        if force_period_date:
+            name += f' [Accounted on {force_period_date}]'
+
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,
