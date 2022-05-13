@@ -2,12 +2,12 @@
 
 # set server timezone in UTC before time module imported
 import os
-os.environ['TZ'] = 'UTC'
 
 import odoo
 from odoo.service.server import load_server_wide_modules
 from odoo.modules import initialize_sys_path
 
+os.environ['TZ'] = 'UTC'
 config = odoo.tools.config
 # Heroku Postgres url takes the following structure
 DATABASE_URL = "postgres://postgres:postgres@localhost:5432/rd-demo"
