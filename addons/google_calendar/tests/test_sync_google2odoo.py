@@ -13,6 +13,13 @@ from odoo import Command
 
 class TestSyncGoogle2Odoo(TestSyncGoogle):
 
+    def setUp(self):
+        super().setUp()
+        self.private_partner = self.env['res.partner'].create({
+            'name': 'Private Contact',
+            'email': 'private_email@example.com',
+            'type': 'private',
+        })
 
     @property
     def now(self):
@@ -1146,3 +1153,65 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertTrue(event, "It should have created an event")
         self.assertEqual(event.show_as, 'free')
         self.assertGoogleAPINotCalled
+
+    @patch_api
+    def test_private_partner_single_event(self):
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': 'admin@yourcompany.example.com',
+                'responseStatus': 'needsAction'
+            }, {
+                'displayName': 'Attendee',
+                'email': self.private_partner.email,
+                'responseStatus': 'needsAction'
+            }, ],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        private_attendee = event.attendee_ids.filtered(lambda e: e.email == self.private_partner.email)
+        self.assertNotEqual(self.private_partner.id, private_attendee.partner_id.id)
+        self.assertNotEqual(private_attendee.partner_id.type, 'private')
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_recurrence_private_contact(self):
+        recurrence_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        values = {
+            'id': recurrence_id,
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Attendee',
+                'email': self.private_partner.email,
+                'responseStatus': 'needsAction'
+            }, ],
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'date': '2020-01-6'},
+            'end': {'date': '2020-01-7'},
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
+        events = recurrence.calendar_event_ids
+        private_attendees = events.mapped('attendee_ids').filtered(lambda e: e.email == self.private_partner.email)
+        self.assertTrue(all([a.partner_id.id != self.private_partner.id for a in private_attendees]))
+        self.assertTrue(all([a.partner_id.type != 'private' for a in private_attendees]))
+        self.assertGoogleAPINotCalled()
