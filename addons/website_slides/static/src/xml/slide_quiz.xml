@@ -92,7 +92,7 @@
                 </div>
                 <span t-if="widget.publicUser &amp;&amp; widget.channel.signupAllowed" class="d-block mt-2">
                     <span>Don't have an account ?</span>
-                    <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.url">Sign Up !</a>
+                    <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.redirectURL">Sign Up !</a>
                 </span>
             </div>
             <div t-else="" class="d-md-flex align-items-center justify-content-between">
