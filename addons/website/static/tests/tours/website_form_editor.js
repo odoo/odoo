@@ -551,5 +551,72 @@ odoo.define('website.tour.form_editor', function (require) {
         }
     ]);
 
+    function editContactUs(steps) {
+        return [
+            {
+                content: "Enter edit mode",
+                trigger: 'a[data-action=edit]',
+            }, {
+                content: "Select the contact us form by clicking on an input field",
+                trigger: '.s_website_form input',
+                extra_trigger: '#oe_snippets .oe_snippet_thumbnail',
+                run: 'click',
+            },
+            ...steps,
+            {
+                content: 'Save the page',
+                trigger: 'button[data-action=save]',
+            },
+            {
+                content: 'Wait for reload',
+                trigger: 'body:not(.editor_enable)',
+            },
+        ];
+    }
+
+    tour.register('website_form_contactus_edition_with_email', {
+        test: true,
+        url: '/contactus',
+    }, editContactUs([
+        {
+            content: 'Change the Recipient Email',
+            trigger: '[data-field-name="email_to"] input',
+            run: 'text test@test.test',
+        },
+    ]));
+    tour.register('website_form_contactus_edition_no_email', {
+        test: true,
+        url: '/contactus',
+    }, editContactUs([
+        {
+            content: "Change a random option",
+            trigger: '[data-set-mark] input',
+            run: 'text_blur **',
+        },
+    ]));
+    tour.register('website_form_contactus_submit', {
+        test: true,
+        url: '/contactus',
+    }, [
+        // As the demo portal user, only two inputs needs to be filled to send
+        // the email
+        {
+            content: "Fill in the subject",
+            trigger: 'input[name="subject"]',
+        },
+        {
+            content: 'Fill in the message',
+            trigger: 'textarea[name="description"]',
+        },
+        {
+            content: 'Send the form',
+            trigger: '.s_website_form_send',
+        },
+        {
+            content: 'Check form is submitted without errors',
+            trigger: '#wrap:has(h1:contains("Thank You!"))',
+        },
+    ]);
+
     return {};
 });
