@@ -10,7 +10,7 @@
                         <select name="inputDevice" class="o_RtcConfigurationMenu_optionDeviceSelect" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="rtcConfigurationMenu.onChangeSelectAudioInput">
                             <option value="">Browser default</option>
                             <t t-if="state.userDevices" t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                                <RtcConfigurationMenuDeviceComponent device="device"/>
+                                <RtcConfigurationMenuDevice device="device"/>
                             </t>
                         </select>
                     </div>
