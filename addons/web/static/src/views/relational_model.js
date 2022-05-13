@@ -152,20 +152,21 @@ class RequestBatcherORM extends ORM {
             batch = {
                 deferred: new Deferred(),
                 scheduled: false,
-                ids,
+                ids: [],
             };
             this.batches[key] = batch;
         }
-        const previousIds = batch.ids;
-        batch.ids = [...new Set([...previousIds, ...ids])];
+        batch.ids = [...new Set([...batch.ids, ...ids])];
 
         if (!batch.scheduled) {
             batch.scheduled = true;
-            await Promise.resolve();
-            delete this.batches[key];
-            const result = await callback(batch.ids);
-            batch.deferred.resolve(result);
+            Promise.resolve().then(async () => {
+                delete this.batches[key];
+                const result = await callback(batch.ids);
+                batch.deferred.resolve(result);
+            });
         }
+        // TODO check why reads where sequential
 
         return batch.deferred;
     }
