@@ -49,7 +49,16 @@ class ResConfigSettings(models.TransientModel):
     enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
     enabled_buy_now_button = fields.Boolean(string="Buy Now")
 
-    account_on_checkout = fields.Selection(related='website_id.account_on_checkout', readonly=False)
+    account_on_checkout = fields.Selection(
+        string="Customer Accounts",
+        selection=[
+            ("optional", "Optional"),
+            ("disabled", "Disabled (buy as guest)"),
+            ("mandatory", "Mandatory (no guest checkout)"),
+        ],
+        compute="_compute_account_on_checkout",
+        inverse="_inverse_account_on_checkout",
+        readonly=False, required=True)
 
     @api.depends('website_id')
     def _compute_terms_url(self):
@@ -93,6 +102,22 @@ class ResConfigSettings(models.TransientModel):
         self.filtered(lambda w: w.group_discount_per_so_line).update({
             'group_product_pricelist': True,
         })
+
+    @api.depends('website_id.account_on_checkout')
+    def _compute_account_on_checkout(self):
+        for record in self:
+            record.account_on_checkout = record.website_id.account_on_checkout or 'disabled'
+
+    def _inverse_account_on_checkout(self):
+        for record in self:
+            if not record.website_id:
+                continue
+            record.website_id.account_on_checkout = record.account_on_checkout
+            # account_on_checkout implies different values for `auth_signup_uninvited`
+            if record.account_on_checkout in ['optional', 'mandatory']:
+                record.website_id.auth_signup_uninvited = 'b2c'
+            else:
+                record.website_id.auth_signup_uninvited = 'b2b'
 
     def action_update_terms(self):
         self.ensure_one()
