@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussView',
@@ -40,6 +40,38 @@ registerModel({
                 return;
             }
             this.discuss.threadView.topbar.openInvitePopoverView();
+        },
+        /**
+         * Handles OWL update on the discuss component.
+         */
+        onComponentUpdate() {
+            if (this.discuss.thread) {
+                this.component.trigger('o-push-state-action-manager');
+            }
+            if (
+                this.discuss.thread &&
+                this.discuss.thread === this.messaging.inbox &&
+                this.discuss.threadView &&
+                this.lastThreadCache && this.lastThreadCache.localId === this.discuss.threadView.threadCache.localId &&
+                this.lastThreadCounter > 0 && this.discuss.thread.counter === 0
+            ) {
+                this.env.bus.trigger('show-effect', {
+                    message: this.env._t("Congratulations, your inbox is empty!"),
+                    type: 'rainbow_man',
+                });
+            }
+            const lastThreadCache = (
+                this.discuss.threadView &&
+                this.discuss.threadView.threadCache &&
+                this.discuss.threadView.threadCache
+            );
+            this.update({
+                lastThreadCache: lastThreadCache ? replace(lastThreadCache) : clear(),
+                lastThreadCounter: (
+                    this.discuss.thread &&
+                    this.discuss.thread.counter
+                ),
+            });
         },
         onHideMobileAddItemHeader() {
             if (!this.exists()) {
@@ -111,11 +143,7 @@ registerModel({
         },
     },
     fields: {
-        mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
-            compute: '_computeMobileAddItemHeaderAutocompleteInputView',
-            inverse: 'discussViewOwnerAsMobileAddItemHeader',
-            isCausal: true,
-        }),
+        component: attr(),
         discuss: one('Discuss', {
             inverse: 'discussView',
             readonly: true,
@@ -129,6 +157,19 @@ registerModel({
         inboxView: one('DiscussSidebarMailboxView', {
             default: insertAndReplace(),
             inverse: 'discussViewOwnerAsInbox',
+            isCausal: true,
+        }),
+        /**
+         * Useful to display rainbow man on inbox.
+         */
+        lastThreadCache: one('ThreadCache'),
+        /**
+         * Useful to display rainbow man on inbox.
+         */
+        lastThreadCounter: attr(),
+        mobileAddItemHeaderAutocompleteInputView: one('AutocompleteInputView', {
+            compute: '_computeMobileAddItemHeaderAutocompleteInputView',
+            inverse: 'discussViewOwnerAsMobileAddItemHeader',
             isCausal: true,
         }),
         /**
