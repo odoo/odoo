@@ -362,12 +362,15 @@
             <div id="cart_redirect_setting" position="after">
                 <div id="website_login_documents" position="move"/>
             </div>
-            <xpath expr="//div[@id='website_login_documents']/div[hasclass('o_setting_right_pane')]" position="inside">
-                <div class="text-muted" attrs="{'invisible': [('auth_signup_uninvited', '!=', 'b2c')]}">
-                    Choose if you prompt to create an account on check out
-                </div>
-                <div class="mt8 ml-4" attrs="{'invisible': [('auth_signup_uninvited', '!=', 'b2c')]}">
-                    <field name="account_on_checkout" class="w-75" widget="radio"/>
+            <xpath expr="//div[@id='website_login_documents']/div[hasclass('o_setting_right_pane')]" position="replace">
+                <div class="o_setting_right_pane">
+                    <label for="account_on_checkout" string="Sign in/up at checkout"/>
+                    <div class="text-muted">
+                        "Optional" allows guests to register from the order confirmation email to track their order.
+                    </div>
+                    <div class="mt8 ml-4">
+                        <field name="account_on_checkout" class="w-75" widget="radio"/>
+                    </div>
                 </div>
             </xpath>
 
