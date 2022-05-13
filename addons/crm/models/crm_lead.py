@@ -5,6 +5,7 @@ import logging
 import threading
 from datetime import date, datetime, timedelta
 from psycopg2 import sql
+import re
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.osv import expression
@@ -451,6 +452,7 @@ class Lead(models.Model):
                 lead.ribbon_message = False
 
     def _search_phone_mobile_search(self, operator, value):
+        value = re.sub(r'[^\d+]+', '', value)
         if len(value) <= 2:
             raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
 

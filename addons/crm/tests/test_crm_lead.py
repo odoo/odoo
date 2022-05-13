@@ -8,6 +8,7 @@ from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDR
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.tests.common import Form, users
+from odoo.exceptions import UserError
 
 
 class TestCRMLead(TestCrmCommon):
@@ -496,3 +497,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead_1, self.env['crm.lead'].search([
             ('phone_mobile_search', 'like', '+32485001122')
         ]))
+        with self.assertRaises(UserError):
+            self.env['crm.lead'].search([
+                ('phone_mobile_search', 'like', 'tests@example.com')
+            ])
