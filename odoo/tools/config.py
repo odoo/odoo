@@ -123,6 +123,9 @@ class configmanager(object):
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
+        group.add_option("--heroku-platform", dest="heroku_platform",
+                         help="set this to True or any non falsy value when you are deploying to heroku platform. Requires -d. Default is %default",
+                         my_default=False)
         parser.add_option_group(group)
 
         # HTTP
@@ -448,7 +451,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface', 'heroku_platform'
         ]
 
         for arg in keys:
