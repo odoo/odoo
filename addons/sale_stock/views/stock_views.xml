@@ -22,7 +22,8 @@
             <field name="inherit_id" ref="sale.product_template_form_view_sale_order_button"/>
             <field name="model">product.template</field>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_sales']" position="replace" />
+                <xpath expr="//button[@name='action_view_sales']" position="attributes" />
+                    <attribute name="invisible">1</attribute>
             </field>
         </record>
 
