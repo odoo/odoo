@@ -30,23 +30,17 @@
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
-                        <div class="col-9">
+                        <div class="col">
                             <a name="%(hr_leave_action_action_approve_department)d" type="action">
-                                Time Off Requests
+                                <field name="leave_to_approve_count"/> Time Off Requests
                             </a>
-                        </div>
-                        <div class="col-3 text-right">
-                            <field name="leave_to_approve_count"/>
                         </div>
                     </div>
                     <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
-                        <div class="col-9">
+                        <div class="col">
                             <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
-                                Allocation Requests
+                                <field name="allocation_to_approve_count"/> Allocation Requests
                             </a>
-                        </div>
-                        <div class="col-3 text-right">
-                            <field name="allocation_to_approve_count"/>
                         </div>
                     </div>
                 </xpath>
