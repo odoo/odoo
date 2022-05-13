@@ -200,6 +200,60 @@ registerModel({
                 (this.guest && this.messaging.currentGuest === this.guest);
         },
         /**
+         * Updates the track that is broadcasted to the remote of this session.
+         * This will start new transaction by triggering a negotiationneeded event
+         * on the peerConnection given as parameter.
+         *
+         * negotiationneeded -> offer -> answer -> ...
+         *
+         * @param {String} trackKind
+         * @param {Object} [param1]
+         * @param {boolean} [param1.initTransceiver]
+         */
+        async updateRemoteTrack(trackKind, { initTransceiver } = {}) {
+            if (!this.rtcAsConnectedSession) {
+                return;
+            }
+            const track = trackKind === 'audio' ? this.rtcAsConnectedSession.audioTrack : this.rtcAsConnectedSession.videoTrack;
+            const fullDirection = track ? 'sendrecv' : 'recvonly';
+            const limitedDirection = track ? 'sendonly' : 'inactive';
+            let transceiverDirection = fullDirection;
+            if (trackKind === 'video') {
+                transceiverDirection = !this.messaging.focusedRtcSession || this.messaging.focusedRtcSession === this ? fullDirection : limitedDirection;
+            }
+            let transceiver;
+            if (initTransceiver) {
+                transceiver = this.rtcPeerConnection.peerConnection.addTransceiver(trackKind);
+            } else {
+                transceiver = this.rtcPeerConnection.getTransceiver(trackKind);
+            }
+            if (track) {
+                try {
+                    await transceiver.sender.replaceTrack(track);
+                    transceiver.direction = transceiverDirection;
+                } catch (_e) {
+                    // ignored, the track is probably already on the peerConnection.
+                }
+                return;
+            }
+            try {
+                await transceiver.sender.replaceTrack(null);
+                transceiver.direction = transceiverDirection;
+            } catch (_e) {
+                // ignored, the transceiver is probably already removed
+            }
+            if (trackKind === 'video') {
+                this.rtcAsConnectedSession.notifyPeers([this.id], {
+                    event: 'trackChange',
+                    type: 'peerToPeer',
+                    payload: {
+                        type: 'video',
+                        state: { isSendingVideo: false },
+                    },
+                });
+            }
+        },
+        /**
          * @private
          * @returns {string}
          */
