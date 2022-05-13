@@ -39,6 +39,19 @@ export class Powerbox {
     }
 
     render(commands) {
+        if (this.options.commandFilters && this.options.commandFilters.length) {
+            /**
+             * Some available commands may need to be disabled in certain
+             * situations. i.e.:
+             * in a knowledge article, prevent the usage of the /template
+             * command inside a /template block.
+             * @see commandFilters is an array of functions which returns
+             * commands that can be used.
+             */
+            for (let filter of this.options.commandFilters) {
+                commands = filter(commands);
+            }
+        }
         this._mainWrapperElement.innerHTML = '';
         clearTimeout(this._renderingTimeout);
         this._hoverActive = false;

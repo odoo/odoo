@@ -68,9 +68,12 @@ function commandsWithinCategory(categoryName, categories) {
     };
 }
 
-function splitCommandName(name, searchValue) {
-    const splitName = name.split(new RegExp(`(${escapeRegExp(searchValue)})`, "ig"));
-    return searchValue.length && splitName.length > 1 ? splitName : [name];
+export function splitCommandName(name, searchValue) {
+    if (name) {
+        const splitName = name.split(new RegExp(`(${escapeRegExp(searchValue)})`, "ig"));
+        return searchValue.length && splitName.length > 1 ? splitName : [name];
+    }
+    return [];
 }
 
 export class DefaultCommandItem extends Component {}

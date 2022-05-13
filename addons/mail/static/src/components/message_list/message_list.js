@@ -56,7 +56,12 @@ export class MessageList extends Component {
     }
 
     _willPatch() {
-        const { messageListView } = this._lastRenderedValues();
+        const lastRenderedValues = this._lastRenderedValues();
+        if (!lastRenderedValues) {
+            // TODO ABD: REMOVE (traceback in Knowledge to investigate)
+            return;
+        }
+        const { messageListView } = lastRenderedValues;
         if (!messageListView.exists()) {
             return;
         }
