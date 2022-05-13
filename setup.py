@@ -28,6 +28,7 @@ setup(
         'cryptography',
         'decorator',
         'docutils',
+        'geoip2',
         'gevent',
         'greenlet',
         'idna',

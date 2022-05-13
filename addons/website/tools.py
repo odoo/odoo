@@ -51,7 +51,7 @@ def MockRequest(
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
         ),
-        geoip={},
+        geoip=odoo.http.GeoIP('127.0.0.1'),
         db=env.registry.db_name,
         env=env,
         registry=env.registry,
