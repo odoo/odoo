@@ -56,6 +56,16 @@ export class ImageField extends Component {
         return style;
     }
 
+    get tooltipAttributes() {
+        if (this.props.enableZoom && this.props.readonly && this.props.value) {
+            return {
+                template: "web.ImageZoomTooltip",
+                info: JSON.stringify({ url: this.url }),
+            };
+        }
+        return {};
+    }
+
     onFileRemove() {
         this.state.isValid = true;
         this.props.update(false);
@@ -75,6 +85,8 @@ export class ImageField extends Component {
 ImageField.template = "web.ImageField";
 ImageField.props = {
     ...standardFieldProps,
+    enableZoom: { type: Boolean, optional: true },
+    zoomDelay: { type: Number, optional: true },
     previewImage: { type: String, optional: true },
     acceptedFileExtensions: { type: String, optional: true },
     width: { type: Number, optional: true },
@@ -86,16 +98,18 @@ ImageField.defaultProps = {
 ImageField.components = {
     FileUploader,
 };
-(ImageField.displayName = _lt("Image")),
-    (ImageField.supportedTypes = ["binary"]),
-    (ImageField.extractProps = (fieldName, record, attrs) => {
-        return {
-            previewImage: attrs.preview_image,
-            acceptedFileExtensions: attrs.options.accepted_file_extensions,
-            width: attrs.options.size && attrs.options.size[0],
-            height: attrs.options.size && attrs.options.size[1],
-        };
-    });
+ImageField.displayName = _lt("Image");
+ImageField.supportedTypes = ["binary"];
+ImageField.extractProps = (fieldName, record, attrs) => {
+    return {
+        enableZoom: attrs.options.zoom,
+        zoomDelay: attrs.options.zoom_delay,
+        previewImage: attrs.preview_image,
+        acceptedFileExtensions: attrs.options.accepted_file_extensions,
+        width: attrs.options.size && attrs.options.size[0],
+        height: attrs.options.size && attrs.options.size[1],
+    };
+};
 
 registry.category("fields").add("image", ImageField);
 registry.category("fields").add("kanban.image", ImageField); // FIXME WOWL: s.t. we don't use the legacy one

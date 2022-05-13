@@ -38,7 +38,16 @@
             t-att-width="props.width"
             t-att-style="sizeStyle"
             t-on-error.stop="onLoadFailed"
+            t-att-data-tooltip-template="tooltipAttributes.template"
+            t-att-data-tooltip-info="tooltipAttributes.info"
+            t-att-data-tooltip-delay="props.zoomDelay"
         />
+    </t>
+
+    <t t-name="web.ImageZoomTooltip" owl="1">
+        <div class="o_image_zoom">
+            <img t-att-src="info.url" />
+        </div>
     </t>
 
 </templates>

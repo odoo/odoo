@@ -403,8 +403,6 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await selectDropdownItem(target, "partner_ids", "second record");
-        //await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        //await testUtils.fields.many2one.clickItem("partner_ids", "second record");
         await click(target.querySelector(".o_list_button_save"));
         assert.containsN(
             target,

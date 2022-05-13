@@ -241,6 +241,39 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("ImageField: zoom and zoom_delay options", async function (assert) {
+        serverData.models.partner.records[0].document = MY_IMAGE;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="document" widget="image" options="{'zoom': true, 'zoom_delay': 600}" />
+                </form>
+            `,
+        });
+        // data-tooltip attribute is used by the tooltip service
+        assert.strictEqual(
+            JSON.parse(target.querySelector(".o_field_image img").dataset["tooltipInfo"]).url,
+            `data:image/png;base64,${MY_IMAGE}`,
+            "shows a tooltip on hover"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_image img").dataset["tooltipDelay"],
+            "600",
+            "tooltip has the right delay"
+        );
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.ok(
+            !target.querySelector(".o_field_image img").dataset["tooltipInfo"],
+            "the tooltip is not present in edition"
+        );
+    });
+
     QUnit.test("ImageField in subviews is loaded correctly", async function (assert) {
         assert.expect(4);
 

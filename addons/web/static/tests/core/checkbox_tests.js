@@ -6,7 +6,6 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, patchWithCleanup, mount } from "@web/../tests/helpers/utils";
-import { nextTick } from "../helpers/utils";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
