@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, patchWithCleanup, mount } from "@web/../tests/helpers/utils";
+import { nextTick } from "../helpers/utils";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -60,5 +61,32 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(value, true);
         await click(target.querySelector("input"));
         assert.strictEqual(value, false);
+    });
+
+    QUnit.test("triggering a click event on a disabled checkbox", async (assert) => {
+        const env = await makeTestEnv();
+        class Parent extends Component {
+            onChange() {
+                assert.step("a click triggered on the disabled checkbox changed its value");
+            }
+        }
+        Parent.template = xml`<CheckBox onChange="onChange" disabled="true" />`;
+        Parent.components = { CheckBox };
+
+        await mount(Parent, target, { env });
+        assert.containsOnce(target, "div.custom-checkbox");
+        assert.ok(
+            !target.querySelector(".custom-checkbox input").checked,
+            "the input is not checked"
+        );
+
+        // the CheckBox component should prevent the input to be checked by a click
+        // event triggered in JS as the input is not supposed to be interactive
+        await click(target.querySelector(".custom-checkbox input"));
+        assert.ok(
+            !target.querySelector(".custom-checkbox input").checked,
+            "the input is still not checked"
+        );
+        assert.verifySteps([]);
     });
 });
