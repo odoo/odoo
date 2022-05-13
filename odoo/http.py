@@ -1198,6 +1198,9 @@ mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 # Add potentially missing (detected on windows) svg mime types
 mimetypes.add_type('image/svg+xml', '.svg')
+# Add potentially missing MS mime types
+mimetypes.add_type('application/vnd.ms-outlook', '.msg')
+
 
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
