@@ -257,7 +257,13 @@ if (typeof TouchEvent === "function") {
     });
 }
 
-export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
+export async function triggerEvent(
+    el,
+    selector,
+    eventType,
+    eventAttrs = {},
+    skipVisibilityCheck = false
+) {
     let event;
     if (eventType in EVENT_TYPES) {
         const { constructor, processParameters } = EVENT_TYPES[eventType];
@@ -269,13 +275,15 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
     if (!target) {
         throw new Error(`Can't find a target to trigger ${eventType} event`);
     }
-    const isVisible =
-        target === document ||
-        target === window ||
-        target.offsetWidth > 0 ||
-        target.offsetHeight > 0;
-    if (!isVisible) {
-        throw new Error(`Called triggerEvent ${eventType} on invisible target`);
+    if (!skipVisibilityCheck) {
+        const isVisible =
+            target === document ||
+            target === window ||
+            target.offsetWidth > 0 ||
+            target.offsetHeight > 0;
+        if (!isVisible) {
+            throw new Error(`Called triggerEvent ${eventType} on invisible target`);
+        }
     }
     target.dispatchEvent(event);
     await nextTick();
@@ -681,7 +689,7 @@ export const dragAndDrop = async (fromSelector, toSelector, position) => {
         triggerEvent(target, null, "mouseenter", toPos);
     }
     triggerEvent(from, null, "mouseup", toPos);
-    await triggerEvent(from, null, "click", toPos);
+    await triggerEvent(from, null, "click", toPos, true);
 };
 
 export async function clickDropdown(target, fieldName) {

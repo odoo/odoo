@@ -87,8 +87,8 @@ export const viewService = {
                             views: {},
                         };
                         for (const viewType in views) {
-                            const { arch, toolbar, id, filters } = views[viewType];
-                            const viewDescription = { arch, id };
+                            const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
+                            const viewDescription = { arch, id, custom_view_id };
                             if (toolbar) {
                                 viewDescription.actionMenus = toolbar;
                             }

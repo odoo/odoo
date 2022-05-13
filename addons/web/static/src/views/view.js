@@ -274,6 +274,10 @@ export class View extends Component {
             useSampleModel: false,
             className: `${this.props.className} o_view_controller o_${this.env.config.viewType}_view`,
         };
+        if (viewDescription.custom_view_id) {
+            // for dashboard
+            viewProps.info.customViewId = viewDescription.custom_view_id;
+        }
         if (this.props.globalState) {
             viewProps.globalState = this.props.globalState;
         }

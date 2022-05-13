@@ -35,7 +35,7 @@ const serviceRegistry = registry.category("services");
  * @param {MakeViewParams} params
  * @returns {Component}
  */
-export const makeView = async (params) => {
+export async function makeView(params) {
     const props = { ...params };
     const serverData = props.serverData;
     const mockRPC = props.mockRPC;
@@ -90,7 +90,7 @@ export const makeView = async (params) => {
     const concreteView = concreteViewNode.component;
 
     return concreteView;
-};
+}
 
 export function setupViewRegistries() {
     setupControlPanelFavoriteMenuRegistry();
