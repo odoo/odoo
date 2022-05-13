@@ -5,6 +5,8 @@ import fieldRegistry from "web.field_registry";
 import { parse } from "web.field_utils";
 import { parseArch } from "web.viewUtils";
 import { traverse } from "web.utils";
+import Context from "web.Context";
+import { mapDoActionOptionAPI } from "@web/legacy/backend_utils";
 
 import { makeContext } from "@web/core/context";
 import {
@@ -1048,7 +1050,8 @@ export class StaticList extends DataPoint {
 }
 
 export class RelationalModel extends Model {
-    setup(params, { dialog, notification }) {
+    setup(params, { action, dialog, notification }) {
+        this.actionService = action;
         this.dialogService = dialog;
         this.notificationService = notification;
         this.keepLast = new KeepLast();
@@ -1303,6 +1306,13 @@ export class RelationalModel extends Model {
                     type: "warning",
                 });
             }
+        } else if (evType === "do_action") {
+            // SAME CODE AS legacy_service_provider
+            if (payload.action.context) {
+                payload.action.context = new Context(payload.action.context).eval();
+            }
+            const legacyOptions = mapDoActionOptionAPI(payload.options);
+            return this.actionService.doAction(payload.action, legacyOptions);
         }
         throw new Error(`trigger_up(${evType}) not handled in relational model`);
     }
@@ -1329,4 +1339,4 @@ export class RelationalModel extends Model {
         return new Record(this, params, state);
     }
 }
-RelationalModel.services = ["dialog", "notification"];
+RelationalModel.services = ["action", "dialog", "notification"];

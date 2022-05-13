@@ -10650,47 +10650,65 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "reload company when creating records of model res.company",
         async function (assert) {
             assert.expect(6);
 
+            const fakeActionService = {
+                start(env, { actionMain }) {
+                    return Object.assign({}, actionMain, {
+                        doAction: (actionRequest) => {
+                            if (actionRequest === "reload_context") {
+                                assert.step("reload company");
+                                return Promise.resolve();
+                            }
+                        },
+                    });
+                },
+            };
+            serviceRegistry.add("action", fakeActionService, { force: true });
+
             await makeView({
                 type: "form",
-                model: "res.company",
+                resModel: "res.company",
                 serverData,
-                arch: '<form><field name="name"/></form>',
+                arch: `
+                        <form>
+                            <field name="name"/>
+                        </form>`,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-                intercepts: {
-                    do_action: function (ev) {
-                        assert.step("reload company");
-                        assert.strictEqual(
-                            ev.data.action,
-                            "reload_context",
-                            "company view reloaded"
-                        );
-                    },
                 },
             });
 
-            await editInput(
-                target.querySelector('.o_field_widget[name="name"] input'),
-                "Test Company"
-            );
+            await editInput(target, '.o_field_widget[name="name"] input', "Test Company");
             await click(target.querySelector(".o_form_button_save"));
 
-            assert.verifySteps(["onchange", "create", "reload company", "read"]);
+            assert.verifySteps(["get_views", "onchange", "create", "reload company", "read"]);
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "reload company when writing on records of model res.company",
         async function (assert) {
             assert.expect(6);
-            this.data["res.company"].records = [
+
+            const fakeActionService = {
+                start(env, { actionMain }) {
+                    return Object.assign({}, actionMain, {
+                        doAction: (actionRequest) => {
+                            if (actionRequest === "reload_context") {
+                                assert.step("reload company");
+                                return Promise.resolve();
+                            }
+                        },
+                    });
+                },
+            };
+            serviceRegistry.add("action", fakeActionService, { force: true });
+
+            serverData.models["res.company"].records = [
                 {
                     id: 1,
                     name: "Test Company",
@@ -10699,36 +10717,23 @@ QUnit.module("Views", (hooks) => {
 
             await makeView({
                 type: "form",
-                model: "res.company",
+                resModel: "res.company",
                 serverData,
-                arch: '<form><field name="name"/></form>',
+                arch: `
+                        <form>
+                            <field name="name"/>
+                        </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-                intercepts: {
-                    do_action: function (ev) {
-                        assert.step("reload company");
-                        assert.strictEqual(
-                            ev.data.action,
-                            "reload_context",
-                            "company view reloaded"
-                        );
-                    },
                 },
             });
 
-            await editInput(
-                target.querySelector('.o_field_widget[name="name"] input'),
-                "Test Company2"
-            );
+            await click(target.querySelector(".o_form_button_edit"));
+            await editInput(target, '.o_field_widget[name="name"] input', "Test Company2");
             await click(target.querySelector(".o_form_button_save"));
 
-            assert.verifySteps(["read", "write", "reload company", "read"]);
+            assert.verifySteps(["get_views", "read", "write", "reload company", "read"]);
         }
     );
 
