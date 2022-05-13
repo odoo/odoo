@@ -60,7 +60,7 @@ from .tools import frozendict, lazy_classproperty, ormcache, \
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang, split_every
-from .tools.translate import _
+from .tools.translate import _, _lt
 from .tools import date_utils
 from .tools import populate
 from .tools.lru import LRU
@@ -118,7 +118,7 @@ regex_private = re.compile(r'^(_.*|init)$')
 def check_method_name(name):
     """ Raise an ``AccessError`` if ``name`` is a private method name. """
     if regex_private.match(name):
-        raise AccessError(_('Private methods (such as %s) cannot be called remotely.') % (name,))
+        raise AccessError(_('Private methods (such as %s) cannot be called remotely.', name))
 
 def fix_import_export_id_paths(fieldname):
     """
@@ -1601,7 +1601,10 @@ class BaseModel(metaclass=MetaModel):
                             self._fields, 'date_stop'):
             if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
                                 self._fields, 'date_delay'):
-                raise UserError(_("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay", self._name))
+                raise UserError(_(
+                    "Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay",
+                    self._name
+                ))
 
         return view
 
@@ -2604,7 +2607,7 @@ class BaseModel(metaclass=MetaModel):
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             if gb not in self._fields:
-                raise UserError(_("Unknown field %r in 'groupby'") % gb)
+                raise UserError(_("Unknown field %r in 'groupby'", gb))
             if not self._fields[gb].base_field.groupable:
                 raise UserError(_(
                     "Field %s is not a stored field, only stored fields (regular or "
@@ -3261,14 +3264,16 @@ class BaseModel(metaclass=MetaModel):
 
                 description = self.env['ir.model']._get(self._name).name
                 if not self.env.user.has_group('base.group_no_one'):
-                    raise AccessError(
-                        _('You do not have enough rights to access the fields "%(fields)s" on %(document_kind)s (%(document_model)s). '\
-                          'Please contact your system administrator.\n\n(Operation: %(operation)s)') % {
-                        'fields': ','.join(list(invalid_fields)),
-                        'document_kind': description,
-                        'document_model': self._name,
-                        'operation': operation,
-                    })
+                    raise AccessError(_(
+                        "You do not have enough rights to access the fields \"%(fields)s\""
+                        " on %(document_kind)s (%(document_model)s). "
+                        "Please contact your system administrator."
+                        "\n\n(Operation: %(operation)s)",
+                        fields=','.join(list(invalid_fields)),
+                        document_kind=description,
+                        document_model=self._name,
+                        operation=operation,
+                    ))
 
                 def format_groups(field):
                     if field.groups == '.':
@@ -3283,33 +3288,39 @@ class BaseModel(metaclass=MetaModel):
                             anyof |= self.env.ref(g)
                     strs = []
                     if anyof:
-                        strs.append(_("allowed for groups %s") % ', '.join(
-                            anyof.sorted(lambda g: g.id)
-                                 .mapped(lambda g: repr(g.display_name))
+                        strs.append(_(
+                            "allowed for groups %s",
+                            ', '.join(
+                                anyof.sorted(lambda g: g.id)
+                                    .mapped(lambda g: repr(g.display_name))
+                            ),
                         ))
                     if noneof:
-                        strs.append(_("forbidden for groups %s") % ', '.join(
-                            noneof.sorted(lambda g: g.id)
-                                  .mapped(lambda g: repr(g.display_name))
+                        strs.append(_(
+                            "forbidden for groups %s",
+                            ', '.join(
+                                noneof.sorted(lambda g: g.id)
+                                    .mapped(lambda g: repr(g.display_name))
+                            ),
                         ))
                     return '; '.join(strs)
 
-                raise AccessError(_("""The requested operation can not be completed due to security restrictions.
-
-Document type: %(document_kind)s (%(document_model)s)
-Operation: %(operation)s
-User: %(user)s
-Fields:
-%(fields_list)s""") % {
-                    'document_model': self._name,
-                    'document_kind': description or self._name,
-                    'operation': operation,
-                    'user': self._uid,
-                    'fields_list': '\n'.join(
+                raise AccessError(_(
+                    "The requested operation can not be completed due to security restrictions."
+                    "\n\nDocument type: %(document_kind)s (%(document_model)s)"
+                    "\nOperation: %(operation)s"
+                    "\nUser: %(user)s"
+                    "\nFields:"
+                    "\n%(fields_list)s",
+                    document_model=self._name,
+                    document_kind=description or self._name,
+                    operation=operation,
+                    user=self._uid,
+                    fields_list='\n'.join(
                         '- %s (%s)' % (f, format_groups(self._fields[f]))
                         for f in sorted(invalid_fields)
-                    )
-                })
+                    ),
+                ))
 
         return fields
 
@@ -3495,10 +3506,12 @@ Fields:
         if missing:
             extras = fetched - self
             if extras:
-                raise AccessError(
-                    _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
-                        missing._ids, extras._ids,
-                    ))
+                raise AccessError(_(
+                    "Database fetch misses ids (%(missing)s) and has extra ids (%(extra)s),"
+                    " may be caused by a type incoherence in a previous request",
+                    missing=missing._ids,
+                    extra=extras._ids,
+                ))
             # mark non-existing records in missing
             forbidden = missing.exists()
             if forbidden:
@@ -3567,7 +3580,10 @@ Fields:
             res = self._cr.fetchone()
             if res:
                 # mention the first one only to keep the error message readable
-                raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
+                raise ValidationError(_(
+                    "A document was modified since you last viewed it (%s:%d)",
+                    self._description, res[0],
+                ))
 
     def _check_company(self, fnames=None):
         """ Check the companies of the values of the given field names.
@@ -3629,15 +3645,15 @@ Fields:
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]
-            company_msg = _("- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
-            record_msg = _("- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
+            company_msg = _lt("- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
+            record_msg = _lt("- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
                     msg, company = company_msg, record
                 else:
                     msg, company = record_msg, record.company_id
                 field = self.env['ir.model.fields']._get(self._name, name)
-                lines.append(msg % {
+                lines.append(str(msg) % {
                     'record': record.display_name,
                     'company': company.display_name,
                     'field': field.field_description,
@@ -3999,13 +4015,12 @@ Fields:
                 except AccessError as e:
                     if fields[0].inherited:
                         description = self.env['ir.model']._get(self._name).name
-                        raise AccessError(
-                            _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
-                                'previous_message': e.args[0],
-                                'document_kind': description,
-                                'document_model': self._name,
-                            }
-                        )
+                        raise AccessError(_(
+                            "%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).",
+                            previous_message=e.args[0],
+                            document_kind=description,
+                            document_model=self._name,
+                        ))
                     raise
 
             # validate inversed fields
@@ -4615,7 +4630,9 @@ Fields:
     def _check_qorder(self, word):
         if not regex_order.match(word):
             raise UserError(_(
-                'Invalid "order" specified (%s). A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)',
+                "Invalid \"order\" specified (%s)."
+                " A valid \"order\" specification is a comma-separated list of valid field names"
+                " (optionally followed by asc/desc for the direction)",
                 word,
             ))
         return True
@@ -4625,7 +4642,7 @@ Fields:
         """Add what's missing in ``query`` to implement all appropriate ir.rules
           (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
 
-           :param query: the current query object
+        :param query: the current query object
         """
         if self.env.su:
             return
@@ -6897,11 +6914,11 @@ def itemgetter_tuple(items):
 
 def convert_pgerror_not_null(model, fields, info, e):
     if e.diag.table_name != model._table:
-        return {'message': _(u"Missing required value for the field '%s'") % (e.diag.column_name)}
+        return {'message': _(u"Missing required value for the field '%s'", e.diag.column_name)}
 
     field_name = e.diag.column_name
     field = fields[field_name]
-    message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
+    message = _(u"Missing required value for the field '%s' (%s)", field['string'], field_name)
     return {
         'message': message,
         'field': field_name,
@@ -6933,7 +6950,11 @@ def convert_pgerror_unique(model, fields, info, e):
     if len(ufields) == 1:
         field_name = ufields[0]
         field = fields[field_name]
-        message = _(u"The value for the field '%s' already exists (this is probably '%s' in the current model).") % (field_name, field['string'])
+        message = _(
+            u"The value for the field '%s' already exists (this is probably '%s' in the current model).",
+            field_name,
+            field['string']
+        )
         return {
             'message': message,
             'field': field_name,
