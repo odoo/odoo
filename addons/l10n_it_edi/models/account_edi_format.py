@@ -341,7 +341,7 @@ class AccountEdiFormat(models.Model):
             document_type = elements[0].text if elements else ''
             if document_type and document_type in ['TD04', 'TD08']:
                 move_type = 'in_refund'
-            elif document_type and document_type not in ['TD01', 'TD07']:
+            elif document_type and document_type not in self.get_unsupported_document_types():
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
 
             simplified = self._l10n_it_is_simplified_document_type(document_type)
@@ -671,3 +671,6 @@ class AccountEdiFormat(models.Model):
             invoices += new_invoice
 
         return invoices
+
+    def get_unsupported_document_types(self):
+        return ['TD01', 'TD07']
