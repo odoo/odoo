@@ -37,7 +37,7 @@ class MassMailController(http.Controller):
                 raise exceptions.AccessDenied()
 
             if mailing.mailing_model_real == 'mailing.contact':
-                # Unsubscribe directly + Let the user choose his subscriptions
+                # Unsubscribe directly + Let the user choose their subscriptions
                 mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
 
                 contacts = request.env['mailing.contact'].sudo().search([('email_normalized', '=', tools.email_normalize(email))])

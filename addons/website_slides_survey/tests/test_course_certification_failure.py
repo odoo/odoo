@@ -70,7 +70,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         self.assertFalse(slide_partner.survey_scoring_success, 'Quizz should not be marked as passed with wrong answers')
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_cache()
-        self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course because he still has attempts left')
+        self.assertIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should still be a member of the course because they still have attempts left')
 
         # Step 5: simulate a 'retry'
         retry_user_input = self.slide_certification.survey_id.sudo()._create_answer(
@@ -85,7 +85,7 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
         self.fill_in_answer(retry_user_input, certification.question_ids)
         # forces recompute of partner_ids as we delete directly in relation
         self.channel.invalidate_cache()
-        self.assertNotIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should have been kicked out of the course because he failed his last attempt')
+        self.assertNotIn(self.user_public.partner_id, self.channel.partner_ids, 'Public user should have been kicked out of the course because they failed their last attempt')
 
         # Step 7: add public user as member of the channel once again
         self.channel._action_add_members(self.user_public.partner_id)

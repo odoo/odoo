@@ -109,12 +109,12 @@ class MicrosoftEvent(abc.Set):
     def owner(self, env):
         # Owner/organizer could be desynchronised between Microsoft and Odoo.
         # Let userA, userB be two new users (never synced to Microsoft before).
-        # UserA creates an event in Odoo (he is the owner) but userB syncs first.
+        # UserA creates an event in Odoo (they are the owner) but userB syncs first.
         # There is no way to insert the event into userA's calendar since we don't have
         # any authentication access. The event is therefore inserted into userB's calendar
-        # (he is the orginizer in Microsoft). The "real" owner (in Odoo) is stored as an
+        # (they are the organizer in Microsoft). The "real" owner (in Odoo) is stored as an
         # extended property. There is currently no support to "transfert" ownership when
-        # userA syncs his calendar the first time.
+        # userA syncs their calendar the first time.
         if self.singleValueExtendedProperties:
             microsoft_guid = env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
             real_owner_id = [prop['value'] for prop in self.singleValueExtendedProperties if prop['id'] == 'String {%s} Name owner_odoo_id' % microsoft_guid][0]

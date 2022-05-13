@@ -757,7 +757,7 @@ class Message(models.Model):
         """ Toggle messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
         """
-        # a user should always be able to star a message he can read
+        # a user should always be able to star a message they can read
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
@@ -1004,7 +1004,7 @@ class Message(models.Model):
         messages = self.env['mail.message']
         for message in self:
             # Check if user has access to the record before displaying a notification about it.
-            # In case the user switches from one company to another, it might happen that he doesn't
+            # In case the user switches from one company to another, it might happen that they don't
             # have access to the record related to the notification. In this case, we skip it.
             # YTI FIXME: check allowed_company_ids if necessary
             if message.model and message.res_id:

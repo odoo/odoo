@@ -218,7 +218,7 @@ class MailController(mail.MailController):
     @classmethod
     def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
         """ If the current user doesn't have access to the document, but provided
-        a valid access token, redirect him to the front-end view.
+        a valid access token, redirect them to the front-end view.
         If the partner_id and hash parameters are given, add those parameters to the redirect url
         to authentify the recipient in the chatter, if any.
 

@@ -12,7 +12,7 @@ class MassMailingList(models.Model):
     _description = 'Mailing List'
     _mailing_enabled = True
     _order = 'create_date DESC'
-    # As this model has his own data merge, avoid to enable the generic data_merge on that model.
+    # As this model has their own data merge, avoid to enable the generic data_merge on that model.
     _disable_data_merge = True
 
     name = fields.Char(string='Mailing List', required=True)
@@ -34,7 +34,7 @@ class MassMailingList(models.Model):
         copy=True, depends=['contact_ids'])
     is_public = fields.Boolean(default=True, string='Show In Preferences',
         help='The mailing list can be accessible by recipient in the unsubscription'
-        ' page to allows him to update his subscription preferences.')
+        ' page to allows them to update their subscription preferences.')
 
     # ------------------------------------------------------
     # COMPUTE / ONCHANGE

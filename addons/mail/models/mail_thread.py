@@ -1009,7 +1009,7 @@ class MailThread(models.AbstractModel):
                 subtype_id = thread._creation_subtype().id
 
             # replies to internal message are considered as notes, but parent message
-            # author is added in recipients to ensure he is notified of a private answer
+            # author is added in recipients to ensure they are notified of a private answer
             parent_message = False
             if message_dict.get('parent_id'):
                 parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
@@ -2412,7 +2412,7 @@ class MailThread(models.AbstractModel):
             msg_vals = {}
 
         # compute send user and its related signature; try to use self.env.user instead of browsing
-        # user_ids if he is the author will give a sudo user, improving access performances and cache usage.
+        # user_ids if they are the author will give a sudo user, improving access performances and cache usage.
         signature = ''
         email_add_signature = msg_vals.get('email_add_signature') if msg_vals and 'email_add_signature' in msg_vals else message.email_add_signature
         if email_add_signature:
@@ -2824,7 +2824,7 @@ class MailThread(models.AbstractModel):
         documents. This is done using relational fields linking to res.users
         with track_visibility set. Since OpenERP v7 it is considered as being
         responsible for the document and therefore standard behavior is to
-        subscribe the user and send him a notification.
+        subscribe the user and send them a notification.
 
         Override this method to change that behavior and/or to add people to
         notify, using possible custom notification.

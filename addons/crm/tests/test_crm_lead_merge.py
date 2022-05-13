@@ -408,7 +408,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         lead_w_email                contact_1           KO (already following the destination lead)
                                     contact_2           OK (active on lead_w_email)
                                     contact_company     KO (most recent message on lead_w_email is 35 days ago, message
-                                                            on lead_w_partner is not counted as he doesn't follow it)
+                                                            on lead_w_partner is not counted as they don't follow it)
         lead_w_partner              contact_2           KO (already added with lead_w_email)
         lead_w_partner_company
         """
@@ -480,7 +480,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertIn(self.contact_2, new_partner_followers,
                       'The partner must follow the destination lead')
         # "contact_company" posted a message 35 days ago on lead_2, so it's considered as inactive
-        # "contact_company" posted a message now on lead_3, but he doesn't follow lead_3
+        # "contact_company" posted a message now on lead_3, but they don't follow lead_3
         # so this message is just ignored
         self.assertNotIn(self.contact_company, new_partner_followers,
                          'The partner was not active on the lead')

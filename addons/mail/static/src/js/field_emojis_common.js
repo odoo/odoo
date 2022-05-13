@@ -62,7 +62,7 @@ var FieldEmojiCommon = {
      * By default, the 'change' event is only triggered when the text element is blurred.
      *
      * We override this method because we want to update the value while
-     * the user is typing his message (and not only on blur).
+     * the user is typing their message (and not only on blur).
      *
      * @override
      * @private
@@ -90,7 +90,7 @@ var FieldEmojiCommon = {
     /**
      * Triggers the 'change' event to refresh the value.
      * This method is debounced to run 2 seconds after typing ends.
-     * (to avoid spamming the server while the user is typing his message)
+     * (to avoid spamming the server while the user is typing their message)
      *
      * @private
      */

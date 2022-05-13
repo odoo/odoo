@@ -43,7 +43,7 @@ class ChatbotScriptStep(models.Model):
 
         The whole conversation history will be saved into the lead's description for reference.
         This also allows having a question of type 'free_input_multi' to let the visitor explain
-        his interest / needs before creating the lead. """
+        their interest / needs before creating the lead. """
 
         customer_values = self._chatbot_prepare_customer_values(
             mail_channel, create_partner=False, update_partner=True)

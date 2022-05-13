@@ -90,7 +90,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
     @users('user_sales_manager_mc')
     def test_lead_mc_company_computation_env_user_restrict(self):
         """ Check that the computed company is allowed (aka in self.env.companies).
-        User is logged in company_main even his default default company is
+        User is logged in company_main even their default default company is
         company_2. """
         LeadUnsyncCids = self.env['crm.lead'].with_context(allowed_company_ids=[self.company_main.id])
         self.assertEqual(LeadUnsyncCids.env.company, self.company_main)

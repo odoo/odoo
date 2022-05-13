@@ -193,7 +193,7 @@ registerModel({
         /**
          * States the counter of this messaging menu. The counter is an integer
          * value to give to the current user an estimate of how many things
-         * (unread threads, notifications, ...) are yet to be processed by him.
+         * (unread threads, notifications, ...) are yet to be processed by them.
          */
         counter: attr({
             compute: '_computeCounter',

@@ -90,7 +90,7 @@ class TestGetMailChannel(TransactionCase):
         self.assertEqual(visitor_info['name'], "Roger")
         self.assertEqual(visitor_info['country'], (20, "Belgium"))
 
-        # ensure visitor info are correct when operator is testing himself
+        # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
         channel_info = self.livechat_channel.with_user(operator)._open_livechat_mail_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=operator.id)
         self.assertEqual(channel_info['operator_pid'], (operator.partner_id.id, "Michel Operator"))

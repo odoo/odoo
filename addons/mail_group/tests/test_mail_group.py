@@ -214,7 +214,7 @@ class TestMailGroup(TestMailListCommon):
         })]})
         self.assertIn(partner, mail_group.member_partner_ids)
 
-        # Now that portal is in the member list he should have access
+        # Now that portal is in the member list they should have access
         mail_group.with_user(self.user_employee_2).check_access_rule('read')
         with self.assertRaises(AccessError, msg='Only moderator / responsible and admin can write on the group'):
             mail_group.with_user(self.user_employee_2).check_access_rule('write')

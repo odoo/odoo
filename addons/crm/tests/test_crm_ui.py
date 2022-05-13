@@ -12,7 +12,7 @@ class TestUi(HttpCase):
         self.start_tour("/web", 'crm_tour', login="admin")
 
     def test_02_crm_tour_rainbowman(self):
-        # we create a new user to make sure he gets the 'Congrats on your first deal!'
+        # we create a new user to make sure they get the 'Congrats on your first deal!'
         # rainbowman message.
         self.env['res.users'].create({
             'name': 'Temporary CRM User',

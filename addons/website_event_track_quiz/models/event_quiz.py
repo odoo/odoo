@@ -62,6 +62,6 @@ class QuizAnswer(models.Model):
     is_correct = fields.Boolean('Correct', default=False)
     comment = fields.Text(
         'Extra Comment', translate=True,
-        help='''This comment will be displayed to the user if he selects this answer, after submitting the quiz.
+        help='''This comment will be displayed to the user if they select this answer, after submitting the quiz.
                 It is used as a small informational text helping to understand why this answer is correct / incorrect.''')
     awarded_points = fields.Integer('Points', default=0)

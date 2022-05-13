@@ -98,7 +98,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
      *   (see _getBackgroundColor for details)
      * - The ticks are bigger and bolded to be able to see them better on a big screen (projector)
      * - We don't use tooltips to keep it as simple as possible
-     * - We don't set a suggestedMin or Max so that Chart will adapt automatically himself based on the given data
+     * - We don't set a suggestedMin or Max so that Chart will adapt automatically based on the given data
      *   The '+1' part is a small trick to avoid the datalabels to be clipped in height
      * - We use a custom 'datalabels' plugin to be able to display the number value on top of the
      *   associated bar of the chart.

@@ -227,7 +227,7 @@ class CRMLeadMiningRequest(models.Model):
     def _perform_request(self):
         """
         This will perform the request and create the corresponding leads.
-        The user will be notified if he hasn't enough credits.
+        The user will be notified if they don't have enough credits.
         """
         self.error_type = False
         server_payload = self._prepare_iap_payload()

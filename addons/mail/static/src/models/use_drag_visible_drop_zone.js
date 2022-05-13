@@ -30,7 +30,7 @@ registerModel({
     recordMethods: {
         /**
          * Shows the dropzone when entering the browser window, to let the user know
-         * where he can drop its file.
+         * where they can drop their file.
          * Avoids changing state when entering inner dropzones.
          *
          * @private

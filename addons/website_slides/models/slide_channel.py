@@ -105,7 +105,7 @@ class ChannelUsersRelation(models.Model):
                 users.add_karma(partner_karma[user.partner_id.id])
 
     def _send_completed_mail(self):
-        """ Send an email to the attendee when he has successfully completed a course. """
+        """ Send an email to the attendee when they have successfully completed a course. """
         template_to_records = dict()
         for record in self:
             template = record.channel_id.completed_template_id
@@ -403,7 +403,7 @@ class Channel(models.Model):
     @api.depends_context('uid')
     def _compute_can_publish(self):
         """ For channels of type 'training', only the responsible (see user_id field) can publish slides.
-        The 'sudo' user needs to be handled because he's the one used for uploads done on the front-end when the
+        The 'sudo' user needs to be handled because they are the one used for uploads done on the front-end when the
         logged in user is not publisher but fulfills the upload_group_ids condition. """
         for record in self:
             if not record.can_upload:
@@ -481,7 +481,7 @@ class Channel(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # Ensure creator is member of its channel it is easier for him to manage it (unless it is odoobot)
+            # Ensure creator is member of its channel it is easier for them to manage it (unless it is odoobot)
             if not vals.get('channel_partner_ids') and not self.env.is_superuser():
                 vals['channel_partner_ids'] = [(0, 0, {
                     'partner_id': self.env.user.partner_id.id
