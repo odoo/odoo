@@ -99,7 +99,7 @@
                 <xpath expr="//tree" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
                     <attribute name="js_class">hr_expense_tree_dashboard_header</attribute>
-                    <attribute name="class">hr_expense</attribute>
+                    <attribute name="class">hr_expense h-auto</attribute>
                 </xpath>
             </field>
         </record>
@@ -231,7 +231,7 @@
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile hr_expense" sample="1" js_class="hr_expense_kanban">
+                <kanban class="o_kanban_mobile hr_expense position-relative h-auto" sample="1" js_class="hr_expense_kanban">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
