@@ -9382,7 +9382,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("multi edition: many2many_tags in many2many field", async function (assert) {
+    QUnit.test("multi edition: many2many_tags in many2many field", async function (assert) {
         assert.expect(5);
 
         for (let i = 4; i <= 10; i++) {
@@ -9408,20 +9408,20 @@ QUnit.module("Views", (hooks) => {
         await click(rows[0], ".o_list_record_selector input");
         await click(rows[1], ".o_list_record_selector input");
         await click(rows[0].querySelector(".o_data_cell"));
+        await selectDropdownItem(target, "m2m", "Search More...");
+        assert.containsOnce(document.body, ".modal", "should have open the modal");
 
-        await selectDropdownItem(target, "m2m", "Search More");
-        assert.containsOnce(document.body, ".modal .o_list_view", "should have open the modal");
-
-        await click(target.querySelector(".modal .o_list_view .o_data_row"));
-
+        await click(target.querySelector(".modal .o_data_row .o_field_cell"));
         assert.containsOnce(
             target,
             ".modal [role='alert']",
             "should have open the confirmation modal"
         );
-        assert.containsN(target, ".modal .o_field_many2manytags .badge", 3);
+        assert.containsN(target, ".modal .o_field_many2many_tags .badge", 3);
         assert.strictEqual(
-            $(".modal .o_field_many2manytags .badge:last").text().trim(),
+            target
+                .querySelector(".modal .o_field_many2many_tags .badge:nth-child(3)")
+                .textContent.trim(),
             "Value 3",
             "should have display_name in badge"
         );
