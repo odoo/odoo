@@ -17,6 +17,17 @@ registerModel({
     },
     recordMethods: {
         /**
+         * The date is set by a compute rather than using a default value. Thus,
+         * the date set at first is the time of the record creation, and not the
+         * time of the model initialization.
+         *
+         * @private
+         * @returns {Date}
+         */
+        _computeDate() {
+            return new Date();
+        },
+        /**
          * @private
          * @returns {integer}
          */
@@ -40,10 +51,11 @@ registerModel({
     },
     fields: {
         /**
-         * A Date object set at the current date, updated at every tick.
+         * A Date object set to the current date at the time the record is
+         * created, then updated at every tick.
          */
         date: attr({
-            default: new Date(),
+            compute: '_computeDate',
         }),
         /**
          * An integer representing the frequency in milliseconds at which `date`
