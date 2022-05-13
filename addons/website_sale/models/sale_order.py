@@ -157,7 +157,21 @@ class SaleOrder(models.Model):
 
         if not product:
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
-        product.sudo(False).with_context(allowed_company_ids=self.env.user.company_ids.ids).product_tmpl_id.check_access_rule('read')
+        # We have to check that the user has access to the product without sudo before doing anything else
+        # However you might come in a situation where a product is limited to the company of the website
+        # and an user from another company wants to buy something from you.
+        # In that case we have to temporarily give access to the website's company/ies to the user.
+        # Essentially multi company rules should be evaluated with the website's rule while any other
+        # rule should use the user as base.
+        original_company_ids = None
+        if self.env.context.get('allowed_company_ids'):
+            companies = self.env['res.company'].sudo().browse(self.env.context.get('allowed_company_ids'))
+            user_sudo = self.env.user.sudo()
+            original_company_ids = user_sudo.company_ids
+            self.env.user.sudo().company_ids = companies + original_company_ids
+        product.sudo(False).product_tmpl_id.check_access_rule('read')
+        if original_company_ids:
+            self.env.user.sudo().company_ids = original_company_ids
 
         try:
             if add_qty:
