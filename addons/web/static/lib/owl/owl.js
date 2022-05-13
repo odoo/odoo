@@ -1599,7 +1599,7 @@
             return reactive(originalTarget, callback);
         }
         if (!reactiveCache.has(target)) {
-            reactiveCache.set(target, new Map());
+            reactiveCache.set(target, new WeakMap());
         }
         const reactivesForTarget = reactiveCache.get(target);
         if (!reactivesForTarget.has(callback)) {
