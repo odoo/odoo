@@ -6,6 +6,9 @@ import { _t } from 'web.core';
 
 const KnowledgeArticleLinkModal = Dialog.extend({
     template: 'knowledge.wysiwyg_article_link_modal',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/knowledge/static/src/xml/knowledge_editor.xml']
+    ),
     /**
      * @override
      * @param {Widget} parent
