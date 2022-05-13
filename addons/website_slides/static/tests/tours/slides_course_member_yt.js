@@ -23,10 +23,10 @@ FullScreen.include({
  * Global use case:
  * an user (either employee, website publisher or portal) joins a public
     course;
- * he has access to the full course content when he's a member of the
+ * they have access to the full course content when they are a member of the
     course;
- * he uses fullscreen player to complete the course;
- * he rates the course;
+ * they use fullscreen player to complete the course;
+ * they rate the course;
  */
 tour.register('course_member_youtube', {
     url: '/slides',

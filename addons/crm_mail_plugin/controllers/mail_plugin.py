@@ -53,7 +53,7 @@ class MailPluginController(mail_plugin.MailPluginController):
 
     def _get_contact_data(self, partner):
         """
-        Return the leads key only if the current user can create leads. So, if he can not
+        Return the leads key only if the current user can create leads. So, if they can not
         create leads, the section won't be visible on the addin side (like if the CRM
         module was not installed on the database).
         """

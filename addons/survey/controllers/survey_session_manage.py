@@ -84,8 +84,8 @@ class UserInputSession(http.Controller):
         Frontend should take the delay into account by displaying the appropriate animations.
 
         Writing the next question on the survey is sudo'ed to avoid potential access right issues.
-        e.g: a survey user can create a live session from any survey but he can only write
-        on its own survey.
+        e.g: a survey user can create a live session from any survey but they can only write
+        on their own survey.
 
         In addition to return a pre-rendered html template with the next question, we also return the background
         to display. Background image depends on the next question to display and cannot be extracted from the

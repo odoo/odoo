@@ -32,7 +32,7 @@ class Authenticate(http.Controller):
     def auth_confirm(self, scope, friendlyname, redirect, info=None, do=None, **kw):
         """
         Called by the `app_auth` template. If the user decided to allow the app to access Odoo, a temporary auth code
-        is generated and he is redirected to `redirect` with this code in the URL. It should redirect to the app, and
+        is generated and they are redirected to `redirect` with this code in the URL. It should redirect to the app, and
         the app should then exchange this auth code for an access token by calling
         `/mail_client/auth/access_token`.
 

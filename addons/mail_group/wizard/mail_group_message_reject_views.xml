@@ -9,7 +9,7 @@
                     Reject the message<span attrs="{'invisible': [('send_email', '=', False)]}"> and send an email to the author (<field name="email_from_normalized"/>)</span>.
                 </div>
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': [('action', '!=', 'ban')]}">
-                    Ban the author of the message (<field name="email_from_normalized"/>) <span attrs="{'invisible': [('send_email', '=', False)]}">and send him an email</span>.
+                    Ban the author of the message (<field name="email_from_normalized"/>) <span attrs="{'invisible': [('send_email', '=', False)]}">and send them an email</span>.
                 </div>
                 <group>
                     <field name="send_email" invisible="1"/>

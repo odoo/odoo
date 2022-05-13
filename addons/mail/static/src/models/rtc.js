@@ -1231,7 +1231,7 @@ registerModel({
             inverse: 'rtcAsConnectedSession',
         }),
         /**
-         * String, peerToken of the current session used to identify him during the peer-to-peer transactions.
+         * String, peerToken of the current session used to identify them during the peer-to-peer transactions.
          */
         currentRtcSession: one('RtcSession', {
             inverse: 'rtcAsCurrentSession',

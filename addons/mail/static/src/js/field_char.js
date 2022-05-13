@@ -45,7 +45,7 @@ FieldChar.include({
     /**
      * Triggers the 'change' event to refresh the value.
      * This method is debounced to run 2 seconds after typing ends.
-     * (to avoid spamming the server while the user is typing his message)
+     * (to avoid spamming the server while the user is typing their message)
      *
      * @private
      */

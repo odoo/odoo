@@ -19,7 +19,7 @@ class MailPluginController(mail_plugin.MailPluginController):
         This is structured this way to enable the "project" feature on the Outlook side only if the Odoo version
         supports it.
 
-        Return the tasks key only if the current user can create tasks. So, if he can not
+        Return the tasks key only if the current user can create tasks. So, if they can not
         create tasks, the section won't be visible on the addin side (like if the project
         module was not installed on the database).
         """

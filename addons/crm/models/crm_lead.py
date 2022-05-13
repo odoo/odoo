@@ -1892,7 +1892,7 @@ class Lead(models.Model):
     # Each won/lost lead increments a frequency table, where we store, for each field/value couple, the number of
     # won and lost leads.
     #   E.g. : A won lead from Belgium will increase the won count of the frequency country_id='Belgium' by 1.
-    # The frequencies are split by team_id, so each team has his own frequencies environment. (Team A doesn't impact B)
+    # The frequencies are split by team_id, so each team has its own frequencies environment. (Team A doesn't impact B)
     # There are two main ways to build the frequency table:
     #   - Live Increment: At each Won/lost, we increment directly the frequencies based on the lead values.
     #       Done right BEFORE writing the lead as won or lost.
@@ -1980,7 +1980,7 @@ class Lead(models.Model):
             field = frequency['variable']
             value = frequency['value']
 
-            # To avoid that a tag take to much importance if his subset is too small,
+            # To avoid that a tag take too much importance if its subset is too small,
             # we ignore the tag frequencies if we have less than 50 won or lost for this tag.
             if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 50:
                 continue
@@ -2066,7 +2066,7 @@ class Lead(models.Model):
         final state of the lead.
         This issue is when the lead leaves a closed state because once the new values have been writen, we do not know
         what was the previous state that we need to decrement.
-        This is why 'is_won' and 'decrement' parameters are used to describe the from / to change of his state.
+        This is why 'is_won' and 'decrement' parameters are used to describe the from / to change of its state.
         """
         new_frequencies_by_team, existing_frequencies_by_team = self._pls_prepare_update_frequency_table(target_state=from_state or to_state)
 

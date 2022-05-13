@@ -248,7 +248,7 @@ class Channel(models.Model):
             membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
 
             # always add current user to new channel to have right values for
-            # is_pinned + ensure he has rights to see channel
+            # is_pinned + ensure they have rights to see channel
             partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
             vals['channel_last_seen_partner_ids'] = membership_ids_cmd + [
                 (0, 0, {'partner_id': pid})
@@ -659,7 +659,7 @@ class Channel(models.Model):
 
     def _message_post_after_hook(self, message, msg_vals):
         """
-        Automatically set the message posted by the current user as seen for himself.
+        Automatically set the message posted by the current user as seen for themselves.
         """
         self._set_last_seen_message(message)
         return super()._message_post_after_hook(message=message, msg_vals=msg_vals)
@@ -940,7 +940,7 @@ class Channel(models.Model):
 
     def channel_fold(self, state=None):
         """ Update the fold_state of the given session. In order to syncronize web browser
-            tabs, the change will be broadcast to himself (the current user channel).
+            tabs, the change will be broadcast to themselves (the current user channel).
             Note: the user need to be logged
             :param state : the new status of the session for the current user.
         """
@@ -1252,7 +1252,7 @@ class Channel(models.Model):
 
     def _execute_command_help_message_extra(self):
         msg = _("""<br><br>
-            Type <b>@username</b> to mention someone, and grab his attention.<br>
+            Type <b>@username</b> to mention someone, and grab their attention.<br>
             Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br>""")
         return msg

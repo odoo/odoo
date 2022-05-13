@@ -61,7 +61,7 @@ class TestLivechatLead(TestCrmCommon):
         self.assertEqual(lead.name, 'TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
-        # public + someone else: no customer (as he was anonymous)
+        # public + someone else: no customer (as they were anonymous)
         channel.write({
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })

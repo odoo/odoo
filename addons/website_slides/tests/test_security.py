@@ -292,7 +292,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_manager.can_upload)
         self.assertTrue(channel_manager.can_publish)
 
-        # superuser should always be able to publish even if he's not the responsible
+        # superuser should always be able to publish even if they are not the responsible
         channel_superuser = self.channel.sudo()
         channel_superuser.invalidate_cache(['can_upload', 'can_publish'])
         self.assertTrue(channel_superuser.can_upload)

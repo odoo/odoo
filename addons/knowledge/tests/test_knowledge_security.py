@@ -173,7 +173,7 @@ class TestKnowledgeSecurity(KnowledgeArticlePermissionsCase):
             self.article_roots.article_member_ids,
             'Members: employee should memberships of visible '
         )
-        # remove employee from Shared root, check he cannot read those members
+        # remove employee from Shared root, check they cannot read those members
         self.article_roots[2].article_member_ids.filtered(lambda m: m.partner_id == self.partner_employee).unlink()
         my_members = self.env['knowledge.article.member'].search([('article_id', 'in', self.article_roots.ids)])
         self.assertEqual(len(my_members), 2)

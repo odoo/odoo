@@ -604,7 +604,7 @@ class TestMailgateway(TestMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_create_uid_crash(self):
         def _employee_crash(*args, **kwargs):
-            """ If employee is test employee, consider he has no access on document """
+            """ If employee is test employee, consider they have no access on document """
             recordset = args[0]
             if recordset.env.uid == self.user_employee.id and not recordset.env.su:
                 if kwargs.get('raise_exception', True):

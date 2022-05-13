@@ -798,7 +798,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
     );
 });
 
-QUnit.test('chat with author should be opened after clicking on his avatar', async function (assert) {
+QUnit.test('chat with author should be opened after clicking on their avatar', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -830,11 +830,11 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
     assert.strictEqual(
         document.querySelector('.o_ChatWindow_thread').dataset.correspondentId,
         message.author.id.toString(),
-        "chat with author should be opened after clicking on his avatar"
+        "chat with author should be opened after clicking on their avatar"
     );
 });
 
-QUnit.test('chat with author should be opened after clicking on his im status icon', async function (assert) {
+QUnit.test('chat with author should be opened after clicking on their im status icon', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -866,7 +866,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
     assert.strictEqual(
         document.querySelector('.o_ChatWindow_thread').dataset.correspondentId,
         message.author.id.toString(),
-        "chat with author should be opened after clicking on his im status icon"
+        "chat with author should be opened after clicking on their im status icon"
     );
 });
 
