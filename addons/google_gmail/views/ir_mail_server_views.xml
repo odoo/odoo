@@ -6,17 +6,30 @@
         <field name="inherit_id" ref="base.ir_mail_server_form"/>
         <field name="arch" type="xml">
             <field name="smtp_user" position="after">
-                <field string="Authorization Code" name="google_gmail_authorization_code" password="True"
-                    attrs="{'required': [('smtp_authentication', '=', 'gmail')], 'invisible': [('smtp_authentication', '!=', 'gmail')]}"/>
-                <field name="google_gmail_uri"
-                    class="fa fa-arrow-right oe_edit_only"
-                    widget="url"
-                    text=" Get an Authorization Code"
-                    attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '=', False)]}"
-                    nolabel="1"/>
-                <div class="alert alert-warning" role="alert"
-                    attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
-                    Setup your Gmail API credentials to link a Gmail account.
+                <field name="google_gmail_uri" invisible="1"/>
+                <field name="google_gmail_refresh_token" invisible="1"/>
+                <div></div>
+                <div attrs="{'invisible': [('smtp_authentication', '!=', 'gmail')]}">
+                    <span attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}"
+                        class="badge badge-success">
+                        Gmail Token Valid
+                    </span>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0"
+                        attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '!=', False)]}">
+                        <i class="fa fa-arrow-right"/>
+                        Connect your Gmail account
+                    </button>
+                    <button type="object"
+                        name="open_google_gmail_uri" class="btn-link px-0"
+                        attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}">
+                        <i class="fa fa-cog"/>
+                        Edit Settings
+                    </button>
+                    <div class="alert alert-warning" role="alert"
+                        attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
+                        Setup your Gmail API credentials in the general settings to link a Gmail account.
+                    </div>
                 </div>
             </field>
             <field name="smtp_user" position="attributes">
