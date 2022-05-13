@@ -140,7 +140,7 @@ class Sanitize {
                 node.remove();
                 fillEmpty(pnode);
                 this._parse(next);
-                restoreCursor(new Map([[node, pnode]]));
+                restoreCursor({ replace: new Map([[node, pnode]]) });
                 return;
             }
         }

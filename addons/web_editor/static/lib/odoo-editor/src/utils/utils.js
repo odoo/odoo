@@ -619,6 +619,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     // Target the deepest descendant of the range nodes.
     [start, startOffset] = getDeepestPosition(start, startOffset);
     [end, endOffset] = getDeepestPosition(end, endOffset);
+    const isCollapsed = start === end && startOffset === endOffset;
 
     // Split text nodes if that was requested.
     if (splitText) {
@@ -655,6 +656,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     if (
         correctTripleClick &&
         !endOffset &&
+        !isCollapsed &&
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
     ) {
         const previous = previousLeaf(end, editable, true);
@@ -747,11 +749,11 @@ export function getCursors(document) {
 export function preserveCursor(document) {
     const sel = document.getSelection();
     const cursorPos = [sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset];
-    return replace => {
+    return ({replace, normalize} = {}) => {
         replace = replace || new Map();
         cursorPos[0] = replace.get(cursorPos[0]) || cursorPos[0];
         cursorPos[2] = replace.get(cursorPos[2]) || cursorPos[2];
-        setSelection(...cursorPos);
+        setSelection(...cursorPos, normalize);
     };
 }
 
