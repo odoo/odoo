@@ -688,7 +688,7 @@ class Users(models.Model):
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-                with self._assert_can_auth():
+                with self._assert_can_auth(user=login):
                     user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                     if not user:
                         raise AccessDenied()
@@ -745,7 +745,7 @@ class Users(models.Model):
 
         with contextlib.closing(cls.pool.cursor()) as cr:
             self = api.Environment(cr, uid, {})[cls._name]
-            with self._assert_can_auth():
+            with self._assert_can_auth(user=uid):
                 if not self.env.user.active:
                     raise AccessDenied()
                 self._check_credentials(passwd, {'interactive': False})
@@ -940,7 +940,7 @@ class Users(models.Model):
         )
 
     @contextlib.contextmanager
-    def _assert_can_auth(self):
+    def _assert_can_auth(self, user=None):
         """ Checks that the current environment even allows the current auth
         request to happen.
 
@@ -948,6 +948,8 @@ class Users(models.Model):
         a number of failures trying to log-in, the user (by login) is put on
         cooldown. During the cooldown period, login *attempts* are ignored
         and logged.
+
+        :param user: user id or login, for logging purpose
 
         .. warning::
 
@@ -979,13 +981,13 @@ class Users(models.Model):
         (failures, previous) = failures_map[source]
         if self._on_login_cooldown(failures, previous):
             _logger.warning(
-                "Login attempt ignored for %s on %s: "
+                "Login attempt ignored for %s (user %r) on %s: "
                 "%d failures since last success, last failure at %s. "
                 "You can configure the number of login failures before a "
                 "user is put on cooldown as well as the duration in the "
                 "System Parameters. Disable this feature by setting "
                 "\"base.login_cooldown_after\" to 0.",
-                source, self.env.cr.dbname, failures, previous)
+                source, user or "?", self.env.cr.dbname, failures, previous)
             if ipaddress.ip_address(source).is_private:
                 _logger.warning(
                     "The rate-limited IP address %s is classified as private "
