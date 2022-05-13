@@ -164,7 +164,7 @@ class SaleOrder(models.Model):
         # Essentially multi company rules should be evaluated with the website's rule while any other
         # rule should use the user as base.
         original_company_ids = None
-        if self.env.context.get('allowed_company_ids'):
+        if not self.env.user._is_public() and self.env.context.get('allowed_company_ids'):
             companies = self.env['res.company'].sudo().browse(self.env.context.get('allowed_company_ids'))
             user_sudo = self.env.user.sudo()
             original_company_ids = user_sudo.company_ids
