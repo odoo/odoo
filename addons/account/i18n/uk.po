@@ -7825,6 +7825,13 @@ msgid "Journal Entry Date"
 msgstr "Дата запису журналу"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Journal Entry Info"
+msgstr "Інформація запису журналу"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
@@ -7945,6 +7952,13 @@ msgstr "Журнал, де розміщений відкритий запис б
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
 msgstr "Журнал для створення запису."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Journal:"
+msgstr "Журнал:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -16702,6 +16716,14 @@ msgstr "напр. INV"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"for this customer. You can allocate them to mark this credit note as paid."
+msgstr ""
+"для цього клієнта. Ви можете призначити їх, щоб позначити це сторно як "
+"оплачене."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
 "для цього покупця. Ви можете розділити їх, щоби позначити цей рахунок як "
@@ -16713,6 +16735,14 @@ msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
 "для цього постачальника. Ви можете виділити їх, щоб позначити цей рахунок як"
 " оплачений"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"for this vendor. You can allocate them to mark this credit note as paid."
+msgstr ""
+"для цього постачальника. Ви можете призначити їх, щоб позначити це сторно як"
+" оплачене."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16794,13 +16824,13 @@ msgstr "на"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "outstanding debits"
-msgstr "залишкові дебети"
+msgid "outstanding credits"
+msgstr "залишкові кредити"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "outstanding payments"
-msgstr "залишкові платежі"
+msgid "outstanding debits"
+msgstr "залишкові дебети"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
