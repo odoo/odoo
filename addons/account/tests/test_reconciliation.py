@@ -503,9 +503,11 @@ class TestReconciliationExec(TestReconciliation):
             credit_line_vals['amount_currency'] = -debit_line_vals['amount_currency']
             vals = {
                 'journal_id': self.bank_journal_euro.id,
-                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+                'line_ids': [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
             }
-            return self.env['account.move'].create(vals).id
+            move = self.env['account.move'].create(vals)
+            move.action_post()
+            return move.id
         move_list_vals = [
             ('1', -1.83, 0, self.currency_swiss_id),
             ('2', 728.35, 795.05, self.currency_swiss_id),
@@ -587,7 +589,7 @@ class TestReconciliationExec(TestReconciliation):
                 'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
             }
         move_ids += self.env['account.move'].create(vals)
-
+        move_ids.action_post()
         account_move_line = move_ids.mapped('line_ids').filtered(lambda l: l.account_id == self.account_rcv)
         writeoff_vals = [{
                 'account_id': self.account_rcv.id,

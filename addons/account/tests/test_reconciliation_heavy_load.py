@@ -73,7 +73,7 @@ class TestReconciliationHeavyLoad(AccountingTestCase):
         line_ids.append((0, False, values))
 
         move.write({'line_ids': line_ids})
-
+        move.action_post()
         move.line_ids.reconcile()
 
         self.assertTrue(all(move.line_ids.mapped('reconciled')))

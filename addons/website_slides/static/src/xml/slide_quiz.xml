@@ -60,7 +60,7 @@
                 </div>
                 <div>
                     <a t-att-href="'/web/login?redirect=' + widget.redirectURL" class="btn btn-primary font-weight-bold text-uppercase">Sign in</a>
-                    <span t-if="widget.channel.signupAllowed" class="d-block mt-2">Don't have an account ? <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.url">Sign Up !</a></span>
+                    <span t-if="widget.channel.signupAllowed" class="d-block mt-2">Don't have an account ? <a class="font-weight-bold" t-att-href="'/web/signup?redirect=' + widget.redirectURL">Sign Up !</a></span>
                 </div>
             </div>
             <div t-if="widget.readonly &amp;&amp; widget.channel.channelEnroll == 'invite'" class="alert alert-info">
