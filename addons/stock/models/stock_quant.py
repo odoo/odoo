@@ -188,6 +188,8 @@ class StockQuant(models.Model):
             package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
             owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
             quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+            if lot_id:
+                quant = quant.filtered(lambda q: q.lot_id)
 
             if quant:
                 quant = quant[0].sudo()
@@ -451,19 +453,19 @@ class StockQuant(models.Model):
         domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
-                domain = expression.AND([[('lot_id', '=', lot_id.id)], domain])
+                domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)], domain])
             if package_id:
                 domain = expression.AND([[('package_id', '=', package_id.id)], domain])
             if owner_id:
                 domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
             domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
         else:
-            domain = expression.AND([[('lot_id', '=', lot_id and lot_id.id or False)], domain])
+            domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)] if lot_id else [('lot_id', '=', False)], domain])
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
-        return self.search(domain, order=removal_strategy_order)
+        return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -611,6 +613,8 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id and quantity > 0:
+            quants = quants.filtered(lambda q: q.lot_id)
 
         if location_id.should_bypass_reservation():
             incoming_dates = []
@@ -629,7 +633,7 @@ class StockQuant(models.Model):
         quant = None
         if quants:
             # see _acquire_one_job for explanations
-            self._cr.execute("SELECT id FROM stock_quant WHERE id IN %s LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", [tuple(quants.ids)])
+            self._cr.execute("SELECT id FROM stock_quant WHERE id IN %s ORDER BY lot_id LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", [tuple(quants.ids)])
             stock_quant_result = self._cr.fetchone()
             if stock_quant_result:
                 quant = self.browse(stock_quant_result[0])
@@ -671,7 +675,7 @@ class StockQuant(models.Model):
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
             # if we want to reserve
-            available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+            available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
                 raise UserError(_('It is not possible to reserve more products of %s than you have in stock.', product_id.display_name))
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
