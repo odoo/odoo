@@ -3,6 +3,16 @@
     <menuitem id="account_reports_do_statements_menu" name="Dominican Republic" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
 
     <!-- Chart of Accounts Template -->
+    <record id="do_chart_template_common" model="account.chart.template">
+        <field name="name">Catálogo de Cuentas Común Dominicano</field>
+        <field name="code_digits">8</field>
+        <field name="cash_account_code_prefix">110101</field>
+        <field name="bank_account_code_prefix">110102</field>
+        <field name="transfer_account_code_prefix">11010100</field>
+        <field name="currency_id" ref="base.DOP"/>
+        <field name="visible" eval="0"/>
+    </record>
+
     <record id="do_chart_template" model="account.chart.template">
         <field name="name">Catálogo de Cuentas Dominicano (NIIF)</field>
         <field name="code_digits">8</field>
@@ -10,5 +20,16 @@
         <field name="bank_account_code_prefix">110102</field>
         <field name="transfer_account_code_prefix">11010100</field>
         <field name="currency_id" ref="base.DOP"/>
+        <field name="parent_id" ref="do_chart_template_common"/>
+    </record>
+
+    <record id="do_chart_template_gubernamental" model="account.chart.template">
+        <field name="name">Localización Gubernamental Dominicana</field>
+        <field name="code_digits">12</field>
+        <field name="cash_account_code_prefix">110101</field>
+        <field name="bank_account_code_prefix">110102</field>
+        <field name="transfer_account_code_prefix">11010100</field>
+        <field name="currency_id" ref="base.DOP"/>
+        <field name="parent_id" ref="do_chart_template_common"/>
     </record>
 </odoo>
