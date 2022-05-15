@@ -1,23 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-#
+# 
 # Translators:
-# Martin Trigaux, 2021
+# ba566f9f7abd166f8f1f032649ec3e69, 2017
+# Wolfgang Taferner, 2017
+# Katharina Moritz <kmo@e2f.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2020
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:29+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_account
@@ -36,13 +44,21 @@ msgstr "Analytischer Buchungssatz"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
-msgid "Analytic account in which cost and revenue entries will take        place for financial management of the manufacturing order."
-msgstr "Analytisches Konto, auf dem die Kosten- und Erlösbuchungen für das Finanzmanagement des Produktionsauftrags erfolgen."
+msgid ""
+"Analytic account in which cost and revenue entries will take        place "
+"for financial management of the manufacturing order."
+msgstr ""
+"Analytisches Konto, auf dem die Kosten- und Erlösbuchungen für das "
+"Finanzmanagement des Produktionsauftrags erfolgen."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
-msgid "Analytic account in which cost and revenue entries will take place for financial management of the manufacturing order."
-msgstr "Analytisches Konto, auf dem die Kosten- und Erlösbuchungen für das Finanzmanagement des Produktionsauftrags erfolgen."
+msgid ""
+"Analytic account in which cost and revenue entries will take place for "
+"financial management of the manufacturing order."
+msgstr ""
+"Analytisches Konto, auf dem die Kosten- und Erlösbuchungen für das "
+"Finanzmanagement des Produktionsauftrags erfolgen."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
@@ -78,8 +94,12 @@ msgstr "Berechnung des Preises aus Stückliste"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
-msgid "Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
-msgstr "Berechnung des Produktpreises mittels Produkten und Vorgängen der entsprechenden Stücklisten, nur für Fertigungsprodukte."
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+"Berechnung des Produktpreises mittels Produkten und Vorgängen der "
+"entsprechenden Stücklisten, nur für Fertigungsprodukte."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
@@ -98,8 +118,12 @@ msgstr "Mehrkosten pro produzierter Einheit"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
-msgid "Fill this only if you want automatic analytic accounting entries on production orders."
-msgstr "Nur ausfüllen, wenn Sie automatische Kostenbuchungen für Fertigungsaufträge erzeugen möchten."
+msgid ""
+"Fill this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr ""
+"Nur ausfüllen, wenn Sie automatische Kostenbuchungen für Fertigungsaufträge "
+"erzeugen möchten."
 
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
@@ -154,8 +178,16 @@ msgstr "Lagerregel"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
-msgid "Technical field automatically checked when a ongoing production posts journal entries for its costs. This way, we can record one production's cost multiple times and only consider new entries in the work centers time lines."
-msgstr "Das technische Feld wird automatisch überprüft, wenn eine laufende Produktion Buchungen für dessen Kosten quittiert. Auf diese Weise können wir die Kosten einer Produktion mehrfach aufzeichnen und nur neue Buchungen in den Zeitplänen der Arbeitsplätze berücksichtigen."
+msgid ""
+"Technical field automatically checked when a ongoing production posts "
+"journal entries for its costs. This way, we can record one production's cost"
+" multiple times and only consider new entries in the work centers time "
+"lines."
+msgstr ""
+"Das technische Feld wird automatisch überprüft, wenn eine laufende "
+"Produktion Buchungen für dessen Kosten quittiert. Auf diese Weise können wir"
+" die Kosten einer Produktion mehrfach aufzeichnen und nur neue Buchungen in "
+"den Zeitplänen der Arbeitsplätze berücksichtigen."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
@@ -196,11 +228,11 @@ msgstr "Work-Center"
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
-msgstr ""
+msgstr "[Raw] %s"
 
 #. module: mrp_account
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format
 msgid "[WC] %s"
-msgstr ""
+msgstr "[WC] %s"
