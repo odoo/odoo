@@ -1600,7 +1600,8 @@ class AccountMove(models.Model):
                     'move_id': line.move_id.id,
                     'position': move.currency_id.position,
                     'digits': [69, move.currency_id.decimal_places],
-                    'payment_date': fields.Date.to_string(line.date),
+                    'date': fields.Date.to_string(line.date),
+                    'account_payment_id': line.payment_id.id,
                 })
 
             if not payments_widget_vals['content']:
@@ -3321,6 +3322,7 @@ class AccountMove(models.Model):
             move.has_reconciled_entries = len(move.line_ids._reconciled_lines()) > 1
 
     def action_view_reverse_entry(self):
+        # DEPRECATED: REMOVED IN MASTER
         self.ensure_one()
 
         # Create action.
@@ -4025,6 +4027,7 @@ class AccountMoveLine(models.Model):
                 if tax.price_include:
                     amount_currency += tax_res['amount']
 
+        tax_included_division_is_zero = any(tax.price_include and tax.amount == 100 and tax.amount_type == 'division' for tax in taxes) and amount_currency == 0
         discount_factor = 1 - (discount / 100.0)
         if amount_currency and discount_factor:
             # discount != 100%
@@ -4039,8 +4042,9 @@ class AccountMoveLine(models.Model):
                 'discount': 0.0,
                 'price_unit': amount_currency / (quantity or 1.0),
             }
-        elif not discount_factor:
-            # balance of line is 0, but discount  == 100% so we display the normal unit_price
+        elif not discount_factor or tax_included_division_is_zero:
+            # balance of line is 0, but discount == 100% or taxes (price included) == 100%,
+            # so we display the normal unit_price
             vals = {}
         else:
             # balance is 0, so unit price is 0 as well

@@ -195,6 +195,7 @@ export class OdooEditor extends EventTarget {
                 toSanitize: true,
                 isRootEditable: true,
                 placeholder: false,
+                showEmptyElementHint: true,
                 defaultLinkAttributes: {},
                 plugins: [],
                 getContentEditableAreas: () => [],
@@ -2279,14 +2280,17 @@ export class OdooEditor extends EventTarget {
             this._lastBeforeInputType === 'insertParagraph';
         if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
             if (ev.inputType === 'deleteContentBackward') {
+                this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oDeleteBackward');
             } else if (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) {
+                this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oDeleteForward');
             } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
+                this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
@@ -2348,6 +2352,7 @@ export class OdooEditor extends EventTarget {
                 this.sanitize();
                 this.historyStep();
             } else if (ev.inputType === 'insertLineBreak') {
+                this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
                 this._applyCommand('oShiftEnter');
@@ -2355,6 +2360,8 @@ export class OdooEditor extends EventTarget {
                 this.sanitize();
                 this.historyStep();
             }
+        } else if (ev.inputType === 'insertCompositionText') {
+            this._fromCompositionText = true;
         }
     }
 
@@ -2510,6 +2517,17 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
+     * @private
+     */
+    _compositionStep() {
+        if (this._fromCompositionText) {
+            this._fromCompositionText = false;
+            this.sanitize();
+            this.historyStep();
+        }
+    }
+
+    /**
      * Returns true if the current selection content is only one ZWS
      *
      * @private
@@ -2631,10 +2649,12 @@ export class OdooEditor extends EventTarget {
             }
         }
 
-        for (const [selector, text] of Object.entries(selectors)) {
-            for (const el of this.editable.querySelectorAll(selector)) {
-                if (!this.options.isHintBlacklisted(el)) {
-                    this._makeHint(el, text);
+        if (this.options.showEmptyElementHint) {
+            for (const [selector, text] of Object.entries(selectors)) {
+                for (const el of this.editable.querySelectorAll(selector)) {
+                    if (!this.options.isHintBlacklisted(el)) {
+                        this._makeHint(el, text);
+                    }
                 }
             }
         }

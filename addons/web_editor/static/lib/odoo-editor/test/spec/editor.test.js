@@ -1356,6 +1356,33 @@ X[]
                         contentAfter: `<div>[]def</div>`,
                     });
                 });
+                it('should remove contenteditable="false" at the beggining of a P', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div contenteditable="false">def</div><p>[]ghi</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<p>abc</p><p>[]ghi</p>`,
+                    });
+                });
+                it('should remove a fontawesome', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><span class="fa"></span><p>[]def</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<p>abc</p><p>[]def</p>`,
+                    });
+                });
+                it('should remove a media element', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>abc</p><div class="o_image"></div><p>[]def</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<p>abc</p><p>[]def</p>`,
+                    });
+                });
             });
             describe('Line breaks', () => {
                 describe('Single', () => {
