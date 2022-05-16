@@ -45,8 +45,16 @@ registerModel({
          * Handles OWL update on the discuss component.
          */
         onComponentUpdate() {
-            if (this.discuss.thread) {
-                this.component.trigger('o-push-state-action-manager');
+            if (this.discuss.thread && this.actionManager) {
+                if (this.lastPushStateActiveThread !== this.discuss.thread) {
+                    this.actionManager.do_push_state({
+                        action: this.actionId,
+                        active_id: this.discuss.activeId,
+                    });
+                    this.update({
+                        lastPushStateActiveThread: replace(this.discuss.thread),
+                    });
+                }
             }
             if (
                 this.discuss.thread &&
@@ -143,7 +151,16 @@ registerModel({
         },
     },
     fields: {
-        component: attr(),
+        /**
+         * Used to push state when changing active thread.
+         * The id of the action which opened discuss.
+         */
+        actionId: attr(),
+        /**
+         * Used to push state when changing active thread.
+         * The actionManager passed to the discuss widget.
+         */
+        actionManager: attr(),
         discuss: one('Discuss', {
             inverse: 'discussView',
             readonly: true,
@@ -159,6 +176,7 @@ registerModel({
             inverse: 'discussViewOwnerAsInbox',
             isCausal: true,
         }),
+        lastPushStateActiveThread: one('Thread'),
         /**
          * Useful to display rainbow man on inbox.
          */

@@ -557,7 +557,7 @@ function getCreateThreadViewComponent({ afterEvent, env, target }) {
 
 function getOpenDiscuss({ afterNextRender, discuss, selector, widget }) {
     return async function openDiscuss() {
-        DiscussWidget.prototype._pushStateActionManager = () => {};
+        widget.do_push_state = () => {};
         const discussWidget = new DiscussWidget(widget, discuss);
         await discussWidget.appendTo($(selector));
         await afterNextRender(() => discussWidget.on_attach_callback());
