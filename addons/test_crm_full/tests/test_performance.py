@@ -42,7 +42,7 @@ class TestCrmPerformance(CrmPerformanceCase):
         country_be = self.env.ref('base.be')
         lang_be_id = self.env['res.lang']._lang_get_id('fr_BE')
 
-        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=244):  # 236, sometimes +6
+        with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=245):  # 236, sometimes +6
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             crm_values = [
                 {'country_id': country_be.id,
