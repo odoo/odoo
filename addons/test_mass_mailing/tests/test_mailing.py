@@ -277,6 +277,46 @@ class TestMassMailing(TestMassMailCommon):
         self.assertEqual(mailing.canceled, 3)
 
     @users('user_marketing')
+    def test_mailing_w_seenlist_unstored_partner(self):
+        """ Test seen list when partners are not stored. """
+        test_customers = self.env['res.partner'].sudo().create([
+            {'email': f'"Mailing Partner {idx}" <email.from.{idx}@test.example.com',
+             'name': f'Mailing Partner {idx}',
+            } for idx in range(8)
+        ])
+        test_records = self.env['mailing.test.partner.unstored'].create([
+            {'email_from': f'email.from.{idx}@test.example.com',
+             'name': f'Mailing Record {idx}',
+            } for idx in range(10)
+        ])
+        self.assertEqual(test_records[:8].partner_id, test_customers)
+        self.assertFalse(test_records[9:].partner_id)
+
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>Marketing stuff for ${object.name}</p>',
+            'mailing_domain': [('id', 'in', test_records.ids)],
+            'mailing_model_id': self.env['ir.model']._get_id('mailing.test.partner.unstored'),
+            'name': 'test',
+            'subject': 'Blacklisted',
+        })
+
+        # create existing traces to check the seen list
+        traces = self._create_sent_traces(
+            mailing,
+            test_records[:3]
+        )
+        traces.flush()
+
+        # check remaining recipients effectively check seen list
+        mailing.action_put_in_queue()
+        res_ids = mailing._get_remaining_recipients()
+        self.assertEqual(sorted(res_ids), sorted(test_records[3:].ids))
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing.action_send_mail()
+        self.assertEqual(len(self._mails), 7, 'Mailing: seen list should contain 3 existing traces')
+
+    @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_mailing_list_optout(self):
         """ Test mailing list model specific optout behavior """
