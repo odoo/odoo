@@ -4062,9 +4062,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(modal, ".o_data_row", "should display 1 record in the second page");
     });
 
-    QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
-        assert.expect(12);
-
+    QUnit.test("focus when closing many2one modal in many2one modal", async function (assert) {
         serverData.views = {
             "partner,false,form": `
                 <form>
@@ -4094,40 +4092,37 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
         await click(target, ".o_external_button");
 
-        let $originalModal = target.querySelector(".modal");
-        let $focusedModal = target.querySelector(".modal:not(.o_inactive_modal)");
+        const originalModal = target.querySelector(".modal");
 
-        assert.containsOnce(target, ".modal", "There should be one modal");
-        assert.strictEqual($focusedModal, $originalModal, "Modal is focused");
-        assert.hasClass(target, "modal-open", "Modal is said opened");
+        assert.containsOnce(target, ".modal");
+        assert.doesNotHaveClass(originalModal, "o_inactive_modal");
+        assert.hasClass(document.body, "modal-open");
 
         // Open many2one modal of field in many2one modal
-        await click($originalModal, ".o_external_button");
+        await click(originalModal, ".o_external_button");
 
         let nextModal = target.querySelectorAll(".modal")[1];
-        $focusedModal = target.querySelector(".modal:not(.o_inactive_modal)");
 
-        assert.containsN(target, ".modal", 2, "There should be two modals");
-        assert.strictEqual($focusedModal, nextModal, "Last modal is focused");
-        assert.hasClass(target, "modal-open", "Modal is said opened");
+        assert.containsN(target, ".modal", 2);
+        assert.doesNotHaveClass(nextModal, "o_inactive_modal");
+        assert.hasClass(document.body, "modal-open");
 
         // Close second modal
         await click(nextModal, "button[class='close']");
-        $focusedModal = document.activeElement.closest(".modal");
 
-        assert.containsOnce(target, ".modal", "There should be one modal");
+        assert.containsOnce(target, ".modal");
         assert.strictEqual(
-            $originalModal,
+            originalModal,
             target.querySelector(".modal"),
             "First modal is still opened"
         );
-        assert.strictEqual($focusedModal, $originalModal, "Modal is focused");
-        assert.hasClass(target, "modal-open", "Modal is said opened");
+        assert.doesNotHaveClass(originalModal, "o_inactive_modal");
+        assert.hasClass(document.body, "modal-open");
 
         // Close first modal
-        await click($originalModal, "button[class='close']");
-        assert.containsNone(target, ".modal", "There should be no modal");
-        assert.doesNotHaveClass(target, "modal-open", "Modal is not said opened");
+        await click(originalModal, "button[class='close']");
+        assert.containsNone(target, ".modal");
+        assert.doesNotHaveClass(document.body, "modal-open");
     });
 
     QUnit.test("search more pager is reset when doing a new search", async function (assert) {
