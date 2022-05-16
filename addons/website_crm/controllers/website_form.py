@@ -16,7 +16,7 @@ class WebsiteForm(form.WebsiteForm):
             country = visitor_partner.country_id or request.env.company.country_id
             if country:
                 return country
-        country_code = request.geoip.get('country_code')
+        country_code = request.geoip.country_code
         if country_code:
             return request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1)
         return request.env['res.country']
@@ -55,8 +55,8 @@ class WebsiteForm(form.WebsiteForm):
                     request.params.update({phone_field: fmt_number})
 
         if model_name == 'crm.lead' and not request.params.get('state_id'):
-            geoip_country_code = request.geoip.get('country_code')
-            geoip_state_code = request.geoip.get('region')
+            geoip_country_code = request.geoip.country_code
+            geoip_state_code = request.geoip.subdivisions[0].iso_code if request.geoip.subdivisions else None
             if geoip_country_code and geoip_state_code:
                 state = request.env['res.country.state'].search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)])
                 if state:

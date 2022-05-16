@@ -1059,6 +1059,14 @@ class GeoIP(collections.abc.Mapping):
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_COUNTRY
 
+    @property
+    def country_name(self):
+        return self.country.name or self.continent.name
+
+    @property
+    def country_code(self):
+        return self.country.iso_code or self.continent.code
+
     def __getattr__(self, attr):
         # Be smart and determine whether the attribute exists on the
         # country object or on the city object.
@@ -1074,10 +1082,10 @@ class GeoIP(collections.abc.Mapping):
     # Old dict API, undocumented for now, will be deprecated some day
     def __getitem__(self, item):
         if item == 'country_name':
-            return self.country.name or self.continent.name
+            return self.country_name
 
         if item == 'country_code':
-            return self.country.iso_code or self.continent.code
+            return self.country_code
 
         if item == 'city':
             return self.city.name
