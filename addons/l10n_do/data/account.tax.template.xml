@@ -456,7 +456,7 @@
         </record>
 
         <record id="tax_tip_purch" model="account.tax.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="chart_template_id" ref="do_chart_template_common"/>
             <field name="sequence">19</field>
             <field name="name">10% Propina Legal</field>
             <field name="description">10% Legal</field>
@@ -924,7 +924,7 @@
         </record>
 
         <record id="ret_75_tax_nonformal" model="account.tax.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="chart_template_id" ref="do_chart_template_common"/>
             <field name="sequence">44</field>
             <field name="name">Retención 75% ITBIS Bienes a Informales (N08-10)</field>
             <field name="description">-75% ITBIS (N08-10)</field>
@@ -1060,7 +1060,7 @@
         </record>
 
         <record id="ret_2_income_person" model="account.tax.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="chart_template_id" ref="do_chart_template_common"/>
             <field name="sequence">52</field>
             <field name="name">Retención 2% ISR a Física (con Materiales)</field>
             <field name="description">-2% ISR (N07-07)</field>
