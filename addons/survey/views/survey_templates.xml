@@ -24,7 +24,7 @@
             <div class="py-3 m-0 p-0 text-right">
                 <div class="o_survey_progress_wrapper d-inline-block pr-5 text-left">
                     <t t-call="survey.survey_progression"
-                        t-if="survey and survey.questions_layout != 'one_page' and answer and answer.state == 'in_progress' and (not question or not question.is_page)">
+                        t-if="survey and survey.questions_layout != 'one_page' and answer and answer.state == 'in_progress' and (not question or not question.is_page) and not survey_form_readonly">
                         <t t-if="survey.questions_layout == 'page_per_section'">
                             <t t-set="page_ids" t-value="survey.page_ids.ids"/>
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
