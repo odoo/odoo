@@ -6515,7 +6515,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("resequence columns in grouped by m2o", async (assert) => {
+    QUnit.skipWOWL("resequence columns in grouped by m2o", async (assert) => {
         assert.expect(7);
 
         await makeView({
