@@ -343,6 +343,7 @@
             <field name="model">product.template</field>
             <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
