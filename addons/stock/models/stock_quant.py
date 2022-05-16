@@ -881,9 +881,8 @@ class StockQuant(models.Model):
 
         if self.inventory_date:
             name += f' [Scheduled on {self.inventory_date}]'
-        
         # force period date is set when accounting date is set from stock_account module
-        force_period_date = self.env.context.get('force_period_date',False)
+        force_period_date = self.env.context.get('force_period_date', False)
         if force_period_date:
             name += f' [Accounted on {force_period_date}]'
 

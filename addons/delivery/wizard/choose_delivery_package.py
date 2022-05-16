@@ -41,7 +41,6 @@ class ChooseDeliveryPackage(models.TransientModel):
 
     @api.onchange('delivery_package_type_id')
     def _onchange_delivery_package_type(self):
-        
         move_line_ids = self.picking_id.move_line_ids.filtered(lambda m:
             float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
             and not m.result_package_id

@@ -52,7 +52,7 @@ class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = 'product.product'
 
-    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', 
+    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit of Measure')
 
     def _compute_purchased_product_qty(self):
