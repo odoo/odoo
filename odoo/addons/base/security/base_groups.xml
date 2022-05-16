@@ -9,6 +9,7 @@
         -->
         <record model="res.groups" id="group_erp_manager">
             <field name="name">Access Rights</field>
+            <field name="implied_ids" eval="[Command.link(ref('group_user'))]"/>
         </record>
 
         <record model="res.groups" id="group_system">
