@@ -11,6 +11,22 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
 
     const { EventBus, useSubEnv, xml } = owl;
 
+    class Root extends PosComponent {
+        setup() {
+            super.setup();
+            useSubEnv({
+                isDebug: () => false,
+                posbus: new EventBus(),
+            });
+        }
+    }
+    Root.env = makeTestEnvironment();
+    Root.template = xml/* html */ `
+        <div>
+            <PosPopupController />
+        </div>
+    `;
+
     QUnit.module('unit tests for PosPopupController', {
         before() {
             Registries.Component.freeze();
@@ -47,22 +63,6 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
 
     QUnit.test('allow multiple popups at the same time', async function(assert) {
         assert.expect(12);
-
-        class Root extends PosComponent {
-            setup() {
-                super.setup();
-                useSubEnv({
-                    isDebug: () => false,
-                    posbus: new EventBus(),
-                });
-            }
-        }
-        Root.env = makeTestEnvironment();
-        Root.template = xml/* html */ `
-            <div>
-                <PosPopupController />
-            </div>
-        `;
 
         const root = await mount(Root, testUtils.prepareTarget());
 
@@ -118,22 +118,6 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
     QUnit.test('pressing cancel/confirm key should only close the top popup', async function(assert) {
         assert.expect(6);
 
-        class Root extends PosComponent {
-            setup() {
-                super.setup();
-                useSubEnv({
-                    isDebug: () => false,
-                    posbus: new EventBus(),
-                });
-            }
-        }
-        Root.env = makeTestEnvironment();
-        Root.template = xml/* html */ `
-            <div>
-                <PosPopupController />
-            </div>
-        `;
-
         const root = await mount(Root, testUtils.prepareTarget());
 
         let popup1Promise = root.showPopup('CustomPopup1', { confirmKey: 'Enter', cancelKey: 'Escape' });
@@ -161,5 +145,31 @@ odoo.define('point_of_sale.tests.PosPopupController', function(require) {
 
         const result1 = await popup1Promise;
         assert.strictEqual(result1.confirmed, true);
+    });
+
+    QUnit.test('noDuplicate: should not show the same popup at once.', async function(assert) {
+        assert.expect(4);
+
+        const root = await mount(Root, testUtils.prepareTarget());
+
+        root.showPopup('CustomPopup1', { confirmKey: 'Enter', cancelKey: 'Escape', noDuplicate: true });
+        await testUtils.nextTick();
+        assert.strictEqual(root.el.querySelectorAll('.popup').length, 1);
+
+        // Try to show the same popup.
+        const popup2Promise = root.showPopup('CustomPopup1', { confirmKey: 'Enter', cancelKey: 'Escape' });
+
+        await testUtils.nextTick();
+        assert.strictEqual(root.el.querySelectorAll('.popup').length, 1);
+
+        // popup2Promise should immediately resolve to undefined.
+        assert.strictEqual(await popup2Promise, undefined);
+
+        // Pressing 'Escape' should cancel the top popup which is the CustomPopup2.
+        testUtils.dom.triggerEvent(window, 'keyup', { key: 'Escape' });
+        await testUtils.nextTick();
+
+        // Cancelling should destroy the first popup and nothing else should show up.
+        assert.strictEqual(root.el.querySelectorAll('.popup').length, 0);
     });
 });

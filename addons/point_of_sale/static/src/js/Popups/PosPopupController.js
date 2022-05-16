@@ -23,7 +23,7 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
      * and since the popup is listening to that event (@see AbstractAwaitablePopup),
      * it will result to the call of `confirm`/`cancel` method.
      *
-     * @typedef {{ id: number, resolve: Function, keepBehind?: boolean, cancelKey?: string, confirmKey?: string }} BasePopupProps
+     * @typedef {{ id: number, resolve: Function, keepBehind?: boolean, noDuplicate?: boolean, cancelKey?: string, confirmKey?: string }} BasePopupProps
      * @typedef {{ name: string, component: AbstractAwaitablePopup, props: BasePopupProps, key: string }} Popup
      */
     class PosPopupController extends PosComponent {
@@ -33,6 +33,7 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
             useBus(this.env.posbus, 'close-popup', this._closePopup);
             owl.useExternalListener(window, 'keyup', this._onWindowKeyup);
             this.popups = owl.useState([]);
+            this.noDuplicates = new Set();
         }
         _showPopup(event) {
             let { id, name, props, resolve } = event.detail;
@@ -45,10 +46,18 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
                 resolve();
                 return;
             }
+            props = this._constructPopupProps(component, props);
+            if (this.noDuplicates.has(name)) {
+                resolve();
+                return;
+            }
+            if (props.noDuplicate) {
+                this.noDuplicates.add(name);
+            }
             this.popups.push({
                 name,
                 component,
-                props: this._constructPopupProps(component, props),
+                props,
                 key: `${name}-${id}`,
             });
         }
@@ -57,6 +66,7 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
             const index = this.popups.findIndex((popup) => popup.props.id == popupId);
             if (index != -1) {
                 const popup = this.popups[index];
+                this.noDuplicates.delete(popup.name);
                 popup.props.resolve(response);
                 this.popups.splice(index, 1);
             }
@@ -83,6 +93,7 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
             const defaultProps = popupComponent.defaultProps || {};
             return Object.assign(
                 {
+                    noDuplicate: false,
                     keepBehind: false,
                     cancelKey: 'Escape',
                     confirmKey: 'Enter',
