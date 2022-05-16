@@ -6,7 +6,7 @@
             <div class="o_Message position-relative pt-1"
                 t-att-class="{
                     'o_Message_active': messageView.isActive,
-                    'o-clicked': messageView.isClicked,
+                    'o-clicked': messageView.messagingAsClickedMessageView,
                     'o-discussion': messageView.message.isDiscussionOrNotification,
                     'o-has-message-selection': messageView.threadView and messageView.threadView.replyingToMessageView,
                     'o-highlighted': messageView.message.isHighlighted or messageView.isHighlighted,
