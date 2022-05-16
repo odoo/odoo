@@ -503,7 +503,7 @@ class ResCompany(models.Model):
 
         company = self.env.company
         company.sudo().set_onboarding_step_done('account_setup_taxes_state')
-        view_id_list = self.env.ref('account.view_tax_tree').id
+        view_id_list = self.env.ref('account.view_onboarding_tax_tree').id
         view_id_form = self.env.ref('account.view_tax_form').id
 
         return {
