@@ -608,7 +608,7 @@ class Partner(models.Model):
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
         for partner in self:
-            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+            if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
             partner._fields_sync(vals)
         return result

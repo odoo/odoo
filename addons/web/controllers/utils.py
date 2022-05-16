@@ -201,7 +201,7 @@ def _get_login_redirect_url(uid, redirect=None):
 
 
 def is_user_internal(uid):
-    return request.env['res.users'].sudo().browse(uid).has_group('base.group_user')
+    return request.env['res.users'].browse(uid)._is_internal()
 
 
 def _local_web_translations(trans_file):

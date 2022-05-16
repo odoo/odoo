@@ -31,7 +31,7 @@ class Users(models.Model):
         otp_required = False
         if ICP.get_param('auth_totp.policy') == 'all_required':
             otp_required = True
-        elif ICP.get_param('auth_totp.policy') == 'employee_required' and self.has_group('base.group_user'):
+        elif ICP.get_param('auth_totp.policy') == 'employee_required' and self._is_internal():
             otp_required = True
         if otp_required:
             return 'totp_mail'
