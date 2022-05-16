@@ -154,7 +154,7 @@ class Users(models.Model):
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
             'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
-            'public_partners': list(self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id.mail_partner_format().values()),
+            'publicPartners': [('insert', [{'id': p.id} for p in self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id])],
             'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution']),
             'starred_counter': self.partner_id._get_starred_count(),
         }
