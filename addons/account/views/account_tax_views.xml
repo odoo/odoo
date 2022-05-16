@@ -19,6 +19,18 @@
             </field>
         </record>
 
+        <record id="view_onboarding_tax_tree" model="ir.ui.view">
+            <field name="name">account.onboarding.tax.tree</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_tree" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">active desc, type_tax_use desc, amount desc, sequence</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="tax_repartition_line_tree" model="ir.ui.view">
             <field name="name">account.tax.repartition.line.tree</field>
             <field name="model">account.tax.repartition.line</field>
