@@ -12,7 +12,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class PurchaseOrder(models.Model):
@@ -492,7 +492,7 @@ class PurchaseOrder(models.Model):
         return {
             'partner_id': partner.id,
             'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
-            'min_qty': 0.0,
+            'min_qty': 1.0,
             'price': price,
             'currency_id': currency.id,
             'delay': 0,
@@ -528,10 +528,9 @@ class PurchaseOrder(models.Model):
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
-                try:
-                    line.product_id.write(vals)
-                except AccessError:  # no write access rights -> just ignore
-                    break
+                # supplier info should be added regardless of the user access rights
+                line.product_id.sudo().write(vals)
+                
 
     def action_create_invoice(self):
         """Create the invoice associated to the PO.
