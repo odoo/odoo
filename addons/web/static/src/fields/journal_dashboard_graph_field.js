@@ -2,9 +2,9 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
-import { useAssets } from "@web/core/assets";
+import { loadJS } from "@web/core/assets";
 
-const { Component, useEffect, useRef } = owl;
+const { Component, onWillStart, useEffect, useRef } = owl;
 
 export class JournalDashboardGraphField extends Component {
     setup() {
@@ -12,7 +12,7 @@ export class JournalDashboardGraphField extends Component {
         this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.value);
 
-        useAssets({ jsLibs: ["/web/static/lib/Chart/Chart.js"] });
+        onWillStart(() => loadJS(["/web/static/lib/Chart/Chart.js"]));
 
         useEffect(() => {
             this.renderChart();
