@@ -24,9 +24,9 @@
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <!-- Remove customer accounts setting from sales settings tab -->
-            <xpath expr="//div[@id='auth_signup_documents']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
+            <!-- It must not be in the view at all to make sure settings can be saved
+                (because auth_signup_uninvited is specified as required) -->
+            <xpath expr="//div[@id='auth_signup_documents']" position="replace"></xpath>
         </field>
     </record>
 
