@@ -1912,6 +1912,19 @@
     }
     xml.nextId = 1;
 
+    class Component {
+        constructor(props, env, node) {
+            this.props = props;
+            this.env = env;
+            this.__owl__ = node;
+        }
+        setup() { }
+        render(deep = false) {
+            this.__owl__.render(deep === true);
+        }
+    }
+    Component.template = "";
+
     // Maps fibers to thrown errors
     const fibersInError = new WeakMap();
     const nodeErrorHandlers = new WeakMap();
@@ -2423,6 +2436,9 @@
                 C = parent.constructor.components[name];
                 if (!C) {
                     throw new Error(`Cannot find the definition of component "${name}"`);
+                }
+                else if (!(C.prototype instanceof Component)) {
+                    throw new Error(`"${name}" is not a Component. It must inherit from the Component class`);
                 }
             }
             node = new ComponentNode(C, props, ctx.app, ctx, key);
@@ -3029,6 +3045,11 @@
     // of HTML (as we will parse it as xml later)
     const xmlDoc = document.implementation.createDocument(null, null, null);
     const MODS = new Set(["stop", "capture", "prevent", "self", "synthetic"]);
+    let nextDataIds = {};
+    function generateId(prefix = "") {
+        nextDataIds[prefix] = (nextDataIds[prefix] || 0) + 1;
+        return prefix + nextDataIds[prefix];
+    }
     // -----------------------------------------------------------------------------
     // BlockDescription
     // -----------------------------------------------------------------------------
@@ -3047,12 +3068,8 @@
             this.target = target;
             this.type = type;
         }
-        static generateId(prefix) {
-            this.nextDataIds[prefix] = (this.nextDataIds[prefix] || 0) + 1;
-            return prefix + this.nextDataIds[prefix];
-        }
         insertData(str, prefix = "d") {
-            const id = BlockDescription.generateId(prefix);
+            const id = generateId(prefix);
             this.target.addLine(`let ${id} = ${str};`);
             return this.data.push(id) - 1;
         }
@@ -3090,7 +3107,6 @@
         }
     }
     BlockDescription.nextBlockId = 1;
-    BlockDescription.nextDataIds = {};
     function createContext(parentCtx, params) {
         return Object.assign({
             block: null,
@@ -3158,7 +3174,6 @@
     class CodeGenerator {
         constructor(ast, options) {
             this.blocks = [];
-            this.ids = {};
             this.nextBlockId = 1;
             this.isDebug = false;
             this.targets = [];
@@ -3188,7 +3203,7 @@
             const ast = this.ast;
             this.isDebug = ast.type === 12 /* TDebug */;
             BlockDescription.nextBlockId = 1;
-            BlockDescription.nextDataIds = {};
+            nextDataIds = {};
             this.compileAST(ast, {
                 block: null,
                 index: 0,
@@ -3245,7 +3260,7 @@
             return code;
         }
         compileInNewTarget(prefix, ast, ctx, on) {
-            const name = this.generateId(prefix);
+            const name = generateId(prefix);
             const initialTarget = this.target;
             const target = new CodeTarget(name, on);
             this.targets.push(target);
@@ -3259,10 +3274,6 @@
         }
         define(varName, expr) {
             this.addLine(`const ${varName} = ${expr};`);
-        }
-        generateId(prefix = "") {
-            this.ids[prefix] = (this.ids[prefix] || 0) + 1;
-            return prefix + this.ids[prefix];
         }
         insertAnchor(block) {
             const tag = `block-child-${block.children.length}`;
@@ -3332,7 +3343,7 @@
                 .map((tok) => {
                 if (tok.varName && !tok.isLocal) {
                     if (!mapping.has(tok.varName)) {
-                        const varId = this.generateId("v");
+                        const varId = generateId("v");
                         mapping.set(tok.varName, varId);
                         this.define(varId, tok.value);
                     }
@@ -3472,7 +3483,7 @@
                 block = this.createBlock(block, "block", ctx);
                 this.blocks.push(block);
                 if (ast.dynamicTag) {
-                    const tagExpr = this.generateId("tag");
+                    const tagExpr = generateId("tag");
                     this.define(tagExpr, compileExpr(ast.dynamicTag));
                     block.dynamicTagName = tagExpr;
                 }
@@ -3542,7 +3553,7 @@
                         info[1] = `multiRefSetter(refs, \`${name}\`)`;
                     }
                     else {
-                        let id = this.generateId("ref");
+                        let id = generateId("ref");
                         this.target.refInfo[name] = [id, `(el) => refs[\`${name}\`] = el`];
                         const index = block.data.push(id) - 1;
                         attrs["block-ref"] = String(index);
@@ -3554,10 +3565,10 @@
             if (ast.model) {
                 const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
                 const baseExpression = compileExpr(baseExpr);
-                const bExprId = this.generateId("bExpr");
+                const bExprId = generateId("bExpr");
                 this.define(bExprId, baseExpression);
                 const expression = compileExpr(expr);
-                const exprId = this.generateId("expr");
+                const exprId = generateId("expr");
                 this.define(exprId, expression);
                 const fullExpression = `${bExprId}[${exprId}]`;
                 let idx;
@@ -3566,7 +3577,7 @@
                     attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
                 }
                 else if (hasDynamicChildren) {
-                    const bValueId = this.generateId("bValue");
+                    const bValueId = generateId("bValue");
                     tModelSelectedExpr = `${bValueId}`;
                     this.define(tModelSelectedExpr, fullExpression);
                 }
@@ -3768,7 +3779,7 @@
             let id;
             if (ast.memo) {
                 this.target.hasCache = true;
-                id = this.generateId();
+                id = generateId();
                 this.define(`memo${id}`, compileExpr(ast.memo));
                 this.define(`vnode${id}`, `cache[key${this.target.loopLevel}];`);
                 this.addLine(`if (vnode${id}) {`);
@@ -3797,7 +3808,7 @@
             this.insertBlock("l", block, ctx);
         }
         compileTKey(ast, ctx) {
-            const tKeyExpr = this.generateId("tKey_");
+            const tKeyExpr = generateId("tKey_");
             this.define(tKeyExpr, compileExpr(ast.expr));
             ctx = createContext(ctx, {
                 tKeyExpr,
@@ -3880,7 +3891,7 @@
             }
             const key = `key + \`${this.generateComponentKey()}\``;
             if (isDynamic) {
-                const templateVar = this.generateId("template");
+                const templateVar = generateId("template");
                 this.define(templateVar, subTemplate);
                 block = this.createBlock(block, "multi", ctx);
                 this.helpers.add("call");
@@ -3890,7 +3901,7 @@
                 });
             }
             else {
-                const id = this.generateId(`callTemplate_`);
+                const id = generateId(`callTemplate_`);
                 this.helpers.add("getTemplate");
                 this.staticDefs.push({ id, expr: `getTemplate(${subTemplate})` });
                 block = this.createBlock(block, "multi", ctx);
@@ -3943,7 +3954,7 @@
             }
         }
         generateComponentKey() {
-            const parts = [this.generateId("__")];
+            const parts = [generateId("__")];
             for (let i = 0; i < this.target.loopLevel; i++) {
                 parts.push(`\${key${i + 1}}`);
             }
@@ -3997,7 +4008,7 @@
             if (ast.slots) {
                 let ctxStr = "ctx";
                 if (this.target.loopLevel || !this.hasSafeContext) {
-                    ctxStr = this.generateId("ctx");
+                    ctxStr = generateId("ctx");
                     this.helpers.add("capture");
                     this.define(ctxStr, `capture(ctx)`);
                 }
@@ -4032,7 +4043,7 @@
             }
             let propVar;
             if ((slotDef && (ast.dynamicProps || hasSlotsProp)) || this.dev) {
-                propVar = this.generateId("props");
+                propVar = generateId("props");
                 this.define(propVar, propString);
                 propString = propVar;
             }
@@ -4044,7 +4055,7 @@
             const key = this.generateComponentKey();
             let expr;
             if (ast.isDynamic) {
-                expr = this.generateId("Comp");
+                expr = generateId("Comp");
                 this.define(expr, compileExpr(ast.name));
             }
             else {
@@ -4075,11 +4086,11 @@
         }
         wrapWithEventCatcher(expr, on) {
             this.helpers.add("createCatcher");
-            let name = this.generateId("catcher");
+            let name = generateId("catcher");
             let spec = {};
             let handlers = [];
             for (let ev in on) {
-                let handlerId = this.generateId("hdlr");
+                let handlerId = generateId("hdlr");
                 let idx = handlers.push(handlerId) - 1;
                 spec[ev] = idx;
                 const handler = this.generateHandlerCode(ev, on[ev]);
@@ -4108,7 +4119,7 @@
             }
             else {
                 if (dynamic) {
-                    let name = this.generateId("slot");
+                    let name = generateId("slot");
                     this.define(name, slotName);
                     blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}, ${dynamic}, ${scope}))`;
                 }
@@ -4138,11 +4149,12 @@
             const key = this.generateComponentKey();
             let ctxStr = "ctx";
             if (this.target.loopLevel || !this.hasSafeContext) {
-                ctxStr = this.generateId("ctx");
+                ctxStr = generateId("ctx");
                 this.helpers.add("capture");
                 this.define(ctxStr, `capture(ctx);`);
             }
-            const blockString = `component(Portal, {target: ${compileExpr(ast.target)},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
+            const target = compileExpr(ast.target);
+            const blockString = `component(Portal, {target: ${target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
             if (block) {
                 this.insertAnchor(block);
             }
@@ -5008,19 +5020,6 @@
         handlers.push(callback.bind(node.component));
     }
 
-    class Component {
-        constructor(props, env, node) {
-            this.props = props;
-            this.env = env;
-            this.__owl__ = node;
-        }
-        setup() { }
-        render(deep = false) {
-            this.__owl__.render(deep === true);
-        }
-    }
-    Component.template = "";
-
     const VText = text("").constructor;
     class VPortal extends VText {
         constructor(selector, realBDom) {
@@ -5613,8 +5612,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
 
 
     __info__.version = '2.0.0-beta-7';
-    __info__.date = '2022-04-27T09:08:50.320Z';
-    __info__.hash = '0cd66c8';
+    __info__.date = '2022-05-13T10:25:03.103Z';
+    __info__.hash = 'a837310';
     __info__.url = 'https://github.com/odoo/owl';
 
 
