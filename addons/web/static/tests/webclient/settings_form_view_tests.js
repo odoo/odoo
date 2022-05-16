@@ -430,7 +430,7 @@ QUnit.module(
                 await click(target.querySelector("button[name='4']"));
                 assert.containsOnce(document.body, ".modal", "should open a warning dialog");
 
-                await click(target.querySelectorAll(".modal-footer .btn")[1]); // Discard
+                await click(target.querySelectorAll(".modal-footer .btn")[2]); // Discard
                 await nextTick();
                 assert.containsOnce(target, ".o_list_view", "should be open list view");
                 await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
@@ -444,7 +444,7 @@ QUnit.module(
                 await click(target.querySelector("button[name='4']"));
                 assert.containsOnce(document.body, ".modal", "should open a warning dialog");
 
-                await click(target.querySelectorAll(".modal-footer .btn")[2]); // Stay Here
+                await click(target.querySelectorAll(".modal-footer .btn")[1]); // Stay Here
                 assert.containsOnce(target, ".o_form_view", "should be remain on form view");
 
                 await click(target.querySelector(".o_form_button_save")); // Form Save button
