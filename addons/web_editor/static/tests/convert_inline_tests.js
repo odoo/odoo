@@ -555,16 +555,18 @@ QUnit.module('convert_inline', {}, function () {
         assert.expect(1);
 
         const $editable = $(`<div><div class="container"><div class="row"><div class="col">Hello</div></div></div></div>`);
+        $(document.body).append($editable); // editable needs to be in the DOM to compute its dynamic styles.
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        const containerStyle = `padding:0 16px 0 16px;margin:0 auto 0 auto;box-sizing:border-box;max-width:1140px;width:100%;`;
-        const rowStyle = `margin:0 -16px 0 -16px;box-sizing:border-box;`;
-        const colStyle = `padding:0 16px 0 16px;box-sizing:border-box;max-width:100%;width:100%;position:relative;`;
+        const containerStyle = `padding: 0px 16px; margin: 0px auto; box-sizing: border-box; max-width: 1320px; width: 100%;`;
+        const rowStyle = `margin: 0px; box-sizing: border-box;`;
+        const colStyle = `padding: 0px 16px; margin: 0px; box-sizing: border-box; max-width: 100%; width: 100%;`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +
             `<div class="col" style="${colStyle}" width="100%">Hello</div></div></div>`,
             "should have converted the classes of a simple Bootstrap grid to inline styles"
         );
+        $editable.remove();
     });
     QUnit.test('simplify border/margin/padding styles', async function (assert) {
         assert.expect(12);
