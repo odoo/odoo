@@ -60,7 +60,7 @@ registerModel({
          * @param {Object} param0.current_user_settings
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
-         * @param {Object[]} param0.public_partners
+         * @param {Array[]} param0.publicPartners
          * @param {Object[]} [param0.shortcodes=[]]
          * @param {integer} [param0.starred_counter=0]
          */
@@ -75,7 +75,7 @@ registerModel({
             menu_id,
             needaction_inbox_counter = 0,
             partner_root,
-            public_partners,
+            publicPartners,
             shortcodes = [],
             starred_counter = 0
         }) {
@@ -86,8 +86,8 @@ registerModel({
                 current_partner,
                 current_user_id,
                 partner_root,
-                public_partners,
             });
+            this.messaging.update({ publicPartners });
             // mailboxes after partners and before other initializers that might
             // manipulate threads or messages
             this._initMailboxes({
@@ -271,14 +271,12 @@ registerModel({
          * @param {Object} current_partner
          * @param {integer} current_user_id
          * @param {Object} partner_root
-         * @param {Object[]} [public_partners=[]]
          */
         _initPartners({
             currentGuest,
             current_partner,
             current_user_id: currentUserId,
             partner_root,
-            public_partners = [],
         }) {
             if (currentGuest) {
                 this.messaging.update({ currentGuest: insert(currentGuest) });
@@ -292,9 +290,6 @@ registerModel({
             }
             this.messaging.update({
                 partnerRoot: insert(this.messaging.models['Partner'].convertData(partner_root)),
-                publicPartners: insert(public_partners.map(
-                    publicPartner => this.messaging.models['Partner'].convertData(publicPartner)
-                )),
             });
         },
         /**
