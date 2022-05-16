@@ -202,4 +202,27 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.skipWOWL("dont overflow color picker in list", async function (assert) {
+        //  const list = await createView({
+        //      View: ListView,
+        //      model: 'foo',
+        //      data: this.data,
+        //      arch: `
+        //          <tree editable="top" string="Partners">
+        //              <field name="date"/>
+        //              <field name="int_field" widget="color_picker"/>
+        //          </tree>`,
+        //      domain: [['id', '<', 0]],
+        // });
+        //  await testUtils.dom.click(list.el.querySelector('.o_list_button_add'))
+        //  const date_column_width = list.el.querySelector('.o_list_table thead th[data-name="date"]').style.width.replace('px', '');
+        //  const int_field_column_width = list.el.querySelector('.o_list_table thead th[data-name="int_field"]').style.width.replace('px', '');
+        //  // Default values for date and int fields are: date: '92px', integer: '74px'
+        //  // With the screen growing, the proportion is kept and thus int_field would remain smaller than date if
+        //  // the color_picker wouldn't have widthInList set to '1'. With that property set, int_field size will be bigger
+        //  // than date's one.
+        //  assert.ok(parseFloat(date_column_width) < parseFloat(int_field_column_width), "colorpicker should display properly (Horizontly)");
+        //  list.destroy();
+    });
 });
