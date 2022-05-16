@@ -8,11 +8,16 @@
                 <t t-if="messaging.rtc.channel">
                     <button class="o_RtcActivityNotice_button px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="rtcActivityNoticeView.buttonTitle" role="button" t-on-click="messaging.rtc.onClickActivityNoticeButton">
                         <div class="o_RtcActivityNotice_buttonContent d-flex align-items-center">
-                            <i class="o_RtcActivityNotice_outputIndicator fa fa-lg me-2" t-att-class="{
-                                'fa-microphone': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
-                                'fa-video-camera': messaging.rtc.sendUserVideo,
-                                'fa-desktop': messaging.rtc.sendDisplay,
-                            }"/>
+                            <span class="position-relative me-2">
+                                <i class="o_RtcActivityNotice_outputIndicator fa me-2" t-att-class="{
+                                    'fa-microphone': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
+                                    'fa-video-camera': messaging.rtc.sendUserVideo,
+                                    'fa-desktop': messaging.rtc.sendDisplay,
+                                }"/>
+                                <small class="position-absolute top-0 end-0 bottom-0 mt-n3 pt-1">
+                                    <i class="o_RtcActivityNotice_dot fa fa-circle text-warning small"/>
+                                </small>
+                            </span>
                             <em class="o_RtcActivityNotice_buttonTitle text-truncate" t-esc="messaging.rtc.channel.displayName"/>
                         </div>
                     </button>
