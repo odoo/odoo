@@ -85,8 +85,9 @@
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
                     <separator/>
-                    <filter string="Services" name="service" domain="[('tax_scope','=','service')]" />
-                    <filter string="Goods" name="goods" domain="[('tax_scope','=','consu')]" />
+                    <filter string="Services &amp; Goods" name="service" domain="[('tax_scope','=','service')]" />
+                    <filter string="Merchandises" name="consu" domain="[('tax_scope','=','consu')]" />
+                    <filter string="Investments" name="investment" domain="[('tax_scope','=','investment')]" />
                     <separator/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
