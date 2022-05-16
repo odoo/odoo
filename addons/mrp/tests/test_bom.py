@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions, Command
+from odoo import exceptions, Command, fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools import float_compare, float_round, float_repr
 
+from freezegun import freeze_time
 
+
+@freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
     def test_01_explode(self):
