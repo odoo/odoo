@@ -150,7 +150,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
     });
 
     QUnit.test("Partner autocomplete : Company type = Individual", function (assert) {
-        assert.expect(2);
+        assert.expect(3);
         var done = assert.async();
         createView({
             View: FormView,
@@ -159,7 +159,8 @@ odoo.define('partner_autocomplete.tests', function (require) {
             arch:
                 '<form>' +
                 '<field name="company_type"/>' +
-                '<field name="name" widget="field_partner_autocomplete"/>' +
+                '<field id="individual" name="name" widget="field_partner_autocomplete" placeholder="e.g. Some Individual" attrs="{\'required\': True, \'invisible\': False}"/>' +
+                '<field id="company" name="name" widget="field_partner_autocomplete" placeholder="e.g. Some Company" attrs="{\'required\': False, \'invisible\': True}"/>' +
                 '<field name="website"/>' +
                 '<field name="image_1920" widget="image"/>' +
                 '</form>',
@@ -171,6 +172,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             // Check input exists
             var $input = form.$(".o_field_partner_autocomplete > input:visible");
             assert.strictEqual($input.length, 1, "there should be an <input/> for the Partner field");
+            assert.strictEqual($input.attr("placeholder"), "e.g. Some Individual", "placeholder should match the one of the XML node");
 
             // Change input val and assert nothing happens
             testUtils.fields.editInput($input, "odoo")
@@ -185,7 +187,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
 
 
     QUnit.test("Partner autocomplete : Company type = Company / Name search", async function (assert) {
-        assert.expect(17);
+        assert.expect(18)
         var fields = this.data['res.partner'].fields;
         var form = await createView({
             View: FormView,
@@ -194,7 +196,8 @@ odoo.define('partner_autocomplete.tests', function (require) {
             arch:
                 '<form>' +
                 '<field name="company_type"/>' +
-                '<field name="name" widget="field_partner_autocomplete"/>' +
+                '<field id="individual" name="name" widget="field_partner_autocomplete" placeholder="e.g. Some Individual" attrs="{\'required\': False, \'invisible\': True}"/>' +
+                '<field id="company" name="name" widget="field_partner_autocomplete" placeholder="e.g. Some Company" attrs="{\'required\': True, \'invisible\': False}"/>' +
                 '<field name="website"/>' +
                 '<field name="image_1920" widget="image"/>' +
                 '<field name="phone"/>' +
@@ -222,6 +225,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             // Check input exists
             var $input = form.$(".o_field_partner_autocomplete > input:visible");
             assert.strictEqual($input.length, 1, "there should be an <input/> for the field");
+            assert.strictEqual($input.attr("placeholder"), "e.g. Some Company", "placeholder should match the one of the XML node");
 
             // Change input val and assert changes
             await testUtils.fields.editInput($input, "odoo");
@@ -231,7 +235,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
             assert.strictEqual($dropdown.children().length, 1, "there should be only ne proposition");
 
             await testUtils.dom.click($dropdown.find("a").first());
-            $input = form.$(".o_field_partner_autocomplete > input");
+            $input = form.$(".o_field_partner_autocomplete > input:visible");
             assert.strictEqual($input.val(), "Odoo", "Input value should have been updated to \"Odoo\"");
             assert.strictEqual(form.$("input.o_field_widget").val(), "odoo.com", "website value should have been updated to \"odoo.com\"");
 

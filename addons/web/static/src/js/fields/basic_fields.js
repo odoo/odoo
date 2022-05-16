@@ -268,7 +268,7 @@ var InputField = DebouncedField.extend({
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
 
-        var inputAttrs = { placeholder: this.attrs.placeholder || "" };
+        var inputAttrs = { placeholder: (this.__node && this.__node.attrs.placeholder) || this.attrs.placeholder || "" };
         var inputVal;
         if (this.nodeOptions.isPassword) {
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
