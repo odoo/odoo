@@ -92,15 +92,11 @@ div.col:not([align]) {
 
     a:not(.btn), .btn.btn-link {
         font-weight: bold;
-        text-decoration: none;
         padding-left: 0 !important;
         padding-right: 0 !important;
         border: none!important;
-
-        &:hover, &:focus, &:active {
-            text-decoration: none !important;
-        }
     }
+
     // Icons
     .fa {
         @mixin size($width, $height: $width) {
@@ -153,12 +149,14 @@ div.col:not([align]) {
     .btn-link{
         padding: 0;
     }
-    
+
     .o_mail_table_styles {
         padding-top: 20px;
         padding-bottom: 20px;
     }
-
+    .o_mail_footer_social > a {
+        text-decoration: none !important;
+    }
     .o_mail_footer_links {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -183,7 +181,7 @@ div.col:not([align]) {
 
 }
 
-.card {  
+.card {
     border-color: #d2d2d2;
     .card-header,.card-footer {
         background-color: inherit!important;

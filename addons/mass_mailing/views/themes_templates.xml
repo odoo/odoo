@@ -17,6 +17,31 @@
 
     <!-- Default Theme -->
     <template id="theme_default_template">
+        <style id="design-element">
+            h1 {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            }
+            h2 {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            }
+            h3 {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            }
+            p, p > *, li, li > * {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+            }
+            a:not(.btn), a.btn.btn-link {
+                color: #81709b;
+            }
+            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
+                background-color: #81709b;
+                border-color: #81709b;
+            }
+            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
+                background-color: #72e1d0;
+                border-color: #72e1d0;
+            }
+        </style>
         <t t-call="mass_mailing.s_mail_block_header_logo" />
         <t t-call="mass_mailing.s_mail_block_title_text" />
         <t t-call="mass_mailing.s_mail_block_footer_social_left"/>
