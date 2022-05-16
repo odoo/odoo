@@ -19,4 +19,24 @@
         <field name="property_stock_valuation_account_id" ref="do_niif_11050100"/>
     </record>
 
+    <record id="gov_central_chart_template" model="account.chart.template">
+        <field eval="True" name="use_anglo_saxon"/>
+        <field name="account_journal_suspense_account_id" ref="gov_central_110102000100030003"/>
+        <field name="account_journal_payment_debit_account_id" ref="gov_central_110102000100030005"/>
+        <field name="account_journal_payment_credit_account_id" ref="gov_central_11010400030003"/>
+        <field name="default_cash_difference_income_account_id" ref="gov_central_41029809990001"/>
+        <field name="default_cash_difference_expense_account_id" ref="gov_central_510301"/>
+        <field name="property_account_expense_id" ref="gov_central_5105010002"/>
+        <field name="property_account_income_id" ref="gov_central_41029809980005"/>
+        <field name="property_account_receivable_id" ref="gov_central_1104040003"/>
+        <field name="property_account_payable_id" ref="gov_central_2101010001"/>
+        <field name="property_account_income_categ_id" ref="gov_central_41020200020003"/>
+        <field name="property_account_expense_categ_id" ref="gov_central_5105010001"/>
+        <!-- <field name="property_stock_account_input_categ_id" ref="do_niif_21021200"/> -->
+        <field name="property_stock_account_output_categ_id" ref="gov_central_110603"/>
+        <field name="property_stock_valuation_account_id" ref="gov_central_110602"/>
+        <field name="expense_currency_exchange_account_id" ref="gov_central_510301"/>
+        <field name="income_currency_exchange_account_id" ref="gov_central_4106010001"/>
+        <field name="default_pos_receivable_account_id" ref="gov_central_41020200020999" />
+    </record>
 </odoo>

@@ -24,4 +24,16 @@
         <field name="currency_id" ref="base.DOP"/>
         <field name="country_id" ref="base.do"/>
     </record>
+
+    <record id="gov_central_chart_template" model="account.chart.template">
+        <field name="name">Catálogo de Gobierno Central</field>
+        <field name="parent_id" ref="do_chart_template_common"/>
+        <field name="code_digits">18</field>
+        <field name="cash_account_code_prefix">110101</field>
+        <field name="bank_account_code_prefix">110102</field>
+        <field name="transfer_account_code_prefix">1101010001</field>
+        <field name="currency_id" ref="base.DOP"/>
+        <field name="country_id" ref="base.do"/>
+    </record>
+
 </odoo>
