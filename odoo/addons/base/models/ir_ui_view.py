@@ -1182,8 +1182,11 @@ actual arch.
                     if missing_view_types:
                         comodel = self.env[field.comodel_name].sudo(False)
                         refs = self._get_view_refs(node)
-                        if refs:
-                            comodel = comodel.with_context(**refs)
+                        # Do not propagate <view_type>_view_ref of parent call to `_get_view`
+                        comodel = comodel.with_context(**{
+                            f'{view_type}_view_ref': refs.get(f'{view_type}_view_ref')
+                            for view_type in missing_view_types
+                        })
                         for view_type in missing_view_types:
                             subarch, _subview = comodel._get_view(view_type=view_type)
                             node.append(subarch)

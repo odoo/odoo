@@ -2343,6 +2343,31 @@ class TestViews(ViewCase):
             'A <graph> can only contains <field> nodes, found a <label>'
         )
 
+    def test_view_ref(self):
+        view = self.assertValid(
+            """
+                <form>
+                    <field name="groups_id" class="canary"/>
+                </form>
+            """
+        )
+        self.env["ir.model.data"].create({
+            'module': 'base',
+            'name': 'test_views_test_view_ref',
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        })
+        view_data = self.env['ir.ui.view'].with_context(form_view_ref='base.test_views_test_view_ref').get_view()
+        self.assertEqual(view.id, view_data['id'], "The view returned should be test_views_test_view_ref")
+        view_data = self.env['ir.ui.view'].with_context(form_view_ref='base.test_views_test_view_ref').get_view(view.id)
+        tree = etree.fromstring(view_data['arch'])
+        field_groups_id = tree.xpath('//field[@name="groups_id"]')[0]
+        self.assertEqual(
+            len(field_groups_id.xpath(".//*[@class='canary']")),
+            0,
+            "The view test_views_test_view_ref should not be in the views of the many2many field groups_id"
+        )
+
     def assertValid(self, arch, name='valid view', inherit_id=False):
         return self.View.create({
             'name': name,
