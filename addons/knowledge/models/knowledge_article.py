@@ -23,8 +23,8 @@ class Article(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string="Title", default=lambda self: _('New Article'), required=True, tracking=20)
-    body = fields.Html(string="Article Body")
-    icon = fields.Char(string='Article Icon')
+    body = fields.Html(string="Body")
+    icon = fields.Char(string='Emoji')
     cover = fields.Binary(string='Cover Image')
     is_locked = fields.Boolean(
         string='Locked',
@@ -42,7 +42,7 @@ class Article(models.Model):
         string="Desyncronized with parents",
         help="If set, this article won't inherit access rules from its parents anymore.")
     sequence = fields.Integer(
-        string="Article Sequence",
+        string="Sequence",
         default=0,  # Set default=0 to avoid false values and messed up sequence order inside same parent
         help="The sequence is computed only among the articles that have the same parent.")
     root_article_id = fields.Many2one(
@@ -57,7 +57,7 @@ class Article(models.Model):
              "(External users can still have access to this article if they are added to its members)")
     inherited_permission = fields.Selection(
         [('write', 'Can write'), ('read', 'Can read'), ('none', 'No access')],
-        string='Article Inherited Permission',
+        string='Inherited Permission',
         compute="_compute_inherited_permission", compute_sudo=True,
         store=True, recursive=True)
     inherited_permission_parent_id = fields.Many2one(
