@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.exceptions import UserError
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
@@ -33,3 +34,51 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         action2 = picking.action_view_subcontracting_source_purchase()
         po_action2 = self.env[action2['res_model']].browse(action2['res_id'])
         self.assertEqual(po_action2, po)
+
+    def test_decrease_qty(self):
+        """ Tests when a PO for a subcontracted product has its qty decreased after confirmation
+        """
+
+        product_qty = 5.0
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': 'finished',
+                'product_id': self.finished.id,
+                'product_qty': product_qty,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 50.0}
+            )],
+        })
+
+        po.button_confirm()
+        receipt = po.picking_ids
+        sub_mo = receipt._get_subcontract_production()
+        self.assertEqual(len(receipt), 1, "A receipt should have been created")
+        self.assertEqual(receipt.move_ids.product_qty, product_qty, "Qty of subcontracted product to receive is incorrect")
+        self.assertEqual(len(sub_mo), 1, "A subcontracting MO should have been created")
+        self.assertEqual(sub_mo.product_qty, product_qty, "Qty of subcontracted product to produce is incorrect")
+
+        # create a neg qty to proprogate to receipt
+        lower_qty = product_qty - 1.0
+        po.order_line.product_qty = lower_qty
+        sub_mos = receipt._get_subcontract_production()
+        self.assertEqual(receipt.move_ids.product_qty, lower_qty, "Qty of subcontracted product to receive should update (not validated yet)")
+        self.assertEqual(len(sub_mos), 1, "Original subcontract MO should have absorbed qty change")
+        self.assertEqual(sub_mo.product_qty, lower_qty, "Qty of subcontract MO should update (none validated yet)")
+
+        # increase qty again
+        po.order_line.product_qty = product_qty
+        sub_mos = receipt._get_subcontract_production()
+        self.assertEqual(sum(receipt.move_ids.mapped('product_qty')), product_qty, "Qty of subcontracted product to receive should update (not validated yet)")
+        self.assertEqual(len(sub_mos), 2, "A new subcontracting MO should have been created")
+
+        # check that a neg qty can't proprogate once receipt is done
+        for move in receipt.move_ids:
+            move.move_line_ids.qty_done = move.product_qty
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(sub_mos[0].state, 'done')
+        self.assertEqual(sub_mos[1].state, 'done')
+        with self.assertRaises(UserError):
+            po.order_line.product_qty = lower_qty
