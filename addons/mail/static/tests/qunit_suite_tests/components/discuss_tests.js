@@ -2564,7 +2564,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
         { name: "General" },
         { name: "Special" },
     ]);
-    const { discussWidget, messaging } = await this.start({
+    const { messaging } = await this.start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2582,7 +2582,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
             name: 'text.txt',
         });
         inputFiles(
-            discussWidget.discuss.threadView.composerView.fileUploader.fileInput,
+            messaging.discuss.threadView.composerView.fileUploader.fileInput,
             [file]
         );
     });
@@ -2608,7 +2608,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     ];
     await afterNextRender(() =>
         inputFiles(
-            discussWidget.discuss.threadView.composerView.fileUploader.fileInput,
+            messaging.discuss.threadView.composerView.fileUploader.fileInput,
             files
         )
     );
@@ -3881,7 +3881,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    const { discussWidget } = await this.start({
+    const { messaging } = await this.start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -3920,7 +3920,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     });
     await afterNextRender(() =>
         inputFiles(
-            discussWidget.discuss.threadView.composerView.fileUploader.fileInput,
+            messaging.discuss.threadView.composerView.fileUploader.fileInput,
             [file]
         )
     );
