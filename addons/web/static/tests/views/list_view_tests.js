@@ -22,6 +22,7 @@ import {
     makeDeferred,
     mouseEnter,
     nextTick,
+    patchDate,
     patchTimeZone,
     patchWithCleanup,
     selectDropdownItem,
@@ -63,7 +64,6 @@ let testUtils,
     _t,
     clickFirst,
     BasicModel,
-    RamStorage,
     AbstractStorageService,
     loadState,
     patch,
@@ -6897,7 +6897,7 @@ QUnit.module("Views", (hooks) => {
                     action: [
                         {
                             id: 29,
-                            name: "Action partner",
+                            name: "Action event",
                         },
                     ],
                 },
@@ -6907,7 +6907,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
 
         await click(target.querySelector(".o_list_record_selector input"));
-
         await toggleActionMenu(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
@@ -6920,57 +6919,63 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(12);
 
-            const list = await makeView({
+            await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
                 arch: '<tree><field name="foo"/></tree>',
-                toolbar: {
-                    action: [
-                        {
-                            id: 44,
-                            name: "Custom Action",
-                            type: "ir.actions.server",
-                        },
-                    ],
-                    print: [],
+                info: {
+                    actionMenus: {
+                        action: [
+                            {
+                                id: 44,
+                                name: "Custom Action",
+                                type: "ir.actions.server",
+                            },
+                        ],
+                        print: [],
+                    },
                 },
                 mockRPC: function (route, args) {
                     if (route === "/web/action/load") {
                         assert.step(JSON.stringify(args));
                         return Promise.resolve({});
                     }
-                    return this._super(...arguments);
                 },
                 actionMenus: {},
+                searchViewArch: `
+                    <search>
+                        <filter name="bar" domain="[('bar', '=', true)]"/>
+                    </search>`,
             });
 
             assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
-
             assert.containsN(target, ".o_data_row", 4);
 
             // select all records
-            await click($(target).find("thead .o_list_record_selector input"));
+            await click(target.querySelector("thead .o_list_record_selector input"));
             assert.containsN(target, ".o_list_record_selector input:checked", 5);
-
             assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
 
             await toggleActionMenu(target);
             await toggleMenuItem(target, "Custom Action");
 
             // unselect first record (will unselect the thead checkbox as well)
-            await click($(target).find("tbody .o_list_record_selector:first input"));
+            await click(target.querySelector(".o_data_row .o_list_record_selector input"));
             assert.containsN(target, ".o_list_record_selector input:checked", 3);
+
             await toggleActionMenu(target);
             await toggleMenuItem(target, "Custom Action");
 
             // add a domain and select first two records
-            await list.reload({ domain: [["bar", "=", true]] });
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "bar");
             assert.containsN(target, ".o_data_row", 3);
             assert.containsNone(target, ".o_list_record_selector input:checked");
 
-            await click($(target).find("tbody .o_list_record_selector:nth(0) input"));
-            await click($(target).find("tbody .o_list_record_selector:nth(1) input"));
+            const rows = target.querySelectorAll(".o_data_row")
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
             assert.containsN(target, ".o_list_record_selector input:checked", 2);
 
             await toggleActionMenu(target);
@@ -7054,9 +7059,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("edit list line after line deletion", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("edit list line after line deletion", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -7064,20 +7067,24 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="top"><field name="foo"/><field name="int_field"/></tree>',
         });
 
-        await click($(target).find(".o_data_row:nth(2) > td:not(.o_list_record_selector)").first());
+        const rows = target.querySelectorAll(".o_data_row")
+        await click(rows[2].querySelector(".o_data_cell"));
         assert.ok(
             $(target).find(".o_data_row:nth(2)").is(".o_selected_row"),
             "third row should be in edition"
         );
-        await click(target.querySelector(".o_list_button_discard"));
+
+        await clickDiscard(target)
         await click(target.querySelector(".o_list_button_add"));
         assert.ok(
             $(target).find(".o_data_row:nth(0)").is(".o_selected_row"),
             "first row should be in edition (creation)"
         );
-        await click(target.querySelector(".o_list_button_discard"));
+
+        await clickDiscard(target)
         assert.containsNone(target, ".o_selected_row", "no row should be selected");
-        await click($(target).find(".o_data_row:nth(2) > td:not(.o_list_record_selector)").first());
+
+        await click(rows[2].querySelector(".o_data_cell"));
         assert.ok(
             $(target).find(".o_data_row:nth(2)").is(".o_selected_row"),
             "third row should be in edition"
@@ -8601,18 +8608,16 @@ QUnit.module("Views", (hooks) => {
             m2o: function () {},
         };
 
-        var prom = testUtils.makeTestPromise();
+        const prom = makeDeferred()
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree editable="top"><field name="m2o" required="1"/></tree>',
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
+            mockRPC: async function (route, args, performRPC) {
+                const result = await performRPC(route, args);
                 if (args.method === "onchange") {
-                    return prom.then(function () {
-                        return result;
-                    });
+                    await prom;
                 }
                 return result;
             },
@@ -8625,14 +8630,12 @@ QUnit.module("Views", (hooks) => {
         click(target.querySelector(".o_list_button_add"));
 
         prom.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
         assert.containsN(target, ".o_data_row", 5, "only one record should have been created");
     });
 
-    QUnit.skipWOWL("reference field rendering", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("reference field rendering", async function (assert) {
         serverData.models.foo.records.push({
             id: 5,
             reference: "res_currency,2",
@@ -8647,7 +8650,6 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "name_get") {
                     assert.step(args.model);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -8662,8 +8664,8 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("reference field batched in grouped list", async function (assert) {
-        assert.expect(8);
+    QUnit.test("reference field batched in grouped list", async function (assert) {
+        assert.expect(9);
 
         serverData.models.foo.records = [
             // group 1
@@ -8693,10 +8695,9 @@ QUnit.module("Views", (hooks) => {
                         assert.deepEqual(args.args[0], [1]);
                     }
                 }
-                return this._super.apply(this, arguments);
             },
         });
-        assert.verifySteps(["web_read_group", "name_get", "name_get"]);
+        assert.verifySteps(["get_views", "web_read_group", "name_get", "name_get"]);
         assert.containsN(target, ".o_group_header", 2);
         const allNames = Array.from(
             target.querySelectorAll(".o_data_cell"),
@@ -9515,7 +9516,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // select all records (the first one has value 1 for m2o)
-            await click(target, ".o_list_record_selector input");
+            await click(target.querySelector(".o_list_record_selector input"));
 
             // set m2o to 1 in first record
             await click(target.querySelector(".o_data_row .o_data_cell"));
@@ -10210,7 +10211,7 @@ QUnit.module("Views", (hooks) => {
 
         // Change the M2O value in the Form dialog
         await editInput(target, ".modal input", "OOF");
-        await click(target.querySelector(".modal .btn-primary"));
+        await click(target.querySelector(".modal .o_form_button_save"));
 
         assert.strictEqual(
             target.querySelector(".modal .o_field_widget[name=m2o]").innerText,
@@ -13242,12 +13243,22 @@ QUnit.module("Views", (hooks) => {
 
             var forceLocalStorage = true;
 
-            var Storage = RamStorage.extend({
-                getItem: function (key) {
+            // var Storage = RamStorage.extend({
+            //     getItem: function (key) {
+            //         assert.step("getItem " + key);
+            //         return forceLocalStorage ? '["m2o"]' : this._super.apply(this, arguments);
+            //     },
+            //     setItem: function (key, value) {
+            //         assert.step("setItem " + key + " to " + value);
+            //         return this._super.apply(this, arguments);
+            //     },
+            // });
+            patchWithCleanup(browser.localStorage, {
+                getItem: (key) => {
                     assert.step("getItem " + key);
                     return forceLocalStorage ? '["m2o"]' : this._super.apply(this, arguments);
                 },
-                setItem: function (key, value) {
+                setItem: (key, value) => {
                     assert.step("setItem " + key + " to " + value);
                     return this._super.apply(this, arguments);
                 },
@@ -13324,30 +13335,26 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("quickcreate in a many2one in a list", async function (assert) {
+    QUnit.test("quickcreate in a many2one in a list", async function (assert) {
         assert.expect(2);
 
         await makeView({
+            type: "list",
             arch: '<tree editable="top"><field name="m2o"/></tree>',
             serverData,
             resModel: "foo",
         });
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
-        await click($(target).find(".o_data_row:first .o_data_cell:first"));
-
-        const $input = $(target).find(".o_data_row:first .o_data_cell:first input");
-        await editInput($input, "aaa");
-        $input.trigger("keyup");
-        $input.trigger("blur");
+        const input = target.querySelector(".o_data_row .o_data_cell input");
+        await editInput(input, null, "aaa");
+        await triggerEvents(input, null, ["keyup", "blur"] )
         document.body.click();
+        await nextTick();
+        assert.containsOnce(target, ".modal", "the quick_create modal should appear");
 
-        await testUtils.nextTick();
-
-        assert.containsOnce(document.body, ".modal", "the quick_create modal should appear");
-
-        await click($(".modal .btn-primary:first"));
-        await click(document.body);
-
+        await click(target.querySelector(".modal .btn-primary"));
+        await click(target.querySelector(".o_list_view"));
         assert.strictEqual(
             target.getElementsByClassName("o_data_cell")[0].innerHTML,
             "aaa",
@@ -13633,19 +13640,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, intFieldInput);
     });
 
-    QUnit.skipWOWL("Date in evaluation context works with date field", async function (assert) {
-        assert.expect(11);
-
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
-        testUtils.mock.patch(BasicModel, {
-            _getEvalContext() {
-                const evalContext = this._super(...arguments);
-                assert.ok(dateRegex.test(evalContext.today));
-                assert.strictEqual(evalContext.current_date, evalContext.today);
-                return evalContext;
-            },
-        });
+    QUnit.test("Date in evaluation context works with date field", async function (assert) {
+        patchDate(1997, 0, 9, 12, 0, 0);
 
         serverData.models.foo.fields.birthday = { string: "Birthday", type: "date" };
         serverData.models.foo.records[0].birthday = "1997-01-08";
@@ -13653,6 +13649,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.records[2].birthday = "1997-01-10";
 
         await makeView({
+            type: "list",
             arch: `
                 <tree>
                     <field name="birthday" decoration-danger="birthday > today"/>
@@ -13662,25 +13659,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_data_row .text-danger");
-
-        unpatchDate();
-        testUtils.mock.unpatch(BasicModel);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "Datetime in evaluation context works with datetime field",
         async function (assert) {
-            assert.expect(6);
-
-            const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
-            const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
-            testUtils.mock.patch(BasicModel, {
-                _getEvalContext() {
-                    const evalContext = this._super(...arguments);
-                    assert.ok(datetimeRegex.test(evalContext.now));
-                    return evalContext;
-                },
-            });
+            patchDate(1997, 0, 9, 12, 0, 0);
 
             /**
              * Returns "1997-01-DD HH:MM:00" with D, H and M holding current UTC values
@@ -13702,6 +13686,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.foo.records[2].birthday = dateStringDelta(+30);
 
             await makeView({
+                type: "list",
                 arch: `
                 <tree>
                     <field name="birthday" decoration-danger="birthday > now"/>
@@ -13711,9 +13696,6 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.containsOnce(target, ".o_data_row .text-danger");
-
-            unpatchDate();
-            testUtils.mock.unpatch(BasicModel);
         }
     );
 
