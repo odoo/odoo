@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import legacyFieldRegistry from "web.field_registry";
 import { registry } from "@web/core/registry";
-import { ComponentAdapter } from "web.OwlCompatibility";
+import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "web.Domain";
+import legacyFieldRegistry from "web.field_registry";
+import { ComponentAdapter } from "web.OwlCompatibility";
 import viewUtils from "web.viewUtils";
 
 const { Component, useEffect, xml } = owl;
@@ -145,7 +146,7 @@ function mapStaticListDatapoint(staticList) {
     };
 }
 
-function mapRecordDatapoint(record) {
+export function mapRecordDatapoint(record) {
     const data = Object.assign({}, record.data);
     for (const fieldName of record.fieldNames) {
         const fieldType = record.fields[fieldName].type;
@@ -192,7 +193,7 @@ function mapRecordDatapoint(record) {
                 evalContext = evalContext || basicModelRecord.evalContext;
                 evaluated[k] = new Domain(mod, evalContext).compute(evalContext);
             } catch (e) {
-                throw new Error(_.str.sprintf('for modifier "%s": %s', k, e.message));
+                throw new Error(sprintf('for modifier "%s": %s', k, e.message));
             }
         }
         return evaluated;

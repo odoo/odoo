@@ -78,34 +78,37 @@ export const isTruthy = (value, truthyIfUndefined) =>
  * Combines the existing value of a node attribute with new given parts. The glue
  * is the string used to join the parts.
  *
- * @param {Element} node
+ * @param {Element} el
  * @param {string} attr
  * @param {string | string[]} parts
  * @param {string} [glue=" "]
  */
-export const combineAttributes = (node, attr, parts, glue = " ") => {
+export const combineAttributes = (el, attr, parts, glue = " ") => {
     const allValues = [];
-    if (node.hasAttribute(attr)) {
-        allValues.push(node.getAttribute(attr));
+    if (el.hasAttribute(attr)) {
+        allValues.push(el.getAttribute(attr));
     }
     allValues.push(...(Array.isArray(parts) ? parts : [parts]));
-    node.setAttribute(attr, allValues.join(glue));
+    el.setAttribute(attr, allValues.join(glue));
 };
 
 /**
  * XML equivalent of `document.createElement`.
  *
  * @param {string} tagName
- * @param {(Record<string, string> | Element[])[]} tagName
+ * @param {...(Iterable<Element> | Record<string, string>)} args
  * @returns {Element}
  */
 export const createElement = (tagName, ...args) => {
     const el = xmlDocument.createElement(tagName);
     for (const arg of args) {
+        if (!arg) {
+            continue;
+        }
         if (Symbol.iterator in arg) {
             // Children list
             el.append(...arg);
-        } else if (arg && typeof arg === "object") {
+        } else if (typeof arg === "object") {
             // Attributes
             for (const name in arg) {
                 el.setAttribute(name, arg[name]);

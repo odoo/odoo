@@ -28,6 +28,8 @@ import { nbsp } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { kanbanView } from "@web/views/kanban/kanban_view";
+import Widget from "web.Widget";
+import widgetRegistry from "web.widget_registry";
 
 const { Component, markup } = owl;
 
@@ -35,7 +37,7 @@ const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
 
 // WOWL remove after adapting tests
-let testUtils, Widget, widgetRegistry, FormRenderer, AbstractField, FieldChar, fieldRegistry;
+let testUtils, FormRenderer, AbstractField, FieldChar, fieldRegistry;
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -6977,20 +6979,23 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["resequence", "resequence"], "should have resequenced twice");
     });
 
-    QUnit.skipWOWL("basic support for widgets", async (assert) => {
+    QUnit.test("basic support for widgets", async (assert) => {
         // This test could be removed as soon as we drop the support of legacy widgets (see test
         // below, which is a duplicate of this one, but with an Owl Component instead).
         assert.expect(1);
 
-        const MyWidget = Widget.extend({
-            init: function (parent, dataPoint) {
-                serverData.models = dataPoint.data;
-            },
-            start: function () {
-                this.el.querySelectorel.text(JSON.stringify(serverData.models));
-            },
-        });
-        widgetRegistry.add("test", MyWidget);
+        widgetRegistry.add(
+            "test",
+            Widget.extend({
+                init(_parent, dataPoint) {
+                    this._super(...arguments);
+                    this.data = dataPoint.data;
+                },
+                start() {
+                    this.el.innerText = JSON.stringify(this.data);
+                },
+            })
+        );
 
         await makeView({
             type: "kanban",
@@ -7007,11 +7012,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_widget:nth-child(2)").innerText,
-            '{"foo":"gnap","id":3}',
-            "widget should have been instantiated"
+            getCard(2).querySelector(".o_legacy_widget").innerText,
+            '{"foo":"gnap"}'
         );
-        delete widgetRegistry.map.test;
     });
 
     QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
@@ -8471,11 +8474,12 @@ QUnit.module("Views", (hooks) => {
         widgetRegistry.add(
             "asyncwidget",
             Widget.extend({
-                willStart: function () {
-                    return widgetDef;
+                async willStart() {
+                    await Promise.all([this._super(...arguments), widgetDef]);
                 },
-                start: function () {
+                async start() {
                     this.el.innerText = "LOADED";
+                    return this._super(...arguments);
                 },
             })
         );
@@ -9170,20 +9174,21 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("kanban widget supports options parameters", async (assert) => {
+    QUnit.test("kanban widget supports options parameters", async (assert) => {
         assert.expect(2);
 
         widgetRegistry.add(
             "widget_test_option",
             Widget.extend({
-                init(parent, state, options) {
+                init(_parent, _state, options) {
                     this._super(...arguments);
                     this.title = options.attrs.title;
                 },
-                start() {
-                    this.el.querySelectorel.append(
+                async start() {
+                    this.$el.append(
                         $("<div>", { text: this.title, class: "o-test-widget-option" })
                     );
+                    return this._super(...arguments);
                 },
             })
         );
@@ -9205,9 +9210,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o-test-widget-option", 4);
         assert.strictEqual(
-            target.querySelector(".o-test-widget-option")[0].textContent,
+            target.querySelector(".o-test-widget-option").textContent,
             "Widget with Option"
         );
-        delete widgetRegistry.map.optionwidget;
     });
 });

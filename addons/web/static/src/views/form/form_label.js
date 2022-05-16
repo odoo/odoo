@@ -8,7 +8,11 @@ const { Component, xml } = owl;
 
 export class FormLabel extends Component {
     get className() {
-        const { invalid, empty } = fieldVisualFeedback(this.props.record, this.props.fieldName);
+        const { invalid, empty } = fieldVisualFeedback(
+            null,
+            this.props.record,
+            this.props.fieldName
+        );
         const classes = this.props.className ? [this.props.className] : [];
         if (invalid) {
             classes.push("o_field_invalid");

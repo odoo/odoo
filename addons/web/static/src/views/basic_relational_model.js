@@ -201,7 +201,6 @@ class DataPoint {
         for (const [name, descr] of Object.entries(fieldsInfo)) {
             this.activeFields[name] = descr.__WOWL_FIELD_DESCR__ || {};
         }
-        this.fieldNames = Object.keys(this.activeFields);
 
         this.setup(params, state);
     }
@@ -225,6 +224,10 @@ class DataPoint {
             }
         }
         return evalContext;
+    }
+
+    get fieldNames() {
+        return Object.keys(this.activeFields);
     }
 
     exportState() {
@@ -453,17 +456,15 @@ export class Record extends DataPoint {
             const fieldType = legDP.fields[fieldName].type;
             switch (fieldType) {
                 case "date":
+                case "datetime": {
                     // from moment to luxon
                     if (data[fieldName]) {
-                        data[fieldName] = deserializeDate(JSON.stringify(data[fieldName]));
+                        const deserialize =
+                            fieldType === "date" ? deserializeDate : deserializeDateTime;
+                        data[fieldName] = deserialize(JSON.stringify(data[fieldName]));
                     }
                     break;
-                case "datetime":
-                    // from moment to luxon
-                    if (data[fieldName]) {
-                        data[fieldName] = deserializeDateTime(JSON.stringify(data[fieldName]));
-                    }
-                    break;
+                }
                 case "one2many":
                 case "many2many": {
                     const currentVal = this.data[fieldName];
@@ -503,7 +504,7 @@ export class Record extends DataPoint {
                     }
                     break;
                 }
-                case "reference":
+                case "reference": {
                     data[fieldName] = data[fieldName]
                         ? {
                               resModel: data[fieldName].model,
@@ -512,8 +513,10 @@ export class Record extends DataPoint {
                           }
                         : false;
                     break;
-                case "char":
+                }
+                case "char": {
                     data[fieldName] = data[fieldName] || "";
+                }
             }
             if (legDP.specialData[fieldName]) {
                 this.preloadedData[fieldName] = legDP.specialData[fieldName];

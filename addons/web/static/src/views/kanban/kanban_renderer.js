@@ -21,6 +21,7 @@ import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { ViewWidget } from "@web/views/view_widget";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
@@ -660,6 +661,7 @@ KanbanRenderer.components = {
     KanbanColumnQuickCreate,
     KanbanRecordQuickCreate,
     ViewButton,
+    ViewWidget,
     KanbanAnimatedNumber,
     Dropdown,
     DropdownItem,

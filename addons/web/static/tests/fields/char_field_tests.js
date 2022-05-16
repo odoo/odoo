@@ -721,7 +721,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "input field: change value before pending onchange returns (2)",
+        "input field: change value before pending onchange returns (with fieldDebounce)",
         async function (assert) {
             // this test is exactly the same as the previous one, except that in
             // this scenario the onchange return *before* we validate the change

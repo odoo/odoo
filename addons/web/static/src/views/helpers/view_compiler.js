@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { registry } from "@web/core/registry";
 import {
     combineAttributes,
     createElement,
@@ -18,7 +17,6 @@ import {
 const { useComponent, xml } = owl;
 
 const templateIds = Object.create(null);
-const viewWidgetRegistry = registry.category("view_widgets");
 
 /**
  * @param {Element} parent
@@ -108,8 +106,44 @@ const applyInvisible = (invisible, compiled, params) => {
     return compiled;
 };
 
-const tupleArrayToExpr = (tupleArray) => {
-    return `{${tupleArray.map((tuple) => tuple.join(":")).join(",")}}`;
+/**
+ * @param {Element} target
+ * @param  {...Element} sources
+ * @returns {Element}
+ */
+export const assignOwlDirectives = (target, ...sources) => {
+    for (const source of sources) {
+        for (const { name, value } of source.attributes) {
+            if (name.startsWith("t-")) {
+                target.setAttribute(name, value);
+            }
+        }
+    }
+    return target;
+};
+
+/**
+ * Encodes an object into a string usable inside a pre-compiled template
+ * @param  {Object}
+ * @return {string}
+ */
+export const encodeObjectForTemplate = (obj) => `"${encodeURI(JSON.stringify(obj))}"`;
+
+/**
+ * Decodes a string within an attribute into an Object
+ * @param  {string} str
+ * @return {Object}
+ */
+export const decodeObjectForTemplate = (str) => JSON.parse(decodeURI(str));
+
+/**
+ * @param {Record<string, any>} obj
+ * @returns {string}
+ */
+const objectToString = (obj) => {
+    return `{${Object.entries(obj)
+        .map((t) => t.join(":"))
+        .join(",")}}`;
 };
 
 /**
@@ -184,7 +218,7 @@ const isComment = (node) => node.nodeType === 8;
  * @param {Element} el
  * @returns {boolean}
  */
-const isComponentNode = (el) =>
+export const isComponentNode = (el) =>
     el.tagName === getTitleTagName(el) || (el.tagName === "t" && "t-component" in el.attributes);
 
 /**
@@ -317,7 +351,6 @@ export class ViewCompiler {
 
         // Props
         const clickParams = {};
-        const owlAttributes = ["t-if"];
         const stringPropsAttributes = ["string", "size", "title", "icon"];
         const clickParamsAttributes = [
             "name",
@@ -335,9 +368,7 @@ export class ViewCompiler {
             "debounce",
         ];
         for (const { name, value } of el.attributes) {
-            if (owlAttributes.includes(name)) {
-                button.setAttribute(name, value);
-            } else if (stringPropsAttributes.includes(name)) {
+            if (stringPropsAttributes.includes(name)) {
                 button.setAttribute(name, `\`${value}\``);
             } else if (clickParamsAttributes.includes(name)) {
                 clickParams[name] = value;
@@ -345,6 +376,7 @@ export class ViewCompiler {
         }
         button.setAttribute("clickParams", JSON.stringify(clickParams));
         button.setAttribute("className", `'${el.className}'`);
+        assignOwlDirectives(button, el);
 
         // Button's body
         const buttonContent = [];
@@ -445,15 +477,15 @@ export class ViewCompiler {
     }
 
     createLabelFromField(fieldId, fieldName, fieldString, label, params) {
-        const props = [
-            ["id", `"${fieldId}"`],
-            ["fieldName", `"${fieldName}"`],
-            ["record", `record`],
-        ];
+        const props = {
+            id: `'${fieldId}'`,
+            fieldName: `'${fieldName}'`,
+            record: "record",
+        };
         let labelText = label.textContent || fieldString;
-        labelText = labelText ? `"${labelText}"` : `record.fields.${fieldName}.string`;
+        labelText = labelText ? `'${labelText}'` : `record.fields['${fieldName}'].string`;
         return createElement("FormLabel", {
-            "t-props": tupleArrayToExpr(props),
+            "t-props": objectToString(props),
             string: labelText,
         });
     }
@@ -565,25 +597,22 @@ export class ViewCompiler {
                 if (addLabel && !isOuterGroup) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
                     const fieldName = child.getAttribute("name");
-                    const props = [
-                        ["id", `${slotContent.getAttribute("id")}`],
-                        ["fieldName", `"${fieldName}"`],
-                        ["record", `record`],
-                        [
-                            "string",
-                            child.hasAttribute("string")
-                                ? `"${child.getAttribute("string")}"`
-                                : `record.fields.${fieldName}.string`,
-                        ],
-                    ];
+                    const props = {
+                        id: `${slotContent.getAttribute("id")}`,
+                        fieldName: `'${fieldName}'`,
+                        record: "record",
+                        string: child.hasAttribute("string")
+                            ? `'${child.getAttribute("string")}'`
+                            : `record.fields.${fieldName}.string`,
+                    };
                     // note: remove this oe_read/edit_only logic when form view
                     // will always be in edit mode
                     if (child.classList.contains("oe_read_only")) {
-                        props.push(["className", `"oe_read_only"`]);
+                        props.className = `'oe_read_only'`;
                     } else if (child.classList.contains("oe_edit_only")) {
-                        props.push(["className", `"oe_edit_only"`]);
+                        props.className = `'oe_edit_only'`;
                     }
-                    mainSlot.setAttribute("props", tupleArrayToExpr(props));
+                    mainSlot.setAttribute("props", objectToString(props));
                     mainSlot.setAttribute("Component", "constructor.components.FormLabel");
                     mainSlot.setAttribute("subType", "'item_component'");
                 }
@@ -775,13 +804,20 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileWidget(el) {
-        const widgetName = el.getAttribute("name");
-        const tComponent = createElement("t");
-        tComponent.className = "'o_widget'";
-        tComponent.setAttribute("t-component", `getWidget('${widgetName}')`);
-        tComponent.setAttribute("record", "record");
-        tComponent.setAttribute("readonly", "props.readonly");
-        return tComponent;
+        const attrs = {};
+        const props = { record: "record", options: "{mode:props.readonly?'readonly':'edit'}" };
+        for (const { name, value } of el.attributes) {
+            if (name === "name") {
+                props.name = `'${value}'`;
+            } else if (name === "modifiers") {
+                attrs.modifiers = JSON.parse(value || "{}");
+            } else {
+                attrs[name] = value;
+            }
+        }
+        props.node = encodeObjectForTemplate({ attrs });
+        const viewWidget = createElement("ViewWidget", props);
+        return assignOwlDirectives(viewWidget, el);
     }
 }
 
@@ -799,12 +835,6 @@ export const useViewCompiler = (ViewCompiler, templateKey, xmlDoc, params) => {
     Object.assign(component, {
         evalDomain(record, expr) {
             return new Domain(expr).contains(record.evalContext);
-        },
-        getWidget(widgetName) {
-            if (!viewWidgetRegistry.contains(widgetName)) {
-                throw new Error(`No widget named "${widgetName}"`);
-            }
-            return viewWidgetRegistry.get(widgetName);
         },
     });
 

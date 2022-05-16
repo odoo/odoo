@@ -66,14 +66,14 @@ QUnit.module("Form Compiler", () => {
             <OuterGroup>
                <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
-                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'field_display_name_1',fieldName:&quot;display_name&quot;,record:record,string:record.fields.display_name.string}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'field_display_name_1',fieldName:'display_name',record:record,string:record.fields.display_name.string}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
                         <Field id="'field_display_name_1'" name="'display_name'" record="record" archs="'views' in record.fields.display_name and record.fields.display_name.views" class="scope &amp;&amp; scope.className" />
                      </t>
                   </InnerGroup>
                </t>
                <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
-                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'field_charfield_2',fieldName:&quot;charfield&quot;,record:record,string:record.fields.charfield.string}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'field_charfield_2',fieldName:'charfield',record:record,string:record.fields.charfield.string}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
                         <Field id="'field_charfield_2'" name="'charfield'" record="record" archs="'views' in record.fields.charfield and record.fields.charfield.views" class="scope &amp;&amp; scope.className" />
                      </t>
                   </InnerGroup>

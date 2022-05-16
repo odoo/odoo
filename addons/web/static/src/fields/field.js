@@ -50,8 +50,8 @@ function getFieldClassFromRegistry(viewType, fieldType, widget, jsClass) {
     return DefaultField;
 }
 
-export function fieldVisualFeedback(record, fieldName) {
-    const Cls = record.activeFields[fieldName].FieldComponent;
+export function fieldVisualFeedback(FieldComponent, record, fieldName) {
+    const Cls = FieldComponent || record.activeFields[fieldName].FieldComponent;
     const readonly = record.isReadonly(fieldName);
     const inEdit = record.mode !== "readonly";
 
@@ -80,6 +80,7 @@ export class Field extends Component {
 
     get classNames() {
         const { readonly, required, invalid, empty } = fieldVisualFeedback(
+            this.FieldComponent,
             this.props.record,
             this.props.name
         );

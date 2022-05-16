@@ -2,13 +2,14 @@
 
 import { Field } from "@web/fields/field";
 import { ButtonBox } from "@web/views/form/button_box/button_box";
-import { useViewCompiler } from "@web/views/helpers/view_compiler";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { Notebook } from "../../core/notebook/notebook";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
+import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { useBounceButton } from "@web/views/helpers/view_hook";
-import { FormLabel } from "./form_label";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { ViewWidget } from "@web/views/view_widget";
+import { Notebook } from "../../core/notebook/notebook";
 import { FormCompiler } from "./form_compiler";
+import { FormLabel } from "./form_label";
 
 const { Component, useSubEnv, useRef, useState, xml } = owl;
 
@@ -37,6 +38,7 @@ FormRenderer.components = {
     FormLabel,
     ButtonBox,
     ViewButton,
+    ViewWidget,
     Notebook,
     OuterGroup,
     InnerGroup,
