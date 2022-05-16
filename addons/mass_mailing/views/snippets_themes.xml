@@ -346,10 +346,50 @@
             t-att-data-variable="radius_variable"/>
 </template>
 
+<template id="snippet_options_extra_shapes" inherit_id="web_editor.snippet_options">
+    <xpath expr="//div[hasclass('o_we_image_shape')]//we-select-page[hasclass('o_we_basic_shapes')]" position="inside">
+        <we-button data-set-img-shape="mass_mailing/basic/circle" data-select-label="Circle"/>
+        <we-button data-set-img-shape="mass_mailing/basic/triangle" data-select-label="Triangle"/>
+        <we-button data-set-img-shape="mass_mailing/basic/slanted" data-select-label="Slanted"/>
+    </xpath>
+</template>
+
+<template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
+    <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
+        <div data-selector="span.fa, i.fa, img">
+            <we-select string="Alignment" data-state-to-first-class="true">
+                <we-button data-select-class="" title="Unalign">None</we-button>
+                <we-button data-select-class="float-left" title="Align Left">Left</we-button>
+                <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
+                <we-button data-select-class="float-right" title="Align Right">Right</we-button>
+            </we-select>
+
+            <t t-call="mass_mailing.snippet_options_border_line_widgets">
+                <t t-set="label">Border</t>
+                <t t-set="with_bs_class" t-value="True"></t>
+            </t>
+
+            <we-input string="Round Corners"
+            data-select-style="0" data-css-property="border-radius"
+            data-unit="px" data-extra-class="rounded"
+            t-att-data-variable="radius_variable"/>
+
+            <we-input string="Padding" data-select-style="" data-unit="px" data-css-property="padding"/>
+        </div>
+        <div data-selector="span.fa, i.fa">
+            <we-row string="Style">
+                <we-button class="fa fa-fw fa-square" data-select-class="rounded" title="Shape: Rounded"/>
+                <we-button class="fa fa-fw fa-circle-o" data-select-class="rounded-circle" title="Shape: Circle"/>
+                <we-button class="fa fa-fw fa-sun-o" data-select-class="shadow" title="Shadow"/>
+                <we-button class="fa fa-fw fa-picture-o" data-select-class="img-thumbnail" title="Shape: Thumbnail"/>
+            </we-row>
+        </div>
+    </xpath>
+</template>
 <!-- Snippet themes Options -->
 <template id="snippet_options">
     <t t-set="no_animations" t-value="True"/>
-    <t t-call="web_editor.snippet_options"/>
+    <t t-call="mass_mailing.snippet_options_extra_shapes"/>
     <t t-out="0"/>
 
     <!-- Border | Columns -->
