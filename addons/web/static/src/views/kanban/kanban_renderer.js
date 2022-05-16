@@ -645,12 +645,12 @@ export class KanbanRenderer extends Component {
     }
 
     tooltipAttributes(group) {
-        if (!group.tooltipLines) {
+        if (!group.tooltip) {
             return {};
         }
         return {
             "data-tooltip-template": "web.KanbanGroupTooltip",
-            "data-tooltip-info": JSON.stringify(group.tooltipLines),
+            "data-tooltip-info": JSON.stringify(group.tooltip),
         };
     }
 }

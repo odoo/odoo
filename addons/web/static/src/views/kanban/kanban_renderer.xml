@@ -191,9 +191,11 @@
 
     <t t-name="web.KanbanGroupTooltip" owl="1">
         <div>
-            <t t-foreach="info" t-as="line" t-key="line_index">
-                <t t-esc="line"/>
-                <br t-if="!line_last"/>
+            <t t-foreach="info" t-as="entry" t-key="entry_index">
+                <t t-esc="entry.title"/>
+                <br/>
+                <t t-esc="entry.value"/>
+                <br t-if="!field_last"/>
             </t>
         </div>
     </t>

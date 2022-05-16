@@ -165,7 +165,8 @@ class KanbanGroup extends Group {
     }
 
     async load() {
-        await super.load();
+        const proms = [];
+        proms.push(super.load());
         const groupName = this.groupByField.name;
         if (
             this.groupByField.type === "many2one" &&
@@ -176,16 +177,25 @@ class KanbanGroup extends Group {
             const tooltipInfo = this.model.tooltipInfo[groupName];
             const fieldNames = Object.keys(tooltipInfo);
             // This read will be batched for all groups
-            const [tooltipData] = await this.model.orm.read(
+            const readProm = this.model.orm.read(
                 resModel,
                 [this.value],
                 ["display_name", ...fieldNames]
             );
-            this.tooltipLines = fieldNames.flatMap((fieldName) => [
-                tooltipInfo[fieldName],
-                tooltipData[fieldName],
-            ]);
+            proms.push(readProm);
+            const [values] = await readProm;
+            this.tooltip = null;
+            for (const fieldName of fieldNames) {
+                if (values[fieldName]) {
+                    this.tooltip = this.tooltip || [];
+                    this.tooltip.push({
+                        title: tooltipInfo[fieldName],
+                        value: values[fieldName],
+                    });
+                }
+            }
         }
+        await Promise.all(proms);
     }
 
     /**

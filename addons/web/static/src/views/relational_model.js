@@ -166,7 +166,6 @@ class RequestBatcherORM extends ORM {
                 batch.deferred.resolve(result);
             });
         }
-        // TODO check why reads where sequential
 
         return batch.deferred;
     }
