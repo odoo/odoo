@@ -14,7 +14,7 @@ class ReportBomStructure(models.AbstractModel):
             'partner_id': seller.name.id,
             'quantity': bom_quantity,
             'uom': bom.product_uom_id.name,
-            'prod_cost': seller.price / ratio_uom_seller,
+            'prod_cost': seller.price / ratio_uom_seller * bom_quantity,
             'bom_cost': seller.price / ratio_uom_seller * bom_quantity,
             'level': level or 0
         }
@@ -25,7 +25,7 @@ class ReportBomStructure(models.AbstractModel):
             bom_quantity = bom.product_qty * factor
             seller = product._select_seller(quantity=bom_quantity, uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller:
-                price += seller.product_uom._compute_price(seller.price, product.uom_id)
+                price += seller.product_uom._compute_price(seller.price, product.uom_id) * bom_quantity
         return price
 
     def _get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
@@ -41,6 +41,7 @@ class ReportBomStructure(models.AbstractModel):
             if seller:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller, level, bom_quantity)
                 res['total'] += res['subcontracting']['bom_cost']
+                res['bom_cost'] += res['subcontracting']['bom_cost']
         return res
 
     def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, child_bom_ids, unfolded):
