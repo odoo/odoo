@@ -243,7 +243,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: interacting with export templates", async function (assert) {
-        assert.expect(17);
+        assert.expect(22);
 
         await makeView({
             serverData,
@@ -322,8 +322,8 @@ QUnit.module("ViewDialogs", (hooks) => {
             ".o_exported_lists_select",
             "the template list is still visible"
         );
-        assert.containsOnce(target, ".o_save_list_btn", "a save button is now visible");
-        assert.containsOnce(target, ".o_cancel_list_btn", "a cancel button is now visible");
+        assert.containsNone(target, ".o_save_list_btn", "save button is not visible");
+        assert.containsOnce(target, ".o_cancel_list_btn .fa-undo", "undo button is visible");
         assert.containsN(
             target,
             ".o_fields_list .o_export_field",
@@ -373,6 +373,33 @@ QUnit.module("ViewDialogs", (hooks) => {
             target.querySelector(".o_exported_lists_select").selectedOptions[0].textContent,
             "Export template",
             "the new template is now selected"
+        );
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Activities", "Foo", "Bar"]
+        );
+
+        await click(target, ".o_delete_exported_list");
+        assert.strictEqual(
+            document.querySelectorAll(".o_dialog .modal-body")[1].textContent,
+            "Do you really want to delete this export template?"
+        );
+        assert.containsN(
+            document.body,
+            ".o_dialog",
+            2,
+            "a confirmation dialog has appeared on top"
+        );
+
+        await click(document.body, ".o_dialog:nth-child(2) .btn-primary");
+        assert.strictEqual(
+            target.querySelector(".o_exported_lists_select").selectedOptions[0].textContent,
+            "",
+            "the template list has been resetted"
+        );
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Foo"]
         );
     });
 
@@ -470,8 +497,69 @@ QUnit.module("ViewDialogs", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
             ["Activities", "Foo", "Partner name"]
         );
+    });
 
+    QUnit.test("Export dialog: compatible and export type options", async function (assert) {
+        assert.expect(5);
+
+        mockDownload(({ url, data }) => {
+            assert.strictEqual(url, "/web/export/wow", "should call get_file with the correct url");
+            assert.ok(
+                JSON.parse(data.data)["import_compat"],
+                "request to generate the file must have 'import_compat' as true"
+            );
+            return Promise.resolve();
+        });
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([
+                        { tag: "csv", label: "CSV" },
+                        { tag: "xls", label: "Excel" },
+                        { tag: "wow", label: "WOW" },
+                    ]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    if (args.prefix === "partner_ids") {
+                        assert.step("fetch fields for 'partner_ids'");
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        assert.containsN(
+            target,
+            "input[name='o_export_format_name']",
+            3,
+            "three inputs are available to choose the format"
+        );
+        assert.strictEqual(
+            target.querySelectorAll("input[name='o_export_format_name']")[2].value,
+            "wow",
+            "the third input has the right value"
+        );
+        assert.strictEqual(
+            target.querySelectorAll("input[name='o_export_format_name']")[2].labels[0].textContent,
+            "WOW",
+            "the third input has the right label"
+        );
+
+        await click(target.querySelectorAll("input[name='o_export_format_name']")[2]);
         await click(target, ".o_import_compat input");
+        await click(target, ".o_select_button");
     });
 
     QUnit.test("Direct export list", async function (assert) {

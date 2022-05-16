@@ -8,6 +8,15 @@ import { useSortable } from "@web/core/utils/ui";
 
 const { Component, useRef, useState, onMounted } = owl;
 
+class DeleteExportListDialog extends Component {
+    async onDelete() {
+        await this.props.delete();
+        this.props.close();
+    }
+}
+DeleteExportListDialog.components = { Dialog };
+DeleteExportListDialog.template = "web.DeleteExportListDialog";
+
 class ExportDataItem extends Component {
     setup() {
         this.state = useState({
@@ -48,7 +57,9 @@ ExportDataItem.props = {
 export class ExportDataDialog extends Component {
     setup() {
         super.setup();
+        this.dialog = useService("dialog");
         this.notification = useService("notification");
+        this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.draggableRef = useRef("draggable");
         this.exportListRef = useRef("exportList");
@@ -64,7 +75,7 @@ export class ExportDataDialog extends Component {
             compatible: false,
             templateId: null,
             exportedFields: [],
-            templateisEditing: false,
+            isEditingTemplate: false,
             search: [],
         });
 
@@ -131,8 +142,20 @@ export class ExportDataDialog extends Component {
     }
 
     handleTemplateEdition() {
-        if (this.state.templateId && !this.state.templateisEditing) {
-            this.state.templateisEditing = true;
+        if (this.state.templateId && !this.state.isEditingTemplate) {
+            this.state.isEditingTemplate = true;
+        }
+    }
+
+    defaultExportedFields() {
+        if (this.state.compatible) {
+            this.state.exportedFields = this.state.exportedFields.filter(
+                (i) => this.fieldsAvailableAll[i]
+            );
+        } else {
+            this.state.exportedFields = Object.values(this.props.root.activeFields).map(
+                (i) => i.name && this.fieldsAvailableAll[i.name] && i.name
+            );
         }
     }
 
@@ -153,9 +176,9 @@ export class ExportDataDialog extends Component {
     async loadExportList(value) {
         this.state.templateId = value;
         if (value === "new_template") {
-            return (this.state.templateisEditing = true);
+            return (this.state.isEditingTemplate = true);
         }
-        this.state.templateisEditing = false;
+        this.state.isEditingTemplate = false;
         const fields = await this.rpc("/web/export/namelist", {
             model: this.props.root.resModel,
             export_id: Number(value),
@@ -192,30 +215,23 @@ export class ExportDataDialog extends Component {
                 type: "danger",
             });
         }
-
-        const exportList = this.exportList.map((field) => [
-            0,
-            0,
+        const id = await this.orm.create(
+            "ir.exports",
             {
-                name: field.id,
+                name,
+                export_fields: this.exportList.map((field) => [
+                    0,
+                    0,
+                    {
+                        name: field.id,
+                    },
+                ]),
+                resource: this.props.root.resModel,
             },
-        ]);
+            this.props.context
+        );
 
-        const id = await this.rpc("/web/dataset/call_kw", {
-            args: [
-                {
-                    name,
-                    export_fields: exportList,
-                    resource: this.props.root.resModel,
-                },
-            ],
-            kwargs: {
-                context: this.props.context,
-            },
-            model: "ir.exports",
-            method: "create",
-        });
-
+        this.state.isEditingTemplate = false;
         this.state.templateId = id;
         this.templates.push({ id, name });
     }
@@ -298,6 +314,22 @@ export class ExportDataDialog extends Component {
         );
     }
 
+    async onDeleteExportList() {
+        this.dialog.add(DeleteExportListDialog, {
+            text: this.env._t("Do you really want to delete this export template?"),
+            delete: async () => {
+                const id = Number(this.state.templateId);
+                await this.orm.unlink("ir.exports", [id], this.props.context);
+                this.templates.splice(
+                    this.templates.findIndex((i) => i.id === id),
+                    1
+                );
+                this.state.templateId = null;
+                this.defaultExportedFields();
+            },
+        });
+    }
+
     setFormat(ev) {
         if (ev.target.checked) {
             this.state.selectedFormat = this.availableFormats.findIndex(
@@ -314,15 +346,7 @@ export class ExportDataDialog extends Component {
         fields.forEach((field) => {
             this.fieldsAvailableAll[field.id] = field;
         });
-        if (this.state.compatible) {
-            this.state.exportedFields = this.state.exportedFields.filter(
-                (i) => this.fieldsAvailableAll[i]
-            );
-        } else {
-            this.state.exportedFields = Object.values(this.props.root.activeFields).map(
-                (i) => i.name && this.fieldsAvailableAll[i.name] && i.name
-            );
-        }
+        this.defaultExportedFields();
         this.state.templateId && this.loadExportList(this.state.templateId);
     }
 }
