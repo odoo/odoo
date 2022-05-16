@@ -830,6 +830,7 @@ class SaleOrder(models.Model):
 
     def _show_cancel_wizard(self):
         for order in self:
+<<<<<<< HEAD
             if order.invoice_ids.filtered(lambda inv: inv.state == 'draft') and not order._context.get('disable_cancel_warning'):
                 return True
         return False
@@ -852,6 +853,15 @@ class SaleOrder(models.Model):
             ))
 
     # INVOICING #
+=======
+            ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
+            order_ref = ref % (order._name, order.id or order._origin.id, order.name)
+            customer_ref = ref % (order.partner_id._name, order.partner_id.id, order.partner_id.display_name)
+            order.activity_schedule(
+                'sale.mail_act_sale_upsell',
+                user_id=order.user_id.id or order.partner_id.user_id.id,
+                note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
+>>>>>>> d59dbc6c27b... temp
 
     def _prepare_invoice(self):
         """
