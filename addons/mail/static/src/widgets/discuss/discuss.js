@@ -22,31 +22,29 @@ export const DiscussWidget = AbstractAction.extend({
     init(parent, action, options={}) {
         this._super(...arguments);
 
-        // control panel attributes
-        this.action = action;
-        this.actionManager = parent;
-        this.discuss = undefined;
-        this.options = options;
-
         this.app = undefined;
 
-        this._lastPushStateActiveThread = null;
-        this.env = Component.env;
         Component.env.services.messaging.modelManager.messagingCreatedPromise.then(async () => {
             const messaging = Component.env.services.messaging.modelManager.messaging;
-            const initActiveId = this.options.active_id ||
-                (this.action.context && this.action.context.active_id) ||
-                (this.action.params && this.action.params.default_active_id) ||
+            const initActiveId = options.active_id ||
+                (action.context && action.context.active_id) ||
+                (action.params && action.params.default_active_id) ||
                 'mail.box_inbox';
-            this.discuss = messaging.discuss;
-            this.discuss.update({ discussView: insertAndReplace(), initActiveId });
+            const discuss = messaging.discuss;
+            discuss.update({
+                discussView: insertAndReplace({
+                    actionId: action.id,
+                    actionManager: parent,
+                }),
+                initActiveId,
+            });
             // Wait for messaging to be initialized to make sure the system
             // knows of the "init thread" if it exists.
             await messaging.initializedPromise;
-            if (!this.discuss.isInitThreadHandled) {
-                this.discuss.update({ isInitThreadHandled: true });
-                if (!this.discuss.thread) {
-                    this.discuss.openInitThread();
+            if (!discuss.isInitThreadHandled) {
+                discuss.update({ isInitThreadHandled: true });
+                if (!discuss.thread) {
+                    discuss.openInitThread();
                 }
             }
         });
@@ -73,18 +71,6 @@ export const DiscussWidget = AbstractAction.extend({
             // prevent twice call to on_attach_callback (FIXME)
             return;
         }
-        this._pushStateActionManagerEventListener = ev => {
-            ev.stopPropagation();
-            if (this._lastPushStateActiveThread === this.discuss.thread) {
-                return;
-            }
-            this._pushStateActionManager();
-            this._lastPushStateActiveThread = this.discuss.thread;
-        };
-        this.el.addEventListener(
-            'o-push-state-action-manager',
-            this._pushStateActionManagerEventListener
-        );
 
         this.app = new App(DiscussContainer, {
             templates: window.__OWL_TEMPLATES__,
@@ -104,23 +90,5 @@ export const DiscussWidget = AbstractAction.extend({
             this.app.destroy();
         }
         this.app = undefined;
-        this.el.removeEventListener(
-            'o-push-state-action-manager',
-            this._pushStateActionManagerEventListener
-        );
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _pushStateActionManager() {
-        this.actionManager.do_push_state({
-            action: this.action.id,
-            active_id: this.discuss.activeId,
-        });
     },
 });
