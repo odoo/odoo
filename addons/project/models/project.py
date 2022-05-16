@@ -236,18 +236,25 @@ class Project(models.Model):
             project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
-        task_data = self.env['project.task']._read_group(
-            [('project_id', 'in', self.ids),
-             ('is_closed', '=', False)],
-            ['project_id', 'display_project_id:count'], ['project_id'])
+        domain = [('project_id', 'in', self.ids), ('is_closed', '=', False)]
+        fields = ['project_id', 'display_project_id:count']
+        groupby = ['project_id']
+        task_data = self.env['project.task']._read_group(domain, fields, groupby)
         result_wo_subtask = defaultdict(int)
         result_with_subtasks = defaultdict(int)
         for data in task_data:
             result_wo_subtask[data['project_id'][0]] += data['display_project_id']
             result_with_subtasks[data['project_id'][0]] += data['project_id_count']
+        task_all_data = self.env['project.task'].with_context(active_test=False)._read_group(domain, fields, groupby)
+        all_tasks_wo_subtasks = defaultdict(int)
+        for data in task_all_data:
+            all_tasks_wo_subtasks[data['project_id'][0]] += data['display_project_id']
+
         for project in self:
             project.task_count = result_wo_subtask[project.id]
             project.task_count_with_subtasks = result_with_subtasks[project.id]
+            if not project.active:
+                project.task_count = all_tasks_wo_subtasks[project.id]
 
     def _default_stage_id(self):
         # Since project stages are order by sequence first, this should fetch the one with the lowest sequence number.
@@ -749,6 +756,7 @@ class Project(models.Model):
         context = ast.literal_eval(context)
         context.update({
             'create': self.active,
+            'active_test': self.active
             })
         action['context'] = context
         return action
@@ -1193,10 +1201,10 @@ class Task(models.Model):
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
-                                     domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+                                     domain="[('project_id', '!=', False), ('id', '!=', id)]")
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
-                                     domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+                                     domain="[('project_id', '!=', False), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
     is_blocked = fields.Boolean(compute='_compute_is_blocked', store=True, recursive=True)
 
