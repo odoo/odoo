@@ -2,6 +2,7 @@
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
+import { actionService } from "@web/webclient/actions/action_service";
 import {
     click,
     editInput,
@@ -9,11 +10,9 @@ import {
     patchWithCleanup,
     triggerEvent,
     editSelect,
+    clickSave,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
-
-// WOWL remove after adapting tests
-let testUtils;
 
 let target;
 let serverData;
@@ -416,8 +415,8 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("reference in form view", async function (assert) {
-        assert.expect(15);
+    QUnit.test("reference in form view", async function (assert) {
+        assert.expect(14);
 
         serverData.views = {
             "product,false,form": `
@@ -427,7 +426,23 @@ QUnit.module("Fields", (hooks) => {
             `,
         };
 
-        const form = await makeView({
+        patchWithCleanup(actionService, {
+            start() {
+                const service = this._super(...arguments);
+                return {
+                    ...service,
+                    doAction(action) {
+                        assert.strictEqual(
+                            action.res_id,
+                            17,
+                            "should do a do_action with correct parameters"
+                        );
+                    },
+                };
+            },
+        });
+
+        await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -477,14 +492,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        testUtils.mock.intercept(form, "do_action", function (event) {
-            assert.strictEqual(
-                event.data.action.res_id,
-                17,
-                "should do a do_action with correct parameters"
-            );
-        });
-
         assert.strictEqual(
             target.querySelector("a.o_form_uri").textContent,
             "xphone",
@@ -494,60 +501,52 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_form_button_edit");
 
-        assert.containsN(
-            form,
-            ".o_field_widget",
-            2,
-            "should contain two field widgets (selection and many2one)"
-        );
-        assert.containsOnce(form, ".o_field_many2one", "should contain one many2one");
+        assert.containsOnce(target, ".o_field_many2one_selection", "should contain one many2one");
         assert.strictEqual(
-            form.$(".o_field_widget select").val(),
+            target.querySelector(".o_field_widget select").value,
             "product",
             "widget should contain one select with the model"
         );
         assert.strictEqual(
-            form.$(".o_field_widget input").val(),
+            target.querySelector(".o_field_widget input").value,
             "xphone",
             "widget should contain one input with the record"
         );
 
-        var options = _.map(form.$(".o_field_widget select > option"), function (el) {
-            return $(el).val();
-        });
+        const options = [...target.querySelectorAll(".o_field_widget select > option")].map(
+            (el) => el.value
+        );
         assert.deepEqual(
             options,
             ["", "product", "partner_type", "partner"],
             "the options should be correctly set"
         );
 
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await click(target, ".o_external_button");
 
         assert.strictEqual(
-            $(".modal .modal-title").text().trim(),
+            target.querySelector(".modal .modal-title").textContent.trim(),
             "Open: custom label",
             "dialog title should display the custom string label"
         );
-        await testUtils.dom.click($(".modal .o_form_button_cancel"));
+        await click(target, ".modal .o_form_button_cancel");
 
-        await testUtils.fields.editSelect(form.$(".o_field_widget select"), "partner_type");
+        await editSelect(target, ".o_field_widget select", "partner_type");
         assert.strictEqual(
-            form.$(".o_field_widget input").val(),
+            target.querySelector(".o_field_widget input").value,
             "",
             "many2one value should be reset after model change"
         );
 
-        await testUtils.fields.many2one.clickOpenDropdown("reference");
-        await testUtils.fields.many2one.clickHighlightedItem("reference");
+        await click(target, ".o_field_widget[name=reference] input");
+        await click(target.querySelector(".o_field_widget[name=reference] .ui-menu-item"));
 
-        await testUtils.form.clickSave(form);
+        await clickSave(target);
         assert.strictEqual(
-            form.$("a.o_form_uri:contains(gold)").length,
-            1,
+            target.querySelector("a.o_form_uri").textContent,
+            "gold",
             "should contain a link with the new value"
         );
-
-        form.destroy();
     });
 
     QUnit.test("interact with reference field changed by onchange", async function (assert) {
@@ -596,7 +595,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_save");
     });
 
-    QUnit.skipWOWL("default_get and onchange with a reference field", async function (assert) {
+    QUnit.test("default_get and onchange with a reference field", async function (assert) {
         assert.expect(8);
 
         serverData.models.partner.fields.reference.default = "product,37";
@@ -629,8 +628,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.verifySteps(["product"], "the first name_get should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='reference'] select").value,
@@ -659,7 +656,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("default_get a reference field in a x2m", async function (assert) {
+    QUnit.test("default_get a reference field in a x2m", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.turtles.default = [
@@ -690,8 +687,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>
             `,
         });
-
-        await click(target, ".o_form_button_edit");
 
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="turtles"] .o_data_row').textContent,
@@ -788,7 +783,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("ReferenceField with model_field option", async function (assert) {
+    QUnit.test("ReferenceField with model_field option", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.records[0].reference = false;

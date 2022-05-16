@@ -1068,6 +1068,9 @@ export class Record extends DataPoint {
     }
 
     async _loadReference(fieldName, value) {
+        // const modelField = this.activeFields[fieldName].options.model_field;
+        // if (modelField) {
+        // }
         if (value) {
             if (typeof value === "string") {
                 const [resModel, resId] = value.split(",");

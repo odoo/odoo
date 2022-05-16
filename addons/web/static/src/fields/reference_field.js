@@ -4,12 +4,25 @@ import { registry } from "@web/core/registry";
 import { Many2OneField } from "./many2one_field";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component, useState, xml } = owl;
+const { Component, onWillUpdateProps, useState, xml } = owl;
+
+function valuesEqual(a, b) {
+    return a.resId === b.resId && a.resModel === b.resModel;
+}
 
 export class ReferenceField extends Component {
     setup() {
         this.state = useState({
-            resModel: this.props.value && this.props.value.resModel,
+            resModel: this.relation,
+        });
+
+        onWillUpdateProps((nextProps) => {
+            if (
+                valuesEqual(this.props.value || {}, nextProps.value || {}) &&
+                nextProps.modelFieldValue !== this.props.modelFieldValue
+            ) {
+                nextProps.update(false);
+            }
         });
     }
 
@@ -20,19 +33,18 @@ export class ReferenceField extends Component {
             value: this.props.value && [this.props.value.resId, this.props.value.displayName],
             update: this.updateM2O.bind(this),
         };
-        delete p.canSelectModel;
+        delete p.hideModelSelector;
+        delete p.modelFieldValue;
         return p;
     }
 
-    get modelInfo() {
-        return this.props.record.preloadedData[this.props.name];
-    }
-
     get relation() {
-        if (this.props.value && this.props.value.resModel) {
+        if (this.props.modelFieldValue) {
+            return this.props.modelFieldValue;
+        } else if (this.props.value && this.props.value.resModel) {
             return this.props.value.resModel;
         } else {
-            return this.state.resModel;
+            return this.state && this.state.resModel;
         }
     }
 
@@ -57,7 +69,7 @@ export class ReferenceField extends Component {
 
 ReferenceField.template = xml/*xml*/ `
     <div class="o_row">
-        <t t-if="!props.readonly and props.canSelectModel">
+        <t t-if="!props.readonly and !props.hideModelSelector">
             <select class="o_input" t-on-change="(ev) => this.updateModel(ev.target.value || false)">
                 <option />
                 <t t-foreach="props.record.fields[props.name].selection" t-as="option" t-key="option[0]">
@@ -75,25 +87,38 @@ ReferenceField.components = {
 };
 ReferenceField.props = {
     ...standardFieldProps,
-    canSelectModel: Boolean,
+    hideModelSelector: { type: Boolean, optional: true },
+    modelFieldValue: { type: String, optional: true },
+    value: {
+        type: [Object, false],
+        shape: {
+            resModel: String,
+            resId: Number,
+            displayName: String,
+        },
+    },
 };
 
 ReferenceField.extractProps = (fieldName, record, attrs) => {
-    let charProps = {};
+    let props = {};
+    const preloadedData = record.preloadedData[fieldName];
     if (record.fields[fieldName].type === "char") {
-        const preloadedData = record.preloadedData[fieldName];
-        charProps = {
+        props = {
             value: {
                 resModel: preloadedData.model,
                 resId: preloadedData.data.id,
                 displayName: preloadedData.data.display_name,
             },
         };
+    } else if (attrs.options["model_field"]) {
+        props = {
+            hideModelSelector: true,
+            modelFieldValue: preloadedData && preloadedData.modelName,
+        };
     }
 
     return {
-        canSelectModel: !attrs.options.model_field,
-        ...charProps,
+        ...props,
     };
 };
 
