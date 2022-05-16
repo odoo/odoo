@@ -235,6 +235,13 @@ class AccountEdiFormat(models.Model):
         return message
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):
+        if move.is_purchase_document(include_receipts=True):
+            return {
+                "seller_details": move.partner_id,
+                "dispatch_details": move.partner_id,
+                "buyer_details": move.journal_id.company_id.partner_id,
+                "ship_to_details": move.journal_id.company_id.partner_id,
+            }
         return {
             "seller_details": move.company_id.partner_id,
             "dispatch_details": move._l10n_in_get_warehouse_address() or move.company_id.partner_id,
@@ -410,7 +417,7 @@ class AccountEdiFormat(models.Model):
         return json_payload
 
     @api.model
-    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False):
+    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False, filter_to_apply=None):
         def l10n_in_grouping_key_generator(tax_values):
             base_line = tax_values["base_line_id"]
             tax_line = tax_values["tax_line_id"]
@@ -444,7 +451,7 @@ class AccountEdiFormat(models.Model):
             return True
 
         return move._prepare_edi_tax_details(
-            filter_to_apply=l10n_in_filter_to_apply,
+            filter_to_apply=filter_to_apply or l10n_in_filter_to_apply,
             grouping_key_generator=l10n_in_grouping_key_generator,
         )
 
