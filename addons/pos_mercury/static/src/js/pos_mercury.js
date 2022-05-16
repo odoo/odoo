@@ -128,11 +128,268 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
     }
 });
 
+<<<<<<< HEAD
 var _order_super = pos_model.Order.prototype;
 pos_model.Order = pos_model.Order.extend({
     electronic_payment_in_progress: function() {
         var res = _order_super.electronic_payment_in_progress.apply(this, arguments);
         return res || this.get_paymentlines().some(line => line.mercury_swipe_pending);
+=======
+// On Payment screen, allow online payments
+PaymentScreenWidget.include({
+    // How long we wait for the odoo server to deliver the response of
+    // a Vantiv transaction
+    server_timeout_in_ms: 95000,
+
+    // How many Vantiv transactions we send without receiving a
+    // response
+    server_retries: 3,
+
+    _get_swipe_pending_line: function () {
+        var i = 0;
+        var lines = this.pos.get_order().get_paymentlines();
+
+        for (i = 0; i < lines.length; i++) {
+            if (lines[i].mercury_swipe_pending) {
+                return lines[i];
+            }
+        }
+
+        return 0;
+    },
+
+    _does_credit_payment_line_exist: function (amount, card_number, card_brand, card_owner_name) {
+        var i = 0;
+        var lines = this.pos.get_order().get_paymentlines();
+
+        for (i = 0; i < lines.length; i++) {
+            if (lines[i].mercury_amount === amount &&
+                lines[i].mercury_card_number === card_number &&
+                lines[i].mercury_card_brand === card_brand &&
+                lines[i].mercury_card_owner_name === card_owner_name) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    retry_mercury_transaction: function (def, response, retry_nr, can_connect_to_server, callback, args) {
+        var self = this;
+        var message = "";
+
+        if (retry_nr < self.server_retries) {
+            if (response) {
+                message = "Retry #" + (retry_nr + 1) + "...<br/><br/>" + response.message;
+            } else {
+                message = "Retry #" + (retry_nr + 1) + "...";
+            }
+            def.notify({
+                message: message
+            });
+
+            setTimeout(function () {
+                callback.apply(self, args);
+            }, 1000);
+        } else {
+            if (response) {
+                message = "Error " + response.error + ": " + lookUpCodeTransaction["TimeoutError"][response.error] + "<br/>" + response.message;
+            } else {
+                if (can_connect_to_server) {
+                    message = _t("No response from Vantiv (Vantiv down?)");
+                } else {
+                    message = _t("No response from server (connected to network?)");
+                }
+            }
+            def.resolve({
+                message: message,
+                auto_close: false
+            });
+        }
+    },
+
+    // Handler to manage the card reader string
+    credit_code_transaction: function (parsed_result, old_deferred, retry_nr) {
+        var order = this.pos.get_order();
+        if (order.get_due(order.selected_paymentline) < 0) {
+            this.gui.show_popup('error',{
+                'title': _t('Refunds not supported'),
+                'body':  _t('Credit card refunds are not supported. Instead select your credit card payment method, click \'Validate\' and refund the original charge manually through the Vantiv backend.'),
+            });
+            return;
+        }
+
+        if(this.pos.getOnlinePaymentMethods().length === 0) {
+            return;
+        }
+
+        var self = this;
+        var decodedMagtek = self.pos.decodeMagtek(parsed_result.code);
+
+        if (! decodedMagtek) {
+            this.gui.show_popup('error',{
+                'title': _t('Could not read card'),
+                'body':  _t('This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International).'),
+            });
+            return;
+        }
+
+        var swipe_pending_line = self._get_swipe_pending_line();
+        var purchase_amount = 0;
+
+        if (swipe_pending_line) {
+            purchase_amount = swipe_pending_line.get_amount();
+        } else {
+            purchase_amount = self.pos.get_order().get_due();
+        }
+
+        var transaction = {
+            'encrypted_key'     : decodedMagtek['encrypted_key'],
+            'encrypted_block'   : decodedMagtek['encrypted_block'],
+            'transaction_type'  : 'Credit',
+            'transaction_code'  : 'Sale',
+            'invoice_no'        : self.pos.get_order().uid.replace(/-/g,''),
+            'purchase'          : purchase_amount,
+            'payment_method_id' : parsed_result.payment_method_id,
+        };
+
+        var def = old_deferred || new $.Deferred();
+        retry_nr = retry_nr || 0;
+
+        // show the transaction popup.
+        // the transaction deferred is used to update transaction status
+        // if we have a previous deferred it indicates that this is a retry
+        if (! old_deferred) {
+            self.gui.show_popup('payment-transaction', {
+                transaction: def
+            });
+            def.notify({
+                message: _t('Handling transaction...'),
+            });
+        }
+
+        rpc.query({
+                model: 'pos_mercury.mercury_transaction',
+                method: 'do_payment',
+                args: [transaction],
+            }, {
+                timeout: self.server_timeout_in_ms,
+            })
+            .then(function (data) {
+                // if not receiving a response from Vantiv, we should retry
+                if (data === "timeout") {
+                    self.retry_mercury_transaction(def, null, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+                    return;
+                }
+
+                if (data === "not setup") {
+                    def.resolve({
+                        message: _t("Please setup your Vantiv merchant account.")
+                    });
+                    return;
+                }
+
+                if (data === "internal error") {
+                    def.resolve({
+                        message: _t("Odoo error while processing transaction.")
+                    });
+                    return;
+                }
+
+                var response = self.pos.decodeMercuryResponse(data);
+                response.payment_method_id = parsed_result.payment_method_id;
+
+                if (response.status === 'Approved') {
+                    // AP* indicates a duplicate request, so don't add anything for those
+                    if (response.message === "AP*" && self._does_credit_payment_line_exist(response.authorize, decodedMagtek['number'],
+                                                                                        response.card_type, decodedMagtek['name'])) {
+                        def.resolve({
+                            message: lookUpCodeTransaction["Approved"][response.error],
+                            auto_close: true,
+                        });
+                    } else {
+                        // If the payment is approved, add a payment line
+                        var order = self.pos.get_order();
+
+                        if (swipe_pending_line) {
+                            order.select_paymentline(swipe_pending_line);
+                        } else {
+                            order.add_paymentline(self.pos.payment_methods_by_id[parsed_result.payment_method_id]);
+                        }
+
+                        order.selected_paymentline.paid = true;
+                        order.selected_paymentline.mercury_swipe_pending = false;
+                        order.selected_paymentline.mercury_amount = response.authorize;
+                        order.selected_paymentline.set_amount(response.authorize);
+                        order.selected_paymentline.mercury_card_number = decodedMagtek['number'];
+                        order.selected_paymentline.mercury_card_brand = response.card_type;
+                        order.selected_paymentline.mercury_card_owner_name = decodedMagtek['name'];
+                        order.selected_paymentline.mercury_ref_no = response.ref_no;
+                        order.selected_paymentline.mercury_record_no = response.record_no;
+                        order.selected_paymentline.mercury_invoice_no = response.invoice_no;
+                        order.selected_paymentline.mercury_auth_code = response.auth_code;
+                        order.selected_paymentline.mercury_data = response; // used to reverse transactions
+                        order.selected_paymentline.set_credit_card_name();
+
+                        self.order_changes();
+                        self.reset_input();
+                        self.render_paymentlines();
+                        order.trigger('change', order); // needed so that export_to_JSON gets triggered
+
+                        if (response.message === "PARTIAL AP") {
+                            def.resolve({
+                                message: _t("Partially approved"),
+                                auto_close: false,
+                            });
+                        } else {
+                            def.resolve({
+                                message: lookUpCodeTransaction["Approved"][response.error],
+                                auto_close: true,
+                            });
+                        }
+                    }
+                }
+
+                // if an error related to timeout or connectivity issues arised, then retry the same transaction
+                else {
+                    if (lookUpCodeTransaction["TimeoutError"][response.error]) { // recoverable error
+                        self.retry_mercury_transaction(def, response, retry_nr, true, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+                    } else { // not recoverable
+                        def.resolve({
+                            message: "Error " + response.error + ":<br/>" + response.message,
+                            auto_close: false
+                        });
+                    }
+                }
+
+            }).catch(function () {
+                self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
+            });
+    },
+
+    credit_code_cancel: function () {
+        return;
+    },
+
+    credit_code_action: function (parsed_result) {
+        var self = this;
+        var online_payment_methods = this.pos.getOnlinePaymentMethods();
+
+        if (online_payment_methods.length === 1) {
+            parsed_result.payment_method_id = online_payment_methods[0].item;
+            self.credit_code_transaction(parsed_result);
+        } else { // this is for supporting another payment system like mercury
+            this.gui.show_popup('selection',{
+                title:   _t('Pay with: '),
+                list:    online_payment_methods,
+                confirm: function (item) {
+                    parsed_result.payment_method_id = item;
+                    self.credit_code_transaction(parsed_result);
+                },
+                cancel:  self.credit_code_cancel,
+            });
+        }
+>>>>>>> f7f0c23623b... temp
     },
 });
 
