@@ -2,9 +2,9 @@
 
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape, intersperse, nbsp } from "@web/core/utils/strings";
+import { escape, intersperse, nbsp, sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
 
 const { markup } = owl;
@@ -62,7 +62,7 @@ const humanNumber = (number, options = { decimals: 0, minDigits: 1 }) => {
     }
     // note: we need to call toString here to make sure we manipulate the resulting
     // string, not an object with a toString method.
-    const unitSymbols = _lt("kMGTPE").toString();
+    const unitSymbols = _t("kMGTPE").toString();
     const sign = Math.sign(number);
     number = Math.abs(number);
     let symbol = "";
@@ -95,7 +95,7 @@ const humanNumber = (number, options = { decimals: 0, minDigits: 1 }) => {
  * @param {boolean} value
  * @returns {string}
  */
-export const formatBoolean = (value) => (value ? _lt("True") : _lt("False"));
+export const formatBoolean = (value) => (value ? _t("True") : _t("False"));
 
 /**
  * Returns a string representing a char.  If the value is false, then we return
@@ -275,11 +275,11 @@ export const formatMany2one = (value, options) => {
 export const formatX2many = (value) => {
     const count = value.currentIds.length;
     if (count === 0) {
-        return _lt("No records");
+        return _t("No records");
     } else if (count === 1) {
-        return _lt("1 record");
+        return _t("1 record");
     } else {
-        return count + _lt(" records"); // WOWL might not be good (RTL,...)
+        return sprintf(_t("%s records"), count);
     }
 };
 
