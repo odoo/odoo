@@ -346,10 +346,17 @@
             t-att-data-variable="radius_variable"/>
 </template>
 
+<template id="snippet_options_extra_shapes" inherit_id="web_editor.snippet_options">
+    <xpath expr="//div[hasclass('o_we_image_shape')]//we-select-page[hasclass('o_we_basic_shapes')]" position="inside">
+        <we-button data-set-img-shape="mass_mailing/basic/circle" data-select-label="Circle"/>
+        <we-button data-set-img-shape="mass_mailing/basic/triangle" data-select-label="Triangle"/>
+        <we-button data-set-img-shape="mass_mailing/basic/slanted" data-select-label="Slanted"/>
+    </xpath>
+</template>
 <!-- Snippet themes Options -->
 <template id="snippet_options">
     <t t-set="no_animations" t-value="True"/>
-    <t t-call="web_editor.snippet_options"/>
+    <t t-call="mass_mailing.snippet_options_extra_shapes"/>
     <t t-out="0"/>
 
     <!-- Border | Columns -->
