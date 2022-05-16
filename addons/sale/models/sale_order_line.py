@@ -733,10 +733,11 @@ class SaleOrderLine(models.Model):
 
         Lines cannot be deleted if the order is confirmed; downpayment
         lines who have not yet been invoiced bypass that exception.
+        Also, allow deleting UX lines (notes/sections).
         :rtype: recordset sale.order.line
         :returns: set of lines that cannot be deleted
         """
-        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment))
+        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment) and not line.display_type)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
