@@ -474,7 +474,11 @@ class AccountReconcileModel(models.Model):
             'analytic_account_id': counterpart_vals.get('analytic_account_id'),
             'analytic_tag_ids': counterpart_vals.get('analytic_tag_ids', []),
             'reconcile_model_id': self.id,
-            'journal_id': counterpart_vals['journal_id']
+            'journal_id': counterpart_vals['journal_id'],
+            'tax_exigible': counterpart_vals.get('tax_exigible'),
+            'tax_repartition_line_id': counterpart_vals.get('tax_repartition_line_id'),
+            'tax_ids': counterpart_vals.get('tax_ids', []),
+            'tax_tag_ids': counterpart_vals.get('tax_tag_ids', []),
         }
 
     ####################################################
