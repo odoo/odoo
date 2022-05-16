@@ -105,7 +105,7 @@
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
             <field name="body_html" type="html">
 <div>
-    <strong>Reminder <t t-out="object.name or ''"/></strong><br/>
+    <strong>Reminder</strong><br/>
     You have not updated your progress for the goal <t t-out="object.definition_id.name or ''"></t> (currently reached at <t t-out="object.completeness or ''"></t>%) for at least <t t-out="object.remind_update_delay or ''"></t> days. Do not forget to do it.
     <br/><br/>
     Thank you,
