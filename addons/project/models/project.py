@@ -951,7 +951,7 @@ class Project(models.Model):
             return False
         if self.env.user.has_group('base.group_portal'):
             return self.env.user.partner_id in self.collaborator_ids.partner_id
-        return self.env.user.has_group('base.group_user')
+        return self.env.user._is_internal()
 
     def _add_collaborators(self, partners):
         self.ensure_one()

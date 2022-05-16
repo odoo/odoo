@@ -3307,7 +3307,7 @@ class AccountMove(models.Model):
 
         def is_internal_partner(partner):
             # Helper to know if the partner is an internal one.
-            return partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids)
+            return partner.user_ids and all(user._is_internal() for user in partner.user_ids)
 
         extra_domain = False
         if custom_values.get('company_id'):

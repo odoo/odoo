@@ -12,7 +12,7 @@ class IrHttp(models.AbstractModel):
     def session_info(self):
         user = request.env.user
         result = super(IrHttp, self).session_info()
-        if self.env.user.has_group('base.group_user'):
+        if self.env.user._is_internal():
             result['notification_type'] = user.notification_type
         assets_discuss_public_hash = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle='mail.assets_discuss_public')
         result['cache_hashes']['assets_discuss_public'] = assets_discuss_public_hash

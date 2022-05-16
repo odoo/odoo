@@ -9,6 +9,6 @@ class Http(models.AbstractModel):
 
     def session_info(self):
         res = super(Http, self).session_info()
-        if self.env.user.has_group('base.group_user'):
+        if self.env.user._is_internal():
             res['odoobot_initialized'] = self.env.user.odoobot_state not in [False, 'not_initialized']
         return res

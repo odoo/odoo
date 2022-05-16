@@ -149,7 +149,7 @@ class OAuthController(http.Controller):
                 resp.autocorrect_location_header = False
 
                 # Since /web is hardcoded, verify user has right to land on it
-                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
+                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user._is_internal():
                     resp.location = '/'
                 return resp
             except AttributeError:

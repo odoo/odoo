@@ -41,7 +41,7 @@ class ResPartner(models.Model):
         """ proxy for function field towards actual implementation """
         result = self.sudo()._get_signup_url_for_action()
         for partner in self:
-            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+            if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
 
@@ -105,7 +105,7 @@ class ResPartner(models.Model):
         """ Get a signup token related to the partner if signup is enabled.
             If the partner already has a user, get the login parameter.
         """
-        if not self.env.user.has_group('base.group_user') and not self.env.is_admin():
+        if not self.env.user._is_internal() and not self.env.is_admin():
             raise exceptions.AccessDenied()
 
         res = defaultdict(dict)

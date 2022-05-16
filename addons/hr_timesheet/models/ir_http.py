@@ -13,7 +13,7 @@ class Http(models.AbstractModel):
             widget to apply, depending on the current company.
         """
         result = super(Http, self).session_info()
-        if request.env.user.has_group('base.group_user'):
+        if request.env.user._is_internal():
             company_ids = request.env.user.company_ids
 
             for company in company_ids:

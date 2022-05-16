@@ -1773,7 +1773,7 @@ class MailThread(models.AbstractModel):
             if filtered_attachment_ids:
                 filtered_attachment_ids.write({'res_model': model, 'res_id': res_id})
             # prevent public and portal users from using attachments that are not theirs
-            if not self.env.user.has_group('base.group_user'):
+            if not self.env.user._is_internal():
                 attachment_ids = filtered_attachment_ids.ids
 
             m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
@@ -2264,7 +2264,7 @@ class MailThread(models.AbstractModel):
          * either call the standard implementation _notify_cancel_by_type_generic
          * or implements their own logic
         """
-        if not self.env.user.has_group('base.group_user'):
+        if not self.env.user._is_internal():
             raise exceptions.AccessError(_("Access Denied"))
         self.check_access_rights('read')
 
