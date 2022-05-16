@@ -1268,7 +1268,7 @@
                 </we-select>
             </we-row>
 
-            <t t-if="request.geoip.get('country_code')">
+            <t t-if="request.geoip.country_code">
                 <t t-call="website.snippet_options_conditional_visibility">
                     <t t-set="option_name">Country</t>
                     <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>

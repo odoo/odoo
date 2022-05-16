@@ -88,15 +88,17 @@ class Users(models.Model):
         template = self.env.ref('auth_totp_mail_enforce.mail_template_totp_mail_code').sudo()
         context = {}
         if request:
-            geoip = request.geoip
             device = request.httprequest.user_agent.platform
             browser = request.httprequest.user_agent.browser
             context.update({
-                'location': f"{geoip['city']}, {geoip['country_name']}" if geoip else None,
+                'location': None,
                 'device': device and device.capitalize() or None,
                 'browser': browser and browser.capitalize() or None,
                 'ip': request.httprequest.environ['REMOTE_ADDR'],
             })
+            if request.geoip.city.name:
+                context['location'] = f"{request.geoip.city.name}, {request.geoip.country_name}"
+
         email_values = {
             'email_to': self.email,
             'email_cc': False,
