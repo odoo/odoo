@@ -648,7 +648,7 @@
             'search_default_managed_people': 1,
             'hide_employee_name': 1}
         </field>
-        <field name="domain">[]</field>
+        <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

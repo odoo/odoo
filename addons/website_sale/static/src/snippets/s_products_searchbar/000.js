@@ -48,11 +48,29 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
 
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this._render(null);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _adaptToScrollingParent() {
+        const bcr = this.el.getBoundingClientRect();
+        this.$menu[0].style.setProperty('position', 'fixed', 'important');
+        this.$menu[0].style.setProperty('top', `${bcr.bottom}px`, 'important');
+        this.$menu[0].style.setProperty('left', `${bcr.left}px`, 'important');
+        this.$menu[0].style.setProperty('max-width', `${bcr.width}px`, 'important');
+        this.$menu[0].style.setProperty('max-height', `${document.body.clientHeight - bcr.bottom - 16}px`, 'important');
+    },
     /**
      * @private
      */
@@ -75,6 +93,13 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
      * @private
      */
     _render: function (res) {
+        if (this._scrollingParentEl) {
+            this._scrollingParentEl.removeEventListener('scroll', this._menuScrollAndResizeHandler);
+            window.removeEventListener('resize', this._menuScrollAndResizeHandler);
+            delete this._scrollingParentEl;
+            delete this._menuScrollAndResizeHandler;
+        }
+
         var $prevMenu = this.$menu;
         this.$el.toggleClass('dropdown show', !!res);
         if (res) {
@@ -86,8 +111,30 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                 widget: this,
             }));
             this.$menu.css('min-width', this.autocompleteMinWidth);
+
+            // Handle the case where the searchbar is in a mega menu by making
+            // it position:fixed and forcing its size. Note: this could be the
+            // default behavior or at least needed in more cases than the mega
+            // menu only (all scrolling parents). But as a stable fix, it was
+            // easier to fix that case only as a first step, especially since
+            // this cannot generically work on all scrolling parent.
+            const megaMenuEl = this.el.closest('.o_mega_menu');
+            if (megaMenuEl) {
+                const navbarEl = this.el.closest('.navbar');
+                const navbarTogglerEl = navbarEl ? navbarEl.querySelector('.navbar-toggler') : null;
+                if (navbarTogglerEl && navbarTogglerEl.clientWidth < 1) {
+                    this._scrollingParentEl = megaMenuEl;
+                    this._menuScrollAndResizeHandler = () => this._adaptToScrollingParent();
+                    this._scrollingParentEl.addEventListener('scroll', this._menuScrollAndResizeHandler);
+                    window.addEventListener('resize', this._menuScrollAndResizeHandler);
+
+                    this._adaptToScrollingParent();
+                }
+            }
+
             this.$el.append(this.$menu);
         }
+
         if ($prevMenu) {
             $prevMenu.remove();
         }
