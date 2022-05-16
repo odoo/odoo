@@ -23,10 +23,6 @@
         <field name="groups_id" eval="[(4, ref('website.group_website_designer'))]"/>
     </record>
 
-    <record id="base.group_system" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
-    </record>
-
     <data noupdate="1">
 
     <record id="website_designer_edit_qweb" model="ir.rule">

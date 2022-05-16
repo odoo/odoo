@@ -33,7 +33,7 @@ class TestActionBindings(common.TransactionCase):
         )
 
         # add a group on an action, and check that it is not returned
-        group = self.env.ref('base.group_user')
+        group = self.env.ref('base.group_system')
         action2.groups_id += group
         self.env.user.groups_id -= group
 
