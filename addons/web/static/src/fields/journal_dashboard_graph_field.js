@@ -34,9 +34,9 @@ export class JournalDashboardGraphField extends Component {
         }
         let config;
         if (this.props.graphType === "line") {
-            config = this._getLineChartConfig();
+            config = this.getLineChartConfig();
         } else if (this.props.graphType === "bar") {
-            config = this._getBarChartConfig();
+            config = this.getBarChartConfig();
         }
         this.chart = new Chart(this.canvasRef.el, config);
         // To perform its animations, ChartJS will perform each animation
@@ -45,23 +45,23 @@ export class JournalDashboardGraphField extends Component {
         // advancing the animation service.
         Chart.animationService.advance();
     }
-    _getLineChartConfig() {
-        let labels = this.data[0].values.map(function (pt) {
+    getLineChartConfig() {
+        const labels = this.data[0].values.map(function (pt) {
             return pt.x;
         });
-        let borderColor = this.data[0].is_sample_data ? "#dddddd" : "#875a7b";
-        let backgroundColor = this.data[0].is_sample_data ? "#ebebeb" : "#dcd0d9";
+        const borderColor = this.data[0].is_sample_data ? "#dddddd" : "#875a7b";
+        const backgroundColor = this.data[0].is_sample_data ? "#ebebeb" : "#dcd0d9";
         return {
             type: "line",
             data: {
-                labels: labels,
+                labels,
                 datasets: [
                     {
+                        backgroundColor,
+                        borderColor,
                         data: this.data[0].values,
                         fill: "start",
                         label: this.data[0].key,
-                        backgroundColor: backgroundColor,
-                        borderColor: borderColor,
                         borderWidth: 2,
                     },
                 ],
@@ -87,10 +87,10 @@ export class JournalDashboardGraphField extends Component {
         };
     }
 
-    _getBarChartConfig() {
-        let data = [];
-        let labels = [];
-        let backgroundColor = [];
+    getBarChartConfig() {
+        const data = [];
+        const labels = [];
+        const backgroundColor = [];
 
         this.data[0].values.forEach(function (pt) {
             data.push(pt.value);
@@ -102,13 +102,13 @@ export class JournalDashboardGraphField extends Component {
         return {
             type: "bar",
             data: {
-                labels: labels,
+                labels,
                 datasets: [
                     {
-                        data: data,
+                        backgroundColor,
+                        data,
                         fill: "start",
                         label: this.data[0].key,
-                        backgroundColor: backgroundColor,
                     },
                 ],
             },

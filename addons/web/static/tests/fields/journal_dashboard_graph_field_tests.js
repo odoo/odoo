@@ -1,23 +1,40 @@
 /** @odoo-module **/
 
-import { getFixture } from "../helpers/utils";
+import { click, getFixture, nextTick, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let target;
 let serverData;
 
 QUnit.module("Fields", (hooks) => {
-    var graph_values = [
+    const graph_values = [
         { value: 300, label: "5-11 Dec" },
         { value: 500, label: "12-18 Dec" },
         { value: 100, label: "19-25 Dec" },
     ];
+
     hooks.beforeEach(() => {
         target = getFixture();
         serverData = {
             models: {
                 partner: {
                     fields: {
+                        int_field: {
+                            string: "int_field",
+                            type: "integer",
+                            sortable: true,
+                            searchable: true,
+                        },
+                        selection: {
+                            string: "Selection",
+                            type: "selection",
+                            searchable: true,
+                            selection: [
+                                ["normal", "Normal"],
+                                ["blocked", "Blocked"],
+                                ["done", "Done"],
+                            ],
+                        },
                         graph_data: { string: "Graph Data", type: "text" },
                         graph_type: {
                             string: "Graph Type",
@@ -31,6 +48,8 @@ QUnit.module("Fields", (hooks) => {
                     records: [
                         {
                             id: 1,
+                            int_field: 10,
+                            selection: "blocked",
                             graph_type: "bar",
                             graph_data: JSON.stringify([
                                 {
@@ -44,6 +63,9 @@ QUnit.module("Fields", (hooks) => {
                         },
                         {
                             id: 2,
+                            display_name: "second record",
+                            int_field: 0,
+                            selection: "normal",
                             graph_type: "line",
                             graph_data: JSON.stringify([
                                 {
@@ -63,9 +85,21 @@ QUnit.module("Fields", (hooks) => {
         setupViewRegistries();
     });
 
+    async function reloadKanbanView(target) {
+        await click(target, "input.o_searchview_input");
+        await triggerEvent(target, "input.o_searchview_input", "keydown", { key: "Enter" });
+    }
+    // Kanban
+    // WOWL remove this helper and user the control panel instead
+    const reload = async (kanban, params = {}) => {
+        kanban.env.searchModel.reload(params);
+        kanban.env.searchModel.search();
+        await nextTick();
+    };
+
     QUnit.module("JournalDashboardGraphField");
 
-    QUnit.skipWOWL("JournalDashboardGraphField is rendered correctly", async function (assert) {
+    QUnit.test("JournalDashboardGraphField is rendered correctly", async function (assert) {
         assert.expect(3);
 
         await makeView({
@@ -95,38 +129,16 @@ QUnit.module("Fields", (hooks) => {
             ".o_kanban_record:nth-child(1) .o_graph_barchart",
             "graph of first record should be a barchart"
         );
+
+        await reloadKanbanView(target);
         assert.containsOnce(
             target,
             ".o_kanban_record:first-child canvas",
             "there should be only one rendered graph by record"
         );
-        /*.then(function (kanban) {
-            concurrency
-                .delay(0)
-                .then(function () {
-
-                    TODO....
-                    // force a re-rendering of the first record (to check if the
-                    // previous rendered graph is correctly removed from the DOM)
-                    var firstRecordState = kanban.model.get(kanban.handle).data[0];
-                    return kanban.renderer.updateRecord(firstRecordState);
-                })
-                .then(function () {
-                    return concurrency.delay(0);
-                })
-                .then(function () {
-                    assert.strictEqual(
-                        kanban.$(".o_kanban_record:first() canvas").length,
-                        1,
-                        "there should be only one rendered graph by record"
-                    );
-
-                    kanban.destroy();
-                    done();
-                });*/
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "rendering of a field with JournalDashboardGraphField in an updated kanban view (ungrouped)",
         async function (assert) {
             assert.expect(2);
@@ -152,43 +164,25 @@ QUnit.module("Fields", (hooks) => {
                 target,
                 ".o_dashboard_graph canvas",
                 2,
-                "there should be two graph rendered"
+                "there should be two graphs rendered"
             );
-            /*.then(function (kanban) {
-                    concurrency
-                        .delay(0)
-                        .then(function () {
-                            assert.containsN(
-                                kanban,
-                                ".o_dashboard_graph canvas",
-                                2,
-                                "there should be two graph rendered"
-                            );
-                            return kanban.update({});
-                        })
-                        .then(function () {
-                            return concurrency.delay(0); // one graph is re-rendered WOWL: how to test? should it be tested?
-                        })
-                        .then(function () {
-                            assert.containsN(
-                                kanban,
-                                ".o_dashboard_graph canvas",
-                                2,
-                                "there should be one graph rendered"
-                            );
-                            kanban.destroy();
-                            done();
-                        });
-                });*/
+
+            await reloadKanbanView(target);
+            assert.containsN(
+                target,
+                ".o_dashboard_graph canvas",
+                2,
+                "there should still be two graphs rendered"
+            );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "rendering of a field with JournalDashboardGraphField in an updated kanban view (grouped)",
         async function (assert) {
             assert.expect(2);
 
-            await makeView({
+            const kanban = await makeView({
                 serverData,
                 type: "kanban",
                 resModel: "partner",
@@ -212,11 +206,7 @@ QUnit.module("Fields", (hooks) => {
                 "there should be two graph rendered"
             );
 
-            /*TODO
-            kanban.update({
-                groupBy: ["selection"],
-                domain: [["int_field", "=", 10]],
-            });*/
+            await reload(kanban, { groupBy: ["selection"], domain: [["int_field", "=", 10]] });
 
             assert.containsOnce(
                 target,
