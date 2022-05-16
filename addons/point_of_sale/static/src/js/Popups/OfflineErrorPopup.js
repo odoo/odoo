@@ -22,6 +22,7 @@ odoo.define('point_of_sale.OfflineErrorPopup', function(require) {
         cancelText: _lt('Cancel'),
         title: _lt('Offline Error'),
         body: _lt('Either the server is inaccessible or browser is not connected online.'),
+        noDuplicate: true,
     };
 
     Registries.Component.add(OfflineErrorPopup);
