@@ -430,7 +430,7 @@ class IrAttachment(models.Model):
         if self.env.is_superuser():
             return True
         # Always require an internal user (aka, employee) to access to a attachment
-        if not (self.env.is_admin() or self.env.user.has_group('base.group_user')):
+        if not (self.env.is_admin() or self.env.user._is_internal()):
             raise AccessError(_("Sorry, you are not allowed to access this document."))
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}

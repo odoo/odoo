@@ -189,7 +189,7 @@ class Web_Editor(http.Controller):
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
                        hide_dm_logo=False, hide_dm_share=False):
-        if not request.env.user.has_group('base.group_user'):
+        if not request.env.user._is_internal():
             raise werkzeug.exceptions.Forbidden()
         return get_video_url_data(
             video_url, autoplay=autoplay, loop=loop,

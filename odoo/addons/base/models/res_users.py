@@ -916,6 +916,10 @@ class Users(models.Model):
             'target': 'current',
         }
 
+    def _is_internal(self):
+        self.ensure_one()
+        return not self.sudo().share
+
     def _is_public(self):
         self.ensure_one()
         return self.has_group('base.group_public')
@@ -1157,9 +1161,9 @@ class UsersImplied(models.Model):
     def write(self, values):
         if not values.get('groups_id'):
             return super(UsersImplied, self).write(values)
-        users_before = self.filtered(lambda u: u.has_group('base.group_user'))
+        users_before = self.filtered(lambda u: u._is_internal())
         res = super(UsersImplied, self).write(values)
-        demoted_users = users_before.filtered(lambda u: not u.has_group('base.group_user'))
+        demoted_users = users_before.filtered(lambda u: not u._is_internal())
         if demoted_users:
             # demoted users are restricted to the assigned groups only
             vals = {'groups_id': [Command.clear()] + values['groups_id']}
