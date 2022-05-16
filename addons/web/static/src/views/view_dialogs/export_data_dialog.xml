@@ -12,9 +12,9 @@
     </t>
 
     <t t-name="web.ExportDataItem" owl="1">
-        <div t-att-data-field_id="props.field.id" class="o_export_tree_item o_cursor_pointer position-relative pl-3" role="treeitem" t-on-click.stop="onClick"> 
+        <div t-att-data-field_id="props.field.id" t-attf-class="o_export_tree_item o_cursor_pointer position-relative pl-4 {{ state.isExpanded ? 'o_expanded' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.id) and this.props.onAdd(ev)"> 
             <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
-            <div class="o_tree_column d-flex">
+            <div class="o_tree_column d-flex align-items-center">
                 <span t-esc="formattedName" />
                 <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.id) ? 'o_inactive' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.id) and this.props.onAdd(ev)" />
             </div>
@@ -44,7 +44,7 @@
                 </div>
                 <h4 class="mt-3">Available fields</h4>
                 <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
-                <div class="o_left_field_panel h-100 pl-2 overflow-auto border">
+                <div class="o_left_field_panel h-100 overflow-auto border">
                     <div class="o_field_tree_structure">
                         <t t-if="fieldsAvailable">
                             <t t-foreach="rootFields" t-as="field" t-key="field.id">

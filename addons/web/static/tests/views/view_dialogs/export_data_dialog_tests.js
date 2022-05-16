@@ -9,6 +9,7 @@ import {
     getNodesTextContent,
     mockDownload,
     nextTick,
+    triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -404,7 +405,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: interacting with available fields", async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         await makeView({
             serverData,
@@ -456,23 +457,29 @@ QUnit.module("ViewDialogs", (hooks) => {
             )
         );
 
-        await click(
-            firstField.querySelector(
-                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
-            )
+        await triggerEvent(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+            "dblclick"
         );
         assert.hasClass(
             firstField.querySelector(
                 ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
             ),
             "o_inactive",
-            "the field cannot be added anymore"
+            "field has been added by double clicking on it and cannot be added anymore"
         );
 
         await click(firstField.querySelector(".o_add_field"));
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
             ["Foo", "Company", "Activities"]
+        );
+        await triggerEvent(target, ".o_export_tree_item[data-field_id='activity_ids']", "dblclick");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
+            ["Foo", "Company", "Activities"],
+            "double clicking on an expandable field does not add the field"
         );
 
         await dragAndDrop(".o_export_field:first-child", ".o_export_field:nth-child(2)");

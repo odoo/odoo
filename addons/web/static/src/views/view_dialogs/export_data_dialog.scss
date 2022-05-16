@@ -9,6 +9,17 @@
             .o_left_field_panel, .o_right_field_panel {
                 user-select: none;
                 .o_export_tree_item {
+                    &:hover:not(.o_expanded) {
+                        background: rgba($o-brand-odoo, .7);
+                        color: white;
+                    }
+
+                    &.o_expanded {
+                        border-bottom: 1px solid grey;
+                        margin-bottom: 0.2em;
+                        background: rgba($o-brand-odoo, .2);
+                    }
+
                     .o_tree_column {
                         justify-content: space-between;
                     }
@@ -18,7 +29,7 @@
                     }
 
                     .o_expand_parent {
-                        inset: 4px auto auto 0;
+                        inset: 4px auto auto 0.5em;
                     }
                 }
 
