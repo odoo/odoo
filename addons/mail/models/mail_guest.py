@@ -102,7 +102,7 @@ class MailGuest(models.Model):
                 'id': partner_root.id,
                 'name': partner_root.name,
             },
-            'public_partners': [],
+            'publicPartners': [],
             'shortcodes': [],
             'starred_counter': False,
         }
