@@ -9,6 +9,7 @@ import traceback
 
 from odoo import api, fields, models, tools, _
 from odoo.tools.misc import get_lang
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -45,6 +46,12 @@ class Currency(models.Model):
         ('unique_name', 'unique (name)', 'The currency code must be unique!'),
         ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
+
+    @api.constrains('active')
+    def _check_company_currency_stays_active(self):
+        currencies = self.filtered(lambda c: not c.active)
+        if self.env['res.company'].search([('currency_id', 'in', currencies.ids)]):
+            raise UserError(_("This currency is set on a company and therefore must be active."))
 
     def _get_rates(self, company, date):
         self.env['res.currency.rate'].flush(['rate', 'currency_id', 'company_id', 'name'])
