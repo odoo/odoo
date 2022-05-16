@@ -320,7 +320,7 @@
                             </div>
 
                             <div class="row" t-if="task.description or task.attachment_ids">
-                                <div t-if="task.description" t-attf-class="col-12 col-lg-7 mb-4 mb-md-0 {{'col-lg-7' if task.attachment_ids else 'col-lg-12'}}">
+                                <div t-if="not is_html_empty(task.description)" t-attf-class="col-12 col-lg-7 mb-4 mb-md-0 {{'col-lg-7' if task.attachment_ids else 'col-lg-12'}}">
                                     <hr class="mb-1"/>
                                     <div class="d-flex my-2">
                                         <strong>Description</strong>
