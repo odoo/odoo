@@ -100,7 +100,7 @@ class TestDiscussFullPerformance(TransactionCase):
         self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=85):  # 84 ent
+        with self.assertQueryCount(emp=82):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
@@ -756,17 +756,9 @@ class TestDiscussFullPerformance(TransactionCase):
                 'out_of_office_date_end': False,
                 'user_id': False,
             },
-            'public_partners': [{
-                'active': False,
-                'display_name': 'Public user',
-                'email': False,
+            'publicPartners': [('insert', [{
                 'id': self.env.ref('base.public_partner').id,
-                'im_status': 'im_partner',
-                'is_internal_user': False,
-                'name': 'Public user',
-                'out_of_office_date_end': False,
-                'user_id': self.env.ref('base.public_user').id,
-            }],
+            }])],
             'currentGuest': False,
             'current_partner': {
                 'active': True,
