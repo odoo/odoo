@@ -42,6 +42,7 @@ tour.register('edit_link_popover', {
     {
         content: "Click on a paragraph",
         trigger: FIRST_PARAGRAPH,
+        run: 'text Paragraph', // Make sure the selection is set in the paragraph
     },
     {
         content: "Click on 'Link' to open Link Dialog",

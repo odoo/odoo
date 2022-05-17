@@ -290,7 +290,7 @@ const Wysiwyg = Widget.extend({
         // _createPalette.
         this._configureToolbar(options);
 
-        $(this.odooEditor.editable).on('click', this._updateEditorUI.bind(this));
+        $(this.odooEditor.editable).on('mouseup', this._updateEditorUI.bind(this));
         $(this.odooEditor.editable).on('keydown', this._updateEditorUI.bind(this));
         $(this.odooEditor.editable).on('keydown', this._handleShortcuts.bind(this));
         // Ensure the Toolbar always have the correct layout in note.
@@ -1583,12 +1583,6 @@ const Wysiwyg = Widget.extend({
         const $target = e ? editorWindow.$(e.target) : editorWindow.$();
         // Restore paragraph dropdown button's default ID.
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
-        // Hide the create-link button if the selection spans several blocks.
-        const selection = this.odooEditor.document.getSelection();
-        const range = selection.rangeCount && selection.getRangeAt(0);
-        const $rangeContainer = range && $(range.commonAncestorContainer);
-        const spansBlocks = range && !!$rangeContainer.contents().filter((i, node) => isBlock(node)).length;
-        this.toolbar.$el.find('#create-link').toggleClass('d-none', !range || spansBlocks);
         // Only show the media tools in the toolbar if the current selected
         // snippet is a media.
         const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars');
@@ -1628,6 +1622,14 @@ const Wysiwyg = Widget.extend({
         // Some icons are relevant for icons, that aren't for other media.
         this.toolbar.$el.find('#colorInputButtonGroup, #create-link').toggleClass('d-none', isInMedia && !$target.is('.fa'));
         this.toolbar.$el.find('.only_fa').toggleClass('d-none', !$target.is('.fa'));
+        // Hide the create-link button if the selection spans several blocks.
+        const selection = this.odooEditor.document.getSelection();
+        const range = selection.rangeCount && selection.getRangeAt(0);
+        const $rangeContainer = range && $(range.commonAncestorContainer);
+        const spansBlocks = range && !!$rangeContainer.contents().filter((i, node) => isBlock(node)).length;
+        if (!range || spansBlocks) {
+            this.toolbar.$el.find('#create-link').toggleClass('d-none', true);
+        }
         // Toggle the toolbar arrow.
         this.toolbar.$el.toggleClass('noarrow', isInMedia);
         // Unselect all media.
