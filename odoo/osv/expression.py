@@ -782,8 +782,9 @@ class expression(object):
                             subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "id" IN %s'
                             if not inverse_field.required:
                                 subquery += f' AND "{inverse_field.name}" IS NOT NULL'
+                            subquery = f'({subquery})'
                             subparams = [tuple(ids2) or (None,)]
-                        push_result(f'("{alias}"."id" {in_} ({subquery}))', subparams)
+                        push_result(f'("{alias}"."id" {in_} {subquery})', subparams)
                     else:
                         # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
@@ -845,8 +846,7 @@ class expression(object):
 
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
-                        subquery, params = ids2.subselect()
-                        term_id2 = f"({subquery})"
+                        term_id2, params = ids2.subselect()
                     else:
                         # rewrite condition in terms of ids2
                         term_id2 = "%s"
@@ -1065,7 +1065,7 @@ class expression(object):
                 params = []
             elif isinstance(right, Query):
                 subquery, subparams = right.subselect()
-                query = '(%s."%s" %s (%s))' % (table_alias, left, operator, subquery)
+                query = '(%s."%s" %s %s)' % (table_alias, left, operator, subquery)
                 params = subparams
             elif isinstance(right, (list, tuple)):
                 if model._fields[left].type == "boolean":
