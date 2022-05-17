@@ -474,18 +474,6 @@ function getCreateComposerSuggestionComponent({ env, modelManager, target }) {
     };
 }
 
-function getCreateFollowerListMenuComponent({ env, modelManager, target }) {
-    return async function createFollowerListMenuComponent(thread, props) {
-        const followerListMenuView = modelManager.messaging.models['FollowerListMenuView'].create({
-            qunitTest: insertAndReplace(),
-        });
-        return await createRootMessagingComponent(env, "FollowerListMenu", {
-            props: { record: followerListMenuView, thread, ...props },
-            target,
-        });
-    };
-}
-
 function getCreateMessageComponent({ env, modelManager, target }) {
     return async function createMessageComponent(message) {
         const messageView = modelManager.messaging.models['MessageView'].create({
@@ -918,7 +906,6 @@ async function start(param0 = {}) {
         createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: testEnv, target }),
         createComposerComponent: getCreateComposerComponent({ env: testEnv, modelManager, target }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: testEnv, modelManager, target }),
-        createFollowerListMenuComponent: getCreateFollowerListMenuComponent({ env: testEnv, modelManager, target }),
         createMessageComponent: getCreateMessageComponent({ env: testEnv, modelManager, target }),
         createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, target }),

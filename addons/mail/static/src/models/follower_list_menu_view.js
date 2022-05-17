@@ -34,11 +34,21 @@ registerModel({
                     break;
             }
         },
+        /**
+         * @private
+         * @returns {Boolean}
+         */
+        _computeIsDisabled() {
+            return this.chatterOwner.isDisabled;
+        }
     },
     fields: {
         chatterOwner: one('Chatter', {
             inverse: 'followerListMenuView',
             readonly: true,
+        }),
+        isDisabled: attr({
+            compute: '_computeIsDisabled',
         }),
         isDropdownOpen: attr({
             default: false,
