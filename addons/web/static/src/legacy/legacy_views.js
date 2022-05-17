@@ -32,6 +32,9 @@ const legacyViewTemplate = xml`
 // registers a view from the legacy view registry to the wowl one, but wrapped
 // into an Owl Component
 function registerView(name, LegacyView) {
+    if (viewRegistry.contains(name)) {
+        return;
+    }
     class Controller extends LegacyComponent {
         setup() {
             this.vm = useService("view");
@@ -140,7 +143,7 @@ function registerView(name, LegacyView) {
                         return {
                             viewID: vid,
                             type: vtype,
-                            multiRecord: !this.constructor.multiRecord,
+                            multiRecord: !legacyView.multiRecord,
                         };
                     }
                 });
@@ -151,18 +154,21 @@ function registerView(name, LegacyView) {
             });
         }
     }
-    Controller.template = legacyViewTemplate;
 
+    Controller.template = legacyViewTemplate;
     Controller.components = { ViewAdapter };
-    Controller.display_name = LegacyView.prototype.display_name;
-    Controller.icon = LegacyView.prototype.icon;
-    Controller.isMobileFriendly = LegacyView.prototype.mobile_friendly;
-    Controller.multiRecord = LegacyView.prototype.multi_record;
-    Controller.type = LegacyView.prototype.viewType;
-    Controller.isLegacy = true;
-    if (!viewRegistry.contains(name)) {
-        viewRegistry.add(name, Controller);
-    }
+    Controller.isLegacy = true; // for action dialog
+
+    const legacyView = {
+        type: LegacyView.prototype.viewType,
+        display_name: LegacyView.prototype.display_name,
+        icon: LegacyView.prototype.icon,
+        isMobileFriendly: LegacyView.prototype.mobile_friendly,
+        multiRecord: LegacyView.prototype.multi_record,
+        isLegacy: true,
+        Controller,
+    };
+    viewRegistry.add(name, legacyView);
 }
 
 // register views already in the legacy registry, and listens to future registrations

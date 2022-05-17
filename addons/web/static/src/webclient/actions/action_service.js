@@ -668,7 +668,7 @@ function makeActionManager(env) {
                             if (c.action.type === "ir.actions.act_window") {
                                 for (const viewType in c.action.controllers) {
                                     const controller = c.action.controllers[viewType];
-                                    if (controller.Component.isLegacy) {
+                                    if (controller.view.isLegacy) {
                                         toDestroy.add(controller);
                                     }
                                 }
@@ -878,7 +878,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            Component: view.isLegacy ? view : View,
+            Component: view.isLegacy ? view.Controller : View,
             action,
             view,
             views,
@@ -1313,7 +1313,7 @@ function makeActionManager(env) {
         }
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
-            Component: view.isLegacy ? view : View,
+            Component: view.isLegacy ? view.Controller : View,
             action: controller.action,
             views: controller.views,
             view,
