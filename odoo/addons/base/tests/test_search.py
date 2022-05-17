@@ -203,7 +203,4 @@ class test_search(TransactionCase):
             {'name': 'runbot'},
         ])
         self.assertEqual(len(partners) + count_partner_before, Partner.search_count([]))
-        self.assertEqual(len(partners) + count_partner_before, Partner.search([], count=True))
-
         self.assertEqual(3, Partner.search_count([], limit=3))
-        self.assertEqual(3, Partner.search([], count=True, limit=3))

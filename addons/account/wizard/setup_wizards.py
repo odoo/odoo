@@ -79,8 +79,11 @@ class SetupBarBankConfigWizard(models.TransientModel):
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
 
     def _number_unlinked_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False),
-                                                   ('id', '!=', self.default_linked_journal_id())], count=True)
+        return self.env['account.journal'].search_count([
+            ('type', '=', 'bank'),
+            ('bank_account_id', '=', False),
+            ('id', '!=', self.default_linked_journal_id()),
+        ])
 
     @api.onchange('acc_number')
     def _onchange_acc_number(self):
