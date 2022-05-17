@@ -354,7 +354,7 @@ const FieldEditor = FormEditor.extend({
     },
 });
 
-options.registry.WebsiteFormEditor = FormEditor.extend({
+const WebsiteFormEditor = FormEditor.extend({
     events: Object.assign({}, options.Class.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
@@ -846,6 +846,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         });
     },
 });
+
+options.registry.WebsiteFormEditor = WebsiteFormEditor;
 
 const authorizedFieldsCache = {};
 
@@ -1669,6 +1671,7 @@ options.registry.DeviceVisibility.include({
     },
 });
 
-export default {
+export {
+    WebsiteFormEditor,
     clearAllFormsInfo,
 };
