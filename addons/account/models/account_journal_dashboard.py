@@ -112,7 +112,7 @@ class account_journal(models.Model):
         locale = get_lang(self.env).code
 
         #starting point of the graph is the last statement
-        last_stmt = self._get_last_bank_statement(domain=[('move_id.state', '=', 'posted')])
+        last_stmt = self._get_last_bank_statement(domain=[('state', 'in', ['posted', 'confirm'])])
 
         last_balance = last_stmt and last_stmt.balance_end_real or 0
         data.append(build_graph_data(today, last_balance))
@@ -246,7 +246,7 @@ class account_journal(models.Model):
         sum_draft = sum_waiting = sum_late = 0.0
         if self.type in ('bank', 'cash'):
             last_statement = self._get_last_bank_statement(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('state', 'in', ['posted', 'confirm'])])
             last_balance = last_statement.balance_end
             has_at_least_one_statement = bool(last_statement)
             bank_account_balance, nb_lines_bank_account_balance = self._get_journal_bank_account_balance(
