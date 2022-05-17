@@ -1236,6 +1236,7 @@ var SnippetsMenu = Widget.extend({
         this.loadingTimers = {};
         this.loadingElements = {};
         this._loadingEffectDisabled = false;
+        this._onClick = this._onClick.bind(this);
     },
     /**
      * @override
@@ -1307,49 +1308,9 @@ var SnippetsMenu = Widget.extend({
         }).insertAfter(this.$el);
 
         // Active snippet editor on click in the page
-        var lastElement;
-        const onClick = ev => {
-            var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
-            if (!srcElement || lastElement === srcElement) {
-                return;
-            }
-            var $target = $(srcElement);
-            // Keep popover open if clicked inside it, but not on a button
-            if ($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length) {
-                return;
-            }
-            lastElement = srcElement;
-            _.defer(function () {
-                lastElement = false;
-            });
-
-            if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
-                this._closeWidgets();
-            }
-            if (!$target.closest('body > *').length || $target.is('#iframe_target')) {
-                return;
-            }
-            if ($target.closest(this._notActivableElementsSelector).length) {
-                return;
-            }
-            const $oeStructure = $target.closest('.oe_structure');
-            if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
-                // If empty oe_structure, encourage using snippets in there by
-                // making them "wizz" in the panel.
-                this._activateSnippet(false).then(() => {
-                    this.$snippets.odooBounce();
-                });
-                return;
-            }
-            this._activateSnippet($target);
-        };
-
-        this.$document.on('click.snippets_menu', '*', onClick);
+        this.$document.on('click.snippets_menu', '*', this._onClick);
         // Needed as bootstrap stop the propagation of click events for dropdowns
-        this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', onClick);
-        if (this.$body[0].document !== this.ownerDocument) {
-            this.$body.on('click.snippets_menu', '*', onClick);
-        }
+        this.$document.on('mouseup.snippets_menu', '.dropdown-toggle', this._onClick);
 
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
@@ -1495,7 +1456,6 @@ var SnippetsMenu = Widget.extend({
             }
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
-            this.$body.off('.snippets_menu');
             if (this.$scrollingElement) {
                 this.$scrollingElement[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
             }
@@ -2798,6 +2758,46 @@ var SnippetsMenu = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Activates the right snippet and initializes its SnippetEditor.
+     *
+     * @private
+     */
+    _onClick(ev) {
+        var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
+        if (!srcElement || this.lastElement === srcElement) {
+            return;
+        }
+        var $target = $(srcElement);
+        // Keep popover open if clicked inside it, but not on a button
+        if ($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length) {
+            return;
+        }
+        this.lastElement = srcElement;
+        _.defer(() => {
+            this.lastElement = false;
+        });
+
+        if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
+            this._closeWidgets();
+        }
+        if (!$target.closest('body > *').length || $target.is('#iframe_target')) {
+            return;
+        }
+        if ($target.closest(this._notActivableElementsSelector).length) {
+            return;
+        }
+        const $oeStructure = $target.closest('.oe_structure');
+        if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
+            // If empty oe_structure, encourage using snippets in there by
+            // making them "wizz" in the panel.
+            this._activateSnippet(false).then(() => {
+                this.$snippets.odooBounce();
+            });
+            return;
+        }
+        this._activateSnippet($target);
+    },
     /**
      * Called when a child editor asks for insertion zones to be enabled.
      *
