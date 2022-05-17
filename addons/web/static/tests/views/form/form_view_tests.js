@@ -24,6 +24,7 @@ import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { CharField } from "@web/fields/char_field";
 import { FormController } from "@web/views/form/form_controller";
 import { session } from "@web/session";
+import { scrollerService } from "@web/core/scroller_service";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -33,9 +34,6 @@ let createView,
     testUtils,
     core,
     FormView,
-    mapLegacyEnvToWowlEnv,
-    makeTestEnv,
-    makeTestEnvironment,
     _t,
     ViewDialogs,
     Widget,
@@ -1105,35 +1103,21 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_notebook .nav .nav-link:nth(1)"), "active");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "notebook page is changing when an anchor is clicked from another page",
         async (assert) => {
-            assert.expect(6);
-
-            // This should be removed as soon as the view is moved to owl
-            const wowlEnv = await makeTestEnv();
-            const legacyEnv = makeTestEnvironment({ bus: core.bus });
-            mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
+            serviceRegistry.add("scroller", scrollerService);
 
             const scrollableParent = document.createElement("div");
             scrollableParent.style.overflow = "auto";
-            const target = getFixture();
             target.append(scrollableParent);
 
             await makeView({
+                serverData,
                 type: "form",
                 resModel: "partner",
-                data: {
-                    partner: {
-                        fields: {},
-                        records: [
-                            {
-                                id: 1,
-                            },
-                        ],
-                    },
-                },
                 arch: `<form>
+                        <a class="outerLink2" href="#anchor2">TO ANCHOR 2 FROM OUTSIDE THE NOTEPAD</a>
                         <sheet>
                             <notebook>
                                 <page string="Non scrollable page">
@@ -1168,15 +1152,15 @@ QUnit.module("Views", (hooks) => {
                             </notebook>
                         </sheet>
                 </form>`,
-                res_id: 1,
+                resId: 1,
             });
-            scrollableParent.append(target);
+
+            scrollableParent.append(target.querySelector(".o_form_view"));
 
             // We set the height of the parent to the height of the second pane
             // We are then sure there will be no scrollable on this pane but a
             // only for the first pane
-            scrollableParent.style.maxHeight =
-                scrollableParent.querySelector(".o_action").getBoundingClientRect().height + "px";
+            scrollableParent.style.maxHeight = "400px";
 
             // The element must be contained in the scrollable parent (top and bottom)
             const isVisible = (el) => {
@@ -1193,11 +1177,9 @@ QUnit.module("Views", (hooks) => {
                     .contains(scrollableParent.querySelector("#anchor1")),
                 "the first pane is visible"
             );
-            assert.ok(
-                !isVisible(scrollableParent.querySelector("#anchor2")),
-                "the second anchor is not visible"
-            );
-            scrollableParent.querySelector(".link2").click();
+            assert.containsNone(target, "#anchor2", "the second anchor is not visible");
+
+            await click(scrollableParent.querySelector(".link2"));
             assert.ok(
                 scrollableParent
                     .querySelector(".tab-pane.active")
@@ -1208,7 +1190,8 @@ QUnit.module("Views", (hooks) => {
                 isVisible(scrollableParent.querySelector("#anchor2")),
                 "the second anchor is visible"
             );
-            scrollableParent.querySelector(".link1").click();
+
+            await click(scrollableParent.querySelector(".link1"));
             assert.ok(
                 scrollableParent
                     .querySelector(".tab-pane.active")
@@ -1218,6 +1201,18 @@ QUnit.module("Views", (hooks) => {
             assert.ok(
                 isVisible(scrollableParent.querySelector("#anchor1")),
                 "the first anchor is visible"
+            );
+
+            await click(target.querySelector(".outerLink2"));
+            assert.ok(
+                scrollableParent
+                    .querySelector(".tab-pane.active")
+                    .contains(scrollableParent.querySelector("#anchor2")),
+                "the second pane is visible"
+            );
+            assert.ok(
+                isVisible(scrollableParent.querySelector("#anchor2")),
+                "the second anchor is visible"
             );
         }
     );

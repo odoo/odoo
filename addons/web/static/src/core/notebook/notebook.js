@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-const { Component, useState, onWillUpdateProps } = owl;
+import { scrollTo } from "@web/core/utils/scrolling";
+
+const { Component, useEffect, useRef, useState, onWillUpdateProps } = owl;
 
 /**
  * A notebook component that will render only the current page and allow
@@ -20,12 +22,39 @@ const { Component, useState, onWillUpdateProps } = owl;
 
 export class Notebook extends Component {
     setup() {
+        this.activePane = useRef("activePane");
+        this.anchorTarget = null;
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props);
-
+        this.env.bus.addEventListener("SCROLLER:ANCHOR_LINK_CLICKED", (ev) =>
+            this.onAnchorClicked(ev)
+        );
+        useEffect(
+            () => {
+                if (this.anchorTarget) {
+                    const matchingEl = this.activePane.el.querySelector(`#${this.anchorTarget}`);
+                    scrollTo(matchingEl, { isAnchor: true });
+                    this.anchorTarget = null;
+                }
+            },
+            () => [this.state.currentPage]
+        );
         onWillUpdateProps(
             (nextProps) => (this.state.currentPage = this.computeActivePage(nextProps))
         );
+    }
+
+    onAnchorClicked(ev) {
+        if (!this.props.anchors) return;
+        const id = ev.detail.detail.id.substring(1);
+        if (this.props.anchors[id]) {
+            if (this.state.currentPage !== this.props.anchors[id].target) {
+                ev.preventDefault();
+                ev.detail.detail.originalEv.preventDefault();
+                this.anchorTarget = id;
+                this.state.currentPage = this.props.anchors[id].target;
+            }
+        }
     }
 
     computeActivePage(props) {
@@ -43,4 +72,4 @@ export class Notebook extends Component {
 }
 
 Notebook.template = "web.Notebook";
-Notebook.props = ["slots?", "class?", "className?"];
+Notebook.props = ["slots?", "class?", "className?", "anchors?"];

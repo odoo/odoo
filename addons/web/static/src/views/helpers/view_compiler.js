@@ -729,6 +729,11 @@ export class ViewCompiler {
      */
     compileNotebook(el, params) {
         const noteBook = createElement("Notebook");
+        const pageAnchors = Array.from(document.querySelectorAll("[href]")).filter(
+            (el) => el.attributes.href.value[0] === "#"
+        );
+        const noteBookAnchors = {};
+
         if (el.hasAttribute("class")) {
             noteBook.setAttribute("className", `"${el.getAttribute("class")}"`);
             el.removeAttribute("class");
@@ -753,6 +758,15 @@ export class ViewCompiler {
             pageSlot.setAttribute("t-set-slot", pageId);
             pageSlot.setAttribute("title", pageTitle);
 
+            for (const anchor of child.querySelectorAll("[href]")) {
+                if (anchor.attributes.href.value[0] === "#") {
+                    pageAnchors.push(anchor.attributes.href.value);
+                    noteBookAnchors[anchor.attributes.href.value.substring(1)] = {
+                        origin: `'${pageId}'`,
+                    };
+                }
+            }
+
             let isVisible;
             if (invisible === false) {
                 isVisible = "true";
@@ -764,6 +778,26 @@ export class ViewCompiler {
             for (const contents of child.children) {
                 append(pageSlot, this.compileNode(contents, params));
             }
+        }
+
+        if (pageAnchors.length) {
+            // If anchors from the page are targetting an element
+            // present in the notebook, it must be aware of the
+            // page that contains the corresponding element
+            for (const anchor of pageAnchors) {
+                let pageId = 1;
+                for (const child of el.children) {
+                    if (child.querySelector(anchor)) {
+                        noteBookAnchors[anchor.substring(1)].target = `'page_${pageId}'`;
+                        noteBookAnchors[anchor.substring(1)] = objectToString(
+                            noteBookAnchors[anchor.substring(1)]
+                        );
+                        break;
+                    }
+                    pageId++;
+                }
+            }
+            noteBook.setAttribute("anchors", objectToString(noteBookAnchors));
         }
 
         return noteBook;
