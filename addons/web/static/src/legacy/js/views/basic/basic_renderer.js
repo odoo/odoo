@@ -529,7 +529,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
 
         this.trigger_up('resequence_records', {
             handleField: this.handleField,
-            offset: _.min(sequences),
+            offset: _.max(sequences),
             recordIds: recordIds,
         });
     },

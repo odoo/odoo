@@ -1872,10 +1872,11 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         // validated by the model, trigger the change on the last record
         // (without the option, s.t. the potential onchange on parent record
         // is triggered)
+        var len = ev.data.recordIds.length - 1
         var recordId = recordIds.pop();
         var proms = recordIds.map(function (recordId, index) {
             var data = {};
-            data[handleField] = offset + index;
+            data[handleField] = offset - len + index;
             return self._setValue({
                 operation: 'UPDATE',
                 id: recordId,
@@ -1894,7 +1895,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 }
             }
             var data = {};
-            data[handleField] = offset + recordIds.length;
+            data[handleField] = offset;
             self._setValue({
                 operation: 'UPDATE',
                 id: recordId,

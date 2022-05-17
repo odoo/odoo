@@ -7256,8 +7256,8 @@ QUnit.module('Views', {
                   '</tree>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
-                    assert.strictEqual(args.offset, -4,
-                        "should write the sequence starting from the lowest current one");
+                    assert.strictEqual(args.offset, 17,
+                        "should write the sequence starting from the highest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2 , 3],
@@ -7325,7 +7325,7 @@ QUnit.module('Views', {
                             context: {},
                             model: "foo",
                             ids: [4, 3],
-                            offset: 13,
+                            offset: 14,
                             field: "int_field",
                         });
                     }
@@ -7334,7 +7334,7 @@ QUnit.module('Views', {
                             context: {},
                             model: "foo",
                             ids: [4, 2],
-                            offset: 12,
+                            offset: 14,
                             field: "int_field",
                         });
                     }
@@ -7342,8 +7342,8 @@ QUnit.module('Views', {
                         assert.deepEqual(args, {
                             context: {},
                             model: "foo",
-                            ids: [2, 4],
-                            offset: 12,
+                            ids: [1, 2, 4, 3],
+                            offset: 15,
                             field: "int_field",
                         });
                     }
@@ -7352,7 +7352,7 @@ QUnit.module('Views', {
                             context: {},
                             model: "foo",
                             ids: [4, 2],
-                            offset: 12,
+                            offset: 17,
                             field: "int_field",
                         });
                     }
@@ -7416,8 +7416,8 @@ QUnit.module('Views', {
                   '</tree>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
-                    assert.strictEqual(args.offset, 1,
-                        "should write the sequence starting from the lowest current one");
+                    assert.strictEqual(args.offset, 3,
+                        "should write the sequence starting from the highest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2, 3],
@@ -7552,8 +7552,8 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
                     var _super = this._super.bind(this);
-                    assert.strictEqual(args.offset, 1,
-                        "should write the sequence starting from the lowest current one");
+                    assert.strictEqual(args.offset, 3,
+                        "should write the sequence starting from the highest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2, 3],

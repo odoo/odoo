@@ -704,7 +704,7 @@ QUnit.module('fields', {}, function () {
             );
 
             assert.strictEqual(nbConfirmChange, 1, "should have confirmed changes only once");
-            assert.verifySteps(["0", "1"],
+            assert.verifySteps(["8", "9"],
                 "sequences values should be incremental starting from the previous minimum one");
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
@@ -715,8 +715,8 @@ QUnit.module('fields', {}, function () {
             assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
                 return _.pick(turtle, 'id', 'turtle_foo', 'turtle_int');
             }), [
-                    { id: 1, turtle_foo: "yop", turtle_int: 1 },
-                    { id: 2, turtle_foo: "blip", turtle_int: 0 },
+                    { id: 1, turtle_foo: "yop", turtle_int: 9 },
+                    { id: 2, turtle_foo: "blip", turtle_int: 8 },
                     { id: 3, turtle_foo: "kawa", turtle_int: 21 }
                 ], "should have save the changed sequence");
 
@@ -946,7 +946,7 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (args.method === 'write') {
-                        assert.deepEqual(args.args[1].turtles, [[1, 2, { "turtle_int": 1 }], [1, 1, { "turtle_int": 2 }], [1, 3, { "turtle_int": 3 }]],
+                        assert.deepEqual(args.args[1].turtles, [[1, 2, { "turtle_int": -1 }], [1, 1, { "turtle_int": 0 }], [1, 3, { "turtle_int": 1 }]],
                             "should change all lines that have changed (the first one doesn't change because it has the same sequence)");
                     }
                     return this._super.apply(this, arguments);
@@ -1128,7 +1128,7 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#30#31#32#33#34#35#36#37#38",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#22#21#23#24#25#26#27#28#29",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             // Drag and drop the third line in second position
@@ -1138,11 +1138,11 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
             await testUtils.dom.click(form.$('.o_form_label'));
-            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
+            assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should display the records in order after resequence");
 
             await testUtils.form.clickDiscard(form);
@@ -1722,13 +1722,13 @@ QUnit.module('fields', {}, function () {
                     "sequences values should be apply from the begin index to the drop index");
             }
             assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
-                { id: 3, turtle_foo: "kawa", turtle_int: 2 },
-                { id: 7, turtle_foo: "a4", turtle_int: 3 },
-                { id: 1, turtle_foo: "yop", turtle_int: 4 },
-                { id: 2, turtle_foo: "blip", turtle_int: 5 },
-                { id: 5, turtle_foo: "a2", turtle_int: 6 },
-                { id: 6, turtle_foo: "a3", turtle_int: 7 },
-                { id: 4, turtle_foo: "a1", turtle_int: 8 }
+                { id: 3, turtle_foo: "kawa", turtle_int: 15 },
+                { id: 7, turtle_foo: "a4", turtle_int: 16 },
+                { id: 1, turtle_foo: "yop", turtle_int: 17 },
+                { id: 2, turtle_foo: "blip", turtle_int: 18 },
+                { id: 5, turtle_foo: "a2", turtle_int: 19 },
+                { id: 6, turtle_foo: "a3", turtle_int: 20 },
+                { id: 4, turtle_foo: "a1", turtle_int: 21 }
             ], "sequences must be apply correctly");
 
             form.destroy();
@@ -1777,7 +1777,7 @@ QUnit.module('fields', {}, function () {
                 { position: 'top' }
             );
 
-            assert.verifySteps(["0", "1"],
+            assert.verifySteps(["8", "9"],
                 "sequences values should be incremental starting from the previous minimum one");
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
@@ -8969,9 +8969,9 @@ QUnit.module('fields', {}, function () {
                     if (args.method === 'write') {
                         assert.deepEqual(args.args[1], {
                             turtles: [
-                                [1, 2, {turtle_int: 0}],
-                                [1, 3, {turtle_int: 1}],
-                                [1, 1, {turtle_int: 2}],
+                                [1, 2, {turtle_int: 19}],
+                                [1, 3, {turtle_int: 20}],
+                                [1, 1, {turtle_int: 21}],
                             ],
                         });
                     }
@@ -10017,12 +10017,12 @@ QUnit.module('fields', {}, function () {
             assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
                 return _.pick(turtle, 'id', 'turtle_int');
             }), [
-                {id: 1, turtle_int: 2},
-                {id: 2, turtle_int: 3},
-                {id: 3, turtle_int: 4},
-                {id: 4, turtle_int: 1},
-                {id: 5, turtle_int: 5},
-                {id: 6, turtle_int: 6},
+                {id: 1, turtle_int: 0},
+                {id: 2, turtle_int: 1},
+                {id: 3, turtle_int: 2},
+                {id: 4, turtle_int: -1},
+                {id: 5, turtle_int: 3},
+                {id: 6, turtle_int: 4},
             ], "should have saved the updated turtle_int sequence");
 
             form.destroy();
