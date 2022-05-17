@@ -571,7 +571,7 @@ class HolidaysType(models.Model):
             leaves = self.browse(super()._search(domain, access_rights_uid=access_rights_uid))
             leaves = leaves.sorted(key=self._model_sorting_key, reverse=True)
             leaves = leaves[offset:(offset + limit) if limit else None]
-            return leaves.ids
+            return leaves._as_query()
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def action_see_days_allocated(self):

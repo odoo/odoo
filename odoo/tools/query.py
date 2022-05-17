@@ -216,6 +216,35 @@ class Query(object):
             self._ids = tuple(row[0] for row in self._cr.fetchall())
         return self._ids
 
+    def set_result_ids(self, ids, ordered=True):
+        """ Set up the query to return the lines given by ``ids``. The parameter
+        ``ordered`` tells whether the query must be ordered to match exactly the
+        sequence ``ids``.
+        """
+        assert not (self._joins or self._where_clauses or self.limit or self.offset), \
+            "Method set_result_ids() can only be called on a virgin Query"
+        ids = tuple(ids)
+        if not ids:
+            self.add_where("FALSE")
+        elif ordered:
+            # This guarantees that self.select() returns the results in the
+            # expected order of ids:
+            #   SELECT "stuff".id
+            #   FROM "stuff"
+            #   JOIN (SELECT * FROM unnest(%s) WITH ORDINALITY) AS "stuff__ids"
+            #       ON ("stuff"."id" = "stuff__ids"."unnest")
+            #   WHERE TRUE
+            #   ORDER BY "stuff__ids"."ordinality"
+            alias = self.join(
+                next(iter(self._tables)), 'id',
+                'SELECT * FROM unnest(%s) WITH ORDINALITY', 'unnest',
+                'ids', extra_params=[list(ids)],
+            )
+            self.order = f'"{alias}"."ordinality"'
+        else:
+            self.add_where(f'"{next(iter(self._tables))}"."id" IN %s', [ids])
+        self._ids = ids
+
     def __str__(self):
         return '<osv.Query: %r with params: %r>' % self.select()
 

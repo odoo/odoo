@@ -543,7 +543,7 @@ class IrAttachment(models.Model):
             return ids
 
         if not ids:
-            return []
+            return ids
 
         # Work with a set, as list.remove() is prohibitive for large lists of documents
         # (takes 20+ seconds on a db with 100k docs during search_count()!)
@@ -601,7 +601,7 @@ class IrAttachment(models.Model):
             )
             result.extend(more_ids[:limit - len(result)])
 
-        return list(result)
+        return self.browse(result)._as_query(order)
 
     def _read(self, fields):
         self.check('read')
