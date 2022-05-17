@@ -3,6 +3,7 @@
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickEdit,
     editInput,
     getFixture,
     getNodesTextContent,
@@ -1975,11 +1976,9 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         'empty inner readonly fields don\'t have o_form_empty class in "create" mode',
         async function (assert) {
-            assert.expect(2);
-
             serverData.models.partner.fields.product_id.readonly = true;
             await makeView({
                 type: "form",
@@ -1996,16 +1995,14 @@ QUnit.module("Views", (hooks) => {
                         </sheet>
                     </form>`,
             });
-            assert.containsNone(target, ".o_form_label_empty", "no empty class on label");
-            assert.containsNone(target, ".o_field_empty", "no empty class on field");
+            assert.containsNone(target, ".o_form_label_empty");
+            assert.containsNone(target, ".o_field_empty");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "label tag added for fields have o_form_empty class in readonly mode if field is empty",
         async function (assert) {
-            assert.expect(8);
-
             serverData.models.partner.fields.foo.default = false; // no default value for this test
             serverData.models.partner.records[1].foo = false; // 1 is record with id=2
             serverData.models.partner.records[1].trululu = false; // 1 is record with id=2
@@ -2033,57 +2030,23 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
-            assert.containsN(
-                target,
-                ".o_field_widget.o_field_empty",
-                2,
-                "should have 2 empty fields with correct class"
-            );
-            assert.containsN(
-                target,
-                ".o_form_label_empty",
-                2,
-                "should have 2 muted labels (for the empty fieds) in readonly"
-            );
+            assert.containsN(target, ".o_field_widget.o_field_empty", 2);
+            assert.containsN(target, ".o_form_label_empty", 2);
 
-            await click(target.querySelector(".o_form_button_edit"));
+            await clickEdit(target);
 
-            assert.containsOnce(
-                target,
-                ".o_field_empty",
-                "in edit mode, only empty readonly fields should have the o_field_empty class"
-            );
-            assert.containsOnce(
-                target,
-                ".o_form_label_empty",
-                "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
-            );
+            assert.containsOnce(target, ".o_field_empty");
+            assert.containsOnce(target, ".o_form_label_empty");
 
-            await editInput(target, ".o_field_widget[name=foo] input", "test");
+            await editInput(target, "div[name=foo] input", "test");
 
-            assert.containsNone(
-                target,
-                ".o_field_empty",
-                "after readonly modifier change, the o_field_empty class should have been removed"
-            );
-            assert.containsNone(
-                target,
-                ".o_form_label_empty",
-                "after readonly modifier change, the o_form_label_empty class should have been removed"
-            );
+            assert.containsNone(target, ".o_field_empty");
+            assert.containsNone(target, ".o_form_label_empty");
 
-            await editInput(target, ".o_field_widget[name=foo] input", "hello");
+            await editInput(target, "div[name=foo] input", "hello");
 
-            assert.containsOnce(
-                target,
-                ".o_field_empty",
-                "after value changed to false for a readonly field, the o_field_empty class should have been added"
-            );
-            assert.containsOnce(
-                target,
-                ".o_form_label_empty",
-                "after value changed to false for a readonly field, the o_form_label_empty class should have been added"
-            );
+            assert.containsOnce(target, ".o_field_empty");
+            assert.containsOnce(target, ".o_form_label_empty");
         }
     );
 
@@ -9041,8 +9004,6 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.skipWOWL("support header button as widgets on form statusbar", async function (assert) {
-        assert.expect(2);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -9055,15 +9016,10 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
         });
 
-        assert.containsOnce(
-            target,
-            "button.o_attachment_button",
-            "should have 1 attach_document widget in the statusbar"
-        );
+        assert.containsOnce(target, "button.o_attachment_button");
         assert.strictEqual(
             target.querySelector("span.o_attach_document").innerText.trim(),
-            "Attach document",
-            "widget should have been instantiated"
+            "Attach document"
         );
     });
 
@@ -9871,11 +9827,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(webClient, ".o_kanban_view");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many create record dialog shouldn't have a 'remove' button",
         async function (assert) {
-            assert.expect(2);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -9901,12 +9855,8 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_form_button_create"));
             await click(target.querySelector(".o-kanban-button-new"));
 
-            assert.containsOnce(document.body, ".modal");
-            assert.strictEqual(
-                $(".modal .modal-footer .o_btn_remove").length,
-                0,
-                "shouldn't have a 'remove' button on new records"
-            );
+            assert.containsOnce(target, ".modal");
+            assert.containsNone(target, ".modal .modal-footer .o_btn_remove");
         }
     );
 
