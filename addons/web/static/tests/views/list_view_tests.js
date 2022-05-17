@@ -1897,15 +1897,15 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 resId: 1,
-                arch:
-                    "<form>" +
-                    '<field name="o2m">' +
-                    '<tree editable="top">' +
-                    '<field name="int_field" widget="handle"/>' +
-                    '<field name="titi"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
+                arch:`
+                    <form>
+                        <field name="o2m">
+                            <tree editable="top">
+                            <field name="int_field" widget="handle"/>
+                            <field name="titi"/>
+                            </tree>
+                        </field>
+                    </form>`,
             });
             await clickEdit(target);
             await addRow(target);
@@ -1917,7 +1917,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("edit field in editable field without editing the row", async function (assert) {
+    QUnit.test("edit field in editable field without editing the row", async function (assert) {
         // some widgets are editable in readonly (e.g. priority, boolean_toggle...) and they
         // thus don't require the row to be switched in edition to be edited
         await makeView({
@@ -1946,9 +1946,9 @@ QUnit.module("Views", (hooks) => {
 
         // toggle the boolean value after switching the row in edition
         assert.containsNone(target, ".o_selected_row");
-        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await click(target.querySelector(".o_data_row .o_data_cell .o_field_boolean_toggle div"));
         assert.containsOnce(target, ".o_selected_row");
-        await click(target.querySelector(".o_selected_row .o_boolean_toggle"));
+        await click(target.querySelector(".o_selected_row .o_field_boolean_toggle div"));
         assert.containsOnce(target, ".o_selected_row");
         assert.verifySteps([]);
 
@@ -6153,7 +6153,6 @@ QUnit.module("Views", (hooks) => {
                     );
                     nbRPCs.searchRead++;
                 }
-                return this._super.apply(this, arguments);
             },
             intercepts: {
                 switch_view: function (event) {
@@ -9485,7 +9484,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable list view: multi edition of many2one: set same value",
         async function (assert) {
             assert.expect(4);
@@ -9520,12 +9519,11 @@ QUnit.module("Views", (hooks) => {
 
             // set m2o to 1 in first record
             await click(target.querySelector(".o_data_row .o_data_cell"));
-            await testUtils.fields.many2one.searchAndClickItem("m2o", { search: "Value 1" });
-
-            assert.containsOnce(document.body, ".modal");
+            await editInput(target, ".o_data_row [name=m2o] input", "Value 1")
+            await click(target.querySelector(".o-autocomplete--dropdown-item"))
+            assert.containsOnce(target, ".modal");
 
             await click(target, ".modal .modal-footer .btn-primary");
-
             assert.strictEqual(
                 $(target).find(".o_list_many2one").text(),
                 "Value 1Value 1Value 1Value 1"

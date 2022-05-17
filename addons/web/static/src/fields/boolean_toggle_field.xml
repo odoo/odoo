@@ -6,7 +6,7 @@
             className="'o_field_boolean o_boolean_toggle'"
             id="props.id"
             value="props.value or false"
-            disabled="props.readonly"
+            disabled="props.record.isReadonly(props.name)"
             onChange.bind="onChange"
             onKeydown.bind="onKeydown"
         >
