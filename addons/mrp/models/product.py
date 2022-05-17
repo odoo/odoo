@@ -5,6 +5,7 @@ from datetime import timedelta
 import operator as py_operator
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_round, float_is_zero
+from collections import defaultdict
 
 
 OPERATORS = {
@@ -139,8 +140,95 @@ class ProductProduct(models.Model):
         res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
         qties = self.env.context.get("mrp_compute_quantities", {})
         qties.update(res)
+
+        #Find the boms which have at least one line with apply on variant
+        bom_ids = [bom.id for bom in bom_kits.values()]
+        if bom_ids:
+            self.env.cr.execute("""
+                            SELECT id
+                            FROM mrp_bom bom
+                            WHERE bom.id in %s
+                            AND EXISTS(
+                                SELECT
+                                FROM mrp_bom_line line
+                                WHERE line.bom_id = bom.id
+                                AND EXISTS (
+                                    SELECT
+                                    FROM mrp_bom_line_product_template_attribute_value_rel rel
+                                    WHERE rel.mrp_bom_line_id = line.id
+                                )
+                            )
+                        """, [tuple(bom_ids)])
+            boms_with_apply = [bom[0] for bom in self.env.cr.fetchall()]
+        else:
+            boms_with_apply = []
+
+        #For the boms that have apply, iterate through all products individually
         for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            if bom_kits[product].id in boms_with_apply:
+                _, bom_sub_lines = bom_kits[product].explode(product, 1)
+                ratios_virtual_available = []
+                ratios_qty_available = []
+                ratios_incoming_qty = []
+                ratios_outgoing_qty = []
+                ratios_free_qty = []
+                for bom_line, bom_line_data in bom_sub_lines:
+                    component = bom_line.product_id.with_context(mrp_compute_quantities=qties)
+                    if component.type != 'product' or float_is_zero(bom_line_data['qty'],
+                                                                    precision_rounding=bom_line.product_uom_id.rounding):
+                        # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
+                        # to avoid a division by zero. The same logic is applied to non-storable products as those
+                        # products have 0 qty available.
+                        continue
+                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                    qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id,
+                                                                            round=False, raise_if_failure=False)
+                    if not qty_per_kit:
+                        continue
+                    rounding = component.uom_id.rounding
+                    component_res = (
+                        qties.get(component.id)
+                        if component.id in qties
+                        else {
+                            "virtual_available": float_round(component.virtual_available, precision_rounding=rounding),
+                            "qty_available": float_round(component.qty_available, precision_rounding=rounding),
+                            "incoming_qty": float_round(component.incoming_qty, precision_rounding=rounding),
+                            "outgoing_qty": float_round(component.outgoing_qty, precision_rounding=rounding),
+                            "free_qty": float_round(component.free_qty, precision_rounding=rounding),
+                        }
+                    )
+                    ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
+                    ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
+                    ratios_incoming_qty.append(component_res["incoming_qty"] / qty_per_kit)
+                    ratios_outgoing_qty.append(component_res["outgoing_qty"] / qty_per_kit)
+                    ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
+                if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
+                    res[product.id] = {
+                        'virtual_available': min(ratios_virtual_available) // 1,
+                        'qty_available': min(ratios_qty_available) // 1,
+                        'incoming_qty': min(ratios_incoming_qty) // 1,
+                        'outgoing_qty': min(ratios_outgoing_qty) // 1,
+                        'free_qty': min(ratios_free_qty) // 1,
+                    }
+                else:
+                    res[product.id] = {
+                        'virtual_available': 0,
+                        'qty_available': 0,
+                        'incoming_qty': 0,
+                        'outgoing_qty': 0,
+                        'free_qty': 0,
+                    }
+
+        # For the boms that don't have apply, we want to iterate through boms instead of products
+        # so we reverse the keys and values of bom_kits
+        bom_kits_to_products = defaultdict(list)
+        for product, bom_kit in bom_kits.items():
+            if bom_kit.id not in boms_with_apply:
+                bom_kits_to_products[bom_kit].append(product)
+
+        for bom_kit in bom_kits_to_products:
+            _, bom_sub_lines = bom_kit.explode(bom_kits_to_products[bom_kit][0], 1)
+
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
@@ -148,13 +236,15 @@ class ProductProduct(models.Model):
             ratios_free_qty = []
             for bom_line, bom_line_data in bom_sub_lines:
                 component = bom_line.product_id.with_context(mrp_compute_quantities=qties)
-                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                if component.type != 'product' or float_is_zero(bom_line_data['qty'],
+                                                                precision_rounding=bom_line.product_uom_id.rounding):
                     # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
                     # to avoid a division by zero. The same logic is applied to non-storable products as those
                     # products have 0 qty available.
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id,
+                                                                        round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
                 rounding = component.uom_id.rounding
@@ -175,22 +265,23 @@ class ProductProduct(models.Model):
                 ratios_outgoing_qty.append(component_res["outgoing_qty"] / qty_per_kit)
                 ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
-                res[product.id] = {
-                    'virtual_available': min(ratios_virtual_available) // 1,
-                    'qty_available': min(ratios_qty_available) // 1,
-                    'incoming_qty': min(ratios_incoming_qty) // 1,
-                    'outgoing_qty': min(ratios_outgoing_qty) // 1,
-                    'free_qty': min(ratios_free_qty) // 1,
-                }
+                for product in bom_kits_to_products[bom_kit]:
+                    res[product.id] = {
+                        'virtual_available': min(ratios_virtual_available) // 1,
+                        'qty_available': min(ratios_qty_available) // 1,
+                        'incoming_qty': min(ratios_incoming_qty) // 1,
+                        'outgoing_qty': min(ratios_outgoing_qty) // 1,
+                        'free_qty': min(ratios_free_qty) // 1,
+                    }
             else:
-                res[product.id] = {
-                    'virtual_available': 0,
-                    'qty_available': 0,
-                    'incoming_qty': 0,
-                    'outgoing_qty': 0,
-                    'free_qty': 0,
-                }
-
+                for product in bom_kits_to_products[bom_kit]:
+                    res[product.id] = {
+                        'virtual_available': 0,
+                        'qty_available': 0,
+                        'incoming_qty': 0,
+                        'outgoing_qty': 0,
+                        'free_qty': 0,
+                    }
         return res
 
     def action_view_bom(self):
