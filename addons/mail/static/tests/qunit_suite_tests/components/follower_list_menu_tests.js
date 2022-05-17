@@ -1,26 +1,68 @@
 /** @odoo-module **/
 
-import { insert, replace } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred';
 import {
+    afterNextRender,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
+import { nextTick } from 'web.test_utils';
+import FormView from 'web.FormView';
 import Bus from 'web.Bus';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('follower_list_menu_tests.js');
+QUnit.module('follower_list_menu_tests.js', {
+    async beforeEach() {
+        // FIXME archs could be removed once task-2248306 is done
+        // The mockServer will try to get the list view
+        // of every relational fields present in the main view.
+        // In the case of mail fields, we don't really need them,
+        // but they still need to be defined.
+        this.createView = async (viewParams, ...args) => {
+            const startResult = makeDeferred();
+            await afterNextRender(async () => {
+                const viewArgs = Object.assign(
+                    {
+                        archs: {
+                            'mail.activity,false,list': '<tree/>',
+                            'mail.followers,false,list': '<tree/>',
+                            'mail.message,false,list': '<tree/>',
+                        },
+                    },
+                    viewParams,
+                );
+                startResult.resolve(await start(viewArgs, ...args));
+            });
+            return startResult;
+        };
+    },
+});
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { createFollowerListMenuComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 100,
+    await this.createView({
+        hasView: true,
+        // View params
+        View: FormView,
         model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+        viewOptions: {
+            mode: 'edit',
+        },
     });
-    await createFollowerListMenuComponent(thread, { isDisabled: true });
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu',
@@ -42,6 +84,7 @@ QUnit.test('base rendering not editable', async function (assert) {
     );
 
     document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
+    await nextTick();
     assert.containsNone(
         document.body,
         '.o_FollowerListMenu_dropdown',
@@ -52,13 +95,24 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
-    const { click, createFollowerListMenuComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
-        hasWriteAccess: true,
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+
+    const { click, createChatterContainerComponent } = await start({
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
+            return this._super(...arguments);
+        },
     });
-    await createFollowerListMenuComponent(thread);
+    await createChatterContainerComponent({
+        threadId: resPartnerId1,
+        threadModel: 'res.partner',
+    });
 
     assert.containsOnce(
         document.body,
@@ -92,11 +146,12 @@ QUnit.test('click on "add followers" button', async function (assert) {
     assert.expect(15);
 
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
-        { name: 'resPartner1'},
+    const [resPartnerId1, resPartnerId2, resPartnerId3] = pyEnv['res.partner'].create([
+        { name: 'resPartner1' },
         { name: 'resPartner2' },
+        { name: 'resPartner3' },
     ]);
-    const mailFollowerId1 = pyEnv['mail.followers'].create({
+    pyEnv['mail.followers'].create({
         partner_id: resPartnerId2,
         email: "bla@bla.bla",
         is_active: true,
@@ -127,16 +182,33 @@ QUnit.test('click on "add followers" button', async function (assert) {
                 "ir.actions.act_window",
                 "The 'add followers' action should be of type 'ir.actions.act_window'"
             );
-            pyEnv['res.partner'].write([action.context.default_res_id], { message_follower_ids: [mailFollowerId1] });
+            pyEnv['mail.followers'].create({
+                partner_id: resPartnerId3,
+                email: "bla@bla.bla",
+                is_active: true,
+                name: "Wololo",
+                res_id: resPartnerId1,
+                res_model: 'res.partner',
+            });
             options.on_close();
     });
-    const { click, createFollowerListMenuComponent, messaging } = await start({ env: { bus } });
-    const thread = messaging.models['Thread'].create({
-        hasWriteAccess: true,
-        id: resPartnerId1,
-        model: 'res.partner',
+
+    const { click, createChatterContainerComponent } = await start({
+        env: { bus },
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
+            return this._super(...arguments);
+        },
     });
-    await createFollowerListMenuComponent(thread);
+    await createChatterContainerComponent({
+        threadId: resPartnerId1,
+        threadModel: 'res.partner',
+    });
 
     assert.containsOnce(
         document.body,
@@ -150,8 +222,8 @@ QUnit.test('click on "add followers" button', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
-        "0",
-        "Followers counter should be equal to 0"
+        "1",
+        "Followers counter should be equal to 1"
     );
 
     await click('.o_FollowerListMenu_buttonFollowers');
@@ -177,15 +249,16 @@ QUnit.test('click on "add followers" button', async function (assert) {
     ]);
     assert.strictEqual(
         document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
-        "1",
-        "Followers counter should now be equal to 1"
+        "2",
+        "Followers counter should now be equal to 2"
     );
 
     await click('.o_FollowerListMenu_buttonFollowers');
-    assert.containsOnce(
+    assert.containsN(
         document.body,
         '.o_FollowerMenu_follower',
-        "Follower list should be refreshed and contain a follower"
+        2,
+        "Follower list should be refreshed and contain 2 followers"
     );
     assert.strictEqual(
         document.querySelector('.o_Follower_name').textContent,
@@ -198,35 +271,41 @@ QUnit.test('click on remove follower', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, createFollowerListMenuComponent, messaging } = await start({
+    const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
+        { name: 'resPartner1' },
+        { name: 'resPartner2' },
+    ]);
+    pyEnv['mail.followers'].create({
+        partner_id: resPartnerId2,
+        email: "bla@bla.bla",
+        is_active: true,
+        name: "Wololo",
+        res_id: resPartnerId1,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await start({
         async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user with write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = true;
+                return res;
+            }
             if (route.includes('message_unsubscribe')) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[resPartnerId1], [messaging.currentPartner.id]],
+                    [[resPartnerId1], [resPartnerId2]],
                     "message_unsubscribe should be called with right argument"
                 );
             }
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
-        model: 'res.partner',
+    await createChatterContainerComponent({
+        threadId: resPartnerId1,
+        threadModel: 'res.partner',
     });
-    await messaging.models['Follower'].create({
-        followedThread: replace(thread),
-        id: 2,
-        isActive: true,
-        partner: insert({
-            email: "bla@bla.bla",
-            id: messaging.currentPartner.id,
-            name: "François Perusse",
-        }),
-    });
-    await createFollowerListMenuComponent(thread);
 
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
@@ -387,14 +466,25 @@ QUnit.test('Show "Add follower" and subtypes edition/removal buttons on all foll
 QUnit.test('Show "No Followers" dropdown-item if there are no followers and user dose not have write access', async function (assert) {
     assert.expect(1);
 
-    const { click, createFollowerListMenuComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
-        hasWriteAccess: false,
+    const pyEnv = await startServer();
+
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    const { click, createChatterContainerComponent } = await start({
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user without write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = false;
+                return res;
+            }
+            return this._super(...arguments);
+        },
+    });
+    await createChatterContainerComponent({
+        threadId: resPartnerId1,
+        threadModel: 'res.partner',
     });
 
-    await createFollowerListMenuComponent(thread);
     await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
