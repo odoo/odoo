@@ -22,7 +22,7 @@ from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.http import request, content_disposition, Response, ROUTING_KEYS
 from odoo.service import security
 from odoo.tools import consteq, submap
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import get_extension, guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -354,7 +354,7 @@ class IrHttp(models.AbstractModel):
             mimetype = guess_mimetype(content, default=default_mimetype)
 
         # extension
-        has_extension = bool(mimetypes.guess_type(filename)[0])
+        has_extension = get_extension(filename) or mimetypes.guess_type(filename)[0]
         if not has_extension:
             extension = mimetypes.guess_extension(mimetype)
             if extension:
