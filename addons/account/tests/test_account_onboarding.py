@@ -13,7 +13,7 @@ class TestTourRenderInvoiceReport(AccountTestInvoicingHttpCommon):
 
         cls.env.user.write({
             'groups_id': [
-                (6, 0, (cls.env.ref('account.group_account_invoice') + cls.env.ref('base.group_system')).ids),
+                (6, 0, (cls.env.ref('account.group_account_manager') + cls.env.ref('base.group_system')).ids),
             ],
         })
 
