@@ -222,7 +222,7 @@ class StockWarehouseOrderpoint(models.Model):
         now = datetime.now()
         notification = False
         if len(self) == 1:
-            notification = self._get_replenishment_order_notification(now)
+            notification = self.with_context(written_after=now)._get_replenishment_order_notification()
         # Forced to call compute quantity because we don't have a link.
         self._compute_qty()
         self.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
@@ -442,12 +442,12 @@ class StockWarehouseOrderpoint(models.Model):
             'trigger': 'manual',
         }
 
-    def _get_replenishment_order_notification(self, written_after):
+    def _get_replenishment_order_notification(self):
         self.ensure_one()
-        move = self.env['stock.move'].search([
-            ('orderpoint_id', 'in', self.ids),
-            ('write_date', '>', written_after)
-        ], limit=1)
+        domain = [('orderpoint_id', 'in', self.ids)]
+        if self.env.context.get('written_date'):
+            domain = expression.AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+        move = self.env['stock.move'].search(domain, limit=1)
         if move.picking_id:
             return {
                 'type': 'ir.actions.client',
