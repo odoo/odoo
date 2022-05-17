@@ -159,6 +159,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
     /**
      * Method to be overridden in child components in order to prepare QWeb
      * options.
+     *
      * @private
      */
     _getQWebRenderOptions: function () {
