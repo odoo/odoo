@@ -91,6 +91,9 @@ function searchModelStateFromLegacy(state) {
         newState.sections = sections;
         //! Can be undefined. See search_model.__legacyParseSearchPanelArchAnyway
         newState.searchPanelInfo = searchPanelInfo;
+        if (newState.searchPanelInfo) {
+            newState.searchPanelInfo.loaded = true;
+        }
     }
 
     for (const [key, extension] of Object.entries(ActionModel.registry.entries())) {
@@ -166,12 +169,15 @@ export function searchModelStateToLegacy(state) {
                 filter.orderedBy = item.orderBy;
                 delete filter.orderBy;
                 break;
-            case "filter":
+            case "filter": {
                 let context = item.context;
                 try {
                     context = makeContext([context]);
-                } catch (_e) {}
+                } catch (_e) {
+                    // pass
+                }
                 filter.context = context;
+            }
         }
         filters[item.id] = filter;
     }

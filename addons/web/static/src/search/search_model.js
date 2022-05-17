@@ -266,8 +266,10 @@ export class SearchModel extends EventBus {
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
             this.domainParts = {};
             this.display = this._getDisplay(config.display);
-
-            return this._reloadSections();
+            if (!this.searchPanelInfo.loaded) {
+                return this._reloadSections();
+            }
+            return;
         }
 
         this.blockNotification = true;
@@ -310,7 +312,7 @@ export class SearchModel extends EventBus {
         );
         const { labels, preSearchItems, searchPanelInfo, sections } = parser.parse();
 
-        this.searchPanelInfo = { ...searchPanelInfo, shouldReload: false };
+        this.searchPanelInfo = { ...searchPanelInfo, loaded: false, shouldReload: false };
 
         await Promise.all(labels.map((cb) => cb(this.orm)));
 
@@ -1284,6 +1286,7 @@ export class SearchModel extends EventBus {
     async _fetchSections(categoriesToLoad, filtersToLoad) {
         await this._fetchCategories(categoriesToLoad);
         await this._fetchFilters(filtersToLoad);
+        this.searchPanelInfo.loaded = true;
     }
 
     _getActiveComparison() {
@@ -2094,6 +2097,6 @@ export class SearchModel extends EventBus {
         const parser = new SearchArchParser(searchViewDescription, searchViewFields);
         const { searchPanelInfo } = parser.parse();
 
-        this.searchPanelInfo = { ...searchPanelInfo, shouldReload: false };
+        this.searchPanelInfo = { ...searchPanelInfo, loaded: false, shouldReload: false };
     }
 }

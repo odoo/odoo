@@ -4,7 +4,6 @@ import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     getFixture,
-    legacyExtraNextTick,
     makeDeferred,
     nextTick,
     selectDropdownItem,
@@ -2006,13 +2005,11 @@ QUnit.module("Search", (hooks) => {
         assert.containsNone(target, ".o_pivot_view .o_content .o_search_panel");
 
         await switchView(target, "list");
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view .o_content.o_component_with_search_panel");
         assert.containsOnce(target, ".o_content.o_component_with_search_panel .o_search_panel");
 
         await click(target.querySelector(".o_data_row .o_data_cell"));
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_form_view .o_content");
         assert.containsNone(target, ".o_form_view .o_content .o_search_panel");
@@ -2041,7 +2038,6 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_content.o_component_with_search_panel .o_search_panel");
 
         await switchView(target, "list");
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view .o_content");
         assert.containsNone(target, ".o_content .o_search_panel");
@@ -2181,7 +2177,6 @@ QUnit.module("Search", (hooks) => {
 
             // switch to list
             await switchView(target, "list");
-            await legacyExtraNextTick();
 
             assert.containsOnce(target, ".o_list_view .o_content.o_component_with_search_panel");
             assert.containsOnce(target, ".o_content.o_component_with_search_panel .o_search_panel");
@@ -2203,11 +2198,9 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_search_panel_category_value:first .active");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "categories and filters are not reloaded when switching between views",
         async (assert) => {
-            assert.expect(3);
-
             const webclient = await createWebClient({
                 serverData,
                 async mockRPC(route, { method }) {
@@ -2220,9 +2213,7 @@ QUnit.module("Search", (hooks) => {
             await doAction(webclient, 1);
 
             await switchView(target, "list");
-            await legacyExtraNextTick();
             await switchView(target, "kanban");
-            await legacyExtraNextTick();
 
             assert.verifySteps([
                 "search_panel_select_range", // kanban: categories
@@ -2231,11 +2222,9 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "categories and filters are loaded when switching from a view without the search panel",
         async (assert) => {
-            assert.expect(5);
-
             // set the pivot view as the default view
             serverData.actions[1].views = [
                 [false, "pivot"],
@@ -2256,11 +2245,9 @@ QUnit.module("Search", (hooks) => {
             assert.verifySteps([]);
 
             await switchView(target, "list");
-            await legacyExtraNextTick();
             assert.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
 
             await switchView(target, "kanban");
-            await legacyExtraNextTick();
             assert.verifySteps([]);
         }
     );
@@ -2288,7 +2275,6 @@ QUnit.module("Search", (hooks) => {
         // simulate a scroll in the search panel and switch into list
         getSearchPanel().scrollTo(0, 100);
         await switchView(target, "list");
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_list_view .o_content");
         assert.strictEqual(getSearchPanel().scrollTop, 100);
@@ -2296,7 +2282,6 @@ QUnit.module("Search", (hooks) => {
         // simulate another scroll and switch back to kanban
         getSearchPanel().scrollTo(0, 25);
         await switchView(target, "kanban");
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_kanban_view .o_content");
         assert.strictEqual(getSearchPanel().scrollTop, 25);
