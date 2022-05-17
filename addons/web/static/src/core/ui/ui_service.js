@@ -38,6 +38,35 @@ export function useActiveElement(refName) {
     );
 }
 
+// window size handling
+export const MEDIAS_BREAKPOINTS = [
+    { maxWidth: 474 },
+    { minWidth: 475, maxWidth: 575 },
+    { minWidth: 576, maxWidth: 767 },
+    { minWidth: 769, maxWidth: 991 },
+    { minWidth: 992, maxWidth: 1199 },
+    { minWidth: 1200, maxWidth: 1533 },
+    { minWidth: 1534 },
+];
+
+/**
+ * Create the MediaQueryList used both by the uiService and config from
+ * `MEDIA_BREAKPOINTS`.
+ *
+ * @returns {MediaQueryList[]}
+ */
+ export function getMediaQueryLists() {
+    return MEDIAS_BREAKPOINTS.map(({ minWidth, maxWidth }) => {
+        if (!maxWidth) {
+            return window.matchMedia(`(min-width: ${minWidth}px)`);
+        }
+        if (!minWidth) {
+            return window.matchMedia(`(max-width: ${maxWidth}px)`);
+        }
+        return window.matchMedia(`(min-width: ${minWidth}px) and (max-width: ${maxWidth}px)`);
+    });
+}
+
 export const uiService = {
     start(env) {
         let ui = {};
@@ -109,15 +138,7 @@ export const uiService = {
         });
 
         // window size handling
-        const MEDIAS = [
-            window.matchMedia("(max-width: 474px)"),
-            window.matchMedia("(min-width: 475px) and (max-width: 575px)"),
-            window.matchMedia("(min-width: 576px) and (max-width: 767px)"),
-            window.matchMedia("(min-width: 768px) and (max-width: 991px)"),
-            window.matchMedia("(min-width: 992px) and (max-width: 1199px)"),
-            window.matchMedia("(min-width: 1200px) and (max-width: 1533px)"),
-            window.matchMedia("(min-width: 1534px)"),
-        ];
+        const MEDIAS = getMediaQueryLists();
         function getSize() {
             return MEDIAS.findIndex((media) => media.matches);
         }

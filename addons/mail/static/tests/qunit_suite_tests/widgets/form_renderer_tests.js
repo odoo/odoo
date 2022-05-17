@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { makeDeferred } from '@mail/utils/deferred';
+import { patchUiSize, SIZES } from '@mail/../tests/helpers/patch_ui_size';
 import {
     afterNextRender,
     nextAnimationFrame,
@@ -8,7 +9,6 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import config from 'web.config';
 import fieldRegistry from 'web.field_registry';
 import FormView from 'web.FormView';
 import { dom, nextTick } from 'web.test_utils';
@@ -775,6 +775,7 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     });
     pyEnv['mail.message'].create(messages);
 
+    patchUiSize({ size: SIZES.LG });
     const { click } = await this.createView({
         hasView: true,
         // View params
@@ -794,12 +795,6 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
         viewOptions: {
             currentId: resPartnerId1,
             ids: [resPartnerId1, resPartnerId2],
-        },
-        config: {
-            device: { size_class: config.device.SIZES.LG },
-        },
-        env: {
-            device: { size_class: config.device.SIZES.LG },
         },
     });
 
