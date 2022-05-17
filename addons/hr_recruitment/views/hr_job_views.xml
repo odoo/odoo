@@ -32,7 +32,7 @@
                                 <div class="o_kanban_card_header_title">
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                     <div class="o_primary col-12">
-                                        <t t-esc="record.name.value"/>
+                                        <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
                                     </div>
                                     <div class="col-12 text-muted">
                                         <field name="user_id" />
