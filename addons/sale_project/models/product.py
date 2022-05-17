@@ -5,16 +5,19 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
-SERVICE_POLICY = [
-    # (service_policy, string)
-    ('ordered_prepaid', 'Prepaid/Fixed Price'),
-    ('delivered_milestones', 'Based on Milestones'),
-    ('delivered_manual', 'Based on Delivered Quantity (Manual)'),
-]
-
-
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+
+    @api.model
+    def _selection_service_policy(self):
+        service_policies = [
+            # (service_policy, string)
+            ('ordered_prepaid', 'Prepaid/Fixed Price'),
+            ('delivered_manual', 'Based on Delivered Quantity (Manual)'),
+        ]
+        if self.user_has_groups('project.group_project_milestone'):
+            service_policies.insert(1, ('delivered_milestones', 'Based on Milestones'))
+        return service_policies
 
     service_tracking = fields.Selection(
         selection=[
@@ -36,7 +39,7 @@ class ProductTemplate(models.Model):
         'project.project', 'Project Template', company_dependent=True, copy=True,
         domain="[('company_id', '=', current_company_id)]",
         help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
-    service_policy = fields.Selection(SERVICE_POLICY, string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('milestones', 'Project Milestones'),
     ])

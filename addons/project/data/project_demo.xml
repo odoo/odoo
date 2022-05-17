@@ -7,6 +7,11 @@
             <field name="groups_id" eval="[Command.link(ref('group_project_user'))]"/>
         </record>
 
+        <!-- Groups : Add milestones feature by default -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[Command.link(ref('group_project_milestone'))]"/>
+        </record>
+
         <!-- Categories -->
         <record id="project_tags_00" model="project.tags">
             <field name="name">Bug</field>
