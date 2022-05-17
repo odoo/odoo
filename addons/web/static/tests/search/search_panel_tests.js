@@ -2252,9 +2252,7 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("scroll position is kept when switching between controllers", async (assert) => {
-        assert.expect(6);
-
+    QUnit.test("scroll position is kept when switching between controllers", async (assert) => {
         for (let i = 10; i < 20; i++) {
             serverData.models.category.records.push({ id: i, name: "Cat " + i });
         }

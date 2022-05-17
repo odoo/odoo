@@ -153,8 +153,10 @@ export class FormController extends Component {
                 return this.model.root.save({ stayInEdition: true });
             }
         };
-        useViewButtons(this.model, useRef("root"), { beforeExecuteAction });
+        const rootRef = useRef("root");
+        useViewButtons(this.model, rootRef, { beforeExecuteAction });
         useSetupView({
+            rootRef,
             beforeLeave: () => {
                 if (this.model.root.isDirty) {
                     return this.model.root.save({ noReload: true, stayInEdition: true });

@@ -9,7 +9,7 @@ import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { useModel } from "../helpers/model";
 
-const { Component } = owl;
+const { Component, useRef } = owl;
 
 export class GraphController extends Component {
     setup() {
@@ -17,6 +17,7 @@ export class GraphController extends Component {
         this.model = useModel(this.props.Model, this.props.modelParams);
 
         useSetupView({
+            rootRef: useRef("root"),
             getLocalState: () => {
                 return { metaData: this.model.metaData };
             },

@@ -46,3 +46,26 @@ export function scrollTo(element, options = { scrollable: null, isAnchor: false 
         }
     }
 }
+
+/**
+ * Returns the scrollLeft and scrollTop properties of the given element.
+ *
+ * @param {Element} el
+ * @returns {Object} with keys "left" and "top"
+ */
+export function getScrollPosition(el) {
+    return { left: el.scrollLeft, top: el.scrollTop };
+}
+
+/**
+ * Sets the scrollLeft and scrollTop properties on the given element.
+ *
+ * @param {Element} el
+ * @param {Object} offset
+ * @param {number} [offset.left=0]
+ * @param {number} [offset.top=0]
+ */
+export function setScrollPosition(el, offset) {
+    el.scrollLeft = offset.left || 0;
+    el.scrollTop = offset.top || 0;
+}

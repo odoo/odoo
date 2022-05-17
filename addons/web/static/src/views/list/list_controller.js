@@ -64,7 +64,6 @@ export class ListController extends Component {
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
         });
-        useViewButtons(this.model, useRef("root"));
 
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
@@ -78,7 +77,12 @@ export class ListController extends Component {
                 : false;
         useSubEnv({ model: this.model }); // do this in useModel?
 
+        const rootRef = useRef("root");
+
+        useViewButtons(this.model, rootRef);
+
         useSetupView({
+            rootRef,
             /** TODO **/
             beforeLeave: async () => {
                 if (this.model.root.editedRecord) {

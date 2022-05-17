@@ -1,12 +1,9 @@
 /** @odoo-module **/
 
-import { getScrollPosition, setScrollPosition } from "./scrolling";
+import { getScrollPosition, setScrollPosition } from "@web/core/utils/scrolling";
 
-const { useComponent, useEffect, useExternalListener } = owl;
+const { onMounted, useComponent, useEffect, useExternalListener } = owl;
 
-// -----------------------------------------------------------------------------
-// Action hook
-// -----------------------------------------------------------------------------
 const scrollSymbol = Symbol("scroll");
 
 export class CallbackRecorder {
@@ -66,35 +63,71 @@ export function useSetupAction(params = {}) {
         __getContext__,
     } = component.env;
 
-    if (params.beforeUnload) {
-        useExternalListener(window, "beforeunload", params.beforeUnload);
+    const { beforeUnload, beforeLeave, getGlobalState, getLocalState, rootRef } = params;
+
+    if (beforeUnload) {
+        useExternalListener(window, "beforeunload", beforeUnload);
     }
-    if (__beforeLeave__ && params.beforeLeave) {
-        useCallbackRecorder(__beforeLeave__, params.beforeLeave);
+    if (__beforeLeave__ && beforeLeave) {
+        useCallbackRecorder(__beforeLeave__, beforeLeave);
     }
-    if (__getGlobalState__ && params.getGlobalState) {
-        useCallbackRecorder(__getGlobalState__, params.getGlobalState);
-    }
-    if (__getLocalState__) {
-        useCallbackRecorder(__getLocalState__, () => {
+    if (__getGlobalState__ && (getGlobalState || rootRef)) {
+        useCallbackRecorder(__getGlobalState__, () => {
             const state = {};
-            state[scrollSymbol] = getScrollPosition(component.env);
-            if (params.getLocalState) {
-                Object.assign(state, params.getLocalState());
+            if (getGlobalState) {
+                Object.assign(state, getGlobalState());
+            }
+            if (rootRef) {
+                const searchPanelEl = rootRef.el.querySelector(".o_content .o_search_panel");
+                if (searchPanelEl) {
+                    state[scrollSymbol] = { searchPanel: getScrollPosition(searchPanelEl) };
+                }
             }
             return state;
         });
+
+        if (rootRef) {
+            onMounted(() => {
+                const { globalState } = component.props;
+                const scrolling = globalState && globalState[scrollSymbol];
+                if (scrolling) {
+                    const searchPanelEl = rootRef.el.querySelector(".o_content .o_search_panel");
+                    if (searchPanelEl) {
+                        setScrollPosition(searchPanelEl, scrolling.searchPanel);
+                    }
+                }
+            });
+        }
+    }
+    if (__getLocalState__ && (getLocalState || rootRef)) {
+        useCallbackRecorder(__getLocalState__, () => {
+            const state = {};
+            if (getLocalState) {
+                Object.assign(state, getLocalState());
+            }
+            if (rootRef) {
+                const contentEl = rootRef.el.querySelector(".o_content");
+                if (contentEl) {
+                    state[scrollSymbol] = { content: getScrollPosition(contentEl) };
+                }
+            }
+            return state;
+        });
+
+        if (rootRef) {
+            onMounted(() => {
+                const { state } = component.props;
+                const scrolling = state && state[scrollSymbol];
+                if (scrolling) {
+                    const contentEl = rootRef.el.querySelector(".o_content");
+                    if (contentEl) {
+                        setScrollPosition(contentEl, scrolling.content);
+                    }
+                }
+            });
+        }
     }
     if (__getContext__ && params.getContext) {
         useCallbackRecorder(__getContext__, params.getContext);
     }
-
-    useEffect(
-        () => {
-            if (component.props.state && component.props.state[scrollSymbol]) {
-                setScrollPosition(component.env, component.props.state[scrollSymbol]);
-            }
-        },
-        () => []
-    );
 }

@@ -18,10 +18,9 @@ export class KanbanController extends Component {
         this.actionService = useService("action");
         this.model = useModel(this.props.Model, this.props.modelParams);
 
-        useViewButtons(this.model, useRef("root"));
-        useSetupView({
-            /** TODO **/
-        });
+        const rootRef = useRef("root");
+        useViewButtons(this.model, rootRef);
+        useSetupView({ rootRef /** TODO **/ });
         usePager(() => {
             if (!this.model.root.isGrouped) {
                 return {

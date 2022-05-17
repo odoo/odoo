@@ -8,6 +8,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { getScrollPosition, setScrollPosition } from "@web/core/utils/scrolling";
 import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { View, ViewNotFoundError } from "@web/views/view";
@@ -641,6 +642,9 @@ function makeActionManager(env) {
                     });
                     dialog = nextDialog;
                 } else {
+                    if (this.env.isSmall) {
+                        setScrollPosition(document.firstElementChild, controller.scrolling || {});
+                    }
                     controller.getGlobalState = () => {
                         const exportFns = this.__getGlobalState__.callbacks;
                         if (exportFns.length) {
@@ -753,6 +757,10 @@ function makeActionManager(env) {
         }
         if (controller.action.globalState) {
             controller.props.globalState = controller.action.globalState;
+        }
+
+        if (currentController && env.isSmall) {
+            currentController.scrolling = getScrollPosition(document.firstElementChild);
         }
 
         const closingProm = _executeCloseAction();
