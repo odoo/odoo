@@ -4134,7 +4134,7 @@ class BaseModel(metaclass=MetaModel):
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
-        relational_names = []
+        fnames_modifying_relations = []
         protected = set()
         check_company = False
         for fname, value in vals.items():
@@ -4152,8 +4152,8 @@ class BaseModel(metaclass=MetaModel):
                     # order to avoid an inconsistent update.
                     self[fname]
                 determine_inverses[field.inverse].append(field)
-            if field.relational or self.pool.field_inverses[field]:
-                relational_names.append(fname)
+            if field in self.pool.fields_modifying_relations:
+                fnames_modifying_relations.append(fname)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
                     # Protect the field from being recomputed while being
@@ -4197,7 +4197,7 @@ class BaseModel(metaclass=MetaModel):
             # In this situation, the total amount must be recomputed on *both*
             # sales order: the line's order before the modification, and the
             # line's order after the modification.
-            self.modified(relational_names, before=True)
+            self.modified(fnames_modifying_relations, before=True)
 
             real_recs = self.filtered('id')
 
@@ -6649,7 +6649,8 @@ class BaseModel(metaclass=MetaModel):
     # Generic onchange method
     #
 
-    def _dependent_fields(self, field):
+    @classmethod
+    def _dependent_fields(cls, field):
         """ Return an iterator on the fields that depend on ``field``. """
         def traverse(node):
             for key, val in node.items():
@@ -6657,7 +6658,7 @@ class BaseModel(metaclass=MetaModel):
                     yield from val
                 else:
                     yield from traverse(val)
-        return traverse(self.pool.field_triggers.get(field, {}))
+        return traverse(cls.pool.field_triggers.get(field, {}))
 
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the

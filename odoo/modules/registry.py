@@ -367,6 +367,30 @@ class Registry(Mapping):
 
         return triggers
 
+    @lazy_property
+    def fields_modifying_relations(self):
+        '''
+        Return the union of the set of relational fields that are dependencies
+        of other fields, with the set of non-relational fields that are
+        dependencies of relational fields.
+        '''
+        result = set()
+
+        for field in self.field_triggers:
+            # If the field is itself a relational field, it is also considered
+            # as triggering relational fields.
+            if field.relational or self.field_inverses[field]:
+                result.add(field)
+                continue
+
+            Model = self.models[field.model_name]
+            for dep in Model._dependent_fields(field):
+                if dep.relational or self.field_inverses[dep]:
+                    result.add(field)
+                    break
+
+        return result
+
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
