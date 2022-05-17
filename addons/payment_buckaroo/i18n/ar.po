@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-17 16:38+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 msgid ""
 "An error occurred during processing of your payment (code %s). Please try "
 "again."
-msgstr ""
+msgstr "حدث خطأ أثناء معالجة هذا الدفع (الكود %s). يرجى المحاولة مجدداً. "
 
 #. module: payment_buckaroo
 #: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
@@ -36,34 +37,34 @@ msgstr "Buckaroo"
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_secret_key
 msgid "Buckaroo Secret Key"
-msgstr ""
+msgstr "المفتاح السري لـ Buckaroo "
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid shasign: received %(sign)s, computed %(check)s"
-msgstr ""
+msgstr "shasign غير صالح: تم استلام %(sign)s، تم احتساب %(check)s "
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "لم يتم العثور على معاملة تطابق المرجع %s. "
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "معالج السداد"
+msgstr "بوابة الدفع "
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_account_payment_method
 msgid "Payment Methods"
-msgstr "طرق السداد"
+msgstr "طرق الدفع "
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "معاملة السداد"
+msgstr "معاملة الدفع "
 
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
@@ -74,13 +75,13 @@ msgstr "المزود"
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
-msgstr ""
+msgstr "البيانات المستلمة دون مرجع (%(ref)s) أو shasign (%(sign)s). "
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing transaction keys"
-msgstr ""
+msgstr "البيانات المستلمة دون مفاتيح المعاملة "
 
 #. module: payment_buckaroo
 #: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
@@ -90,26 +91,26 @@ msgstr "مفتاح سري"
 #. module: payment_buckaroo
 #: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "مقدم خدمة الدفع لاستخدامه مع بوابة الدفع هذه "
 
 #. module: payment_buckaroo
 #: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
 msgid "The key solely used to identify the website with Buckaroo"
-msgstr ""
+msgstr "المفتاح مُستخدم فقط لتعريف الموقع الإلكتروني مع Buckaroo "
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown status code: %s"
-msgstr ""
+msgstr "كود الحالة غير المعروفة: %s "
 
 #. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
 msgid "Website Key"
-msgstr ""
+msgstr "مفتاح الموقع الإلكتروني "
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused (code %s). Please try again."
-msgstr ""
+msgstr "لقد تم رفض الدفع (الكود %s). يرجى المحاولة مجدداً. "

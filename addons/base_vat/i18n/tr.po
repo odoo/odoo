@@ -10,6 +10,7 @@
 # Yedigen, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +88,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Vergi numarası geçerli görünmüyor. [%(wrong_vat)s]  %(record_label)s  \n"
+"Beklenen biçim %(expected_format)s şeklindedir."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -96,6 +99,8 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Vergi numarası doğrulamada başarısız oldu. [%(wrong_vat)s]  %(record_label)s"
+" Beklenen biçim: %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -104,6 +109,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Bu yabancı vergi numarası için tespit edilen ülke, bu mali pozisyonda "
+"ayarlanan ülke ile eşleşmiyor."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -132,10 +139,10 @@ msgstr "Avrupa VIES servisini kullanarak Vergi No Doğrulama"
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "mali koşul [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "kontak [%s]"
