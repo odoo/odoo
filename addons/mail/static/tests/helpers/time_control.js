@@ -2,6 +2,9 @@
 
 import { nextTick } from '@mail/utils/utils';
 
+import { browser } from '@web/core/browser/browser';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
+
 /**
  * @param {Object} [providedEnv={}]
  * @returns {Object}
@@ -15,7 +18,7 @@ import { nextTick } from '@mail/utils/utils';
     let timedOutIds = [];
     // key: timeoutId, value: func + remaining duration
     const timeouts = new Map();
-    Object.assign(env.browser, {
+    patchWithCleanup(browser, {
         clearTimeout: id => {
             timeouts.delete(id);
             timedOutIds = timedOutIds.filter(i => i !== id);

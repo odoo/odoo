@@ -32,6 +32,7 @@ export const browser = {
     console: window.console,
     history: window.history,
     navigator: navigator,
+    Notification: window.Notification,
     open: window.open.bind(window),
     XMLHttpRequest: window.XMLHttpRequest,
     localStorage,
@@ -46,6 +47,15 @@ Object.defineProperty(browser, "location", {
     get() {
         return window.location;
     },
+    configurable: true,
+});
+
+Object.defineProperty(browser, 'innerHeight', {
+    get: () => window.innerHeight,
+    configurable: true,
+});
+Object.defineProperty(browser, 'innerWidth', {
+    get: () => window.innerWidth,
     configurable: true,
 });
 
