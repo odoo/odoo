@@ -1,15 +1,13 @@
 /** @odoo-module **/
 
 import { makeDeferred } from '@mail/utils/deferred';
+import { patchUiSize, SIZES } from '@mail/../tests/helpers/patch_ui_size';
 import {
     afterNextRender,
     nextAnimationFrame,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
-
-import { browser } from '@web/core/browser/browser';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 import { file, dom } from 'web.test_utils';
 const { createFile, inputFiles } = file;
@@ -236,9 +234,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
         },
     ]);
     const imSearchDef = makeDeferred();
-    patchWithCleanup(browser, {
-        innerWidth: 1920,
-    });
+    patchUiSize({ width: 1920 });
     const { click, createMessagingMenuComponent } = await start({
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
@@ -629,13 +625,8 @@ QUnit.test('Mobile: opening a chat window should not update channel state on the
             }],
         ],
     });
-    const { click, createMessagingMenuComponent } = await start({
-        env: {
-            device: {
-                isMobile: true,
-            },
-        },
-    });
+    patchUiSize({ size: SIZES.SM });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_NotificationList_preview`);
@@ -664,13 +655,8 @@ QUnit.test('Mobile: closing a chat window should not update channel state on the
             }],
         ],
     });
-    const { click, createMessagingMenuComponent } = await start({
-        env: {
-            device: {
-                isMobile: true,
-            },
-        },
-    });
+    patchUiSize({ size: SIZES.SM });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_NotificationList_preview`);
@@ -711,13 +697,8 @@ QUnit.test("Mobile: chat window shouldn't open automatically after receiving a n
             uuid: 'channel-10-uuid',
         },
     ];
-    const { messaging } = await start({
-        env: {
-            device: {
-                isMobile: true,
-            },
-        },
-    });
+    patchUiSize({ size: SIZES.SM });
+    const { messaging } = await start();
 
     // simulate receiving a message
     messaging.rpc({
@@ -858,9 +839,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
             ],
         },
     ]);
-    patchWithCleanup(browser, {
-        innerWidth: 1920,
-    });
+    patchUiSize({ width: 1920 });
     await start();
     assert.containsN(
         document.body,
@@ -1041,9 +1020,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
-    patchWithCleanup(browser, {
-        innerWidth: 1920, // enough to fit at least 2 chat windows
-    });
+    patchUiSize({ width: 1920 }); // enough to fit at least 2 chat windows
     const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
@@ -1267,9 +1244,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
         channel_type: "chat",
     };
     pyEnv['mail.channel'].create([channel, chat]);
-    patchWithCleanup(browser, {
-        innerWidth: 900,
-    });
+    patchUiSize({ width: 900 });
     const { click } = await start();
 
     assert.containsN(
@@ -1377,9 +1352,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         { name: 'mailChannel2' },
         { name: 'mailChannel3' },
     ]);
-    patchWithCleanup(browser, {
-        innerWidth: 900, // enough to fit 2 chat windows but not 3
-    });
+    patchUiSize({ width: 900 }); // enough to fit 2 chat windows but not 3
     const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
@@ -1633,9 +1606,7 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
             ],
         },
     ]);
-    patchWithCleanup(browser, {
-        innerWidth: 1920,
-    });
+    patchUiSize({ width: 1920 });
     await start();
     assert.containsN(
         document.body,
@@ -1830,13 +1801,8 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
             }],
         ],
     });
-    const { click, createMessagingMenuComponent, insertText } = await start({
-        env: {
-            device: {
-                isMobile: true, // here isMobile is used for the small screen size, not actually for the mobile devices
-            },
-        },
-    });
+    patchUiSize({ size: SIZES.SM });
+    const { click, createMessagingMenuComponent, insertText } = await start();
     await createMessagingMenuComponent();
 
     await click(`.o_MessagingMenu_toggler`);
@@ -2046,9 +2012,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
             name: "Channel #12",
         },
     ]);
-    patchWithCleanup(browser, {
-        innerWidth: 900,
-    });
+    patchUiSize({ width: 900 });
     const { click, messaging } = await start({
         mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
@@ -2449,9 +2413,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel1' }]);
-    patchWithCleanup(browser, {
-        innerWidth: 600, // enough to fit 1 chat window + hidden menu
-    });
+    patchUiSize({ width: 600 }); // enough to fit 1 chat window + hidden menu
     const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     // open, from systray menu, chat windows of channels with id 1, 2
@@ -2465,7 +2427,7 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
             }).localId
         }"]
     `);
-    await click('.o_MessagingMenu_toggler');
+    await click('.o_ChatWindowHeader_commandBack');
     await click(`
         .o_MessagingMenu_dropdownMenu
         .o_NotificationList_preview[data-thread-local-id="${
