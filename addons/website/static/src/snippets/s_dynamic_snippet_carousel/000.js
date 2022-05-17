@@ -11,7 +11,6 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
     ),
 
     /**
-     *
      * @override
      */
     init: function () {
@@ -24,9 +23,7 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Method to be overridden in child components in order to prepare QWeb
-     * options
-     * @private
+     * @override
      */
     _getQWebRenderOptions: function () {
         return Object.assign(
@@ -36,38 +33,6 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
             },
         );
     },
-
-    /**
-     *
-     * @override
-     */
-    _renderContent: function () {
-        this._super.apply(this, arguments);
-        this._computeHeights();
-    },
-
-    /**
-     *
-     * Force height of carousel to the higher slide, to avoid flickering.
-     * @private
-     */
-    _computeHeights: function () {
-        var maxHeight = 0;
-        var $items = this.$('.carousel-item');
-        $items.css('min-height', '');
-        _.each($items, function (el) {
-            var $item = $(el);
-            var isActive = $item.hasClass('active');
-            $item.addClass('active');
-            var height = $item.outerHeight();
-            if (height > maxHeight) {
-                maxHeight = height;
-            }
-            $item.toggleClass('active', isActive);
-        });
-        $items.css('min-height', maxHeight);
-    },
-
 });
 publicWidget.registry.dynamic_snippet_carousel = DynamicSnippetCarousel;
 
