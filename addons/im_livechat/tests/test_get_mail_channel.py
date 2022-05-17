@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+from freezegun import freeze_time
 
+from odoo import fields
 from odoo.tests.common import TransactionCase
 
 
@@ -138,3 +141,24 @@ class TestGetMailChannel(TransactionCase):
         self.assertEqual(message_formats[0]['author_id'][1], operator.livechat_username)
         self.assertEqual(message_formats[0]['author_id'][2], operator.livechat_username)
         self.assertFalse(message_formats[0].get('email_from'), "should not send email_from to livechat user")
+
+    def test_read_channel_unpined_for_operator_after_one_day(self):
+        public_user = self.env.ref('base.public_user')
+        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='visitor')
+        member_of_operator = self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
+        message = self.env['mail.channel'].browse(channel_info['id']).message_post(body='cc')
+        member_of_operator.channel_id.with_user(self.operators.filtered(
+            lambda operator: operator.partner_id == member_of_operator.partner_id
+        ))._channel_seen(message.id)
+        with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):
+            member_of_operator._gc_unpin_livechat_sessions()
+        self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")
+
+    def test_unread_channel_not_unpined_for_operator_after_autovacuum(self):
+        public_user = self.env.ref('base.public_user')
+        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='visitor')
+        member_of_operator = self.env['mail.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
+        self.env['mail.channel'].browse(channel_info['id']).message_post(body='cc')
+        with freeze_time(fields.Datetime.to_string(fields.datetime.now() + timedelta(days=1))):
+            member_of_operator._gc_unpin_livechat_sessions()
+        self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")
