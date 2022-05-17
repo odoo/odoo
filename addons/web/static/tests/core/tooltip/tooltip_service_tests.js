@@ -343,4 +343,25 @@ QUnit.module("Tooltip service", (hooks) => {
             "<ul><li>X: 3</li><li>Y: abc</li></ul>"
         );
     });
+
+    QUnit.test("empty tooltip, no template", async (assert) => {
+        class MyComponent extends Component {
+            get tooltip() {
+                return "";
+            }
+        }
+        MyComponent.template = xml`<button t-att-data-tooltip="tooltip">Action</button>`;
+        let simulateTimeout = () => {};
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        await makeParent(MyComponent, { mockSetTimeout });
+
+        assert.containsNone(target, ".o_popover_container .o_popover");
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        simulateTimeout();
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+    });
 });
