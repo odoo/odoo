@@ -74,11 +74,9 @@ export class FollowerListMenu extends Component {
 
 Object.assign(FollowerListMenu, {
     defaultProps: {
-        isDisabled: false,
         isChatterButton: false,
     },
     props: {
-        isDisabled: { type: Boolean, optional: true },
         thread: Object,
         isChatterButton: { type: Boolean, optional: true },
         record: Object,
