@@ -22,71 +22,100 @@ class MicrosoftService(models.AbstractModel):
     _name = 'microsoft.service'
     _description = 'Microsoft Service'
 
-    def _get_calendar_scope(self):
+    @api.model
+    def _get_scope(self):
+        """
+        Get the scope of the Microsoft API authentication.
+        Note: at the moment, only calendar access is configured. 
+        """
         return 'offline_access openid Calendars.ReadWrite'
 
     @api.model
+    def _get_base_url(self):
+        """
+        Get the Odoo instance base URL.
+        """
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'web.base.url', default='http://www.odoo.com?NoBaseUrl'
+        )
+
+    @api.model
+    def _get_credentials(self):
+        """
+        Get Microsoft API credentials from settings.
+        """
+        Config = self.env['ir.config_parameter'].sudo()
+        client_id = Config.get_param('microsoft_api_client_id')
+        secret_id = Config.get_param('microsoft_api_client_secret')
+
+        return client_id, secret_id
+
+    @api.model
+    def has_credentials_configured(self):
+        """
+        Indicates if API credentials are correctly configured
+        """
+        client_id, secret_id = self._get_credentials()
+        return client_id and secret_id
+
+    @api.model
+    def can_set_credentials(self, user):
+        """
+        Indicates if the user can set Microsoft API credentials.
+        """
+        return user.has_group('base.group_erp_manager')
+
+    @api.model
+    def is_user_authenticated(self, user):
+        """
+        Indicates if the user is already authenticated to the Microsoft API with
+        credentials set in Odoo settings.
+        """
+        return bool(user.sudo().microsoft_calendar_rtoken)
+
+    @api.model
+    def get_calendar_auth_url(self, from_url):
+        """
+        Return the full Microsoft Calendar URL for the authentication.
+        """
+        return self._get_authorize_url(
+            from_url,
+            service='calendar',
+            scope=self._get_scope()
+        )
+
+    @api.model
     def _get_auth_endpoint(self):
-        return self.env["ir.config_parameter"].sudo().get_param('microsoft_account.auth_endpoint', DEFAULT_MICROSOFT_AUTH_ENDPOINT)
+        return self.env["ir.config_parameter"].sudo().get_param(
+            'microsoft_account.auth_endpoint',
+            DEFAULT_MICROSOFT_AUTH_ENDPOINT
+        )
 
     @api.model
     def _get_token_endpoint(self):
-        return self.env["ir.config_parameter"].sudo().get_param('microsoft_account.token_endpoint', DEFAULT_MICROSOFT_TOKEN_ENDPOINT)
+        return self.env["ir.config_parameter"].sudo().get_param(
+            'microsoft_account.token_endpoint',
+            DEFAULT_MICROSOFT_TOKEN_ENDPOINT
+        )
 
     @api.model
-    def generate_refresh_token(self, service, authorization_code):
-        """ Call Microsoft API to refresh the token, with the given authorization code
-            :param service : the name of the microsoft service to actualize
-            :param authorization_code : the code to exchange against the new refresh token
-            :returns the new refresh token
+    def _get_authorize_url(self, from_url, service, scope):
         """
-        Parameters = self.env['ir.config_parameter'].sudo()
-        client_id = Parameters.get_param('microsoft_%s_client_id' % service)
-        client_secret = Parameters.get_param('microsoft_%s_client_secret' % service)
-        redirect_uri = Parameters.get_param('microsoft_redirect_uri')
-
-        scope = self._get_calendar_scope()
-
-        # Get the Refresh Token From Microsoft And store it in ir.config_parameter
-        headers = {"Content-type": "application/x-www-form-urlencoded"}
-        data = {
-            'client_id': client_id,
-            'redirect_uri': redirect_uri,
-            'client_secret': client_secret,
-            'scope': scope,
-            'grant_type': "refresh_token"
-        }
-        try:
-            req = requests.post(self._get_token_endpoint(), data=data, headers=headers, timeout=TIMEOUT)
-            req.raise_for_status()
-            content = req.json()
-        except requests.exceptions.RequestException as exc:
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
-            raise self.env['res.config.settings'].get_config_warning(error_msg) from exc
-
-        return content.get('refresh_token')
-
-    @api.model
-    def _get_authorize_uri(self, from_url, service, scope):
-        """ This method return the url needed to allow this instance of Odoo to access to the scope
-            of gmail specified as parameters
+        Returns the URL needed to allow this Odoo instance to access to the 
+        Microsoft scope specified as parameter.
         """
         state = {
             'd': self.env.cr.dbname,
             's': service,
             'f': from_url
         }
-
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = get_param('microsoft_%s_client_id' % (service,), default=False)
-
+        client_id, _ = self._get_credentials()
         encoded_params = urls.url_encode({
             'response_type': 'code',
             'client_id': client_id,
             'state': json.dumps(state),
             'scope': scope,
-            'redirect_uri': base_url + '/microsoft_account/authentication',
+            'redirect_uri': self._get_base_url() + '/microsoft_account/authentication',
             'prompt': 'consent',
             'access_type': 'offline'
         })
@@ -94,14 +123,10 @@ class MicrosoftService(models.AbstractModel):
 
     @api.model
     def _get_microsoft_tokens(self, authorize_code, service):
-        """ Call Microsoft API to exchange authorization code against token, with POST request, to
-            not be redirected.
         """
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = get_param('microsoft_%s_client_id' % (service,), default=False)
-        client_secret = get_param('microsoft_%s_client_secret' % (service,), default=False)
-        scope = self._get_calendar_scope()
+        Call Microsoft API to exchange authorization code against token, with POST request, to not be redirected.
+        """
+        client_id, client_secret = self._get_credentials()
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
@@ -109,27 +134,30 @@ class MicrosoftService(models.AbstractModel):
             'client_id': client_id,
             'client_secret': client_secret,
             'grant_type': 'authorization_code',
-            'scope': scope,
-            'redirect_uri': base_url + '/microsoft_account/authentication'
+            'scope': self._get_scope(),
+            'redirect_uri': self._get_base_url() + '/microsoft_account/authentication'
         }
         try:
-            dummy, response, dummy = self._do_request(self._get_token_endpoint(), params=data, headers=headers, method='POST', preuri='')
-            access_token = response.get('access_token')
-            refresh_token = response.get('refresh_token')
-            ttl = response.get('expires_in')
-            return access_token, refresh_token, ttl
+            _, res, _ = self._do_request(
+                self._get_token_endpoint(), params=data, headers=headers, method='POST', preuri=''
+            )
+            return res.get('access_token'), res.get('refresh_token'), res.get('expires_in')
         except requests.HTTPError:
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
-            raise self.env['res.config.settings'].get_config_warning(error_msg)
+            raise self.env['res.config.settings'].get_config_warning(
+                _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
+            )
 
     @api.model
-    def _do_request(self, uri, params=None, headers=None, method='POST', preuri="https://graph.microsoft.com", timeout=TIMEOUT):
-        """ Execute the request to Microsoft API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
-            :param uri : the url to contact
-            :param params : dict or already encoded parameters for the request to make
-            :param headers : headers of request
-            :param method : the method to use to make the request
-            :param preuri : pre url to prepend to param uri.
+    def _do_request(
+        self, uri, params=None, headers=None, method='POST', preuri="https://graph.microsoft.com", timeout=TIMEOUT
+    ):
+        """
+        Execute the request to Microsoft API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
+        :param uri : the url to contact
+        :param params : dict or already encoded parameters for the request to make
+        :param headers : headers of request
+        :param method : the method to use to make the request
+        :param preuri : pre url to prepend to param uri.
         """
         if params is None:
             params = {}

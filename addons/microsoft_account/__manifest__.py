@@ -11,6 +11,7 @@ The module adds Microsoft user in res user.
     'depends': ['base_setup'],
     'data': [
         'data/microsoft_account_data.xml',
+        'views/res_config_settings_views.xml',
     ],
     'license': 'LGPL-3',
 }
