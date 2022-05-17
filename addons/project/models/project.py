@@ -1499,9 +1499,13 @@ class Task(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create a recursive hierarchy of tasks.'))
 
+    def _get_attachments_search_domain(self):
+        self.ensure_one()
+        return [('res_id', '=', self.id), ('res_model', '=', 'project.task')]
+
     def _compute_attachment_ids(self):
         for task in self:
-            attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
+            attachment_ids = self.env['ir.attachment'].search(task._get_attachments_search_domain()).ids
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = [(6, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
 
