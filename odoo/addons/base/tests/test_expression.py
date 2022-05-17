@@ -1291,7 +1291,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE ("res_company"."name"::text like %s)
+                WHERE ("res_company"."name"::text LIKE %s)
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
@@ -1342,7 +1342,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text like %s))
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
@@ -1356,13 +1356,45 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company"."id"
                 FROM "res_company"
-                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text like %s))
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
                 ORDER BY "res_company"."id"
                 LIMIT 1
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
             company_ids = self.company._search([('name', 'like', self.company.name)], order='id', limit=1)
+            self.Partner.search([('company_id', 'in', company_ids)])
+
+        # special case, when the query has been "forced"
+        with self.assertQueries(['''
+            SELECT "res_company"."id"
+            FROM "res_company"
+            WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+            ORDER BY "res_company"."id"
+        ''', '''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN %s)
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            company_ids = self.company._search([('name', 'like', self.company.name)], order='id')
+            company_ids = tuple(company_ids)
+            self.Partner.search([('company_id', 'in', company_ids)])
+
+        # special case, when the query has been build from a record
+        with self.assertQueries(['''
+            SELECT "res_company"."id"
+            FROM "res_company"
+            WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text LIKE %s))
+            ORDER BY "res_company"."id"
+        ''', '''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE ("res_partner"."company_id" IN %s)
+            ORDER BY "res_partner"."display_name", "res_partner"."id"
+        ''']):
+            companies = self.company.search([('name', 'like', self.company.name)], order='id')
+            company_ids = companies._as_query(ordered=False)
             self.Partner.search([('company_id', 'in', company_ids)])
 
     def test_autojoin(self):

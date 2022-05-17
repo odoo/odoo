@@ -422,7 +422,7 @@ class MailActivity(models.Model):
 
         # re-construct a list based on ids, because 'allowed_ids' does not keep the original order
         id_list = [id for id in ids if id in allowed_ids]
-        return id_list
+        return self.browse(id_list)._as_query(order)
 
     @api.model
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

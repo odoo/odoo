@@ -4631,14 +4631,14 @@ class BaseModel(metaclass=MetaModel):
 
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
-        :return: a collection of record ids (may be a ``Query`` object)
+        :return: a :class:`Query` object that represents the matching records
         """
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
         if expression.is_false(self, domain):
             # optimization: no need to query, as no record satisfies the domain
-            return ()
+            return self.browse()._as_query()
 
         # the flush must be done before the _where_calc(), as the latter can do some selects
         self._flush_search(domain, order=order)
@@ -4651,6 +4651,16 @@ class BaseModel(metaclass=MetaModel):
         query.limit = limit
         query.offset = offset
 
+        return query
+
+    def _as_query(self, ordered=True):
+        """ Return a :class:`Query` that corresponds to the recordset ``self``.
+        This method is convenient for making a query object with a known result.
+
+        :param ordered: whether the recordset order must be enforced by the query
+        """
+        query = Query(self.env.cr, self._table, self._table_query)
+        query.set_result_ids(self._ids, ordered)
         return query
 
     @api.returns(None, lambda value: value[0])
