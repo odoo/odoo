@@ -2352,7 +2352,7 @@ class MailThread(models.AbstractModel):
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
-        test_mode = getattr(threading.currentThread(), 'testing', False)
+        test_mode = getattr(threading.current_thread(), 'testing', False)
         if force_send and len(emails) < recipients_max and (not self.pool._init or test_mode):
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails

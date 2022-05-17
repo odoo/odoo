@@ -711,7 +711,7 @@ class IrMailServer(models.Model):
         Can be overridden in tests after mocking the SMTP lib to test in depth the
         outgoing mail server.
         """
-        return getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        return getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
 
     def _neutralize(self):
         super()._neutralize()
