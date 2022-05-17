@@ -151,6 +151,15 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
 
+        account_type = cls.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
+        cls.account_receiv = cls.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'user_type_id': account_type.id, 'reconcile': True})
+        cls.account_expense = cls.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'user_type_id': account_type.id, 'reconcile': True})
+        cls.account_output = cls.env['account.account'].create({'name': 'Output', 'code': 'OUT00', 'user_type_id': account_type.id, 'reconcile': True})
+        cls.account_valuation = cls.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type.id, 'reconcile': True})
+        cls.category = cls.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time', 'property_cost_method': 'fifo'})
+        cls.category.property_stock_journal = cls.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+        cls.setUp_test_12()
+
     @classmethod
     def _cls_create_product(cls, name, uom_id, routes=()):
         p = Form(cls.env['product.product'])
@@ -581,19 +590,11 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.company = self.company_data['company']
         self.company.anglo_saxon_accounting = True
         self.partner = self.env['res.partner'].create({'name': 'My Test Partner'})
-        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
-        self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
-        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00' , 'user_type_id': account_type.id, 'reconcile': True})
-        self.partner.property_account_receivable_id = self.account_receiv
         self.category.property_account_income_categ_id = self.account_receiv
-        self.category.property_account_expense_categ_id = account_expense
+        self.category.property_account_expense_categ_id = self.account_expense
         self.category.property_stock_account_input_categ_id = self.account_receiv
-        self.category.property_stock_account_output_categ_id = account_output
-        self.category.property_stock_valuation_account_id = account_valuation
-        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+        self.category.property_stock_account_output_categ_id = self.account_output
+        self.category.property_stock_valuation_account_id = self.account_valuation
 
         Product = self.env['product.product']
         self.finished_product = Product.create({
@@ -1631,119 +1632,118 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.assertEqual(len(mos), 1)
         self.assertEqual(mos.state, 'cancel')
 
-    def test_12_sale_mrp_anglo_saxon_variant(self):
-        """Test the price unit of kit with variants"""
-        # Check that the correct bom are selected when computing price_unit for COGS
-
-        self.env.company.currency_id = self.env.ref('base.USD')
-        self.uom_unit = self.UoM.create({
+    @classmethod
+    def setUp_test_12(cls):
+        cls.env.company.currency_id = cls.env.ref('base.USD')
+        cls.uom_unit_12 = cls.UoM.create({
             'name': 'Test-Unit',
-            'category_id': self.categ_unit.id,
+            'category_id': cls.categ_unit.id,
             'factor': 1,
             'uom_type': 'bigger',
             'rounding': 1.0})
-        self.company = self.company_data['company']
-        self.company.anglo_saxon_accounting = True
-        self.partner = self.env['res.partner'].create({'name': 'My Test Partner'})
-        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
-        self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'user_type_id': account_type.id, 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'user_type_id': account_type.id, 'reconcile': True})
-        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00', 'user_type_id': account_type.id, 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type.id, 'reconcile': True})
-        self.partner.property_account_receivable_id = self.account_receiv
-        self.category.property_account_income_categ_id = self.account_receiv
-        self.category.property_account_expense_categ_id = account_expense
-        self.category.property_stock_account_input_categ_id = self.account_receiv
-        self.category.property_stock_account_output_categ_id = account_output
-        self.category.property_stock_valuation_account_id = account_valuation
-        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+        cls.company = cls.company_data['company']
+        cls.company.anglo_saxon_accounting = True
+        cls.partner = cls.env['res.partner'].create({'name': 'My Test Partner'})
+        cls.category = cls.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time', 'property_cost_method': 'fifo'})
+
+        cls.partner.property_account_receivable_id = cls.account_receiv
+        cls.category.property_account_income_categ_id = cls.account_receiv
+        cls.category.property_account_expense_categ_id = cls.account_expense
+        cls.category.property_stock_account_input_categ_id = cls.account_receiv
+        cls.category.property_stock_account_output_categ_id = cls.account_output
+        cls.category.property_stock_valuation_account_id = cls.account_valuation
 
         # Create variant attributes
-        self.prod_att_1 = self.env['product.attribute'].create({'name': 'Color'})
-        self.prod_attr1_v1 = self.env['product.attribute.value'].create({'name': 'red', 'attribute_id': self.prod_att_1.id, 'sequence': 1})
-        self.prod_attr1_v2 = self.env['product.attribute.value'].create({'name': 'blue', 'attribute_id': self.prod_att_1.id, 'sequence': 2})
+        cls.prod_att_1 = cls.env['product.attribute'].create({'name': 'Color'})
+        cls.prod_attr1_v1 = cls.env['product.attribute.value'].create({'name': 'red', 'attribute_id': cls.prod_att_1.id, 'sequence': 1})
+        cls.prod_attr1_v2 = cls.env['product.attribute.value'].create({'name': 'blue', 'attribute_id': cls.prod_att_1.id, 'sequence': 2})
 
         # Create Product template with variants
-        self.product_template = self.env['product.template'].create({
+        cls.product_template = cls.env['product.template'].create({
             'name': 'Product Template',
             'type': 'product',
-            'uom_id': self.uom_unit.id,
+            'uom_id': cls.uom_unit_12.id,
             'invoice_policy': 'delivery',
-            'categ_id': self.category.id,
+            'categ_id': cls.category.id,
             'attribute_line_ids': [(0, 0, {
-                'attribute_id': self.prod_att_1.id,
-                'value_ids': [(6, 0, [self.prod_attr1_v1.id, self.prod_attr1_v2.id])]
+                'attribute_id': cls.prod_att_1.id,
+                'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id])]
             })]
         })
 
         # Get product variant
-        self.pt_attr1_v1 = self.product_template.attribute_line_ids[0].product_template_value_ids[0]
-        self.pt_attr1_v2 = self.product_template.attribute_line_ids[0].product_template_value_ids[1]
-        self.variant_1 = self.product_template._get_variant_for_combination(self.pt_attr1_v1)
-        self.variant_2 = self.product_template._get_variant_for_combination(self.pt_attr1_v2)
+        cls.pt_attr1_v1 = cls.product_template.attribute_line_ids[0].product_template_value_ids[0]
+        cls.pt_attr1_v2 = cls.product_template.attribute_line_ids[0].product_template_value_ids[1]
+        cls.variant_1 = cls.product_template._get_variant_for_combination(cls.pt_attr1_v1)
+        cls.variant_2 = cls.product_template._get_variant_for_combination(cls.pt_attr1_v2)
 
-        def create_simple_bom_for_product(product, name, price):
-            component = self.env['product.product'].create({
-                'name': 'Component ' + name,
-                'type': 'product',
-                'uom_id': self.uom_unit.id,
-                'categ_id': self.category.id,
-                'standard_price': price
-            })
-            self.env['stock.quant'].sudo().create({
-                'product_id': component.id,
-                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
-                'quantity': 10.0,
-            })
-            bom = self.env['mrp.bom'].create({
-                'product_tmpl_id': self.product_template.id,
-                'product_id': product.id,
-                'product_qty': 1.0,
-                'type': 'phantom'
-            })
-            self.env['mrp.bom.line'].create({
-                'product_id': component.id,
-                'product_qty': 1.0,
-                'bom_id': bom.id
-            })
-
-        create_simple_bom_for_product(self.variant_1, "V1", 20)
-        create_simple_bom_for_product(self.variant_2, "V2", 10)
-
-        def create_post_sale_order(product):
-            so_vals = {
-                'partner_id': self.partner.id,
-                'partner_invoice_id': self.partner.id,
-                'partner_shipping_id': self.partner.id,
-                'order_line': [(0, 0, {
-                    'name': product.name,
-                    'product_id': product.id,
-                    'product_uom_qty': 2,
-                    'product_uom': product.uom_id.id,
-                    'price_unit': product.list_price
-                })],
-                'pricelist_id': self.env.ref('product.list0').id,
-                'company_id': self.company.id,
-            }
-            so = self.env['sale.order'].create(so_vals)
-            # Validate the SO
-            so.action_confirm()
-            # Deliver the three finished products
-            pick = so.picking_ids
-            # To check the products on the picking
-            wiz_act = pick.button_validate()
-            wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-            wiz.process()
-            # Create the invoice
-            so._create_invoices()
-            invoice = so.invoice_ids
-            invoice.action_post()
-            return invoice
+        cls.create_simple_bom_for_product(cls.variant_1, "V1", 20)
+        cls.create_simple_bom_for_product(cls.variant_2, "V2", 10)
 
         # Create a SO for variant 1
-        self.invoice_1 = create_post_sale_order(self.variant_1)
-        self.invoice_2 = create_post_sale_order(self.variant_2)
+        cls.invoice_1 = cls.create_post_sale_order(cls.variant_1)
+        cls.invoice_2 = cls.create_post_sale_order(cls.variant_2)
+
+    @classmethod
+    def create_simple_bom_for_product(cls, product, name, price):
+        component = cls.env['product.product'].create({
+            'name': 'Component ' + name,
+            'type': 'product',
+            'uom_id': cls.uom_unit.id,
+            'categ_id': cls.category.id,
+            'standard_price': price
+        })
+        cls.env['stock.quant'].sudo().create({
+            'product_id': component.id,
+            'location_id': cls.company_data['default_warehouse'].lot_stock_id.id,
+            'quantity': 10.0,
+        })
+        bom = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.product_template.id,
+            'product_id': product.id,
+            'product_qty': 1.0,
+            'type': 'phantom'
+        })
+        cls.env['mrp.bom.line'].create({
+            'product_id': component.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id
+        })
+
+    @classmethod
+    def create_post_sale_order(cls, product):
+        so_vals = {
+            'partner_id': cls.partner.id,
+            'partner_invoice_id': cls.partner.id,
+            'partner_shipping_id': cls.partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 2,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price
+            })],
+            'pricelist_id': cls.env.ref('product.list0').id,
+            'company_id': cls.company.id,
+        }
+        so = cls.env['sale.order'].create(so_vals)
+        # Validate the SO
+        so.action_confirm()
+        # Deliver the three finished products
+        pick = so.picking_ids
+        # To check the products on the picking
+        wiz_act = pick.button_validate()
+        wiz = Form(cls.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
+        wiz.process()
+        # Create the invoice
+        so._create_invoices()
+        invoice = so.invoice_ids
+        invoice.action_post()
+        return invoice
+
+    def test_12_sale_mrp_anglo_saxon_variant(self):
+        """Test the price unit of kit with variants"""
+        # Check that the correct bom are selected when computing price_unit for COGS
 
         def check_cogs_entry_values(invoice, expected_value):
             aml = invoice.line_ids
