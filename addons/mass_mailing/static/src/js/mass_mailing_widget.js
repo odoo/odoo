@@ -61,9 +61,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         var $editable = this.wysiwyg.getEditable();
         await this.wysiwyg.cleanForSave();
-        return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
+        return this.wysiwyg.saveModifiedImages(this.$content).then(async function () {
             self._isDirty = self.wysiwyg.isDirty();
-            self._doAction();
+            await self._doAction();
 
             const $editorEnable = $editable.closest('.editor_enable');
             $editorEnable.removeClass('editor_enable');
