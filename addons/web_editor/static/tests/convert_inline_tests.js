@@ -766,7 +766,7 @@ QUnit.module('convert_inline', {}, function () {
         $styleSheet.remove();
     });
     QUnit.test('remove unsupported styles', async function (assert) {
-        assert.expect(10);
+        assert.expect(9);
 
         const $styleSheet = $('<style type="text/css" title="test-stylesheet"/>');
         document.head.appendChild($styleSheet[0])
@@ -804,7 +804,7 @@ QUnit.module('convert_inline', {}, function () {
             "should have removed border initial");
         styleSheet.deleteRule(0);
 
-        // display: block (except for .btn-block)
+        // display: block
         styleSheet.insertRule(`
             .test-block {
                 display: block;
@@ -815,11 +815,6 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             `<div class="test-block" style="box-sizing:border-box;"></div>`,
             "should have removed display block");
-        $editable = $(`<div>${`<div class="btn-block"></div>`}</div>`);
-        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        assert.strictEqual($editable.html(),
-            `<div class="btn-block" style="box-sizing:border-box;width:100%;display:block;" width="100%"></div>`,
-            "should not have removed display block for .btn-block");
         styleSheet.deleteRule(0);
 
         // !important

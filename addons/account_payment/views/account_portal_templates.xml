@@ -66,10 +66,10 @@
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider in ('none', 'transfer'))"/>
-            <div>
+            <div class="d-grid">
                 <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
 
-                    class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
+                    class="btn btn-primary mb-2" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
                 <div t-if="tx_ids and not pending_manual_txs and not invoice.amount_residual and invoice.payment_state not in ('paid', 'in_payment')" class="alert alert-info py-1 mb-2" >
