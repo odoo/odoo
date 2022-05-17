@@ -317,23 +317,7 @@ registerModel({
             if (this.messaging.currentPartner) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
-            const postData = {
-                attachment_ids: composer.attachments.map(attachment => attachment.id),
-                body,
-                message_type: 'comment',
-                partner_ids: composer.recipients.map(partner => partner.id),
-            };
+            const postData = this._getMessageData();
             const params = {
                 'post_data': postData,
                 'thread_id': composer.thread.id,
@@ -778,6 +762,31 @@ registerModel({
                 });
             }
             return undefined;
+        },
+        /**
+         * Gather data for message post.
+         *
+         * @private
+         * @returns {Object}
+         */
+        _getMessageData() {
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.composer.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            // This message will be received from the mail composer as html content
+            // subtype but the urls will not be linkified. If the mail composer
+            // takes the responsibility to linkify the urls we end up with double
+            // linkification a bit everywhere. Ideally we want to keep the content
+            // as text internally and only make html enrichment at display time but
+            // the current design makes this quite hard to do.
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            body = this._generateEmojisOnHtml(body);
+            return {
+                attachment_ids: this.composer.attachments.map(attachment => attachment.id),
+                body,
+                message_type: 'comment',
+                partner_ids: this.composer.recipients.map(partner => partner.id),
+            };
         },
         /**
          * Handles change of this composer. Useful to reset the state of the
