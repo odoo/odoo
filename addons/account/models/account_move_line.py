@@ -1282,6 +1282,13 @@ class AccountMoveLine(models.Model):
         )
         return super(AccountMoveLine, contextualized).search_read(domain, fields, offset, limit, order)
 
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('cumulated_balance'):
+            res['cumulated_balance']['exportable'] = False
+        return res
+
     def init(self):
         """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
             same way when we search on partner_id, with the addition of being optimal when having a query that will
