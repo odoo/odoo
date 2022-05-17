@@ -223,6 +223,22 @@ class Query(object):
         return bool(self.get_result_ids())
 
     def __len__(self):
+        if self._ids is None and not self.offset:
+            from_clause, where_clause, params = self.get_sql()
+            where_clause = where_clause or 'TRUE'
+            if self.limit:
+                # apply the limit, and wrap the query into a more efficient one
+                query_str = f'''
+                    SELECT COUNT(*) FROM (
+                        SELECT FROM {from_clause}
+                        WHERE {where_clause}
+                        LIMIT {int(self.limit)}
+                    ) t
+                '''
+            else:
+                query_str = f'SELECT COUNT(*) FROM {from_clause} WHERE {where_clause}'
+            self._cr.execute(query_str, params)
+            return self._cr.fetchone()[0]
         return len(self.get_result_ids())
 
     def __iter__(self):

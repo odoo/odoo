@@ -1469,15 +1469,13 @@ class BaseModel(metaclass=MetaModel):
                      list to match all records.
         :param limit: maximum number of record to count (upperbound) (default: all)
         """
-        res = self.search(domain, limit=limit, count=True)
-        return res if isinstance(res, int) else len(res)
+        query = self._search(domain, limit=limit, order='id')
+        return len(query)
 
     @api.model
-    @api.returns('self',
-        upgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
-        downgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, domain, offset=0, limit=None, order=None, count=False):
-        """ search(domain[, offset=0][, limit=None][, order=None][, count=False])
+    @api.returns('self')
+    def search(self, domain, offset=0, limit=None, order=None):
+        """ search(domain[, offset=0][, limit=None][, order=None])
 
         Searches for records based on the ``domain``
         :ref:`search domain <reference/orm/domains>`.
@@ -1487,12 +1485,11 @@ class BaseModel(metaclass=MetaModel):
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
-        :param bool count: if True, only counts and returns the number of matching records (default: False)
         :returns: at most ``limit`` records matching the search criteria
         :raise AccessError: if user is not allowed to access requested information
         """
-        res = self._search(domain, offset=offset, limit=limit, order=order, count=count)
-        return res if count else self.browse(res)
+        query = self._search(domain, offset=offset, limit=limit, order=order)
+        return self.browse(query)
 
     #
     # display_name, name_get, name_create, name_search
@@ -4616,7 +4613,7 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].flush_model(field_names)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """
         Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
@@ -4625,37 +4622,23 @@ class BaseModel(metaclass=MetaModel):
 
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
-        :return: a list of record ids or an integer (if count is True)
+        :return: a collection of record ids (may be a ``Query`` object)
         """
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
         if expression.is_false(self, domain):
             # optimization: no need to query, as no record satisfies the domain
-            return 0 if count else []
+            return ()
 
         # the flush must be done before the _where_calc(), as the latter can do some selects
         self._flush_search(domain, order=order)
 
         query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
-        query.limit = limit
-
-        if count:
-            # Ignore order and offset when just counting, they don't make sense and could
-            # hurt performance
-            if limit:
-                # Special case to avoid counting every record in DB (which can be really slow).
-                # The result will be between 0 and limit.
-                query_str, params = query.select("")  # generates a `SELECT FROM` (faster)
-                query_str = f"SELECT COUNT(*) FROM ({query_str}) t"
-            else:
-                query_str, params = query.select("COUNT(*)")
-
-            self._cr.execute(query_str, params)
-            return self._cr.fetchone()[0]
 
         query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
+        query.limit = limit
         query.offset = offset
 
         return query

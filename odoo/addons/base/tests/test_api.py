@@ -70,10 +70,10 @@ class TestAPI(SavepointCaseWithUserDemo):
 
     @mute_logger('odoo.models')
     def test_04_query_count(self):
-        """ Test the search method with count=True. """
+        """ Test the search_count method. """
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
-        count2 = self.env['res.partner'].search([], count=True)
+        count2 = self.env['res.partner'].search_count([])
         self.assertIsInstance(count1, int)
         self.assertIsInstance(count2, int)
         self.assertEqual(count1, count2)

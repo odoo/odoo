@@ -672,7 +672,7 @@ class Project(models.Model):
         return result
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         new_order, item_index, desc = [], -1, False
         for index, order_item in enumerate((order or self._order).split(',')):
             order_item_list = order_item.strip().lower().split(' ')
@@ -681,7 +681,7 @@ class Project(models.Model):
                 desc = order_item_list[-1] == 'desc'
             else:
                 new_order.append(order_item)
-        query = super()._search(args, offset, limit, ', '.join(new_order), count, access_rights_uid)
+        query = super()._search(domain, offset, limit, ', '.join(new_order), access_rights_uid)
         if item_index != -1:
             query_order_list = query.order.split(',')
             query_order_list.insert(item_index, f"""
@@ -1889,10 +1889,10 @@ class Task(models.Model):
         return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        fields_list = {term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
-        return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def mapped(self, func):
         # Note: This will protect the filtered method too
