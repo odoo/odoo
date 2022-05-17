@@ -484,9 +484,9 @@
             data-color-prefix="bg-"/>
     </div>
 
-    <!-- Allow changing background images in Masonry -->
+    <!-- Allow changing background images in Masonry and Cover -->
     <t t-call="web_editor.snippet_options_background_options">
-        <t t-set="selector" t-value="'.s_masonry_block .row > div'"/>
+        <t t-set="selector" t-value="'.s_masonry_block .row > div, .s_cover .oe_img_bg'"/>
         <t t-set="with_images" t-value="True"/>
     </t>
 
