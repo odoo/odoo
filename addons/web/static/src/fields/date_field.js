@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { DatePicker } from "@web/core/datepicker/datepicker";
-import { areDateEquals } from "@web/core/l10n/dates";
+import { areDateEquals, formatDate } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
@@ -14,12 +14,10 @@ export class DateField extends Component {
     }
 
     get formattedValue() {
-        return this.props.value
-            ? this.props.format(this.props.value, {
-                  // get local date if field type is datetime
-                  timezone: this.props.isDateTime,
-              })
-            : "";
+        return formatDate(this.props.value, {
+            // get local date if field type is datetime
+            timezone: this.props.isDateTime,
+        });
     }
 
     onDateTimeChanged(date) {

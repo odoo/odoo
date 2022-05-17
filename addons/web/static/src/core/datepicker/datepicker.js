@@ -1,8 +1,13 @@
 /** @odoo-module **/
 
-import { areDateEquals } from "@web/core/l10n/dates";
+import {
+    areDateEquals,
+    formatDate,
+    formatDateTime,
+    parseDate,
+    parseDateTime,
+} from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 const {
@@ -15,9 +20,6 @@ const {
     useState,
 } = owl;
 const { DateTime } = luxon;
-
-const formatters = registry.category("formatters");
-const parsers = registry.category("parsers");
 
 let datePickerId = 0;
 
@@ -148,8 +150,8 @@ export class DatePicker extends Component {
     initFormat() {
         this.defaultFormat = localization.dateFormat;
         this.staticFormat = "yyyy/MM/dd";
-        this.formatValue = wrapError(formatters.get("date"));
-        this.parseValue = wrapError(parsers.get("date"));
+        this.formatValue = wrapError(formatDate);
+        this.parseValue = wrapError(parseDate);
         this.isLocal = false;
     }
 
@@ -326,8 +328,8 @@ export class DateTimePicker extends DatePicker {
     initFormat() {
         this.defaultFormat = localization.dateTimeFormat;
         this.staticFormat = "yyyy/MM/dd HH:mm:ss";
-        this.formatValue = wrapError(formatters.get("datetime"));
-        this.parseValue = wrapError(parsers.get("datetime"));
+        this.formatValue = wrapError(formatDateTime);
+        this.parseValue = wrapError(parseDateTime);
         this.isLocal = true;
     }
 }

@@ -3,6 +3,8 @@
 import { registry } from "@web/core/registry";
 import { useInputField } from "./input_field_hook";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
+import { formatFloat } from "./formatters";
+import { parseFloat } from "./parsers";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component, onWillUpdateProps } = owl;
@@ -27,7 +29,7 @@ export class FloatField extends Component {
     }
 
     parse(value) {
-        return this.props.inputType === "number" ? Number(value) : this.props.parse(value);
+        return this.props.inputType === "number" ? Number(value) : parseFloat(value);
     }
 
     onChange(ev) {
@@ -50,9 +52,7 @@ export class FloatField extends Component {
         if (props.inputType === "number" && !props.readonly && props.value) {
             return props.value;
         }
-        return this.props.format(props.value, {
-            digits: props.digits,
-        });
+        return formatFloat(props.value, { digits: props.digits });
     }
 }
 

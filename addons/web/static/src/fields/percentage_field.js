@@ -2,6 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { formatPercentage } from "./formatters";
+import { parsePercentage } from "./parsers";
 import { useInputField } from "./input_field_hook";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
 import { standardFieldProps } from "./standard_field_props";
@@ -13,7 +15,7 @@ export class PercentageField extends Component {
         useInputField({
             getValue: () => this.props.value * 100,
             refName: "numpadDecimal",
-            parse: (v) => this.props.parse(v),
+            parse: (v) => parsePercentage(v),
         });
         useNumpadDecimal();
     }
@@ -23,7 +25,7 @@ export class PercentageField extends Component {
     onChange(ev) {
         let parsedValue;
         try {
-            parsedValue = this.props.parse(ev.target.value);
+            parsedValue = parsePercentage(ev.target.value);
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             this.props.setAsInvalid();
@@ -33,7 +35,7 @@ export class PercentageField extends Component {
     }
 
     get formattedValue() {
-        return this.props.format(this.props.value, {
+        return formatPercentage(this.props.value, {
             digits: this.props.digits,
         });
     }

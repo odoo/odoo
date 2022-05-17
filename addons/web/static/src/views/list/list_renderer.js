@@ -27,7 +27,7 @@ const {
     useEffect,
 } = owl;
 
-const formatterRegistry = registry.category("formatters");
+const formatters = registry.category("formatters");
 
 const DEFAULT_GROUP_PAGER_COLSPAN = 1;
 
@@ -347,8 +347,7 @@ export class ListRenderer extends Component {
                     aggregateValue = fieldValues.reduce((acc, val) => acc + val);
                 }
 
-                const formatter =
-                    formatterRegistry.get(widget, false) || formatterRegistry.get(type, false);
+                const formatter = formatters.get(widget, false) || formatters.get(type, false);
                 aggregates[fieldName] = {
                     help: attrs[func],
                     value: formatter ? formatter(aggregateValue) : aggregateValue,
@@ -466,7 +465,7 @@ export class ListRenderer extends Component {
     getFormattedValue(column, record) {
         const fieldName = column.name;
         const field = this.fields[fieldName];
-        const formatter = formatterRegistry.get(field.type, (val) => val);
+        const formatter = formatters.get(field.type, (val) => val);
         const formatOptions = {
             escape: false,
             data: record.data,

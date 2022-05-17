@@ -11,6 +11,4 @@ export const standardFieldProps = {
     update: Function,
     value: true,
     decorations: { type: Object, optional: true },
-    format: Function,
-    parse: Function,
 };

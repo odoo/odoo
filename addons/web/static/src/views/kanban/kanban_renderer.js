@@ -35,7 +35,7 @@ const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 const isNull = (value) => [null, undefined].includes(value);
 
-const formatterRegistry = registry.category("formatters");
+const formatters = registry.category("formatters");
 
 class KanbanCoverImageDialog extends Component {
     setup() {
@@ -204,7 +204,7 @@ export class KanbanRenderer extends Component {
     getValue(record, fieldName) {
         const field = record.fields[fieldName];
         const value = record.data[fieldName];
-        const formatter = formatterRegistry.get(field.type, (value) => value);
+        const formatter = formatters.get(field.type, (value) => value);
         return formatter(value, { field, data: record.data });
     }
 

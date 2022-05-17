@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
+import { formatInteger } from "@web/fields/formatters";
 
 const { Component, onWillUpdateProps, onWillUnmount, useState } = owl;
 
 export class KanbanAnimatedNumber extends Component {
     setup() {
-        this.formatInteger = registry.category("formatters").get("integer");
+        this.formatInteger = formatInteger;
         this.state = useState({ value: this.props.value });
         this.handle = null;
         onWillUpdateProps((nextProps) => {

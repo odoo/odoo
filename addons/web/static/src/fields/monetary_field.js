@@ -2,6 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { formatMonetary } from "./formatters";
+import { parseMonetary } from "./parsers";
 import { useInputField } from "./input_field_hook";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
 import { standardFieldProps } from "./standard_field_props";
@@ -14,7 +16,7 @@ export class MonetaryField extends Component {
         useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: (v) => this.props.parse(v, { currencyId: this.props.currencyId }),
+            parse: (v) => parseMonetary(v, { currencyId: this.props.currencyId }),
         });
         useNumpadDecimal();
     }
@@ -22,7 +24,7 @@ export class MonetaryField extends Component {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parse(value, { currencyId: this.props.currencyId });
+            value = parseMonetary(value, { currencyId: this.props.currencyId });
         } catch {
             isValid = false;
             this.props.setAsInvalid();
@@ -57,7 +59,7 @@ export class MonetaryField extends Component {
         if (this.props.inputType === "number" && !this.props.readonly && this.props.value) {
             return this.props.value;
         }
-        return this.props.format(this.props.value, {
+        return formatMonetary(this.props.value, {
             digits: this.currencyDigits,
             currencyId: this.props.currencyId,
             noSymbol: !this.props.readonly,

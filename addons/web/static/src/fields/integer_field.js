@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { formatInteger } from "./formatters";
+import { parseInteger } from "./parsers";
 import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
@@ -9,9 +11,9 @@ const { Component } = owl;
 export class IntegerField extends Component {
     setup() {
         useInputField({
-            getValue: () => this.formattedInputValue,
+            getValue: () => this.formattedValue,
             refName: "numpadDecimal",
-            parse: (v) => this.props.parse(v),
+            parse: (v) => parseInteger(v),
         });
         useNumpadDecimal();
     }
@@ -19,7 +21,7 @@ export class IntegerField extends Component {
         let isValid = true;
         let value = ev.target.value;
         try {
-            value = this.props.parse(value);
+            value = parseInteger(value);
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
             isValid = false;
@@ -30,9 +32,11 @@ export class IntegerField extends Component {
         }
     }
 
-    get formattedInputValue() {
-        if (this.props.inputType === "number") return this.props.value;
-        return this.props.format(this.props.value);
+    get formattedValue() {
+        if (!this.props.readonly && this.props.inputType === "number") {
+            return this.props.value;
+        }
+        return formatInteger(this.props.value);
     }
 }
 

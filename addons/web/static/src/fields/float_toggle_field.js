@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { formatFloat } from "./formatters";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -17,13 +18,14 @@ export class FloatToggleField extends Component {
     }
 
     get formattedValue() {
-        return this.props.format(this.props.value * this.props.factor, {
+        return formatFloat(this.props.value * this.props.factor, {
             digits: this.props.digits,
         });
     }
 }
 
 FloatToggleField.template = "web.FloatToggleField";
+FloatToggleField.supportedTypes = ["float"];
 FloatToggleField.props = {
     ...standardFieldProps,
     digits: { type: Array, optional: true },

@@ -3,10 +3,11 @@
 import { registry } from "@web/core/registry";
 
 const { Component } = owl;
+const parsers = registry.category("parsers");
 
 export class DomainSelectorFieldInput extends Component {
     parseValue(value) {
-        const parser = registry.category("parsers").get(this.props.field.type, (value) => value);
+        const parser = parsers.get(this.props.field.type, (value) => value);
         return parser(value);
     }
 

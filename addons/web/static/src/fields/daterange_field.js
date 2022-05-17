@@ -6,6 +6,8 @@ import { loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 
 const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
+const formatters = registry.category("formatters");
+const parsers = registry.category("parsers");
 
 export class DateRangeField extends Component {
     setup() {
@@ -69,12 +71,10 @@ export class DateRangeField extends Component {
     }
 
     formatValue(format, value) {
+        const formatter = formatters.get(format);
         let formattedValue;
         try {
-            formattedValue = this.props.format(value, {
-                formatter: format,
-                timezone: this.isDateTime,
-            });
+            formattedValue = formatter(value, { timezone: this.isDateTime });
         } catch {
             this.props.setAsInvalid();
         }
@@ -82,16 +82,15 @@ export class DateRangeField extends Component {
     }
 
     onChangeInput(ev) {
+        const parse = parsers.get(this.props.formatType);
+        let value;
         try {
-            let value;
-            value = this.props.parse(ev.target.value, {
-                parser: this.props.formatType,
-                timezone: this.isDateTime,
-            });
-            this.props.update(value);
+            value = parse(ev.target.value, { timezone: this.isDateTime });
         } catch {
             this.props.setAsInvalid();
+            return;
         }
+        this.props.update(value);
     }
 
     onWindowScroll(ev) {
@@ -109,12 +108,12 @@ export class DateRangeField extends Component {
         let start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
         let end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
         const format = this.isDateTime ? localization.dateTimeFormat : localization.dateFormat;
-        const dates = [start, end].map((date) =>
-            this.props.parse(date.format(format.toUpperCase()), {
-                parser: this.props.formatType,
+        const parser = parsers.get(this.props.formatType);
+        const dates = [start, end].map((date) => {
+            return parser(date.format(format.toUpperCase()), {
                 timezone: this.isDateTime,
-            })
-        );
+            });
+        });
         await this.props.updateRange(dates[0], dates[1]);
         const input = document.querySelector(
             `.o_field_daterange[name='${this.props.relatedDateRange}'] input`

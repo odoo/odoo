@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/fields/standard_field_props";
+import { formatX2many } from "./formatters";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
 export class ListX2ManyField extends Component {
     get formattedValue() {
-        return this.props.format(this.props.value);
+        return formatX2many(this.props.value);
     }
 }
 

@@ -3,7 +3,6 @@
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { isBroadlyFalsy } from "@web/core/utils/misc";
 import { isTruthy } from "@web/core/utils/xml";
 import { X2M_TYPES } from "@web/views/helpers/view_utils";
 
@@ -155,56 +154,12 @@ export class Field extends Component {
                 }
             },
             value: this.props.record.data[this.props.name],
-            format: this.format.bind(this),
-            parse: this.parse.bind(this),
             decorations: decorationMap,
             readonly: readonlyFromViewMode || readonlyFromModifiers || false,
             ...props,
             type: field.type,
             ...extractedPropsForStandaloneComponent,
         };
-    }
-
-    format(value, options = {}) {
-        const record = this.props.record;
-        const field = record.fields[this.props.name];
-        const activeField = record.activeFields[this.props.name];
-
-        // GES
-        // Is this the right place ? Or should we delegate that to the fields anyway.
-        // The option exists at least on integer field. To see if it use at many places.
-        if ("format" in activeField.options && isBroadlyFalsy(activeField.options.format)) {
-            return value;
-        }
-        const formatterRegistry = registry.category("formatters");
-        if (options.formatter && formatterRegistry.contains(options.formatter)) {
-            return formatterRegistry.get(options.formatter)(value, options);
-        } else if (formatterRegistry.contains(activeField.widget)) {
-            return formatterRegistry.get(activeField.widget)(value, options);
-        } else if (formatterRegistry.contains(field.type)) {
-            return formatterRegistry.get(field.type)(value, options);
-        } else {
-            console.warn(`No formatter found for ${field.type} field. It should be implemented.`);
-            return String(value);
-        }
-    }
-
-    parse(value, options = {}) {
-        const record = this.props.record;
-        const field = record.fields[this.props.name];
-        const activeField = record.activeFields[this.props.name];
-
-        const parserRegistry = registry.category("parsers");
-        if (options.parser && parserRegistry.contains(options.parser)) {
-            return parserRegistry.get(options.parser)(value, options);
-        } else if (parserRegistry.contains(activeField.widget)) {
-            return parserRegistry.get(activeField.widget)(value, options);
-        } else if (parserRegistry.contains(field.type)) {
-            return parserRegistry.get(field.type)(value, options);
-        } else {
-            console.warn(`No parser found for ${field.type} field. It should be implemented.`);
-            return value;
-        }
     }
 }
 Field.template = xml/* xml */ `

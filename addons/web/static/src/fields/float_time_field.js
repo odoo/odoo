@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { formatFloatTime } from "./formatters";
+import { parseFloatTime } from "./parsers";
 import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
@@ -16,7 +18,7 @@ export class FloatTimeField extends Component {
         let isValid = true;
         let value;
         try {
-            value = this.props.parse(ev.target.value);
+            value = parseFloatTime(ev.target.value);
         } catch {
             isValid = false;
             this.props.setAsInvalid();
@@ -27,7 +29,7 @@ export class FloatTimeField extends Component {
     }
 
     get formattedValue() {
-        return this.props.format(this.props.value);
+        return formatFloatTime(this.props.value);
     }
 }
 

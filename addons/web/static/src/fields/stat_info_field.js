@@ -4,10 +4,12 @@ import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
+const formatters = registry.category("formatters");
 
 export class StatInfoField extends Component {
     get formattedValue() {
-        return this.props.format(this.props.value || 0, { digits: this.props.digits });
+        const formatter = formatters.get(this.props.type);
+        return formatter(this.props.value || 0, { digits: this.props.digits });
     }
 }
 

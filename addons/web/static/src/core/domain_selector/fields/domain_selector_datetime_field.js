@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 
 const { Component } = owl;
 
+const parsers = registry.category("parsers");
 const dsf = registry.category("domain_selector/fields");
 const dso = registry.category("domain_selector/operator");
 
@@ -15,7 +16,7 @@ export class DomainSelectorDateTimeField extends Component {
         return this.props.field.type === "date" ? DatePicker : DateTimePicker;
     }
     get parser() {
-        return registry.category("parsers").get(this.props.field.type);
+        return parsers.get(this.props.field.type);
     }
     get parsedValue() {
         return this.props.value ? this.parser(this.props.value) : luxon.DateTime.local();

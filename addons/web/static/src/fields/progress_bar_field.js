@@ -2,10 +2,13 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { parseFloat } from "./parsers";
 import { standardFieldProps } from "./standard_field_props";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
 
 const { Component, onWillUpdateProps, useState } = owl;
+const formatters = registry.category("formatters");
+const parsers = registry.category("parsers");
 
 export class ProgressBarField extends Component {
     setup() {
@@ -24,11 +27,9 @@ export class ProgressBarField extends Component {
         });
     }
 
-    getFormattedValue(part, isHumanReadable = false) {
-        return this.props.format(this.state[part], {
-            formatter: this.props[part].type,
-            humanReadable: isHumanReadable,
-        });
+    getFormattedValue(part, humanReadable = false) {
+        const formatter = formatters.get(this.props[part].type);
+        return formatter(this.state[part], { humanReadable });
     }
 
     /**
@@ -38,9 +39,7 @@ export class ProgressBarField extends Component {
     onChangeValue(value, part) {
         let parsedValue;
         try {
-            parsedValue = this.props.parse(value, {
-                parser: "float",
-            });
+            parsedValue = parseFloat(value);
             if (this.props[part].type === "integer") {
                 parsedValue = Math.floor(parsedValue);
             }
@@ -53,11 +52,12 @@ export class ProgressBarField extends Component {
     }
 
     onInput(ev, part) {
+        const parser = parsers.get(this.props[part].type);
         try {
-            this.state[part] = this.props.parse(ev.target.value, {
-                parser: this.props[part].type,
-            });
-        } catch {}
+            this.state[part] = parser(ev.target.value);
+        } catch {
+            // pass
+        }
     }
 }
 

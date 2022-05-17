@@ -1,7 +1,9 @@
 /** @odoo-module **/
 /* global ace */
+
 import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { formatText } from "./formatters";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component, onWillStart, useEffect, useRef } = owl;
@@ -55,7 +57,7 @@ export class AceField extends Component {
         this.aceEditor.on("blur", this.onBlur.bind(this));
     }
     patchAce() {
-        const formattedValue = this.props.format(this.props.value) || "";
+        const formattedValue = formatText(this.props.value);
         if (this.aceSession.getValue() !== formattedValue) {
             this.aceSession.setValue(formattedValue);
         }
