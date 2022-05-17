@@ -25,16 +25,15 @@ class Partner(models.Model):
         if self.ids:
             all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
 
-            event_id = self.env['calendar.event']._search([])  # ir.rules will be applied
-            subquery_string, subquery_params = event_id.select()
-            subquery = self.env.cr.mogrify(subquery_string, subquery_params).decode()
+            query = self.env['calendar.event']._search([])  # ir.rules will be applied
+            query_str, params = query.subselect()
 
-            self.env.cr.execute("""
+            self.env.cr.execute(f"""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
-                 WHERE res_partner_id IN %s AND calendar_event_id IN ({})
+                 WHERE res_partner_id IN %s AND calendar_event_id IN {query_str}
               GROUP BY res_partner_id, calendar_event_id
-            """.format(subquery), [tuple(all_partners.ids)])
+            """, [tuple(all_partners.ids)] + params)
 
             meeting_data = self.env.cr.fetchall()
 
