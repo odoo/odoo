@@ -5,6 +5,9 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
+import { browser } from '@web/core/browser/browser';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
+
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss_mobile_mailbox_selection', {}, function () {
@@ -13,13 +16,13 @@ QUnit.module('discuss_mobile_mailbox_selection_tests.js');
 QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
+    patchWithCleanup(browser, {
+        innerHeight: 640,
+        innerWidth: 360,
+    });
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
         env: {
-            browser: {
-                innerHeight: 640,
-                innerWidth: 360,
-            },
             device: {
                 isMobile: true,
             },
@@ -74,6 +77,10 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
 
+    patchWithCleanup(browser, {
+        innerHeight: 640,
+        innerWidth: 360,
+    });
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -82,10 +89,6 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
             },
         },
         env: {
-            browser: {
-                innerHeight: 640,
-                innerWidth: 360,
-            },
             device: {
                 isMobile: true,
             },

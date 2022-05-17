@@ -8,6 +8,9 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
+import { browser } from '@web/core/browser/browser';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
+
 import { file, dom } from 'web.test_utils';
 const { createFile, inputFiles } = file;
 const { triggerEvent } = dom;
@@ -233,12 +236,10 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
         },
     ]);
     const imSearchDef = makeDeferred();
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
+    });
     const { click, createMessagingMenuComponent } = await start({
-        env: {
-            browser: {
-                innerWidth: 1920,
-            },
-        },
         async mockRPC(route, args) {
             const res = await this._super(...arguments);
             if (args.method === 'im_search') {
@@ -857,13 +858,10 @@ QUnit.test('focus next visible chat window when closing current chat window with
             ],
         },
     ]);
-    await start({
-        env: {
-            browser: {
-                innerWidth: 1920,
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
     });
+    await start();
     assert.containsN(
         document.body,
         '.o_ChatWindow .o_ComposerTextInput_textarea',
@@ -1043,13 +1041,10 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
-    const { click, createMessagingMenuComponent, messaging } = await start({
-        env: {
-            browser: {
-                innerWidth: 1920, // enough to fit at least 2 chat windows
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 1920, // enough to fit at least 2 chat windows
     });
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`
@@ -1272,13 +1267,10 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
         channel_type: "chat",
     };
     pyEnv['mail.channel'].create([channel, chat]);
-    const { click } = await start({
-        env: {
-            browser: {
-                innerWidth: 900,
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 900,
     });
+    const { click } = await start();
 
     assert.containsN(
         document.body,
@@ -1385,13 +1377,10 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         { name: 'mailChannel2' },
         { name: 'mailChannel3' },
     ]);
-    const { click, createMessagingMenuComponent, messaging } = await start({
-        env: {
-            browser: {
-                innerWidth: 900, // enough to fit 2 chat windows but not 3
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 900, // enough to fit 2 chat windows but not 3
     });
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
@@ -1644,13 +1633,10 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
             ],
         },
     ]);
-    await start({
-        env: {
-            browser: {
-                innerWidth: 1920,
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 1920,
     });
+    await start();
     assert.containsN(
         document.body,
         '.o_ChatWindow .o_ComposerTextInput_textarea',
@@ -2060,12 +2046,10 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
             name: "Channel #12",
         },
     ]);
+    patchWithCleanup(browser, {
+        innerWidth: 900,
+    });
     const { click, messaging } = await start({
-        env: {
-            browser: {
-                innerWidth: 900,
-            },
-        },
         mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 const { channel_id } = args;
@@ -2465,13 +2449,10 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel1' }]);
-    const { click, createMessagingMenuComponent, messaging } = await start({
-        env: {
-            browser: {
-                innerWidth: 600, // enough to fit 1 chat window + hidden menu
-            },
-        },
+    patchWithCleanup(browser, {
+        innerWidth: 600, // enough to fit 1 chat window + hidden menu
     });
+    const { click, createMessagingMenuComponent, messaging } = await start();
     await createMessagingMenuComponent();
     // open, from systray menu, chat windows of channels with id 1, 2
     await click('.o_MessagingMenu_toggler');
