@@ -1081,9 +1081,11 @@ const Wysiwyg = Widget.extend({
                         this.linkTools && this.linkTools.destroy();
                         this.linkTools = undefined;
                         this.odooEditor.document.removeEventListener('mousedown', _onMousedown, true);
+                        document.removeEventListener('mousedown', _onMousedown, true);
                     }
                 };
                 this.odooEditor.document.addEventListener('mousedown', _onMousedown, true);
+                document.addEventListener('mousedown', _onMousedown, true);
                 if (!this.linkTools.$el) {
                     this.linkTools.appendTo(this.toolbar.$el);
                 }
