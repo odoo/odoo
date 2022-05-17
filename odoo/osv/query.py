@@ -76,6 +76,7 @@ class Query(object):
         self.order = None
         self.limit = None
         self.offset = None
+        self.groupby = None
 
     def add_table(self, alias, table=None):
         """ Add a table with a given alias to the from clause. """
@@ -169,6 +170,7 @@ class Query(object):
             ", ".join(args or [f'"{next(iter(self._tables))}".id']),
             from_clause,
             where_clause or "TRUE",
+            (" GROUP BY %s" % self.groupby) if self.groupby else "",
             (" ORDER BY %s" % self.order) if self.order else "",
             (" LIMIT %d" % self.limit) if self.limit else "",
             (" OFFSET %d" % self.offset) if self.offset else "",

@@ -3481,21 +3481,24 @@ class One2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
-        inverse_field = comodel._fields[inverse]
-        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
-        lines = comodel.search(domain)
 
-        # group lines by inverse field (without prefetching other fields)
-        group = defaultdict(list)
-        for line in lines.with_context(prefetch_fields=False):
-            # line[inverse] may be a record or an integer
-            group[get_id(line[inverse])].append(line.id)
+        query = comodel._where_calc(domain)
+        comodel._apply_ir_rules(query, 'read')
+        sub_order = comodel._generate_order_by(comodel._order, query)
+        query.groupby = f"{comodel._table}.{inverse}"
+
+        comodel._flush_search(domain)
+        comodel.env.cr.execute(*query.select(
+            f"{comodel._table}.{inverse}",
+            f"array_agg({comodel._table}.id {sub_order})",
+        ))
+        group = dict(comodel.env.cr.fetchall())
 
         # store result in cache
         cache = records.env.cache
         for record in records:
-            cache.set(record, self, tuple(group[record.id]))
+            cache.set(record, self, tuple(group.get(record.id, [])))
 
     def write_real(self, records_commands_list, create=False):
         """ Update real records. """
