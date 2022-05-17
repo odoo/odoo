@@ -11,6 +11,7 @@ export const kanbanView = {
     display_name: "Kanban",
     icon: "oi oi-view-kanban",
     multiRecord: true,
+    isMobileFriendly: true,
     Controller: KanbanController,
     Renderer: KanbanRenderer,
     Model: KanbanModel,
