@@ -372,7 +372,7 @@ class MailActivity(models.Model):
         return super(MailActivity, self).unlink()
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """ Override that adds specific access rights of mail.activity, to remove
         ids uid could not see according to our custom rules. Please refer to
         _filter_access_rules_remaining for more details about those rules.
@@ -381,16 +381,10 @@ class MailActivity(models.Model):
 
         # Rules do not apply to administrator
         if self.env.is_superuser():
-            return super(MailActivity, self)._search(
-                args, offset=offset, limit=limit, order=order,
-                count=count, access_rights_uid=access_rights_uid)
-        # Perform a super with count as False, to have the ids, not a counter
-        ids = super(MailActivity, self)._search(
-            args, offset=offset, limit=limit, order=order,
-            count=False, access_rights_uid=access_rights_uid)
-        if not ids and count:
-            return 0
-        elif not ids:
+            return super()._search(domain, offset, limit, order, access_rights_uid)
+
+        ids = super()._search(domain, offset, limit, order, access_rights_uid)
+        if not ids:
             return ids
 
         # check read access rights before checking the actual rules on the given ids
@@ -426,12 +420,9 @@ class MailActivity(models.Model):
                     activity['id'] for activity in activities_to_check
                     if activity['res_model'] == doc_model and activity['res_id'] in valid_doc_ids)
 
-        if count:
-            return len(allowed_ids)
-        else:
-            # re-construct a list based on ids, because 'allowed_ids' does not keep the original order
-            id_list = [id for id in ids if id in allowed_ids]
-            return id_list
+        # re-construct a list based on ids, because 'allowed_ids' does not keep the original order
+        id_list = [id for id in ids if id in allowed_ids]
+        return id_list
 
     @api.model
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -447,7 +438,7 @@ class MailActivity(models.Model):
 
         # Rules do not apply to administrator
         if not self.env.is_superuser():
-            allowed_ids = self._search(domain, count=False)
+            allowed_ids = self._search(domain)
             if allowed_ids:
                 domain = expression.AND([domain, [('id', 'in', allowed_ids)]])
             else:

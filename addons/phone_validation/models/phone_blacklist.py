@@ -60,23 +60,18 @@ class PhoneBlackList(models.Model):
             values['number'] = sanitized
         return super(PhoneBlackList, self).write(values)
 
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """ Override _search in order to grep search on sanitized number field """
-        if args:
-            new_args = []
-            for arg in args:
-                if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
-                    number = arg[2]
-                    sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-                    if sanitized:
-                        new_args.append([arg[0], arg[1], sanitized])
-                    else:
-                        new_args.append(arg)
-                else:
-                    new_args.append(arg)
-        else:
-            new_args = args
-        return super(PhoneBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        def sanitize_number(arg):
+            if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
+                number = arg[2]
+                sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
+                if sanitized:
+                    return (arg[0], arg[1], sanitized)
+            return arg
+
+        domain = [sanitize_number(item) for item in domain]
+        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     def add(self, number, message=None):
         sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']

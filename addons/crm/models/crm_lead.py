@@ -774,7 +774,7 @@ class Lead(models.Model):
         return result
 
     @api.model
-    def search(self, domain, offset=0, limit=None, order=None, count=False):
+    def search(self, domain, offset=0, limit=None, order=None):
         """ Override to support ordering on my_activity_date_deadline.
 
         Ordering through web client calls search_read with an order parameter set.
@@ -804,8 +804,9 @@ class Lead(models.Model):
         All other search and search_read are left untouched by this override to avoid
         side effects. Search_count is not affected by this override.
         """
-        if count or not order or 'my_activity_date_deadline' not in order:
-            return super(Lead, self).search(domain, offset=offset, limit=limit, order=order, count=count)
+        if not order or 'my_activity_date_deadline' not in order:
+            return super().search(domain, offset, limit, order)
+
         order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
 
         # Perform a read_group on my activities to get a mapping lead_id / deadline
@@ -825,7 +826,7 @@ class Lead(models.Model):
 
         # Search leads linked to those activities and order them. See docstring
         # of this method for more details.
-        search_res = super(Lead, self).search(my_lead_domain, offset=0, limit=None, order=my_lead_order, count=count)
+        search_res = super().search(my_lead_domain, order=my_lead_order)
         my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_mapping[lead_id], reverse=not activity_asc)
         # keep only requested window (offset + limit, or offset+)
         my_lead_ids_keep = my_lead_ids_ordered[offset:(offset + limit)] if limit else my_lead_ids_ordered[offset:]
@@ -847,9 +848,9 @@ class Lead(models.Model):
             lead_offset = 0
         lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
-        other_lead_res = super(Lead, self).search(
+        other_lead_res = super().search(
             expression.AND([[('id', 'not in', my_lead_ids_skip)], domain]),
-            offset=lead_offset, limit=lead_limit, order=lead_order, count=count
+            lead_offset, lead_limit, lead_order,
         )
         return self.browse(my_lead_ids_keep) + other_lead_res
 

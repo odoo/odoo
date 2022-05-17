@@ -113,19 +113,18 @@ class ResPartnerBank(models.Model):
                 for acc in self]
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        pos = 0
-        while pos < len(args):
-            # DLE P14
-            if args[pos][0] == 'acc_number':
-                op = args[pos][1]
-                value = args[pos][2]
+    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        def sanitize(arg):
+            if isinstance(arg, (tuple, list)) and arg[0] == 'acc_number':
+                value = arg[2]
                 if not isinstance(value, str) and isinstance(value, Iterable):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)
-                if 'like' in op:
+                if 'like' in arg[1]:
                     value = '%' + value + '%'
-                args[pos] = ('sanitized_acc_number', op, value)
-            pos += 1
-        return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
+                return ('sanitized_acc_number', arg[1], value)
+            return arg
+
+        domain = [sanitize(item) for item in domain]
+        return super()._search(domain, offset, limit, order, access_rights_uid)
