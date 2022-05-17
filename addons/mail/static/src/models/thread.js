@@ -4,7 +4,6 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, insertAndUnlink, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
-import throttle from '@mail/utils/throttle';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
@@ -26,7 +25,6 @@ registerModel({
     identifyingFields: ['model', 'id'],
     lifecycleHooks: {
         _willDelete() {
-            this.throttleNotifyCurrentPartnerTypingStatus.clear();
             if (this.isTemporary) {
                 for (const message of this.messages) {
                     message.delete();
@@ -914,15 +912,17 @@ registerModel({
             });
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
-                .filter(localId => localId !== currentPartner.localId);
-            newOrderedTypingMemberLocalIds.push(currentPartner.localId);
+            const newOrderedTypingMembers = [
+                ...this.orderedTypingMembers.filter(member => member !== currentPartner),
+                currentPartner,
+            ];
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                isCurrentPartnerTyping: true,
+                orderedTypingMembers: replace(newOrderedTypingMembers),
                 typingMembers: link(currentPartner),
             });
             // Notify typing status to other members.
-            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
+            await this.throttleNotifyCurrentPartnerTypingStatus.do();
         },
         /**
          * Called to register a new other member partner that is typing
@@ -932,11 +932,12 @@ registerModel({
          */
         registerOtherMemberTypingMember(partner) {
             this.update({ otherMembersLongTypingTimers: insert({ partner: replace(partner) }) });
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
-                .filter(localId => localId !== partner.localId);
-            newOrderedTypingMemberLocalIds.push(partner.localId);
+            const newOrderedTypingMembers = [
+                ...this.orderedTypingMembers.filter(member => member !== partner),
+                partner,
+            ];
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                orderedTypingMembers: replace(newOrderedTypingMembers),
                 typingMembers: link(partner),
             });
         },
@@ -1005,17 +1006,17 @@ registerModel({
             });
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
-                .filter(localId => localId !== currentPartner.localId);
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== currentPartner);
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                isCurrentPartnerTyping: false,
+                orderedTypingMembers: replace(newOrderedTypingMembers),
                 typingMembers: unlink(currentPartner),
             });
             // Notify typing status to other members.
             if (immediateNotify) {
                 this.throttleNotifyCurrentPartnerTypingStatus.clear();
             }
-            this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: false });
+            this.throttleNotifyCurrentPartnerTypingStatus.do();
         },
         /**
          * Called to unregister an other member partner that is no longer typing
@@ -1025,10 +1026,9 @@ registerModel({
          */
         unregisterOtherMemberTypingMember(partner) {
             this.update({ otherMembersLongTypingTimers: insertAndUnlink({ partner: replace(partner) }) });
-            const newOrderedTypingMemberLocalIds = this.orderedTypingMemberLocalIds
-                .filter(localId => localId !== partner.localId);
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== partner);
             this.update({
-                orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
+                orderedTypingMembers: replace(newOrderedTypingMembers),
                 typingMembers: unlink(partner),
             });
         },
@@ -1114,6 +1114,9 @@ registerModel({
                 return clear();
             }
             if (!this.isPinned) {
+                return clear();
+            }
+            if (!this.messaging.discuss) {
                 return clear();
             }
             const discussSidebarCategory = this._getDiscussSidebarCategory();
@@ -1510,18 +1513,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Partner[]}
-         */
-        _computeOrderedTypingMembers() {
-            return [[
-                'replace',
-                this.orderedTypingMemberLocalIds
-                    .map(localId => this.messaging.models['Partner'].get(localId))
-                    .filter(member => !!member),
-            ]];
-        },
-        /**
-         * @private
          * @returns {Activity[]}
          */
         _computeOverdueActivities() {
@@ -1542,11 +1533,9 @@ registerModel({
          * @returns {Throttle}
          */
         _computeThrottleNotifyCurrentPartnerTypingStatus() {
-            return throttle(
-                this.messaging,
-                ({ isTyping }) => this._notifyCurrentPartnerTypingStatus({ isTyping }),
-                2.5 * 1000
-            );
+            return insertAndReplace({
+                func: () => this._notifyCurrentPartnerTypingStatus(),
+            });
         },
         /**
          * @private
@@ -1627,31 +1616,29 @@ registerModel({
         },
         /**
          * @private
-         * @param {Object} param0
-         * @param {boolean} param0.isTyping
          */
-        async _notifyCurrentPartnerTypingStatus({ isTyping }) {
+        async _notifyCurrentPartnerTypingStatus() {
             if (
                 this.forceNotifyNextCurrentPartnerTypingStatus ||
-                isTyping !== this.currentPartnerLastNotifiedIsTyping
+                this.isCurrentPartnerTyping !== this.currentPartnerLastNotifiedIsTyping
             ) {
                 if (this.model === 'mail.channel') {
                     await this.messaging.rpc({
                         model: 'mail.channel',
                         method: 'notify_typing',
                         args: [this.id],
-                        kwargs: { is_typing: isTyping },
+                        kwargs: { is_typing: this.isCurrentPartnerTyping },
                     }, { shadow: true });
                     if (!this.exists()) {
                         return;
                     }
                 }
-                if (isTyping && this.currentPartnerLongTypingTimer) {
+                if (this.isCurrentPartnerTyping && this.currentPartnerLongTypingTimer) {
                     this.update({ currentPartnerLongTypingTimer: [clear(), insertAndReplace()] });
                 }
             }
             this.update({
-                currentPartnerLastNotifiedIsTyping: isTyping,
+                currentPartnerLastNotifiedIsTyping: this.isCurrentPartnerTyping,
                 forceNotifyNextCurrentPartnerTypingStatus: false,
             });
         },
@@ -1795,9 +1782,12 @@ registerModel({
          * Immediately notify other members that he/she is still typing.
          */
         async onCurrentPartnerLongTypingTimeout() {
-            this.update({ forceNotifyNextCurrentPartnerTypingStatus: true });
+            this.update({
+                isCurrentPartnerTyping: true,
+                forceNotifyNextCurrentPartnerTypingStatus: true,
+            });
             this.throttleNotifyCurrentPartnerTypingStatus.clear();
-            await this.throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
+            await this.throttleNotifyCurrentPartnerTypingStatus.do();
         },
     },
     fields: {
@@ -2052,6 +2042,9 @@ registerModel({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,
         }),
+        isCurrentPartnerTyping: attr({
+            default: false,
+        }),
         /**
          * States whether this thread description is editable by the current user.
          */
@@ -2248,19 +2241,9 @@ registerModel({
             compute: '_computeOrderedOtherTypingMembers',
         }),
         /**
-         * Ordered typing members on this thread. Lower index means this member
-         * is currently typing for the longest time. This list includes current
-         * partner as typer.
+         * Ordered list of typing members.
          */
-        orderedTypingMembers: many('Partner', {
-            compute: '_computeOrderedTypingMembers',
-        }),
-        /**
-         * Technical attribute to manage ordered list of typing members.
-         */
-        orderedTypingMemberLocalIds: attr({
-            default: [],
-        }),
+        orderedTypingMembers: many('Partner'),
         originThreadAttachments: many('Attachment', {
             inverse: 'originThread',
             isCausal: true,
@@ -2405,8 +2388,10 @@ registerModel({
          *
          * @see _notifyCurrentPartnerTypingStatus
          */
-        throttleNotifyCurrentPartnerTypingStatus: attr({
+        throttleNotifyCurrentPartnerTypingStatus: one('Throttle', {
             compute: '_computeThrottleNotifyCurrentPartnerTypingStatus',
+            inverse: 'threadAsThrottleNotifyCurrentPartnerTypingStatus',
+            isCausal: true,
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due

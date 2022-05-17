@@ -10,6 +10,7 @@ registerModel({
         'otherMemberLongTypingInThreadTimerOwner',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
         'threadAsCurrentPartnerLongTypingTimerOwner',
+        'throttleOwner',
     ]],
     lifecycleHooks: {
         _willDelete() {
@@ -30,6 +31,9 @@ registerModel({
             }
             if (this.otherMemberLongTypingInThreadTimerOwner) {
                 return 60 * 1000;
+            }
+            if (this.throttleOwner) {
+                return this.throttleOwner.duration;
             }
             return clear();
         },
@@ -71,6 +75,10 @@ registerModel({
                 this.otherMemberLongTypingInThreadTimerOwner.onOtherMemberLongTypingTimeout();
                 return;
             }
+            if (this.throttleOwner) {
+                this.throttleOwner.onTimeout();
+                return;
+            }
         },
     },
     fields: {
@@ -94,6 +102,10 @@ registerModel({
         }),
         threadAsCurrentPartnerLongTypingTimerOwner: one('Thread', {
             inverse: 'currentPartnerLongTypingTimer',
+            readonly: true,
+        }),
+        throttleOwner: one('Throttle', {
+            inverse: 'cooldownTimer',
             readonly: true,
         }),
         /**
