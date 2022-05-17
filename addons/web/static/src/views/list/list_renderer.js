@@ -40,6 +40,15 @@ const FIELD_CLASSES = {
     many2one: "o_list_many2one",
 };
 
+const FIXED_FIELD_COLUMN_WIDTHS = {
+    boolean: "70px",
+    date: "92px",
+    datetime: "146px",
+    float: "92px",
+    integer: "74px",
+    monetary: "104px",
+};
+
 export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
@@ -443,24 +452,18 @@ export class ListRenderer extends Component {
     }
 
     getCellTitle(column, record) {
-        const fieldName = column.name;
-        const fieldType = this.fields[fieldName].type;
-        if (fieldType === "boolean") {
-            return "";
+        const fieldType = this.fields[column.name].type;
+        // Because we freeze the column sizes, it may happen that we have to shorten
+        // field values. In order for the user to have access to the complete value
+        // in those situations, we put the value as title of the cells.
+        // This is only necessary for some field types, as for the others, we hardcode
+        // a minimum column width that should be enough to display the entire value.
+        if (!(fieldType in FIXED_FIELD_COLUMN_WIDTHS)) {
+            return this.getFormattedValue(column, record);
         }
-        const formatter = formatterRegistry.get(fieldType, (val) => val);
-        const formatOptions = {
-            escape: false,
-            data: record.data,
-            isPassword: "password" in column.attrs,
-            digits: column.attrs.digits && JSON.parse(column.attrs.digits),
-            field: record.fields[fieldName],
-            timezone: true,
-        };
-        return formatter(record.data[fieldName], formatOptions);
     }
 
-    getCellValue(column, record) {
+    getFormattedValue(column, record) {
         const fieldName = column.name;
         const field = this.fields[fieldName];
         const formatter = formatterRegistry.get(field.type, (val) => val);
@@ -694,15 +697,6 @@ export class ListRenderer extends Component {
     }
 
     calculateColumnWidth(column) {
-        const FIXED_FIELD_COLUMN_WIDTHS = {
-            BooleanField: "70px",
-            DateField: "92px",
-            DateTimeField: "146px",
-            FloatField: "92px",
-            IntegerField: "74px",
-            MonetaryField: "104px",
-        };
-
         if (column.options && column.attrs.width) {
             return { type: "absolute", value: column.attrs.width };
         }
@@ -711,9 +705,9 @@ export class ListRenderer extends Component {
             return { type: "relative", value: 1 };
         }
 
-        const fieldClass = column.FieldComponent.name;
-        if (fieldClass in FIXED_FIELD_COLUMN_WIDTHS) {
-            return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[fieldClass] };
+        const type = column.widget || this.props.list.fields[column.name].type;
+        if (type in FIXED_FIELD_COLUMN_WIDTHS) {
+            return { type: "absolute", value: FIXED_FIELD_COLUMN_WIDTHS[type] };
         }
 
         return { type: "relative", value: 1 };

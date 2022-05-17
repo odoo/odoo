@@ -978,7 +978,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="bar"/></tree>',
         });
-        assert.equal($(target).find("tbody tr:first td:eq(1)").attr("data-tooltip"), "");
+        assert.strictEqual(target.querySelector(".o_data_cell").getAttribute("data-tooltip"), null);
     });
 
     QUnit.test("field with nolabel has no title", async function (assert) {
