@@ -1351,6 +1351,12 @@ class ComputeContainer(models.Model):
 
     name = fields.Char()
     member_ids = fields.One2many('test_new_api.compute.member', 'container_id')
+    member_count = fields.Integer(compute='_compute_member_count', store=True)
+
+    @api.depends('member_ids')
+    def _compute_member_count(self):
+        for record in self:
+            record.member_count = len(record.member_ids)
 
 
 class ComputeMember(models.Model):
