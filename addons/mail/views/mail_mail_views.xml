@@ -13,13 +13,13 @@
                         <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
                     </header>
                     <sheet>
-                        <field name="mail_message_id" required="0" invisible="1"/>
+                        <field name="mail_message_id_int" required="0" invisible="1"/>
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
                         <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
-                                context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
+                                context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id_int}" states='received,sent,exception,cancel'/>
                         </div>
                         <group>
                             <field name="email_from"/>
@@ -51,7 +51,13 @@
                                 </group>
                             </page>
                             <page string="Attachments" name="attachments">
-                                <field name="attachment_ids"/>
+                                <div class="alert alert-warning" role="alert"
+                                    attrs="{'invisible': [('restricted_attachment_count', '=', 0)]}">
+                                    You do not have access to <field name="restricted_attachment_count"/>
+                                    attachment(s) of this email.
+                                </div>
+                                <field name="unrestricted_attachment_ids"
+                                    domain="[('res_field','=', False)]"/>
                             </page>
                             <page string="Failure Reason" name="failure_reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
                                 <field name="failure_reason"/>
