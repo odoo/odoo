@@ -2,6 +2,9 @@
 
 import { start } from '@mail/../tests/helpers/test_utils';
 
+import { browser } from '@web/core/browser/browser';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
+
 import FormView from 'web.FormView';
 
 QUnit.module('mail', {}, function () {
@@ -14,19 +17,15 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
     // is good for rendering... task-227947
     assert.expect(1);
 
+    patchWithCleanup(browser, {
+        Notification: 'denied',
+    });
     await start({
         arch: `
             <form>
                 <widget name="notification_alert"/>
             </form>
         `,
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'denied',
-                },
-            },
-        },
         hasView: true,
         model: 'mail.message',
         // View params
@@ -43,19 +42,17 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
 QUnit.test('notification_alert widget: no notification alert when granted', async function (assert) {
     assert.expect(1);
 
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'granted',
+        },
+    });
     await start({
         arch: `
             <form>
                 <widget name="notification_alert"/>
             </form>
         `,
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'granted',
-                },
-            },
-        },
         hasView: true,
         model: 'mail.message',
         // View params
@@ -72,19 +69,17 @@ QUnit.test('notification_alert widget: no notification alert when granted', asyn
 QUnit.test('notification_alert widget: no notification alert when default', async function (assert) {
     assert.expect(1);
 
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'default',
+        },
+    });
     await start({
         arch: `
             <form>
                 <widget name="notification_alert"/>
             </form>
         `,
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'default',
-                },
-            },
-        },
         hasView: true,
         model: 'mail.message',
         // View params

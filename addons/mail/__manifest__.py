@@ -137,7 +137,6 @@
             'mail/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
-            'mail/static/src/env/test_env.js',
             'mail/static/tests/helpers/*.js',
             'mail/static/tests/models/*.js',
         ],

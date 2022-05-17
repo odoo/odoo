@@ -6,6 +6,9 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
+import { browser } from '@web/core/browser/browser';
+import { patchWithCleanup } from '@web/../tests/helpers/utils';
+
 import { makeTestPromise } from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -806,15 +809,13 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
 QUnit.test('rendering with OdooBot has a request (default)', async function (assert) {
     assert.expect(4);
 
-    const { click, createMessagingMenuComponent } = await start({
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'default',
-                },
-            },
+    patchWithCleanup(browser, {
+        Notification: {
+            ...browser.Notification,
+            permission: 'default',
         },
     });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     assert.ok(
@@ -843,15 +844,12 @@ QUnit.test('rendering with OdooBot has a request (default)', async function (ass
 QUnit.test('rendering without OdooBot has a request (denied)', async function (assert) {
     assert.expect(2);
 
-    const { click, createMessagingMenuComponent } = await start({
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'denied',
-                },
-            },
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'denied',
         },
     });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     assert.containsNone(
@@ -871,15 +869,12 @@ QUnit.test('rendering without OdooBot has a request (denied)', async function (a
 QUnit.test('rendering without OdooBot has a request (accepted)', async function (assert) {
     assert.expect(2);
 
-    const { click, createMessagingMenuComponent } = await start({
-        env: {
-            browser: {
-                Notification: {
-                    permission: 'granted',
-                },
-            },
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'granted',
         },
     });
+    const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
     assert.containsNone(
@@ -899,17 +894,17 @@ QUnit.test('rendering without OdooBot has a request (accepted)', async function 
 QUnit.test('respond to notification prompt (denied)', async function (assert) {
     assert.expect(4);
 
+    patchWithCleanup(browser, {
+        Notification: {
+            permission: 'default',
+            async requestPermission() {
+                this.permission = 'denied';
+                return this.permission;
+            },
+        },
+    });
     const { click, createMessagingMenuComponent } = await start({
         env: {
-            browser: {
-                Notification: {
-                    permission: 'default',
-                    async requestPermission() {
-                        this.permission = 'denied';
-                        return this.permission;
-                    },
-                },
-            },
             services: {
                 notification: {
                     notify() {

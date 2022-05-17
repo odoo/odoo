@@ -3,7 +3,6 @@
 import BusService from 'bus.BusService';
 
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
-import { addMessagingToEnv } from '@mail/env/test_env';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import { ChatWindowService } from '@mail/services/chat_window_service/chat_window_service';
 import { MessagingService } from '@mail/services/messaging/messaging';
@@ -22,6 +21,7 @@ import {
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
+import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -693,7 +693,6 @@ async function start(param0 = {}) {
         env.session
     );
     env.isDebug = env.isDebug || (() => true);
-    env = addMessagingToEnv(env);
     if (hasTimeControl) {
         env = addTimeControlToEnv(env);
     }
@@ -851,6 +850,9 @@ async function start(param0 = {}) {
     }
     // get the final test env after execution of createView/createWebClient/addMockEnvironment
     testEnv = Component.env;
+    patchWithCleanup(browser, {
+        fetch: testEnv.browser.fetch,
+    });
     // link the pyEnv to the actual mockServer after execution of createView/createWebClient/addMockEnvironment
     if (pyEnv) {
         pyEnv.mockServer = MockServer.currentMockServer;
