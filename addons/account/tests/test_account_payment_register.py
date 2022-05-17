@@ -364,13 +364,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'group_payment': False,
                 'amount': 1200.0
             })
+        self.assertRecordValues(payment_register, [{'payment_difference': 1800.0}])
         payments = payment_register._create_payments()
-        self.assertRecordValues(payment_register, [
-            {
-                'payment_difference': 1800.0  # Test _compute_payment_difference
-            }
-        ])
-
         self.assertRecordValues(payments, [
             {
                 'ref': 'INV/2017/00001',
@@ -1041,11 +1036,20 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         # Payment of 600 USD (equivalent to 1200 Gol in 2017).
         # 600.0 USD should be computed correctly to fully paid the invoices.
-        payment = self.env['account.payment.register']\
+        wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({'currency_id': self.company_data['currency'].id})\
-            ._create_payments()
+            .create({
+                'currency_id': self.company_data['currency'].id,
+                'payment_date': '2017-01-01',
+            })
 
+        self.assertRecordValues(wizard, [{
+            'amount': 600.0,
+            'payment_difference': 0.0,
+            'currency_id': self.company_data['currency'].id,
+        }])
+
+        payment = wizard._create_payments()
         lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_internal_type == 'receivable')
         self.assertRecordValues(lines, [
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.currency_data['currency'].id, 'reconciled': True},
@@ -1066,11 +1070,20 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         # Payment of 600 USD = 1200 Gol.
         # 1200.0 Gol should be computed correctly to fully paid the invoices.
-        payment = self.env['account.payment.register']\
+        wizard = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({'currency_id': self.currency_data['currency'].id})\
-            ._create_payments()
+            .create({
+                'currency_id': self.currency_data['currency'].id,
+                'payment_date': '2017-01-01',
+            })
 
+        self.assertRecordValues(wizard, [{
+            'amount': 1200.0,
+            'payment_difference': 0.0,
+            'currency_id': self.currency_data['currency'].id,
+        }])
+
+        payment = wizard._create_payments()
         lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_internal_type == 'receivable')
         self.assertRecordValues(lines, [
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.company_data['currency'].id, 'reconciled': True},
