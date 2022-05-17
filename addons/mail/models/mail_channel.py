@@ -989,6 +989,7 @@ class Channel(models.Model):
         member.write({
             'fetched_message_id': last_message.id,
             'seen_message_id': last_message.id,
+            'last_seen_dt': fields.Datetime.now(),
         })
 
     def channel_fetched(self):
