@@ -21,9 +21,9 @@ class StockQuantPackage(models.Model):
                     ('result_package_id', '=', package.id),
                     ('picking_id', '=', self.env.context['picking_id'])
                 ])
-                # set initial weight to package type base weight * N move lines
+                # set initial weight to package type base weight
                 if package.package_type_id:
-                    weight = package.package_type_id.base_weight * len(current_picking_move_line_ids)
+                    weight = package.package_type_id.base_weight
                 for ml in current_picking_move_line_ids:
                     weight += ml.product_uom_id._compute_quantity(
                         ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight

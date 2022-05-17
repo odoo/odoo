@@ -16,9 +16,9 @@ class StockMove(models.Model):
         for move in moves_with_weight:
             total_weight = (move.product_qty * move.product_id.weight)
             # Add base weight of package to total weight for each line
-            for line in move.move_line_ids:
-                pack = line.result_package_id
-                if pack and pack.package_type_id:
+            packages = move.move_line_ids.mapped('result_package_id')
+            for pack in packages:
+                if pack.package_type_id:
                     pack_weight = pack.package_type_id.base_weight
                     total_weight += pack_weight
             move.weight = total_weight
