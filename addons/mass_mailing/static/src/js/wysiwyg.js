@@ -33,6 +33,18 @@ const MassMailingWysiwyg = Wysiwyg.extend({
             selectorEditableArea: '.o_editable',
         }, options));
     },
+    /**
+     * @override
+     */
+    _getCommands: function () {
+        const commands = this._super();
+        const linkCommand = commands.find(command => command.title === 'Link');
+        if (linkCommand) {
+            // Don't open the dialog: use the link tools.
+            linkCommand.callback = () => this.toggleLinkTools({forceDialog: false});
+        }
+        return commands;
+    },
 });
 
 return MassMailingWysiwyg;
