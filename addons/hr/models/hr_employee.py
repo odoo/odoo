@@ -251,10 +251,8 @@ class HrEmployeePrivate(models.Model):
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order, access_rights_uid)
         except ValueError:
             raise AccessError(_('You do not have access to this document.'))
-        if isinstance(ids, Query):
-            # the result is expected from this table, so we should link tables
-            ids = super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)], order=order)
-        return ids
+        # the result is expected from this table, so we should link tables
+        return super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)], order=order)
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
