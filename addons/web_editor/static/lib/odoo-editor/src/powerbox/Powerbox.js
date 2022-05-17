@@ -56,6 +56,9 @@ export class Powerbox {
         clearTimeout(this._renderingTimeout);
         this._hoverActive = false;
 
+        // Do not show disabled commands.
+        commands = commands.filter(command => !command.isDisabled || !command.isDisabled());
+
         this._mainWrapperElement.classList.toggle('oe-commandbar-noResult', commands.length === 0);
         if (commands.length === 0) {
             return;
