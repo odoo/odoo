@@ -1351,3 +1351,30 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Check if something was posted in the price difference account
         price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
         self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
+
+    def test_anglosaxon_valuation_price_unit_diff_standard(self):
+        """
+        Check the price unit difference account is hit with the correct amount
+        """
+        self.env.ref("product.decimal_price").digits = 6
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'standard'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.categ_id.property_account_creditor_price_difference_categ = self.price_diff_account
+        self.product1.standard_price = 0.01719
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2022-03-31',
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product1.id, 'quantity': 30000, 'price_unit': 0.01782, 'tax_ids': self.tax_purchase_a.ids})
+            ]
+        })
+
+        invoice.action_post()
+
+        # Check if something was posted in the price difference account
+        price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
+        self.assertEqual(len(price_diff_aml), 1, "A line should have been generated in the price difference account.")
+        self.assertAlmostEqual(price_diff_aml.balance, 18.90)
