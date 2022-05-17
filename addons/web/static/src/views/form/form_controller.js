@@ -24,7 +24,8 @@ export async function loadSubViews(
     context,
     resModel,
     viewService,
-    userService
+    userService,
+    isSmall
 ) {
     for (const fieldName in activeFields) {
         const field = fields[fieldName];
@@ -35,11 +36,18 @@ export async function loadSubViews(
         if (fieldInfo.modifiers.invisible === true) {
             continue; // no need to fetch the sub view if the field is always invisible
         }
-        if (fieldInfo.views[fieldInfo.viewMode]) {
-            continue; // the sub view is inline in the main form view // TODO: check this (not sure about this (DAM))
-        }
+
         if (!fieldInfo.FieldComponent.useSubView) {
             continue; // the FieldComponent used to render the field doesn't need a sub view
+        }
+
+        let viewType = fieldInfo.viewMode || "list,kanban";
+        viewType = viewType.replace("tree", "list");
+        if (viewType.includes(",")) {
+            viewType = isSmall ? "kanban" : "list";
+        }
+        if (fieldInfo.views[viewType]) {
+            continue; // the sub view is inline in the main form view
         }
 
         // extract *_view_ref keys from field context, to fetch the adequate view
@@ -60,18 +68,7 @@ export async function loadSubViews(
         // (e.g. create: 0) to apply to sub views (same logic as the one applied by
         // the server for inline views)
         refinedContext.base_model_name = resModel;
-        let viewMode = fieldInfo.viewMode;
-        if (!viewMode) {
-            viewMode = "list,kanban";
-        } else if (viewMode === "tree") {
-            viewMode = "list";
-        }
-        if (viewMode.indexOf(",") !== -1) {
-            // WOWL do this elsewhere or get env here?
-            viewMode = /** env.isSmall  ? "kanban" : */ "list";
-        }
-        fieldInfo.viewMode = viewMode;
-        let viewType = viewMode;
+
         const comodel = field.relation;
         const { fields: comodelFields, relatedModels, views } = await viewService.loadViews({
             resModel: comodel,
@@ -82,6 +79,7 @@ export async function loadSubViews(
         const archInfo = new ArchParser().parse(views[viewType].arch, relatedModels, comodel);
         fieldInfo.views[viewType] = { ...archInfo, fields: comodelFields };
         fieldInfo.relatedFields = comodelFields;
+        fieldInfo.viewMode = viewType;
     }
 }
 
@@ -195,7 +193,8 @@ export class FormController extends Component {
                 this.props.context,
                 this.props.resModel,
                 this.viewService,
-                this.user
+                this.user,
+                this.env.isSmall
             );
             this.beforeLoadResolver();
         });

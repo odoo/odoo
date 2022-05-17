@@ -299,7 +299,8 @@ export class X2ManyField extends Component {
             {}, // context
             comodel,
             this.viewService,
-            this.user
+            this.user,
+            this.env.isSmall
         );
 
         return formViewInfo;
