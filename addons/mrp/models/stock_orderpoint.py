@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_is_zero
+from odoo.osv.expression import AND
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -13,12 +14,12 @@ class StockWarehouseOrderpoint(models.Model):
         'mrp.bom', string='Bill of Materials', check_company=True,
         domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
 
-    def _get_replenishment_order_notification(self, written_after):
+    def _get_replenishment_order_notification(self):
         self.ensure_one()
-        production = self.env['mrp.production'].search([
-            ('orderpoint_id', 'in', self.ids),
-            ('write_date', '>', written_after)
-        ], order='create_date desc', limit=1)
+        domain = [('orderpoint_id', 'in', self.ids)]
+        if self.env.context.get('written_date'):
+            domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+        production = self.env['mrp.production'].search(domain, limit=1)
         if production:
             action = self.env.ref('mrp.action_mrp_production_form')
             return {
@@ -34,7 +35,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'sticky': False,
                 }
             }
-        return super()._get_replenishment_order_notification(written_after)
+        return super()._get_replenishment_order_notification()
 
     @api.depends('route_id')
     def _compute_show_bom(self):
