@@ -1,55 +1,14 @@
-// ------------------------------------------------------------------
-// Layout
-// ------------------------------------------------------------------
-
-.o_CallOptionMenu {
-    display: flex;
-    flex-direction: column;
-}
-
-.o_CallOptionMenu_button {
-    display: flex;
-    margin: map-get($spacers, 1);
-    align-items: center;
-    color: gray('800');
-}
-
-.o_CallOptionMenu_buttonIcon {
-    margin: map-get($spacers, 1);
-    padding: map-get($spacers, 1);
-}
-
-.o_CallOptionMenu_buttonText {
-    @include text-truncate();
-}
-
-// ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
 
 .o_CallOptionMenu_button {
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    border-radius: 5px;
-    color: gray('800');
-
     &:hover {
-        background-color: gray('100');
-        box-shadow: 0px 0px 1px 1px gray('300') inset;
+        background-color: $gray-100;
+        box-shadow: 0px 0px 1px 1px $gray-300 inset;
     }
 
     &:active {
-        background-color: gray('200');
-        box-shadow: 0px 0px 1px 1px gray('400') inset;
+        background-color: $gray-200;
+        box-shadow: 0px 0px 1px 1px $gray-400 inset;
     }
-
-    @include hover-focus () {
-        outline: none;
-    }
-}
-
-.o_CallOptionMenu_separator {
-    background-color: $border-color;
 }
