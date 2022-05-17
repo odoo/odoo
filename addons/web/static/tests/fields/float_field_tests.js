@@ -331,39 +331,6 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "read"]); // should not have save as nothing changed
     });
 
-    QUnit.skipWOWL("float widget on monetary field", async function (assert) {
-        assert.expect(1);
-
-        serverData.models.partner.fields.monetary = { string: "Monetary", type: "monetary" };
-        serverData.models.partner.records[0].monetary = 9.99;
-        serverData.models.partner.records[0].currency_id = 1;
-
-        await makeView({
-            serverData,
-            type: "form",
-            resModel: "partner",
-            arch: `
-                <form string="Partners">
-                    <sheet>
-                        <field name="monetary" widget="float"/>
-                        <field name="currency_id" invisible="1"/>
-                    </sheet>
-                </form>
-                `,
-            resId: 1,
-            /*
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },*/
-        });
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=monetary]").textContent,
-            "9.99",
-            "value should be correctly formatted (with the float formatter)"
-        );
-    });
-
     QUnit.test("float field with type number option", async function (assert) {
         assert.expect(4);
 
