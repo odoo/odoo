@@ -280,8 +280,8 @@
                 </tr>
             </table>
 
-            <div class="mt-3 o_not_editable">
-                <button role="button" class="btn btn-link btn-block" title="Share Channel"
+            <div class="mt-3 d-grid o_not_editable">
+                <button role="button" class="btn btn-link" title="Share Channel"
                     aria-label="Share Channel"
                     data-toggle="modal" t-att-data-target="'#slideChannelShareModal_%s' % channel.id">
                     <i class="fa fa-share-square fa-fw"/> Share
@@ -292,9 +292,9 @@
 </template>
 
 <template id="course_join">
-    <div class="o_wslides_js_course_join flex-grow-1">
+    <div class="o_wslides_js_course_join flex-grow-1 d-grid">
         <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
-            class="btn btn-primary btn-block o_wslides_js_course_join_link"
+            class="btn btn-primary o_wslides_js_course_join_link"
             title="Start Course" aria-label="Start Course Channel"
             t-att-href="'#'"
             t-att-data-channel-id="channel.id"
