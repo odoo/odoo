@@ -653,7 +653,7 @@ async function start(param0 = {}) {
     const {
         autoOpenDiscuss = false,
         discuss = {},
-        env: providedEnv,
+        env: providedEnv = {},
         hasWebClient = false,
         hasTimeControl = false,
         hasView = false,
@@ -684,7 +684,18 @@ async function start(param0 = {}) {
     const { debug = false } = param0;
     initCallbacks.forEach(callback => callback(param0));
     const testSetupDoneDeferred = makeDeferred();
-    let env = Object.assign(providedEnv || {});
+    let env = {
+        ...providedEnv,
+        browser: {
+            ...providedEnv.browser,
+            innerWidth: browser.innerWidth,
+            innerHeight: browser.innerHeight,
+        },
+        device: {
+            ...providedEnv.device,
+            isMobile: owl.Component.env.device.isMobile,
+        },
+    };
     env.session = Object.assign(
         {
             is_bound: Promise.resolve(),

@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
+import { patchUiSize } from '@mail/../tests/helpers/patch_ui_size';
 import {
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
-
-import { browser } from '@web/core/browser/browser';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -16,17 +14,9 @@ QUnit.module('discuss_mobile_mailbox_selection_tests.js');
 QUnit.test('select another mailbox', async function (assert) {
     assert.expect(7);
 
-    patchWithCleanup(browser, {
-        innerHeight: 640,
-        innerWidth: 360,
-    });
+    patchUiSize({ height: 360, width: 640 });
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
-        env: {
-            device: {
-                isMobile: true,
-            },
-        },
     });
     assert.containsOnce(
         document.body,
@@ -77,20 +67,12 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
 
-    patchWithCleanup(browser, {
-        innerHeight: 640,
-        innerWidth: 360,
-    });
+    patchUiSize({ height: 360, width: 640 });
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
         discuss: {
             context: {
                 active_id: mailChannelId1,
-            },
-        },
-        env: {
-            device: {
-                isMobile: true,
             },
         },
     });

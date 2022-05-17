@@ -3,6 +3,7 @@ odoo.define('web.config', function (require) {
 
 const Bus = require('web.Bus');
 const { hasTouch, isAndroid, isIOS, isMobileOS } = require('@web/core/browser/feature_detection');
+const { getMediaQueryLists } = require('@web/core/ui/ui_service');
 
 const bus = new Bus();
 
@@ -87,16 +88,7 @@ var config = {
     },
 };
 
-
-var medias = [
-    window.matchMedia('(max-width: 474px)'),
-    window.matchMedia('(min-width: 475px) and (max-width: 575px)'),
-    window.matchMedia('(min-width: 576px) and (max-width: 767px)'),
-    window.matchMedia('(min-width: 768px) and (max-width: 991px)'),
-    window.matchMedia('(min-width: 992px) and (max-width: 1199px)'),
-    window.matchMedia('(min-width: 1200px) and (max-width: 1533px)'),
-    window.matchMedia('(min-width: 1534px)'),
-];
+const medias = getMediaQueryLists();
 
 /**
  * Return the current size class
