@@ -2797,7 +2797,7 @@ class AccountMove(models.Model):
                     group[(line.account_id, line.currency_id)].append(line.id)
                 for (account, dummy), line_ids in group.items():
                     if account.reconcile or account.internal_type == 'liquidity':
-                        self.env['account.move.line'].browse(line_ids).reconcile()
+                        self.env['account.move.line'].browse(line_ids).with_context(move_reverse_cancel=cancel).reconcile()
 
         return reverse_moves
 
