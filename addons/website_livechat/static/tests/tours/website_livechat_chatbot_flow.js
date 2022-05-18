@@ -17,12 +17,6 @@ LivechatButton.include({
 
         return this._super(...arguments);
     },
-    _renderMessages: function () {
-        this._super(...arguments);
-
-        this._chatWindow.$('.o_livechat_chatbot_main_restart')
-            .addClass('ready');
-    },
     /**
      * Small override that removes current messages when restarting.
      * This allows to easily check for new posted messages without having the old ones "polluting"
@@ -124,7 +118,7 @@ tour.register('website_livechat_chatbot_flow_tour', {
     trigger: messagesContain("Ok bye!"),
     run: () => {}  // last step is displayed
 }, {
-    trigger: '.o_livechat_chatbot_main_restart.ready',
+    trigger: '.o_livechat_chatbot_restart',
     run: 'click'
 }, {
     trigger: messagesContain("Restarting conversation..."),
