@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { sprintf } from '@web/core/utils/strings';
 
@@ -21,6 +21,18 @@ registerModel({
             if (this.channelMemberListViewOwnerAsOnline) {
                 return replace(this.channelMemberListViewOwnerAsOnline.channel);
             }
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+         _computeChannelMemberViews() {
+            if (this.members.length === 0) {
+                return clear();
+            }
+            return insertAndReplace(
+                this.members.map(member => ({ partner: replace(member) })),
+            );
         },
         /**
          * @private
@@ -71,6 +83,11 @@ registerModel({
         channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
             inverse: 'onlineCategoryView',
             readonly: true,
+        }),
+        channelMemberViews: many('ChannelMemberView', {
+            compute: '_computeChannelMemberViews',
+            inverse: 'channelMemberListCategoryViewOwner',
+            isCausal: true,
         }),
         members: many('Partner', {
             compute: '_computeMembers',
