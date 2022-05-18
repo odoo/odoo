@@ -29,10 +29,10 @@ export class ChannelMemberListCategory extends Component {
         if (!this.channelMemberListView.exists()) {
             return [];
         }
-        if (this.props.category === 'online') {
+        if (this.record.channelMemberListViewOwnerAsOnline) {
             return this.channelMemberListView.channel.orderedOnlineMembers;
         }
-        if (this.props.category === 'offline') {
+        if (this.record.channelMemberListViewOwnerAsOffline) {
             return this.channelMemberListView.channel.orderedOfflineMembers;
         }
         return [];
@@ -43,10 +43,10 @@ export class ChannelMemberListCategory extends Component {
      */
     get title() {
         let categoryText = "";
-        if (this.props.category === 'online') {
+        if (this.record.channelMemberListViewOwnerAsOnline) {
             categoryText = this.env._t("Online");
         }
-        if (this.props.category === 'offline') {
+        if (this.record.channelMemberListViewOwnerAsOffline) {
             categoryText = this.env._t("Offline");
         }
         return sprintf(
@@ -62,7 +62,6 @@ export class ChannelMemberListCategory extends Component {
 
 Object.assign(ChannelMemberListCategory, {
     props: {
-        category: String,
         channelMemberListView: Object,
         record: Object,
     },

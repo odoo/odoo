@@ -4,7 +4,6 @@
         <t t-if="messageActionList">
             <div class="o_MessageActionList d-flex border rounded-sm bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
                 <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'pl-3 py-3 pr-2' : 'pl-2 py-2 pr-1' }}"  t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
-                <PopoverView t-if="messageActionList.reactionPopoverView" record="messageActionList.reactionPopoverView"/>
                 <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar o_cursor_pointer"  t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" t-att-class="{
                         'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,
                         'fa fa-lg fa-star': messageActionList.message.isStarred,

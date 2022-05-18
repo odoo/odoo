@@ -15,10 +15,7 @@ patchRecordMethods('MessagingInitializer', {
         this.messaging.discuss.update({
             categoryLivechat: insertAndReplace({
                 isServerOpen: is_discuss_sidebar_category_livechat_open,
-                name: this.env._t("Livechat"),
                 serverStateKey: 'is_discuss_sidebar_category_livechat_open',
-                sortComputeMethod: 'last_action',
-                supportedChannelTypes: ['livechat'],
             }),
         });
         this._super(...arguments);
