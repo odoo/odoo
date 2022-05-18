@@ -18,6 +18,7 @@ class TestSequenceConcurrency(TransactionCase):
         self.payment_journal = self.env["account.journal"].search(
             [("type", "in", ("cash", "bank"))], limit=1, order="id DESC"
         )
+        self.last_thread_exc = None
 
     def _create_invoice_form(self, env, post=True):
         if release.version == "13.0":
@@ -382,8 +383,8 @@ class TestSequenceConcurrency(TransactionCase):
                 )
                 t_pay_inv.start()
                 t_inv_pay.start()
-                t_pay_inv.join(timeout=deadlock_timeout * 3)
-                t_inv_pay.join(timeout=deadlock_timeout * 3)
+                t_pay_inv.join(timeout=deadlock_timeout + 15)
+                t_inv_pay.join(timeout=deadlock_timeout + 15)
                 if self.last_thread_exc:
                     raise self.last_thread_exc
             except psycopg2.errors.DeadlockDetected as e:
