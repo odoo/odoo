@@ -2,7 +2,7 @@ import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
 import { insertText as insertTextSel } from '../src/utils/utils.js';
 
-const Direction = {
+export const Direction = {
     BACKWARD: 'BACKWARD',
     FORWARD: 'FORWARD',
 };
