@@ -147,6 +147,9 @@ export class Field extends Component {
             required: this.props.record.isRequired(this.props.name), // AAB: does the field really need this?
             update: async (value) => {
                 await record.update({ [this.props.name]: value });
+                if (record.selected && record.model.multiEdit) {
+                    return;
+                }
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (readonlyFromViewMode && !readonlyFromModifiers && !emptyRequiredValue) {
                     // TODO: maybe move this in the model

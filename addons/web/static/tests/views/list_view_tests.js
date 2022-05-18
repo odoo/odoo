@@ -1897,7 +1897,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 resId: 1,
-                arch:`
+                arch: `
                     <form>
                         <field name="o2m">
                             <tree editable="top">
@@ -3119,7 +3119,7 @@ QUnit.module("Views", (hooks) => {
                 "Currency field should have a fixed width of 25px (see arch)"
             );
             assert.strictEqual(
-                form.el.querySelector(".o_list_record_remove_header").style.width,
+                target.querySelector(".o_list_record_remove_header").style.width,
                 "32px"
             );
 
@@ -3297,12 +3297,11 @@ QUnit.module("Views", (hooks) => {
                     },
                 ],
             };
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "foo",
                 serverData,
                 resId: 1,
-                viewOptions: { mode: "edit" },
                 arch:
                     "<form>" +
                     "<sheet>" +
@@ -3320,9 +3319,10 @@ QUnit.module("Views", (hooks) => {
                     "</sheet>" +
                     "</form>",
             });
+            await clickEdit(target);
 
-            const [titi, grosminet] = form.el.querySelectorAll(".tab-pane:last-child th");
-            const one2many = form.el.querySelector(".o_field_one2many");
+            const [titi, grosminet] = target.querySelectorAll(".tab-pane:last-child th");
+            const one2many = target.querySelector(".o_field_one2many");
 
             assert.isNotVisible(one2many, "One2many field should be hidden");
             assert.strictEqual(titi.style.width, "", "width of small char should not be set yet");
@@ -3332,15 +3332,13 @@ QUnit.module("Views", (hooks) => {
                 "width of large char should also not be set"
             );
 
-            await click(form.el.querySelector(".nav-item:last-child .nav-link"));
+            await click(target.querySelector(".nav-item:last-child .nav-link"));
 
             assert.isVisible(one2many, "One2many field should be visible");
             assert.ok(
                 titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 700,
                 "list has been correctly frozen after being visible"
             );
-
-            form.destroy();
         }
     );
 
@@ -3386,8 +3384,8 @@ QUnit.module("Views", (hooks) => {
                     "</form>",
             });
 
-            const [titi, grosminet] = form.el.querySelectorAll("th");
-            const one2many = form.el.querySelector(".o_field_one2many");
+            const [titi, grosminet] = target.querySelectorAll("th");
+            const one2many = target.querySelector(".o_field_one2many");
 
             assert.isNotVisible(one2many, "One2many field should be hidden");
             assert.strictEqual(titi.style.width, "", "width of small char should not be set yet");
@@ -3397,7 +3395,7 @@ QUnit.module("Views", (hooks) => {
                 "width of large char should also not be set"
             );
 
-            await click(form.el.querySelector(".o_field_boolean input"));
+            await click(target.querySelector(".o_field_boolean input"));
 
             assert.isVisible(one2many, "One2many field should be visible");
             assert.ok(
@@ -3444,7 +3442,7 @@ QUnit.module("Views", (hooks) => {
         await click(form.$(".o_field_boolean input"));
 
         assert.strictEqual(
-            form.el.querySelector("th").style.width,
+            target.querySelector("th").style.width,
             "",
             "Column header should be initially unfrozen"
         );
@@ -3452,7 +3450,7 @@ QUnit.module("Views", (hooks) => {
         await click(form.$(".nav-item:last() .nav-link"));
 
         assert.notEqual(
-            form.el.querySelector("th").style.width,
+            target.querySelector("th").style.width,
             "",
             "Column header should have been frozen"
         );
@@ -6972,7 +6970,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_data_row", 3);
             assert.containsNone(target, ".o_list_record_selector input:checked");
 
-            const rows = target.querySelectorAll(".o_data_row")
+            const rows = target.querySelectorAll(".o_data_row");
             await click(rows[0], ".o_list_record_selector input");
             await click(rows[1], ".o_list_record_selector input");
             assert.containsN(target, ".o_list_record_selector input:checked", 2);
@@ -7066,21 +7064,21 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="top"><field name="foo"/><field name="int_field"/></tree>',
         });
 
-        const rows = target.querySelectorAll(".o_data_row")
+        const rows = target.querySelectorAll(".o_data_row");
         await click(rows[2].querySelector(".o_data_cell"));
         assert.ok(
             $(target).find(".o_data_row:nth(2)").is(".o_selected_row"),
             "third row should be in edition"
         );
 
-        await clickDiscard(target)
+        await clickDiscard(target);
         await click(target.querySelector(".o_list_button_add"));
         assert.ok(
             $(target).find(".o_data_row:nth(0)").is(".o_selected_row"),
             "first row should be in edition (creation)"
         );
 
-        await clickDiscard(target)
+        await clickDiscard(target);
         assert.containsNone(target, ".o_selected_row", "no row should be selected");
 
         await click(rows[2].querySelector(".o_data_cell"));
@@ -8607,7 +8605,7 @@ QUnit.module("Views", (hooks) => {
             m2o: function () {},
         };
 
-        const prom = makeDeferred()
+        const prom = makeDeferred();
         await makeView({
             type: "list",
             resModel: "foo",
@@ -8740,8 +8738,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(allNames, ["test", "test", "1", "2", "2"]);
     });
 
-    QUnit.skipWOWL("multi edit reference field batched in grouped list", async function (assert) {
-        assert.expect(18);
+    QUnit.test("multi edit reference field batched in grouped list", async function (assert) {
+        assert.expect(19);
 
         serverData.models.foo.records = [
             // group 1
@@ -8787,10 +8785,10 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[1]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[2]);
-        await click(target.querySelector(".o_data_row .o_field_boolean"));
+        await click(target.querySelector(".o_data_row .o_field_boolean label"));
         assert.containsOnce(target, ".modal");
 
-        await click($(".modal .modal-footer .btn-primary"));
+        await click(target, ".modal .modal-footer .btn-primary");
         assert.containsNone(target, ".modal");
         assert.verifySteps(["write", "read", "name_get", "name_get"]);
         assert.containsN(target, ".o_group_header", 2);
@@ -9519,8 +9517,8 @@ QUnit.module("Views", (hooks) => {
 
             // set m2o to 1 in first record
             await click(target.querySelector(".o_data_row .o_data_cell"));
-            await editInput(target, ".o_data_row [name=m2o] input", "Value 1")
-            await click(target.querySelector(".o-autocomplete--dropdown-item"))
+            await editInput(target, ".o_data_row [name=m2o] input", "Value 1");
+            await click(target.querySelector(".o-autocomplete--dropdown-item"));
             assert.containsOnce(target, ".modal");
 
             await click(target, ".modal .modal-footer .btn-primary");
@@ -9613,10 +9611,10 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable list view (multi edition): writable fields in readonly (force save)",
         async function (assert) {
-            assert.expect(7);
+            assert.expect(8);
 
             // boolean toogle widget allows for writing on the record even in readonly mode
             await makeView({
@@ -9640,7 +9638,7 @@ QUnit.module("Views", (hooks) => {
             const rows = target.querySelectorAll(".o_data_row");
             await click(rows[0], ".o_list_record_selector input");
             await click(rows[2], ".o_list_record_selector input");
-            await click(rows[0].querySelector(".o_field_boolean"));
+            await click(rows[0].querySelector(".o_boolean_toggle label"));
 
             assert.ok(
                 $(".modal").text().includes("Confirmation"),
@@ -10987,9 +10985,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_selected_row [name=int_field]");
     });
 
-    QUnit.skipWOWL("readonly boolean in editable list is readonly", async function (assert) {
-        assert.expect(6);
-
+    QUnit.test("readonly boolean in editable list is readonly", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -11006,7 +11002,7 @@ QUnit.module("Views", (hooks) => {
         const disabledCell = rows[1].querySelector("[name=bar]");
         await click(rows[1].querySelector(".o_data_cell"));
         assert.containsOnce(disabledCell, ":disabled:checked");
-        await click(rows[1].querySelector("[name=bar] label"));
+        await click(rows[1].querySelector("[name=bar] div"));
         assert.containsOnce(disabledCell, ":checked", "clicking disabled checkbox did not work");
         assert.ok(
             $(document.activeElement).is('input[type="text"]'),
@@ -11017,7 +11013,7 @@ QUnit.module("Views", (hooks) => {
         await click(rows[0].querySelector(".o_data_cell"));
         const enabledCell = rows[0].querySelector("[name=bar]");
         assert.containsOnce(enabledCell, ":checked:not(:disabled)");
-        await click(rows[0].querySelector("[name=bar] label"));
+        await click(rows[0].querySelector("[name=bar] div"));
         assert.containsNone(
             enabledCell,
             ":checked",
@@ -13346,7 +13342,7 @@ QUnit.module("Views", (hooks) => {
 
         const input = target.querySelector(".o_data_row .o_data_cell input");
         await editInput(input, null, "aaa");
-        await triggerEvents(input, null, ["keyup", "blur"] )
+        await triggerEvents(input, null, ["keyup", "blur"]);
         document.body.click();
         await nextTick();
         assert.containsOnce(target, ".modal", "the quick_create modal should appear");
@@ -13489,11 +13485,11 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            const th = form.el.getElementsByTagName("th")[0];
+            const th = target.getElementsByTagName("th")[0];
             const resizeHandle = th.getElementsByClassName("o_resize")[0];
-            const firstTableInitialWidth = form.el.querySelectorAll(".o_field_x2many_list table")[0]
+            const firstTableInitialWidth = target.querySelectorAll(".o_field_x2many_list table")[0]
                 .offsetWidth;
-            const secondTableInititalWidth = form.el.querySelectorAll(
+            const secondTableInititalWidth = target.querySelectorAll(
                 ".o_field_x2many_list table"
             )[1].offsetWidth;
 
@@ -13503,18 +13499,18 @@ QUnit.module("Views", (hooks) => {
                 "both table columns have same width"
             );
 
-            await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName("th")[1], {
+            await testUtils.dom.dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
                 position: "right",
             });
 
             assert.notEqual(
                 firstTableInitialWidth,
-                form.el.querySelectorAll("thead")[0].offsetWidth,
+                target.querySelectorAll("thead")[0].offsetWidth,
                 "first o2m table is resized and width of table has changed"
             );
             assert.strictEqual(
                 secondTableInititalWidth,
-                form.el.querySelectorAll("thead")[1].offsetWidth,
+                target.querySelectorAll("thead")[1].offsetWidth,
                 "second o2m table should not be impacted on first o2m in group resized"
             );
 
@@ -13553,16 +13549,16 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            const th = form.el.getElementsByTagName("th")[0];
+            const th = target.getElementsByTagName("th")[0];
             const resizeHandle = th.getElementsByClassName("o_resize")[0];
-            const listInitialWidth = form.el.querySelector(".o_list_view").offsetWidth;
+            const listInitialWidth = target.querySelector(".o_list_view").offsetWidth;
 
-            await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName("th")[1], {
+            await testUtils.dom.dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
                 position: "right",
             });
 
             assert.strictEqual(
-                form.el.querySelector(".o_list_view").offsetWidth,
+                target.querySelector(".o_list_view").offsetWidth,
                 listInitialWidth,
                 "resizing the column should not impact the width of list"
             );
@@ -13659,43 +13655,41 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_data_row .text-danger");
     });
 
-    QUnit.test(
-        "Datetime in evaluation context works with datetime field",
-        async function (assert) {
-            patchDate(1997, 0, 9, 12, 0, 0);
+    QUnit.test("Datetime in evaluation context works with datetime field", async function (assert) {
+        patchDate(1997, 0, 9, 12, 0, 0);
 
-            /**
-             * Returns "1997-01-DD HH:MM:00" with D, H and M holding current UTC values
-             * from patched date + (deltaMinutes) minutes.
-             * This is done to allow testing from any timezone since UTC values are
-             * calculated with the offset of the current browser.
-             */
-            function dateStringDelta(deltaMinutes) {
-                const d = new Date(Date.now() + 1000 * 60 * deltaMinutes);
-                return `1997-01-${String(d.getUTCDate()).padStart(2, "0")} ${String(
-                    d.getUTCHours()
-                ).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}:00`;
-            }
+        /**
+         * Returns "1997-01-DD HH:MM:00" with D, H and M holding current UTC values
+         * from patched date + (deltaMinutes) minutes.
+         * This is done to allow testing from any timezone since UTC values are
+         * calculated with the offset of the current browser.
+         */
+        function dateStringDelta(deltaMinutes) {
+            const d = new Date(Date.now() + 1000 * 60 * deltaMinutes);
+            return `1997-01-${String(d.getUTCDate()).padStart(
+                2,
+                "0"
+            )} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}:00`;
+        }
 
-            // "datetime" field may collide with "datetime" object in context
-            serverData.models.foo.fields.birthday = { string: "Birthday", type: "datetime" };
-            serverData.models.foo.records[0].birthday = dateStringDelta(-30);
-            serverData.models.foo.records[1].birthday = dateStringDelta(0);
-            serverData.models.foo.records[2].birthday = dateStringDelta(+30);
+        // "datetime" field may collide with "datetime" object in context
+        serverData.models.foo.fields.birthday = { string: "Birthday", type: "datetime" };
+        serverData.models.foo.records[0].birthday = dateStringDelta(-30);
+        serverData.models.foo.records[1].birthday = dateStringDelta(0);
+        serverData.models.foo.records[2].birthday = dateStringDelta(+30);
 
-            await makeView({
-                type: "list",
-                arch: `
+        await makeView({
+            type: "list",
+            arch: `
                 <tree>
                     <field name="birthday" decoration-danger="birthday > now"/>
                 </tree>`,
-                serverData,
-                resModel: "foo",
-            });
+            serverData,
+            resModel: "foo",
+        });
 
-            assert.containsOnce(target, ".o_data_row .text-danger");
-        }
-    );
+        assert.containsOnce(target, ".o_data_row .text-danger");
+    });
 
     QUnit.skipWOWL("update control panel while list view is mounting", async function (assert) {
         let mountedCounterCall = 0;

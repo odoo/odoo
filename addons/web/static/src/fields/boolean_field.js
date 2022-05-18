@@ -48,6 +48,7 @@ BooleanField.props = {
 };
 BooleanField.extractProps = (fieldName, record) => {
     return {
+        readonly: !(record.isInEdition && !record.isReadonly(fieldName)),
         isReadonlyEnabled:
             record.activeFields[fieldName].viewType === "list" && !record.isReadonly(fieldName),
     };

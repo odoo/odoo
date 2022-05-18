@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { editInput, click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { FileUploader } from "@web/fields/file_handler";
 
