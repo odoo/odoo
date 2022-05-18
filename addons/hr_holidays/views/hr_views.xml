@@ -18,46 +18,51 @@
         <field name="name">hr.department.kanban.inherit</field>
         <field name="model">hr.department</field>
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
-        <field name="groups_id" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//templates" position="before">
-                    <field name="leave_to_approve_count"/>
-                    <field name="allocation_to_approve_count"/>
-                    <field name="total_employee"/>
-                    <field name="absence_of_today"/>
+                    <t groups="hr_holidays.group_hr_holidays_user">
+                        <field name="leave_to_approve_count"/>
+                        <field name="allocation_to_approve_count"/>
+                        <field name="total_employee"/>
+                        <field name="absence_of_today"/>
+                    </t>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
-                        <div class="col">
-                            <a name="%(hr_leave_action_action_approve_department)d" type="action">
-                                <field name="leave_to_approve_count"/> Time Off Requests
-                            </a>
+                    <t groups="hr_holidays.group_hr_holidays_user">
+                        <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
+                            <div class="col">
+                                <a name="%(hr_leave_action_action_approve_department)d" type="action">
+                                    <field name="leave_to_approve_count"/> Time Off Requests
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
-                        <div class="col">
-                            <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
-                                <field name="allocation_to_approve_count"/> Allocation Requests
-                            </a>
+                        <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
+                            <div class="col">
+                                <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
+                                    <field name="allocation_to_approve_count"/> Allocation Requests
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    </t>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_card_upper_content')]" position="after">
-                    <div class="row o_kanban_primary_bottom bottom_block">
-                        <div class="col-3">
-                            <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose time off requests are either confirmed or validated on today">Absence</a>
+                    <t groups="hr_holidays.group_hr_holidays_user">
+                        <div class="row o_kanban_primary_bottom bottom_block">
+                            <div class="col-3">
+                                <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose time off requests are either confirmed or validated on today">Absence</a>
+                            </div>
+                            <div class="col-9">
+                                <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
+                            </div>
                         </div>
-                        <div class="col-9">
-                            <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
-                        </div>
-                    </div>
+                    </t>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <a role="menuitem" class="dropdown-item" name="%(hr_leave_action_action_department)d" type="action">
+                    <a role="menuitem" class="dropdown-item" name="%(hr_leave_action_action_department)d" type="action" groups="hr_holidays.group_hr_holidays_user">
                         Time Off
                     </a>
                 </xpath>
