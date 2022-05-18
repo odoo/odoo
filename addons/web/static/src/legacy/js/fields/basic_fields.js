@@ -2971,6 +2971,9 @@ var BooleanToggle = FieldBoolean.extend({
      * Adds the icon fa-check-circle if value is true else adds icon
      * fa-times-circle
      *
+     * The boolean_toggle should only be disabled when there is a readonly modifier
+     * not when the view is in readonly mode
+     *
      * @override
      */
     async _render() {
@@ -2982,6 +2985,8 @@ var BooleanToggle = FieldBoolean.extend({
         const i = document.createElement("i");
         i.setAttribute('class', `fa ${classToApply}`);
         this.el.querySelector('label').appendChild(i);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
+        this.$input.prop('disabled', isReadonly);
     },
 
     //--------------------------------------------------------------------------
@@ -2996,8 +3001,10 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: async function (event) {
         event.stopPropagation();
-        await this._setValue(!this.value);
-        this._render();
+        if (!this.$input.prop('disabled')) {
+            await this._setValue(!this.value);
+            this._render();
+        }
     },
 });
 

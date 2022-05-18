@@ -567,7 +567,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "Freigabe der Produktion"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__warning
@@ -734,7 +734,7 @@ msgstr "Stücklistenzeilen der bezeichneten Stückliste"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr ""
+msgstr "Rückstandsbestätigungszeile"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
@@ -1067,7 +1067,7 @@ msgstr "Checksumme/SHA1"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
 msgid "Cleanup Time"
-msgstr ""
+msgstr "Aufräumzeit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -1131,7 +1131,7 @@ msgstr "Komponentenstatus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Component of Draft MO"
-msgstr ""
+msgstr "Bestandteil des Entwurfs eines Fertigungsauftrags"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -2605,7 +2605,7 @@ msgstr "Manuelle Dauer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "Manuf. Lead Time"
-msgstr ""
+msgstr "Fertigungsdurchlaufzeit"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -2854,12 +2854,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_ids
 #: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_ids
 msgid "Mrp Production"
-msgstr ""
+msgstr "MRP Produktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
 msgid "Mrp Production Count"
-msgstr ""
+msgstr "MRP Zählung Produktion"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
@@ -3076,7 +3076,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
 msgid "Number of source MO"
-msgstr ""
+msgstr "Nummer der Auftragsquelle Fertigungsauftrag"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -3406,7 +3406,7 @@ msgstr "Ply Veneer"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
 msgid "Popover Data JSON"
-msgstr ""
+msgstr "Popover Data JSON"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__possible_product_template_attribute_value_ids
@@ -3477,6 +3477,9 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Kommissionieren / Produzieren: Entladen Sie die Komponenten zuerst aus dem "
+"Lager an den Eingangslagerplatz und bringen Sie sie dann an den "
+"Produktionsort."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3648,7 +3651,7 @@ msgstr "Arbeitsplatz"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Production of Draft MO"
-msgstr ""
+msgstr "Erstellung Entwurf Fertigungsauftrag"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -3716,7 +3719,7 @@ msgstr "Qualitätseinbußen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control_worksheet
 msgid "Quality Worksheet"
-msgstr ""
+msgstr "Arbeitsblatt Qualität"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
@@ -4499,7 +4502,7 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
-msgid "The Workoder (%s) cannot be started twice!"
+msgid "The Workorder (%s) cannot be started twice!"
 msgstr ""
 
 #. module: mrp
@@ -4585,6 +4588,10 @@ msgid ""
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
 msgstr ""
+"Das Produkt wurde bereits mindestens einmal verwendet, die Bearbeitung "
+"seiner Struktur kann zu unerwünschtem Verhalten führen. Archivieren Sie "
+"stattdessen das Produkt und erstellen Sie ein neues mit einer neuen "
+"Stückliste."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5423,6 +5430,10 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"Mit Arbeitsauftragsvorgängen können Sie die Fertigungsvorgänge erstellen und"
+" verwalten, die an Ihren Arbeitsplätzen zur Herstellung eines Produkts "
+"durchgeführt werden sollen. Sie sind mit Stücklisten verknüpft, die die "
+"benötigten Komponenten definieren."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id

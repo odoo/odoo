@@ -169,7 +169,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             for i in range(6)
         )
         (invoice + invoice2 + refund + refund2).write({
-            'journal_id': self.company_data['default_journal_sale'],
+            'journal_id': self.company_data['default_journal_sale'].id,
             'partner_id': 1,
             'invoice_date': '2016-01-01',
         })
