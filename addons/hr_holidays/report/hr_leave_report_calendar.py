@@ -67,6 +67,7 @@ class LeaveReportCalendar(models.Model):
                 ON cc.id = co.resource_calendar_id
         WHERE 
             hl.state IN ('confirm', 'validate', 'validate1')
+            AND hl.active IS TRUE
         );
         """)
 
