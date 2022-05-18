@@ -5,17 +5,18 @@
         <field name="model">res.config.settings</field>
         <field name="priority" eval="95"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
-        <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_manager'), 0)]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <field name="pos_selectable_categ_ids" invisible="1"/>
-                <field name="pos_has_active_session" invisible="1"/>
-                <field name="pos_allowed_pricelist_ids" invisible="1"/>
-                <field name="pos_cash_control" invisible="1"/>
-                <field name="pos_iface_print_via_proxy" invisible="1"/>
-                <field name="pos_company_has_template" invisible="1"/>
-                <field name="is_default_pricelist_displayed" invisible="1"/>
-                <field name="group_cash_rounding" invisible="1"/>
+                <t groups="point_of_sale.group_pos_manager">
+                    <field name="pos_selectable_categ_ids" invisible="1"/>
+                    <field name="pos_has_active_session" invisible="1"/>
+                    <field name="pos_allowed_pricelist_ids" invisible="1"/>
+                    <field name="pos_cash_control" invisible="1"/>
+                    <field name="pos_iface_print_via_proxy" invisible="1"/>
+                    <field name="pos_company_has_template" invisible="1"/>
+                    <field name="is_default_pricelist_displayed" invisible="1"/>
+                    <field name="group_cash_rounding" invisible="1"/>
+                </t>
 
                 <div class="app_settings_block" data-string="Point of sale" string="Point of Sale" data-key="point_of_sale" groups="point_of_sale.group_pos_manager">
                     <div class="app_settings_header pt-1 pb-1" style="background-color: #FEF0D0;">

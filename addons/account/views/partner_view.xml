@@ -142,10 +142,10 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="11"/>
-            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')), (4, ref('account.group_account_readonly'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
+                        groups="account.group_account_invoice,account.group_account_readonly"
                         context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
@@ -158,12 +158,14 @@
                 </div>
 
                 <page name="internal_notes" position="inside">
-                    <group colspan="2" col="2" groups="account.group_warning_account">
-                        <separator string="Warning on the Invoice" colspan="4"/>
-                        <field name="invoice_warn" nolabel="1" />
-                        <field name="invoice_warn_msg" colspan="3" nolabel="1"
-                            attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
-                    </group>
+                    <t groups="account.group_account_invoice,account.group_account_readonly">
+                        <group colspan="2" col="2" groups="account.group_warning_account">
+                            <separator string="Warning on the Invoice" colspan="4"/>
+                            <field name="invoice_warn" nolabel="1" />
+                            <field name="invoice_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
+                        </group>
+                    </t>
                 </page>
             </field>
         </record>
@@ -189,7 +191,6 @@
             <field name="model">res.partner</field>
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="groups_id" eval="[(5,)]"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="before">
                     <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert" style="margin-bottom:0px;"

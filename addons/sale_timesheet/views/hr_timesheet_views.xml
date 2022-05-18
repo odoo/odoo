@@ -39,13 +39,12 @@
     <record id="hr_timesheet_line_tree_inherit" model="ir.ui.view">
         <field name="name">account.analytic.line.tree.inherit</field>
         <field name="model">account.analytic.line</field>
-        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='name']" position="after">
-                <field name="commercial_partner_id" invisible="1"/>
-                <field name="is_so_line_edited" invisible="1"/>
-                <field name="so_line" widget="so_line_many2one" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
+                <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
+                <field name="so_line" widget="so_line_many2one" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>
@@ -53,13 +52,12 @@
     <record id="hr_timesheet_line_form_inherit" model="ir.ui.view">
         <field name="name">account.analytic.line.form.inherit</field>
         <field name="model">account.analytic.line</field>
-        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='task_id']" position="after">
-                <field name="commercial_partner_id" invisible="1"/>
-                <field name="is_so_line_edited" invisible="1" />
-                <field name="so_line" widget="so_line_many2one" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
+                <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
+                <field name="so_line" widget="so_line_many2one" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>

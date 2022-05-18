@@ -14,24 +14,27 @@
         <field name="name">mrp.production.view.inherited</field>
         <field name="model">mrp.production</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view" />
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="before">
-                <field name="show_valuation" invisible="1"/>
+                <field name="show_valuation" invisible="1" groups="stock.group_stock_manager"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button string="Valuation" type="object"
-                    name="action_view_stock_valuation_layers"
-                    class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
-                    attrs="{'invisible': [('show_valuation', '=', False)]}" />
-                <button class="oe_stat_button" type="object"
-                    name="action_view_analytic_account"
-                    string="Analytic Account" icon="fa-bar-chart-o"
-                    attrs="{'invisible': ['|', ('analytic_account_id', '=', False), ('state', 'in', ['draft', 'cancel'])]}"
-                    groups="analytic.group_analytic_accounting"/>
+                <t groups="stock.group_stock_manager">
+                    <button string="Valuation" type="object"
+                        name="action_view_stock_valuation_layers"
+                        class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
+                        attrs="{'invisible': [('show_valuation', '=', False)]}" />
+                    <button class="oe_stat_button" type="object"
+                        name="action_view_analytic_account"
+                        string="Analytic Account" icon="fa-bar-chart-o"
+                        attrs="{'invisible': ['|', ('analytic_account_id', '=', False), ('state', 'in', ['draft', 'cancel'])]}"
+                        groups="analytic.group_analytic_accounting"/>
+                </t>
             </xpath>
             <xpath expr="//page[@name='miscellaneous']//field[@name='date_deadline']" position="after">
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <t groups="stock.group_stock_manager">
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                </t>
             </xpath>
         </field>
     </record>

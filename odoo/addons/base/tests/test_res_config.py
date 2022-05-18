@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from lxml import etree
 import logging
 
 from odoo import exceptions, Command
@@ -155,7 +156,7 @@ class TestResConfigExecute(TransactionCase):
         # Check user has access to all models of relational fields in view
         # because the webclient makes a name_get request for all specified records
         # even if they are not shown to the user.
-        settings_view_arch = self.settings_view.with_user(user)._get_combined_arch()
+        settings_view_arch = etree.fromstring(settings.get_view(view_id=self.settings_view.id)['arch'])
         seen_fields = set()
         for node in settings_view_arch.iterdescendants(tag='field'):
             seen_fields.add(node.get('name'))

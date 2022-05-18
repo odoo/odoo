@@ -39,7 +39,6 @@
         <field name="name">product.product.sale.order</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
@@ -59,11 +58,13 @@
                 </button>
             </div>
             <group name="description" position="after">
-                <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
-                    <field name="sale_line_warn" nolabel="1"/>
-                    <field name="sale_line_warn_msg" colspan="3" nolabel="1"
-                            attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
-                </group>
+                <t groups="sales_team.group_sale_salesman">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" nolabel="1"/>
+                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </t>
             </group>
         </field>
     </record>
@@ -72,7 +73,6 @@
         <field name="name">product.template.sale.order.button</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
-        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
@@ -91,11 +91,13 @@
                 </button>
             </div>
             <group name="description" position="after">
-                <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
-                    <field name="sale_line_warn" nolabel="1"/>
-                    <field name="sale_line_warn_msg" colspan="3" nolabel="1"
-                            attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
-                </group>
+                <t groups="sales_team.group_sale_salesman">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" nolabel="1"/>
+                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </t>
             </group>
         </field>
     </record>
