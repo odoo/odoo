@@ -282,7 +282,9 @@ QUnit.module("Fields", (hooks) => {
                 "</form>",
             resId: 1,
             mockRPC(route, args) {
-                assert.step(route);
+                if (args.method !== "get_views") {
+                    assert.step(route);
+                }
                 if (route === "/web/dataset/call_kw/ir.attachment/read") {
                     assert.deepEqual(args.args[1], ["name", "mimetype"]);
                 }
@@ -321,12 +323,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("div.o_field_widget .oe_fileupload .o_attach").textContent.trim(),
             "Pictures",
             "the button should be correctly named"
-        ); //CHECK THIS
-        /*assert.containsOnce(
-            target,
-            "div.o_field_widget .oe_fileupload .o_hidden_input_file form",
-            "there should be a hidden form to upload attachments"
-        );*/
+        );
 
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
@@ -334,11 +331,15 @@ QUnit.module("Fields", (hooks) => {
             'there should be an attribute "accept" on the input'
         );
 
+        const input = target.querySelector(".o_field_many2many_binary input");
         // We need to convert the input type since we can't programmatically set
         // the value of a file input. The patch of the onFileChange will create
         // a file object to be used by the component.
-        target.querySelector(".o_field_many2many_binary input").setAttribute("type", "text");
-        await editInput(target, ".o_field_many2many_binary input", "fake_file");
+        input.setAttribute("type", "text");
+        input.value = "fake_file";
+        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        await nextTick();
         await nextTick();
 
         assert.strictEqual(
@@ -346,7 +347,6 @@ QUnit.module("Fields", (hooks) => {
             "fake_file.txt",
             'value of attachment should be "fake_file.txt"'
         );
-
         assert.strictEqual(
             target.querySelector(".o_attachment .caption.small a").textContent,
             "txt",
@@ -359,20 +359,17 @@ QUnit.module("Fields", (hooks) => {
                 "div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete"
             )
         );
-
         assert.verifySteps([
             "/web/dataset/call_kw/turtle/read",
             "/web/dataset/call_kw/ir.attachment/read",
         ]);
 
         await click(target, ".o_form_button_save");
-
         assert.containsOnce(
             target,
             "div.o_field_widget .oe_fileupload .o_attachments",
             "there should be only one attachment left"
         );
-
         assert.verifySteps([
             "/web/dataset/call_kw/turtle/write",
             "/web/dataset/call_kw/turtle/read",
