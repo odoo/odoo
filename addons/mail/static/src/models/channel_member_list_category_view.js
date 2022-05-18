@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { replace } from '@mail/model/model_field_command';
+import { many, one } from '@mail/model/model_field';
+import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMemberListCategoryView',
@@ -20,6 +20,22 @@ registerModel({
                 return replace(this.channelMemberListViewOwnerAsOnline.channel);
             }
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeMembers() {
+            if (!this.exists()) {
+                return clear();
+            }
+            if (this.channelMemberListViewOwnerAsOnline) {
+                return replace(this.channel.orderedOnlineMembers);
+            }
+            if (this.channelMemberListViewOwnerAsOffline) {
+                return replace(this.channel.orderedOfflineMembers);
+            }
+            return clear();
+        },
     },
     fields: {
         channel: one('Thread', {
@@ -33,6 +49,9 @@ registerModel({
         channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
             inverse: 'onlineCategoryView',
             readonly: true,
+        }),
+        members: many('Partner', {
+            compute: '_computeMembers',
         }),
     },
 });
