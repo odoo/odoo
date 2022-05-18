@@ -7,8 +7,12 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'Timer',
     identifyingFields: [[
+        'callViewAsShowOverlay',
+        'chatterOwnerAsAttachmentsLoader',
         'messagingOwnerAsFetchImStatusTimer',
+        'messageViewOwnerAsHighlight',
         'otherMemberLongTypingInThreadTimerOwner',
+        'rtcSessionOwnerAsBroadcast',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
         'threadAsCurrentPartnerLongTypingTimerOwner',
         'throttleOwner',
@@ -24,8 +28,20 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
+            if (this.callViewAsShowOverlay) {
+                return 3 * 1000;
+            }
+            if (this.chatterOwnerAsAttachmentsLoader) {
+                return this.messaging.loadingBaseDelayDuration;
+            }
+            if (this.messageViewOwnerAsHighlight) {
+                return 2 * 1000;
+            }
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
+            }
+            if (this.rtcSessionOwnerAsBroadcast) {
+                return 3 * 1000;
             }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 return 5 * 1000;
@@ -67,8 +83,24 @@ registerModel({
          * @private
          */
         _onTimeoutOwner() {
+            if (this.callViewAsShowOverlay) {
+                this.callViewAsShowOverlay.onShowOverlayTimeout();
+                return;
+            }
+            if (this.chatterOwnerAsAttachmentsLoader) {
+                this.chatterOwnerAsAttachmentsLoader.onAttachmentsLoadingTimeout();
+                return;
+            }
+            if (this.messageViewOwnerAsHighlight) {
+                this.messageViewOwnerAsHighlight.onHighlightTimerTimeout();
+                return;
+            }
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
+                return;
+            }
+            if (this.rtcSessionOwnerAsBroadcast) {
+                this.rtcSessionOwnerAsBroadcast.onBroadcastTimeout();
                 return;
             }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
@@ -90,6 +122,14 @@ registerModel({
         },
     },
     fields: {
+        callViewAsShowOverlay: one('CallView', {
+            inverse: 'showOverlayTimer',
+            readonly: true,
+        }),
+        chatterOwnerAsAttachmentsLoader: one('Chatter', {
+            inverse: 'attachmentsLoaderTimer',
+            readonly: true,
+        }),
         /**
          * Duration, in milliseconds, until timer times out and calls the
          * timeout function.
@@ -103,9 +143,17 @@ registerModel({
             inverse: 'fetchImStatusTimer',
             readonly: true,
         }),
+        messageViewOwnerAsHighlight: one('MessageView', {
+            inverse: 'highlightTimer',
+            readonly: true,
+        }),
         otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
             inverse: 'timer',
             isCausal: true,
+            readonly: true,
+        }),
+        rtcSessionOwnerAsBroadcast: one('RtcSession', {
+            inverse: 'broadcastTimer',
             readonly: true,
         }),
         threadAsCurrentPartnerInactiveTypingTimerOwner: one('Thread', {

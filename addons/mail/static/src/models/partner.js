@@ -376,6 +376,10 @@ registerModel({
             inverse: 'partner',
             isCausal: true,
         }),
+        channelMemberViews: many('ChannelMemberView', {
+            inverse: 'partner',
+            isCausal: true,
+        }),
         country: one('Country'),
         /**
          * Deprecated.
