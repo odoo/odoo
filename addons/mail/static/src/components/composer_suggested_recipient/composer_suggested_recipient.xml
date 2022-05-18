@@ -14,28 +14,6 @@
                         </t>
                     </label>
                 </div>
-                <t t-if="!suggestedRecipientInfo.partner">
-                    <FormViewDialogComponentAdapter
-                        Component="FormViewDialog"
-                        setFormViewDialogWidget="setFormViewDialogWidget"
-                        params="{
-                            context: {
-                                active_id: suggestedRecipientInfo.thread.id,
-                                active_model: 'mail.compose.message',
-                                default_email: suggestedRecipientInfo.email,
-                                default_name: suggestedRecipientInfo.name,
-                                default_lang: suggestedRecipientInfo.lang,
-                                force_email: true,
-                                ref: 'compound_context',
-                            },
-                            disable_multiple_selection: true,
-                            on_saved: _onDialogSaved,
-                            res_id: false,
-                            res_model: 'res.partner',
-                            title: suggestedRecipientInfo.dialogText,
-                        }"
-                    />
-                </t>
             </div>
         </t>
     </t>
