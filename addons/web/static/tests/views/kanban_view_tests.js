@@ -6463,8 +6463,8 @@ QUnit.module("Views", (hooks) => {
                 '<field name="datetime"/>' +
                 '<templates><t t-name="kanban-box">' +
                 "<div>" +
-                '<span class="date" t-esc="record.date.raw_value"/>' +
-                '<span class="datetime" t-esc="record.datetime.raw_value"/>' +
+                '<span class="date" t-esc="record.date.value"/>' +
+                '<span class="datetime" t-esc="record.datetime.value"/>' +
                 "</div>" +
                 "</t></templates>" +
                 "</kanban>",
@@ -6472,8 +6472,8 @@ QUnit.module("Views", (hooks) => {
 
         patchWithCleanup(luxon.Settings, { defaultLocale: "en" });
 
-        assert.strictEqual(getCard(0).querySelector(".date").innerText, "Wed Jan 25 2017");
-        assert.strictEqual(getCard(1).querySelector(".datetime").innerText, "Mon Dec 12 2016");
+        assert.strictEqual(getCard(0).querySelector(".date").innerText, "01/25/2017");
+        assert.strictEqual(getCard(1).querySelector(".datetime").innerText, "12/12/2016 10:55:05");
     });
 
     QUnit.test("evaluate conditions on relational fields", async (assert) => {
