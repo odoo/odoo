@@ -11,22 +11,22 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
-            trigger: "div#subscription_info strong:contains('successfully unsubscribed')",
+            trigger: "div#o_mailing_subscription_info_state strong:contains('unsubscribed')",
         }, {
             content: "No warning should be displayed",
-            trigger: "div#div_blacklist:not(:has(p:contains('You were still subscribed to those newsletters. You will not receive any news from them anymore')))",
+            trigger: "div#o_mailing_portal_subscription:not(:has(p:contains('You were still subscribed to those newsletters. You will not receive any news from them anymore')))",
         }, {
             content: "Revert exclusion list",
-            trigger: "div#button_remove_blacklist",
+            trigger: "div#button_blocklist_remove",
         }, {
             content: "Confirmation exclusion list is removed",
-            trigger: "div#subscription_info strong:contains('removed from our blacklist')",
+            trigger: "div#o_mailing_subscription_info_state strong:contains('removed from our blocklist')",
         }, {
             content: "Now exclude me (again)",
-            trigger: "div#button_add_blacklist",
+            trigger: "div#button_blocklist_add",
         }, {
             content: "Confirmation exclusion is done",
-            trigger: "div#subscription_info strong:contains('added to our blacklist')",
+            trigger: "div#o_mailing_subscription_info_state strong:contains('added to our blocklist')",
             isCheck: true,
         },
     ],
@@ -42,25 +42,25 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
-            trigger: "div#subscription_info strong:contains('successfully unsubscribed')",
+            trigger: "div#o_mailing_subscription_info_state strong:contains('unsubscribed')",
         }, {
             content: "Display warning about mailing lists",
-            trigger: "div#div_blacklist p:contains('You were still subscribed to those newsletters. You will not receive any news from them anymore')",
+            trigger: "div#o_mailing_portal_subscription p:contains('You were still subscribed to those newsletters. You will not receive any news from them anymore')",
         }, {
             content: "Warning should contain reference to memberships",
-            trigger: "div#div_blacklist li strong:contains('List1')",
+            trigger: "div#o_mailing_portal_subscription li strong:contains('List1')",
         }, {
             content: "Revert exclusion list",
-            trigger: "div#button_remove_blacklist",
+            trigger: "div#button_blocklist_remove",
         }, {
             content: "Confirmation exclusion list is removed",
-            trigger: "div#subscription_info strong:contains('removed from our blacklist')",
+            trigger: "div#o_mailing_subscription_info_state strong:contains('removed from our blocklist')",
         }, {
             content: "Now exclude me (again)",
-            trigger: "div#button_add_blacklist",
+            trigger: "div#button_blocklist_add",
         }, {
             content: "Confirmation exclusion is done",
-            trigger: "div#subscription_info strong:contains('added to our blacklist')",
+            trigger: "div#o_mailing_subscription_info_state strong:contains('added to our blocklist')",
             isCheck: true,
         },
     ],
