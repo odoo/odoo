@@ -48,6 +48,39 @@ function patchSetTimeout() {
     });
 }
 
+function getNextTabableElement() {
+    // get TABS
+
+    let selector =
+        "[tabindex], a, area, button, frame, iframe, input, object, select, textarea,"
+            .split(",")
+            .join(':not([tabindex="-1"]):not(:disabled):not(#qunit *    ),')
+    selector = selector.slice(0, selector.length -1);
+
+    const tabableElements = getFixture().querySelectorAll(selector);
+
+    const dict = {};
+    for (const el of [...tabableElements]) {
+        if (!dict[el.tabIndex]) {
+            dict[el.tabIndex] = [];
+        }
+        dict[el.tabIndex].push(el);
+    }
+
+    const AB0 = dict[0] || [];
+    delete dict[0];
+    const TABS = [...Object.values(dict).flat(), ...AB0];
+
+    // use TABS
+
+    const index = TABS.indexOf(document.activeElement);
+    if (index === -1) {
+        throw Error("Hum");
+    }
+
+    return TABS[index + 1] || null;
+}
+
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -6737,7 +6770,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("focusing fields in one2many list", async function (assert) {
+    QUnit.test("focusing fields in one2many list", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -6764,13 +6797,9 @@ QUnit.module("Fields", (hooks) => {
             document.activeElement
         );
 
-        await testUtils.fields.triggerKeydown(
-            target.querySelector('[name="turtle_foo"] input'),
-            "tab"
-        );
         assert.strictEqual(
-            target.querySelector('[name="turtle_int"] input'),
-            document.activeElement
+            getNextTabableElement(),
+            target.querySelector('[name="turtle_int"] input')
         );
     });
 
