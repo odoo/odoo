@@ -8,6 +8,14 @@ import odoo
 from odoo import SUPERUSER_ID, api, fields, release, tools
 from odoo.tests import Form, TransactionCase, tagged
 
+PG_CONCURRENCY_ERRORS = [
+    psycopg2.errorcodes.LOCK_NOT_AVAILABLE,
+    psycopg2.errorcodes.SERIALIZATION_FAILURE,
+    psycopg2.errorcodes.DEADLOCK_DETECTED,
+    psycopg2.errorcodes.QUERY_CANCELED,
+    psycopg2.errorcodes.TRANSACTION_ROLLBACK,
+]
+
 
 @tagged("post_install", "-at_install", "test_move_sequence")
 class TestSequenceConcurrency(TransactionCase):
@@ -122,16 +130,15 @@ class TestSequenceConcurrency(TransactionCase):
                     self.assertEqual(invoice1.state, "draft")
                     invoice2 = self._create_invoice_form(env2, post=False)
                     self.assertEqual(invoice2.state, "draft")
-            except (
-                psycopg2.errors.QueryCanceled,
-                psycopg2.errors.TransactionRollbackError,
-                psycopg2.errors.LockNotAvailable,
-            ) as e:
-                self.assertFalse(
-                    True,
-                    "Should it raises error to user and rollback the whole transaction? %s"
-                    % e,
-                )
+            except psycopg2.OperationalError as e:
+                if e.pgcode in PG_CONCURRENCY_ERRORS:
+                    self.assertFalse(
+                        True,
+                        "Should it raises error to user and rollback the whole transaction? %s"
+                        % e,
+                    )
+                else:
+                    raise
 
     def test_sequence_concurrency_20_editing_last_invoice(self):
         """Edit last invoice and create a new invoice
@@ -154,16 +161,15 @@ class TestSequenceConcurrency(TransactionCase):
                     invoice.write({"write_uid": env0.uid})
                     invoice.flush()
                     self._create_invoice_form(env1)
-            except (
-                psycopg2.errors.QueryCanceled,
-                psycopg2.errors.TransactionRollbackError,
-                psycopg2.errors.LockNotAvailable,
-            ) as e:
-                self.assertFalse(
-                    True,
-                    "Should it raises error to user and rollback the whole transaction? %s"
-                    % e,
-                )
+            except psycopg2.OperationalError as e:
+                if e.pgcode in PG_CONCURRENCY_ERRORS:
+                    self.assertFalse(
+                        True,
+                        "Should it raises error to user and rollback the whole transaction? %s"
+                        % e,
+                    )
+                else:
+                    raise
 
     def test_sequence_concurrency_30_editing_last_payment(self):
         """Edit last payment and create a new payment
@@ -179,17 +185,17 @@ class TestSequenceConcurrency(TransactionCase):
             payment = self._create_payment_form(env0)
             if hasattr(payment, "move_line_ids"):
                 # v13.0
-                payment_move_ids = payment.mapped("move_line_ids.move_id").ids
+                payment_move = payment.mapped("move_line_ids.move_id")
             else:
                 # v14.0
-                payment_move_ids = payment.move_id.ids
-            self.addCleanup(self._clean_moves, payment_move_ids)
+                payment_move = payment.move_id
+            self.addCleanup(self._clean_moves, payment_move.ids)
             env0.cr.commit()
             try:
                 with env0.cr.savepoint(), env1.cr.savepoint():
                     # Edit something in "last move"
-                    payment.write({"write_uid": env0.uid})
-                    payment.flush()
+                    payment_move.write({"write_uid": env0.uid})
+                    payment_move.flush()
                     self._create_payment_form(env1)
             except (
                 psycopg2.errors.QueryCanceled,
@@ -236,16 +242,15 @@ class TestSequenceConcurrency(TransactionCase):
                     # Many pieces of code call flush directly
                     lines2reconcile.flush()
                     self._create_invoice_form(env1)
-            except (
-                psycopg2.errors.QueryCanceled,
-                psycopg2.errors.TransactionRollbackError,
-                psycopg2.errors.LockNotAvailable,
-            ) as e:
-                self.assertFalse(
-                    True,
-                    "Should it raises error to user and rollback the whole transaction? %s"
-                    % e,
-                )
+            except psycopg2.OperationalError as e:
+                if e.pgcode in PG_CONCURRENCY_ERRORS:
+                    self.assertFalse(
+                        True,
+                        "Should it raises error to user and rollback the whole transaction? %s"
+                        % e,
+                    )
+                else:
+                    raise
 
     def test_sequence_concurrency_50_reconciling_last_payment(self):
         """Reconcile last payment and create a new one
@@ -281,16 +286,15 @@ class TestSequenceConcurrency(TransactionCase):
                     # Many pieces of code call flush directly
                     lines2reconcile.flush()
                     self._create_payment_form(env1)
-            except (
-                psycopg2.errors.QueryCanceled,
-                psycopg2.errors.TransactionRollbackError,
-                psycopg2.errors.LockNotAvailable,
-            ) as e:
-                self.assertFalse(
-                    True,
-                    "Should it raises error to user and rollback the whole transaction? %s"
-                    % e,
-                )
+            except psycopg2.OperationalError as e:
+                if e.pgcode in PG_CONCURRENCY_ERRORS:
+                    self.assertFalse(
+                        True,
+                        "Should it raises error to user and rollback the whole transaction? %s"
+                        % e,
+                    )
+                else:
+                    raise
 
     @unittest.skipIf(
         release.version == "13.0",
@@ -321,16 +325,15 @@ class TestSequenceConcurrency(TransactionCase):
                 with env1.cr.savepoint(), env2.cr.savepoint():
                     self._create_payment_form(env1)
                     self._create_payment_form(env2)
-            except (
-                psycopg2.errors.QueryCanceled,
-                psycopg2.errors.TransactionRollbackError,
-                psycopg2.errors.LockNotAvailable,
-            ) as e:
-                self.assertFalse(
-                    True,
-                    "Should it raises error to user and rollback the whole transaction? %s"
-                    % e,
-                )
+            except psycopg2.OperationalError as e:
+                if e.pgcode in PG_CONCURRENCY_ERRORS:
+                    self.assertFalse(
+                        True,
+                        "Should it raises error to user and rollback the whole transaction? %s"
+                        % e,
+                    )
+                else:
+                    raise
 
     @tools.mute_logger("odoo.sql_db")
     def test_sequence_concurrency_95_pay2inv_inv2pay(self):
@@ -381,24 +384,23 @@ class TestSequenceConcurrency(TransactionCase):
                 t_inv_pay.join(timeout=deadlock_timeout + 15)
                 if self.last_thread_exc:
                     raise self.last_thread_exc
-            except psycopg2.errors.DeadlockDetected as e:
-                self.assertFalse(
-                    True,
-                    "Should it raises deadlock error to user and rollback the whole 2 transactions? %s"
-                    % e,
-                )
-            except (
-                psycopg2.errors.QueryCanceled,
-                psycopg2.errors.TransactionRollbackError,
-                psycopg2.errors.LockNotAvailable,
-            ) as e:
-                # Even if you could define invoice number as standard instead of no-gap in v13.0
-                # Odoo people said that the whole world needs to deal with sequence standard
-                # for all kind of invoices (bills, customer invoices, refunds)
-                # So not raises errors if not deadlock here
-                pass
-                # self.assertFalse(
-                #     True,
-                #     "Should it raises error to user and rollback the whole transaction? %s"
-                #     % e,
-                # )
+            except psycopg2.OperationalError as e:
+                if e.pgcode == psycopg2.errorcodes.DEADLOCK_DETECTED:
+                    self.assertFalse(
+                        True,
+                        "Should it raises deadlock error to user and rollback the whole 2 transactions? %s"
+                        % e,
+                    )
+                elif e.pgcode in PG_CONCURRENCY_ERRORS:
+                    # Even if you could define invoice number as standard instead of no-gap in v13.0
+                    # Odoo people said that the whole world needs to deal with sequence standard
+                    # for all kind of invoices (bills, customer invoices, refunds)
+                    # So not raises errors if not deadlock here
+                    pass
+                    # self.assertFalse(
+                    #     True,
+                    #     "Should it raises error to user and rollback the whole transaction? %s"
+                    #     % e,
+                    # )
+                else:
+                    raise
