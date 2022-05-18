@@ -3708,8 +3708,6 @@ class AccountMoveLine(models.Model):
     price_total = fields.Monetary(string='Total', store=True, readonly=True,
         currency_field='currency_id')
     reconciled = fields.Boolean(compute='_compute_amount_residual', store=True)
-    blocked = fields.Boolean(string='No Follow-up', default=False,
-        help="You can check this box to mark this journal item as a litigation with the associated partner")
     date_maturity = fields.Date(string='Due Date', index=True, tracking=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)

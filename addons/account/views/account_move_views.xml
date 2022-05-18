@@ -62,11 +62,8 @@
                                         <field name="currency_id" invisible="1"/>
                                         <field name="amount_currency"/>
                                     </group>
-                                    <group string="Product" attrs="{'invisible': [('product_id', '=', False)]}">
+                                    <group string="Product" name="product" attrs="{'invisible': [('product_id', '=', False)]}">
                                         <field name="product_id" readonly="1"/>
-                                    </group>
-                                    <group string="States">
-                                        <field name="blocked"/>
                                     </group>
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
