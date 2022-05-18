@@ -69,7 +69,7 @@ class HrExpense(models.Model):
         store=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
         default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
-    unit_amount = fields.Float("Unit Price", compute='_compute_unit_amount', readonly=False, store=True, required=True, copy=True,
+    unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', readonly=False, store=True, required=True, copy=True,
         states={'done': [('readonly', True)]}, digits='Product Price')
     unit_amount_display = fields.Float("Unit Price Display", compute='_compute_unit_amount_display')
     quantity = fields.Float(required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure', default=1)
@@ -250,16 +250,6 @@ class HrExpense(models.Model):
         for expense in self:
             expense.product_description = not is_html_empty(expense.product_id.description) and expense.product_id.description
 
-    @api.depends('product_id', 'company_id')
-    def _compute_unit_amount(self):
-        for expense in self:
-            if not expense.product_id or not expense.product_has_cost or expense.attachment_number or (not expense.attachment_number and expense.unit_amount):
-                continue
-            expense.unit_amount = expense.product_id.price_compute(
-                'standard_price',
-                uom=expense.product_uom_id,
-                currency=expense.currency_id)[expense.product_id.id]
-
     @api.depends('unit_amount', 'total_amount_company', 'product_has_cost')
     def _compute_unit_amount_display(self):
         for expense in self:
@@ -270,6 +260,9 @@ class HrExpense(models.Model):
         for expense in self:
             if not expense.product_id:
                 continue
+            # Only change unit_amount if the product has no cost defined on it
+            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+                expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
             expense.product_uom_id = expense.product_id.uom_id
