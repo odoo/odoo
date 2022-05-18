@@ -72,7 +72,7 @@ export class ChatWindowHiddenMenu extends Component {
         const textDirection = this.messaging.locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        const offset = this.messaging.chatWindowManager.visual.hidden.offset;
+        const offset = this.messaging.chatWindowManager.visual.hiddenMenuOffset;
         this.root.el.style[offsetFrom] = `${offset}px`;
         this.root.el.style[oppositeFrom] = 'auto';
     }

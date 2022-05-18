@@ -14,10 +14,10 @@ export class ChannelMember extends Component {
     }
 
     /**
-     * @returns {Partner}
+     * @returns {ChannelMemberView}
      */
-    get member() {
-        return this.props.member;
+    get record() {
+        return this.props.record;
     }
 
 }
@@ -25,7 +25,7 @@ export class ChannelMember extends Component {
 Object.assign(ChannelMember, {
     props: {
         channel: Object,
-        member: Object,
+        record: Object,
     },
     template: 'mail.ChannelMember',
 });

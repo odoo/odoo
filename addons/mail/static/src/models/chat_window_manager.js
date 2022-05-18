@@ -6,28 +6,24 @@ import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_
 
 const BASE_VISUAL = {
     /**
+     * @deprecated, should use ChatWindowManager/availableVisibleSlots instead
      * Amount of visible slots available for chat windows.
      */
     availableVisibleSlots: 0,
     /**
-     * Data related to the hidden menu.
+     * List of hidden docked chat windows. Useful to compute counter.
+     * Chat windows are ordered by their `chatWindows` order.
      */
-    hidden: {
-        /**
-         * List of hidden docked chat windows. Useful to compute counter.
-         * Chat windows are ordered by their `chatWindows` order.
-         */
-        chatWindowLocalIds: [],
-        /**
-         * Whether hidden menu is visible or not
-         */
-        isVisible: false,
-        /**
-         * Offset of hidden menu starting point from the starting point
-         * of chat window manager. Makes only sense if it is visible.
-         */
-        offset: 0,
-    },
+    hiddenChatWindowLocalIds: [],
+    /**
+     * Whether hidden menu is visible or not
+     */
+    isHiddenMenuVisible: false,
+    /**
+     * Offset of hidden menu starting point from the starting point
+     * of chat window manager. Makes only sense if it is visible.
+     */
+    hiddenMenuOffset: 0,
     /**
      * Data related to visible chat windows. Index determine order of
      * docked chat windows.
@@ -223,7 +219,7 @@ registerModel({
          * @returns {ChatWindow[]}
          */
         _computeAllOrderedHidden() {
-            return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
+            return replace(this.visual.hiddenChatWindowLocalIds.map(chatWindowLocalId =>
                 this.messaging.models['ChatWindow'].get(chatWindowLocalId)
             ));
         },
@@ -235,6 +231,23 @@ registerModel({
             return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
                 this.messaging.models['ChatWindow'].get(chatWindowLocalId)
             ));
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeAvailableVisibleSlots() {
+            return this.visual.availableVisibleSlots;
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeEndGapWidth() {
+            if (this.messaging.device.isSmall) {
+                return 0;
+            }
+            return 10;
         },
         /**
          * @private
@@ -268,6 +281,16 @@ registerModel({
          * @private
          * @returns {integer}
          */
+        _computeStartGapWidth() {
+            if (this.messaging.device.isSmall) {
+                return 0;
+            }
+            return 10;
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
         _computeUnreadHiddenConversationAmount() {
             const allHiddenWithThread = this.allOrderedHidden.filter(
                 chatWindow => chatWindow.thread
@@ -289,23 +312,18 @@ registerModel({
             if (!this.messaging || !this.messaging.device) {
                 return visual;
             }
-            const BETWEEN_GAP_WIDTH = 5;
-            const CHAT_WINDOW_WIDTH = 325;
-            const END_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
-            const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
-            const START_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
                 return visual;
             }
             if (!this.allOrdered.length) {
                 return visual;
             }
-            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - START_GAP_WIDTH - END_GAP_WIDTH;
+            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
             let maxAmountWithoutHidden = Math.floor(
-                relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
+                relativeGlobalWindowWidth / (this.chatWindowWidth + this.betweenGapWidth));
             let maxAmountWithHidden = Math.floor(
-                (relativeGlobalWindowWidth - HIDDEN_MENU_WIDTH - BETWEEN_GAP_WIDTH) /
-                (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
+                (relativeGlobalWindowWidth - this.hiddenMenuWidth - this.betweenGapWidth) /
+                (this.chatWindowWidth + this.betweenGapWidth));
             if (this.messaging.device.isSmall) {
                 maxAmountWithoutHidden = 1;
                 maxAmountWithHidden = 1;
@@ -314,7 +332,7 @@ registerModel({
                 // all visible
                 for (let i = 0; i < this.allOrdered.length; i++) {
                     const chatWindowLocalId = this.allOrdered[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
+                    const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 visual.availableVisibleSlots = maxAmountWithoutHidden;
@@ -322,23 +340,23 @@ registerModel({
                 // some visible, some hidden
                 for (let i = 0; i < maxAmountWithHidden; i++) {
                     const chatWindowLocalId = this.allOrdered[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
+                    const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 if (this.allOrdered.length > maxAmountWithHidden) {
-                    visual.hidden.isVisible = !this.messaging.device.isSmall;
-                    visual.hidden.offset = visual.visible[maxAmountWithHidden - 1].offset
-                        + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
+                    visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
+                    visual.hiddenMenuOffset = visual.visible[maxAmountWithHidden - 1].offset
+                        + this.chatWindowWidth + this.betweenGapWidth;
                 }
                 for (let j = maxAmountWithHidden; j < this.allOrdered.length; j++) {
-                    visual.hidden.chatWindowLocalIds.push(this.allOrdered[j].localId);
+                    visual.hiddenChatWindowLocalIds.push(this.allOrdered[j].localId);
                 }
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
-                visual.hidden.isVisible = !this.messaging.device.isSmall;
-                visual.hidden.offset = START_GAP_WIDTH;
-                visual.hidden.chatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
+                visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
+                visual.hiddenMenuOffset = this.startGapWidth;
+                visual.hiddenChatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
                 console.warn('cannot display any visible chat windows (screen is too small)');
                 visual.availableVisibleSlots = 0;
             }
@@ -358,15 +376,34 @@ registerModel({
         allOrderedVisible: many('ChatWindow', {
             compute: '_computeAllOrderedVisible',
         }),
+        /**
+         * Amount of visible slots available for chat windows.
+         */
+        availableVisibleSlots: attr({
+            compute: '_computeAvailableVisibleSlots',
+            default: 0,
+        }),
+        betweenGapWidth: attr({
+            default: 5,
+        }),
         chatWindows: many('ChatWindow', {
             inverse: 'manager',
             isCausal: true,
+        }),
+        chatWindowWidth: attr({
+            default: 325,
+        }),
+        endGapWidth: attr({
+            compute: '_computeEndGapWidth',
         }),
         hasVisibleChatWindows: attr({
             compute: '_computeHasVisibleChatWindows',
         }),
         hiddenChatWindowHeaderViews: many('ChatWindowHeaderView', {
             compute: '_computeHiddenChatWindowHeaderViews',
+        }),
+        hiddenMenuWidth: attr({
+            default: 200, // max width, including width of dropup list items
         }),
         isHiddenMenuOpen: attr({
             default: false,
@@ -377,6 +414,9 @@ registerModel({
         newMessageChatWindow: one('ChatWindow', {
             inverse: 'managerAsNewMessage',
             isCausal: true,
+        }),
+        startGapWidth: attr({
+            compute: '_computeStartGapWidth',
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',
