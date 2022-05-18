@@ -3,31 +3,43 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 import { FileUploader } from "./file_handler";
+import { useService } from "@web/core/utils/hooks";
 
 const { Component, useState } = owl;
 
 export class Many2ManyBinaryField extends Component {
     setup() {
         this.state = useState({
-            files: [],
+            files: this.props.value.records.map((record) => record.data),
         });
-        console.log(this.props);
+        this.orm = useService("orm");
     }
 
-    get url() {
-        //TODO
+    getUrl(id) {
+        return "/web/content/" + id + "?download=true";
     }
 
     getExtension(file) {
         return file.name.replace(/^.*\./, "");
     }
-    onFileUploaded(file) {
-        console.log(file);
-        this.state.files.push(file);
+
+    async onFileUploaded(file) {
+        const data = await this.orm.call("ir.attachment", "name_create", [file], {
+            context: this.props.context,
+        });
+        const ids = [...this.props.value.currentIds, data[0]];
+        this.props.value.replaceWith(ids);
+
+        const res = {
+            ...data[1],
+            id: data[0],
+        };
+        this.state.files.push(res);
     }
 
-    onFileRemove(ev) {
-        console.log(ev.target.dataset.id);
+    async onFileRemove(ev) {
+        const ids = this.props.value.currentIds.filter((id) => id !== Number(ev.target.dataset.id));
+        this.props.value.replaceWith(ids);
     }
 }
 
@@ -41,6 +53,7 @@ Many2ManyBinaryField.props = {
     className: { type: String, optional: true },
     uploadText: { type: String, optional: true },
     setAsInvalid: { type: Function, optional: true },
+    items: { type: Object, optional: true },
 };
 Many2ManyBinaryField.defaultProps = {
     setAsInvalid: () => {},
@@ -50,7 +63,7 @@ Many2ManyBinaryField.extractProps = (fieldName, record, attrs) => {
     return {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         className: attrs.class,
-        uploadText: record.data[fieldName].field.string,
+        uploadText: record.fields[fieldName].string,
         setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };

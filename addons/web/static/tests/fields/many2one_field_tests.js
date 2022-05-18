@@ -1727,6 +1727,44 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.skipWOWL("name_create in form dialog", async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <group>
+                        <field name="p">
+                            <tree>
+                                <field name="bar"/>
+                            </tree>
+                            <form>
+                            <field name="product_id"/>
+                            </form>
+                        </field>
+                    </group>
+                </form>
+                `,
+            mockRPC(route, args) {
+                if (args.method === "name_create") {
+                    assert.step("name_create");
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await testUtils.owlCompatibilityExtraNextTick();
+        await testUtils.fields.many2one.searchAndClickItem("product_id", {
+            selector: ".modal",
+            search: "new record",
+        });
+
+        assert.verifySteps(["name_create"]);
+    });
+
     QUnit.test("list in form: quick create then add a new line directly", async function (assert) {
         // required many2one inside a one2many list: directly after quick creating
         // a new many2one value (before the name_create returns), click on add an item:
