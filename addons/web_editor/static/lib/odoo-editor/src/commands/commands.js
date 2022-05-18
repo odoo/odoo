@@ -421,12 +421,12 @@ export function toggleFormat(editor, format) {
     const {anchorNode, anchorOffset, focusNode, focusOffset} = editor.document.getSelection();
     const style = styles[format];
     const selectedTextNodes = getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.length);
     const isAlreadyFormatted = style.is(editor.editable);
     let changedElements = [];
     if (isAlreadyFormatted && style.name === 'textDecorationLine') {
-        const decoratedPairs = new Set(selectedTextNodes.map(n => [closestElement(n, `[style*="text-decoration-line: ${style.value}"]`), n]));
-        for (const [closestDecorated, textNode] of decoratedPairs) {
+        for (const textNode of selectedTextNodes) {
+            const closestDecorated = closestElement(textNode, `[style*="text-decoration-line: ${style.value}"]`);
             if (closestDecorated) {
                 const splitResult = splitAroundUntil(textNode, closestDecorated);
                 const decorationToRemove = splitResult[0] || splitResult[1] || closestDecorated;
