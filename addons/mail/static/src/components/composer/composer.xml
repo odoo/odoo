@@ -107,7 +107,6 @@
                                 >
                                     <i class="fa fa-smile-o"/>
                                 </button>
-                                <PopoverView t-if="composerView.emojisPopoverView" record="composerView.emojisPopoverView"/>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip mx-1 border-0 rounded-pill bg-white" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" title="Add attachment" type="button" t-on-click="composerView.onClickAddAttachment"/>
                             </div>
                             <t t-if="composerView.isExpandable">

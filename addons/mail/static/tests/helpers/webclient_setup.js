@@ -7,6 +7,7 @@ import BusService from 'bus.BusService';
 import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
 import { DiscussContainer } from '@mail/components/discuss_container/discuss_container';
+import { PopoverManagerContainer } from '@mail/components/popover_manager_container/popover_manager_container';
 import { messagingService } from '@mail/services/messaging_service';
 import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';
 
@@ -36,6 +37,7 @@ const SERVICES_PARAMETER_NAMES = new Set([
     mainComponentRegistry.add('ChatWindowManagerContainer', { Component: ChatWindowManagerContainer });
     mainComponentRegistry.add('DialogManagerContainer', { Component: DialogManagerContainer });
     registry.category('actions').add('mail.action_discuss', DiscussContainer);
+    mainComponentRegistry.add('PopoverManagerContainer', { Component: PopoverManagerContainer });
 }
 
 /**
