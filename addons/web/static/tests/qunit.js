@@ -1,3 +1,7 @@
+/** @odoo-module */
+
+import { canDefaultBehaviorHappen } from "./helpers/utils";
+
 (function () {
     "use strict";
 
@@ -180,6 +184,12 @@
     function isNotVisible(el, msg) {
         return _checkVisible(el, false, msg);
     }
+    function defaultBehavior(el, eventType, eventAttrs, msg) {
+        const answer = canDefaultBehaviorHappen(el, null, eventType, eventAttrs);
+        QUnit.assert.ok(answer, msg);
+    }
+
+    QUnit.assert.defaultBehavior = defaultBehavior;
     QUnit.assert.containsN = containsN;
     QUnit.assert.containsNone = containsNone;
     QUnit.assert.containsOnce = containsOnce;

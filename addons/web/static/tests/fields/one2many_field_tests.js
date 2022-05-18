@@ -33,6 +33,7 @@ import { session } from "@web/session";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { FieldOne2Many } from "web.relational_fields";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { getNextTabableElement } from "@web/core/utils/ui";
 
 let serverData;
 let target;
@@ -46,39 +47,6 @@ function patchSetTimeout() {
             window.setTimeout(fn, 0);
         },
     });
-}
-
-function getNextTabableElement() {
-    // get TABS
-
-    let selector =
-        "[tabindex], a, area, button, frame, iframe, input, object, select, textarea,"
-            .split(",")
-            .join(':not([tabindex="-1"]):not(:disabled):not(#qunit *    ),')
-    selector = selector.slice(0, selector.length -1);
-
-    const tabableElements = getFixture().querySelectorAll(selector);
-
-    const dict = {};
-    for (const el of [...tabableElements]) {
-        if (!dict[el.tabIndex]) {
-            dict[el.tabIndex] = [];
-        }
-        dict[el.tabIndex].push(el);
-    }
-
-    const AB0 = dict[0] || [];
-    delete dict[0];
-    const TABS = [...Object.values(dict).flat(), ...AB0];
-
-    // use TABS
-
-    const index = TABS.indexOf(document.activeElement);
-    if (index === -1) {
-        throw Error("Hum");
-    }
-
-    return TABS[index + 1] || null;
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -6792,15 +6760,12 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
 
         await click(target.querySelector(".o_data_row td"));
-        assert.strictEqual(
-            target.querySelector('[name="turtle_foo"] input'),
-            document.activeElement
-        );
+        const turtleFooInput = target.querySelector('[name="turtle_foo"] input');
+        const turtleIntInput = target.querySelector('[name="turtle_int"] input');
+        assert.strictEqual(turtleFooInput, document.activeElement);
 
-        assert.strictEqual(
-            getNextTabableElement(),
-            target.querySelector('[name="turtle_int"] input')
-        );
+        assert.strictEqual(getNextTabableElement(target), turtleIntInput);
+        assert.defaultBehavior(turtleFooInput, null, "keydown", { key: "Tab" });
     });
 
     QUnit.test("one2many list editable = top", async function (assert) {
