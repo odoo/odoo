@@ -566,7 +566,7 @@ class HolidaysType(models.Model):
         to the method.
         """
         employee_id = self._get_contextual_employee_id()
-        if not order and employee_id:
+        if order == self._order and employee_id:
             # retrieve all leaves, sort them, then apply offset and limit
             leaves = self.browse(super()._search(domain, access_rights_uid=access_rights_uid))
             leaves = leaves.sorted(key=self._model_sorting_key, reverse=True)

@@ -350,8 +350,7 @@ class EventEvent(models.Model):
             domain = [('date_begin', '<=', now), ('date_end', '>', now)]
         else:
             domain = ['|', ('date_begin', '>', now), ('date_end', '<=', now)]
-        event_ids = self.env['event.event']._search(domain)
-        return [('id', 'in', event_ids)]
+        return domain
 
     @api.depends('date_begin', 'date_end', 'date_tz')
     def _compute_field_is_one_day(self):
@@ -384,8 +383,7 @@ class EventEvent(models.Model):
             domain = [('date_end', '<=', now)]
         else:
             domain = [('date_end', '>', now)]
-        event_ids = self.env['event.event']._search(domain)
-        return [('id', 'in', event_ids)]
+        return domain
 
     @api.depends('event_type_id')
     def _compute_date_tz(self):

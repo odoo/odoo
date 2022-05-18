@@ -673,8 +673,10 @@ class Project(models.Model):
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
+        if not order:
+            return super()._search(domain, offset, limit, order, access_rights_uid)
         new_order, item_index, desc = [], -1, False
-        for index, order_item in enumerate((order or self._order).split(',')):
+        for index, order_item in enumerate(order.split(',')):
             order_item_list = order_item.strip().lower().split(' ')
             if order_item_list[0] == 'is_favorite':
                 item_index = index
@@ -683,7 +685,7 @@ class Project(models.Model):
                 new_order.append(order_item)
         query = super()._search(domain, offset, limit, ', '.join(new_order), access_rights_uid)
         if item_index != -1:
-            query_order_list = query.order.split(',')
+            query_order_list = query.order.split(',') if query.order else []
             query_order_list.insert(item_index, f"""
                 "project_project"."id" IN (
                     SELECT project_id

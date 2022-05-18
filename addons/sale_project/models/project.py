@@ -155,7 +155,6 @@ class Project(models.Model):
     def action_open_project_invoices(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
         query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query.order = None
         query_string, query_param = query.select('DISTINCT move_id')
         self._cr.execute(query_string, query_param)
         invoice_ids = [line.get('move_id') for line in self._cr.dictfetchall()]
@@ -539,7 +538,6 @@ class Project(models.Model):
     def action_open_project_vendor_bills(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['in_invoice', 'in_refund'])])
         query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
-        query.order = None
         query_string, query_param = query.select('DISTINCT move_id')
         self._cr.execute(query_string, query_param)
         vendor_bill_ids = [line.get('move_id') for line in self._cr.dictfetchall()]

@@ -115,7 +115,6 @@ class AccountMove(models.Model):
                 continue
             MoveLines = self.env["account.move.line"].with_company(company_id)
             query = MoveLines._search(domain)
-            query.order = None
             query_str, params = query.select(
                 "SUM(debit) AS debit", "SUM(credit) AS credit"
             )

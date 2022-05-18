@@ -149,7 +149,7 @@ class PartnerCategory(models.Model):
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return self._search(args, limit=limit, order=self._order, access_rights_uid=name_get_uid)
 
 
 class PartnerTitle(models.Model):

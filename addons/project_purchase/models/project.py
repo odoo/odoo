@@ -21,7 +21,6 @@ class Project(models.Model):
         query = self.env['purchase.order.line']._search([])
         query.add_where('purchase_order_line.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
 
-        query.order = None
         query_string, query_param = query.select(
             'jsonb_object_keys(analytic_distribution) as account_id',
             'COUNT(DISTINCT(order_id)) as purchase_order_count',
@@ -127,7 +126,7 @@ class Project(models.Model):
                 '|',
                 ('qty_invoiced', '>', 0),
                 '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
-            ])
+            ], order=self.env['purchase.order.line']._order)
             query.add_where('purchase_order_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
             query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit', 'purchase_order_line.currency_id', '"purchase_order_line".analytic_distribution')
             self._cr.execute(query_string, query_param)
@@ -173,7 +172,7 @@ class Project(models.Model):
                 ('parent_state', 'in', ['draft', 'posted']),
                 ('price_subtotal', '>', 0),
                 ('id', 'not in', purchase_order_line_invoice_line_ids),
-            ])
+            ], order=self.env['account.move.line']._order)
             query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
             # account_move_line__move_id is the alias of the joined table account_move in the query
             # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join

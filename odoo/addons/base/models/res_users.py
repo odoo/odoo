@@ -659,9 +659,9 @@ class Users(models.Model):
                 domain = []
             else:
                 domain = [('login', '=', name)]
-            user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([domain, args]), limit=limit, order=self._order, access_rights_uid=name_get_uid)
         if not user_ids:
-            user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, order=self._order, access_rights_uid=name_get_uid)
         return user_ids
 
     def copy(self, default=None):
