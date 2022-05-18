@@ -50,6 +50,7 @@ class AccountReconcileModelLine(models.Model):
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
         required=True, check_company=True)
+    partner_id = fields.Many2one('res.partner', string='Partner')
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
         domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
         help="This field is ignored in a bank statement reconciliation.", check_company=True)
