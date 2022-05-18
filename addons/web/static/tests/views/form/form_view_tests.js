@@ -2953,7 +2953,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
-    QUnit.skipWOWL("reference field in one2many list", async function (assert) {
+    QUnit.test("reference field in one2many list", async function (assert) {
         serverData.models.partner.records[0].reference = "partner,2";
         serverData.views = {
             "partner,false,form": '<form><field name="display_name"/></form>',
@@ -2984,7 +2984,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
 
         // open the modal form view of the record pointed by the reference field
-        await click(target.querySelector('table td[title="first record"]'));
+        await click(target.querySelector('table td[data-tooltip="first record"]'));
         await click(target.querySelector("table td button.o_external_button"));
 
         // edit the record in the modal
@@ -2993,11 +2993,11 @@ QUnit.module("Views", (hooks) => {
             '.modal-body .o_field_widget[name="display_name"] input',
             "New name"
         );
-        await click(target.querySelector(".modal-dialog footer button"));
+        await click(target.querySelector(".modal-dialog footer .o_form_button_save"));
 
         assert.containsOnce(
             target,
-            '.o_field_cell[title="New name"]',
+            '.o_field_cell[data-tooltip="New name"]',
             "should not crash and value must be edited"
         );
     });
