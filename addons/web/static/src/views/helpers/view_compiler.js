@@ -729,8 +729,8 @@ export class ViewCompiler {
      */
     compileNotebook(el, params) {
         const noteBook = createElement("Notebook");
-        const pageAnchors = Array.from(document.querySelectorAll("[href]")).filter(
-            (el) => el.attributes.href.value[0] === "#"
+        const pageAnchors = [...document.querySelectorAll("[href^=\\#]")].map((a) =>
+            CSS.escape(a.getAttribute("href").substring(1))
         );
         const noteBookAnchors = {};
 
@@ -762,13 +762,12 @@ export class ViewCompiler {
                 noteBook.setAttribute("defaultPage", `"${pageId}"`);
             }
 
-            for (const anchor of child.querySelectorAll("[href]")) {
-                if (anchor.attributes.href.value[0] === "#") {
-                    pageAnchors.push(anchor.attributes.href.value);
-                    noteBookAnchors[anchor.attributes.href.value.substring(1)] = {
-                        origin: `'${pageId}'`,
-                    };
-                }
+            for (const anchor of child.querySelectorAll("[href^=\\#]")) {
+                const anchorValue = CSS.escape(anchor.getAttribute("href").substring(1));
+                pageAnchors.push(anchorValue);
+                noteBookAnchors[anchorValue] = {
+                    origin: `'${pageId}'`,
+                };
             }
 
             let isVisible;
@@ -789,13 +788,12 @@ export class ViewCompiler {
             // present in the notebook, it must be aware of the
             // page that contains the corresponding element
             for (const anchor of pageAnchors) {
+                if (!anchor.length) return;
                 let pageId = 1;
                 for (const child of el.children) {
-                    if (child.querySelector(anchor)) {
-                        noteBookAnchors[anchor.substring(1)].target = `'page_${pageId}'`;
-                        noteBookAnchors[anchor.substring(1)] = objectToString(
-                            noteBookAnchors[anchor.substring(1)]
-                        );
+                    if (child.querySelector(`#${anchor}`)) {
+                        noteBookAnchors[anchor].target = `'page_${pageId}'`;
+                        noteBookAnchors[anchor] = objectToString(noteBookAnchors[anchor]);
                         break;
                     }
                     pageId++;
