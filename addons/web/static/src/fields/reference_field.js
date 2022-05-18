@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { Many2OneField } from "./many2one_field";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component, onWillUpdateProps, useState, xml } = owl;
+const { Component, onWillUpdateProps, useState } = owl;
 
 function valuesEqual(a, b) {
     return a.resId === b.resId && a.resModel === b.resModel;
@@ -67,21 +67,7 @@ export class ReferenceField extends Component {
     }
 }
 
-ReferenceField.template = xml/*xml*/ `
-    <div class="o_row">
-        <t t-if="!props.readonly and !props.hideModelSelector">
-            <select class="o_input" t-on-change="(ev) => this.updateModel(ev.target.value || false)">
-                <option />
-                <t t-foreach="props.record.fields[props.name].selection" t-as="option" t-key="option[0]">
-                    <option t-att-value="option[0]" t-att-selected="option[0] === relation" t-esc="option[1]" />
-                </t>
-            </select>
-        </t>
-        <t t-if="relation">
-            <Many2OneField t-props="m2oProps" />
-        </t>
-    </div>
-`;
+ReferenceField.template = "web.ReferenceField";
 ReferenceField.components = {
     Many2OneField,
 };

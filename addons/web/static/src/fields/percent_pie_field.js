@@ -22,6 +22,7 @@ PercentPieField.props = {
     ...standardFieldProps,
     string: { type: String, optional: true },
 };
+PercentPieField.supportedTypes = ["float", "integer"];
 PercentPieField.displayName = _lt("PercentPie");
 PercentPieField.extractProps = (fieldName, record, attrs) => {
     return {

@@ -54,5 +54,6 @@ Many2ManyBinaryField.extractProps = (fieldName, record, attrs) => {
         setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
+Many2ManyBinaryField.supportedTypes = ["many2many"];
 
 registry.category("fields").add("many2many_binary", Many2ManyBinaryField);

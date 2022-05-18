@@ -69,11 +69,10 @@ BadgeSelectionField.extractProps = (fieldName, record, attrs) => {
         }
     };
     return {
-        horizontal: Boolean(attrs.options.horizontal),
         options: getOptions(),
     };
 };
-BadgeSelectionField.displayName = _lt("Selection");
+BadgeSelectionField.displayName = _lt("Badges");
 BadgeSelectionField.supportedTypes = ["many2one", "selection"];
 BadgeSelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 

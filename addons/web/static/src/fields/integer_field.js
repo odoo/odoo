@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatInteger } from "./formatters";
 import { parseInteger } from "./parsers";
@@ -59,5 +60,7 @@ IntegerField.extractProps = (fieldName, record, attrs) => {
         setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
+IntegerField.displayName = _lt("Integer");
+IntegerField.supportedTypes = ["integer"];
 
 registry.category("fields").add("integer", IntegerField);

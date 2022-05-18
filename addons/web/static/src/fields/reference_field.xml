@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ReferenceField" owl="1">
+        <div class="o_row">
+            <t t-if="!props.readonly and !props.hideModelSelector">
+                <select class="o_input" t-on-change="(ev) => this.updateModel(ev.target.value || false)">
+                    <option />
+                    <t t-foreach="props.record.fields[props.name].selection" t-as="option" t-key="option[0]">
+                        <option t-att-value="option[0]" t-att-selected="option[0] === relation" t-esc="option[1]" />
+                    </t>
+                </select>
+            </t>
+            <t t-if="relation">
+                <Many2OneField t-props="m2oProps" />
+            </t>
+        </div>
+    </t>
+
+</templates>

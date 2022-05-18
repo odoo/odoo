@@ -20,7 +20,7 @@ StatInfoField.props = {
     noLabel: { type: Boolean, optional: true },
     digits: { type: Array, optional: true },
 };
-StatInfoField.supportedTypes = ["float", "integer"];
+StatInfoField.supportedTypes = ["float", "integer", "monetary"];
 StatInfoField.isEmpty = () => false;
 StatInfoField.extractProps = (fieldName, record, attrs) => {
     return {

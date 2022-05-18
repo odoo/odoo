@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "./standard_field_props";
 import { FileDownloader, FileUploader } from "./file_handler";
+import { _lt } from "@web/core/l10n/translation";
 
 const { Component, onWillUpdateProps, useState } = owl;
 
@@ -79,6 +80,8 @@ BinaryField.defaultProps = {
     isDownloadable: true,
 };
 BinaryField.template = "web.BinaryField";
+BinaryField.displayName = _lt("File");
+BinaryField.supportedTypes = ["binary"];
 BinaryField.extractProps = (fieldName, record, attrs) => {
     return {
         fileData: record.data[fieldName] || "",
@@ -86,7 +89,7 @@ BinaryField.extractProps = (fieldName, record, attrs) => {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         isDownloadable: !(record.isReadonly(fieldName) && record.mode === "edit"),
         update: (file) => {
-            const changes = { [fieldName]: file.data || false }
+            const changes = { [fieldName]: file.data || false };
             if (attrs.filename && attrs.filename !== fieldName) {
                 changes[attrs.filename] = file.name || false;
             }

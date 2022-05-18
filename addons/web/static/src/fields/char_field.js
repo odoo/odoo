@@ -45,7 +45,7 @@ CharField.props = {
     shouldTrim: { type: Boolean, optional: true },
     maxLength: { type: Number, optional: true },
     isTranslatable: { type: Boolean, optional: true },
-    resId: { type: Number | Boolean, optional: true },
+    resId: { type: [Number, Boolean], optional: true },
     resModel: { type: String, optional: true },
 };
 CharField.components = {

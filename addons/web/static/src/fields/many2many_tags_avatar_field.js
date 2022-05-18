@@ -29,6 +29,7 @@ Many2ManyTagsAvatarField.extractProps = (fieldName, record, attrs) => {
         canQuickCreate: !attrs.options.no_quick_create,
     };
 };
+Many2ManyTagsAvatarField.supportedTypes = ["many2many"];
 
 registry.category("fields").add("many2many_tags_avatar", Many2ManyTagsAvatarField);
 

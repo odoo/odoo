@@ -145,5 +145,6 @@ JournalDashboardGraphField.extractProps = (fieldName, record, attrs) => {
         graphType: record.data["graph_type"] || attrs["t-att-graph_type"].replaceAll("'", ""),
     };
 };
+JournalDashboardGraphField.supportedTypes = ["text"];
 
 registry.category("fields").add("dashboard_graph", JournalDashboardGraphField);

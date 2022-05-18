@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { isFalsy } from "@web/core/utils/xml";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -25,7 +26,7 @@ BooleanFavoriteField.supportedTypes = ["boolean"];
 BooleanFavoriteField.isEmpty = () => false;
 BooleanFavoriteField.extractProps = (fieldName, record, attrs) => {
     return {
-        noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
+        noLabel: isFalsy(attrs.nolabel),
     };
 };
 

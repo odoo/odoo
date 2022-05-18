@@ -83,5 +83,6 @@ FloatField.extractProps = (fieldName, record, attrs) => {
             record.fields[fieldName].digits,
     };
 };
+FloatField.supportedTypes = ["float"];
 
 registry.category("fields").add("float", FloatField);

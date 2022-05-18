@@ -3,7 +3,7 @@
 
     <t t-name="web.CopyClipboardField" owl="1">
         <t t-if="props.value">
-            <t t-component="constructor.TYPE" t-props="props"/>
+            <Field t-props="props"/>
             <CopyButton className="'o_btn_' + props.type + '_copy'" value="props.value"/>
         </t>
     </t>

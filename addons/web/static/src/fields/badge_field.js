@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 const { Component } = owl;
@@ -24,6 +25,7 @@ export class BadgeField extends Component {
 }
 
 BadgeField.template = "web.BadgeField";
+BadgeField.displayName = _lt("Badge");
 BadgeField.supportedTypes = ["selection", "many2one", "char"];
 
 registry.category("fields").add("badge", BadgeField);

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatFloatTime } from "./formatters";
 import { parseFloatTime } from "./parsers";
@@ -47,5 +48,7 @@ FloatTimeField.extractProps = (fieldName, record) => {
         setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
+FloatTimeField.displayName = _lt("Time");
+FloatTimeField.supportedTypes = ["float"];
 
 registry.category("fields").add("float_time", FloatTimeField);

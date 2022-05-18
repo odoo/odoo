@@ -54,7 +54,7 @@ SelectionField.props = {
     options: Object,
     placeholder: { type: String, optional: true },
 };
-SelectionField.extractProps = (fieldName, record) => {
+SelectionField.extractProps = (fieldName, record, attrs) => {
     const getOptions = () => {
         switch (record.fields[fieldName].type) {
             case "many2one":
@@ -67,6 +67,7 @@ SelectionField.extractProps = (fieldName, record) => {
     };
     return {
         options: getOptions(),
+        placeholder: attrs.placeholder,
     };
 };
 SelectionField.displayName = _lt("Selection");

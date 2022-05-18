@@ -311,6 +311,7 @@ X2ManyField.components = { Pager };
 X2ManyField.props = { ...standardFieldProps };
 X2ManyField.template = "web.X2ManyField";
 X2ManyField.useSubView = true;
+X2ManyField.supportedTypes = ["one2many"];
 registry.category("fields").add("one2many", X2ManyField);
 
 export class Many2ManyField extends X2ManyField {
@@ -344,6 +345,7 @@ export class Many2ManyField extends X2ManyField {
         this.list.model.updateRecord(this.list, record, { isM2M: true });
     }
 }
+Many2ManyField.supportedTypes = ["many2many"];
 
 registry.category("fields").add("many2many", Many2ManyField);
 

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -77,6 +78,8 @@ PdfViewerField.props = {
     previewImage: { type: String, optional: true },
 };
 PdfViewerField.template = "web.PdfViewerField";
+PdfViewerField.supportedTypes = ["binary"];
+PdfViewerField.displayName = _lt("PDF Viewer");
 PdfViewerField.extractProps = (fieldName, record, attrs) => {
     return {
         defaultPage: record.data[fieldName + "_page"],

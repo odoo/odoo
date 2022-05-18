@@ -42,5 +42,6 @@ FloatFactorField.extractProps = (fieldName, record, attrs) => {
         factor: attrs.options.factor,
     };
 };
+FloatFactorField.supportedTypes = ["float"];
 
 registry.category("fields").add("float_factor", FloatFactorField);

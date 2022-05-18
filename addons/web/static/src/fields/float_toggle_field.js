@@ -51,5 +51,6 @@ FloatToggleField.extractProps = (fieldName, record, attrs) => {
         disableReadOnly: Boolean(attrs.options.force_button),
     };
 };
+FloatToggleField.supportedTypes = ["float"];
 
 registry.category("fields").add("float_toggle", FloatToggleField);
