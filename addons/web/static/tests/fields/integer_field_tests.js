@@ -273,26 +273,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    // should we keep the next one ? This is bad.
-    QUnit.skipWOWL("IntegerField in form view with virtual id", async function (assert) {
-        assert.expect(1);
-
-        var params = {
-            type: "form",
-            serverData,
-            resModel: "partner",
-            arch: '<form><field name="int_field"/></form>',
-        };
-        params.resId = serverData.models.partner.records[1].id = "2-20170808020000";
-        await makeView(params);
-
-        assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "2-20170808020000",
-            "Should display virtual id"
-        );
-    });
-
     QUnit.test("basic flow in editable list view", async function (assert) {
         assert.expect(4);
 
