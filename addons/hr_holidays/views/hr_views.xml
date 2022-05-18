@@ -226,6 +226,7 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="company_id" invisible="1"/>
                 <field name="leave_manager_id"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">

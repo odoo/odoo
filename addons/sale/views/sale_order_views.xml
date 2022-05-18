@@ -272,7 +272,9 @@
                                 confirm="This will update all unit prices based on the currently set pricelist."
                                 attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
                         </div>
+                        <field name="company_id" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
+                        <field name="pricelist_id" invisible="1"/>
                         <field name="tax_country_id" invisible="1"/>
                         <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
                     </group>
@@ -318,6 +320,7 @@
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                 name="product_uom_qty"/>
+                                            <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                             <field
                                                 name="product_uom"
                                                 force_save="1"
@@ -465,6 +468,7 @@
                                 />
                                 <field name="qty_to_invoice" invisible="1"/>
                                 <field name="product_uom_readonly" invisible="1"/>
+                                <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                 <field
                                     name="product_uom"
                                     force_save="1"
@@ -511,7 +515,7 @@
                                 <field name="name"/>
                                 <field name="product_id"/>
                                 <field name="product_uom_qty"/>
-                                <field name="product_uom" groups="uom.group_uom"/>
+                                <field name="product_uom"/>
                                 <field name="price_subtotal"/>
                                 <field name="price_total"/>
                                 <field name="price_tax" invisible="1"/>
@@ -601,8 +605,11 @@
                                         confirm="This will update all taxes based on the currently selected fiscal position."
                                         attrs="{'invisible': ['|', ('show_update_fpos', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
                                 </div>
+                                <field name="partner_invoice_id" invisible="1"/>
                                 <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
                                 <field name="invoice_status" states="sale,done" groups="base.group_no_one"/>
+                                <!-- test_event_configurator -->
+                                <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
                             </group>
                         </group>
                         <group>

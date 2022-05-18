@@ -65,6 +65,7 @@
             <field name="model">account.analytic.group</field>
             <field name="arch" type="xml">
                 <form string="Analytic Account Groups">
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -175,6 +176,7 @@
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
                 <form string="Analytic Account">
+                    <field name="company_id" invisible="1"/>
                     <sheet string="Analytic Account">
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d" icon="fa-usd">
@@ -312,6 +314,7 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
+                <field name="company_id" invisible="1"/>
                 <sheet>
                     <group>
                         <group name="analytic_entry" string="Analytic Entry">

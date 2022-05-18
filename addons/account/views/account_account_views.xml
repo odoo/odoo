@@ -89,6 +89,7 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <tree editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts">
+                    <field name="company_id" invisible="1"/>
                     <field name="code"/>
                     <field name="name"/>
                     <field name="account_type" widget="account_type_selection"/>

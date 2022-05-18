@@ -60,6 +60,7 @@
             <tree editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
                 <field name="tracking" invisible="1"/>
                 <field name="state" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="picking_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
@@ -82,6 +83,7 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <form string="Stock Batch Transfer">
+                <field name="company_id" invisible="1"/>
                 <field name="show_check_availability" invisible="1"/>
                 <field name="show_validate" invisible="1"/>
                 <field name="show_allocation" invisible="1"/>

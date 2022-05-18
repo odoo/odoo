@@ -434,6 +434,8 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project" class="o_form_project_project" js_class="form_description_expander">
+                    <field name="company_id" invisible="1"/>
+                    <field name="analytic_account_id" invisible="1"/>
                     <header>
                         <button name="%(project.project_share_wizard_action)d" string="Share Readonly" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'read'}" data-hotkey="r"/>
@@ -444,6 +446,7 @@
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <field name="currency_id" invisible="1"/>
+                        <field name="allow_milestones" invisible="1"/>
                         <button class="oe_stat_button" type="object" name="action_view_analytic_account_entries" icon="fa-usd" attrs="{'invisible': [('analytic_account_id', '=', False)]}" groups="analytic.group_analytic_accounting">
                             <div class="o_form_field o_stat_info">
                                 <span class="o_stat_value">
@@ -1080,6 +1083,8 @@
                     <field name="rating_last_value" invisible="1"/>
                     <field name="rating_count" invisible="1"/>
                     <field name="allow_milestones" invisible="1" />
+                    <field name="parent_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', 'in', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight" attrs="{'invisible' : &quot;['|', ('user_ids', 'in', uid), ('user_ids', '!=', [])]&quot;}" data-hotkey="q"/>
@@ -1189,6 +1194,7 @@
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
                                 <tree editable="bottom">
+                                    <field name="company_id" invisible="1"/>
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
                                     <field name="legend_blocked" invisible="1"/>
@@ -1226,6 +1232,7 @@
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1" context="{'default_project_id' : project_id}">
                                 <tree editable="bottom">
+                                    <field name="company_id" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
                                     <field name="display_project_id" invisible="1" />

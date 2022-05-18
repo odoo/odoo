@@ -463,7 +463,6 @@
                     <field name="holiday_status_id" options="{'no_open': True}" context="{'request_type':'leave', 'from_manager_leave_form': True ,'employee_id': employee_id}"/>
                 </h1>
             </div>
-            <field name="employee_id" position="replace"/>
             <label id="label_dates" position="before">
                     <field name="multi_employee" invisible="1" force_save="1"/>
                     <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" attrs="{

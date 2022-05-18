@@ -165,6 +165,7 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" edit="false" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="date" readonly="1"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="journal_id" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
@@ -706,12 +707,15 @@
 
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="journal_id" invisible="1"/>
                         <field name="show_name_warning" invisible="1"/>
                         <field name="posted_before" invisible="1"/>
                         <field name="move_type" invisible="1"/>
                         <field name="payment_state" invisible="1" force_save="1"/>
                         <field name="invoice_filter_type_domain" invisible="1"/>
                         <field name="suitable_journal_ids" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
                         <field name="company_currency_id" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="bank_partner_id" invisible="1"/>
@@ -897,6 +901,9 @@
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
                                         <field name="display_type" force_save="1" invisible="1"/>
+                                        <!-- /l10n_in_edi.test_edi_json -->
+                                        <!-- required for @api.onchange('product_id') -->
+                                        <field name="product_uom_id" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->

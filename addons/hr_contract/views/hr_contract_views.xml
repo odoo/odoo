@@ -10,6 +10,7 @@
                 <data>
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
+                        <field name="employee_type" invisible="1"/>
                         <button name="action_open_contract_history"
                             class="oe_stat_button"
                             icon="fa-book"
@@ -153,6 +154,8 @@
                         <group name="top_info">
                             <group name="top_info_left">
                                 <field name="active" invisible="1"/>
+                                <!-- employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]") -->
+                                <field name="company_id" invisible="1"/>
                                 <field name="employee_id"/>
                                 <field name="date_start" string="Contract Start Date"/>
                                 <field name="date_end" string="Contract End Date"/>

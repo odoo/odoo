@@ -127,6 +127,7 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <form string="Account Tax">
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                     <group>
                         <group>
@@ -149,9 +150,9 @@
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="country_code" invisible="1"/>
                                 <label for="invoice_repartition_line_ids"/>
-                                <field name="invoice_repartition_line_ids" context="{'default_company_id': company_id}"/>
+                                <field name="invoice_repartition_line_ids"/>
                                 <label for="refund_repartition_line_ids"/>
-                                <field name="refund_repartition_line_ids" context="{'default_company_id': company_id}"/>
+                                <field name="refund_repartition_line_ids"/>
                             </div>
                             <field name="children_tax_ids" attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <tree string="Children Taxes">

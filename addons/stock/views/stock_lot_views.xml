@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <form string="Lots/Serial Numbers">
                 <sheet>
+                <field name="company_id" invisible="1"/>
                 <field name="display_complete" invisible="1"/>
                 <div class="oe_button_box" name="button_box"
                      attrs="{'invisible': [('display_complete', '=', False)]}">

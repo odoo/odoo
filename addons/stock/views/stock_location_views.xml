@@ -15,6 +15,7 @@
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
             <form string="Stock Location" create="false">
+                <field name="company_id" invisible="1"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button string="Putaway Rules"
@@ -180,6 +181,7 @@
             <field eval="7" name="priority" />
             <field name="arch" type="xml">
                 <form string="Route">
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">

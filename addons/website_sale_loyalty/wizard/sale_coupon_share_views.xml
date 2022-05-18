@@ -5,6 +5,7 @@
         <field name="model">coupon.share</field>
         <field name="arch" type="xml">
             <form string="Share Loyalty Card" edit="1" create="0">
+                <field name="website_id" invisible="1"/>
                 <field name="program_website_id" invisible="1"/>
                 <group attrs="{'invisible': [('website_id', '=', False)]}">
                     <div colspan="2">

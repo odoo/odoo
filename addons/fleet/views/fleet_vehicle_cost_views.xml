@@ -5,6 +5,7 @@
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
             <form string="Contract logs">
+                <field name="company_id" invisible="1"/>
                 <header>
                     <button name="action_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
                     <button name="action_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>

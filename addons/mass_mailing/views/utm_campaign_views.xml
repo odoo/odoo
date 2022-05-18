@@ -17,7 +17,6 @@
                     attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
                     groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_mail_count" widget="statinfo" string="Mailings"/>
-                    <field name="ab_testing_mailings_count" invisible="1"/>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
@@ -46,6 +45,7 @@
                 </page>
             </xpath>
             <xpath expr="//notebook" position="after">
+                <field name="ab_testing_mailings_count" invisible="1"/>
                 <group name="ab_test_group" groups="mass_mailing.group_mass_mailing_campaign" attrs="{'invisible': [('ab_testing_mailings_count', '=', 0)]}">
                     <group string="A/B Test">
                         <field name="ab_testing_completed" invisible="1"/>

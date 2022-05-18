@@ -2340,6 +2340,481 @@ class TestViews(ViewCase):
             """Field 'model' used in attrs ({'readonly': [('parent.model', '=', 'ir.ui.view')]}) must be present in view but is missing.""",
         )
 
+    def test_attrs_groups_behavior(self):
+        view = self.View.create({
+            'name': 'foo',
+            'model': 'res.partner',
+            'arch': """
+                <form>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_system"/>
+                    <div id="foo"/>
+                    <div id="bar" groups="base.group_system"/>
+                </form>
+            """,
+        })
+        user_demo = self.env.ref('base.user_demo')
+        # Make sure demo doesn't have the base.group_system
+        self.assertFalse(self.env['res.partner'].with_user(user_demo).env.user.has_group('base.group_system'))
+        arch = self.env['res.partner'].with_user(user_demo).get_view(view_id=view.id)['arch']
+        tree = etree.fromstring(arch)
+        self.assertTrue(tree.xpath('//field[@name="name"]'))
+        self.assertFalse(tree.xpath('//field[@name="company_id"]'))
+        self.assertTrue(tree.xpath('//div[@id="foo"]'))
+        self.assertFalse(tree.xpath('//div[@id="bar"]'))
+
+        user_admin = self.env.ref('base.user_admin')
+        # Make sure admin has the base.group_system
+        self.assertTrue(self.env['res.partner'].with_user(user_admin).env.user.has_group('base.group_system'))
+        arch = self.env['res.partner'].with_user(user_admin).get_view(view_id=view.id)['arch']
+        tree = etree.fromstring(arch)
+        self.assertTrue(tree.xpath('//field[@name="name"]'))
+        self.assertTrue(tree.xpath('//field[@name="company_id"]'))
+        self.assertTrue(tree.xpath('//div[@id="foo"]'))
+        self.assertTrue(tree.xpath('//div[@id="bar"]'))
+
+    def test_attrs_groups_validation(self):
+        def validate(arch, valid=False, parent=False):
+            parent = 'parent.' if parent else ''
+            if valid:
+                self.assertValid(arch % {'attrs': f"""attrs="{{'invisible': [('{parent}name', '=', 'foo')]}}" """})
+                self.assertValid(arch % {'attrs': f"""domain="[('name', '!=', {parent}name)]" """})
+                self.assertValid(arch % {'attrs': f"""context="{{'default_name': {parent}name}}" """})
+                self.assertValid(arch % {'attrs': f"""decoration-info="{parent}name == 'foo'" """})
+            else:
+                self.assertInvalid(
+                    arch % {'attrs': f"""attrs="{{'invisible': [('{parent}name', '=', 'foo')]}}" """},
+                    f"""Field 'name' used in attrs ({{'invisible': [('{parent}name', '=', 'foo')]}}) is restricted to the group(s)""",
+                )
+                self.assertInvalid(
+                    arch % {'attrs': f"""domain="[('name', '!=', {parent}name)]" """},
+                    f"""Field 'name' used in domain of <field name="inherit_id"> ([('name', '!=', {parent}name)]) is restricted to the group(s)""",
+                )
+                self.assertInvalid(
+                    arch % {'attrs': f"""context="{{'default_name': {parent}name}}" """},
+                    f"""Field 'name' used in context ({{'default_name': {parent}name}}) is restricted to the group(s)""",
+                )
+                self.assertInvalid(
+                    arch % {'attrs': f"""decoration-info="{parent}name == 'foo'" """},
+                    f"""Field 'name' used in decoration-info={parent}name == 'foo' is restricted to the group(s)""",
+                )
+
+
+        # Assert using a field restricted to a group
+        # in another field without the same group is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a parent field restricted to a group
+        # in a child field without the same group is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_children_ids">
+                    <tree editable="bottom">
+                        <field name="inherit_id" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=False, parent=True)
+
+        # Assert using a parent field restricted to a group
+        # in a child field with the same group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_children_ids">
+                    <tree editable="bottom">
+                        <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=True, parent=True)
+
+        # Assert using a parent field available for everyone
+        # in a child field restricted to a group is valid
+        validate("""
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_children_ids">
+                    <tree editable="bottom">
+                        <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=True, parent=True)
+
+        # Assert using a field available for everyone
+        # in another field restricted to a group is valid
+        validate("""
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_id" %(attrs)s groups="base.group_system"/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field restricted to a group
+        # in another field with the same group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field available twice for 2 diffent groups
+        # in another field restricted to one of the 2 groups is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_portal"/>
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field restricted to a group only
+        # in other fields restricted to at least one different group is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+                <field name="inherit_id" groups="base.group_portal" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a field available twice for 2 different groups
+        # in other fields restricted to the same 2 group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="name" groups="base.group_portal"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+                <field name="inherit_id" groups="base.group_portal" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field available for 2 diffent groups,
+        # in another field restricted to one of the 2 groups is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_portal,base.group_system"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field available for 1 group only
+        # in another field restricted 2 groups is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_portal,base.group_system" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a field restricted to a group
+        # in another field restricted to a group including the group for which the field is available is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_erp_manager"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a parent field restricted to a group
+        # in a child field restricted to a group including the group for which the field is available is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_erp_manager"/>
+                <field name="inherit_children_ids">
+                    <tree editable="bottom">
+                        <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=True, parent=True)
+
+        # Assert using a field restricted to a group
+        # in another field restricted to a group not including the group for which the field is available is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_erp_manager" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a parent field restricted to a group
+        # in a child field restricted to a group not including the group for which the field is available is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_children_ids">
+                    <tree editable="bottom">
+                        <field name="inherit_id" groups="base.group_erp_manager" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=False, parent=True)
+
+        # Assert using a field within a block restricted to a group
+        # in another field not restricted to the same group is invalid
+        validate("""
+            <form string="View">
+                <group groups="base.group_system">
+                    <field name="name"/>
+                </group>
+                <field name="inherit_id" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a field within a block restricted to a group
+        # in another field within the same block restricted to a group is valid
+        validate("""
+            <form string="View">
+                <group groups="base.group_system">
+                    <field name="name"/>
+                    <field name="inherit_id" %(attrs)s/>
+                </group>
+            </form>
+        """, valid=True)
+
+        # Assert using a field within a block restricted to a group
+        # in another field within the same block restricted to a group and additional groups on the field node is valid
+        validate("""
+            <form string="View">
+                <group groups="base.group_system">
+                    <field name="name"/>
+                    <field name="inherit_id" %(attrs)s groups="base.group_multi_currency,base.group_multi_company"/>
+                </group>
+            </form>
+        """, valid=True)
+
+        # Assert using a field within a block restricted to a group
+        # in another field within a block restricted to the same group is valid
+        validate("""
+            <form string="View">
+                <group groups="base.group_system">
+                    <field name="name"/>
+                </group>
+                <group groups="base.group_system">
+                    <field name="inherit_id" %(attrs)s/>
+                </group>
+            </form>
+        """, valid=True)
+
+        # Assert using a field within a block restricted to a group
+        # in another field within a block restricted to a group including the group for which the field is available
+        # is valid
+        validate("""
+            <form string="View">
+                <group groups="base.group_erp_manager">
+                    <field name="name"/>
+                </group>
+                <group groups="base.group_system">
+                    <field name="inherit_id" %(attrs)s/>
+                </group>
+            </form>
+        """, valid=True)
+
+        # Assert using a field within a block restricted to a group
+        # in another field within a block restricted to a group not including the group for which the field is available
+        # is invalid
+        validate("""
+            <form string="View">
+                <group groups="base.group_system">
+                    <field name="name"/>
+                </group>
+                <group groups="base.group_erp_manager">
+                    <field name="inherit_id" %(attrs)s/>
+                </group>
+            </form>
+        """, valid=False)
+
+        # Assert using a parent field restricted to a group
+        # in a child field under a relational field restricted to the same group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_children_ids" groups="base.group_system">
+                    <tree editable="bottom">
+                        <field name="inherit_id" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=True, parent=True)
+
+        # Assert using a parent field restricted to a group
+        # in a child field under a relational field restricted
+        # to a group including the group for which the field is available is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_erp_manager"/>
+                <field name="inherit_children_ids" groups="base.group_system">
+                    <tree editable="bottom">
+                        <field name="inherit_id" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=True, parent=True)
+
+        # Assert using a parent field restricted to a group
+        # in a child field under a relational field restricted
+        # to a group not including the group for which the field is available is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_children_ids" groups="base.group_erp_manager">
+                    <tree editable="bottom">
+                        <field name="inherit_id" %(attrs)s/>
+                    </tree>
+                </field>
+            </form>
+        """, valid=False, parent=True)
+
+        # Assert using a field restricted to users not having a group
+        # in another field not restricted to any group is invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system"/>
+                <field name="inherit_id" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a field not restricted to any group
+        # in another field restricted to users not having a group is valid
+        validate("""
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_id" groups="!base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field restricted to users not having multiple groups
+        # in another field restricted to users not having one of the group only is invalid
+        # e.g.
+        # if the user is portal, the field "name" will not be in the view
+        # but the field "inherit_id" where "name" is used will be in the view
+        # making it invalid.
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system,!base.group_portal"/>
+                <field name="inherit_id" groups="!base.group_system" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a field restricted to users not having a group
+        # in another field restricted to users not having multiple group including the one above is valid
+        # e.g.
+        # if the user is portal, the field "name" will be in the view
+        # but the field "inherit_id" where "name" is used will not be in the view
+        # making it valid.
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_user"/>
+                <field name="inherit_id" groups="!base.group_user,!base.group_portal" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field restricted to a non group
+        # in another field for which the non group is not implied is invalid
+        # e.g.
+        # if the user is employee, the field "name" will not be in the view
+        # but the field "inherit_id" where "name" is used will be in the view,
+        # making it invalid.
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_user"/>
+                <field name="inherit_id" groups="!base.group_system" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert using a field restricted to a non group
+        # in another field restricted to a non group implied in the non group of the available field is valid
+        # e.g.
+        # if the user is employee, the field "name" will be in the view
+        # but the field "inherit_id", where "name" is used, will not be in the view,
+        # therefore making it valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system"/>
+                <field name="inherit_id" groups="!base.group_user" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert using a field restricted to non-admins, itself in a block restricted to employees,
+        # in another field restricted to a block restricted to employees
+        # is invalid
+        # e.g.
+        # if the user is admin, the field "name" will not be in the view
+        # but the field "inherit_id", where "name" is used, will be in the view,
+        # threfore making it invalid
+        validate("""
+            <form string="View">
+                <group groups="base.group_user">
+                    <field name="name" groups="!base.group_system"/>
+                </group>
+                <group groups="base.group_user">
+                    <field name="inherit_id" %(attrs)s/>
+                </group>
+            </form>
+        """, valid=False)
+
+        # Assert using a field restricted to a group
+        # in another field restricted the opposite group is invalid
+        # e.g.
+        # if the user is admin, the field "name" will be in the view
+        # but the field "inherit_id", where "name" is used, will not be in the view,
+        # therefore making it invalid
+        validate("""
+            <form string="View">
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="!base.group_system" %(attrs)s/>
+            </form>
+        """, valid=False)
+
+        # Assert having two times the same field with a mutually exclusive group
+        # and using that field in another field without any group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system"/>
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert having two times the same field with a mutually exclusive group
+        # and using that field in another field using the group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system"/>
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert having two times the same field with a mutually exclusive group
+        # and using that field in another field using the !group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system"/>
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="!base.group_system" %(attrs)s/>
+            </form>
+        """, valid=True)
+
+        # Assert having two times the same field with a mutually exclusive group
+        # and using that field in another field restricted to any other group is valid
+        validate("""
+            <form string="View">
+                <field name="name" groups="!base.group_system"/>
+                <field name="name" groups="base.group_system"/>
+                <field name="inherit_id" groups="base.group_portal" %(attrs)s/>
+            </form>
+        """, valid=True)
+
     def test_button(self):
         arch = """
             <form>

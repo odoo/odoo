@@ -88,7 +88,7 @@
         <field name="arch" type="xml">
             <form create="0" delete="0">
                 <header>
-                    <field name="state" widget="statusbar" groups="base.group_user"/>
+                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <field name="product_uom_category_id" invisible="1"/>
@@ -99,6 +99,7 @@
                     <field name="picking_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="has_tracking" invisible="1"/>
+                    <field name="product_uom" invisible="1"/>
                     <field name="product_uom_qty" invisible="1"/>
                     <group>
                         <field name="order_finished_lot_id"/>

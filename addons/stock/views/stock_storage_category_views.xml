@@ -5,6 +5,7 @@
         <field name="model">stock.storage.category</field>
         <field name="arch" type="xml">
             <form string="Storage Category">
+                <field name="company_id" invisible="1"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(action_storage_category_locations)d" string="Locations" type="action" class="oe_stat_button" icon="fa-arrows-v"/>
@@ -86,6 +87,7 @@
                 <field name="quantity"/>
                 <field name="product_uom_id" options="{'no_create': True, 'no_open': True}"/>
                 <field name="company_id" invisible="1"/>
+                <field name="package_type_id" invisible="1"/>
             </tree>
         </field>
     </record>

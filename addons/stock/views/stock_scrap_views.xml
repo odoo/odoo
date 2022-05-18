@@ -55,6 +55,7 @@
                                 </div>
                             </group>
                             <group>
+                                <field name="company_id" invisible="1"/>
                                 <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': ['|',('product_id', '=', False),('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                                 <field name="tracking" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>

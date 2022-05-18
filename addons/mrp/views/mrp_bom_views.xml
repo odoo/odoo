@@ -51,8 +51,10 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="product_tmpl_id" context="{'default_detailed_type': 'product'}"/>
                             <field name="product_uom_category_id" invisible="1"/>
+                            <field name="allow_operation_dependencies" invisible="1"/>
                             <field name="product_id" groups="product.group_product_variant" context="{'default_detailed_type': 'product'}"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
@@ -79,7 +81,7 @@
                     </group>
                     <notebook>
                         <page string="Components" name="components">
-                            <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_company_id': company_id, 'default_bom_id': id}">
+                            <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_bom_id': id}">
                                 <tree string="Components" editable="bottom">
                                     <field name="company_id" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
@@ -108,13 +110,13 @@
                                 <field name="operation_ids"
                                     attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
                                     groups="mrp.group_mrp_routings"
-                                    context="{'bom_id_invisible': True, 'default_company_id': company_id, 'default_bom_id': id, 'tree_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}" widget="mrp_one2many_with_copy"/>
+                                    context="{'bom_id_invisible': True, 'default_bom_id': id, 'tree_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}" widget="mrp_one2many_with_copy"/>
                         </page>
                         <page string="By-products"
                             name="by_products"
                             attrs="{'invisible': [('type','!=','normal')]}"
                             groups="mrp.group_mrp_byproducts">
-                            <field name="byproduct_ids"  context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_company_id': company_id, 'default_bom_id': id}">
+                            <field name="byproduct_ids"  context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_bom_id': id}">
                                 <tree string="By-products"  editable="top">
                                     <field name="company_id" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>

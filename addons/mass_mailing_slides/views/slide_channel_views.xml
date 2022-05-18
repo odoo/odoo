@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
         <field name="arch" type="xml">
             <button name="action_channel_invite" position="after">
+                <field name="members_count" invisible="1"/>
                 <button name="action_mass_mailing_attendees" string="Contact Attendees" type="object"
                         class="oe_highlight" attrs="{'invisible': [('members_count', '=', 0)]}"
                         groups="mass_mailing.group_mass_mailing_user"/>

@@ -75,6 +75,7 @@
                             <field name="description"/>
                             <field name="invoice_state" invisible="1"/>
                             <field name="tracking" invisible="1" attrs="{'readonly': 1}"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="product_id"/>
                             <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot" attrs="{'required':[('tracking', 'in', ['serial', 'lot'])], 'invisible': [('tracking', 'not in', ['serial', 'lot'])], 'readonly': ['|', ('state', '=', 'done'), ('tracking', 'not in', ['serial', 'lot'])]}"/>
                             <field name="product_uom_category_id" invisible="1"/>

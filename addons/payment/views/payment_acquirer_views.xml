@@ -6,6 +6,7 @@
         <field name="model">payment.acquirer</field>
         <field name="arch" type="xml">
             <form string="Payment Acquirer">
+                <field name="company_id" invisible="1"/>
                 <field name="is_published" invisible="1"/>
                 <field name="main_currency_id" invisible="1"/>
                 <field name="support_fees" invisible="1"/>
@@ -22,6 +23,7 @@
                 <field name="show_auth_msg" invisible="1"/>
                 <field name="show_done_msg" invisible="1"/>
                 <field name="show_cancel_msg" invisible="1"/>
+                <field name="provider" invisible="1"/>
                 <sheet>
                     <!-- === Stat Buttons === -->
                     <div class="oe_button_box" name="button_box">

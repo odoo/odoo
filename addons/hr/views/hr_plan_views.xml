@@ -33,6 +33,7 @@
             <field name="model">hr.plan</field>
             <field name="arch" type="xml">
                 <form string="Planning">
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
@@ -82,6 +83,7 @@
             <field name="model">hr.plan.activity.type</field>
             <field name="arch" type="xml">
                 <form string="Activity">
+                    <field name="company_id" invisible="1"/>
                     <sheet>
                         <group>
                             <field name="activity_type_id"/>

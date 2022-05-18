@@ -1822,6 +1822,10 @@ class TestMrpOrder(TestMrpCommon):
         })
         self.env['stock.quant']._update_available_quantity(storable_component, self.env.ref('stock.stock_location_stock'), 100)
 
+        # Despite the purpose of this test is to use multi uom
+        # tests the production choose the right uoms on all models without
+        # having the uom fields in the interface views
+        self.env.user.groups_id -= self.env.ref('uom.group_uom')
         for component in [consumable_component, storable_component]:
             bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': product.product_tmpl_id.id,
