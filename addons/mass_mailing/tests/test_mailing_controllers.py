@@ -132,10 +132,10 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.authenticate('user_marketing', 'user_marketing')
 
         # TEST: various invalid cases
-        for test_user_id, test_token in [
-            (self.user_marketing.id, ''),  # no token
-            (self.user_marketing.id, 'zboobs'),  # invalid token
-            (self.env.uid, hash_token),  # invalid credentials
+        for test_user_id, test_token, error_code in [
+            (self.user_marketing.id, '', 400),  # no token
+            (self.user_marketing.id, 'zboobs', 418),  # invalid token
+            (self.env.uid, hash_token, 418),  # invalid credentials
         ]:
             with self.subTest(test_user_id=test_user_id, test_token=test_token):
                 res = self.url_open(
@@ -144,7 +144,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                         f'mailing/report/unsubscribe?user_id={test_user_id}&token={test_token}',
                     )
                 )
-                self.assertEqual(res.status_code, 404)
+                self.assertEqual(res.status_code, error_code)
                 self.assertTrue(self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'))
 
         # TEST: not mailing user
@@ -157,7 +157,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                 f'mailing/report/unsubscribe?user_id={self.user_marketing.id}&token={hash_token}',
             )
         )
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 418)
         self.assertTrue(self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'))
 
         # TEST: finally valid call
@@ -387,11 +387,11 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.authenticate('user_marketing', 'user_marketing')
 
         # TEST: various invalid cases
-        for test_res_id, test_email, test_token in [
-            (res_id, email_normalized, ''),  # no token
-            (res_id, email_normalized, 'zboobs'),  # wrong token
-            (self.env.user.partner_id.id, email_normalized, hash_token),  # mismatch
-            (res_id, 'not.email@example.com', hash_token),  # mismatch
+        for test_res_id, test_email, test_token, error_code in [
+            (res_id, email_normalized, '', 400),  # no token
+            (res_id, email_normalized, 'zboobs', 418),  # wrong token
+            (self.env.user.partner_id.id, email_normalized, hash_token, 418),  # mismatch
+            (res_id, 'not.email@example.com', hash_token, 418),  # mismatch
         ]:
             with self.subTest(test_email=test_email, test_res_id=test_res_id, test_token=test_token):
                 res = self.url_open(
@@ -400,7 +400,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                         f'mailing/{test_mailing.id}/view?email={test_email}&res_id={test_res_id}&token={test_token}',
                     )
                 )
-                self.assertEqual(res.status_code, 403)
+                self.assertEqual(res.status_code, error_code)
 
         # TEST: valid call using credentials
         res = self.url_open(
@@ -490,4 +490,4 @@ class TestMailingTracking(TestMailingControllersCommon):
             f'mail/track/{mail_id_int}/fake_token/blank.gif'
         )
         response = self.url_open(track_url)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
