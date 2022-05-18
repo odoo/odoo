@@ -14,3 +14,6 @@ class TestSnippets(odoo.tests.HttpCase):
         mailing_list = self.env['mailing.list'].search([], limit=1)
         emails = mailing_list.contact_ids.mapped('email')
         self.assertIn("hello@world.com", emails)
+
+    def test_02_newsletter_block_edition(self):
+        self.start_tour("/?enable_editor=1", "newsletter_block_edition", login='admin')
