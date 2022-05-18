@@ -85,8 +85,9 @@ class TestChannelAccessRights(MailCommon):
         # Employee update employee-based group: ok
         group_groups.write({'name': 'modified'})
 
-        # Employee unlink employee-based group: ok
-        group_groups.unlink()
+        # Employee unlink employee-based group: ko
+        with self.assertRaises(AccessError):
+            group_groups.unlink()
 
         # Employee cannot read a private group
         with self.assertRaises(AccessError):
