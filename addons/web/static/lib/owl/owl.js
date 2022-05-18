@@ -2284,16 +2284,17 @@
                     continue;
                 }
             }
-            let isValid;
+            let whyInvalid;
             try {
-                isValid = isValidProp(props[propName], propDef);
+                whyInvalid = whyInvalidProp(props[propName], propDef);
             }
             catch (e) {
                 e.message = `Invalid prop '${propName}' in component ${ComponentClass.name} (${e.message})`;
                 throw e;
             }
-            if (!isValid) {
-                throw new Error(`Invalid Prop '${propName}' in component '${ComponentClass.name}'`);
+            if (whyInvalid !== null) {
+                whyInvalid = whyInvalid.replace(/\${propName}/g, propName);
+                throw new Error(`Invalid Prop '${propName}' in component '${ComponentClass.name}': ${whyInvalid}`);
             }
         }
         if (!allowAdditionalProps) {
@@ -2305,11 +2306,11 @@
         }
     }
     /**
-     * Check if an invidual prop value matches its (static) prop definition
+     * Check why an invidual prop value doesn't match its (static) prop definition
      */
-    function isValidProp(prop, propDef) {
+    function whyInvalidProp(prop, propDef) {
         if (propDef === true) {
-            return true;
+            return null;
         }
         if (typeof propDef === "function") {
             // Check if a value is constructed by some Constructor.  Note that there is a
@@ -2318,46 +2319,70 @@
             // So, even though 1 is not an instance of Number, we want to consider that
             // it is valid.
             if (typeof prop === "object") {
-                return prop instanceof propDef;
+                if (prop instanceof propDef) {
+                    return null;
+                }
+                return `\${propName} is not an instance of ${propDef.name}`;
             }
-            return typeof prop === propDef.name.toLowerCase();
+            if (typeof prop === propDef.name.toLowerCase()) {
+                return null;
+            }
+            return `type of \${propName} is not ${propDef.name}`;
         }
         else if (propDef instanceof Array) {
             // If this code is executed, this means that we want to check if a prop
             // matches at least one of its descriptor.
-            let result = false;
+            let reasons = [];
             for (let i = 0, iLen = propDef.length; i < iLen; i++) {
-                result = result || isValidProp(prop, propDef[i]);
+                const why = whyInvalidProp(prop, propDef[i]);
+                if (why === null) {
+                    return null;
+                }
+                reasons.push(why);
             }
-            return result;
+            if (reasons.length > 1) {
+                return reasons.slice(0, -1).join(", ") + " and " + reasons[reasons.length - 1];
+            }
+            else {
+                return reasons[0];
+            }
         }
         // propsDef is an object
         if (propDef.optional && prop === undefined) {
-            return true;
+            return null;
         }
-        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
-        if (propDef.validate) {
-            result = result && propDef.validate(prop);
+        if (propDef.type) {
+            const why = whyInvalidProp(prop, propDef.type);
+            if (why !== null) {
+                return why;
+            }
+        }
+        if (propDef.validate && !propDef.validate(prop)) {
+            return "${propName} could not be validated by `validate` function";
         }
         if (propDef.type === Array && propDef.element) {
             for (let i = 0, iLen = prop.length; i < iLen; i++) {
-                result = result && isValidProp(prop[i], propDef.element);
+                const why = whyInvalidProp(prop[i], propDef.element);
+                if (why !== null) {
+                    return why.replace(/\${propName}/g, `\${propName}[${i}]`);
+                }
             }
         }
         if (propDef.type === Object && propDef.shape) {
             const shape = propDef.shape;
             for (let key in shape) {
-                result = result && isValidProp(prop[key], shape[key]);
+                const why = whyInvalidProp(prop[key], shape[key]);
+                if (why !== null) {
+                    return why.replace(/\${propName}/g, `\${propName}['${key}']`);
+                }
             }
-            if (result) {
-                for (let propName in prop) {
-                    if (!(propName in shape)) {
-                        throw new Error(`unknown prop '${propName}'`);
-                    }
+            for (let propName in prop) {
+                if (!(propName in shape)) {
+                    return `unknown prop \${propName}['${propName}']`;
                 }
             }
         }
-        return result;
+        return null;
     }
 
     let currentNode = null;
@@ -2397,7 +2422,9 @@
     }
     function arePropsDifferent(props1, props2) {
         for (let k in props1) {
-            if (props1[k] !== props2[k]) {
+            const prop1 = props1[k] && typeof props1[k] === "object" ? toRaw(props1[k]) : props1[k];
+            const prop2 = props2[k] && typeof props2[k] === "object" ? toRaw(props2[k]) : props2[k];
+            if (prop1 !== prop2) {
                 return true;
             }
         }
@@ -2419,7 +2446,7 @@
                 node.forceNextRender = false;
             }
             else {
-                const currentProps = node.component.props[TARGET];
+                const currentProps = node.component.props;
                 shouldRender = parentFiber.deep || arePropsDifferent(currentProps, props);
             }
             if (shouldRender) {
@@ -2471,7 +2498,12 @@
             applyDefaultProps(props, C);
             const env = (parent && parent.childEnv) || app.env;
             this.childEnv = env;
-            props = useState(props);
+            for (const key in props) {
+                const prop = props[key];
+                if (prop && typeof prop === "object" && prop[TARGET]) {
+                    props[key] = useState(prop);
+                }
+            }
             this.component = new C(props, env, this);
             this.renderFn = app.getTemplate(C.template).bind(this.component, this.component, this);
             this.component.setup();
@@ -2579,7 +2611,12 @@
             const component = this.component;
             applyDefaultProps(props, component.constructor);
             currentNode = this;
-            props = useState(props);
+            for (const key in props) {
+                const prop = props[key];
+                if (prop && typeof prop === "object" && prop[TARGET]) {
+                    props[key] = useState(prop);
+                }
+            }
             currentNode = null;
             const prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
             await prom;
@@ -5093,7 +5130,7 @@
     }
     function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
         key = key + "__slot_" + name;
-        const slots = ctx.props[TARGET].slots || {};
+        const slots = ctx.props.slots || {};
         const { __render, __ctx, __scope } = slots[name] || {};
         const slotScope = Object.create(__ctx || {});
         if (__scope) {
@@ -5612,8 +5649,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
 
 
     __info__.version = '2.0.0-beta-7';
-    __info__.date = '2022-05-13T10:25:03.103Z';
-    __info__.hash = 'a837310';
+    __info__.date = '2022-05-18T06:47:34.420Z';
+    __info__.hash = '4c77132';
     __info__.url = 'https://github.com/odoo/owl';
 
 

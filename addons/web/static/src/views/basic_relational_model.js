@@ -617,6 +617,7 @@ export class Record extends DataPoint {
             resolveSavePromise();
             if (!this.isInEdition) {
                 await this.load();
+                this.model.notify();
             }
             return false;
         }
