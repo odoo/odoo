@@ -5,10 +5,9 @@
             <field name="name">stock.quant.subcontracting.search</field>
             <field name="model">stock.quant</field>
             <field name="inherit_id" ref="stock.quant_search_view" />
-            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='transit_loc']" position="after">
-                    <filter string="Subcontracting Locations" name="is_subcontract" domain="[('is_subcontract', '=', True)]" />
+                    <filter string="Subcontracting Locations" name="is_subcontract" domain="[('is_subcontract', '=', True)]" groups="mrp.group_mrp_user"/>
                 </xpath>
             </field>
         </record>

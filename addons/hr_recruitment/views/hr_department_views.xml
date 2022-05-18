@@ -4,27 +4,31 @@
         <field name="name">hr.department.kanban.inherit</field>
         <field name="model">hr.department</field>
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
-        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_user'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//templates" position="before">
-                    <field name="new_applicant_count"/>
-                    <field name="new_hired_employee"/>
-                    <field name="expected_employee"/>
+                    <t groups="hr_recruitment.group_hr_recruitment_user">
+                        <field name="new_applicant_count"/>
+                        <field name="new_hired_employee"/>
+                        <field name="expected_employee"/>
+                    </t>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <div t-if="record.new_applicant_count.raw_value > 0" class="row ml16">
-                        <div class="col">
-                            <a name="%(hr_applicant_action_from_department)d" type="action">
-                                <field name="new_applicant_count"/> New Applicants
-                            </a>
+                    <t t-groups="hr_recruitment.group_hr_recruitment_user">
+                        <div t-if="record.new_applicant_count.raw_value > 0" class="row ml16">
+                            <div class="col">
+                                <a name="%(hr_applicant_action_from_department)d" type="action">
+                                    <field name="new_applicant_count"/> New Applicants
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    </t>
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <a role="menuitem" class="dropdown-item" name="%(action_hr_recruitment_report_filtered_department)d" type="action">
+                    <a role="menuitem" class="dropdown-item" name="%(action_hr_recruitment_report_filtered_department)d"
+                        type="action" groups="hr_recruitment.group_hr_recruitment_user">
                         Recruitments
                     </a>
                 </xpath>

@@ -17,10 +17,9 @@
             <field name="model">res.config.settings</field>
             <field name="priority" eval="40"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-            <field name="groups_id" eval="[(4, ref('account.group_account_manager'), 0)]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <field name="country_code" invisible="1"/>
+                    <field name="country_code" invisible="1" groups="account.group_account_manager"/>
                     <div class="app_settings_block" data-string="Invoicing" string="Invoicing" data-key="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>

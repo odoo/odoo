@@ -5,7 +5,6 @@
         <field name="model">res.config.settings</field>
         <field name="priority" eval="70"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-        <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'), 0)]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
                 <div class="app_settings_block" data-string="Employees" string="Employees" data-key="hr" groups="hr.group_hr_manager">
