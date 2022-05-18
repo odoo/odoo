@@ -6,6 +6,7 @@ from odoo.tools import float_compare, date_utils, email_split, email_re, is_html
 from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
 
 from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from contextlib import contextmanager
 from itertools import zip_longest
@@ -293,8 +294,15 @@ class AccountMove(models.Model):
              "This happens if the move contains no payable or receivable line.")
 
     # ==== Auto-post feature fields ====
-    auto_post = fields.Boolean(string='Post Automatically', default=False, copy=False,
-        help='If this checkbox is ticked, this entry will be automatically posted at its date.')
+    auto_post = fields.Selection(
+        string='Post Automatically',
+        selection=[('no', 'No'), ('at_date', 'At Date'), ('monthly', 'Monthly'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')],
+        default='no', required=True, copy=False,
+        help='Specify whether this entry is posted automatically on its accounting date, and any similar recurring invoices.')
+    auto_post_until = fields.Date(
+        string='Auto-post Until',
+        copy=False,
+        help='Determine an end date for recurring invoices.')
 
     # ==== Reverse feature fields ====
     reversed_entry_id = fields.Many2one(
@@ -500,6 +508,11 @@ class AccountMove(models.Model):
                 self._onchange_currency()
             else:
                 self._onchange_recompute_dynamic_lines()
+
+    @api.onchange('auto_post', 'auto_post_until')
+    def _onchange_auto_post_until(self):
+        if self.auto_post in ('no', 'at_date'):
+            self.auto_post_until = False
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -2734,8 +2747,8 @@ class AccountMove(models.Model):
         """
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
-            future_moves.auto_post = True
             for move in future_moves:
+                move.auto_post = move.auto_post or 'at_date'
                 msg = _('This move will be posted at the accounting date: %(date)s', date=format_date(self.env, move.date))
                 move.message_post(body=msg)
             to_post = self - future_moves
@@ -2752,7 +2765,7 @@ class AccountMove(models.Model):
                 raise UserError(_('The entry %s (id %s) is already posted.') % (move.name, move.id))
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
-            if move.auto_post and move.date > fields.Date.context_today(self):
+            if move.auto_post != 'no' and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
             if not move.journal_id.active:
@@ -2919,7 +2932,7 @@ class AccountMove(models.Model):
         self.write({'state': 'draft', 'is_move_sent': False})
 
     def button_cancel(self):
-        self.write({'auto_post': False, 'state': 'cancel'})
+        self.write({'auto_post': 'no', 'state': 'cancel'})
 
     def _get_mail_template(self):
         """
@@ -3127,12 +3140,38 @@ class AccountMove(models.Model):
         records = self.search([
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
-            ('auto_post', '=', True),
+            ('auto_post', '!=', 'no'),
         ])
         for ids in self._cr.split_for_in_conditions(records.ids, size=1000):
-            self.browse(ids)._post()
+            records = self.browse(ids)
+            records._post()
+            records.filtered(lambda r: r.auto_post != 'at_date')._copy_recurring_entries()
             if not self.env.registry.in_test_mode():
                 self._cr.commit()
+
+    def _copy_recurring_entries(self):
+        ''' Creates a copy of a recurring (periodic) entry and adjusts its dates for the next period.
+        Meant to be called right after posting a periodic entry.
+        Copies extra fields as defined by get_fields_to_copy_recurring_entries().
+        '''
+        deltas = {'monthly': 1, 'quarterly': 3, 'yearly': 12}
+        for record in self:
+            delta = relativedelta(months=deltas[record.auto_post])
+            next_date = record.date + delta
+            if not record.auto_post_until or next_date <= record.auto_post_until:
+                copy = record.copy()
+                copy.write({field: getattr(record, field) for field in record.get_fields_to_copy_recurring_entries()})
+                copy.date = next_date
+                copy.invoice_date = record.invoice_date + delta
+                if not copy.invoice_payment_term_id:
+                    copy.invoice_date_due = copy.date + (record.invoice_date_due - record.date)
+
+    def get_fields_to_copy_recurring_entries(self):
+        ''' Determines which extra fields to copy when copying a recurring entry.
+        To be extended by modules that add fields with copy=False (implicit or explicit)
+        whenever the opposite behavior is expected for recurring invoices.
+        '''
+        return ['auto_post', 'auto_post_until', 'invoice_payment_term_id', 'invoice_user_id']
 
     # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
     def action_duplicate(self):

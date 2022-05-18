@@ -2111,7 +2111,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         self.assertRecordValues(refund, [{
             'state': 'draft',
-            'auto_post': True,
+            'auto_post': 'at_date',
         }])
 
     def test_out_invoice_create_1(self):
