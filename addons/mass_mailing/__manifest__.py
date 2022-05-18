@@ -103,7 +103,10 @@
         ],
         'mass_mailing.mailing_assets': [
             'mass_mailing/static/src/scss/mailing_portal.scss',
-            'mass_mailing/static/src/js/mailing_portal.js',
+            'mass_mailing/static/src/js/mailing_portal_subscription.js',
+            'mass_mailing/static/src/js/mailing_portal_subscription_blocklist.js',
+            'mass_mailing/static/src/js/mailing_portal_subscription_feedback.js',
+            'mass_mailing/static/src/js/mailing_portal_subscription_form.js',
         ],
         'web_editor.assets_wysiwyg': [
             'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',

@@ -7,67 +7,83 @@
     </template>
 
     <template id="unsubscribe_form">
-        <div class="container o_unsubscribe_form">
+        <div id="o_mailing_portal_subscription"
+             class="container o_mailing_portal_body"
+             t-att-data-blocklist-enabled="blocklist_enabled"
+             t-att-data-blocklist-possible="blocklist_possible"
+             t-att-data-document-id="document_id"
+             t-att-data-hash-token="hash_token"
+             t-att-data-email="email"
+             t-att-data-email-valid="email_valid"
+             t-att-data-is-blocklisted="is_blocklisted"
+             t-att-data-mailing-id="mailing_id">
             <div class="row">
-                <form action="/mailing/list/update" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <input type="hidden" name="email" t-att-value="email"/>
-                    <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
-                    <input type="hidden" name="res_id" t-att-value="res_id"/>
-                    <input type="hidden" name="unsubscribed_list" t-att-value="unsubscribed_list"/>
-
-                    <div>
-                        <t t-if="contacts">
-                            <div id="info_state" class="alert alert-success" role="status">
-                                <div id="subscription_info"></div>
-                                <div id="div_feedback">
-                                    <p>We would appreciate if you provide feedback about why you updated<br/>your subscriptions</p>
-                                    <textarea class="form-control"  name="opt_out_feedback" cols="60" rows="3"></textarea>
-                                    <br/>
-                                    <div class="btn btn-primary text-start" id="button_feedback">Send</div>
-                                </div>
-                            </div>
-
-                            <h1 class="o_page_header">Mailing Subscriptions</h1>
-                            <p>Choose your mailing subscriptions</p>
-                            <div id="div_opt_out">
-                                <ul class="list-group">
-                                    <t t-foreach="list_ids" t-as="list_id">
-                                        <t t-if="list_id.is_public == True">
-                                            <li class="list-group-item">
-                                                <input type="checkbox" name="contact_ids"
-                                                    t-att-value="list_id['id']" t-att-checked="None if list_id['id'] in opt_out_list_ids else 'checked'"/>
-                                                <t t-esc="list_id.name"/>
-                                                <span t-if="list_id['id'] in opt_out_list_ids"
-                                                      class="o_mailing_portal_list_unsubscribed">
-                                                    Unsubscribed
-                                                </span>
-                                            </li>
-                                        </t>
-                                    </t>
-                                </ul>
-
-                                <div class="mb64 pt-3">
-                                    <div class="btn btn-link float-end pe-0 text-uppercase"
-                                         t-if="show_blacklist_button"
-                                         id="button_add_blacklist"
-                                         style="display:none">Blacklist Me</div>
-                                    <div class="btn btn-link float-end pe-0 text-uppercase"
-                                         id="button_remove_blacklist"
-                                         style="display:none">Come Back</div>
-                                    <button type="submit" id="send_form"
-                                            class="btn btn-primary">Update my subscriptions</button>
-                                </div>
-                            </div>
-
-                        </t>
-                        <t t-else="">
-                            <div class="alert alert-info text-center" role="status">
-                                <p>You are not subscribed to any of our mailing list.</p>
-                            </div>
-                        </t>
+                <div class="col-lg-6 offset-lg-3 mt-4">
+                    <div id="o_mailing_subscription_info"
+                         class="alert alert-success" role="status">
+                        <div id="o_mailing_subscription_info_state">
+                            <t t-if="unsubscribed_list">
+                                You have been <strong>successfully unsubscribed from <t t-out="unsubscribed_list"/></strong>.
+                            </t>
+                            <t t-else="">
+                                You have been <strong>successfully unsubscribed</strong>.
+                            </t>
+                        </div>
+                        <div id="o_mailing_subscription_feedback">
+                            <form action="/mail/mailing/feedback" method="POST">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <p>
+                                    We would appreciate if you provide feedback about why you updated<br/>your subscriptions.
+                                </p>
+                                <textarea class="form-control" name="feedback" cols="60" rows="3"></textarea>
+                                <br/>
+                                <div class="btn btn-primary text-start" id="button_feedback">Send</div>
+                            </form>
+                        </div>
                     </div>
-                </form>
+
+                    <div id="o_mailing_subscription_form" t-if="contacts">
+                        <form action="/mailing/list/update" method="POST">
+                            <h1 class="o_page_header">Mailing Subscriptions</h1>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <p>Choose your mailing subscriptions</p>
+                            <ul id="o_mailing_subscription_form_lists" class="list-group">
+                                <li t-foreach="list_ids"
+                                    t-as="list_id"
+                                    t-if="list_id.is_public == True"
+                                    class="list-group-item">
+                                    <input type="checkbox"
+                                           name="mailing_list_ids"
+                                           t-att-disabled="'disabled' if is_blocklisted else None"
+                                           t-att-value="list_id['id']"
+                                           t-att-checked="None if list_id['id'] in opt_out_list_ids else 'checked'"/>
+                                    <t t-esc="list_id.name"/>
+                                    <span t-if="list_id['id'] in opt_out_list_ids"
+                                          class="o_mailing_list_unsubscribed">
+                                        Unsubscribed
+                                    </span>
+                                </li>
+                            </ul>
+
+                            <div id="o_mailing_subscription_blocklist"
+                                 class="mb64 pt-3">
+                                <div class="btn btn-link float-end pe-0 text-uppercase d-none"
+                                     t-if="blocklist_enabled and blocklist_possible"
+                                     id="button_blocklist_add">Exclude Me</div>
+                                <div class="btn btn-link float-end pe-0 text-uppercase d-none"
+                                     id="button_blocklist_remove">Come Back</div>
+                                <button type="submit" id="button_form_send"
+                                        t-att-disabled="'disabled' if is_blocklisted else None"
+                                        class="btn btn-primary">
+                                    Update my subscriptions
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div t-else="" class="alert alert-info text-center" role="status">
+                        <p>You are not subscribed to any of our mailing list.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
@@ -79,16 +95,28 @@
     </template>
 
     <template id="unsubscribe_done">
-        <div class="container o_unsubscribe_form">
+        <div id="o_mailing_portal_subscription"
+             class="container o_mailing_portal_body"
+             t-att-data-blocklist-enabled="blocklist_enabled"
+             t-att-data-blocklist-possible="blocklist_possible"
+             t-att-data-document-id="document_id"
+             t-att-data-hash-token="hash_token"
+             t-att-data-email="email"
+             t-att-data-email-valid="email_valid"
+             t-att-data-is-blocklisted="is_blocklisted"
+             t-att-data-mailing-id="mailing_id">
             <div class="row">
                 <input type="hidden" name="email" t-att-value="email"/>
                 <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
                 <input type="hidden" name="res_id" t-att-value="res_id"/>
-                <div id="div_blacklist" class="col-lg-6 offset-lg-3">
+                <div class="col-lg-6 offset-lg-3">
                     <h1 class="o_page_header">Mailing Subscriptions</h1>
 
-                    <div id="subscription_info" class="alert alert-success text-center" role="status">
-                        <p>You have been successfully <strong>unsubscribed</strong>!</p>
+                    <div id="o_mailing_subscription_info"
+                         class="alert alert-success" role="status">
+                        <div id="o_mailing_subscription_info_state">
+                            You have been successfully <strong>unsubscribed</strong>!
+                        </div>
                     </div>
 
                     <div t-if="list_ids" class="alert alert-warning">
@@ -104,13 +132,13 @@
                         </ul>
                     </div>
 
-                    <div t-if="show_blacklist_button" class="mb64">
-                        <div class="btn btn-link float-end"
-                             id="button_add_blacklist"
-                             style="display:none">Blacklist Me</div>
-                        <div class="btn btn-link float-end"
-                             id="button_remove_blacklist"
-                             style="display:none">Come Back</div>
+                    <div id="o_mailing_subscription_blocklist"
+                         class="mb64 pt-3">
+                        <div class="btn btn-link float-end pe-0 text-uppercase d-none"
+                             t-if="blocklist_enabled and blocklist_possible"
+                             id="button_blocklist_add">Exclude Me</div>
+                        <div class="btn btn-link float-end pe-0 text-uppercase d-none"
+                             id="button_blocklist_remove">Come Back</div>
                     </div>
                 </div>
             </div>
