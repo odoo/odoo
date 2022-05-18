@@ -764,6 +764,8 @@ class IrActionsReport(models.Model):
         self.ensure_one()
         if not data:
             data = {}
+        if isinstance(res_ids, int):
+            res_ids = [res_ids]
         data.setdefault('report_type', 'pdf')
         self_sudo = self.sudo()
 
