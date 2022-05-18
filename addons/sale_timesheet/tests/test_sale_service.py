@@ -598,8 +598,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         planned_hours_for_uom = {
             'day': 8.0,
             'hour': 1.0,
-            'unit': 1.0,
-            'gram': 0.0,
+            'unit': 8.0,
+            'gram': 0.008,
         }
 
         project = self.project_global.copy({'tasks': False})
