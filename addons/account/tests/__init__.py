@@ -34,3 +34,4 @@ from . import test_reconciliation_heavy_load
 from . import test_account_incoming_supplier_invoice
 from . import test_reconcile_account
 from . import test_payment_term
+from . import test_sequence_concurrency
