@@ -351,6 +351,37 @@ async function svgToPNG(src) {
     }).then(loadedImgEl => toPNGViaCanvas(loadedImgEl));
 }
 
+/**
+ * Bootstraps an "empty" Google Maps iframe.
+ *
+ * @returns {HTMLIframeElement}
+ */
+function generateGMapIframe() {
+    const iframeEl = document.createElement('iframe');
+    iframeEl.classList.add('s_map_embedded', 'o_not_editable');
+    iframeEl.setAttribute('width', '100%');
+    iframeEl.setAttribute('height', '100%');
+    iframeEl.setAttribute('frameborder', '0');
+    iframeEl.setAttribute('scrolling', 'no');
+    iframeEl.setAttribute('marginheight', '0');
+    iframeEl.setAttribute('marginwidth', '0');
+    iframeEl.setAttribute('src', 'about:blank');
+    return iframeEl;
+}
+
+/**
+ * Generates a Google Maps URL based on the given parameter.
+ *
+ * @param {DOMStringMap} dataset
+ * @returns {string} a Google Maps URL
+ */
+function generateGMapLink(dataset) {
+    return 'https://maps.google.com/maps?q=' + encodeURIComponent(dataset.mapAddress)
+        + '&t=' + encodeURIComponent(dataset.mapType)
+        + '&z=' + encodeURIComponent(dataset.mapZoom)
+        + '&ie=UTF8&iwloc=&output=embed';
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -359,5 +390,7 @@ return {
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
     svgToPNG: svgToPNG,
+    generateGMapIframe: generateGMapIframe,
+    generateGMapLink: generateGMapLink,
 };
 });
