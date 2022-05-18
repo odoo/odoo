@@ -758,6 +758,10 @@ export class ViewCompiler {
             pageSlot.setAttribute("t-set-slot", pageId);
             pageSlot.setAttribute("title", pageTitle);
 
+            if (child.getAttribute("autofocus") === "autofocus") {
+                noteBook.setAttribute("defaultPage", `"${pageId}"`);
+            }
+
             for (const anchor of child.querySelectorAll("[href]")) {
                 if (anchor.attributes.href.value[0] === "#") {
                     pageAnchors.push(anchor.attributes.href.value);

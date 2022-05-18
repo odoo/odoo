@@ -1072,7 +1072,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_notebook");
     });
 
-    QUnit.skipWOWL("autofocus on second notebook page", async function (assert) {
+    QUnit.test("autofocus on second notebook page", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -1097,10 +1097,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.doesNotHaveClass(
-            target.querySelector(".o_notebook .nav .nav-link:first()"),
+            target.querySelector(".o_notebook .nav .nav-item:first-child .nav-link"),
             "active"
         );
-        assert.hasClass(target.querySelector(".o_notebook .nav .nav-link:nth(1)"), "active");
+        assert.hasClass(
+            target.querySelector(".o_notebook .nav .nav-item:nth-child(2) .nav-link"),
+            "active"
+        );
     });
 
     QUnit.test(

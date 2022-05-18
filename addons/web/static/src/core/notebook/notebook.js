@@ -25,7 +25,7 @@ export class Notebook extends Component {
         this.activePane = useRef("activePane");
         this.anchorTarget = null;
         this.state = useState({ currentPage: null });
-        this.state.currentPage = this.computeActivePage(this.props);
+        this.state.currentPage = this.props.defaultPage || this.computeActivePage(this.props);
         this.env.bus.addEventListener("SCROLLER:ANCHOR_LINK_CLICKED", (ev) =>
             this.onAnchorClicked(ev)
         );
@@ -72,4 +72,4 @@ export class Notebook extends Component {
 }
 
 Notebook.template = "web.Notebook";
-Notebook.props = ["slots?", "class?", "className?", "anchors?"];
+Notebook.props = ["slots?", "class?", "className?", "anchors?", "defaultPage?"];
