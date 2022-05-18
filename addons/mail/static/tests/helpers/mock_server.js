@@ -180,9 +180,6 @@ MockServer.include({
             const ids = args.args[0];
             return this._mockMailChannelChannelFetched(ids);
         }
-        if (args.model === 'mail.channel' && args.method === 'channel_fetch_listeners') {
-            return [];
-        }
         if (args.model === 'mail.channel' && args.method === 'channel_fetch_preview') {
             const ids = args.args[0];
             return this._mockMailChannelChannelFetchPreview(ids);
