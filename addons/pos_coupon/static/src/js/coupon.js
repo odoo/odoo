@@ -253,8 +253,8 @@ odoo.define('pos_coupon.pos', function (require) {
         // OVERIDDEN METHODS
 
         initialize: function () {
-            let res = _order_super.initialize.apply(this, arguments);
-            res.on(
+            _order_super.initialize.apply(this, arguments);
+            this.on(
                 'update-rewards',
                 () => {
                     if (!this.pos.config.use_coupon_programs) return;
@@ -266,11 +266,11 @@ odoo.define('pos_coupon.pos', function (require) {
                         this.trigger('rewards-updated');
                     }).catch(() => { /* catch the reject of dp when calling `add` to avoid unhandledrejection */ });
                 },
-                res
+                this
             );
-            res.on('reset-coupons', res.resetCoupons, res);
-            res._initializePrograms();
-            return res;
+            this.on('reset-coupons', this.resetCoupons, this);
+            this._initializePrograms();
+            return this;
         },
         init_from_JSON: function (json) {
             this.bookedCouponCodes = this.bookedCouponCodes ? this.order.bookedCouponCodes : {};
