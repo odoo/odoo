@@ -82,7 +82,7 @@ class TestMassMailing(TestMailFullCommon):
                 self.assertEqual(int(unsubscribe_params['res_id']), recipient.id)
                 self.assertEqual(unsubscribe_params['email'], recipient.email_normalized)
                 self.assertEqual(
-                    mailing._unsubscribe_token(unsubscribe_params['res_id'], (unsubscribe_params['email'])),
+                    mailing._generate_mailing_recipient_token(unsubscribe_params['res_id'], (unsubscribe_params['email'])),
                     unsubscribe_params['token']
                 )
                 # rendered view
@@ -95,7 +95,7 @@ class TestMassMailing(TestMailFullCommon):
                 self.assertEqual(int(view_params['res_id']), recipient.id)
                 self.assertEqual(view_params['email'], recipient.email_normalized)
                 self.assertEqual(
-                    mailing._unsubscribe_token(view_params['res_id'], (view_params['email'])),
+                    mailing._generate_mailing_recipient_token(view_params['res_id'], (view_params['email'])),
                     view_params['token']
                 )
 
