@@ -247,27 +247,12 @@ registerModel({
             });
             this.messaging.discuss.update({
                 categoryChannel: insertAndReplace({
-                    autocompleteMethod: 'channel',
-                    commandAddTitleText: this.env._t("Add or join a channel"),
-                    hasAddCommand: true,
-                    hasViewCommand: true,
                     isServerOpen: is_discuss_sidebar_category_channel_open,
-                    name: this.env._t("Channels"),
-                    newItemPlaceholderText: this.env._t("Find or create a channel..."),
                     serverStateKey: 'is_discuss_sidebar_category_channel_open',
-                    sortComputeMethod: 'name',
-                    supportedChannelTypes: ['channel'],
                 }),
                 categoryChat: insertAndReplace({
-                    autocompleteMethod: 'chat',
-                    commandAddTitleText: this.env._t("Start a conversation"),
-                    hasAddCommand: true,
                     isServerOpen: is_discuss_sidebar_category_chat_open,
-                    name: this.env._t("Direct Messages"),
-                    newItemPlaceholderText: this.env._t("Find or start a conversation..."),
                     serverStateKey: 'is_discuss_sidebar_category_chat_open',
-                    sortComputeMethod: 'last_action',
-                    supportedChannelTypes: ['chat', 'group'],
                 }),
             });
         },

@@ -125,6 +125,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeManager() {
+            if (this.messaging.popoverManager) {
+                return replace(this.messaging.popoverManager);
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computePosition() {
@@ -229,6 +239,11 @@ registerModel({
             compute: '_computeEmojiListView',
             inverse: 'popoverViewOwner',
             isCausal: true,
+            readonly: true,
+        }),
+        manager: one('PopoverManager', {
+            compute: '_computeManager',
+            inverse: 'popoverViews',
             readonly: true,
         }),
         /**

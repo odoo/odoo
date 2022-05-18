@@ -61,9 +61,6 @@
                         <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none"  t-attf-class="{{ threadViewTopbar.invitePopoverView ? '' : '' }}" title="Add users" t-on-click="threadViewTopbar.onClickInviteButton" t-ref="inviteButton">
                             <i class="fa fa-lg fa-user-plus" t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'text-500' : 'text-700' }}"/>
                         </button>
-                        <t t-if="threadViewTopbar.invitePopoverView">
-                            <PopoverView className="'o_ThreadViewTopbar_invitePopoverView'" record="threadViewTopbar.invitePopoverView"/>
-                        </t>
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
                     <t t-if="!messaging.isCurrentUserGuest and threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and !threadViewTopbar.threadView.isMemberListOpened">

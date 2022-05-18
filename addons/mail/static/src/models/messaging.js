@@ -461,6 +461,11 @@ registerModel({
             default: 0,
         }),
         partnerRoot: one('Partner'),
+        popoverManager: one('PopoverManager', {
+            default: insertAndReplace(),
+            isCausal: true,
+            readonly: true,
+        }),
         /**
          * Determines which partners should be considered the public partners,
          * which are special partners notably used in livechat.
