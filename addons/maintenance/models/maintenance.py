@@ -105,7 +105,7 @@ class MaintenanceEquipment(models.Model):
         args = args or []
         equipment_ids = []
         if name and operator not in expression.NEGATIVE_TERM_OPERATORS and operator != '=':
-            equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            equipment_ids = self._search([('name', '=', name)] + args, limit=limit, order=self._order, access_rights_uid=name_get_uid)
         return equipment_ids or super()._name_search(name, args, operator, limit, name_get_uid)
 
     name = fields.Char('Equipment Name', required=True, translate=True)

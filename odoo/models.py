@@ -1469,7 +1469,7 @@ class BaseModel(metaclass=MetaModel):
                      list to match all records.
         :param limit: maximum number of record to count (upperbound) (default: all)
         """
-        query = self._search(domain, limit=limit, order='id')
+        query = self._search(domain, limit=limit)
         return len(query)
 
     @api.model
@@ -1488,7 +1488,7 @@ class BaseModel(metaclass=MetaModel):
         :returns: at most ``limit`` records matching the search criteria
         :raise AccessError: if user is not allowed to access requested information
         """
-        query = self._search(domain, offset=offset, limit=limit, order=order)
+        query = self._search(domain, offset=offset, limit=limit, order=order or self._order)
         return self.browse(query)
 
     #
@@ -1604,7 +1604,7 @@ class BaseModel(metaclass=MetaModel):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
             domain = aggregator([[(field_name, operator, name)] for field_name in search_fnames])
             args += domain
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return self._search(args, limit=limit, order=self._order, access_rights_uid=name_get_uid)
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -2273,7 +2273,7 @@ class BaseModel(metaclass=MetaModel):
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
-        self._flush_search(domain, fields=fnames + groupby_fields)
+        self._flush_search(domain, fields=fnames + groupby_fields, order=order)
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
@@ -4535,7 +4535,11 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def _flush_search(self, domain, fields=None, order=None, seen=None):
-        """ Flush all the fields appearing in `domain`, `fields` and `order`. """
+        """ Flush all the fields appearing in `domain`, `fields` and `order`.
+
+        Note that ``order=None`` actually means no order, so if you expect some
+        fallback order, you have to provide it yourself.
+        """
         if seen is None:
             seen = set()
         elif self._name in seen:
@@ -4588,14 +4592,15 @@ class BaseModel(metaclass=MetaModel):
         collect_from_domain(self, domain)
 
         # flush the order fields
-        order_spec = order or self._order
-        for order_part in order_spec.split(','):
-            order_field = order_part.split()[0]
-            field = self._fields.get(order_field)
-            if field is not None:
-                to_flush[self._name].add(order_field)
-                if field.relational:
-                    self.env[field.comodel_name]._flush_search([], seen=seen)
+        if order:
+            for order_part in order.split(','):
+                order_field = order_part.split()[0]
+                field = self._fields.get(order_field)
+                if field is not None:
+                    to_flush[self._name].add(order_field)
+                    if field.relational:
+                        comodel = self.env[field.comodel_name]
+                        comodel._flush_search([], order=comodel._order, seen=seen)
 
         if self._active_name:
             to_flush[self._name].add(self._active_name)
@@ -4620,6 +4625,8 @@ class BaseModel(metaclass=MetaModel):
         by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
         This is ok at the security level because this method is private and not callable through XML-RPC.
 
+        No default order is applied when the method is invoked without parameter ``order``.
+
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
         :return: a collection of record ids (may be a ``Query`` object)
@@ -4637,7 +4644,8 @@ class BaseModel(metaclass=MetaModel):
         query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
 
-        query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
+        if order:
+            query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
         query.limit = limit
         query.offset = offset
 

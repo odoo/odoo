@@ -443,13 +443,13 @@ class TestEventData(TestEventInternalsCommon):
             'date_end': datetime(2020, 2, 1, 18, 0, 0),
         })
         self.assertTrue(event_1.is_ongoing)
-        ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
-        self.assertIn(event_1.id, ongoing_event_ids)
+        ongoing_events = self.env['event.event'].search([('is_ongoing', '=', True)])
+        self.assertIn(event_1, ongoing_events)
 
         event_1.update({'date_begin': datetime(2020, 2, 1, 9, 0, 0)})
         self.assertFalse(event_1.is_ongoing)
-        ongoing_event_ids = self.env['event.event']._search([('is_ongoing', '=', True)])
-        self.assertNotIn(event_1.id, ongoing_event_ids)
+        ongoing_events = self.env['event.event'].search([('is_ongoing', '=', True)])
+        self.assertNotIn(event_1, ongoing_events)
 
         event_2 = self.env['event.event'].create({
             'name': 'Test Event 2',
@@ -457,13 +457,13 @@ class TestEventData(TestEventInternalsCommon):
             'date_end': datetime(2020, 1, 28, 8, 0, 0),
         })
         self.assertFalse(event_2.is_ongoing)
-        finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
-        self.assertIn(event_2.id, finished_or_upcoming_event_ids)
+        finished_or_upcoming_events = self.env['event.event'].search([('is_ongoing', '=', False)])
+        self.assertIn(event_2, finished_or_upcoming_events)
 
         event_2.update({'date_end': datetime(2020, 2, 2, 8, 0, 1)})
         self.assertTrue(event_2.is_ongoing)
-        finished_or_upcoming_event_ids = self.env['event.event']._search([('is_ongoing', '=', False)])
-        self.assertNotIn(event_2.id, finished_or_upcoming_event_ids)
+        finished_or_upcoming_events = self.env['event.event'].search([('is_ongoing', '=', False)])
+        self.assertNotIn(event_2, finished_or_upcoming_events)
 
     @users('user_eventmanager')
     def test_event_seats(self):
