@@ -17,6 +17,14 @@
     'demo': [
         'data/hr_fleet_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'hr_fleet/static/src/js/attachment_kanban.js',
+        ],
+        'web.assets_qweb': [
+            'hr_fleet/static/src/xml/attachment_kanban.xml',
+        ],
+    },
     'auto_install': True,
     'license': 'LGPL-3',
 }
