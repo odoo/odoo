@@ -283,6 +283,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='pricelist_availability']" position="after">
                 <group name="pricelist_website" string="Website">
+                    <field name="company_id" invisible="1"/>
                     <field name="website_id" options="{'no_create': True}"/>
                     <field name="selectable"/>
                     <field name="code"/>

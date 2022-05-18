@@ -55,6 +55,8 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <form string="Maintenance Request">
+                <field name="company_id" invisible="1"/>
+                <field name="category_id" invisible="1"/>
                 <header>
                     <button string="Cancel" name="archive_equipment_request" type="object" attrs="{'invisible': [('archive', '=', True)]}"/>
                     <button string="Reopen Request" name="reset_equipment_request" type="object" attrs="{'invisible': [('archive', '=', False)]}"/>
@@ -336,6 +338,7 @@
         <field name="arch" type="xml">
             <form string="Equipments">
                 <sheet>
+                    <field name="company_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"

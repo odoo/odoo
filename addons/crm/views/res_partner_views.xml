@@ -44,6 +44,9 @@
                             <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <field name="parent_id" position="before">
+                        <field name="team_id" invisible="1"/>
+                    </field>
                     <field name="parent_id" position="attributes">
                         <attribute name="context">{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id, 'default_team_id': team_id}</attribute>
                     </field>

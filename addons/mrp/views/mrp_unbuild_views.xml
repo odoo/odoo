@@ -88,6 +88,7 @@
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
                 <form string="Unbuild Orders">
+                    <field name="company_id" invisible="1"/>
                     <header>
                         <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="v"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
@@ -140,6 +141,7 @@
                     <sheet>
                         <group>
                             <group>
+                                <field name="company_id" invisible="1"/>
                                 <field name="state" invisible="1"/>
                                 <field name="product_id" invisible="1"/>
                                 <field name="bom_id" invisible="1"/>

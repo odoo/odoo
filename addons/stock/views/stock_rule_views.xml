@@ -69,6 +69,7 @@
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="picking_type_code_domain" invisible="1"/>
                                 <field name="action"/>
                                 <field name="picking_type_id"/>
@@ -122,6 +123,9 @@
                 <xpath expr="//field[@name='route_id']" position="replace"></xpath>
                 <xpath expr="//group[@name='apply_on']" position="attributes">
                     <attribute name="groups">base.group_multi_company,base.group_no_one</attribute>
+                </xpath>
+                <xpath expr="//form" position="inside">
+                    <field name="route_company_id" invisible="1"/>
                 </xpath>
             </field>
         </record>

@@ -10,6 +10,7 @@
                 <group name="timesheet" groups="base.group_no_one" style="width:50%">
                     <h2>Timesheets</h2>
                     <field name="timesheet_project_id" context="{'active_test': False}"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="timesheet_task_id" context="{'active_test': False, 'default_project_id': timesheet_project_id}" attrs="
                         {'invisible': [('timesheet_project_id', '=', False)], 'required': [('timesheet_project_id', '!=', False)]}"/>
                     <field name="timesheet_generate" invisible="1"/>

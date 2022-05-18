@@ -69,6 +69,7 @@
                             <field name="seniority_id" attrs="{'invisible': [('contact_filter_type','!=', 'seniority')]}" options="{'no_create_edit': True, 'no_quick_create': True}"/>
                         </group>
                     </group>
+                    <field name="lead_type" invisible="1"/>
                     <separator attrs="{'invisible': [('lead_type', '!=', 'lead')]}" string="Lead Data" />
                     <separator attrs="{'invisible': [('lead_type', '!=', 'opportunity')]}" string="Opportunity Data" />
                     <group>

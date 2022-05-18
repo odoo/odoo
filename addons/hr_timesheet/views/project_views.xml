@@ -243,6 +243,7 @@
                 </xpath>
                 <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='company_id']" position="after">
                     <field name="allow_subtasks" invisible="1" />
+                    <field name="progress" invisible="1"/>
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
@@ -272,6 +273,7 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
                     <field name="allow_subtasks" invisible="1"/>
+                    <field name="progress" invisible="1"/>
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>

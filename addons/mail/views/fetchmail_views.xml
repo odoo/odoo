@@ -29,6 +29,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                    <field name="active" invisible="1"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
                         attrs="{'invisible': [('active', '=', True)]}"/>
                      <group>
@@ -74,7 +75,6 @@
                                 <field name="priority"/>
                                 <field name="attach"/>
                                 <field name="original"/>
-                                <field name="active" invisible="1"/>
                             </group>
                         </page>
                     </notebook>

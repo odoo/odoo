@@ -39,6 +39,7 @@
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="hide_reservation_method" invisible="1"/>
                                 <field name="name"/>
                                 <field name="sequence_id" groups="base.group_no_one"/>
@@ -244,6 +245,7 @@
                 <field name="use_create_lots" invisible="1"/>
                 <field name="show_set_qty_button" invisible="1"/>
                 <field name="show_clear_qty_button" invisible="1"/>
+                <field name="company_id" invisible="1"/>
 
                 <header>
                     <button name="action_confirm" attrs="{'invisible': [('show_mark_as_todo', '=', False)]}" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="x"/>
@@ -317,6 +319,8 @@
                             </div>
                             <field name="partner_id" nolabel="1"/>
                             <field name="picking_type_id" attrs="{'invisible': [('hide_picking_type', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
+                            <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                             <field name="backorder_id" attrs="{'invisible': [('backorder_id','=',False)]}"/>

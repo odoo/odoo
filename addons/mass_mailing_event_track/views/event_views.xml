@@ -7,6 +7,7 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='stage_id']" position="before">
+                <field name="track_count" invisible="1"/>
                 <button name="action_mass_mailing_track_speakers" string="Contact Track Speakers" type="object" attrs="{'invisible': [('track_count', '=', 0)]}" groups="mass_mailing.group_mass_mailing_user"/>
             </xpath>
         </field>

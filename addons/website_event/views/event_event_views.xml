@@ -37,6 +37,7 @@
         <field name="inherit_id" ref="event.view_event_tree"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
+                <field name="company_id" invisible="1"/>
                 <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" optional="show"/>
             </field>
         </field>

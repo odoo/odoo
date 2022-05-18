@@ -457,6 +457,8 @@
                     <attribute name="class" remove="o-aside"/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='mail_body']" position="after">
+                    <!-- test_01_mass_mailing_editor_tour -->
+                    <field name="body_html" invisible="1"/>
                     <page string="Mail Debug" name="mail_debug" groups="base.group_no_one">
                         <div class="position-relative">
                             <div class="mt-n2">

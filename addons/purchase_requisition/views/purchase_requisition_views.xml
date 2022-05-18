@@ -104,6 +104,7 @@
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form string="Purchase Agreements">
+            <field name="company_id" invisible="1"/>
             <header>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation"

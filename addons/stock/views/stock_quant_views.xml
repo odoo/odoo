@@ -55,6 +55,7 @@
                     <group>
                         <group>
                             <field name="tracking" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="product_id" readonly="0" options="{'no_create': True}"/>
                             <field name="location_id" readonly="0" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"
@@ -93,6 +94,7 @@
                   sample="1">
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"
                        readonly="context.get('single_product', False)" force_save="1"
                        options="{'no_create': True}"/>
@@ -337,6 +339,7 @@
                 <field name="sn_duplicated" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="inventory_quantity_set" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
                 <field name="storage_category_id" groups="stock.group_stock_storage_categories" invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="cyclic_inventory_frequency" invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
