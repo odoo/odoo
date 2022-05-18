@@ -702,6 +702,8 @@ class AccountTax(models.Model):
             partner=None, currency=None, product=None, taxes=None, price_unit=None, quantity=None,
             discount=None, account=None, analytic_account=None, analytic_tags=None, price_subtotal=None,
             is_refund=False,
+            handle_price_include=None,
+            extra_context=None,
     ):
         return {
             'record': base_line,
@@ -717,6 +719,8 @@ class AccountTax(models.Model):
             'analytic_tags': analytic_tags or self.env['account.analytic.tag'],
             'price_subtotal': price_subtotal or 0.0,
             'is_refund': is_refund,
+            'handle_price_include': handle_price_include,
+            'extra_context': extra_context or {},
         }
 
     @api.model
@@ -791,7 +795,8 @@ class AccountTax(models.Model):
 
         :param base_lines: A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
         :param tax_lines: A list of python dictionaries created using the '_convert_to_tax_line_dict' method.
-        :param handle_price_include: Manage the price-included taxes.
+        :param handle_price_include:    Manage the price-included taxes. If None, use the 'handle_price_include' key
+                                        set on base lines.
         :param include_caba_tags: Manage tags for taxes being exigible on_payment.
         :return: A python dictionary containing:
 
@@ -834,14 +839,20 @@ class AccountTax(models.Model):
             currency = line_vals['currency'] or self.env.company.currency_id
 
             if taxes:
-                taxes_res = taxes.compute_all(
+
+                if handle_price_include is None:
+                    manage_price_include = bool(line_vals['handle_price_include'])
+                else:
+                    manage_price_include = handle_price_include
+
+                taxes_res = taxes.with_context(**line_vals['extra_context']).compute_all(
                     price_unit_after_discount,
                     currency=currency,
                     quantity=line_vals['quantity'],
                     product=line_vals['product'],
                     partner=line_vals['partner'],
                     is_refund=line_vals['is_refund'],
-                    handle_price_include=handle_price_include,
+                    handle_price_include=manage_price_include,
                     include_caba_tags=include_caba_tags,
                 )
 
