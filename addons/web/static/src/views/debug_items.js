@@ -16,6 +16,7 @@ FieldViewGetDialog.template = xml`<Dialog title="this.constructor.title">
 FieldViewGetDialog.components = { Dialog };
 FieldViewGetDialog.props = {
     arch: { type: String },
+    close: { type: Function },
 };
 FieldViewGetDialog.title = _lt("Fields View Get");
 
