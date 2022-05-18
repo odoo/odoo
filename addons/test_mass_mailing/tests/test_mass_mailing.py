@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import random
+
 from unittest.mock import patch
 from werkzeug import urls
 
@@ -27,6 +29,49 @@ class TestMassMail(MassMailingCase):
         })
 
         self.test_medium = self.env['utm.medium'].create({'name': 'TestMedium'})
+
+    @users('marketing')
+    def test_mailing_seen_list_unstored_partner(self):
+        """ Test seen list / blacklist when partners are not stored. """
+        test_customers = self.env['res.partner'].sudo().create([
+            {'email': f'"Mailing Partner {idx}" <email.from.{idx}@test.example.com',
+             'name': f'Mailing Partner {idx}',
+            } for idx in range(8)
+        ])
+        test_records = self.env['mailing.test.partner.unstored'].create([
+            {'email_from': f'email.from.{idx}@test.example.com',
+             'name': f'Mailing Record {idx}',
+            } for idx in range(10)
+        ])
+        self.assertEqual(test_records[:8].partner_id, test_customers)
+        self.assertFalse(test_records[9:].partner_id)
+
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>Marketing stuff for ${object.name}</p>',
+            'mailing_domain': [('id', 'in', test_records.ids)],
+            'mailing_model_id': self.env['ir.model']._get_id('mailing.test.partner.unstored'),
+            'name': 'test',
+            'subject': 'Blacklisted',
+        })
+
+        # create existing traces to check the seen list
+        traces = self.env['mailing.trace'].create([{
+            'email': record.email_from,
+            'mass_mailing_id': mailing.id,
+            'message_id': '<%5f@gilbert.boitempomils>' % random.random(),
+            'model': record._name,
+            'res_id': record.id,
+            'state': 'sent',
+        } for record in test_records[:3]])
+        traces.flush()
+
+        # check remaining recipients effectively check seen list
+        mailing.action_put_in_queue()
+        res_ids = mailing._get_remaining_recipients()
+        self.assertEqual(sorted(res_ids), sorted(test_records[3:].ids))
+
+        mailing.action_send_mail(res_ids=test_records.ids)
+        self.assertEqual(len(self._mails), 7, 'Mailing: seen list should contain 3 existing traces')
 
     @users('marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
