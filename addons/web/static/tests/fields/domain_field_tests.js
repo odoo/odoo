@@ -482,9 +482,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("domain field: manually edit domain with textarea", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("domain field: manually edit domain with textarea", async function (assert) {
         patchWithCleanup(odoo, { debug: true });
 
         serverData.models.partner.records[0].foo = false;
@@ -551,11 +549,9 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "domain field: manually set an invalid domain with textarea",
         async function (assert) {
-            assert.expect(9);
-
             patchWithCleanup(odoo, { debug: true });
 
             serverData.models.partner.records[0].foo = false;
@@ -620,9 +616,9 @@ QUnit.module("Fields", (hooks) => {
                 "o_field_invalid",
                 "the field is marked as invalid"
             );
-            assert.hasClass(
-                target.querySelector(".o_form_view"),
-                "o_form_editable",
+            assert.containsOnce(
+                target,
+                ".o_form_view .o_form_editable",
                 "the view is still in edit mode"
             );
             assert.verifySteps(['[["abc"]]']);

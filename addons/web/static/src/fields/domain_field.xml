@@ -6,7 +6,7 @@
             <t t-if="getResModel(props)">
                 <DomainSelector
                     resModel="getResModel(props)"
-                    value="displayedDomain"
+                    value="displayedDomain || '[]'"
                     readonly="props.readonly"
                     update.bind="update"
                     isDebugMode="!!env.debug"

@@ -10,10 +10,6 @@ import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { createWebClient, doAction } from "../webclient/helpers";
-
-import FormView from "web.FormView";
-import legacyViewRegistry from "web.view_registry";
 
 const { Component, xml } = owl;
 
@@ -290,41 +286,6 @@ QUnit.module("Components", (hooks) => {
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
         await click(target, ".o_domain_add_first_node_button");
-    });
-
-    QUnit.skipWOWL("inline domain editor in modal", async (assert) => {
-        registry.category("views").remove("form"); // remove new form from registry
-        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
-
-        assert.expect(1);
-
-        Object.assign(serverData, {
-            actions: {
-                5: {
-                    id: 5,
-                    name: "Partner Form",
-                    res_model: "partner",
-                    target: "new",
-                    type: "ir.actions.act_window",
-                    views: [["view_ref", "form"]],
-                },
-            },
-            views: {
-                "partner,view_ref,form": `
-                    <form>
-                        <field name="foo" string="Domain" widget="domain" options="{'model': 'partner'}"/>
-                    </form>
-                `,
-            },
-        });
-
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 5);
-        assert.strictEqual(
-            document.querySelector('div[name="foo"]').closest(".modal-body").style.overflow,
-            "visible",
-            "modal should have visible overflow if there is inline domain field widget"
-        );
     });
 
     QUnit.test("edit a domain with the debug textarea", async (assert) => {

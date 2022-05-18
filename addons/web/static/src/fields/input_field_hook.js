@@ -25,7 +25,7 @@ export function useInputField(params) {
         lastSetValue = ev.target.value;
         isDirty = false;
     }
-    useBus(env.bus, "FIELD:COMMIT_CHANGE", commitChanges);
+    useBus(env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", commitChanges);
     useEffect(
         (inputEl) => {
             if (inputEl) {

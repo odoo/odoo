@@ -596,6 +596,9 @@ export class Record extends DataPoint {
         this._savePromise = new Promise((r) => {
             resolveSavePromise = r;
         });
+        const proms = [];
+        this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE", { proms });
+        await Promise.all(proms);
         await this._updatePromise;
         if (!this.checkValidity()) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
@@ -657,7 +660,7 @@ export class Record extends DataPoint {
     async urgentSave() {
         this.model.__bm__.executeDirectly(async () => {
             this._urgentSave = true;
-            this.model.env.bus.trigger("FIELD:COMMIT_CHANGE");
+            this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
             this.__syncData();
             if (this.isDirty && this.checkValidity()) {
                 await this.model.__bm__.save(this.__bm_handle__, { reload: false });

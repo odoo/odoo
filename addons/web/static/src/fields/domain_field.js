@@ -2,7 +2,7 @@
 
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { CharField } from "./char_field";
 import { standardFieldProps } from "./standard_field_props";
@@ -31,6 +31,17 @@ export class DomainField extends Component {
             if (!this.isDebugEdited) {
                 this.displayedDomain = nextProps.value;
                 this.loadCount(nextProps);
+            }
+        });
+
+        useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE", async (ev) => {
+            if (this.isDebugEdited) {
+                const prom = this.loadCount(this.props);
+                ev.detail.proms.push(prom);
+                await prom;
+                if (!this.state.isValid) {
+                    this.props.record.setInvalidField(this.props.name);
+                }
             }
         });
     }
@@ -67,31 +78,23 @@ export class DomainField extends Component {
     }
     async loadCount(props) {
         if (!this.getResModel(props)) {
-            Object.assign(this.state, {
-                recordCount: 0,
-                isValid: true,
-            });
+            Object.assign(this.state, { recordCount: 0, isValid: true });
         }
 
+        const resModel = this.getResModel(props);
+        const context = props.record.getFieldContext(props.name);
+        let recordCount;
         try {
-            this.state.recordCount = null;
-            const context = props.record.getFieldContext(props.name);
-            Object.assign(this.state, {
-                recordCount: await this.orm.silent.call(
-                    this.getResModel(props),
-                    "search_count",
-                    [this.getDomain(props.value).toList(context)],
-                    { context }
-                ),
-                isValid: true,
+            const domain = this.getDomain(props.value).toList(context);
+            recordCount = await this.orm.silent.call(resModel, "search_count", [domain], {
+                context,
             });
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
-            Object.assign(this.state, {
-                recordCount: 0,
-                isValid: false,
-            });
+            Object.assign(this.state, { recordCount: 0, isValid: false });
+            return;
         }
+        Object.assign(this.state, { recordCount, isValid: true });
     }
 
     update(domain, isDebugEdited) {
