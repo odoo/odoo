@@ -2583,9 +2583,21 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: function (event) {
         event.stopPropagation();
-        this._setValue(!this.value);
-        this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
+        if (!this.$input.prop('disabled')) {
+            this._setValue(!this.value);
+            this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
+        }
     },
+
+    /**
+     * The boolean_toggle should only be disabled when there is a readonly modifier
+     * not when the view is in readonly mode
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
+        this.$input.prop('disabled', isReadonly);
+    }
 });
 
 var StatInfo = AbstractField.extend({

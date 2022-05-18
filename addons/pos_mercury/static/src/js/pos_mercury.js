@@ -431,7 +431,7 @@ PaymentScreenWidget.include({
                         if (swipe_pending_line) {
                             order.select_paymentline(swipe_pending_line);
                         } else {
-                            order.add_paymentline(self.payment_methods_by_id[parsed_result.payment_method_id]);
+                            order.add_paymentline(self.pos.payment_methods_by_id[parsed_result.payment_method_id]);
                         }
 
                         order.selected_paymentline.paid = true;
