@@ -9,13 +9,6 @@ const { Component } = owl;
 export class ChannelMemberListCategory extends Component {
 
     /**
-     * @returns {ChannelMemberListView}
-     */
-    get channelMemberListView() {
-        return this.props.channelMemberListView;
-    }
-
-    /**
      * @returns {ChannelMemberListCategoryView}
      */
     get record() {
@@ -26,14 +19,14 @@ export class ChannelMemberListCategory extends Component {
      * @returns {Partner[]}
      */
     get members() {
-        if (!this.channelMemberListView.exists()) {
+        if (!this.record.exists()) {
             return [];
         }
         if (this.record.channelMemberListViewOwnerAsOnline) {
-            return this.channelMemberListView.channel.orderedOnlineMembers;
+            return this.record.channelMemberListViewOwnerAsOnline.channel.orderedOnlineMembers;
         }
         if (this.record.channelMemberListViewOwnerAsOffline) {
-            return this.channelMemberListView.channel.orderedOfflineMembers;
+            return this.record.channelMemberListViewOwnerAsOffline.channel.orderedOfflineMembers;
         }
         return [];
     }
@@ -61,10 +54,7 @@ export class ChannelMemberListCategory extends Component {
 }
 
 Object.assign(ChannelMemberListCategory, {
-    props: {
-        channelMemberListView: Object,
-        record: Object,
-    },
+    props: { record: Object },
     template: 'mail.ChannelMemberListCategory',
 });
 
