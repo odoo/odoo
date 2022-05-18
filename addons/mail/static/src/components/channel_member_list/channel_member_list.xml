@@ -4,11 +4,11 @@
     <t t-name="mail.ChannelMemberList" owl="1">
         <t t-if="channelMemberListView">
             <div class="o_ChannelMemberList d-flex flex-column overflow-auto bg-light" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="channelMemberListView.channel.orderedOnlineMembers.length > 0">
-                    <ChannelMemberListCategory category="'online'" channelMemberListView="channelMemberListView"/>
+                <t t-if="channelMemberListView.onlineCategoryView">
+                    <ChannelMemberListCategory record="channelMemberListView.onlineCategoryView" category="'online'" channelMemberListView="channelMemberListView"/>
                 </t>
-                <t t-if="channelMemberListView.channel.orderedOfflineMembers.length > 0">
-                    <ChannelMemberListCategory category="'offline'" channelMemberListView="channelMemberListView"/>
+                <t t-if="channelMemberListView.offlineCategoryView">
+                    <ChannelMemberListCategory record="channelMemberListView.offlineCategoryView" category="'offline'" channelMemberListView="channelMemberListView"/>
                 </t>
                 <t t-if="channelMemberListView.channel.unknownMemberCount === 1">
                     <span class="mx-2 mt-2">And 1 other member.</span>

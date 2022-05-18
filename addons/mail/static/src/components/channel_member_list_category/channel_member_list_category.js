@@ -16,6 +16,13 @@ export class ChannelMemberListCategory extends Component {
     }
 
     /**
+     * @returns {ChannelMemberListCategoryView}
+     */
+    get record() {
+        return this.props.record;
+    }
+
+    /**
      * @returns {Partner[]}
      */
     get members() {
@@ -57,6 +64,7 @@ Object.assign(ChannelMemberListCategory, {
     props: {
         category: String,
         channelMemberListView: Object,
+        record: Object,
     },
     template: 'mail.ChannelMemberListCategory',
 });
