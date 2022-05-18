@@ -38,6 +38,16 @@ class SaleOrder(models.Model):
             self.warning_stock = ''
         return warn
 
+    @api.depends('user_id', 'company_id')
+    def _compute_warehouse_id(self):
+        if 'website_id' not in self.env.context:
+            super(SaleOrder, self)._compute_warehouse_id()
+        else:
+            website_id = self.env.context['website_id']
+            website = self.env['website'].browse(website_id)
+            for order in self:
+                order.warehouse_id = website._get_warehouse_available()
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
