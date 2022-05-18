@@ -43,7 +43,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${b(`[abc`)}</p><p>${b(`def]`)}</p>`,
                 stepFunction: bold,
-                contentBefore: `<p>${notB(`[abc`)}</p><p>${notB(`def]`, 400)}</p>`,
+                contentAfter: `<p>${notB(`[abc`)}</p><p>${notB(`def]`, 400)}</p>`,
             });
         });
         it('should make a whole heading bold after a triple click', async () => {
@@ -127,7 +127,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${i(`[abc`)}</p><p>${i(`def]`)}</p>`,
                 stepFunction: italic,
-                contentBefore: `<p>${notI(`[abc`)}</p><p>${notI(`def]`)}</p>`,
+                contentAfter: `<p>${notI(`[abc`)}</p><p>${notI(`def]`)}</p>`,
             });
         });
         it('should make a whole heading italic after a triple click', async () => {
