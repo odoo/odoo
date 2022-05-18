@@ -54,6 +54,20 @@ const Link = Widget.extend({
             // alpha -> epsilon classes. This is currently done by removing
             // all btn-* classes anyway.
         ];
+        // Manage the case where there is a button that is not of any type among
+        // those declared above.
+        const types = this.colorsData.map(el => `btn-${el.type}`);
+        const className = this._link.className;
+        const classArray = className ? className.split(' ') : [];
+        if (classArray && !classArray.find(cl => types.includes(cl))) {
+            const btn = classArray.find(cl => cl.startsWith('btn-')) || `btn-${classArray[0]}`;
+            const colorData = btn.split('btn-')[1];
+            this.colorsData.unshift({
+                type: colorData,
+                label: '/',
+                btnPreview: colorData,
+            });
+        }
 
         this.editable = editable;
         this.$editable = $(editable);
