@@ -1000,9 +1000,9 @@ class MassMailing(models.Model):
             self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
-                    'res_id': res_id,
+                    'document_id': res_id,
                     'email': email_to,
-                    'token': self._generate_mailing_recipient_token(res_id, email_to),
+                    'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
@@ -1013,9 +1013,9 @@ class MassMailing(models.Model):
             self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
-                    'res_id': res_id,
+                    'document_id': res_id,
                     'email': email_to,
-                    'token': self._generate_mailing_recipient_token(res_id, email_to),
+                    'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
