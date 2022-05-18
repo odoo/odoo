@@ -13,6 +13,13 @@
             <field name="perm_create" eval="False"/>
         </record>
 
+        <record id="mail_channel_admin" model="ir.rule">
+            <field name="name">Mail.channel: admin full access</field>
+            <field name="model_id" ref="model_mail_channel"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
         <record id="ir_rule_mail_channel_partner_group_user" model="ir.rule">
             <field name="name">mail.channel.partner: write its own entries</field>
             <field name="model_id" ref="model_mail_channel_partner"/>
@@ -25,6 +32,13 @@
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="ir_rule_mail_channel_partner_group_system" model="ir.rule">
+            <field name="name">mail.channel.partner: admin can manipulate all entries</field>
+            <field name="model_id" ref="model_mail_channel_partner"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
         <record id="ir_rule_mail_notifications_group_user" model="ir.rule">
