@@ -7,11 +7,11 @@
             <t t-esc="info.field.label"/> <t t-if="info.field.noLabel and info.viewMode === 'form'">(nolabel)</t>
         </div>
 
-        <p t-if="info.field.help" class="o-tooltip--help small" role="tooltip">
+        <p t-if="info.field.help" class="o-tooltip--help" role="tooltip">
             <t t-esc="info.field.help"/>
         </p>
 
-        <ul class="o-tooltip--technical small" t-if="info.debug" role="tooltip">
+        <ul class="o-tooltip--technical" t-if="info.debug" role="tooltip">
             <li data-item="field" t-if="info.field and info.field.name">
                 <span class="o-tooltip--technical--title">Field:</span>
                 <t t-esc="info.field.name"/>
