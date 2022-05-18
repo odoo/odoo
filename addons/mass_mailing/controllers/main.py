@@ -25,6 +25,15 @@ class MassMailController(http.Controller):
             raise Unauthorized()
         return mailing_sudo
 
+    def _fetch_blocklist_record(self, email):
+        if not email or not tools.email_normalize(email):
+            return None
+        return request.env['mail.blacklist'].sudo().with_context(
+            active_test=False
+        ).search(
+            [('email', '=', tools.email_normalize(email))]
+        )
+
     # ------------------------------------------------------------
     # SUBSCRIPTION MANAGEMENT
     # ------------------------------------------------------------
@@ -75,13 +84,13 @@ class MassMailController(http.Controller):
             ('opt_out', '=', False)
         ]).mapped('list_id')
 
-        message = Markup('<p>%s</p>') % Markup(
+        message = Markup(
             _(
                 'Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)',
                 **self._format_bl_request(mailing, document_id)
             )
         )
-        _blacklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
+        _blocklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
 
         render_values = self._prepare_mailing_subscription_values(mailing, document_id, email, hash_token)
         return request.render(
@@ -94,36 +103,51 @@ class MassMailController(http.Controller):
 
     def _prepare_mailing_subscription_values(self, mailing, document_id, email, hash_token):
         """ Prepare common values used in various subscription management or 
-        blacklist flows done in portal. """
+        blocklist flows done in portal. """
+        mail_blocklist = self._fetch_blocklist_record(email)
+        email_normalized = tools.email_normalize(email)
         return {
             # customer
             'document_id': document_id,
             'email': email,
+            'email_valid': bool(email_normalized),
+            'hash_token': hash_token,
             'mailing_id': mailing.id,
             'res_id': document_id,
-            'token': hash_token,
-            # blacklist
-            'show_blacklist_button': request.env['ir.config_parameter'].sudo().get_param(
-                'mass_mailing.show_blacklist_buttons'),
+            # blocklist
+            'blocklist_enabled': bool(
+                request.env['ir.config_parameter'].sudo().get_param(
+                    'mass_mailing.show_blacklist_buttons',
+                    default=True,
+                )
+            ),
+            'blocklist_possible': mail_blocklist is not None,
+            'is_blocklisted': mail_blocklist.active if mail_blocklist else False,
         }
 
-    @http.route('/mailing/list/update', type='json', auth='public')
-    def mailing_update_list_subscription(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
+    @http.route('/mailing/list/update', type='json', auth='public', csrf=True)
+    def mailing_update_list_subscription(self, mailing_id=None, document_id=None,
+                                         email=None, hash_token=None,
+                                         opt_in_ids=None, opt_out_ids=None, **post):
         try:
-            mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
+            mailing_sudo = self._check_mailing_email_token(mailing_id, document_id, email, hash_token)
         except BadRequest:
             return 'error'
         except (NotFound, Unauthorized):
             return 'unauthorized'
 
-        mailing_sudo.update_opt_out(email, opt_in_ids, False)
-        mailing_sudo.update_opt_out(email, opt_out_ids, True)
+        if opt_in_ids:
+            mailing_sudo.update_opt_out(email, opt_in_ids, False)
+        if opt_out_ids:
+            mailing_sudo.update_opt_out(email, opt_out_ids, True)
         return True
 
-    @http.route('/mailing/feedback', type='json', auth='public')
-    def mailing_send_feedback(self, mailing_id, res_id, email, feedback, token):
+    @http.route('/mailing/feedback', type='json', auth='public', csrf=True)
+    def mailing_send_feedback(self, mailing_id=None, document_id=None,
+                              email=None, hash_token=None,
+                              feedback=None, **post):
         try:
-            mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
+            mailing_sudo = self._check_mailing_email_token(mailing_id, document_id, email, hash_token)
         except BadRequest:
             return 'error'
         except (NotFound, Unauthorized):
@@ -228,60 +252,50 @@ class MassMailController(http.Controller):
     # BLACKLIST
     # ------------------------------------------------------------
 
-    @http.route('/mailing/blacklist/check', type='json', auth='public')
-    def mail_blacklist_check(self, mailing_id, res_id, email, token):
+    @http.route('/mailing/blocklist/add', type='json', auth='public')
+    def mail_blocklist_add(self, mailing_id=None, document_id=None,
+                           email=None, hash_token=None):
         try:
-            _mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
-        except BadRequest:
-            return 'error'
-        except (NotFound, Unauthorized):
-            return 'unauthorized'
-
-        record = request.env['mail.blacklist'].sudo().with_context(active_test=False).search([('email', '=', tools.email_normalize(email))])
-        return record['active']
-
-    @http.route('/mailing/blacklist/add', type='json', auth='public')
-    def mail_blacklist_add(self, mailing_id, res_id, email, token):
-        try:
-            mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
+            mailing_sudo = self._check_mailing_email_token(mailing_id, document_id, email, hash_token)
         except BadRequest:
             return 'error'
         except (NotFound, Unauthorized):
             return 'unauthorized'
 
         if mailing_sudo:
-            message = Markup('<p>%s</p>') % Markup(
+            message = Markup(
                 _(
                     'Blocklist request from portal of mailing %(mailing_link)s (document %(record_link)s)',
-                    **self._format_bl_request(mailing_sudo, res_id)
+                    **self._format_bl_request(mailing_sudo, document_id)
                 )
             )
         else:
             message = Markup('<p>%s</p>') % _('Blocklist request from portal')
 
-        _blacklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
+        _blocklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
         return True
 
-    @http.route('/mailing/blacklist/remove', type='json', auth='public')
-    def mail_blacklist_remove(self, mailing_id, res_id, email, token):
+    @http.route('/mailing/blocklist/remove', type='json', auth='public')
+    def mail_blocklist_remove(self, mailing_id=None, document_id=None,
+                              email=None, hash_token=None):
         try:
-            mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
+            mailing_sudo = self._check_mailing_email_token(mailing_id, document_id, email, hash_token)
         except BadRequest:
             return 'error'
         except (NotFound, Unauthorized):
             return 'unauthorized'
 
-        if mailing_sudo and res_id:
-            message = Markup('<p>%s</p>') % Markup(
+        if mailing_sudo and document_id:
+            message = Markup(
                 _(
                     'Blocklist removal request from portal of mailing %(mailing_link)s (document %(record_link)s)',
-                    **self._format_bl_request(mailing_sudo, res_id)
+                    **self._format_bl_request(mailing_sudo, document_id)
                 )
             )
         else:
             message = Markup('<p>%s</p>') % _('Blocklist removal request from portal')
 
-        _blacklist_rec = request.env['mail.blacklist'].sudo()._remove(email, message=message)
+        _blocklist_rec = request.env['mail.blacklist'].sudo()._remove(email, message=message)
         return True
 
     def _format_bl_request(self, mailing, document_id):
