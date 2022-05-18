@@ -207,7 +207,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                 hash_token = test_mailing._generate_mailing_recipient_token(test_partner.id, test_partner.email_normalized)
                 with freeze_time(self._reference_now):
                     self.start_tour(
-                        f"/mailing/{test_mailing.id}/unsubscribe?email={test_partner.email_normalized}&res_id={test_partner.id}&token={hash_token}",
+                        f"/mailing/{test_mailing.id}/unsubscribe?email={test_partner.email_normalized}&document_id={test_partner.id}&hash_token={hash_token}",
                         tour_name,
                         login=None,
                     )
@@ -265,7 +265,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         hash_token = test_mailing._generate_mailing_recipient_token(contact_l1.id, contact_l1.email)
         with freeze_time(self._reference_now):
             self.start_tour(
-                f"/mailing/{test_mailing.id}/unsubscribe?email={self.test_email_normalized}&res_id={contact_l1.id}&token={hash_token}",
+                f"/mailing/{test_mailing.id}/unsubscribe?email={self.test_email_normalized}&document_id={contact_l1.id}&hash_token={hash_token}",
                 "mailing_portal_unsubscribe_from_list",
                 login=None,
             )
@@ -338,7 +338,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         hash_token = test_mailing._generate_mailing_recipient_token(contact_l1.id, contact_l1.email)
         with freeze_time(self._reference_now):
             self.start_tour(
-                f"/mailing/{test_mailing.id}/unsubscribe?email={contact_l1.email}&res_id={contact_l1.id}&token={hash_token}",
+                f"/mailing/{test_mailing.id}/unsubscribe?email={contact_l1.email}&document_id={contact_l1.id}&hash_token={hash_token}",
                 "mailing_portal_unsubscribe_from_list_with_update",
                 login=None,
             )
@@ -407,25 +407,25 @@ class TestMailingControllers(TestMailingControllersCommon):
         """ Test preview of mailing. It requires either a token, either being
         mailing user. """
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
-        res_id, email_normalized = self.user_marketing.partner_id.id, self.user_marketing.email_normalized
-        hash_token = test_mailing._generate_mailing_recipient_token(res_id, email_normalized)
+        doc_id, email_normalized = self.user_marketing.partner_id.id, self.user_marketing.email_normalized
+        hash_token = test_mailing._generate_mailing_recipient_token(doc_id, email_normalized)
         self.user_marketing.write({
             'groups_id': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
         })
         self.authenticate('user_marketing', 'user_marketing')
 
         # TEST: various invalid cases
-        for test_res_id, test_email, test_token, error_code in [
-            (res_id, email_normalized, '', 400),  # no token
-            (res_id, email_normalized, 'zboobs', 418),  # wrong token
+        for test_doc_id, test_email, test_token, error_code in [
+            (doc_id, email_normalized, '', 400),  # no token
+            (doc_id, email_normalized, 'zboobs', 418),  # wrong token
             (self.env.user.partner_id.id, email_normalized, hash_token, 418),  # mismatch
-            (res_id, 'not.email@example.com', hash_token, 418),  # mismatch
+            (doc_id, 'not.email@example.com', hash_token, 418),  # mismatch
         ]:
-            with self.subTest(test_email=test_email, test_res_id=test_res_id, test_token=test_token):
+            with self.subTest(test_email=test_email, test_doc_id=test_doc_id, test_token=test_token):
                 res = self.url_open(
                     werkzeug.urls.url_join(
                         test_mailing.get_base_url(),
-                        f'mailing/{test_mailing.id}/view?email={test_email}&res_id={test_res_id}&token={test_token}',
+                        f'mailing/{test_mailing.id}/view?email={test_email}&document_id={test_doc_id}&hash_token={test_token}',
                     )
                 )
                 self.assertEqual(res.status_code, error_code)
@@ -434,7 +434,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         res = self.url_open(
             werkzeug.urls.url_join(
                 test_mailing.get_base_url(),
-                f'mailing/{test_mailing.id}/view?email={email_normalized}&res_id={res_id}&token={hash_token}',
+                f'mailing/{test_mailing.id}/view?email={email_normalized}&document_id={doc_id}&hash_token={hash_token}',
             )
         )
         self.assertEqual(res.status_code, 200)

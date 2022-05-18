@@ -46,15 +46,15 @@ class MassMailController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
-    def mailing_unsubscribe(self, mailing_id, email=None, res_id=None, token="", **post):
+    def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
         try:
-            mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
+            mailing_sudo = self._check_mailing_email_token(mailing_id, document_id, email, hash_token)
         except NotFound as e:  # avoid leaking ID existence
             raise Unauthorized() from e
 
         if mailing_sudo.mailing_model_real == 'mailing.contact':
-            return self._mailing_unsubscribe_from_list(mailing_sudo, res_id, email, token)
-        return self._mailing_unsubscribe_from_document(mailing_sudo, res_id, email, token)
+            return self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email, hash_token)
+        return self._mailing_unsubscribe_from_document(mailing_sudo, document_id, email, hash_token)
 
     def _mailing_unsubscribe_from_list(self, mailing, document_id, email, hash_token):
         # Unsubscribe directly + Let the user choose their subscriptions
@@ -252,9 +252,12 @@ class MassMailController(http.Controller):
         return request.render('mass_mailing.mailing_report_deactivated', render_vals)
 
     @http.route(['/mailing/<int:mailing_id>/view'], type='http', website=True, auth='public')
-    def mailing_view_in_browser(self, mailing_id, email=None, res_id=None, token=""):
+    def mailing_view_in_browser(self, mailing_id, email=None, document_id=None, hash_token=None, **kwargs):
+        # backward compatibility: temporary for mailings sent before migation to 17
+        document_id = document_id or kwargs.get('res_id')
+        hash_token = hash_token or kwargs.get('token')
         try:
-            mailing_sudo = self._check_mailing_email_token(mailing_id, res_id, email, token)
+            mailing_sudo = self._check_mailing_email_token(mailing_id, document_id, email, hash_token)
         except NotFound as e:
             raise Unauthorized() from e
         except (BadRequest, Unauthorized):
@@ -265,17 +268,17 @@ class MassMailController(http.Controller):
                 raise
 
         # do not force lang, will simply use user context
-        res_id = int(res_id) if res_id and res_id.isdigit() else 0
+        document_id = int(document_id) if document_id and document_id.isdigit() else 0
         html_markupsafe = mailing_sudo._render_field(
             'body_html',
-            [res_id],
+            [document_id],
             compute_lang=False,
             options={'post_process': False}
-        )[res_id]
+        )[document_id]
         # Update generic URLs (without parameters) to final ones
         html_markupsafe = html_markupsafe.replace(
             '/unsubscribe_from_list',
-            mailing_sudo._get_unsubscribe_url(email, res_id)
+            mailing_sudo._get_unsubscribe_url(email, document_id)
         )
 
         return request.render(

@@ -79,11 +79,11 @@ class TestMassMailing(TestMailFullCommon):
                 unsubscribe_href = self._get_href_from_anchor_id(email['body'], "url6")
                 unsubscribe_url = werkzeug.urls.url_parse(unsubscribe_href)
                 unsubscribe_params = unsubscribe_url.decode_query().to_dict(flat=True)
-                self.assertEqual(int(unsubscribe_params['res_id']), recipient.id)
+                self.assertEqual(int(unsubscribe_params['document_id']), recipient.id)
                 self.assertEqual(unsubscribe_params['email'], recipient.email_normalized)
                 self.assertEqual(
-                    mailing._generate_mailing_recipient_token(unsubscribe_params['res_id'], (unsubscribe_params['email'])),
-                    unsubscribe_params['token']
+                    mailing._generate_mailing_recipient_token(unsubscribe_params['document_id'], (unsubscribe_params['email'])),
+                    unsubscribe_params['hash_token']
                 )
                 # rendered view
                 self.assertIn(
@@ -92,11 +92,11 @@ class TestMassMailing(TestMailFullCommon):
                 view_href = self._get_href_from_anchor_id(email['body'], "url6")
                 view_url = werkzeug.urls.url_parse(view_href)
                 view_params = view_url.decode_query().to_dict(flat=True)
-                self.assertEqual(int(view_params['res_id']), recipient.id)
+                self.assertEqual(int(view_params['document_id']), recipient.id)
                 self.assertEqual(view_params['email'], recipient.email_normalized)
                 self.assertEqual(
-                    mailing._generate_mailing_recipient_token(view_params['res_id'], (view_params['email'])),
-                    view_params['token']
+                    mailing._generate_mailing_recipient_token(view_params['document_id'], (view_params['email'])),
+                    view_params['hash_token']
                 )
 
             self.assertMailTraces(
