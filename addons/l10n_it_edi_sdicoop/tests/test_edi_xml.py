@@ -59,6 +59,18 @@ class TestItEdi(AccountEdiTestCommon):
             'is_company': True,
         })
 
+        cls.italian_partner_b = cls.env['res.partner'].create({
+            'name': 'pa partner',
+            'vat': 'IT06655971007',
+            'l10n_it_codice_fiscale': '06655971007',
+            'l10n_it_pa_index': '123456',
+            'country_id': cls.env.ref('base.it').id,
+            'street': 'Via Test PA',
+            'zip': '32121',
+            'city': 'PA Town',
+            'is_company': True
+        })
+
         cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
             'name': 'Alessi',
             'l10n_it_codice_fiscale': '00465840031',
@@ -230,6 +242,16 @@ class TestItEdi(AccountEdiTestCommon):
                 ],
             })
 
+        cls.pa_partner_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_b.id,
+            'partner_bank_id': cls.test_bank.id,
+            'invoice_line_ids': [
+                (0, 0, cls.standard_line),
+            ],
+        })
+
         # We create this because we are unable to post without a proxy user existing
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': 'l10n_it_edi_sdicoop_test',
@@ -246,6 +268,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.non_latin_and_latin_invoice._post()
         cls.below_400_codice_simplified_invoice._post()
         cls.total_400_VAT_simplified_invoice._post()
+        cls.pa_partner_invoice._post()
 
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
         cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
@@ -533,3 +556,7 @@ class TestItEdi(AccountEdiTestCommon):
     def test_non_domestic_simplified_invoice(self):
         with self.assertRaises(UserError):
             self.non_domestic_simplified_invoice._post()
+
+    def test_send_pa_partner(self):
+        res = self.edi_format._l10n_it_post_invoices_step_1(self.pa_partner_invoice)
+        self.assertEqual(res[self.pa_partner_invoice], {'attachment': self.pa_partner_invoice.l10n_it_edi_attachment_id, 'success': True})

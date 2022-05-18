@@ -7823,6 +7823,13 @@ msgid "Journal Entry Date"
 msgstr "Ngày bút toán gốc"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Journal Entry Info"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
@@ -7944,6 +7951,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
 msgstr "Sổ nhật ký nơi tạo bút toán."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Journal:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -16678,6 +16692,12 @@ msgstr "e.g. INV"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"for this customer. You can allocate them to mark this credit note as paid."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
 "đối với khách hàng này. Bạn có thể phân bổ chúng vào hoá đơn này để đánh dấu"
@@ -16689,6 +16709,14 @@ msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
 "với nhà cung cấp này. Bạn có thể phân bổ chúng để ghi nhận là hóa đơn này đã"
 " thanh toán."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"for this vendor. You can allocate them to mark this credit note as paid."
+msgstr ""
+"với nhà cung cấp này. Bạn có thể phân bổ chúng để ghi nhận là hóa đơn điều chỉnh"
+" này thanh toán."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16897,7 +16925,7 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
-"{{ object.company_id.name }} Biên nhận thanh toán (Ref {{ object.name or "
+"{{ object.company_id.name }} Biên lai thanh toán (Ref {{ object.name or "
 "'n/a' }})"
 
 #. module: account

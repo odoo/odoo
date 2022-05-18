@@ -13,8 +13,8 @@
 # W. Outz, 2022
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # jufeodoo, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Robert Förster <hello@suppliot.eu>, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Robert Förster <hello@suppliot.eu>, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7833,6 +7833,13 @@ msgid "Journal Entry Date"
 msgstr "Datum der Journalbuchung"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Journal Entry Info"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
@@ -7956,6 +7963,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
 msgstr "Journal, indem der Eintrag erstellt werden soll."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_payment.xml:0
+#, python-format
+msgid "Journal:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -9735,6 +9749,8 @@ msgid ""
 "Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
 msgstr ""
+"I pagamenti in uscita sono registrati su un conto Pagamenti in sospeso. Nel widget di riconciliazione bancaria, appaiono come linee blu.\n"
+"Le transazioni bancarie vengono quindi riconciliate sul conto dei pagamenti in sospeso piuttosto che sul conto dei pagamenti."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -16725,6 +16741,12 @@ msgstr "z.B. RG"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"for this customer. You can allocate them to mark this credit note as paid."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
 "für diesen Kunden. Sie können diese zuteilen, um die Rechnung als bezahlt zu"
@@ -16736,6 +16758,12 @@ msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
 "für diesen Lieferanten. Sie können diese zuteilen, um die Rechnung als "
 "bezahlt zu kennzeichnen."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"for this vendor. You can allocate them to mark this credit note as paid."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16815,13 +16843,13 @@ msgstr "an"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "outstanding debits"
-msgstr "noch nicht ausgeglichene Zahlungen"
+msgid "outstanding credits"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "outstanding payments"
-msgstr "Offene Rechnungen"
+msgid "outstanding debits"
+msgstr "noch nicht ausgeglichene Zahlungen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid

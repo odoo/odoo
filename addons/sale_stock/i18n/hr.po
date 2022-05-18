@@ -3,22 +3,25 @@
 # 	* sale_stock
 # 
 # Translators:
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Marko Carević <marko.carevic@live.com>, 2019
-# Mario Jureša <mario.juresa@uvid.hr>, 2019
-# Tina Milas, 2019
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Mario Jureša <mario.juresa@uvid.hr>, 2022
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
+# Jasmina Otročak <jasmina@uvid.hr>, 2022
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
+# Marko Carević <marko.carevic@live.com>, 2022
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2022
+# Tina Milas, 2022
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,35 +58,19 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Ovdje postavljene vrijedonsti"
-" su specifične za pojedinui tvrtku.\" role=\"img\" aria-label=\"Ovdje "
-"postavljene vrijedonsti su specifične za pojedinui tvrtku.\" "
-"groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Ove vrijednosti su specifične"
+" za tvrtku\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Prodaja</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Prodano</span>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>Product</span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>Quantity</span>"
-msgstr "<span>Količina</span>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>SN/LN</span>"
-msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -98,12 +85,13 @@ msgstr "<strong>Nalozi za isporuku</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Incoterm: </strong>"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Inkoterm:</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
@@ -112,6 +100,10 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Artikl koji se može skladištiti je artikl čijim zalihama možete upravljati. \n"
+"Potrebno je instalirati aplikaciju Inventar.\n"
+"Potrošni artikl je artikl za koji se ne upravlja zalihama.\n"
+"Usluga je nematerijalni artikl koji pružate."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -122,6 +114,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Prema konfiguraciji proizvoda, isporučena količina može se automatski izračunati mehanizmom:\n"
+"- Ručno: količina se postavlja ručno na liniji\n"
+"- Analitički iz troškova: količina je količinski zbroj knjiženih troškova\n"
+"- Vremenski list: količina je zbroj sati zabilježenih na zadacima povezanim s ovom prodajnom  stavkom\n"
+"- Premještanje zaliha: količina dolazi iz potvrđenih izbora\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -130,7 +127,7 @@ msgstr "Post-prodaja"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
 msgstr ""
@@ -138,7 +135,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "Primjeni specifične rute"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -154,10 +151,17 @@ msgstr "Raspoloživost"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available"
 msgstr "Dostupno"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Available in stock"
+msgstr "Dostupno na skladištu"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -185,9 +189,19 @@ msgid "Date:"
 msgstr "Datum:"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
+msgid "Default Warehouse"
+msgstr "Zadano skladište"
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "Otprema"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
+msgid "Delivery Alert"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -202,20 +216,14 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
-msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
+"Datum isporuke koji možete obećati kupcu, računajući se od minimalnog "
+"vremena isporuke linija za narudžbu u slučaju proizvoda usluge. U slučaju "
+"dostave, uzeće se u obzir politika otpreme narudžbe kako bi se koristilo "
+"minimalno ili maksimalno vrijeme isporuke linija narudžbe."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
-
-#. module: sale_stock
-#: model:res.groups,name:sale_stock.group_lot_on_invoice
-msgid "Display Serial & Lot Number on Invoices"
 msgstr ""
 
 #. module: sale_stock
@@ -234,6 +242,11 @@ msgstr ""
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Documentation"
+msgstr "Dokumentacija"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -263,21 +276,36 @@ msgstr "Očekivani datum"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Expected Delivery"
+msgstr "Očekivana isporuka"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Expected:"
+msgstr "Očekivano:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
+msgid "Forecast Expected Date"
 msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Predviđanje zalihe"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
 msgstr ""
 
 #. module: sale_stock
@@ -314,6 +342,11 @@ msgstr ""
 "uvjeta koji se koriste za inozemne transakcije."
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
+msgid "Inventory"
+msgstr "Skladište"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
 msgstr "Rute zalihe"
@@ -329,9 +362,14 @@ msgid "Is Mto"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
+msgid "JSON data for the popover widget"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
-msgid "Journal Entries"
-msgstr "Temeljnice"
+msgid "Journal Entry"
+msgstr "Temeljnica"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
@@ -344,11 +382,6 @@ msgid "Lot/Serial"
 msgstr "Lot/Serija"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr ""
-
-#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
@@ -357,7 +390,7 @@ msgstr "Kreiraj narudžbu - MTO"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Moglo bi biti potrebno manualno dopuniti."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -380,7 +413,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Način ažuriranja isporučene količine"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -389,7 +422,21 @@ msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "No enough future availaibility"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "No future availaibility"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "On"
 msgstr "Uključeno"
@@ -399,11 +446,6 @@ msgstr "Uključeno"
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Naručena količina se smanjila!"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
-msgid "Package"
-msgstr "Paket"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -434,16 +476,26 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
+msgstr "Kol za isporučiti"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+msgid "Quotations"
+msgstr "Ponude"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Remaining demand available at"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"Reserving products manually in delivery orders or by running the scheduler "
-"is advised to better manage priorities in case of long customer lead times "
-"or/and frequent stock-outs. By default, the scheduler runs automatically "
-"every 24 hours."
-msgstr ""
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Reserved"
+msgstr "Rezervirano"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -453,7 +505,7 @@ msgstr "Smjer"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Stavka prodaje"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
@@ -468,18 +520,23 @@ msgstr "Prodajni nalozi"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
-msgstr ""
+msgstr "Broj prodajnih naloga"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Izvještaj analize prodaje"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
 msgstr "Prodajni nalog"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -529,7 +586,7 @@ msgstr "Mogućnost odabira u retku prodajnog naloga"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Isporuči sve proizvode odjednom"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
@@ -544,6 +601,13 @@ msgstr "Pravila otpreme"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sold in the last 365 days"
+msgstr "Prodano u zadnjih 365 dana"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"Some products have already been delivered. Returns can be created from the "
+"Delivery Orders."
 msgstr ""
 
 #. module: sale_stock
@@ -558,6 +622,11 @@ msgid "Stock Moves"
 msgstr "Skladišni prijenosi"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
 msgstr "Skladišno pravilo"
@@ -565,12 +634,19 @@ msgstr "Skladišno pravilo"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Izvještaj skladišnih pravila"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Izvještaj skladišnih pravila"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "The delivery"
+msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -582,14 +658,8 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr "Ovaj proizvod je pakiran po %.2f %s. Trebali biste prodati %.2f %s."
-
-#. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "This product is replenished on demand."
 msgstr ""
@@ -605,8 +675,13 @@ msgid "Transfers"
 msgstr "Prijenosi"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "Users"
+msgstr "Korisnici"
+
+#. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "View Forecast"
 msgstr "Vidi predviđanje"
@@ -626,12 +701,6 @@ msgstr "Skladište"
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid "Warning"
-msgstr "Upozorenje"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
 
@@ -642,13 +711,8 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "When to reserve sold products"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Kada kreće isporuka"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -671,7 +735,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "otkazano"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -687,9 +751,16 @@ msgstr "od"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "naručeno umjesto"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "will be late."
 msgstr ""
