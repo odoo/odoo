@@ -137,6 +137,7 @@
             <field name="priority">12</field>
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="before">
+                    <field name="use_leads" invisible="1"/>
                     <header>
                         <button name="action_assign_leads" type="object"
                             string="Assign Leads"

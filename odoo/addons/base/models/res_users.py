@@ -1308,7 +1308,7 @@ class GroupsView(models.Model):
         else:
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
-            xml1, xml2, xml3 = [], [], []
+            xml0, xml1, xml2, xml3 = [], [], [], []
             xml_by_category = {}
             xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
 
@@ -1327,6 +1327,11 @@ class GroupsView(models.Model):
                 if app.xml_id == 'base.module_category_user_type':
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
+                    # test_reified_groups, put the user category type in invisible
+                    # as it's used in domain of attrs of other fields,
+                    # and the normal user category type field node is wrapped in a `groups="base.no_one"`,
+                    # and is therefore removed when not in debug mode.
+                    xml0.append(E.field(name=field_name, invisible="1", on_change="1"))
                     user_type_field_name = field_name
                     user_type_readonly = str({'readonly': [(user_type_field_name, '!=', group_employee.id)]})
                     attrs['widget'] = 'radio'
@@ -1369,6 +1374,7 @@ class GroupsView(models.Model):
                 xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
 
             xml = E.field(
+                *(xml0),
                 E.group(*(xml1), col="2", groups="base.group_no_one"),
                 E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
                 E.group(*(xml3), col="4", attrs=str(user_type_attrs), groups="base.group_no_one"), name="groups_id", position="replace")

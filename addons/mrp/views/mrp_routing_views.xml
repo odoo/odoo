@@ -82,6 +82,7 @@
                         <group>
                             <group name="description">
                                 <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="name"/>
                                 <field name="bom_id" invisible="context.get('bom_id_invisible', False)" domain="[]" readonly="context.get('default_bom_id', False)"/>
                                 <field name="workcenter_id" context="{'default_company_id': company_id}"/>

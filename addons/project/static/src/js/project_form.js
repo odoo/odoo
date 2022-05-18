@@ -133,7 +133,9 @@ const ProjectFormController = FormController.extend({
     async _saveRecord(recordID, options) {
         const task = this.model.get(recordID || this.handle);
         const result = await this._super(...arguments);
-        let tasksX2ManyFields = result.filter(fieldName => ['child_ids', 'depend_on_ids'].includes(fieldName));
+        // --test-tags /industry_fsm.test_ui
+        // <page name="task_dependencies" groups="project.group_project_task_dependencies"></page>
+        let tasksX2ManyFields = Object.keys(task.data).filter(fieldName => ['child_ids', 'depend_on_ids'].includes(fieldName));
         if (tasksX2ManyFields.length) {
             const taskResIds = [];
             for (const taskX2ManyFieldName of tasksX2ManyFields) {

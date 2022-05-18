@@ -175,6 +175,7 @@
                         optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">
+                    <field name="sale_order_id" invisible="1"/>
                     <field name="remaining_hours_available" invisible="1"/>
                     <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}">
                         <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"

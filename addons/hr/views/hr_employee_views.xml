@@ -46,9 +46,11 @@
             <field name="arch" type="xml">
                 <form string="Employee" js_class="hr_employee_form" class='o_employee_form'>
                     <field name="active" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="user_partner_id" invisible="1"/>
                     <field name="hr_presence_state" invisible="1"/>
                     <field name="image_128" invisible="1" />
+                    <field name="company_id" invisible="1"/>
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_manager"/>
                     </header>

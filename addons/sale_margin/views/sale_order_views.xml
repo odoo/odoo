@@ -36,6 +36,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
+                <field name="price_subtotal" invisible="1"/>
                 <field name="purchase_price" optional="hide"/>
                 <field name="margin" optional="hide"/>
                 <field name="margin_percent"

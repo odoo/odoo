@@ -138,6 +138,7 @@
                     <field name="consumption" invisible="1"/>
                     <field name="is_planned" invisible="1"/>
                     <field name="show_allocation" invisible="1"/>
+                    <field name="workorder_ids" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_reception_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="fa-list"
@@ -194,6 +195,7 @@
                             <field name="product_id" context="{'default_detailed_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}" default_focus="1"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="forecasted_issue" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
                              <label for="bom_id" name="bom_label"/>
                             <div class='o_row d-flex' name="bom_div">
@@ -213,6 +215,7 @@
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
+                                <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <span class='fw-bold'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}"/>
@@ -267,6 +270,26 @@
                                     <!-- Useless as the editable in tree declaration -> For Form Test-->
                                     <field name="product_uom_category_id"/>
                                     <field name="allowed_operation_ids"/>
+                                    <!--
+                                    Required for test_00_mrp_byproduct
+                                    when changing the mrp.production product_qty
+                                    `_onchange_producing` is called,
+                                    calling `_set_qty_producing`,
+                                    which changes the `quantity_done` of byproducts
+                                    If byproducts are not in the view (`groups="mrp.group_mrp_byproducts"`)
+                                    and `quantity_done` is not within the finished move views,
+                                    (byproduct moves are a subset of finished moves)
+                                    the `quantity_done` of byproducts is not updated correctly with the onchange
+                                    Another solution is to add `self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')`
+                                    to the test `test_00_mrp_byproduct`, which could makes sense as it's a test testing the byproducts features,
+                                    for which you should have the byproducts group to have access to,
+                                    but it seemed better to keep the feature working even if you do not see the byproducts features with your user.
+                                    That being said, the best would be to have the byproducts feature working without relying on anything in the view,
+                                    e.g. so the byproducts feature works with xmlrpc calls.
+                                    -->
+                                    <field name="quantity_done"/>
+                                    <!-- Required for test_fifo_byproduct -->
+                                    <field name="cost_share"/>
                                 </tree>
                             </field>
                         </group>
@@ -280,6 +303,8 @@
                                 <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
                                     <field name="location_id" string="From" readonly="1" groups="stock.group_stock_multi_locations" optional="show"/>
+                                    <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
+                                    <field name="product_uom" invisible="1"/>
                                     <field name="propagate_cancel" invisible="1"/>
                                     <field name="price_unit" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
@@ -385,8 +410,10 @@
                                 <group>
                                     <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                     <field name="warehouse_id" invisible="1"/>
                                     <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="origin"/>

@@ -40,6 +40,7 @@
         <field name="arch" type="xml">
             <tree string="Reordering Rules" editable="bottom" js_class="stock_orderpoint_list" sample="1" multi_edit="1">
                 <field name="active" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                 <field name="product_category_id" invisible="1"/>
                 <field name="product_tmpl_id" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" invisible="context.get('default_product_id')" force_save="1"/>
@@ -140,6 +141,7 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="route_id" invisible="1"/>
                             <field name="product_id"/>
                             <label for="product_min_qty"/>

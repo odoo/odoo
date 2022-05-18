@@ -12,6 +12,7 @@
                 </header>
                 <div class="alert alert-danger text-center my-0" role="alert" attrs="{'invisible': [('error_type', '=', False)]}">
                     <field name="error_type" invisible="1"/>
+                    <field name="lead_type" invisible="1"/>
                     <span attrs="{'invisible': [('error_type', '!=', 'credits')]}">
                         <span>You do not have enough credits to submit this request.
                             <button name="action_buy_credits" type="object" class="oe_inline p-0 border-0 align-top text-primary">Buy credits.</button>

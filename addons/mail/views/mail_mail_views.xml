@@ -13,6 +13,8 @@
                         <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
                     </header>
                     <sheet>
+                        <field name="model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_open_document" string="Open Document"
                                     type="object" class="oe_link" icon="fa-file-text-o"

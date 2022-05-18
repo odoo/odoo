@@ -17,6 +17,7 @@
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"/>
                             <field name="res_model" groups="base.group_no_one"/>
+                            <field name="res_model" invisible="1"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model" invisible="1"/>
                             <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;"/>

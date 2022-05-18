@@ -8,11 +8,11 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <field name="project_ids" invisible="1"/>
+                <field name="is_product_milestone" invisible="1"/>
                 <button type="object" name="action_view_project_ids" class="oe_stat_button" icon="fa-puzzle-piece" attrs="{'invisible': ['|', ('state', 'in', ['draft', 'sent']), ('project_ids', '=', [])]}" groups="project.group_project_user">
-                    <field name="project_ids" invisible="1"/>
                     <field name="project_count" widget="statinfo" string="Projects"/>
                 </button>
-                <field name="is_product_milestone" invisible="1"/>
                 <button class="oe_stat_button" name="action_view_milestone" type="object" icon="fa-check-square-o"  attrs="{'invisible': ['|', ('is_product_milestone', '=', False), ('project_ids', '=', [])]}" groups="project.group_project_milestone">
                     <field name="milestone_count" widget="statinfo" string="Milestones"/>
                 </button>

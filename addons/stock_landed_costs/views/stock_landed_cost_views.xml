@@ -7,6 +7,7 @@
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
                 <form string="Landed Costs">
+                    <field name="company_id" invisible="1"/>
                     <field name="stock_valuation_layer_ids" invisible="1"/>
                     <header>
                         <button name="button_validate" string="Validate" states="draft" class="oe_highlight" type="object"/>

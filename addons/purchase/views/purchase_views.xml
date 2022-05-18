@@ -176,6 +176,7 @@
                             <field name="partner_ref"/>
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                             <field name="id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
@@ -221,6 +222,7 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="product_type" invisible="1"/>
+                                    <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="invoice_lines" invisible="1"/>
                                     <field name="sequence" widget="handle"/>

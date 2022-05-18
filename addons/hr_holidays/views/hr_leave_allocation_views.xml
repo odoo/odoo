@@ -130,7 +130,7 @@
                             </div>
                         </group>
                         <group name="alloc_right_col">
-                            <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
+                            <field name="employee_id" invisible="1"/>
                             <field name="department_id" invisible="1"/>
                         </group>
                     </group>
@@ -168,6 +168,8 @@
                 <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="replace">
+                <!-- :TestLeaveRequests.test_allocation_request -->
+                <field name="employee_id" invisible="1"/>
                 <field name="multi_employee" invisible="1" force_save="1"/>
                 <!-- Employee id is only visible if the allocation is created specifically for that user in `_action_validate_create_childs` -->
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"

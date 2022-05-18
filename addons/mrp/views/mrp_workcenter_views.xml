@@ -342,12 +342,12 @@
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
                                 <field name="name" string="Work Center Name" required="True"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 <field
                                     name="alternative_workcenter_ids"
                                     widget="many2many_tags"
-                                    context="{'default_company_id': company_id}"
                                 />
                             </group>
                             <group>
@@ -388,7 +388,7 @@
                                 <field name="note" nolabel="1" placeholder="Description of the work center..."/>
                             </page>
                             <page string="Specific Capacities" name="capacity">
-                                <field name="capacity_ids" context="{'default_workcenter_id': id, 'default_company_id': company_id}">
+                                <field name="capacity_ids" context="{'default_workcenter_id': id}">
                                     <tree editable="bottom">
                                         <field name="product_id"/>
                                         <field name="product_uom_id" groups="uom.group_uom"/>

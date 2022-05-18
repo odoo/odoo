@@ -132,6 +132,8 @@
                             <field name="same_currency" invisible="1"/>
                             <field name="is_editable" invisible="1"/>
                             <field name="is_ref_editable" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="company_currency_id" invisible="1"/>
                             <field name="amount_tax_company" invisible="1"/>
                             <field name="unit_amount" invisible="1"/>
@@ -688,6 +690,7 @@
                 <form string="Expense Reports" class="o_expense_sheet">
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
+                <field name="company_id" invisible="1"/>
                  <header>
                     <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit" data-hotkey="l"/>
                     <button name="approve_expense_sheets"

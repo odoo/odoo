@@ -17,8 +17,10 @@
                  attrs="{'invisible': ['|', ('mailing_sms_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
                  icon="fa-mobile" groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_sms_count" widget="statinfo" string="SMS"/>
-                    <field name="ab_testing_mailings_sms_count" invisible="1"/>
                 </button>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field name="ab_testing_mailings_sms_count" invisible="1"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="SMS" name="sms"

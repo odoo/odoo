@@ -48,7 +48,13 @@ class TestACL(TransactionCaseWithUserDemo):
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
-        form_view = currency.get_view(False, 'form')
+        with self.debug_mode():
+            # <group groups="base.group_no_one">
+            #     <group string="Price Accuracy">
+            #         <field name="rounding"/>
+            #         <field name="decimal_places"/>
+            #     </group>
+            form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
@@ -74,7 +80,8 @@ class TestACL(TransactionCaseWithUserDemo):
         self.erp_system_group.users += self.user_demo
         has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
         fields = currency.fields_get([])
-        form_view = currency.get_view(False, 'form')
+        with self.debug_mode():
+            form_view = currency.get_view(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
         self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")

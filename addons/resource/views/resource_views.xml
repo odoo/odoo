@@ -33,6 +33,7 @@
             <form string="Resource">
             <sheet>
                 <field name="active" invisible="1" />
+                <field name="company_id" invisible="1"/>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <group>
                     <group name="user_details">
@@ -57,6 +58,7 @@
         <field name="model">resource.resource</field>
         <field name="arch" type="xml">
             <tree string="Resources" multi_edit="1" default_order="name">
+                <field name="company_id" invisible="1"/>
                 <field name="name" />
                 <field name="user_id" />
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
@@ -125,6 +127,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
             <form string="Leave Detail">
+            <field name="company_id" invisible="1"/>
             <sheet>
                 <group>
                     <group name="leave_details">

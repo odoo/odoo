@@ -2175,7 +2175,11 @@ class AccountMove(models.Model):
             for key in list(field_onchange):
                 if key == to_del or key.startswith(f"{to_del}."):
                     del field_onchange[key]
-            del values[to_del]
+            # test_01_account_tour
+            # File "/data/build/odoo/addons/account/models/account_move.py", line 2127, in onchange
+            # del values[to_del]
+            # KeyError: 'line_ids'
+            values.pop(to_del, None)
         return super().onchange(values, field_name, field_onchange)
 
     # -------------------------------------------------------------------------

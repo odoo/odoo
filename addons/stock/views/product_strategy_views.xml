@@ -5,6 +5,8 @@
         <field name="model">stock.putaway.rule</field>
         <field name="arch" type="xml">
             <tree string="Putaway Rules" editable="bottom" sample='1'>
+                <field name="company_id" invisible="1"/>
+                <field name="package_type_ids" invisible="1"/>
                 <field name="sequence" widget="handle"
                        invisible="context.get('invisible_handle', False)"/>
                 <field name="location_in_id" string="When product arrives in"

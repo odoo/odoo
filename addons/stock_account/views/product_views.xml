@@ -33,6 +33,7 @@
             <field name="arch" type="xml">
                 <group name="account_property" position="inside">
                     <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_readonly" attrs="{'invisible':[('property_valuation', '=', 'manual_periodic')]}">
+                        <field name="property_valuation" invisible="1"/>
                         <field name="property_stock_valuation_account_id" options="{'no_create': True}" attrs="{'required':[('property_valuation', '=', 'real_time')]}"/>
                         <field name="property_stock_journal" attrs="{'required':[('property_valuation', '=', 'real_time')]}" />
                         <field name="property_stock_account_input_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />

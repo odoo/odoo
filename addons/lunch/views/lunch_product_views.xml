@@ -67,6 +67,7 @@
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
             <form string="Products Form">
+                <field name="company_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

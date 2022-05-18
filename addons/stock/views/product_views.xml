@@ -252,6 +252,7 @@
                             attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
                     </header>
                     <div name="button_box" position="inside">
+                        <field name="tracking" invisible="1"/>
                         <field name="show_on_hand_qty_status_button" invisible="1"/>
                         <field name="show_forecasted_qty_status_button" invisible="1"/>
                         <button class="oe_stat_button"
@@ -358,6 +359,7 @@
                             attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
                     </header>
                     <div name="button_box" position="inside">
+                        <field name="tracking" invisible="1"/>
                         <field name="show_on_hand_qty_status_button" invisible="1"/>
                         <field name="show_forecasted_qty_status_button" invisible="1"/>
                         <button type="object"

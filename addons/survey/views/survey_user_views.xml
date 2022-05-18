@@ -52,6 +52,7 @@
                             <field string="Attempts" name="attempts_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <field name="test_entry" invisible="1"/>
                     <widget name="web_ribbon" title="Test Entry" bg_color="bg-info"
                         attrs="{'invisible': [('test_entry', '!=', True)]}"/>
                     <widget name="web_ribbon" title="Failed" bg_color="bg-danger"

@@ -70,6 +70,9 @@
                             By <field name="author" class="oe_inline" placeholder="Author Name"/>
                         </h3>
                         <div>
+                            <field name="state" invisible="1"/>
+                            <field name="to_buy" invisible="1"/>
+                            <field name="has_iap" invisible="1"/>
                             <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary me-1"/>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-primary me-1"
                                attrs="{'invisible': ['|', ('to_buy','=',False), ('state', 'not in', ('uninstalled', 'uninstallable'))]}" role="button">Upgrade</a>
@@ -86,11 +89,9 @@
                         <page string="Information" name="information">
                             <group>
                                 <group>
-                                    <field name="has_iap" invisible="1"/>
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
                                     <field name="category_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="summary"/>
-                                    <field name="to_buy" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="name"/>

@@ -24,6 +24,7 @@
                         <tree editable="bottom" create="0" delete="0">
                             <field name="id" invisible="1"/>
                             <field name="tracking" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('single_product', False)" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
                             <field name="location_id" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot" attrs="{
