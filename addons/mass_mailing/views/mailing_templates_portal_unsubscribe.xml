@@ -29,11 +29,11 @@
                                     <t t-foreach="list_ids" t-as="list_id">
                                         <t t-if="list_id.is_public == True">
                                             <li class="list-group-item">
-                                                <input type="checkbox" class="mail_list_checkbox" name="contact_ids"
+                                                <input type="checkbox" name="contact_ids"
                                                     t-att-value="list_id['id']" t-att-checked="None if list_id['id'] in opt_out_list_ids else 'checked'"/>
                                                 <t t-esc="list_id.name"/>
                                                 <span t-if="list_id['id'] in opt_out_list_ids"
-                                                      class="o_mass_mailing_unsubscribed">
+                                                      class="o_mailing_portal_list_unsubscribed">
                                                     Unsubscribed
                                                 </span>
                                             </li>
@@ -42,11 +42,15 @@
                                 </ul>
 
                                 <div class="mb64 pt-3">
-                                    <div t-if="show_blacklist_button">
-                                        <div class="btn btn-secondary float-end" id="button_add_blacklist" style="display:none">Blacklist Me</div>
-                                    </div>
-                                    <div class="btn btn-secondary float-end" id="button_remove_blacklist" style="display:none">Come Back</div>
-                                    <button type="submit" id="send_form" class="btn btn-primary">Update my subscriptions</button>
+                                    <div class="btn btn-link float-end pe-0 text-uppercase"
+                                         t-if="show_blacklist_button"
+                                         id="button_add_blacklist"
+                                         style="display:none">Blacklist Me</div>
+                                    <div class="btn btn-link float-end pe-0 text-uppercase"
+                                         id="button_remove_blacklist"
+                                         style="display:none">Come Back</div>
+                                    <button type="submit" id="send_form"
+                                            class="btn btn-primary">Update my subscriptions</button>
                                 </div>
                             </div>
 
@@ -89,8 +93,12 @@
                     </div>
 
                     <div t-if="show_blacklist_button" class="mb64">
-                        <div class="btn btn-secondary float-end" id="button_add_blacklist" style="display:none">Blacklist Me</div>
-                        <div class="btn btn-secondary float-end" id="button_remove_blacklist" style="display:none">Come Back</div>
+                        <div class="btn btn-link float-end"
+                             id="button_add_blacklist"
+                             style="display:none">Blacklist Me</div>
+                        <div class="btn btn-link float-end"
+                             id="button_remove_blacklist"
+                             style="display:none">Come Back</div>
                     </div>
                 </div>
             </div>
