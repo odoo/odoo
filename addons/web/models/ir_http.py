@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import hashlib
 import json
 import logging
@@ -7,7 +8,7 @@ import logging
 import odoo
 from odoo import api, http, models
 from odoo.http import request
-from odoo.tools import file_open, image_process, ustr
+from odoo.tools import config, file_open, image_process, ustr
 from odoo.tools.misc import str2bool
 from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 
@@ -46,6 +47,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _handle_debug(cls):
         debug = request.httprequest.args.get('debug')
+        now_timestamp = datetime.datetime.now().timestamp()
         if debug is not None:
             request.session.debug = ','.join(
                      mode if mode in ALLOWED_DEBUG_MODES
@@ -53,6 +55,11 @@ class Http(models.AbstractModel):
                 else ''
                 for mode in (debug or '').split(',')
             )
+            request.session.debug_timestamp = now_timestamp
+            if debug and config['dev_mode']:
+                _logger.info('Debug mode does not turn off automatically when dev mode is enabled.')
+        elif request.session.debug and not config['dev_mode'] and (request.session.debug_timestamp or 0) < now_timestamp - 3600:
+            request.session.debug = ''
 
     @classmethod
     def _pre_dispatch(cls, rule, args):
