@@ -267,7 +267,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
         self.assertEqual(len(channel_message), 1, "Test message should have been posted")
 
-        channel.unlink()
+        channel.sudo().unlink()
         remaining_message = channel_message.exists()
         self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
