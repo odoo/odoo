@@ -3,7 +3,7 @@
 
     <t t-name="mail.ChannelMemberListCategory" owl="1">
         <h6 class="m-2" t-esc="title"/>
-        <t t-foreach="members" t-as="member" t-key="member.localId">
+        <t t-foreach="record.members" t-as="member" t-key="member.localId">
             <ChannelMember channel="record.channel" member="member"/>
         </t>
     </t>

@@ -16,22 +16,6 @@ export class ChannelMemberListCategory extends Component {
     }
 
     /**
-     * @returns {Partner[]}
-     */
-    get members() {
-        if (!this.record.exists()) {
-            return [];
-        }
-        if (this.record.channelMemberListViewOwnerAsOnline) {
-            return this.record.channelMemberListViewOwnerAsOnline.channel.orderedOnlineMembers;
-        }
-        if (this.record.channelMemberListViewOwnerAsOffline) {
-            return this.record.channelMemberListViewOwnerAsOffline.channel.orderedOfflineMembers;
-        }
-        return [];
-    }
-
-    /**
      * @returns {string}
      */
     get title() {
@@ -46,7 +30,7 @@ export class ChannelMemberListCategory extends Component {
             this.env._t("%(categoryText)s - %(memberCount)s"),
             {
                 categoryText,
-                memberCount: this.members.length,
+                memberCount: this.record.members.length,
             }
         );
     }
