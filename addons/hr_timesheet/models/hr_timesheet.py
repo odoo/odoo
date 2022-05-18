@@ -50,11 +50,6 @@ class AccountAnalyticLine(models.Model):
             return [('user_id', '=', self.env.user.id)]
         return []
 
-    def _domain_task_id(self):
-        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
-            return ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
-        return []
-
     task_id = fields.Many2one(
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
