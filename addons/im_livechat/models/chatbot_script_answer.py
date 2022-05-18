@@ -62,4 +62,4 @@ class ChatbotScriptAnswer(models.Model):
         if force_domain_chatbot_script_id:
             domain = expression.AND([domain, [('chatbot_script_id', '=', force_domain_chatbot_script_id)]])
 
-        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
+        return self._search(domain, limit=limit, order=self._order, access_rights_uid=name_get_uid)

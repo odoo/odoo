@@ -87,12 +87,12 @@ class Country(models.Model):
 
         ids = []
         if len(name) == 2:
-            ids = list(self._search([('code', 'ilike', name)] + args, limit=limit))
+            ids = list(self._search([('code', 'ilike', name)] + args, limit=limit, order=self._order))
 
         search_domain = [('name', operator, name)]
         if ids:
             search_domain.append(('id', 'not in', ids))
-        ids += list(self._search(search_domain + args, limit=limit))
+        ids += list(self._search(search_domain + args, limit=limit, order=self._order))
 
         return ids
 
@@ -180,11 +180,11 @@ class CountryState(models.Model):
             first_domain = [('code', '=ilike', name)]
             domain = [('name', operator, name)]
 
-        first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
+        first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, order=self._order, access_rights_uid=name_get_uid) if first_domain else []
         return list(first_state_ids) + [
             state_id
             for state_id in self._search(expression.AND([domain, args]),
-                                         limit=limit, access_rights_uid=name_get_uid)
+                                         limit=limit, order=self._order, access_rights_uid=name_get_uid)
             if state_id not in first_state_ids
         ]
 

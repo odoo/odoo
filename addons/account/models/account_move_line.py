@@ -6,6 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 from odoo.tools import frozendict, formatLang, format_date, float_is_zero, Query
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
@@ -1551,14 +1552,12 @@ class AccountMoveLine(models.Model):
         if field_name != 'account_root_id' or set_count:
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)
 
-        # Override in order to not read the complete move line table and use the index instead
-        query = self._search(domain, limit=1)
-
         # if domain is logically equivalent to false
-        if not isinstance(query, Query):
+        if expression.is_false(self, domain):
             return {}
 
-        query.order = None
+        # Override in order to not read the complete move line table and use the index instead
+        query = self._search(domain, limit=1)
         query.add_where('account.id = account_move_line.account_id')
         query_str, query_param = query.select()
         self.env.cr.execute(f"""
