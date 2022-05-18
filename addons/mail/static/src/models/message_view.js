@@ -13,15 +13,9 @@ registerModel({
          * Briefly highlights the message.
          */
         highlight() {
-            this.messaging.browser.clearTimeout(this.highlightTimeout);
             this.update({
+                highlightTimer: [clear(), insertAndReplace()],
                 isHighlighted: true,
-                highlightTimeout: this.messaging.browser.setTimeout(() => {
-                    if (!this.exists()) {
-                        return;
-                    }
-                    this.update({ isHighlighted: false });
-                }, 2000),
             });
         },
         /**
@@ -109,6 +103,9 @@ registerModel({
             if (this.threadViewOwnerAsLastMessageView && this.component && this.component.isPartiallyVisible()) {
                 this.threadView.handleVisibleMessage(this.message);
             }
+        },
+        onHighlightTimerTimeout() {
+            this.update({ isHighlighted: false });
         },
         onMouseenter() {
             this.update({ isHovered: true });
@@ -368,9 +365,12 @@ registerModel({
             compute: '_computeHasAuthorOpenChat',
         }),
         /**
-         * id of the current timeout that will reset isHighlighted to false.
+         * Current timer that will reset isHighlighted to false.
          */
-        highlightTimeout: attr(),
+        highlightTimer: one('Timer', {
+            inverse: 'messageViewOwnerAsHighlight',
+            isCausal: true,
+        }),
         /**
          * Whether the message is "active", ie: hovered or clicked, and should
          * display additional things (date in sidebar, message actions, etc.)

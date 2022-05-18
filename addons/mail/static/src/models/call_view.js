@@ -17,11 +17,53 @@ registerModel({
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
         },
         _willDelete() {
-            browser.clearTimeout(this.showOverlayTimeout);
             browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
         },
     },
     recordMethods: {
+        /**
+         * Finds a tile layout and dimensions that respects param0.aspectRatio while maximizing
+         * the total area covered by the tiles within the specified container dimensions.
+         *
+         * @param {Object} param0
+         * @param {number} [param0.aspectRatio]
+         * @param {number} param0.containerHeight
+         * @param {number} param0.containerWidth
+         * @param {number} param0.tileCount
+         */
+        calculateTessellation({ aspectRatio = 1, containerHeight, containerWidth, tileCount }) {
+            let optimalLayout = {
+                area: 0,
+                cols: 0,
+                tileHeight: 0,
+                tileWidth: 0,
+            };
+
+            for (let columnCount = 1; columnCount <= tileCount; columnCount++) {
+                const rowCount = Math.ceil(tileCount / columnCount);
+                const potentialHeight = containerWidth / (columnCount * aspectRatio);
+                const potentialWidth = containerHeight / rowCount;
+                let tileHeight;
+                let tileWidth;
+                if (potentialHeight > potentialWidth) {
+                    tileHeight = Math.floor(potentialWidth);
+                    tileWidth = Math.floor(tileHeight * aspectRatio);
+                } else {
+                    tileWidth = Math.floor(containerWidth / columnCount);
+                    tileHeight = Math.floor(tileWidth / aspectRatio);
+                }
+                const area = tileHeight * tileWidth;
+                if (area <= optimalLayout.area) {
+                    continue;
+                }
+                optimalLayout = {
+                    area,
+                    tileHeight,
+                    tileWidth,
+                };
+            }
+            return optimalLayout;
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -75,14 +117,17 @@ registerModel({
             markEventHandled(ev, 'CallView.MouseMoveOverlay');
             this.update({
                 showOverlay: true,
+                showOverlayTimer: clear(),
             });
-            browser.clearTimeout(this.showOverlayTimeout);
         },
         /**
          * @param {MouseEvent} ev
          */
         onRtcSettingsDialogClosed(ev) {
             this.messaging.userSetting.callSettingsMenu.toggle();
+        },
+        onShowOverlayTimeout() {
+            this.update({ showOverlay: false });
         },
         async activateFullScreen() {
             const el = document.body;
@@ -249,10 +294,7 @@ registerModel({
         _showOverlay() {
             this.update({
                 showOverlay: true,
-            });
-            browser.clearTimeout(this.showOverlayTimeout);
-            this.update({
-                showOverlayTimeout: browser.setTimeout(this._onShowOverlayTimeout, 3000),
+                showOverlayTimer: [clear(), insertAndReplace()],
             });
         },
         /**
@@ -265,15 +307,6 @@ registerModel({
                 return;
             }
             this.update({ isFullScreen: false });
-        },
-        /**
-         * @private
-         */
-        _onShowOverlayTimeout() {
-            if (!this.exists()) {
-                return;
-            }
-            this.update({ showOverlay: false });
         },
     },
     fields: {
@@ -288,6 +321,7 @@ registerModel({
             default: 16 / 9,
             compute: '_computeAspectRatio',
         }),
+        tileContainerRef: attr(),
         /**
          * Determines whether we only display the videos or all the participants
          */
@@ -364,7 +398,10 @@ registerModel({
         showOverlay: attr({
             default: true,
         }),
-        showOverlayTimeout: attr(),
+        showOverlayTimer: one('Timer', {
+            inverse: 'callViewAsShowOverlay',
+            isCausal: true,
+        }),
         /**
          * ThreadView on which the call view is attached.
          */
@@ -373,6 +410,9 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        tileHeight: attr({
+            default: 0,
+        }),
         /**
          * List of all participant cards (can either be invitations or rtcSessions).
          */
@@ -380,6 +420,9 @@ registerModel({
             compute: '_computeTileParticipantCards',
             inverse: 'callViewOfTile',
             isCausal: true,
+        }),
+        tileWidth: attr({
+            default: 0,
         }),
     },
     onChanges: [

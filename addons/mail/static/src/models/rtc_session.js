@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcSession',
@@ -13,17 +13,33 @@ registerModel({
         },
     },
     recordMethods: {
+        onBroadcastTimeout() {
+            this.messaging.rpc(
+                {
+                    route: '/mail/rtc/session/update_and_broadcast',
+                    params: {
+                        session_id: this.id,
+                        values: {
+                            is_camera_on: this.isCameraOn,
+                            is_deaf: this.isDeaf,
+                            is_muted: this.isSelfMuted,
+                            is_screen_sharing_on: this.isScreenSharingOn,
+                        },
+                    },
+                },
+                { shadow: true },
+            );
+        },
         /**
          * restores the session to its default values
          */
         reset() {
-            this.messaging.browser.clearTimeout(this.broadcastTimeout);
             this.messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
             this._removeAudio();
             this.removeVideo();
             this.update({
                 audioElement: clear(),
-                broadcastTimeout: clear(),
+                broadcastTimer: clear(),
                 connectionRecoveryTimeout: clear(),
                 isTalking: clear(),
                 localCandidateType: clear(),
@@ -96,11 +112,8 @@ registerModel({
             if (!this.rtcAsCurrentSession) {
                 return;
             }
-            this.update(data);
-            this.messaging.browser.clearTimeout(this.broadcastTimeout);
-            this.update({
-                broadcastTimeout: this.messaging.browser.setTimeout(this._onBroadcastTimeout, 3000),
-            });
+            const data2 = Object.assign({}, data, { broadcastTimer: [clear(), insertAndReplace()] });
+            this.update(data2);
         },
         /**
          * Updates the rtcSession with information on the type of candidate used
@@ -281,30 +294,6 @@ registerModel({
             }
         },
         /**
-         * @private
-         */
-         _onBroadcastTimeout() {
-            if (!this.exists()) {
-                return;
-            }
-            this.update({ broadcastTimeout: clear() });
-            this.messaging.rpc(
-                {
-                    route: '/mail/rtc/session/update_and_broadcast',
-                    params: {
-                        session_id: this.id,
-                        values: {
-                            is_camera_on: this.isCameraOn,
-                            is_deaf: this.isDeaf,
-                            is_muted: this.isSelfMuted,
-                            is_screen_sharing_on: this.isScreenSharingOn,
-                        },
-                    },
-                },
-                { shadow: true },
-            );
-        },
-        /**
          * cleanly removes the audio stream of the session
          *
          * @private
@@ -396,7 +385,10 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
-        broadcastTimeout: attr(),
+        broadcastTimer: one('Timer', {
+            inverse: 'rtcSessionOwnerAsBroadcast',
+            isCausal: true,
+        }),
         /**
          * The mail.channel of the session, rtc sessions are part and managed by
          * mail.channel
