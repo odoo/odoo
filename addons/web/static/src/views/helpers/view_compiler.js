@@ -729,9 +729,9 @@ export class ViewCompiler {
      */
     compileNotebook(el, params) {
         const noteBook = createElement("Notebook");
-        const pageAnchors = [...document.querySelectorAll("[href^=\\#]")].map((a) =>
-            CSS.escape(a.getAttribute("href").substring(1))
-        );
+        const pageAnchors = [...document.querySelectorAll("[href^=\\#]")]
+            .map((a) => CSS.escape(a.getAttribute("href").substring(1)))
+            .filter((a) => a.length);
         const noteBookAnchors = {};
 
         if (el.hasAttribute("class")) {
@@ -764,6 +764,7 @@ export class ViewCompiler {
 
             for (const anchor of child.querySelectorAll("[href^=\\#]")) {
                 const anchorValue = CSS.escape(anchor.getAttribute("href").substring(1));
+                if (!anchorValue.length) continue;
                 pageAnchors.push(anchorValue);
                 noteBookAnchors[anchorValue] = {
                     origin: `'${pageId}'`,
@@ -788,7 +789,6 @@ export class ViewCompiler {
             // present in the notebook, it must be aware of the
             // page that contains the corresponding element
             for (const anchor of pageAnchors) {
-                if (!anchor.length) return;
                 let pageId = 1;
                 for (const child of el.children) {
                     if (child.querySelector(`#${anchor}`)) {
