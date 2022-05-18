@@ -107,9 +107,7 @@
         'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
-
-        # Old snippets
-        ],
+    ],
     'demo': [
         'data/website_demo.xml',
         'data/website_visitor_demo.xml',
