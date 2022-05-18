@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 import unittest
@@ -16,6 +17,26 @@ PG_CONCURRENCY_ERRORS = [
     psycopg2.errorcodes.TRANSACTION_ROLLBACK,
 ]
 
+_logger = logging.getLogger(__name__)
+
+
+class ThreadRaiseJoin(threading.Thread):
+    """Custom Thread Class to raise the exception to main thread in the join"""
+
+    def run(self, *args, **kwargs):
+        self.exc = None
+        try:
+            return super().run(*args, **kwargs)
+        except BaseException as e:
+            self.exc = e
+
+    def join(self, *args, **kwargs):
+        super().join(*args, **kwargs)
+        # raise exception in the join
+        # to raise it in the main thread
+        if self.exc:
+            raise self.exc
+
 
 @tagged("post_install", "-at_install", "test_move_sequence")
 class TestSequenceConcurrency(TransactionCase):
@@ -24,7 +45,6 @@ class TestSequenceConcurrency(TransactionCase):
         self.product = self.env.ref("product.product_delivery_01")
         self.partner = self.env.ref("base.res_partner_12")
         self.date = fields.Date.to_date("1985-04-14")
-        self.last_thread_exc = None
 
     def _create_invoice_form(self, env, post=True):
         if release.version == "13.0":
@@ -89,26 +109,30 @@ class TestSequenceConcurrency(TransactionCase):
             env.cr.commit()
 
     def _create_invoice_payment(self, deadlock_timeout, payment_first=False):
-        try:
-            with odoo.api.Environment.manage():
-                with self.env.registry.cursor() as cr, cr.savepoint():
-                    # Avoid waiting for a long time and it needs to be less than deadlock
-                    cr.execute(
-                        "SET LOCAL statement_timeout = '%ss'", (deadlock_timeout + 10,)
-                    )
-                    env = api.Environment(cr, SUPERUSER_ID, {})
-                    if payment_first:
-                        self._create_payment_form(env)
-                        self._create_invoice_form(env)
-                    else:
-                        self._create_invoice_form(env)
-                        self._create_payment_form(env)
-                    # sleep in order to avoid release the locks too faster
-                    # It could be many methods called after creating these kind of records e.g. reconcile
-                    time.sleep(deadlock_timeout + 12)
-        except Exception as exc:
-            self.last_thread_exc = exc
-            raise exc
+        with odoo.api.Environment.manage():
+            registry = odoo.registry(self.env.cr.dbname)
+            with registry.cursor() as cr, cr.savepoint():
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                cr_pid = cr.connection.get_backend_pid()
+                # Avoid waiting for a long time and it needs to be less than deadlock
+                cr.execute(
+                    "SET LOCAL statement_timeout = '%ss'", (deadlock_timeout + 10,)
+                )
+                if payment_first:
+                    # TODO: Check why if remove logger or print the thread let it alive
+                    _logger.info("Creating payment cr %s", cr_pid)
+                    self._create_payment_form(env)
+                    _logger.info("Creating invoice cr %s", cr_pid)
+                    self._create_invoice_form(env)
+                else:
+                    _logger.info("Creating invoice cr %s", cr_pid)
+                    self._create_invoice_form(env)
+                    _logger.info("Creating payment cr %s", cr_pid)
+                    self._create_payment_form(env)
+                # sleep in order to avoid release the locks too faster
+                # It could be many methods called after creating these kind of records e.g. reconcile
+                print("Finishing waiting %s" % deadlock_timeout + 12)
+                time.sleep(deadlock_timeout + 12)
 
     def test_sequence_concurrency_10_draft_invoices(self):
         """Creating 2 DRAFT invoices not should raises errors"""
@@ -368,12 +392,12 @@ class TestSequenceConcurrency(TransactionCase):
             )
             deadlock_timeout = int(deadlock_timeout / 1000)  # s
             try:
-                t_pay_inv = threading.Thread(
+                t_pay_inv = ThreadRaiseJoin(
                     target=self._create_invoice_payment,
                     args=(deadlock_timeout, True),
                     name="Thread payment invoice",
                 )
-                t_inv_pay = threading.Thread(
+                t_inv_pay = ThreadRaiseJoin(
                     target=self._create_invoice_payment,
                     args=(deadlock_timeout, False),
                     name="Thread invoice payment",
@@ -382,8 +406,6 @@ class TestSequenceConcurrency(TransactionCase):
                 t_inv_pay.start()
                 t_pay_inv.join(timeout=deadlock_timeout + 15)
                 t_inv_pay.join(timeout=deadlock_timeout + 15)
-                if self.last_thread_exc:
-                    raise self.last_thread_exc
             except psycopg2.OperationalError as e:
                 if e.pgcode == psycopg2.errorcodes.DEADLOCK_DETECTED:
                     self.assertFalse(
