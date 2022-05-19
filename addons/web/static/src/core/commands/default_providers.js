@@ -13,6 +13,7 @@ const { Component } = owl;
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {
     emptyMessage: _lt("No command found"),
+    placeholder: _lt("Search for a command..."),
 });
 
 export class HotkeyCommandItem extends Component {

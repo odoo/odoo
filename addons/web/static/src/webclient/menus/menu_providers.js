@@ -18,6 +18,7 @@ const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("/", {
     emptyMessage: _lt("No menu found"),
     name: _lt("menus"),
+    placeholder: _lt("Search for a menu..."),
 });
 
 const commandProviderRegistry = registry.category("command_provider");

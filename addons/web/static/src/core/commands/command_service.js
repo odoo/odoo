@@ -99,7 +99,7 @@ export const commandService = {
 
             for (const [
                 namespace,
-                { emptyMessage, debounceDelay },
+                { emptyMessage, debounceDelay, placeholder },
             ] of commandSetupRegistry.getEntries()) {
                 if (namespace in configByNamespace) {
                     if (emptyMessage) {
@@ -108,6 +108,9 @@ export const commandService = {
                     if (debounceDelay !== undefined) {
                         configByNamespace[namespace].debounceDelay = debounceDelay;
                     }
+                    if (placeholder) {
+                        configByNamespace[namespace].placeholder = placeholder;
+                    }
                 }
             }
 
@@ -115,7 +118,6 @@ export const commandService = {
                 {
                     configByNamespace,
                     FooterComponent: DefaultFooter,
-                    placeholder: env._t("Search for a command..."),
                     providers: commandProviderRegistry.getAll(),
                 },
                 config
