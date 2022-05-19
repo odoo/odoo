@@ -315,7 +315,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     characterData: true,
                 });
             }
-        }
+        };
         observe();
 
         this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
@@ -323,8 +323,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 processRecords(this.observer.takeRecords());
                 this.observer.disconnect();
             }
-        })
-        this.wysiwyg.odooEditor.addEventListener('observerActive', observe)
+        });
+        this.wysiwyg.odooEditor.addEventListener('observerActive', observe);
 
         $('body').addClass('editor_started');
     },
