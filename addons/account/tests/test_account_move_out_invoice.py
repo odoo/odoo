@@ -3139,19 +3139,3 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
-
-    def test_changeprice_unit_to_zero(self):
-        move_form = Form(self.env['account.move'].with_context(default_type='out_invoice'))
-        move_form.partner_id = self.partner_a
-        move_form.invoice_date = fields.Date.from_string('2017-01-01')
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_a
-            line_form.tax_ids.clear()
-        with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.price_unit = 0
-
-        move = move_form.save()
-
-        self.assertRecordValues(move.invoice_line_ids, [
-            {'price_unit': 0}
-        ])

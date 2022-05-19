@@ -22,7 +22,7 @@ from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, content_disposition
 from odoo.tools import consteq, pycompat
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import get_extension, guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
 from odoo.http import ALLOWED_DEBUG_MODES
@@ -393,7 +393,7 @@ class IrHttp(models.AbstractModel):
             mimetype = guess_mimetype(decoded_content, default=default_mimetype)
 
         # extension
-        has_extension = bool(mimetypes.guess_type(filename)[0])
+        has_extension = get_extension(filename) or mimetypes.guess_type(filename)[0]
         if not has_extension:
             extension = mimetypes.guess_extension(mimetype)
             if extension:
