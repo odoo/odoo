@@ -2403,6 +2403,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                 aggregated_fields, count_field, result, read_group_order=order,
             )
+            if limit and limit < len(result):
+                result = sorted(result, key=lambda res: not res[groupby_fields[0]+'_count'])[:limit]
         return result
 
     def _read_group_resolve_many2one_fields(self, data, fields):
