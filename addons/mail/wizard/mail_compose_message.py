@@ -334,6 +334,7 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
+                'use_default_to': True,
             }
             template = self.env['mail.template'].create(values)
 
