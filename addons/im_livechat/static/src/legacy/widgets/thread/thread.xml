@@ -1,103 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates xml:space="preserve">
-
-    <t t-name="im_livechat.legacy.im_livechat.FeedBack">
-        <div class="o_livechat_rating text-center">
-            <div class="o_livechat_rating_box">
-                <div class="o_livechat_rating_feedback_text">
-                    Did we correctly answer your question ?
-                </div>
-                <div class="o_livechat_rating_choices">
-                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_5.png'" alt="Good" data-value="5"/>
-                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_3.png'" alt="OK" data-value="3"/>
-                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_1.png'" alt="Bad" data-value="1" />
-                </div>
-            </div>
-            <div class="o_livechat_rating_reason">
-                <textarea id="reason" placeholder="Explain your note"></textarea>
-                <div class="o_livechat_rating_reason_button">
-                    <input type="button" class="btn btn-primary btn-sm o_rating_submit_button" value="Send" />
-                </div>
-            </div>
-            <div class="o_livechat_email text-left">
-                <strong class="o_livechat_email_sentLabel" style="display: none;">Conversation Sent</strong>
-                <span class="o_livechat_email_receiveCopyLabel text-muted">Receive a copy of this conversation</span>
-                <div class="o_livechat_email_receiveCopyForm input-group">
-                    <input id="o_email" type="text" class="form-control" placeholder="mail@example.com"/>
-                    <button type="button" class="o_email_chat_button btn btn-primary rounded-0">
-                        <i class="fa fa-paper-plane"/>
-                    </button>
-                </div>
-            </div>
-            <div class="alert alert-danger px-0 o_livechat_email_error" style="display: none;" role="alert">
-                Oops! Something went wrong.<br />Please check your internet connection.<br />
-                <a href="#" class="alert-link">Try again</a>
-            </div>
-            <div class="o_livechat_no_feedback text-muted">
-                <span>Close conversation</span>
-            </div>
-        </div>
-    </t>
-
-    <!--
-        @param {@im_livechat/legacy/widgets/abstract_thread_window} widget
-    -->
-    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow">
-        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
-            <div class="o_thread_window_header">
-                <t t-call="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
-                    <t t-set="status" t-value="widget.getThreadStatus()"/>
-                    <t t-set="title" t-value="widget.getTitle()"/>
-                    <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
-                    <t t-set="thread" t-value="widget.getThread()"/>
-                </t>
-            </div>
-            <div class="o_thread_window_content">
-            </div>
-            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
-                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
-            </div>
-        </div>
-    </t>
-
-    <!--
-        @param {string} [status] e.g. 'online', 'offline'.
-        @param {string} title the title of the thread window, e.g. the record
-          name of the document.
-        @param {integer} [unreadCounter] the number of unread messages on the
-          thread.
-        @param {im_livechat.legacy.mail.model.Thread|undefined} thread
-        @param {Object} widget
-        @param {function} widget.isMobile function without any param that
-          states whether it should render for desktop or mobile screen.
-    -->
-    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
-        <span t-if="widget.isMobile()">
-            <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
-        </span>
-        <span class="o_thread_window_title">
-            <t t-esc="title"/>
-            <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
-            <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
-        </span>
-        <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
-            <a href="#" class="o_thread_window_close fa fa-close"/>
-        </span>
-    </t>
-
-    <!--
-        @param {string} status
-        @param {integer|undefined} [partnerID]
-    -->
-    <t t-name="im_livechat.legacy.mail.UserStatus">
-        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
-            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
-            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
-            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
-        </span>
-    </t>
-
     <!--
         @param {mail.model.AbstractThread} thread
         @param {Object} options
@@ -117,97 +20,7 @@
         <i class="o_mail_thread_loading_icon fa fa-circle-o-notch fa-spin"/>
         <span>Please wait...</span>
     </div>
-
-    <!--
-        @param {@im_livechat/legacy/widgets/document_viewer} widget
-    -->
-    <t t-name="im_livechat.legacy.mail.DocumentViewer.Content">
-        <div class="o_viewer_content">
-            <t t-set="model" t-value="widget.modelName"/>
-            <div class="o_viewer-header">
-                <span class="o_image_caption">
-                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
-                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
-                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
-                    <t t-esc="widget.activeAttachment.name"/>
-                    <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
-                </span>
-                <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
-            </div>
-            <div class="o_viewer_img_wrapper">
-                <div class="o_viewer_zoomer">
-                    <t t-if="widget.activeAttachment.fileType === 'image'">
-                        <div class="o_loading_img text-center">
-                            <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
-                        </div>
-                        <t t-set="unique" t-value="widget.activeAttachment.checksum ? widget.activeAttachment.checksum.slice(-8) : ''"/>
-                        <img class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=#{unique}&amp;model=#{model}" alt="Viewer"/>
-                    </t>
-                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
-                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
-                    <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
-                    <video t-if="widget.activeAttachment.fileType == 'video'" class="o_viewer_video" controls="controls">
-                        <source t-attf-src="/web/image/#{widget.activeAttachment.id}?model=#{model}" t-att-data-type="widget.activeAttachment.mimetype"/>
-                    </video>
-                </div>
-            </div>
-            <div t-if="widget.activeAttachment.fileType == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
-                <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
-                </div>
-                <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
-                </div>
-                <div class="btn-group" role="group">
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
-                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <!--
-        @param {@im_livechat/legacy/widgets/dcument_viewer} widget
-    -->
-    <t t-name="im_livechat.legacy.mail.DocumentViewer">
-        <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog">
-            <t class="o_document_viewer_content_call" t-call="im_livechat.legacy.mail.DocumentViewer.Content"/>
-
-            <t t-if="widget.attachment.length !== 1">
-                <a class="arrow arrow-left move_previous" href="#">
-                    <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
-                </a>
-                <a class="arrow arrow-right move_next" href="#">
-                    <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
-                </a>
-            </t>
-        </div>
-    </t>
-
-    <!--
-        @param {string} src
-    -->
-    <t t-name="im_livechat.legacy.mail.PrintImage">
-        <html>
-            <head>
-                <script>
-                    function onload_img() {
-                        setTimeout('print_img()', 10);
-                    }
-                    function print_img() {
-                        window.print();
-                        window.close();
-                    }
-                </script>
-            </head>
-            <body onload='onload_img()'>
-                <img t-att-src='src' alt=""/>
-            </body>
-        </html>
-    </t>
-
+    
     <!--
         @param {mail.model.AbstractThread} thread
         @param {Object} options
@@ -447,13 +260,7 @@
             <span name="partner_name" t-esc="notification.partner_name"/>
         </div>
     </t>
-
-    <t t-name="im_livechat.legacy.mail.MessagesSeparator">
-        <div class="o_thread_new_messages_separator">
-            <span class="o_thread_separator_label">New messages</span>
-        </div>
-    </t>
-
+    
     <!--
         @param {mail.model.Message} message
     -->
@@ -473,44 +280,40 @@
             </t>
         </ul>
     </t>
-
+    
     <!--
-        @param {Array} attachments
+        @param {Object} options
+        @param {boolean} [options.loadMoreOnScroll]
     -->
-    <t t-name="im_livechat.legacy.mail.composer.Attachments">
-        <div t-if="attachments.length > 0" class="o_attachments o_attachments_list">
-            <t t-foreach="attachments" t-as='attachment'>
-                <t t-call="im_livechat.legacy.mail.Attachment">
-                     <t t-set="editable" t-value="true"/>
-                </t>
+    <t t-name="im_livechat.legacy.mail.widget.Thread.LoadMore">
+        <div class="o_thread_show_more">
+            <t t-if="options.loadMoreOnScroll">
+                <span><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
+            </t>
+            <t t-else="">
+                <button class="btn btn-link">-------- Show older messages --------</button>
             </t>
         </div>
     </t>
-
+    
     <!--
-        @param {Object} attachment
-        @param {integer} attachment.id
-        @param {string} attachment.name
-        @param {string} attachment.url
-        @param {boolean} [isDeletable=false]
+        @param {string} status
+        @param {integer|undefined} [partnerID]
     -->
-    <t t-name="im_livechat.legacy.mail.AttachmentPreview">
-        <div class="o_attachment" t-att-title="attachment.name">
-            <div class="o_attachment_wrap">
-                <div class="o_image_box">
-                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
-                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
-                        <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
-                        <a class="o_attachment_download" t-att-href='attachment.url'>
-                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+    <t t-name="im_livechat.legacy.mail.UserStatus">
+        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
+            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
+        </span>
+    </t>
+    
+    <t t-name="im_livechat.legacy.mail.MessagesSeparator">
+        <div class="o_thread_new_messages_separator">
+            <span class="o_thread_separator_label">New messages</span>
         </div>
     </t>
-
+    
     <!--
         @param {Object} attachment
         @param {string} attachment.filename
@@ -563,31 +366,28 @@
             </div>
         </div>
     </t>
-
+    
     <!--
-        @param {Object} options
-        @param {boolean} [options.loadMoreOnScroll]
+        @param {Object} attachment
+        @param {integer} attachment.id
+        @param {string} attachment.name
+        @param {string} attachment.url
+        @param {boolean} [isDeletable=false]
     -->
-     <t t-name="im_livechat.legacy.mail.widget.Thread.LoadMore">
-        <div class="o_thread_show_more">
-            <t t-if="options.loadMoreOnScroll">
-                <span><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
-            </t>
-            <t t-else="">
-                <button class="btn btn-link">-------- Show older messages --------</button>
-            </t>
+    <t t-name="im_livechat.legacy.mail.AttachmentPreview">
+        <div class="o_attachment" t-att-title="attachment.name">
+            <div class="o_attachment_wrap">
+                <div class="o_image_box">
+                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
+                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                        <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
+                        <a class="o_attachment_download" t-att-href='attachment.url'>
+                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
-
-    <!--
-        @param {mail.model.Thread} thread with typing feature
-    -->
-    <t t-name="im_livechat.legacy.mail.ThreadTypingIcon">
-        <span class="o_mail_thread_typing_icon" t-att-title="thread.getTypingMembersToText()">
-            <span class="o_mail_thread_typing_icon_dot"/>
-            <span class="o_mail_thread_typing_icon_dot"/>
-            <span class="o_mail_thread_typing_icon_dot"/>
-        </span>
-    </t>
-
 </templates>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        @param {im_livechat.legacy.mail.AbstractThreadWindow} widget
+    -->
+    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow">
+        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
+            <div class="o_thread_window_header">
+                <t t-call="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+                    <t t-set="status" t-value="widget.getThreadStatus()"/>
+                    <t t-set="title" t-value="widget.getTitle()"/>
+                    <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
+                    <t t-set="thread" t-value="widget.getThread()"/>
+                </t>
+            </div>
+            <div class="o_thread_window_content">
+            </div>
+            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
+                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+            </div>
+        </div>
+    </t>
+    
+    <!--
+        @param {string} [status] e.g. 'online', 'offline'.
+        @param {string} title the title of the thread window, e.g. the record
+          name of the document.
+        @param {integer} [unreadCounter] the number of unread messages on the
+          thread.
+        @param {im_livechat.legacy.mail.model.Thread|undefined} thread
+        @param {Object} widget
+        @param {function} widget.isMobile function without any param that
+          states whether it should render for desktop or mobile screen.
+    -->
+    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+        <span t-if="widget.isMobile()">
+            <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
+        </span>
+        <span class="o_thread_window_title">
+            <t t-esc="title"/>
+            <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
+            <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+        </span>
+        <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
+            <a href="#" class="o_thread_window_close fa fa-close"/>
+        </span>
+    </t>
+
+    <!--
+        @param {mail.model.Thread} thread with typing feature
+    -->
+    <t t-name="im_livechat.legacy.mail.ThreadTypingIcon">
+        <span class="o_mail_thread_typing_icon" t-att-title="thread.getTypingMembersToText()">
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+        </span>
+    </t>
+
+</templates>
