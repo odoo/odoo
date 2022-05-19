@@ -55,7 +55,7 @@ class HrExpense(models.Model):
         states={'approved': [('readonly', True)], 'done': [('readonly', True)]},
         default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
-    product_id = fields.Many2one('product.product', string='Product', tracking=True, states={'done': [('readonly', True)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
+    product_id = fields.Many2one('product.product', string='Category', tracking=True, states={'done': [('readonly', True)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_description = fields.Html(compute='_compute_product_description')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
         store=True, precompute=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
@@ -82,7 +82,7 @@ class HrExpense(models.Model):
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True, string='Account',
         domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
-    description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
+    description = fields.Text('Internal Notes', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
         ("company_account", "Company")
@@ -472,6 +472,18 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             values.append(vals)
         return values
 
+    def get_expenses_to_submit(self):
+        # if there ere no records selected, then select all draft expenses for the user
+        if self:
+            expenses = self.filtered(lambda e: e.state == 'draft' and not e.sheet_id)
+        else:
+            expenses = self.env['hr.expense'].search([('state', '=', 'draft'), ('sheet_id', '=', False), ('employee_id', '=', self.env.user.employee_id.id)])
+
+        if not expenses:
+            raise UserError(_('You have no expense to report'))
+        else:
+            return expenses.action_submit_expenses()
+
     def action_submit_expenses(self):
         context_vals = self._get_default_expense_sheet_values()
         if len(context_vals) > 1:
@@ -479,7 +491,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             return {
                 'name': _('New Expense Reports'),
                 'type': 'ir.actions.act_window',
-                'view_mode': 'list,form',
+                'views': [[False, "list"], [False, "form"]],
                 'res_model': 'hr.expense.sheet',
                 'domain': [('id', 'in', sheets.ids)],
                 'context': self.env.context,
@@ -491,7 +503,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             return {
                 'name': _('New Expense Report'),
                 'type': 'ir.actions.act_window',
-                'view_mode': 'form',
+                'views': [[False, "form"]],
                 'res_model': 'hr.expense.sheet',
                 'target': 'current',
                 'context': context_vals_def,
@@ -841,6 +853,7 @@ class HrExpenseSheet(models.Model):
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
+    product_ids = fields.Many2many('product.product', compute='_compute_product_ids', search='_search_product_ids', string='Categories')
     is_editable = fields.Boolean("Expense Lines Are Editable By Current User", compute='_compute_is_editable')
     expense_number = fields.Integer(compute='_compute_expense_number', string='Number of Expenses')
     state = fields.Selection([
@@ -956,6 +969,11 @@ class HrExpenseSheet(models.Model):
             if expense_lines and any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
                 raise ValidationError(_("Expenses must have the same To Reimburse status."))
 
+    @api.depends('expense_line_ids')
+    def _compute_product_ids(self):
+        for sheet in self:
+            sheet.product_ids = sheet.expense_line_ids.mapped('product_id')
+
     @api.constrains('expense_line_ids', 'employee_id')
     def _check_employee(self):
         for sheet in self:
@@ -968,6 +986,11 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             if any(expense.company_id != sheet.company_id for expense in sheet.expense_line_ids):
                 raise ValidationError(_('An expense report must contain only lines from the same company.'))
+
+    def _search_product_ids(self, operator, value):
+        if operator == 'in' and not isinstance(value, list):
+            value = [value]
+        return [('expense_line_ids.product_id', operator, value)]
 
     @api.model_create_multi
     def create(self, vals_list):
