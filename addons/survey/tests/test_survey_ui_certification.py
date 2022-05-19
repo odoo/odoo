@@ -15,6 +15,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
             'title': 'MyCompany Vendor Certification',
             'access_token': '4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
             'access_mode': 'public',
+            'questions_layout': 'one_page',
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
