@@ -101,6 +101,8 @@ class ProductProduct(models.Model):
             taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
+                prec = 1e+6
+                product_price_unit *= prec
                 taxes_res = flattened_taxes_before_fp.compute_all(
                     product_price_unit,
                     quantity=1.0,
@@ -123,6 +125,7 @@ class ProductProduct(models.Model):
                         tax = self.env['account.tax'].browse(tax_res['id'])
                         if tax.price_include:
                             product_price_unit += tax_res['amount']
+                product_price_unit /= prec
 
         # Apply currency rate.
         if currency != product_currency:
