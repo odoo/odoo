@@ -6,7 +6,7 @@ import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
-import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
+import { utils } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
 import { prepareLegacyRegistriesWithCleanup } from "./helpers/legacy_env_utils";
 import { config as transitionConfig } from "@web/core/transition";
@@ -16,6 +16,8 @@ transitionConfig.disabled = true;
 import { patch } from "@web/core/utils/patch";
 import { processTemplates } from "@web/core/assets";
 const { App, whenReady, loadFile } = owl;
+
+const { prepareRegistriesWithCleanup } = utils;
 
 patch(App.prototype, "TestOwlApp", {
     destroy() {

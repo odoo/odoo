@@ -23,8 +23,8 @@ export const unslugHtmlDataObject = (repr) => {
 };
 
 export const websiteService = {
-    dependencies: ['orm', 'action', 'hotkey'],
-    async start(env, { orm, action, hotkey }) {
+    dependencies: ['orm', 'action', 'user', 'dialog', 'hotkey'],
+    async start(env, { orm, action, user, dialog, hotkey }) {
         let websites = [];
         let currentWebsiteId;
         let currentMetadata = {};
@@ -119,6 +119,12 @@ export const websiteService = {
             },
             get editedObjectPath() {
                 return editedObjectPath;
+            },
+            isPublisher() {
+                return user.hasGroup('website.group_website_publisher');
+            },
+            openMenuDialog(Component, props) {
+                return dialog.add(Component, props);
             },
             goToWebsite({ websiteId, path, edition, translation } = {}) {
                 action.doAction('website.website_preview', {
