@@ -33,8 +33,8 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         this.channel = options.channel;
         this.isMember = options.isMember;
         this.publicUser = options.publicUser;
-        this.joinMessage = options.joinMessage || _t('Join Course'),
-        this.beforeJoin = options.beforeJoin || Promise.resolve();
+        this.joinMessage = options.joinMessage || _t('Join Course');
+        this.beforeJoin = options.beforeJoin || function () {return Promise.resolve();};
         this.afterJoin = options.afterJoin || function () {document.location.reload();};
     },
 
