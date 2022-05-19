@@ -72,6 +72,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
+            'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/website_livechat_message_chatbot.js',
         ],
@@ -178,6 +179,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
             'im_livechat/static/src/legacy/models/*',
             'im_livechat/static/src/legacy/widgets/*',
+            'im_livechat/static/src/legacy/widgets/*/*',
             'im_livechat/static/src/legacy/public_livechat_chatbot.js',
             'im_livechat/static/src/legacy/website_livechat_message_chatbot.js',
 
