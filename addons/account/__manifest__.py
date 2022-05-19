@@ -55,7 +55,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'report/account_invoice_report_view.xml',
         'views/account_cash_rounding_view.xml',
         'wizard/account_report_common_view.xml',
-        'views/report_journal.xml',
         'views/tax_adjustments.xml',
         'wizard/wizard_tax_adjustments_view.xml',
         'views/ir_module_views.xml',
