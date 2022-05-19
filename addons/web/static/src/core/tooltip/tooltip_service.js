@@ -104,6 +104,14 @@ export const tooltipService = {
             if (tooltip === "" && !template) {
                 return;
             }
+
+            // register mouse position first in case the target
+            // contains disabled elements which would prevent
+            // to track mousemove. The position is needed to check
+            // whether the element is hovered or not
+            positionX = ev.x;
+            positionY = ev.y;
+
             openTooltipTimeout = browser.setTimeout(() => {
                 if (shouldCleanup()) {
                     cleanup();
