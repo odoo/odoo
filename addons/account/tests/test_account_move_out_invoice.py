@@ -3416,24 +3416,3 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
-
-    def test_changeprice_unit_to_zero(self):
-        move = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2017-01-01'),
-            'invoice_line_ids': [
-                (0, None, {
-                    'product_id': self.product_a.id,
-                    'product_uom_id': self.product_a.uom_id.id,
-                    'quantity': 1.0,
-                    'price_unit': 1000.0,
-                    'tax_ids': [(6, 0, [])],
-                })]
-        })
-
-        move.write({'invoice_line_ids': [(1, move.invoice_line_ids.ids[0], {
-            'price_unit': 0.0,
-        })]})
-
-        self.assertTrue(all(line.price_unit == 0 for line in move.line_ids))

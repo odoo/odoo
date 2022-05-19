@@ -3003,6 +3003,12 @@ class AccountMove(models.Model):
         })
 
         for move in to_post:
+            # Fix inconsistencies that may occure if the OCR has been editing the invoice at the same time of a user. We force the
+            # partner on the lines to be the same as the one on the move, because that's the only one the user can see/edit.
+            wrong_lines = move.is_invoice() and move.line_ids.filtered(lambda aml: aml.partner_id != move.commercial_partner_id)
+            if wrong_lines:
+                wrong_lines.write({'partner_id': move.commercial_partner_id.id})
+
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
             # Compute 'ref' for 'out_invoice'.
@@ -4027,7 +4033,6 @@ class AccountMoveLine(models.Model):
                 if tax.price_include:
                     amount_currency += tax_res['amount']
 
-        tax_included_division_is_zero = any(tax.price_include and tax.amount == 100 and tax.amount_type == 'division' for tax in taxes) and amount_currency == 0
         discount_factor = 1 - (discount / 100.0)
         if amount_currency and discount_factor:
             # discount != 100%
@@ -4042,9 +4047,8 @@ class AccountMoveLine(models.Model):
                 'discount': 0.0,
                 'price_unit': amount_currency / (quantity or 1.0),
             }
-        elif not discount_factor or tax_included_division_is_zero:
-            # balance of line is 0, but discount == 100% or taxes (price included) == 100%,
-            # so we display the normal unit_price
+        elif not discount_factor:
+            # balance of line is 0, but discount  == 100% so we display the normal unit_price
             vals = {}
         else:
             # balance is 0, so unit price is 0 as well
@@ -4287,8 +4291,11 @@ class AccountMoveLine(models.Model):
                 else:
                     line.amount_residual_currency = 0.0
 
-                line.reconciled = line.company_currency_id.is_zero(line.amount_residual) \
-                                  and (not line.currency_id or line.currency_id.is_zero(line.amount_residual_currency))
+                line.reconciled = (
+                    line.company_currency_id.is_zero(line.amount_residual)
+                    and (not line.currency_id or line.currency_id.is_zero(line.amount_residual_currency))
+                    and line.move_id.state not in ('draft', 'cancel')
+                )
             else:
                 # Must not have any reconciliation since the line is not eligible for that.
                 line.amount_residual = 0.0
