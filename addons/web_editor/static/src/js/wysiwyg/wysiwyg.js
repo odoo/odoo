@@ -804,13 +804,15 @@ const Wysiwyg = Widget.extend({
     historyReset: function () {
         this.odooEditor.historyReset();
     },
-
     /**
      * Save the content to the server for the normal mode.
      */
     saveToServer: async function (reload = true) {
         const defs = [];
-        this.trigger_up('edition_will_stopped');
+        if (!this.__edition_will_stopped_already_done) {
+            // TODO remove in master
+            this.trigger_up('edition_will_stopped');
+        }
         this.trigger_up('ready_to_save', {defs: defs});
         await Promise.all(defs);
 
