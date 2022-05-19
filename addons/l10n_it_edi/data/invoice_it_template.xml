@@ -56,9 +56,9 @@
                         </IdTrasmittente>
                         <ProgressivoInvio t-esc="format_alphanumeric(record.name.replace('/','')[-10:])"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
-                        <CodiceDestinatario t-if="record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code == 'IT'" t-esc="record.commercial_partner_id.l10n_it_pa_index.upper()"/>
+                        <CodiceDestinatario t-if="record.commercial_partner_id.l10n_it_pa_index" t-esc="record.commercial_partner_id.l10n_it_pa_index.upper()"/>
                         <CodiceDestinatario t-if="not record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code == 'IT'" t-esc="'0000000'"/>
-                        <CodiceDestinatario t-if="record.commercial_partner_id.country_id.code != 'IT'" t-esc="'XXXXXXX'"/>
+                        <CodiceDestinatario t-if="not record.commercial_partner_id.l10n_it_pa_index and record.commercial_partner_id.country_id.code != 'IT'" t-esc="'XXXXXXX'"/>
                         <ContattiTrasmittente>
                             <Telefono t-if="format_phone(record.company_id.partner_id.phone)" t-esc="format_alphanumeric(format_phone(record.company_id.partner_id.phone))"/>
                             <Telefono t-if="not format_phone(record.company_id.partner_id.phone) and format_phone(record.company_id.partner_id.mobile)" t-esc="format_alphanumeric(format_phone(record.company_id.partner_id.mobile))"/>
