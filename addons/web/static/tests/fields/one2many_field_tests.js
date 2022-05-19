@@ -304,7 +304,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "O2M List with pager, decoration and default_order: add and cancel adding",
         async function (assert) {
             assert.expect(3);
@@ -356,7 +356,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // Cancel Creation
-            triggerEvent(actualSelectedRow, "input", "keydown", { key: "escape" });
+            triggerEvent(actualSelectedRow, "input", "keydown", { key: "Escape" });
             await nextTick();
             assert.containsOnce(
                 target,

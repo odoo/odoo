@@ -626,6 +626,15 @@ export class ListRenderer extends Component {
         this.props.activeActions.onDelete(record);
     }
 
+    /**
+     * @param {KeyboardEvent} event
+     */
+    onKeydown(event) {
+        if (event.key === "Escape") {
+            this.props.list.unselectRecord();
+        }
+    }
+
     saveOptionalActiveFields() {
         browser.localStorage[this.keyOptionalFields] = Object.keys(
             this.optionalActiveFields
