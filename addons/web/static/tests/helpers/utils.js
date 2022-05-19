@@ -690,6 +690,7 @@ export const dragAndDrop = async (fromSelector, toSelector, position) => {
     }
     triggerEvent(from, null, "mouseup", toPos);
     await triggerEvent(from, null, "click", toPos, true);
+    await nextTick();
 };
 
 export async function clickDropdown(target, fieldName) {
