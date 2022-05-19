@@ -1940,8 +1940,8 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width());
         const largeCells = list.$('.o_data_cell.large');
-        assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
-        assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
+        assert.ok(Math.abs(largeCells[0].offsetWidth - largeCells[1].offsetWidth) <= 1);
+        assert.ok(Math.abs(largeCells[1].offsetWidth - largeCells[2].offsetWidth) <= 1);
         assert.ok(list.$('.o_data_cell:not(.large)')[0].offsetWidth < largeCells[0].offsetWidth);
 
         list.destroy();
@@ -2406,7 +2406,7 @@ QUnit.module('Views', {
 
         const fooWidth = list.$('th[data-name="foo"]')[0].offsetWidth;
         const textWidth = list.$('th[data-name="text"]')[0].offsetWidth;
-        assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
+        assert.ok(Math.abs(fooWidth - textWidth) <= 1, "both columns should have been given the same width");
 
         const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
         const secondRowHeight = list.$('.o_data_row:nth(1)')[0].offsetHeight;
