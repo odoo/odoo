@@ -431,7 +431,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        'StateSelectionField edited by the smart action "Set kanban state..."',
+        'StateSelectionField edited by the smart actions "Set kanban state as <state name>"',
         async function (assert) {
             await makeView({
                 type: "form",
@@ -448,20 +448,23 @@ QUnit.module("Fields", (hooks) => {
 
             triggerHotkey("control+k");
             await nextTick();
-            const idx = [...target.querySelectorAll(".o_command")]
-                .map((el) => el.textContent)
-                .indexOf("Set kanban state...ALT + SHIFT + R");
+            var commandTexts = [...target.querySelectorAll(".o_command")].map(
+                (el) => el.textContent
+            );
+            assert.ok(commandTexts.includes("Set kanban state as NormalALT + D"));
+            const idx = commandTexts.indexOf("Set kanban state as DoneALT + G");
             assert.ok(idx >= 0);
 
             await click([...target.querySelectorAll(".o_command")][idx]);
             await nextTick();
-            assert.deepEqual(
-                [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
-                ["Normal", "Blocked", "Done"]
-            );
-            await click(target, "#o_command_2");
-            await nextTick();
             assert.containsOnce(target, ".o_status_green");
+
+            triggerHotkey("control+k");
+            await nextTick();
+            commandTexts = [...target.querySelectorAll(".o_command")].map((el) => el.textContent);
+            assert.ok(commandTexts.includes("Set kanban state as NormalALT + D"));
+            assert.ok(commandTexts.includes("Set kanban state as BlockedALT + F"));
+            assert.notOk(commandTexts.includes("Set kanban state as DoneALT + G"));
         }
     );
 

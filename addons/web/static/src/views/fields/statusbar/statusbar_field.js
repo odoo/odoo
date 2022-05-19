@@ -9,7 +9,6 @@ import { escape, sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-
 import { Component } from "@odoo/owl";
 
 export class StatusBarField extends Component {
@@ -27,7 +26,7 @@ export class StatusBarField extends Component {
                         providers: [
                             {
                                 provide: () =>
-                                    this.computeItems().unfolded.map((value) => ({
+                                    this.computeItems(false).map((value) => ({
                                         name: value.name,
                                         action: () => {
                                             this.selectItem(value);
@@ -39,11 +38,39 @@ export class StatusBarField extends Component {
                 },
                 { category: "smart_action", hotkey: "alt+shift+x" }
             );
+            useCommand(
+                sprintf(this.env._t(`Move to next %s`), this.props.displayName),
+                () => {
+                    const options = this.computeItems(false);
+                    const nextOption =
+                        options[
+                            options.findIndex(
+                                (option) =>
+                                    option.id ===
+                                    (this.type === "many2one"
+                                        ? this.props.value[0]
+                                        : this.props.value)
+                            ) + 1
+                        ];
+                    this.selectItem(nextOption);
+                },
+                {
+                    category: "smart_action",
+                    hotkey: "alt+x",
+                    isAvailable: () => {
+                        const options = this.computeItems(false);
+                        return (
+                            options[options.length - 1].id !==
+                            (this.type === "many2one" ? this.props.value[0] : this.props.value)
+                        );
+                    },
+                }
+            );
         }
     }
 
     get currentName() {
-        switch (this.props.record.fields[this.props.name].type) {
+        switch (this.type) {
             case "many2one": {
                 const item = this.options.find((item) => this.props.value && item.id === this.props.value[0]);
                 return item ? item.display_name : "";
@@ -56,7 +83,7 @@ export class StatusBarField extends Component {
         throw new Error("Unsupported field type for StatusBarField");
     }
     get options() {
-        switch (this.props.record.fields[this.props.name].type) {
+        switch (this.type) {
             case "many2one":
                 return this.props.record.preloadedData[this.props.name];
             case "selection":
@@ -64,6 +91,10 @@ export class StatusBarField extends Component {
             default:
                 return [];
         }
+    }
+
+    get type() {
+        return this.props.record.fields[this.props.name].type;
     }
 
     getDropdownItemClassNames(item) {
@@ -110,12 +141,15 @@ export class StatusBarField extends Component {
         }));
     }
 
-    computeItems() {
+    computeItems(grouped = true) {
         let items = null;
         if (this.props.type === "many2one") {
             items = this.getVisibleMany2Ones();
         } else {
             items = this.getVisibleSelection();
+        }
+        if (!grouped) {
+            return items;
         }
 
         if (this.env.isSmall) {

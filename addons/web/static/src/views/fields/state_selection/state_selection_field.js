@@ -4,42 +4,34 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
+import { sprintf } from "@web/core/utils/strings";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { formatSelection } from "../formatters";
-
 import { Component } from "@odoo/owl";
 
 export class StateSelectionField extends Component {
     setup() {
-        if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            const commandName = this.env._t("Set kanban state...");
-            useCommand(
-                commandName,
-                () => {
-                    return {
-                        placeholder: commandName,
-                        providers: [
-                            {
-                                provide: () =>
-                                    this.options.map((value) => ({
-                                        name: value[1],
-                                        action: () => {
-                                            this.props.update(value[0]);
-                                        },
-                                    })),
-                            },
-                        ],
-                    };
-                },
-                { category: "smart_action", hotkey: "alt+shift+r" }
-            );
-        }
         this.colorPrefix = "o_status_";
         this.colors = {
             blocked: "red",
             done: "green",
         };
+        if (this.props.record.activeFields[this.props.name].viewType !== "form") {
+            return;
+        }
+        const hotkeys = ["D", "F", "G"];
+        for (const [index, [value, label]] of this.options.entries()) {
+            useCommand(
+                sprintf(this.env._t("Set kanban state as %s"), label),
+                () => this.props.update(value),
+                {
+                    category: "smart_action",
+                    hotkey: "alt+" + hotkeys[index],
+                    isAvailable: () => this.props.value !== value,
+                }
+            );
+        }
     }
     get options() {
         return this.props.record.fields[this.props.name].selection.map(([state, label]) => {
