@@ -382,6 +382,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'name': f'Tax {percentage}%',
                 'amount': percentage,
                 'price_include': price_include,
+                'amount_type': 'percent',
                 'include_base_amount': False,
                 'invoice_repartition_line_ids': [
                     (0, 0, {
@@ -410,10 +411,47 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                     }),
                 ],
             })
+        def create_tax_fixed(amount, price_include=False):
+            return cls.env['account.tax'].create({
+                'name': f'Tax fixed amount {amount}',
+                'amount': amount,
+                'price_include': price_include,
+                'include_base_amount': price_include,
+                'amount_type': 'fixed',
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_tax.ids)],
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_tax.ids)],
+                    }),
+                ],
+            })
 
+        tax_fixed006 = create_tax_fixed(0.06, price_include=True)
+        tax_fixed012 = create_tax_fixed(0.12, price_include=True)
         tax7 = create_tax(7, price_include=False)
         tax10 = create_tax(10, price_include=True)
         tax21 = create_tax(21, price_include=True)
+
 
         tax_group_7_10 = tax7.copy()
         with Form(tax_group_7_10) as tax:
@@ -426,6 +464,8 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'tax7': tax7,
             'tax10': tax10,
             'tax21': tax21,
+            'tax_fixed006': tax_fixed006,
+            'tax_fixed012': tax_fixed012,
             'tax_group_7_10': tax_group_7_10
         }
 
