@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import concurrency from 'web.concurrency';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import session from 'web.session';
@@ -691,6 +692,25 @@ async function applyConfigurator(self, themeName) {
     if (!self.state.selectedPalette) {
         return self.router.navigate(ROUTES.paletteSelectionScreen);
     }
+
+    async function attemptConfiguratorApply(data, retryCount = 0) {
+        try {
+            return await self.rpc({
+                model: 'website',
+                method: 'configurator_apply',
+                kwargs: data,
+            });
+        } catch (error) {
+            // Wait a bit before retrying or allowing manual retry.
+            await concurrency.delay(5000);
+            if (retryCount < 3) {
+                return attemptConfiguratorApply(data, retryCount + 1);
+            }
+            document.querySelector('.o_theme_install_loader_container').remove();
+            throw error;
+        }
+    }
+
     if (themeName !== undefined) {
         const loader = renderToString('website.ThemePreview.Loader', {showTips: true});
         $('body').append(loader);
@@ -705,21 +725,18 @@ async function applyConfigurator(self, themeName) {
                 self.state.selectedPalette.color5,
             ];
         }
-        const resp = await self.rpc({
-            model: 'website',
-            method: 'configurator_apply',
-            kwargs: {
-                'selected_features': selectedFeatures,
-                'industry_id': self.state.selectedIndustry.id,
-                'selected_palette': selectedPalette,
-                'theme_name': themeName,
-                'website_purpose': WEBSITE_PURPOSES[
-                    self.state.selectedPurpose || self.state.formerSelectedPurpose
-                ].name,
-                'website_type': WEBSITE_TYPES[self.state.selectedType].name,
-                'logo_attachment_id': self.state.logoAttachmentId,
-            },
-        });
+        const data = {
+            'selected_features': selectedFeatures,
+            'industry_id': self.state.selectedIndustry.id,
+            'selected_palette': selectedPalette,
+            'theme_name': themeName,
+            'website_purpose': WEBSITE_PURPOSES[
+                self.state.selectedPurpose || self.state.formerSelectedPurpose
+            ].name,
+            'website_type': WEBSITE_TYPES[self.state.selectedType].name,
+            'logo_attachment_id': self.state.logoAttachmentId,
+        };
+        const resp = await attemptConfiguratorApply(data);
         window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
         window.location = resp.url;
     }
