@@ -282,7 +282,7 @@
                             </t>
                         </t>
                         <t t-call="survey.survey_button_retake"/>
-                        <div t-if="survey.scoring_type != 'scoring_without_answers'">
+                        <div t-if="survey.scoring_type != 'scoring_without_answers'" class="o_survey_review">
                             If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">review your answers</a>
                         </div>
                     </div>
