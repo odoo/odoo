@@ -172,6 +172,23 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
         return true;
     }
 
+    // In case the values are a size, they might be made of two parts.
+    if (cssProp && cssProp.endsWith('-size')) {
+        // Avoid re-splitting each part during their individual comparison.
+        const pseudoPartProp = cssProp + '-part';
+        const re = /-?[0-9.]+\s*[A-Za-z%-]+|auto/g;
+        const parts1 = value1.match(re);
+        const parts2 = value2.match(re);
+        for (const index of [0, 1]) {
+            const part1 = parts1 && parts1.length > index ? parts1[index] : 'auto';
+            const part2 = parts2 && parts2.length > index ? parts2[index] : 'auto';
+            if (!_areCssValuesEqual(part1, part2, pseudoPartProp, $target)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // It could be a CSS variable, in that case the actual value has to be
     // retrieved before comparing.
     if (value1.startsWith('var(--')) {
