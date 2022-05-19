@@ -953,7 +953,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': 'new',
+            'target': 'self',
             'url': '/survey/test/%s' % self.access_token,
         }
 
