@@ -46,3 +46,5 @@ ImageUrlField.extractProps = (fieldName, record, attrs) => {
 };
 
 registry.category("fields").add("image_url", ImageUrlField);
+// TODO WOWL: remove below when old registry is removed.
+registry.category("fields").add("kanban.image_url", ImageUrlField);

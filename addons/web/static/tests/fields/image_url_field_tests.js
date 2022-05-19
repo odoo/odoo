@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { click, getFixture } from "../helpers/utils";
+import { KanbanController } from "@web/views/kanban/kanban_controller";
+import { click, getFixture, patchWithCleanup } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -343,5 +344,31 @@ QUnit.module("Fields", (hooks) => {
             document.querySelector(`img[data-src="${EN_FLAG_URL}"]`),
             "The list's image is in the DOM"
         );
+    });
+
+    QUnit.test("image url fields in kanban don't stop opening record", async function (assert) {
+        patchWithCleanup(KanbanController.prototype, {
+            openRecord() {
+                assert.step("open record");
+            },
+        });
+
+        await makeView({
+            type: "kanban",
+            serverData,
+            resModel: "partner",
+            arch: /* xml */ `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="foo" widget="image_url"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+        });
+
+        await click(target.querySelector(".o_kanban_record"));
+
+        assert.verifySteps(["open record"]);
     });
 });
