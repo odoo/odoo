@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     click,
     getFixture,
     makeDeferred,
     nextTick,
+    patchTimeZone,
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
@@ -170,11 +170,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("search date and datetime fields. Support of timezones", async function (assert) {
         assert.expect(4);
 
-        const originalZone = luxon.Settings.defaultZone;
-        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(360);
-        registerCleanup(() => {
-            luxon.Settings.defaultZone = originalZone;
-        });
+        patchTimeZone(360);
 
         const controlPanel = await makeWithSearch({
             serverData,

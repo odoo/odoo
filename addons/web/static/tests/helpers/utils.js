@@ -91,6 +91,21 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
     });
 }
 
+/**
+ * Applies a fixed time zone to luxon based on an offset to the UTC time zone.
+ *
+ * @param {number} offset the number of minutes ahead or behind the UTC time zone
+ *                          +120 => UTC+2
+ *                          -120 => UTC-2
+ */
+export function patchTimeZone(offset) {
+    const originalZone = luxon.Settings.defaultZone;
+    luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(offset);
+    registerCleanup(() => {
+        luxon.Settings.defaultZone = originalZone;
+    });
+}
+
 let nextId = 1;
 
 /**
