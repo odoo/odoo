@@ -16,8 +16,8 @@
     'author': 'David Arnold (XOE Solutions)',
     'website': 'https://www.odoo.com/colombia',
     'depends': [
-        'account',
         'account_debit_note',
+        'l10n_multilang',
         'l10n_latam_base',
     ],
     'data': [
@@ -32,5 +32,6 @@
     'demo': [
         'demo/demo_company.xml',
     ],
+    'post_init_hook': 'load_translations',
     'license': 'LGPL-3',
 }
