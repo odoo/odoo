@@ -46,6 +46,7 @@ export async function loadSubViews(
         if (viewType.includes(",")) {
             viewType = isSmall ? "kanban" : "list";
         }
+        fieldInfo.viewMode = viewType;
         if (fieldInfo.views[viewType]) {
             continue; // the sub view is inline in the main form view
         }
@@ -79,7 +80,6 @@ export async function loadSubViews(
         const archInfo = new ArchParser().parse(views[viewType].arch, relatedModels, comodel);
         fieldInfo.views[viewType] = { ...archInfo, fields: comodelFields };
         fieldInfo.relatedFields = comodelFields;
-        fieldInfo.viewMode = viewType;
     }
 }
 
