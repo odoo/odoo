@@ -37,7 +37,7 @@ class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
         price_diff_account = self.env['account.account'].create({
             'name': 'Super Price Difference Account',
             'code': 'SPDA',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'reconcile': True,
         })
         self.avco_category.property_account_creditor_price_difference_categ = price_diff_account

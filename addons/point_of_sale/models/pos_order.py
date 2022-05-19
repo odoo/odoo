@@ -541,7 +541,7 @@ class PosOrder(models.Model):
                     rounding_line.with_context(check_move_validity=False).unlink()
             if rounding_line_difference:
                 existing_terms_line = new_move.line_ids.filtered(
-                    lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+                    lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
                 if existing_terms_line.debit > 0:
                     existing_terms_line_new_val = float_round(
                         existing_terms_line.debit + rounding_line_difference,

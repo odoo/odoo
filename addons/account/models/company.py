@@ -57,7 +57,7 @@ class ResCompany(models.Model):
         tracking=True,
         help="No users can edit journal entries related to a tax prior and inclusive of this date.")
     transfer_account_id = fields.Many2one('account.account',
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
+        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liqity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
@@ -78,14 +78,13 @@ class ResCompany(models.Model):
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
-        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id), \
-                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
-                                                             self.env.ref('account.data_account_type_other_income').id])
+        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+                ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
-        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
+        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+                ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
@@ -132,10 +131,10 @@ class ResCompany(models.Model):
     # Accrual Accounting
     expense_accrual_account_id = fields.Many2one('account.account',
         help="Account used to move the period of an expense",
-        domain="[('internal_group', '=', 'liability'), ('internal_type', 'not in', ('receivable', 'payable')), ('company_id', '=', id)]")
+        domain="[('internal_group', '=', 'liability'), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('company_id', '=', id)]")
     revenue_accrual_account_id = fields.Many2one('account.account',
         help="Account used to move the period of a revenue",
-        domain="[('internal_group', '=', 'asset'), ('internal_type', 'not in', ('receivable', 'payable')), ('company_id', '=', id)]")
+        domain="[('internal_group', '=', 'asset'), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('company_id', '=', id)]")
     automatic_entry_default_journal_id = fields.Many2one('account.journal', help="Journal used by default for moving the period of an entry", domain="[('type', '=', 'general')]")
 
     # Technical field to hide country specific fields in company form view
@@ -256,7 +255,7 @@ class ResCompany(models.Model):
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code):
-        accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
+        accounts = self.env['account.account'].search([('code', 'like', old_code), ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
             ('company_id', '=', self.id)], order='code asc')
         for account in accounts:
             if account.code.startswith(old_code):
@@ -395,7 +394,7 @@ class ResCompany(models.Model):
         # Then, we open will open a custom tree view allowing to edit opening balances of the account
         view_id = self.env.ref('account.init_accounts_tree').id
         # Hide the current year earnings account as it is automatically computed
-        domain = [('user_type_id', '!=', self.env.ref('account.data_unaffected_earnings').id), ('company_id','=', company.id)]
+        domain = [('account_type', '!=', 'equity_unaffected'), ('company_id', '=', company.id)]
         return {
             'type': 'ir.actions.act_window',
             'name': _('Chart of Accounts'),
@@ -437,9 +436,9 @@ class ResCompany(models.Model):
         """ Returns the unaffected earnings account for this company, creating one
         if none has yet been defined.
         """
-        unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
+        unaffected_earnings_type = "equity_unaffected"
         account = self.env['account.account'].search([('company_id', '=', self.id),
-                                                      ('user_type_id', '=', unaffected_earnings_type.id)])
+                                                      ('account_type', '=', unaffected_earnings_type)])
         if account:
             return account[0]
         # Do not assume '999999' doesn't exist since the user might have created such an account
@@ -450,7 +449,7 @@ class ResCompany(models.Model):
         return self.env['account.account'].create({
                 'code': str(code),
                 'name': _('Undistributed Profits/Losses'),
-                'user_type_id': unaffected_earnings_type.id,
+                'account_type': unaffected_earnings_type,
                 'company_id': self.id,
             })
 

@@ -1050,7 +1050,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         }])
 
         payment = wizard._create_payments()
-        lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_internal_type == 'receivable')
+        lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_type == 'asset_receivable')
         self.assertRecordValues(lines, [
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.currency_data['currency'].id, 'reconciled': True},
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.company_data['currency'].id, 'reconciled': True},
@@ -1084,7 +1084,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         }])
 
         payment = wizard._create_payments()
-        lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_internal_type == 'receivable')
+        lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_type == 'asset_receivable')
         self.assertRecordValues(lines, [
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.company_data['currency'].id, 'reconciled': True},
             {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.currency_data['currency'].id, 'reconciled': True},

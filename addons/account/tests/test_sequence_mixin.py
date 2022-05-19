@@ -458,7 +458,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
             account = env['account.account'].create({
                 'code': 'CT',
                 'name': 'CT',
-                'user_type_id': env.ref('account.data_account_type_fixed_assets').id,
+                'account_type': 'asset_fixed',
             })
             moves = env['account.move'].create([{
                 'journal_id': journal.id,

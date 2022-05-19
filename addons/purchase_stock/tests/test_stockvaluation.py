@@ -32,19 +32,19 @@ class TestStockValuation(TransactionCase):
         cls.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'reconcile': True,
         })
         cls.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'reconcile': True,
         })
         cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
         })
         cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
@@ -253,24 +253,24 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         cls.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'reconcile': True,
         })
         cls.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'reconcile': True,
         })
         cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
         })
         cls.price_diff_account = Account.create({
             'name': 'price diff account',
             'code': 'price diff account',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
         })
         cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
@@ -608,7 +608,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_lines = inv.line_ids
         self.assertEqual(len(move_lines), 2)
 
-        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        payable_line = move_lines.filtered(lambda l: l.account_id.account_type == 'liability_payable')
 
         self.assertEqual(payable_line.amount_currency, -100.0)
         self.assertAlmostEqual(payable_line.balance, -66.67)
@@ -759,7 +759,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertTrue(all([not l.reconciled for l in move_lines]))
 
         # PAYABLE CHECK
-        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
+        payable_line = move_lines.filtered(lambda l: l.account_id.account_type == 'liability_payable')
         self.assertEqual(payable_line.amount_currency, -170.0)
         self.assertAlmostEqual(payable_line.balance, -85.00)
 

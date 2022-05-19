@@ -61,11 +61,10 @@ class AccountFrFec(models.TransientModel):
             account_move_line aml
             LEFT JOIN account_move am ON am.id=aml.move_id
             JOIN account_account aa ON aa.id = aml.account_id
-            LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
         WHERE
             am.date < %s
             AND am.company_id = %s
-            AND aat.include_initial_balance IS NOT TRUE
+            AND aa.include_initial_balance IS NOT TRUE
         '''
         # For official report: only use posted entries
         if self.export_type == "official":
@@ -147,7 +146,7 @@ class AccountFrFec(models.TransientModel):
 
         rows_to_write = [header]
         # INITIAL BALANCE
-        unaffected_earnings_xml_ref = self.env.ref('account.data_unaffected_earnings')
+        unaffected_earnings_xml_ref = 'equity_unaffected'
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
         if unaffected_earnings_xml_ref:
             #compute the benefit/loss of last year to add in the initial balance of the current year earnings account
@@ -179,11 +178,10 @@ class AccountFrFec(models.TransientModel):
             account_move_line aml
             LEFT JOIN account_move am ON am.id=aml.move_id
             JOIN account_account aa ON aa.id = aml.account_id
-            LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
         WHERE
             am.date < %s
             AND am.company_id = %s
-            AND aat.include_initial_balance = 't'
+            AND aa.include_initial_balance = 't'
         '''
 
         # For official report: only use posted entries
@@ -193,8 +191,8 @@ class AccountFrFec(models.TransientModel):
             '''
 
         sql_query += '''
-        GROUP BY aml.account_id, aat.type
-        HAVING aat.type not in ('receivable', 'payable')
+        GROUP BY aml.account_id, aa.account_type
+        HAVING aa.account_type not in ('asset_receivable', 'liability_payable')
         '''
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
@@ -209,7 +207,7 @@ class AccountFrFec(models.TransientModel):
             account_id = listrow.pop()
             if not unaffected_earnings_line:
                 account = self.env['account.account'].browse(account_id)
-                if account.user_type_id.id == self.env.ref('account.data_unaffected_earnings').id:
+                if account.account_type == 'equity_unaffected':
                     #add the benefit/loss of previous fiscal year to the first unaffected earnings account found.
                     unaffected_earnings_line = True
                     current_amount = float(listrow[11].replace(',', '.')) - float(listrow[12].replace(',', '.'))
@@ -231,7 +229,7 @@ class AccountFrFec(models.TransientModel):
             and (unaffected_earnings_results[11] != '0,00'
                  or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
-            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)], limit=1)
+            unaffected_earnings_account = self.env['account.account'].search([('account_type', '=', 'equity_unaffected')], limit=1)
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
@@ -246,7 +244,7 @@ class AccountFrFec(models.TransientModel):
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
             replace(MIN(aa.name), '|', '/') AS CompteLib,
-            CASE WHEN MIN(aat.type) IN ('receivable', 'payable')
+            CASE WHEN MIN(aa.account_type) IN ('asset_receivable', 'liability_payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
                 THEN rp.id::text
@@ -255,7 +253,7 @@ class AccountFrFec(models.TransientModel):
             ELSE ''
             END
             AS CompAuxNum,
-            CASE WHEN aat.type IN ('receivable', 'payable')
+            CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
             THEN COALESCE(replace(rp.name, '|', '/'), '')
             ELSE ''
             END AS CompAuxLib,
@@ -275,11 +273,10 @@ class AccountFrFec(models.TransientModel):
             LEFT JOIN account_move am ON am.id=aml.move_id
             LEFT JOIN res_partner rp ON rp.id=aml.partner_id
             JOIN account_account aa ON aa.id = aml.account_id
-            LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
         WHERE
             am.date < %s
             AND am.company_id = %s
-            AND aat.include_initial_balance = 't'
+            AND aa.include_initial_balance = 't'
         '''
 
         # For official report: only use posted entries
@@ -289,8 +286,8 @@ class AccountFrFec(models.TransientModel):
             '''
 
         sql_query += '''
-        GROUP BY aml.account_id, aat.type, rp.ref, rp.id
-        HAVING aat.type in ('receivable', 'payable')
+        GROUP BY aml.account_id, aa.account_type, rp.ref, rp.id
+        HAVING aa.account_type in ('asset_receivable', 'liability_payable')
         '''
         self._cr.execute(
             sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
@@ -309,7 +306,7 @@ class AccountFrFec(models.TransientModel):
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
             REGEXP_REPLACE(replace(aa.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
-            CASE WHEN aat.type IN ('receivable', 'payable')
+            CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
                 THEN rp.id::text
@@ -318,7 +315,7 @@ class AccountFrFec(models.TransientModel):
             ELSE ''
             END
             AS CompAuxNum,
-            CASE WHEN aat.type IN ('receivable', 'payable')
+            CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
             THEN COALESCE(REGEXP_REPLACE(replace(rp.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
             ELSE ''
             END AS CompAuxLib,
@@ -352,7 +349,6 @@ class AccountFrFec(models.TransientModel):
                                              AND aj__name.lang = %s
                                              AND aj__name.value != ''
             JOIN account_account aa ON aa.id = aml.account_id
-            LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
             LEFT JOIN res_currency rc ON rc.id = aml.currency_id
             LEFT JOIN account_full_reconcile rec ON rec.id = aml.full_reconcile_id
         WHERE

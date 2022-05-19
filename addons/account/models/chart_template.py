@@ -56,9 +56,31 @@ class AccountAccountTemplate(models.Model):
     name = fields.Char(required=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
+    account_type = fields.Selection(
+        selection=[
+            ("asset_receivable", "Receivable"),
+            ("asset_cash", "Bank and Cash"),
+            ("asset_current", "Current Assets"),
+            ("asset_non_current", "Non-current Assets"),
+            ("asset_prepayments", "Prepayments"),
+            ("asset_fixed", "Fixed Assets"),
+            ("liability_payable", "Payable"),
+            ("liability_credit_card", "Credit Card"),
+            ("liability_current", "Current Liabilities"),
+            ("liability_non_current", "Non-current Liabilities"),
+            ("equity", "Equity"),
+            ("equity_unaffected", "Current Year Earnings"),
+            ("income", "Income"),
+            ("income_other", "Other Income"),
+            ("expense", "Expenses"),
+            ("expense_depreciation", "Depreciation"),
+            ("expense_direct_cost", "Cost of Revenue"),
+            ("off_balance", "Off-Balance Sheet"),
+        ],
+        string="Type",
         help="These types are defined according to your country. The type contains more information "\
-        "about the account and its specificities.")
+        "about the account and its specificities."
+    )
     reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
     note = fields.Text()
@@ -101,9 +123,9 @@ class AccountChartTemplate(models.Model):
     cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
     transfer_account_code_prefix = fields.Char(string='Prefix of the main transfer accounts', required=True)
     income_currency_exchange_account_id = fields.Many2one('account.account.template',
-        string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+        string="Gain Exchange Rate Account", domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
-        string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+        string="Loss Exchange Rate Account", domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')), ('deprecated', '=', False)])
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country this chart of accounts belongs to. None if it's generic.")
 
     account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
@@ -157,11 +179,11 @@ class AccountChartTemplate(models.Model):
                 break
         else:
             raise UserError(_('Cannot generate an unused account code.'))
-        current_assets_type = self.env.ref('account.data_account_type_current_assets', raise_if_not_found=False)
+
         return {
             'name': _('Liquidity Transfer'),
             'code': new_code,
-            'user_type_id': current_assets_type and current_assets_type.id or False,
+            'account_type': 'asset_current',
             'reconcile': True,
             'chart_template_id': self.id,
         }
@@ -171,7 +193,7 @@ class AccountChartTemplate(models.Model):
         return self.env['account.account'].create({
             'name': _("Bank Suspense Account"),
             'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'company_id': company.id,
         })
 
@@ -289,13 +311,12 @@ class AccountChartTemplate(models.Model):
         if not company.account_journal_suspense_account_id:
             company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
 
-        account_type_current_assets = self.env.ref('account.data_account_type_current_assets')
         if not company.account_journal_payment_debit_account_id:
             company.account_journal_payment_debit_account_id = self.env['account.account'].create({
                 'name': _("Outstanding Receipts"),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, company.bank_account_code_prefix or ''),
                 'reconcile': True,
-                'user_type_id': account_type_current_assets.id,
+                'account_type': 'asset_current',
                 'company_id': company.id,
             })
 
@@ -304,7 +325,7 @@ class AccountChartTemplate(models.Model):
                 'name': _("Outstanding Payments"),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, company.bank_account_code_prefix or ''),
                 'reconcile': True,
-                'user_type_id': account_type_current_assets.id,
+                'account_type': 'asset_current',
                 'company_id': company.id,
             })
 
@@ -312,7 +333,7 @@ class AccountChartTemplate(models.Model):
             company.default_cash_difference_expense_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Loss'),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
             })
@@ -321,7 +342,7 @@ class AccountChartTemplate(models.Model):
             company.default_cash_difference_income_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Gain'),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
-                'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+                'account_type': 'income',
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
             })
@@ -662,7 +683,7 @@ class AccountChartTemplate(models.Model):
                 'name': account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
-                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
+                'account_type': account_template.account_type or False,
                 'reconcile': account_template.reconcile,
                 'note': account_template.note,
                 'tax_ids': [(6, 0, tax_ids)],
@@ -935,7 +956,7 @@ class AccountTaxTemplate(models.Model):
             return self.env['account.account'].create({
                 'name': f"{existing_account.name} - {additional_label}",
                 'code': new_code,
-                'user_type_id': existing_account.user_type_id.id,
+                'account_type': existing_account.account_type,
                 'company_id': existing_account.company_id.id,
             })
 
@@ -1203,11 +1224,11 @@ class AccountTaxRepartitionLineTemplate(models.Model):
                 vals['tag_ids'] = self._convert_tag_syntax_to_orm(vals['tag_ids'])
 
             if vals.get('use_in_tax_closing') is None:
-                if not vals.get('account_id'):
-                    vals['use_in_tax_closing'] = False
-                else:
-                    internal_group = self.env['account.account.template'].browse(vals.get('account_id')).user_type_id.internal_group
-                    vals['use_in_tax_closing'] = not (internal_group == 'income' or internal_group == 'expense')
+                vals['use_in_tax_closing'] = False
+                if vals.get('account_id'):
+                    account_type = self.env['account.account.template'].browse(vals.get('account_id')).account_type
+                    if account_type:
+                        vals['use_in_tax_closing'] = not (account_type.startswith('income') or account_type.startswith('expense'))
 
         return super().create(vals_list)
 

@@ -173,7 +173,7 @@ class AccountChartTemplate(models.Model):
                         'label': 'Due amount',
                         'account_id': self._get_demo_account(
                             'income',
-                            'account.data_account_type_revenue',
+                            'income',
                             self.env.company,
                         ).id,
                         'amount_type': 'regex',
@@ -183,7 +183,7 @@ class AccountChartTemplate(models.Model):
                         'label': 'Bank Fees',
                         'account_id': self._get_demo_account(
                             'cost_of_goods_sold',
-                            'account.data_account_type_direct_costs',
+                            'expense_direct_cost',
                             self.env.company,
                         ).id,
                         'amount_type': 'percentage',
@@ -336,11 +336,11 @@ class AccountChartTemplate(models.Model):
             created.button_post()
 
     @api.model
-    def _get_demo_account(self, xml_id, user_type_id, company):
+    def _get_demo_account(self, xml_id, account_type, company):
         """Find the most appropriate account possible for demo data creation.
 
         :param xml_id (str): the xml_id of the account template in the generic coa
-        :param user_type_id (str): the full xml_id of the account type wanted
+        :param account_type (str): the full xml_id of the account type wanted
         :param company (Model<res.company>): the company for which we search the account
         :return (Model<account.account>): the most appropriate record found
         """
@@ -351,7 +351,7 @@ class AccountChartTemplate(models.Model):
                 ('module', '=like', 'l10n%')
             ], limit=1).res_id)
             or self.env['account.account'].search([
-                ('user_type_id', '=', self.env.ref(user_type_id).id),
+                ('account_type', '=', account_type),
                 ('company_id', '=', company.id)
             ], limit=1)
             or self.env['account.account'].search([('company_id', '=', company.id)], limit=1)

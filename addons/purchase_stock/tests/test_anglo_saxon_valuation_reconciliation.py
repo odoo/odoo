@@ -23,7 +23,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 'name': 'default_account_stock_price_diff',
                 'code': 'STOCKDIFF',
                 'reconcile': True,
-                'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+                'account_type': 'asset_current',
                 'company_id': company_data['company'].id,
             }),
         })
@@ -218,7 +218,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         cash_basis_base_account = self.env['account.account'].create({
             'code': 'cash_basis_base_account',
             'name': 'cash_basis_base_account',
-            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': self.company_data['company'].id,
         })
         self.company_data['company'].account_cash_basis_base_account_id = cash_basis_base_account
@@ -226,14 +226,14 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         cash_basis_transfer_account = self.env['account.account'].create({
             'code': 'cash_basis_transfer_account',
             'name': 'cash_basis_transfer_account',
-            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': self.company_data['company'].id,
         })
 
         tax_account_1 = self.env['account.account'].create({
             'code': 'tax_account_1',
             'name': 'tax_account_1',
-            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': self.company_data['company'].id,
         })
 
