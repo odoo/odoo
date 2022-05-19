@@ -39,6 +39,7 @@ const FUZZY_NAMESPACES = ["default"];
  *  categories: string[];
  *  debounceDelay: number;
  *  emptyMessage: string;
+ *  placeholder: string;
  * }} NamespaceConfig
  */
 
@@ -46,7 +47,6 @@ const FUZZY_NAMESPACES = ["default"];
  * @typedef {{
  *  configByNamespace?: {[namespace]: NamespaceConfig};
  *  FooterComponent?: Component;
- *  placeholder?: string;
  *  providers: Provider[];
  *  searchValue?: string;
  * }} CommandPaletteConfig
@@ -138,7 +138,6 @@ export class CommandPalette extends Component {
     async setCommandPaletteConfig(config) {
         this.configByNamespace = config.configByNamespace || {};
         this.state.FooterComponent = config.FooterComponent;
-        this.state.placeholder = config.placeholder || DEFAULT_PLACEHOLDER.toString();
 
         this.providersByNamespace = { default: [] };
         for (const provider of config.providers) {
@@ -320,6 +319,7 @@ export class CommandPalette extends Component {
             namespaceConfig.debounceDelay || 0
         );
         this.state.namespace = namespace;
+        this.state.placeholder = namespaceConfig.placeholder || DEFAULT_PLACEHOLDER.toString();
     }
 
     processSearchValue(searchValue) {

@@ -18,11 +18,13 @@ commandSetupRegistry.add("@", {
     debounceDelay: 200,
     emptyMessage: _lt("No user found"),
     name: _lt("users"),
+    placeholder: _lt("Search for a user..."),
 });
 commandSetupRegistry.add("#", {
     debounceDelay: 200,
     emptyMessage: _lt("No channel found"),
     name: _lt("channels"),
+    placeholder: _lt("Search for a channel..."),
 });
 
 const commandProviderRegistry = registry.category("command_provider");

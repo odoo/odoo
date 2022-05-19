@@ -42,12 +42,12 @@ export class DebugMenu extends DebugMenuBasic {
                 const configByNamespace = {
                     default: {
                         categories: defaultCategories,
-                        emptyMessage: this.env._t("No command found"),
+                        emptyMessage: this.env._t("No debug command found"),
+                        placeholder: this.env._t("Choose a debug command..."),
                     },
                 };
                 const commandPaletteConfig = {
                     configByNamespace,
-                    placeholder: this.env._t("Choose a debug command..."),
                     providers: [provider],
                 };
                 return this.command.openPalette(commandPaletteConfig);
