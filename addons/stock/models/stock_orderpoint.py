@@ -148,6 +148,13 @@ class StockWarehouseOrderpoint(models.Model):
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
             raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
 
+    @api.constrains('warehouse_id', 'location_id')
+    def _check_location(self):
+        for record in self:
+            loc_wh = record.location_id.warehouse_id
+            if loc_wh and loc_wh != record.warehouse_id:
+                raise ValidationError(_("Location %s doesn't belong to warehouse %s"), record.location_id.name, record.warehouse_id.name)
+
     @api.depends('location_id', 'company_id')
     def _compute_warehouse_id(self):
         for orderpoint in self:
