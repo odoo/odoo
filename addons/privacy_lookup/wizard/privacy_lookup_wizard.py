@@ -210,7 +210,7 @@ class PrivacyLookupWizard(models.TransientModel):
 
     def action_open_lines(self):
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('privacy.action_privacy_lookup_wizard_line')
+        action = self.env['ir.actions.act_window']._for_xml_id('privacy_lookup.action_privacy_lookup_wizard_line')
         action['domain'] = [('wizard_id', '=', self.id)]
         return action
 
