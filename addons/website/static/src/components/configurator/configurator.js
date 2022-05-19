@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import concurrency from 'web.concurrency';
 import rpc from 'web.rpc';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
@@ -621,6 +622,25 @@ async function applyConfigurator(self, themeName) {
         self.env.router.navigate({to: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN'});
         return;
     }
+
+    async function attemptConfiguratorApply(data, retryCount = 0) {
+        try {
+            return await self.rpc({
+                model: 'website',
+                method: 'configurator_apply',
+                kwargs: data,
+            });
+        } catch (error) {
+            // Wait a bit before retrying or allowing manual retry.
+            await concurrency.delay(5000);
+            if (retryCount < 3) {
+                return attemptConfiguratorApply(data, retryCount + 1);
+            }
+            document.querySelector('.o_theme_install_loader_container').remove();
+            throw error;
+        }
+    }
+
     if (themeName !== undefined) {
         $('body').append(self.env.loader);
         const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
@@ -645,11 +665,7 @@ async function applyConfigurator(self, themeName) {
             website_type: WEBSITE_TYPES[self.state.selectedType].name,
             logo_attachment_id: self.state.logoAttachmentId,
         };
-        const resp = await self.rpc({
-            model: 'website',
-            method: 'configurator_apply',
-            kwargs: {...data},
-        });
+        const resp = await attemptConfiguratorApply(data);
         window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
         window.location = resp.url;
     }
