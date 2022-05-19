@@ -281,6 +281,33 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("statusbar with tooltip for help text", async function (assert) {
+        serverData.models.partner.fields.product_id.help = "some info about the field";
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar" />
+                    </header>
+                </form>
+            `,
+        });
+
+        assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
+        const tooltipInfo = target.querySelector(".o_field_statusbar").attributes[
+            "data-tooltip-info"
+        ];
+        assert.strictEqual(
+            JSON.parse(tooltipInfo.value).field.help,
+            "some info about the field",
+            "tooltip text is present on the field"
+        );
+    });
+
     QUnit.test("statusbar with required modifier", async function (assert) {
         assert.expect(3);
 

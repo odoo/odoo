@@ -5,6 +5,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { isTruthy } from "@web/core/utils/xml";
 import { X2M_TYPES } from "@web/views/helpers/view_utils";
+import { getTooltipInfo } from "./field_tooltip";
 
 const { Component, xml } = owl;
 
@@ -132,6 +133,7 @@ export class Field extends Component {
         const props = { ...this.props };
         delete props.style;
         delete props.class;
+        delete props.showTooltip;
 
         let extractedPropsForStandaloneComponent = {};
         if (this.FieldComponent.extractProps) {
@@ -164,9 +166,19 @@ export class Field extends Component {
             ...extractedPropsForStandaloneComponent,
         };
     }
+
+    get tooltip() {
+        if (this.props.showTooltip) {
+            return getTooltipInfo({
+                field: this.props.record.fields[this.props.name],
+                activeField: this.props.record.activeFields[this.props.name],
+            });
+        }
+        return false;
+    }
 }
 Field.template = xml/* xml */ `
-    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style">
+    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style" t-att-data-tooltip-template="tooltip and 'web.FieldTooltip'" t-att-data-tooltip-info="tooltip">
         <t t-component="FieldComponent" t-props="fieldComponentProps"/>
     </div>`;
 

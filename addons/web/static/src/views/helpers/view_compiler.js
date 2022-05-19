@@ -687,6 +687,9 @@ export class ViewCompiler {
             if (child.nodeName === "button") {
                 buttons.push(compiled);
             } else {
+                if (child.nodeName === "field") {
+                    compiled.setAttribute("showTooltip", true);
+                }
                 others.push(compiled);
             }
         }
