@@ -187,28 +187,6 @@
     </t>
 
     <!--
-        @param {string} src
-    -->
-    <t t-name="im_livechat.legacy.mail.PrintImage">
-        <html>
-            <head>
-                <script>
-                    function onload_img() {
-                        setTimeout('print_img()', 10);
-                    }
-                    function print_img() {
-                        window.print();
-                        window.close();
-                    }
-                </script>
-            </head>
-            <body onload='onload_img()'>
-                <img t-att-src='src' alt=""/>
-            </body>
-        </html>
-    </t>
-
-    <!--
         @param {mail.model.AbstractThread} thread
         @param {Object} options
         @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
