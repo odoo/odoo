@@ -118,6 +118,9 @@ export class StatusBarField extends Component {
 }
 
 StatusBarField.template = "web.StatusBarField";
+StatusBarField.defaultProps = {
+    visibleSelection: [],
+};
 StatusBarField.props = {
     ...standardFieldProps,
     addCommand: { type: Boolean, optional: true },
