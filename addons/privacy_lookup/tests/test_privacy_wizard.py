@@ -66,8 +66,9 @@ class TestPrivacyWizard(TransactionCase):
         # Lookup
         wizard.action_lookup()
         self.assertEqual(len(wizard.line_ids), 2)
-        self.assertEqual(wizard.line_ids[1].resource_ref, self.partner)
-        self.assertEqual(wizard.line_ids[0].resource_ref, None)
+        partner_line = wizard.line_ids.filtered(lambda l: l.resource_ref == self.partner)
+        self.assertTrue(partner_line)
+        self.assertEqual((wizard.line_ids - partner_line).resource_ref, None)
 
     def test_wizard_direct_reference(self):
         bank = self.env['res.bank'].create({
