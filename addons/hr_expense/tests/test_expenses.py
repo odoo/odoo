@@ -437,7 +437,7 @@ class TestExpenses(TestExpenseCommon):
         self.assertFalse(Expense.env.user.has_group('uom.group_uom'))
 
         # Use a product not using the default uom "Unit(s)"
-        product = Expense.env.ref('hr_expense.mileage_expense_product')
+        product = Expense.env.ref('hr_expense.expense_product_mileage')
 
         expense_form = Form(Expense)
         expense_form.product_id = product

@@ -3,9 +3,9 @@
 import { registry } from '@web/core/registry';
 import { patch } from '@web/core/utils/patch';
 
-import { ExpenseDashboardMixin } from '../mixins/expense_dashboard';
+import { ExpenseDashboard } from '../components/expense_dashboard';
 import { ExpenseMobileQRCode } from '../mixins/qrcode';
-import { ExpenseDocumentUpload } from '../mixins/document_upload';
+import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from '../mixins/document_upload';
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanController } from '@web/views/kanban/kanban_controller';
@@ -16,10 +16,12 @@ patch(ExpenseKanbanController.prototype, 'expense_kanban_controller_upload', Exp
 
 export class ExpenseKanbanRenderer extends KanbanRenderer {}
 patch(ExpenseKanbanRenderer.prototype, 'expense_kanban_renderer_qrcode', ExpenseMobileQRCode);
+patch(ExpenseKanbanRenderer.prototype, 'expense_kanban_renderer_qrcode_dzone', ExpenseDocumentDropZone);
+ExpenseKanbanRenderer.template = 'hr_expense.KanbanRenderer';
 
 export class ExpenseDashboardKanbanRenderer extends ExpenseKanbanRenderer {}
-patch(ExpenseDashboardKanbanRenderer.prototype, 'expense_kanban_renderer_dashboard', ExpenseDashboardMixin);
-ExpenseDashboardKanbanRenderer.template = 'hr_expense.KanbanRenderer';
+ExpenseDashboardKanbanRenderer.components = { ...ExpenseDashboardKanbanRenderer.components, ExpenseDashboard};
+ExpenseDashboardKanbanRenderer.template = 'hr_expense.DashboardKanbanRenderer';
 
 registry.category('views').add('hr_expense_kanban', {
     ...kanbanView,

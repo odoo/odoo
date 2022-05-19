@@ -15,12 +15,12 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
 """,
     'depends': ['sale_management', 'hr_expense'],
     'data': [
+        'data/sale_expense_data.xml',
         'views/product_view.xml',
         'views/hr_expense_views.xml',
         'views/sale_order_views.xml',
         'views/hr_expense_sheet_views.xml',
     ],
-    'demo': ['data/sale_expense_demo.xml'],
     'installable': True,
     'auto_install': True,
     'assets': {

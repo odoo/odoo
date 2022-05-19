@@ -13,6 +13,12 @@
         </div>
     </t>
 
+    <t t-name="hr.expense.DocumentDropZone">
+        <div class="o_drop_area d-none">
+            <i class="fa fa-upload fa-10x"></i>
+        </div>
+    </t>
+
     <t t-extend="ListView.buttons" t-name="ExpensesListView.buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
             <button type="button" t-att-class="'d-none d-md-block btn' + (!widget.isMobile ? ' btn-secondary' : '') + ' o_button_upload_expense'">
@@ -23,6 +29,13 @@
         <t t-jquery="button.o_list_button_add" t-operation="before">
             <button type="button" t-att-class="'d-block d-md-none btn' + (widget.isMobile ? ' btn-primary' : '') + ' o_button_upload_expense'">
                 Scan
+            </button>
+        </t>
+
+        <!-- hr.expense buttons -->
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button type="button" t-att-class="'btn btn-secondary' + (widget.isExpense ? '' : ' d-none') + ' o_button_create_report'">
+                Create Report
             </button>
         </t>
 

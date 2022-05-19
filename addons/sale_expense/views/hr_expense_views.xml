@@ -65,7 +65,7 @@
         <field name="model">hr.expense.sheet</field>
         <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='name']" position="after">
+            <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='state']" position="after">
                 <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" optional="show" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
                 <field name="can_be_reinvoiced" invisible="1"/>
             </xpath>

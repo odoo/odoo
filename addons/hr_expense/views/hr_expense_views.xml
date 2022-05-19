@@ -44,10 +44,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree_dashboard_upload" decoration-info="state == 'draft'">
-                    <header>
-                        <button name="action_submit_expenses" type="object" string="Create Report"/>
-                    </header>
+                <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
                     <field name="company_currency_id" invisible="1"/>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
@@ -84,7 +81,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
-                    <attribute name="js_class">hr_expense_tree_dashboard_upload_header</attribute>
+                    <attribute name="js_class">hr_expense_dashboard_tree</attribute>
                 </xpath>
             </field>
         </record>
@@ -98,7 +95,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
-                    <attribute name="js_class">hr_expense_tree_dashboard_header</attribute>
+                    <attribute name="js_class">hr_expense_dashboard_tree</attribute>
                     <attribute name="class">hr_expense h-auto</attribute>
                 </xpath>
             </field>
@@ -159,7 +156,7 @@
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
-                            <label for="total_amount_company" string="" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
+                            <label for="total_amount_company" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div class="o_row d-flex" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
                                 <field name="total_amount_company" style="vertical-align: top;" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
                                 <field name="label_convert_rate"/>
@@ -284,7 +281,7 @@
             </field>
         </record>
 
-        <!-- Kanban view with header. Used in "All My Expenses -->
+        <!-- Kanban view with header. Used in "My Expenses -->
         <record id="hr_expense_kanban_view_header" model="ir.ui.view">
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
@@ -314,9 +311,13 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <graph string="Expenses Analysis" sample="1">
+                    <field name="unit_amount" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="total_amount" type="measure"/>
+                    <field name="total_amount" type="measure" groups="base.group_multi_currency"/>
+                    <field name="untaxed_amount" groups="base.group_multi_currency"/>
+                    <field name="amount_tax" groups="base.group_multi_currency"/>
                 </graph>
             </field>
         </record>
@@ -382,7 +383,7 @@
         <record id="hr_expense_actions_all" model="ir.actions.act_window">
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_mode">graph,pivot,tree,kanban,form</field>
+            <field name="view_mode">graph,pivot,tree,form</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
@@ -411,57 +412,20 @@
             <field name="act_window_id" ref="hr_expense_actions_all"/>
         </record>
 
-        <record id="hr_expense_actions_all_kanban" model="ir.actions.act_window.view">
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="hr_expense_view_expenses_analysis_kanban"/>
-            <field name="act_window_id" ref="hr_expense_actions_all"/>
-        </record>
-
-        <record id="hr_expense_actions_my_unsubmitted" model="ir.actions.act_window">
-            <field name="name">My Expenses to Report</field>
-            <field name="res_model">hr.expense</field>
-            <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
-            <field name="search_view_id" ref="hr_expense_view_search"/>
-            <field name="context">{'search_default_my_expenses': 1, 'search_default_no_report': 1}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_expense_receipt">
-                    <h2 class="d-none d-md-block">
-                        Did you try the mobile app?
-                    </h2>
-                </p>
-                <p>Snap pictures of your receipts and let Odoo<br/> automatically create expenses for you.</p>
-                <p class="d-none d-md-block">
-                    <a href="https://apps.apple.com/be/app/odoo/id1272543640" target="_blank" class="o_expense_mobile_app">
-                        <img alt="Apple App Store" class="img img-fluid h-100 o_expense_apple_store" src="/hr_expense/static/img/app_store.png"/>
-                    </a>
-                    <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank" class="o_expense_mobile_app">
-                        <img alt="Google Play Store" class="img img-fluid h-100 o_expense_google_store" src="/hr_expense/static/img/play_store.png"/>
-                    </a>
-                </p>
-            </field>
-        </record>
-
-        <!-- Tree & Kanban view for "My Expenses to Report" with the header -->
-        <record id="hr_expense_actions_my_unsubmitted_tree" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_my_expenses_tree"/>
-            <field name="act_window_id" ref="hr_expense_actions_my_unsubmitted"/>
-        </record>
-
-        <record id="hr_expense_actions_my_unsubmitted_kanban" model="ir.actions.act_window.view">
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="hr_expense_kanban_view_header"/>
-            <field name="act_window_id" ref="hr_expense_actions_my_unsubmitted"/>
-        </record>
-
         <record id="hr_expense_actions_my_all" model="ir.actions.act_window">
-            <field name="name">All My Expenses</field>
+            <field name="name">My Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="context">{'search_default_my_expenses': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_expense_receipt">
+                    <h2 class="d-none d-md-block">
+                        Drag and drop files to create expenses
+                    </h2>
+                    <p>
+                        Or
+                    </p>
                     <h2 class="d-none d-md-block">
                         Did you try the mobile app?
                     </h2>
@@ -520,7 +484,7 @@
             <field name="name">product.product.expense.form</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <form string="Expense Products">
+                <form string="Expense Categories">
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name='product_variant_count' invisible='1'/>
@@ -561,7 +525,7 @@
                         </group>
                         <notebook>
                             <page string="Internal Note" name="internal_note">
-                                <field name="description"/>
+                                <field name="description" placeholder="This note will be shown to users when they select this expense product."/>
                             </page>
                         </notebook>
                     </sheet>
@@ -585,30 +549,46 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="product_product_expense_categories_tree_view">
+            <field name="name">product.product.expense.categories.tree.view</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" readonly="1"/>
+                    <field name="default_code" optional="show" readonly="1"/>
+                    <field name="description" widget="html" string="Internal Note" optional="show" readonly="1"/>
+                    <field name="lst_price" optional="show" string="Sales Price"/>
+                    <field name="standard_price" optional="show"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="hr_expense_product" model="ir.actions.act_window">
-            <field name="name">Expense Products</field>
+            <field name="name">Expense Categories</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"default_can_be_expensed": 1, 'default_detailed_type': 'service'}</field>
             <field name="domain">[('can_be_expensed', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No expense products found. Let's create one!
+                No expense categories found. Let's create one!
               </p><p>
-                Expense products can be reinvoiced to your customers.
+                Expense categories can be reinvoiced to your customers.
               </p>
             </field>
         </record>
 
         <record id="hr_expense_product_tree" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
+            <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="product_product_expense_categories_tree_view"/>
             <field name="act_window_id" ref="hr_expense_product"/>
         </record>
 
         <record id="hr_expense_product_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">kanban</field>
             <field name="act_window_id" ref="hr_expense_product"/>
         </record>
@@ -624,21 +604,8 @@
             <field name="name">hr.expense.sheet.tree</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1" decoration-info="state == 'draft'">
-                    <header>
-                        <button name="approve_expense_sheets" string="Approve Report" type="object"
-                                groups="hr_expense.group_hr_expense_team_approver"
-                                invisible="not context.get('search_default_submitted',0)"/>
-                        <button name="action_sheet_move_create" string="Post Entries" type="object"
-                                groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"
-                                invisible="not context.get('search_default_to_post',0)"/>
-                        <button name="action_register_payment" string="Register Payment" type="object"
-                                groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"
-                                invisible="not context.get('search_default_approved',0)"/>
-                        <button name="action_submit_sheet" string="Submit" type="object"
-                                groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"
-                                invisible="not context.get('search_default_draft',0)"/>
-                    </header>
+                <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree" sample="1" decoration-info="state == 'draft'">
+                    <field name="product_ids" invisible="1"/>
                     <field name="employee_id" widget="many2one_avatar_employee"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager"/>
                     <field name="create_date" optional="hide"/>
@@ -655,19 +622,6 @@
             </field>
         </record>
 
-        <record id="view_hr_expense_sheet_dashboard_tree" model="ir.ui.view">
-            <field name="name">hr.expense.sheet.dashboard.tree</field>
-            <field name="model">hr.expense.sheet</field>
-            <field name="priority">20</field>
-            <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="js_class">hr_expense_tree_dashboard</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <!-- Tree view for "My Reports" with header -->
         <record id="view_hr_expense_sheet_dashboard_tree_header" model="ir.ui.view">
             <field name="name">hr.expense.sheet.dashboard.tree</field>
@@ -677,7 +631,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="js_class">hr_expense_tree_dashboard_header</attribute>
+                    <attribute name="js_class">hr_expense_dashboard_tree</attribute>
                 </xpath>
             </field>
         </record>
@@ -772,25 +726,33 @@
                      <notebook>
                         <page name="expenses" string="Expense">
                             <field name="is_editable" invisible="1"/>
-                            <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" attrs="{'readonly': [('is_editable', '=', False)]}">
+                            <field name="expense_line_ids"
+                                    nolabel="1"
+                                    widget="many2many"
+                                    mode="tree,kanban"
+                                    domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]"
+                                    options="{'reload_on_button': True}"
+                                    context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" 
+                                    attrs="{'readonly': [('is_editable', '=', False)]}">
                                 <tree decoration-danger="is_refused" editable="bottom" class="o_expense_line_list">
                                     <field name="date" optional="show"/>
                                     <field name="product_id"/>
                                     <field name="name"/>
+                                    <field name="description" optional="hide"/>
                                     <field name="state" invisible="1"/>
+                                    <field name="attachment_number" invisible="1"/>
+                                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="True" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                                     <field name="reference" optional="hide" readonly="True"/>
                                     <field name="analytic_account_id" optional="show" domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" optional="hide" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="account_id" optional="hide" readonly="True"/>
-                                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="True"/>
-                                    <field name="attachment_number" class="text-end ps-0 pe-4" width="1" nolabel="1"/>
                                     <field name="product_has_cost" invisible="True"/>
                                     <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>
                                     <field name="currency_id" optional="hide" readonly="True"/>
                                     <field name="quantity" optional="hide" attrs="{'readonly': [('product_has_cost', '=', False)]}"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="tax_ids" string="Taxes" optional="show" widget="many2many_tags" context="{'default_company_id': company_id}"/>
-                                    <field name="amount_tax" optional="hide" context="{'default_company_id': company_id}" readonly="True"/>
+                                    <field name="amount_tax" optional="hide" context="{'default_company_id': company_id}" readonly="True" groups="base.group_multi_currency"/>
                                     <field name="total_amount" optional="show" attrs="{'readonly': [('product_has_cost', '=', True)]}"/>
                                     <field name="amount_tax_company" optional="hide" readonly="True"/>
                                     <field name="company_currency_id" invisible="1"/>
@@ -929,12 +891,6 @@
                     <filter string="My Reports" name="my_reports" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <separator />
-                    <filter domain="[('state', '=', 'draft')]" string="To Submit" name="draft" help="Draft Expenses"/>
-                    <filter domain="[('state', '=', 'submit')]" string="To Approve" name="submitted" help="Confirmed Expenses"/>
-                    <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
-                    <filter domain="[('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
-                    <filter domain="[('state', '=', 'cancel')]" string="Refused" name="canceled"/>
-                    <separator/>
                     <filter string="Date" name="filter_accounting_date" date="accounting_date"/>
                     <separator/>
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
@@ -946,7 +902,7 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                             ]"/>
-                    <group expand="0" string="Group By">
+                    <group expand="0" string="Group By" name="group_filters">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -954,6 +910,23 @@
                         <filter string="Status" domain="[]" context="{'group_by': 'state'}" name="state"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="hr_expense_sheet_view_search_with_panel" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.view.search.with.panel</field>
+            <field name="model">hr.expense.sheet</field>
+            <field name="inherit_id" ref="hr_expense_sheet_view_search"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_filters']" position='after'>
+                    <searchpanel>
+                        <field name="state" expand="1" select="multi" icon="fa-check-square-o" enable_counters="1"/>
+                        <field name="employee_id"  limit="20" hierarchize="0" select="one" icon="fa-users"/>
+                        <field name="product_ids" limit="20" select="multi" icon="fa-tags"/>
+                        <field name="company_id" expand="1" icon="fa-building" groups="base.group_multi_company"/>
+                    </searchpanel>
+                </xpath>
             </field>
         </record>
 
@@ -1007,79 +980,13 @@
             <field name="act_window_id" ref="action_hr_expense_sheet_my_all"/>
         </record>
 
-        <record id="action_hr_expense_sheet_all_to_submit" model="ir.actions.act_window">
-            <field name="name">Expense Reports to Submit</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_draft': 1}</field>
-            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                No expense reports found
-              </p><p>
-                Create the new expense reports from the expenses submitted by the employees you manage.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_hr_expense_sheet_all_to_approve" model="ir.actions.act_window">
-            <field name="name">Expense Reports to Approve</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_submitted': 1}</field>
-            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                No expense reports found
-              </p><p>
-                Approve the new expense reports submitted by the employees you manage.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_hr_expense_sheet_all_to_post" model="ir.actions.act_window">
-            <field name="name">Expense Reports To Post</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_to_post': 1}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                No expense reports found
-              </p><p>
-                Post the journal entries of the new expense reports approved by the employees' manager.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_hr_expense_sheet_all_to_pay" model="ir.actions.act_window">
-            <field name="name">Expense Reports To Pay</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_approved': 1}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                No expense reports found
-              </p><p>
-                Reimburse the employees who incurred these costs or simply register the corresponding payments.
-              </p>
-            </field>
-        </record>
-
         <record id="action_hr_expense_sheet_all" model="ir.actions.act_window">
             <field name="name">All Reports</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search_with_panel"/>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="context">{ 'searchpanel_default_state': ["draft", "submit", "approve", "post", "done"] }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No expense reports found. Let's create one!
@@ -1157,38 +1064,19 @@
         <menuitem id="menu_hr_expense_root" name="Expenses" sequence="230" web_icon="hr_expense,static/description/icon.svg"/>
 
         <menuitem id="menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="menu_hr_expense_root" groups="base.group_user"/>
-        <menuitem id="menu_hr_expense_my_expenses_to_submit" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted" name="My Expenses to Report"/>
-        <menuitem id="menu_hr_expense_my_expenses_all" sequence="2" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_all" name="All My Expenses"/>
-        <menuitem id="menu_hr_expense_sheet_my_reports" sequence="3" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_all" name="My Reports"/>
+        <menuitem id="menu_hr_expense_my_expenses_all" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_all" name="My Expenses"/>
+        <menuitem id="menu_hr_expense_sheet_my_reports" sequence="2" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_all" name="My Reports"/>
 
-        <menuitem id="menu_hr_expense_report" name="Expense Reports" sequence="2" parent="menu_hr_expense_root"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_submit"
-                  name="Reports to Submit" sequence="1" parent="menu_hr_expense_report"
-                  action="action_hr_expense_sheet_all_to_submit"
-                  groups="hr_expense.group_hr_expense_team_approver"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_approve"
-                  name="Reports to Approve" sequence="2" parent="menu_hr_expense_report"
-                  action="action_hr_expense_sheet_all_to_approve"
-                  groups="hr_expense.group_hr_expense_team_approver"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_post"
-                  name="Reports to Post" sequence="3" parent="menu_hr_expense_report"
-                  action="action_hr_expense_sheet_all_to_post"
-                  groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_pay"
-                  name="Reports to Pay" sequence="4" parent="menu_hr_expense_report"
-                  action="action_hr_expense_sheet_all_to_pay"
-                  groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"/>
-        <menuitem id="menu_hr_expense_sheet_all"
-                  name="All Reports" sequence="5" parent="menu_hr_expense_report"
-                  action="action_hr_expense_sheet_all"
-                  groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"/>
+        <menuitem id="menu_hr_expense_report" name="Expense Reports" sequence="2" parent="menu_hr_expense_root"
+                   action="action_hr_expense_sheet_all"
+                   groups="account.group_account_user,hr_expense.group_hr_expense_team_approver"/>
 
         <menuitem id="menu_hr_expense_reports" name="Reporting" sequence="4" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_manager"/>
         <menuitem id="menu_hr_expense_all_expenses" name="Expenses Analysis" sequence="0" parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>
 
         <menuitem id="menu_hr_expense_configuration" name="Configuration" parent="menu_hr_expense_root"
             sequence="100"/>
-        <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration"
+        <menuitem id="menu_hr_product" name="Expense Categories" parent="menu_hr_expense_configuration"
             action="hr_expense_product" groups="hr_expense.group_hr_expense_manager" sequence="10"/>
 
         <menuitem id="menu_hr_expense_account_employee_expenses" name="Employee Expenses" sequence="22" parent="account.menu_finance_payables" groups="hr_expense.group_hr_expense_user" action="action_hr_expense_account"/>
