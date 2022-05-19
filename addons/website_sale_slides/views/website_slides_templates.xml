@@ -68,7 +68,7 @@
 </template>
 
 <!-- COURSE -->
-<template name="Course Sidebar (infos, CTA)" id='course_sidebar' inherit_id="website_slides.course_sidebar">
+<template name="Course Sidebar (infos, CTA)" id="course_join" inherit_id="website_slides.course_join">
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
         <t t-if="(not channel.is_member or channel.can_publish) and channel.enroll == 'payment'">

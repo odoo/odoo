@@ -73,26 +73,39 @@ class TestKarmaGain(common.SlidesCase):
         self.assertEqual(user.karma, 0)
 
         # Finish the Course
-        self.slide.with_user(user).action_set_completed()
+        self.slide.with_user(user).action_mark_completed()
         self.assertFalse(self.channel.with_user(user).completed)
-        self.slide_2.with_user(user).action_set_completed()
+        self.slide_2.with_user(user).action_mark_completed()
 
         # answer a quizz question
         self.slide_3.with_user(user).action_set_viewed(quiz_attempts_inc=True)
-        self.slide_3.with_user(user)._action_set_quiz_done()
-        self.slide_3.with_user(user).action_set_completed()
+        self.slide_3.with_user(user)._action_mark_completed()
         computed_karma += self.slide_3.quiz_first_attempt_reward
         computed_karma += self.channel.karma_gen_channel_finish
+        self.assertTrue(self.channel.with_user(user).completed)
+        self.assertEqual(user.karma, computed_karma)
 
+        # Mark the quiz as not completed
+        self.slide_3.with_user(user).action_mark_uncompleted()
+        computed_karma -= self.slide_3.quiz_first_attempt_reward
+        computed_karma -= self.channel.karma_gen_channel_finish
+        self.assertFalse(self.channel.with_user(user).completed)
+        self.assertEqual(user.karma, computed_karma)
+
+        # Re-submit the quiz, we should consider it as the second attempt
+        self.slide_3.with_user(user).action_set_viewed(quiz_attempts_inc=True)
+        self.slide_3.with_user(user)._action_mark_completed()
+        computed_karma += self.slide_3.quiz_second_attempt_reward
+        computed_karma += self.channel.karma_gen_channel_finish
         self.assertTrue(self.channel.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
         # Begin then finish the second Course
-        self.slide_2_0.with_user(user).action_set_completed()
+        self.slide_2_0.with_user(user).action_mark_completed()
         self.assertFalse(self.channel_2.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
-        self.slide_2_1.with_user(user).action_set_completed()
+        self.slide_2_1.with_user(user).action_mark_completed()
         self.assertTrue(self.channel_2.with_user(user).completed)
         computed_karma += self.channel_2.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)
@@ -128,7 +141,7 @@ class TestKarmaGain(common.SlidesCase):
         # Leave the finished course
         self.channel._remove_membership(user.partner_id.ids)
         computed_karma -= self.channel.karma_gen_channel_finish
-        computed_karma -= self.slide_3.quiz_first_attempt_reward
+        computed_karma -= self.slide_3.quiz_second_attempt_reward
         self.assertEqual(user.karma, computed_karma)
 
     @mute_logger('odoo.models')
@@ -142,5 +155,5 @@ class TestKarmaGain(common.SlidesCase):
         (self.channel | self.channel_2)._action_add_members(user.partner_id)
 
         computed_karma += self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
-        (self.slide | self.slide_2 | self.slide_3 | self.slide_2_0 | self.slide_2_1).with_user(user).action_set_completed()
+        (self.slide | self.slide_2 | self.slide_3 | self.slide_2_0 | self.slide_2_1).with_user(user)._action_mark_completed()
         self.assertEqual(user.karma, computed_karma)

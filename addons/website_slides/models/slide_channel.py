@@ -60,15 +60,24 @@ class ChannelUsersRelation(models.Model):
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
         completed_records = self.env['slide.channel.partner']
+        uncompleted_records = self.env['slide.channel.partner']
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
-            if not record.completed and record.channel_id.active and record.completed_slides_count >= record.channel_id.total_slides:
+
+            if not record.channel_id.active:
+                continue
+            elif not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
+            elif record.completed and record.completed_slides_count < record.channel_id.total_slides:
+                uncompleted_records += record
 
         if completed_records:
-            completed_records._set_as_completed()
+            completed_records._set_as_completed(completed=True)
             completed_records._send_completed_mail()
+
+        if uncompleted_records:
+            uncompleted_records._set_as_completed(completed=False)
 
     def unlink(self):
         """
@@ -87,11 +96,16 @@ class ChannelUsersRelation(models.Model):
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
         return super(ChannelUsersRelation, self).unlink()
 
-    def _set_as_completed(self):
-        """ Set record as completed and compute karma gains """
+    def _set_as_completed(self, completed=True):
+        """ Set record as completed and compute karma gains
+
+        :param completed:
+            True if we make the slide as completed
+            False if we remove user completion
+        """
         partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
         for record in self:
-            record.completed = True
+            record.completed = completed
             partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
 
         partner_karma = {
@@ -102,7 +116,11 @@ class ChannelUsersRelation(models.Model):
         if partner_karma:
             users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
-                users.add_karma(partner_karma[user.partner_id.id])
+                karma = partner_karma[user.partner_id.id]
+                if not completed:
+                    # Mark the channel as not-completed, we remove the gained karma
+                    karma *= -1
+                users.add_karma(karma)
 
     def _send_completed_mail(self):
         """ Send an email to the attendee when they have successfully completed a course. """
@@ -376,7 +394,7 @@ class Channel(models.Model):
         for record in self:
             record.rating_avg_stars = record.rating_avg
 
-    @api.depends('slide_partner_ids', 'total_slides')
+    @api.depends('slide_partner_ids', 'slide_partner_ids.completed', 'total_slides')
     @api.depends_context('uid')
     def _compute_user_statistics(self):
         current_user_info = self.env['slide.channel.partner'].sudo().search(

@@ -2,10 +2,14 @@
 
 import publicWidget from 'web.public.widget';
 import { _t } from 'web.core';
+import { SlideCoursePage } from '@website_slides/js/slides_course_page';
 
-publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend({
+publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
     selector: '.o_wslides_slides_list',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
+
+    xmlDependencies: SlideCoursePage.prototype.xmlDependencies.concat([
+        '/website_slides/static/src/xml/website_slides_upload.xml',
+    ]),
 
     start: function () {
         this._super.apply(this,arguments);

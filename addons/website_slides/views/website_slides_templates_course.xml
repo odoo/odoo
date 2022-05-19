@@ -255,68 +255,7 @@
     <div class="o_wslides_course_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
 
         <div class="o_wslides_sidebar_top d-flex justify-content-between">
-            <div class="o_wslides_js_course_join flex-grow-1">
-                <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
-                    class="btn btn-primary btn-block o_wslides_js_course_join_link"
-                    title="Start Course" aria-label="Start Course Channel"
-                    t-att-href="'#'"
-                    t-att-data-channel-id="channel.id"
-                    t-att-data-channel-enroll="channel.enroll">
-                    <span class="cta-title text_small_caps">
-                        <t t-if="channel.channel_type == 'documentation'">Start Course</t>
-                        <t t-else="">Join Course</t>
-                    </span>
-                </a>
-
-                <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
-                    <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
-                         t-att-data-channel-id="channel.id">
-                        Private Course
-                        <div t-if="is_public_user">
-                            <small>
-                                Please <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to contact responsible.
-                            </small>
-                        </div>
-                        <div t-elif="channel.has_requested_access">
-                            <small class="text-success">
-                                Request already sent
-                            </small>
-                        </div>
-                        <div t-else="" class="o_wslides_enroll_msg">
-                            <small>
-                                <div t-field="channel.enroll_msg"/>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                <t t-if="channel.is_member">
-                    <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
-                            t-att-data-channel-id="channel.id"
-                            t-att-data-is-follower="channel.message_is_follower"
-                            t-att-data-enroll="channel.enroll">
-                        <t t-call="website_slides.slides_misc_user_image">
-                            <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
-                            <t t-set="img_style" t-value="'width: 1.4em; height: 1.4em; object-fit: cover;'"/>
-                        </t>
-                        <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
-                        <i class="fa fa-check"/>
-                        <i class="fa fa-times"/>
-                    </button>
-                    <div class="d-flex align-items-center pt-3">
-                        <t t-if="channel.completed">
-                            <span class="badge badge-pill badge-success py-1 px-2 mx-auto" style="font-size: 1em"><i class="fa fa-check"/> Completed</span>
-                        </t>
-                        <t t-else="">
-                            <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
-                                <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="ml-3 small">
-                                <span class="o_wslides_progress_percentage" t-esc="channel.completion"/> %
-                            </div>
-                        </t>
-                    </div>
-                </t>
-            </div>
+            <t t-call="website_slides.course_join"/>
             <button t-attf-class="btn d-md-none bg-white ml-1 border #{'alert' if channel.is_member else ''} #{'align-self-start' if channel.is_member or channel.enroll == 'invite' else 'align-self-end'}" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
         </div>
 
@@ -348,6 +287,70 @@
                 </button>
             </div>
         </div>
+    </div>
+</template>
+
+<template id="course_join">
+    <div class="o_wslides_js_course_join flex-grow-1">
+        <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
+            class="btn btn-primary btn-block o_wslides_js_course_join_link"
+            title="Start Course" aria-label="Start Course Channel"
+            t-att-href="'#'"
+            t-att-data-channel-id="channel.id"
+            t-att-data-channel-enroll="channel.enroll">
+            <span class="cta-title text_small_caps">
+                Join Course
+            </span>
+        </a>
+
+        <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
+            <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
+                 t-att-data-channel-id="channel.id">
+                Private Course
+                <div t-if="is_public_user">
+                    <small>
+                        Please <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to contact responsible.
+                    </small>
+                </div>
+                <div t-elif="channel.has_requested_access">
+                    <small class="text-success">
+                        Request already sent
+                    </small>
+                </div>
+                <div t-else="" class="o_wslides_enroll_msg">
+                    <small>
+                        <div t-field="channel.enroll_msg"/>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <t t-if="channel.is_member">
+            <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
+                    t-att-data-channel-id="channel.id"
+                    t-att-data-is-follower="channel.message_is_follower"
+                    t-att-data-enroll="channel.enroll">
+                <t t-call="website_slides.slides_misc_user_image">
+                    <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
+                    <t t-set="img_style" t-value="'width: 1.4em; height: 1.4em; object-fit: cover;'"/>
+                </t>
+                <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
+                <i class="fa fa-check"/>
+                <i class="fa fa-times"/>
+            </button>
+            <div class="d-flex align-items-center pt-3">
+                <span t-attf-class="o_wslides_channel_completion_completed badge badge-pill badge-success py-1 px-2 mx-auto #{'d-none' if not channel.completed else ''}">
+                    <i class="fa fa-check"/> Completed
+                </span>
+                <div t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if channel.completed else 'd-flex'} w-100 align-items-center">
+                    <div class="progress flex-grow-1 bg-black-50" style="height: 6px;">
+                        <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="ml-3 small">
+                        <span class="o_wslides_progress_percentage" t-esc="channel.completion"/> %
+                    </div>
+                </div>
+            </div>
+        </t>
     </div>
 </template>
 
@@ -535,9 +538,9 @@
         </div>
 
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex flex-row align-items-center o_wslides_slides_list_slide_controls">
-            <t t-if="channel.is_member">
-                <i t-if="not channel_progress[slide.id].get('completed')" class="check-done fa fa-circle-o text-500 px-2"></i>
-                <i t-else="" class="check-done text-success fa fa-check-circle px-2"></i>
+            <t t-call="website_slides.slide_sidebar_done_button">
+                <t t-set="is_member" t-value="channel.is_member"/>
+                <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
             </t>
             <span t-if="channel.can_publish" class="d-none d-md-flex">
                 <a t-if="slide.slide_category == 'article'" class="px-2 o_text_link text-primary" target="_blank" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><span class="fa fa-pencil"/></a>
