@@ -1,11 +1,11 @@
 /** @odoo-module  */
 
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown} from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-export class ButtonBox extends owl.Component {
-
+const { Component } = owl;
+export class ButtonBox extends Component {
     setup() {
         const ui = useService("ui");
         this.getMaxButtons = () => [2, 2, 2, 4, 7][ui.size] || 8;
@@ -22,11 +22,13 @@ export class ButtonBox extends owl.Component {
                 } else {
                     visible.push(slotName);
                 }
-
             }
         }
-        return {visible, additional};
+        return { visible, additional };
     }
 }
 ButtonBox.template = "web.Form.ButtonBox";
 ButtonBox.components = { Dropdown, DropdownItem };
+ButtonBox.props = {
+    slots: Object,
+};

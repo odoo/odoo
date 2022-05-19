@@ -521,7 +521,11 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileGenericNode(el, params) {
-        if (el.nodeName === "div" && el.getAttribute("name") === "button_box") {
+        if (
+            el.nodeName === "div" &&
+            el.getAttribute("name") === "button_box" &&
+            el.children.length
+        ) {
             return this.compileButtonBox(el, params);
         }
         const compiled = createElement(el.tagName);
