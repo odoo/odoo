@@ -475,19 +475,6 @@
     </t>
 
     <!--
-        @param {Array} attachments
-    -->
-    <t t-name="im_livechat.legacy.mail.composer.Attachments">
-        <div t-if="attachments.length > 0" class="o_attachments o_attachments_list">
-            <t t-foreach="attachments" t-as='attachment'>
-                <t t-call="im_livechat.legacy.mail.Attachment">
-                     <t t-set="editable" t-value="true"/>
-                </t>
-            </t>
-        </div>
-    </t>
-
-    <!--
         @param {Object} attachment
         @param {integer} attachment.id
         @param {string} attachment.name
