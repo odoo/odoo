@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import concurrency from 'web.concurrency';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import {ColorpickerWidget} from 'web.Colorpicker';
@@ -356,6 +357,23 @@ class ApplyConfiguratorScreen extends Component {
         if (!this.state.selectedPalette) {
             return this.props.navigate(ROUTES.paletteSelectionScreen);
         }
+
+        const attemptConfiguratorApply = async (data, retryCount = 0) => {
+            try {
+                return await this.orm.silent.call('website',
+                    'configurator_apply', [], data
+                );
+            } catch (error) {
+                // Wait a bit before retrying or allowing manual retry.
+                await concurrency.delay(5000);
+                if (retryCount < 3) {
+                    return attemptConfiguratorApply(data, retryCount + 1);
+                }
+                document.querySelector('.o_website_loader_container').remove();
+                throw error;
+            }
+        };
+
         if (themeName !== undefined) {
             this.websiteService.showLoader({ showTips: true });
             const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
@@ -370,20 +388,18 @@ class ApplyConfiguratorScreen extends Component {
                 ];
             }
 
-            const resp = await this.orm.silent.call('website',
-                'configurator_apply',
-                [],
-                {
-                    'selected_features': selectedFeatures,
-                    'industry_id': this.state.selectedIndustry.id,
-                    'selected_palette': selectedPalette,
-                    'theme_name': themeName,
-                    'website_purpose': WEBSITE_PURPOSES[
-                        this.state.selectedPurpose || this.state.formerSelectedPurpose
-                    ].name,
-                    'website_type': WEBSITE_TYPES[this.state.selectedType].name,
-                    'logo_attachment_id': this.state.logoAttachmentId,
-                });
+            const data = {
+                'selected_features': selectedFeatures,
+                'industry_id': this.state.selectedIndustry.id,
+                'selected_palette': selectedPalette,
+                'theme_name': themeName,
+                'website_purpose': WEBSITE_PURPOSES[
+                    this.state.selectedPurpose || this.state.formerSelectedPurpose
+                ].name,
+                'website_type': WEBSITE_TYPES[this.state.selectedType].name,
+                'logo_attachment_id': this.state.logoAttachmentId,
+            };
+            const resp = await attemptConfiguratorApply(data);
 
             this.props.clearStorage();
 
