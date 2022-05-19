@@ -46,7 +46,7 @@ class AccountChartTemplate(models.Model):
         return self.env['account.account'].create({
             'name': _("Bank Suspense Account"),
             'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'tag_ids': [(6, 0, self.env.ref('l10n_mx.account_tag_102_01').ids)],
             'company_id': company.id,
         })

@@ -5,7 +5,7 @@
             <field name="name">Schwebende Geldbewegungen</field>
             <field name="code">2880</field>
             <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets" />
+            <field name="account_type">asset_current</field>
         </record>
         <!-- Vorlage: Kontenplan Österreich (Basis: EKR 2000) -->
         <record id="l10n_at_chart_template" model="account.chart.template">
@@ -26,7 +26,7 @@
           <field name="code">0010</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0090" model="account.account.template">
@@ -34,14 +34,14 @@
           <field name="code">0090</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
         </record>
         <record id="chart_at_template_0100" model="account.account.template">
           <field name="name">Konzessionen</field>
           <field name="code">0100</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0110" model="account.account.template">
@@ -49,7 +49,7 @@
           <field name="code">0110</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0120" model="account.account.template">
@@ -57,7 +57,7 @@
           <field name="code">0120</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0121" model="account.account.template">
@@ -65,7 +65,7 @@
           <field name="code">0121</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0130" model="account.account.template">
@@ -73,7 +73,7 @@
           <field name="code">0130</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0140" model="account.account.template">
@@ -81,7 +81,7 @@
           <field name="code">0140</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI1')])]" />
         </record>
         <record id="chart_at_template_0150" model="account.account.template">
@@ -89,7 +89,7 @@
           <field name="code">0150</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI2')])]" />
         </record>
         <record id="chart_at_template_0180" model="account.account.template">
@@ -97,7 +97,7 @@
           <field name="code">0180</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAI3')])]" />
         </record>
         <record id="chart_at_template_019" model="account.account.template">
@@ -105,14 +105,14 @@
           <field name="code">0190</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
         </record>
         <record id="chart_at_template_0200" model="account.account.template">
           <field name="name">Unbebaute Grundstücke</field>
           <field name="code">0200</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0210" model="account.account.template">
@@ -120,7 +120,7 @@
           <field name="code">0210</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_022" model="account.account.template">
@@ -128,7 +128,7 @@
           <field name="code">0220</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0300" model="account.account.template">
@@ -137,7 +137,7 @@
           <field name="note">KZ 9320 (Bilanzierer gemäß §§ 4 Abs. 1 oder 5)</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0310" model="account.account.template">
@@ -146,7 +146,7 @@
           <field name="note">KZ 9320 (Bilanzierer gemäß §§ 4 Abs. 1 oder 5)</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0320" model="account.account.template">
@@ -154,7 +154,7 @@
           <field name="code">0320</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0330" model="account.account.template">
@@ -162,7 +162,7 @@
           <field name="code">0330</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0340" model="account.account.template">
@@ -170,7 +170,7 @@
           <field name="code">0340</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0350" model="account.account.template">
@@ -178,7 +178,7 @@
           <field name="code">0350</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0360" model="account.account.template">
@@ -186,7 +186,7 @@
           <field name="code">0360</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0370" model="account.account.template">
@@ -194,7 +194,7 @@
           <field name="code">0370</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0390" model="account.account.template">
@@ -202,7 +202,7 @@
           <field name="code">0390</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII1')])]" />
         </record>
         <record id="chart_at_template_0400" model="account.account.template">
@@ -210,7 +210,7 @@
           <field name="code">0400</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0410" model="account.account.template">
@@ -218,7 +218,7 @@
           <field name="code">0410</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0420" model="account.account.template">
@@ -226,7 +226,7 @@
           <field name="code">0420</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0430" model="account.account.template">
@@ -234,7 +234,7 @@
           <field name="code">0430</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0500" model="account.account.template">
@@ -242,7 +242,7 @@
           <field name="code">0500</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0510" model="account.account.template">
@@ -250,7 +250,7 @@
           <field name="code">0510</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0520" model="account.account.template">
@@ -258,7 +258,7 @@
           <field name="code">0520</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0530" model="account.account.template">
@@ -266,7 +266,7 @@
           <field name="code">0530</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0540" model="account.account.template">
@@ -274,7 +274,7 @@
           <field name="code">0540</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0550" model="account.account.template">
@@ -282,7 +282,7 @@
           <field name="code">0550</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII2')])]" />
         </record>
         <record id="chart_at_template_0600" model="account.account.template">
@@ -290,7 +290,7 @@
           <field name="code">0600</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0610" model="account.account.template">
@@ -298,7 +298,7 @@
           <field name="code">0610</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0620" model="account.account.template">
@@ -306,7 +306,7 @@
           <field name="code">0620</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0630" model="account.account.template">
@@ -314,7 +314,7 @@
           <field name="code">0630</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0640" model="account.account.template">
@@ -322,7 +322,7 @@
           <field name="code">0640</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0650" model="account.account.template">
@@ -330,7 +330,7 @@
           <field name="code">0650</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0660" model="account.account.template">
@@ -338,7 +338,7 @@
           <field name="code">0660</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0670" model="account.account.template">
@@ -346,7 +346,7 @@
           <field name="code">0670</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0680" model="account.account.template">
@@ -354,7 +354,7 @@
           <field name="code">0680</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0681" model="account.account.template">
@@ -362,7 +362,7 @@
           <field name="code">0681</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0692" model="account.account.template">
@@ -370,7 +370,7 @@
           <field name="code">0692</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0693" model="account.account.template">
@@ -378,7 +378,7 @@
           <field name="code">0693</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0694" model="account.account.template">
@@ -386,7 +386,7 @@
           <field name="code">0694</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0696" model="account.account.template">
@@ -394,7 +394,7 @@
           <field name="code">0696</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII3')])]" />
         </record>
         <record id="chart_at_template_0700" model="account.account.template">
@@ -402,7 +402,7 @@
           <field name="code">0700</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_prepayments" />
+          <field name="account_type">asset_prepayments</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII4')])]" />
         </record>
         <record id="chart_at_template_0710" model="account.account.template">
@@ -410,7 +410,7 @@
           <field name="code">0710</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII4')])]" />
         </record>
         <record id="chart_at_template_0790" model="account.account.template">
@@ -418,7 +418,7 @@
           <field name="code">0790</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+          <field name="account_type">asset_fixed</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAII4')])]" />
         </record>
         <record id="chart_at_template_0800" model="account.account.template">
@@ -426,7 +426,7 @@
           <field name="code">0800</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII1')])]" />
         </record>
         <record id="chart_at_template_0810" model="account.account.template">
@@ -434,7 +434,7 @@
           <field name="code">0810</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII1')])]" />
         </record>
         <record id="chart_at_template_0820" model="account.account.template">
@@ -442,7 +442,7 @@
           <field name="code">0820</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII1')])]" />
         </record>
         <record id="chart_at_template_0830" model="account.account.template">
@@ -450,7 +450,7 @@
           <field name="code">0830</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII1')])]" />
         </record>
         <record id="chart_at_template_0840" model="account.account.template">
@@ -458,7 +458,7 @@
           <field name="code">0840</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII2')])]" />
         </record>
         <record id="chart_at_template_0850" model="account.account.template">
@@ -466,7 +466,7 @@
           <field name="code">0850</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII4')])]" />
         </record>
         <record id="chart_at_template_0860" model="account.account.template">
@@ -474,7 +474,7 @@
           <field name="code">0860</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII6')])]" />
         </record>
         <record id="chart_at_template_0870" model="account.account.template">
@@ -482,7 +482,7 @@
           <field name="code">0870</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII5')])]" />
         </record>
         <record id="chart_at_template_0880" model="account.account.template">
@@ -490,7 +490,7 @@
           <field name="code">0880</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII5')])]" />
         </record>
         <record id="chart_at_template_0900" model="account.account.template">
@@ -498,7 +498,7 @@
           <field name="code">0900</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII5')])]" />
         </record>
         <record id="chart_at_template_0910" model="account.account.template">
@@ -506,7 +506,7 @@
           <field name="code">0910</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII5')])]" />
         </record>
         <record id="chart_at_template_0980" model="account.account.template">
@@ -514,7 +514,7 @@
           <field name="code">0980</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_prepayments" />
+          <field name="account_type">asset_prepayments</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII5')])]" />
         </record>
         <record id="chart_at_template_0990" model="account.account.template">
@@ -522,7 +522,7 @@
           <field name="code">0990</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+          <field name="account_type">asset_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AAIII5')])]" />
         </record>
         <record id="chart_at_template_1600" model="account.account.template">
@@ -531,7 +531,7 @@
           <field name="note">KZ 9340 (Bilanzierer gemäß §§ 4 Abs. 1 oder 5)</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABI3')])]" />
         </record>
         <record id="chart_at_template_1800" model="account.account.template">
@@ -540,7 +540,7 @@
           <field name="note">KZ 9340 (Bilanzierer gemäß §§ 4 Abs. 1 oder 5)</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_prepayments" />
+          <field name="account_type">asset_prepayments</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABI5')])]" />
         </record>
         <record id="chart_at_template_2000" model="account.account.template">
@@ -548,7 +548,7 @@
           <field name="code">2000</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_receivable" />
+          <field name="account_type">asset_receivable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2099" model="account.account.template">
@@ -556,7 +556,7 @@
           <field name="code">2099</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_receivable" />
+          <field name="account_type">asset_receivable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2080" model="account.account.template">
@@ -564,7 +564,7 @@
           <field name="code">2080</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2090" model="account.account.template">
@@ -572,7 +572,7 @@
           <field name="code">2090</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2100" model="account.account.template">
@@ -580,7 +580,7 @@
           <field name="code">2100</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_receivable" />
+          <field name="account_type">asset_receivable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2130" model="account.account.template">
@@ -588,7 +588,7 @@
           <field name="code">2130</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2140" model="account.account.template">
@@ -596,7 +596,7 @@
           <field name="code">2140</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2150" model="account.account.template">
@@ -604,7 +604,7 @@
           <field name="code">2150</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_receivable" />
+          <field name="account_type">asset_receivable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2180" model="account.account.template">
@@ -612,7 +612,7 @@
           <field name="code">2180</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2190" model="account.account.template">
@@ -620,7 +620,7 @@
           <field name="code">2190</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII1')])]" />
         </record>
         <record id="chart_at_template_2230" model="account.account.template">
@@ -628,7 +628,7 @@
           <field name="code">2230</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII2')])]" />
         </record>
         <record id="chart_at_template_2240" model="account.account.template">
@@ -636,7 +636,7 @@
           <field name="code">2240</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII2')])]" />
         </record>
         <record id="chart_at_template_2280" model="account.account.template">
@@ -644,7 +644,7 @@
           <field name="code">2280</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII3')])]" />
         </record>
         <record id="chart_at_template_2290" model="account.account.template">
@@ -652,7 +652,7 @@
           <field name="code">2290</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII3')])]" />
         </record>
         <record id="chart_at_template_2470" model="account.account.template">
@@ -660,7 +660,7 @@
           <field name="code">2470</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII3')])]" />
         </record>
         <record id="chart_at_template_2480" model="account.account.template">
@@ -668,7 +668,7 @@
           <field name="code">2480</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2490" model="account.account.template">
@@ -676,7 +676,7 @@
           <field name="code">2490</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2500" model="account.account.template">
@@ -684,7 +684,7 @@
           <field name="code">2500</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2501" model="account.account.template">
@@ -692,7 +692,7 @@
           <field name="code">2501</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2502" model="account.account.template">
@@ -700,7 +700,7 @@
           <field name="code">2502</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2505" model="account.account.template">
@@ -708,7 +708,7 @@
           <field name="code">2505</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2506" model="account.account.template">
@@ -716,7 +716,7 @@
           <field name="code">2506</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2507" model="account.account.template">
@@ -724,7 +724,7 @@
           <field name="code">2507</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2510" model="account.account.template">
@@ -732,7 +732,7 @@
           <field name="code">2510</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2511" model="account.account.template">
@@ -740,7 +740,7 @@
           <field name="code">2511</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2512" model="account.account.template">
@@ -748,7 +748,7 @@
           <field name="code">2512</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2513" model="account.account.template">
@@ -756,7 +756,7 @@
           <field name="code">2513</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2515" model="account.account.template">
@@ -764,7 +764,7 @@
           <field name="code">2515</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
         <record id="chart_at_template_2600" model="account.account.template">
@@ -772,7 +772,7 @@
           <field name="code">2600</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIII')])]" />
         </record>
         <record id="chart_at_template_2610" model="account.account.template">
@@ -780,7 +780,7 @@
           <field name="code">2610</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIII1')])]" />
         </record>
         <record id="chart_at_template_2620" model="account.account.template">
@@ -788,7 +788,7 @@
           <field name="code">2620</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIII2')])]" />
         </record>
         <record id="chart_at_template_2680" model="account.account.template">
@@ -796,7 +796,7 @@
           <field name="code">2680</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIII2')])]" />
         </record>
         <record id="chart_at_template_2690" model="account.account.template">
@@ -804,7 +804,7 @@
           <field name="code">2690</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIII2')])]" />
         </record>
         <record id="chart_at_template_2730" model="account.account.template">
@@ -812,7 +812,7 @@
           <field name="code">2730</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIV')])]" />
         </record>
         <record id="chart_at_template_2740" model="account.account.template">
@@ -820,7 +820,7 @@
           <field name="code">2740</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIV')])]" />
         </record>
         <record id="chart_at_template_2780" model="account.account.template">
@@ -828,7 +828,7 @@
           <field name="code">2780</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIV')])]" />
         </record>
         <record id="chart_at_template_transfer_288" model="account.account.template">
@@ -838,7 +838,7 @@
           <field name="code">2890</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABIV')])]" />
         </record>
         <record id="chart_at_template_2900" model="account.account.template">
@@ -846,7 +846,7 @@
           <field name="code">2900</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AC')])]" />
         </record>
         <record id="chart_at_template_2950" model="account.account.template">
@@ -854,7 +854,7 @@
           <field name="code">2950</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AC')])]" />
         </record>
         <record id="chart_at_template_2960" model="account.account.template">
@@ -862,7 +862,7 @@
           <field name="code">2960</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PBI')])]" />
         </record>
         <record id="chart_at_template_2970" model="account.account.template">
@@ -870,7 +870,7 @@
           <field name="code">2970</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PBII')])]" />
         </record>
         <record id="chart_at_template_2980" model="account.account.template">
@@ -878,7 +878,7 @@
           <field name="code">2980</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_AC')])]" />
         </record>
         <record id="chart_at_template_3000" model="account.account.template">
@@ -886,7 +886,7 @@
           <field name="code">3000</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="account_type">liability_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PBI')])]" />
         </record>
         <record id="chart_at_template_3010" model="account.account.template">
@@ -894,7 +894,7 @@
           <field name="code">3010</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+          <field name="account_type">liability_non_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PBII')])]" />
         </record>
         <record id="chart_at_template_3100" model="account.account.template">
@@ -902,7 +902,7 @@
           <field name="code">3100</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCI')])]" />
         </record>
         <record id="chart_at_template_3200" model="account.account.template">
@@ -910,7 +910,7 @@
           <field name="code">3200</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_assets" />
+          <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCIII')])]" />
         </record>
         <record id="chart_at_template_3210" model="account.account.template">
@@ -918,7 +918,7 @@
           <field name="code">3210</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3300" model="account.account.template">
@@ -926,7 +926,7 @@
           <field name="code">3300</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCIV')])]" />
         </record>
         <record id="chart_at_template_3360" model="account.account.template">
@@ -934,7 +934,7 @@
           <field name="code">3360</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCIV')])]" />
         </record>
         <record id="chart_at_template_3370" model="account.account.template">
@@ -942,7 +942,7 @@
           <field name="code">3370</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCIV')])]" />
         </record>
         <record id="chart_at_template_3480" model="account.account.template">
@@ -950,7 +950,7 @@
           <field name="code">3480</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII')])]" />
         </record>
         <record id="chart_at_template_3500" model="account.account.template">
@@ -958,7 +958,7 @@
           <field name="code">3500</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3501" model="account.account.template">
@@ -966,7 +966,7 @@
           <field name="code">3501</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3502" model="account.account.template">
@@ -974,7 +974,7 @@
           <field name="code">3502</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3505" model="account.account.template">
@@ -982,7 +982,7 @@
           <field name="code">3505</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3510" model="account.account.template">
@@ -990,7 +990,7 @@
           <field name="code">3510</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3511" model="account.account.template">
@@ -998,7 +998,7 @@
           <field name="code">3511</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3512" model="account.account.template">
@@ -1006,7 +1006,7 @@
           <field name="code">3512</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3513" model="account.account.template">
@@ -1014,7 +1014,7 @@
           <field name="code">3513</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3515" model="account.account.template">
@@ -1022,7 +1022,7 @@
           <field name="code">3515</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3520" model="account.account.template">
@@ -1030,7 +1030,7 @@
           <field name="code">3520</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3530" model="account.account.template">
@@ -1038,7 +1038,7 @@
           <field name="code">3530</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3540" model="account.account.template">
@@ -1046,7 +1046,7 @@
           <field name="code">3540</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3541" model="account.account.template">
@@ -1054,7 +1054,7 @@
           <field name="code">3541</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3542" model="account.account.template">
@@ -1062,7 +1062,7 @@
           <field name="code">3542</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3550" model="account.account.template">
@@ -1070,7 +1070,7 @@
           <field name="code">3550</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3551" model="account.account.template">
@@ -1078,7 +1078,7 @@
           <field name="code">3551</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+          <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
         <record id="chart_at_template_3600" model="account.account.template">
@@ -1086,7 +1086,7 @@
           <field name="code">3600</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII2')])]" />
         </record>
         <record id="chart_at_template_3610" model="account.account.template">
@@ -1094,7 +1094,7 @@
           <field name="code">3610</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII2')])]" />
         </record>
         <record id="chart_at_template_3740" model="account.account.template">
@@ -1102,7 +1102,7 @@
           <field name="code">3740</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_payable" />
+          <field name="account_type">liability_payable</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PD')])]" />
         </record>
         <record id="chart_at_template_4000" model="account.account.template">
@@ -1110,7 +1110,7 @@
           <field name="code">4000</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="account_type">income</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
         </record>
         <record id="chart_at_template_4001" model="account.account.template">
@@ -1118,7 +1118,7 @@
           <field name="code">4001</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="account_type">income</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
         </record>
         <record id="chart_at_template_4100" model="account.account.template">
@@ -1126,7 +1126,7 @@
           <field name="code">4100</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="account_type">income</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
         </record>
         <record id="chart_at_template_4110" model="account.account.template">
@@ -1134,7 +1134,7 @@
           <field name="code">4110</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="account_type">income</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
         </record>
         <record id="chart_at_template_4200" model="account.account.template">
@@ -1142,7 +1142,7 @@
           <field name="code">4200</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_revenue" />
+          <field name="account_type">income</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
         </record>
         <record id="chart_at_template_4860" model="account.account.template">
@@ -1150,7 +1150,7 @@
           <field name="code">4860</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
         </record>
         <record id="chart_at_template_5000" model="account.account.template">
@@ -1159,7 +1159,7 @@
           <field name="note">KZ 9100</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT5I')])]" />
         </record>
         <record id="chart_at_template_5050" model="account.account.template">
@@ -1168,7 +1168,7 @@
           <field name="note">KZ 9100</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT5I')])]" />
         </record>
         <record id="chart_at_template_5090" model="account.account.template">
@@ -1177,7 +1177,7 @@
           <field name="note">KZ 9100</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT5I')])]" />
         </record>
         <record id="chart_at_template_5800" model="account.account.template">
@@ -1186,7 +1186,7 @@
           <field name="note">KZ 9100</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT5I')])]" />
         </record>
         <record id="chart_at_template_5810" model="account.account.template">
@@ -1195,7 +1195,7 @@
           <field name="note">KZ 9110</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT5II')])]" />
         </record>
         <record id="chart_at_template_5900" model="account.account.template">
@@ -1203,7 +1203,7 @@
           <field name="code">5900</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating')])]" />
         </record>
         <record id="chart_at_template_6200" model="account.account.template">
@@ -1211,7 +1211,7 @@
           <field name="code">6200</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6205" model="account.account.template">
@@ -1219,7 +1219,7 @@
           <field name="code">6205</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6242" model="account.account.template">
@@ -1227,7 +1227,7 @@
           <field name="code">6242</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6260" model="account.account.template">
@@ -1235,7 +1235,7 @@
           <field name="code">6260</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6270" model="account.account.template">
@@ -1243,7 +1243,7 @@
           <field name="code">6270</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6271" model="account.account.template">
@@ -1251,7 +1251,7 @@
           <field name="code">6271</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6310" model="account.account.template">
@@ -1259,7 +1259,7 @@
           <field name="code">6310</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6330" model="account.account.template">
@@ -1267,7 +1267,7 @@
           <field name="code">6330</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6340" model="account.account.template">
@@ -1275,7 +1275,7 @@
           <field name="code">6340</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6400" model="account.account.template">
@@ -1283,7 +1283,7 @@
           <field name="code">6400</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
@@ -1292,7 +1292,7 @@
           <field name="code">6560</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
@@ -1301,7 +1301,7 @@
           <field name="code">6660</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
         <record id="chart_at_template_6661" model="account.account.template">
@@ -1309,7 +1309,7 @@
           <field name="code">6661</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
         <record id="chart_at_template_6662" model="account.account.template">
@@ -1317,7 +1317,7 @@
           <field name="code">6662</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
         <record id="chart_at_template_6640" model="account.account.template">
@@ -1325,14 +1325,14 @@
           <field name="code">6663</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
         <record id="chart_at_template_6700" model="account.account.template">
           <field name="name">Sonstiger freiwilliger Sozialaufwand</field>
           <field name="code">6700</field>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
@@ -1343,7 +1343,7 @@
           <field name="code">6900</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
         </record>
         <record id="chart_at_template_7000" model="account.account.template">
           <field name="name">Abschreibungen auf aktivierte Aufwendungen für das Ingangsetzen und Erweitern eines Betriebes</field>
@@ -1351,7 +1351,7 @@
           <field name="note">KZ 9130</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_depreciation" />
+          <field name="account_type">expense_depreciation</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT7I')])]" />
         </record>
         <record id="chart_at_template_7090" model="account.account.template">
@@ -1360,7 +1360,7 @@
           <field name="note">KZ 9140 (Bilanzierer gemäß §§ 4 Abs. 1 oder 5)</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_depreciation" />
+          <field name="account_type">expense_depreciation</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT7II')])]" />
         </record>
         <record id="chart_at_template_7600" model="account.account.template">
@@ -1368,7 +1368,7 @@
           <field name="code">7600</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_763" model="account.account.template">
@@ -1376,7 +1376,7 @@
           <field name="code">7630</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7690" model="account.account.template">
@@ -1385,7 +1385,7 @@
           <field name="note">KZ 9200</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7770" model="account.account.template">
@@ -1393,7 +1393,7 @@
           <field name="code">7770</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7780" model="account.account.template">
@@ -1401,7 +1401,7 @@
           <field name="code">7780</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7790" model="account.account.template">
@@ -1409,7 +1409,7 @@
           <field name="code">7790</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7820" model="account.account.template">
@@ -1418,7 +1418,7 @@
           <field name="note">KZ 9210</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7830" model="account.account.template">
@@ -1426,7 +1426,7 @@
           <field name="code">7830</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7860" model="account.account.template">
@@ -1434,7 +1434,7 @@
           <field name="code">7860</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7890" model="account.account.template">
@@ -1442,7 +1442,7 @@
           <field name="code">7890</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7900" model="account.account.template">
@@ -1450,35 +1450,35 @@
           <field name="code">7900</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
         </record>
         <record id="chart_at_template_7960" model="account.account.template">
           <field name="name">Herstellungskosten der zur Erzielung der Umsatzerlöse erbrachten Leistungen</field>
           <field name="code">7960</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
         </record>
         <record id="chart_at_template_7970" model="account.account.template">
           <field name="name">Vertriebskosten</field>
           <field name="code">7970</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
         </record>
         <record id="chart_at_template_7980" model="account.account.template">
           <field name="name">Verwaltungskosten</field>
           <field name="code">7980</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
         </record>
         <record id="chart_at_template_7990" model="account.account.template">
           <field name="name">Sonstige betriebliche Aufwendungen</field>
           <field name="code">7990</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_expenses" />
+          <field name="account_type">expense</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_8140" model="account.account.template">
@@ -1486,7 +1486,7 @@
           <field name="code">8140</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8150" model="account.account.template">
@@ -1494,7 +1494,7 @@
           <field name="code">8150</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8160" model="account.account.template">
@@ -1502,7 +1502,7 @@
           <field name="code">8160</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8170" model="account.account.template">
@@ -1510,7 +1510,7 @@
           <field name="code">8170</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8180" model="account.account.template">
@@ -1518,7 +1518,7 @@
           <field name="code">8180</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
         </record>
         <record id="chart_at_template_8190" model="account.account.template">
@@ -1526,7 +1526,7 @@
           <field name="code">8190</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
         </record>
         <record id="chart_at_template_8200" model="account.account.template">
@@ -1534,7 +1534,7 @@
           <field name="code">8200</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8210" model="account.account.template">
@@ -1542,7 +1542,7 @@
           <field name="code">8210</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
         </record>
         <record id="chart_at_template_8350" model="account.account.template">
@@ -1550,7 +1550,7 @@
           <field name="code">8350</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN12')])]" />
         </record>
         <record id="chart_at_template_8990" model="account.account.template">
@@ -1558,7 +1558,7 @@
           <field name="code">8990</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_other_income" />
+          <field name="account_type">income_other</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN12')])]" />
         </record>
         <record id="chart_at_template_9190" model="account.account.template">
@@ -1566,7 +1566,7 @@
           <field name="code">9190</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="account_type">equity</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_PAI')])]" />
         </record>
         <record id="chart_at_template_9390" model="account.account.template">
@@ -1574,7 +1574,7 @@
           <field name="code">9390</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="account_type">equity</field>
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_PAIV')])]" />
         </record>
         <record id="chart_at_template_9800" model="account.account.template">
@@ -1582,21 +1582,21 @@
           <field name="code">9800</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="account_type">equity</field>
         </record>
         <record id="chart_at_template_9850" model="account.account.template">
           <field name="name">Schlussbilanz</field>
           <field name="code">9850</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="account_type">equity</field>
         </record>
         <record id="chart_at_template_9890" model="account.account.template">
           <field name="name">Gewinn- und Verlustrechnung</field>
           <field name="code">9890</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="user_type_id" ref="account.data_account_type_equity" />
+          <field name="account_type">equity</field>
         </record>
     </data>
 </odoo>

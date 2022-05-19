@@ -357,7 +357,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.price_diff_account = self.env['account.account'].create({
             'name': 'price diff account',
             'code': 'price diff account',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
         })
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 

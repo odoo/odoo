@@ -17,25 +17,25 @@ def _create_accounting_data(env):
     stock_input_account = env['account.account'].create({
         'name': 'Stock Input',
         'code': 'StockIn',
-        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'account_type': 'asset_current',
         'reconcile': True,
     })
     stock_output_account = env['account.account'].create({
         'name': 'Stock Output',
         'code': 'StockOut',
-        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'account_type': 'asset_current',
         'reconcile': True,
     })
     stock_valuation_account = env['account.account'].create({
         'name': 'Stock Valuation',
         'code': 'Stock Valuation',
-        'user_type_id': env.ref('account.data_account_type_current_assets').id,
+        'account_type': 'asset_current',
         'reconcile': True,
     })
     expense_account = env['account.account'].create({
         'name': 'Expense Account',
         'code': 'Expense Account',
-        'user_type_id': env.ref('account.data_account_type_expenses').id,
+        'account_type': 'expense',
         'reconcile': True,
     })
     stock_journal = env['account.journal'].create({

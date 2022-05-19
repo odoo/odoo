@@ -213,7 +213,7 @@ class AccountPaymentRegister(models.TransientModel):
             'account_id': line.account_id.id,
             'currency_id': line.currency_id.id,
             'partner_bank_id': partner_bank_account.id,
-            'partner_type': 'customer' if line.account_internal_type == 'receivable' else 'supplier',
+            'partner_type': 'customer' if line.account_type == 'asset_receivable' else 'supplier',
         }
 
     def _get_batches(self):
@@ -507,7 +507,7 @@ class AccountPaymentRegister(models.TransientModel):
                 if line.move_id.state != 'posted':
                     raise UserError(_("You can only register payment for posted journal entries."))
 
-                if line.account_internal_type not in ('receivable', 'payable'):
+                if line.account_type not in ('asset_receivable', 'liability_payable'):
                     continue
                 if line.currency_id:
                     if line.currency_id.is_zero(line.amount_residual_currency):
@@ -522,7 +522,7 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't register a payment because there is nothing left to pay on the selected journal items."))
             if len(lines.company_id) > 1:
                 raise UserError(_("You can't create payments for entries belonging to different companies."))
-            if len(set(available_lines.mapped('account_internal_type'))) > 1:
+            if len(set(available_lines.mapped('account_type'))) > 1:
                 raise UserError(_("You can't register payments for journal items being either all inbound, either all outbound."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
@@ -664,7 +664,7 @@ class AccountPaymentRegister(models.TransientModel):
         """
         domain = [
             ('parent_state', '=', 'posted'),
-            ('account_internal_type', 'in', ('receivable', 'payable')),
+            ('account_type', 'in', ('asset_receivable', 'liability_payable')),
             ('reconciled', '=', False),
         ]
         for vals in to_process:

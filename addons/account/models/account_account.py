@@ -4,34 +4,6 @@ from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 
 
-class AccountAccountType(models.Model):
-    _name = "account.account.type"
-    _description = "Account Type"
-
-    name = fields.Char(string='Account Type', required=True, translate=True)
-    include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward", help="Used in reports to know if we should consider journal items from the beginning of time instead of from the fiscal year only. Account types that should be reset to zero at each new fiscal year (like expenses, revenue..) should not have this option set.")
-    type = fields.Selection([
-        ('other', 'Regular'),
-        ('receivable', 'Receivable'),
-        ('payable', 'Payable'),
-        ('liquidity', 'Liquidity'),
-    ], required=True, default='other',
-        help="The 'Internal Type' is used for features available on "\
-        "different types of accounts: liquidity type is for cash or bank accounts"\
-        ", payable/receivable is for vendor/customer accounts.")
-    internal_group = fields.Selection([
-        ('equity', 'Equity'),
-        ('asset', 'Asset'),
-        ('liability', 'Liability'),
-        ('income', 'Income'),
-        ('expense', 'Expense'),
-        ('off_balance', 'Off Balance'),
-    ], string="Internal Group",
-        required=True,
-        help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
-    note = fields.Text(string='Description')
-
-
 class AccountAccount(models.Model):
     _name = "account.account"
     _inherit = ['mail.thread']
@@ -39,17 +11,16 @@ class AccountAccount(models.Model):
     _order = "is_off_balance, code, company_id"
     _check_company_auto = True
 
-    @api.constrains('internal_type', 'reconcile')
+    @api.constrains('account_type', 'reconcile')
     def _check_reconcile(self):
         for account in self:
-            if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
+            if account.account_type in ('asset_receivable', 'liability_payable') and not account.reconcile:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
-    @api.constrains('user_type_id')
-    def _check_user_type_id_unique_current_year_earning(self):
-        data_unaffected_earnings = self.env.ref('account.data_unaffected_earnings')
+    @api.constrains('account_type')
+    def _check_account_type_unique_current_year_earning(self):
         result = self._read_group(
-            domain=[('user_type_id', '=', data_unaffected_earnings.id)],
+            domain=[('account_type', '=', 'equity_unaffected')],
             fields=['company_id', 'ids:array_agg(id)'],
             groupby=['company_id'],
         )
@@ -64,10 +35,46 @@ class AccountAccount(models.Model):
     code = fields.Char(size=64, required=True, tracking=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, tracking=True,
-        help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
-    internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
-    internal_group = fields.Selection(related='user_type_id.internal_group', string="Internal Group", store=True, readonly=True)
+    account_type = fields.Selection(
+        selection=[
+            ("asset_receivable", "Receivable"),
+            ("asset_cash", "Bank and Cash"),
+            ("asset_current", "Current Assets"),
+            ("asset_non_current", "Non-current Assets"),
+            ("asset_prepayments", "Prepayments"),
+            ("asset_fixed", "Fixed Assets"),
+            ("liability_payable", "Payable"),
+            ("liability_credit_card", "Credit Card"),
+            ("liability_current", "Current Liabilities"),
+            ("liability_non_current", "Non-current Liabilities"),
+            ("equity", "Equity"),
+            ("equity_unaffected", "Current Year Earnings"),
+            ("income", "Income"),
+            ("income_other", "Other Income"),
+            ("expense", "Expenses"),
+            ("expense_depreciation", "Depreciation"),
+            ("expense_direct_cost", "Cost of Revenue"),
+            ("off_balance", "Off-Balance Sheet"),
+        ],
+        string="Type", tracking=True,
+        required=True,
+        help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."
+    )
+    include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward",
+        help="Used in reports to know if we should consider journal items from the beginning of time instead of from the fiscal year only. Account types that should be reset to zero at each new fiscal year (like expenses, revenue..) should not have this option set.",
+        compute="_compute_include_initial_balance",
+        store=True)
+    internal_group = fields.Selection(
+        selection=[
+            ('equity', 'Equity'),
+            ('asset', 'Asset'),
+            ('liability', 'Liability'),
+            ('income', 'Income'),
+            ('expense', 'Expense'),
+            ('off_balance', 'Off Balance'),
+        ],
+        string="Internal Group", readonly=True, compute="_compute_internal_group", store=True
+    )
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False, tracking=True,
@@ -216,21 +223,19 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
 
-    @api.constrains('user_type_id')
-    def _check_user_type_id_sales_purchase_journal(self):
+    @api.constrains('account_type')
+    def _check_account_type_sales_purchase_journal(self):
         if not self:
             return
 
-        self.flush_recordset(['user_type_id'])
-        self.env['account.account.type'].flush_model(['type'])
+        self.env['account.account'].flush_model(['account_type'])
         self.env['account.journal'].flush_model(['type', 'default_account_id'])
         self._cr.execute('''
             SELECT account.id
             FROM account_account account
-            JOIN account_account_type acc_type ON account.user_type_id = acc_type.id
             JOIN account_journal journal ON journal.default_account_id = account.id
             WHERE account.id IN %s
-            AND acc_type.type IN ('receivable', 'payable')
+            AND account.account_type IN ('asset_receivable', 'liability_payable')
             AND journal.type IN ('sale', 'purchase')
             LIMIT 1;
         ''', [tuple(self.ids)])
@@ -366,6 +371,17 @@ class AccountAccount(models.Model):
         for account in self:
             account.is_off_balance = account.internal_group == "off_balance"
 
+    @api.depends('account_type')
+    def _compute_include_initial_balance(self):
+        for account in self:
+            account.include_initial_balance = account.account_type not in ('income', 'income_other', 'expense', 'expense_depreciation', 'expense_direct_cost', 'off_balance')
+
+    @api.depends('account_type')
+    def _compute_internal_group(self):
+        for account in self:
+            if account.account_type:
+                account.internal_group = 'off_balance' if account.account_type == 'off_balance' else account.account_type.split('_')[0]
+
     def _set_opening_debit(self):
         for record in self:
             record._set_opening_debit_credit(record.opening_debit, 'debit')
@@ -484,10 +500,10 @@ class AccountAccount(models.Model):
                 domain = ['&', '!'] + domain[1:]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    @api.onchange('user_type_id')
-    def _onchange_user_type_id(self):
-        self.reconcile = self.internal_type in ('receivable', 'payable')
-        if self.internal_type == 'liquidity':
+    @api.onchange('account_type')
+    def _onchange_account_type(self):
+        self.reconcile = self.account_type in ('asset_receivable', 'liability_payable')
+        if self.account_type in ('asset_cash', 'liability_credit_card'):
             self.reconcile = False
         elif self.internal_group == 'off_balance':
             self.reconcile = False

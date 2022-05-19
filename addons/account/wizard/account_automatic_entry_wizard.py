@@ -31,14 +31,14 @@ class AutomaticEntryWizard(models.TransientModel):
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
-               "('internal_type', 'not in', ('receivable', 'payable')),"
+               "('account_type', 'not in', ('asset_receivable', 'liability_payable')),"
                "('is_off_balance', '=', False)]",
         compute="_compute_expense_accrual_account",
         inverse="_inverse_expense_accrual_account",
     )
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
-               "('internal_type', 'not in', ('receivable', 'payable')),"
+               "('account_type', 'not in', ('asset_receivable', 'liability_payable')),"
                "('is_off_balance', '=', False)]",
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
@@ -139,7 +139,7 @@ class AutomaticEntryWizard(models.TransientModel):
         allowed_actions = set(dict(self._fields['action'].selection))
         if self.env.context.get('default_action'):
             allowed_actions = {self.env.context['default_action']}
-        if any(line.account_id.user_type_id != move_line_ids[0].account_id.user_type_id for line in move_line_ids):
+        if any(line.account_id.account_type != move_line_ids[0].account_id.account_type for line in move_line_ids):
             allowed_actions.discard('change_period')
         if not allowed_actions:
             raise UserError(_('No possible action found with the selected lines.'))
@@ -285,7 +285,7 @@ class AutomaticEntryWizard(models.TransientModel):
     def _compute_move_data(self):
         for record in self:
             if record.action == 'change_period':
-                if any(line.account_id.user_type_id != record.move_line_ids[0].account_id.user_type_id for line in record.move_line_ids):
+                if any(line.account_id.account_type != record.move_line_ids[0].account_id.account_type for line in record.move_line_ids):
                     raise UserError(_('All accounts on the lines must be of the same type.'))
             if record.action == 'change_period':
                 record.move_data = json.dumps(record._get_move_dict_vals_change_period())

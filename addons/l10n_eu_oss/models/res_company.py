@@ -113,7 +113,7 @@ class Company(models.Model):
             oss_account = self.env['account.account'].create({
                 'name': f'{sales_tax_accounts[0].name} OSS',
                 'code': new_code,
-                'user_type_id': sales_tax_accounts[0].user_type_id.id,
+                'account_type': sales_tax_accounts[0].account_type,
                 'company_id': self.id,
                 })
             self.env['ir.model.data'].create({

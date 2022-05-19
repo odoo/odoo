@@ -614,20 +614,20 @@ class TestAccountMove(AccountTestInvoicingCommon):
         tax_waiting_account = self.env['account.account'].create({
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
-            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'account_type': 'liability_current',
             'reconcile': True,
             'company_id': self.company_data['company'].id,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
             'code': 'TDEDUCT',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'company_id': self.company_data['company'].id,
         })
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account

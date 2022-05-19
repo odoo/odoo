@@ -86,6 +86,7 @@ class AccountInvoiceReport(models.Model):
                 line.company_id,
                 line.company_currency_id,
                 line.partner_id AS commercial_partner_id,
+                account.account_type AS user_type,
                 move.state,
                 move.move_type,
                 move.partner_id,
@@ -116,7 +117,6 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN res_partner partner ON partner.id = line.partner_id
                 LEFT JOIN product_product product ON product.id = line.product_id
                 LEFT JOIN account_account account ON account.id = line.account_id
-                LEFT JOIN account_account_type user_type ON user_type.id = account.user_type_id
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id

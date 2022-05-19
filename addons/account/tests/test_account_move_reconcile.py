@@ -39,7 +39,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         cls.cash_basis_base_account = cls.env['account.account'].create({
             'code': 'cash_basis_base_account',
             'name': 'cash_basis_base_account',
-            'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': cls.company_data['company'].id,
         })
         cls.company_data['company'].account_cash_basis_base_account_id = cls.cash_basis_base_account
@@ -47,21 +47,21 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         cls.cash_basis_transfer_account = cls.env['account.account'].create({
             'code': 'cash_basis_transfer_account',
             'name': 'cash_basis_transfer_account',
-            'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': cls.company_data['company'].id,
         })
 
         cls.tax_account_1 = cls.env['account.account'].create({
             'code': 'tax_account_1',
             'name': 'tax_account_1',
-            'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': cls.company_data['company'].id,
         })
 
         cls.tax_account_2 = cls.env['account.account'].create({
             'code': 'tax_account_2',
             'name': 'tax_account_2',
-            'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
+            'account_type': 'income',
             'company_id': cls.company_data['company'].id,
         })
 
@@ -1664,7 +1664,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         move.action_post()
 
-        lines_to_reconcile = move.line_ids.filtered(lambda x: (x.account_id.reconcile or x.account_id.internal_type == 'liquidity') and not x.reconciled)
+        lines_to_reconcile = move.line_ids.filtered(lambda x: (x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')) and not x.reconciled)
 
         self.assertRecordValues(lines_to_reconcile, [
             {'debit': 1200.0, 'credit': 0.0, 'reconciled': False},
@@ -1676,7 +1676,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         reversed_move = move._reverse_moves(cancel=True)
 
         reversed_lines = reversed_move.line_ids.filtered(lambda x: (
-                x.account_id.reconcile or x.account_id.internal_type == 'liquidity'
+                x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
         ))
 
         self.assertRecordValues(reversed_lines, [
@@ -1715,7 +1715,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })],
         })
         refund1.action_post()
-        refund1_rec_line = refund1.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        refund1_rec_line = refund1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         inv1 = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -1729,7 +1729,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })],
         })
         inv1.action_post()
-        inv1_rec_line = inv1.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        inv1_rec_line = inv1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         inv2 = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -1743,7 +1743,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })],
         })
         inv2.action_post()
-        inv2_rec_line = inv2.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        inv2_rec_line = inv2.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         pay1 = self.env['account.payment'].create({
             'partner_type': 'customer',
@@ -1753,8 +1753,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
         })
-        pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.internal_type != 'receivable')
-        pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
+        pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         pay1.action_post()
         pay1.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
@@ -1770,7 +1770,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_id': foreign_curr.id,
         })
         pay2.action_post()
-        pay2_rec_line = pay2.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        pay2_rec_line = pay2.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         # 1st reconciliation refund1 + inv1
         self.assert_invoice_outstanding_to_reconcile_widget(refund1, {
@@ -1986,7 +1986,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })],
         })
         refund1.action_post()
-        refund1_rec_line = refund1.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        refund1_rec_line = refund1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         inv1 = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -2000,7 +2000,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })],
         })
         inv1.action_post()
-        inv1_rec_line = inv1.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        inv1_rec_line = inv1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         inv2 = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -2014,7 +2014,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })],
         })
         inv2.action_post()
-        inv2_rec_line = inv2.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        inv2_rec_line = inv2.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         pay1 = self.env['account.payment'].create({
             'partner_type': 'customer',
@@ -2024,8 +2024,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
         })
-        pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.internal_type != 'receivable')
-        pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
+        pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         pay1.action_post()
         pay1.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
@@ -2041,7 +2041,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_id': foreign_curr.id,
         })
         pay2.action_post()
-        pay2_rec_line = pay2.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        pay2_rec_line = pay2.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         self.assertRecordValues(refund1_rec_line + inv1_rec_line + inv2_rec_line + pay1_rec_line + pay2_rec_line, [
             {'amount_residual': -1385.92,   'amount_residual_currency': -1385.92},
@@ -2974,7 +2974,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'account_id': self.tax_account_1.id,               'debit': 0.0,   'credit': 15.0,     'amount_currency': -10.0,   'tax_ids': [],                                      'tax_line_id': self.cash_basis_tax_a_third_amount.id},
         ])
 
-        receivable_line = caba_inv.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        receivable_line = caba_inv.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         self.assertTrue(receivable_line.full_reconcile_id, "Invoice should be fully paid")
 
         self.assertRecordValues(partial_rec.exchange_move_id.line_ids, [
@@ -3055,7 +3055,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             })\
             ._create_payments()
 
-        receivable_line = caba_inv.line_ids.filtered(lambda x: x.account_id.internal_type == 'receivable')
+        receivable_line = caba_inv.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
         partial_rec = caba_inv.line_ids.matched_credit_ids
         self.assertTrue(receivable_line.full_reconcile_id, "Invoice should be fully paid")
 
@@ -3094,7 +3094,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         cash_basis_transition_account = self.env['account.account'].create({
             'code': '209.01.01',
             'name': 'Cash Basis Transition Account',
-            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'account_type': 'liability_current',
             'company_id': self.company_data['company'].id,
             'reconcile': True,
         })

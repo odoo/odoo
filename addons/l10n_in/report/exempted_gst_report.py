@@ -85,7 +85,7 @@ class L10nInExemptedReport(models.Model):
             LEFT JOIN res_partner cp ON cp.id = COALESCE(aj.l10n_in_gstin_partner_id, c.partner_id)
             LEFT JOIN res_partner p ON p.id = am.partner_id
             LEFT JOIN res_country pc ON pc.id = p.country_id
-            WHERE aa.internal_type = 'other' and aml.tax_line_id IS NULL
+            WHERE (aa.account_type NOT IN ('asset_receivable','liability_payable','asset_cash','liability_credit_card')) and aml.tax_line_id IS NULL
         """
         return from_str
 

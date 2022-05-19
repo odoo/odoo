@@ -83,7 +83,7 @@
                         <field name="name"/>
                         <field name="code"/>
                         <newline/>
-                        <field name="user_type_id" widget="account_hierarchy_selection"/>
+                        <field name="account_type"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                         <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>
@@ -104,7 +104,7 @@
                 <tree string="Account Template">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="user_type_id" widget="account_hierarchy_selection" invisible="1"/>
+                    <field name="account_type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -115,9 +115,9 @@
             <field name="arch" type="xml">
                 <search string="Search Account Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
-                    <field name="user_type_id"/>
+                    <field name="account_type"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" name="accounttype" domain="[]" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" name="accounttype" domain="[]" context="{'group_by':'account_type'}"/>
                    </group>
                 </search>
             </field>

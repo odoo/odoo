@@ -28,7 +28,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         cls.account_pay = cls.company_data['default_account_payable']
         cls.current_assets_account = cls.env['account.account'].search([
-            ('user_type_id', '=', cls.env.ref('account.data_account_type_current_assets').id),
+            ('account_type', '=', 'asset_current'),
             ('company_id', '=', cls.company.id)], limit=1)
 
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
@@ -181,7 +181,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         invoice = invoice_form.save()
         invoice.action_post()
         lines = invoice.line_ids
-        return lines.filtered(lambda l: l.account_id.user_type_id.type in ('receivable', 'payable'))
+        return lines.filtered(lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
     @classmethod
     def _create_st_line(cls, amount=1000.0, date='2019-01-01', payment_ref='turlututu', **kwargs):
@@ -1034,7 +1034,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             })
             payment.action_post()
 
-            return payment.line_ids.filtered(lambda x: x.account_id.user_type_id.type not in {'receivable', 'payable'})
+            return payment.line_ids.filtered(lambda x: x.account_id.account_type not in {'asset_receivable', 'liability_payable'})
 
         payment_partner = self.env['res.partner'].create({
             'name': "Bernard Gagnant",

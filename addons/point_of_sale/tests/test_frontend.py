@@ -24,7 +24,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         account_receivable = account_obj.create({'code': 'X1012',
                                                  'name': 'Account Receivable - Test',
-                                                 'user_type_id': env.ref('account.data_account_type_receivable').id,
+                                                 'account_type': 'asset_receivable',
                                                  'reconcile': True})
         env.company.account_default_pos_receivable_account_id = account_receivable
         env['ir.property']._set_default('property_account_receivable_id', 'res.partner', account_receivable, main_company)
@@ -534,7 +534,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         tax_received_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'company_id': self.env.company.id,
         })
         fixed_tax = self.env['account.tax'].create({

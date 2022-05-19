@@ -61,7 +61,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         cls.test_currency_account = cls.env['account.account'].create({
             'name': 'test destination account',
             'code': 'test_dest_acc',
-            'user_type_id': cls.env['ir.model.data']._xmlid_to_res_id('account.data_account_type_current_assets'),
+            'account_type': 'asset_current',
             'currency_id': cls.test_currency_3.id,
         })
 
@@ -192,7 +192,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
     def test_transfer_wizard_reconcile(self):
         """ Tests reconciliation when doing a transfer with the wizard
         """
-        active_move_lines = (self.move_1 + self.move_2).mapped('line_ids').filtered(lambda x: x.account_id.user_type_id.type in ('receivable', 'payable'))
+        active_move_lines = (self.move_1 + self.move_2).mapped('line_ids').filtered(lambda x: x.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
