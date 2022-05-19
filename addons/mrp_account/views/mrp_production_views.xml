@@ -1,4 +1,15 @@
 <odoo>
+    <record id="view_production_tree_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.production.tree.view.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
     <record id="mrp_production_form_view_inherited" model="ir.ui.view">
         <field name="name">mrp.production.view.inherited</field>
         <field name="model">mrp.production</field>
