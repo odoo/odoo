@@ -15,6 +15,7 @@
     'data': [
         'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
+        'views/res_config_settings_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
