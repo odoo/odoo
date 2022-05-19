@@ -42,6 +42,7 @@ import {
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
+    validateSearch,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
@@ -72,8 +73,7 @@ let testUtils,
     ListController;
 
 async function reloadListView(target) {
-    await click(target, "input.o_searchview_input");
-    await triggerEvent(target, "input.o_searchview_input", "keydown", { key: "Enter" });
+    await validateSearch(target);
 }
 
 QUnit.module("Views", (hooks) => {

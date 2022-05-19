@@ -26,6 +26,6 @@ export class ViewWidget extends Component {
     }
 }
 ViewWidget.template = xml/*xml*/ `
-    <div class="o_widget" t-att-class="props.class" t-att-style="props.style">
+    <div class="o_widget" t-att-class="props.className" t-att-style="props.style">
         <t t-component="Widget" t-props="widgetProps" />
     </div>`;

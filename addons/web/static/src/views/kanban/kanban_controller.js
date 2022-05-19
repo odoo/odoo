@@ -6,8 +6,8 @@ import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { useViewButtons } from "@web/views/view_button/hook";
+import { KanbanRenderer } from "./kanban_renderer";
 
 const { Component, useRef } = owl;
 

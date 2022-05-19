@@ -847,12 +847,19 @@ export class ViewCompiler {
         const attrs = {};
         const props = { record: "record", options: "{mode:props.readonly?'readonly':'edit'}" };
         for (const { name, value } of el.attributes) {
-            if (name === "name") {
-                props.name = `'${value}'`;
-            } else if (name === "modifiers") {
-                attrs.modifiers = JSON.parse(value || "{}");
-            } else {
-                attrs[name] = value;
+            switch (name) {
+                case "class":
+                case "name": {
+                    props[name] = `'${value}'`;
+                    break;
+                }
+                case "modifiers": {
+                    attrs.modifiers = JSON.parse(value || "{}");
+                    break;
+                }
+                default: {
+                    attrs[name] = value;
+                }
             }
         }
         props.node = encodeObjectForTemplate({ attrs });

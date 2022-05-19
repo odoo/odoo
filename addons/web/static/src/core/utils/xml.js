@@ -75,6 +75,21 @@ export const isTruthy = (value, truthyIfUndefined) =>
     (value ? !/^false|0$/i.test(value) : truthyIfUndefined) || false;
 
 /**
+ * Removes the given attributes on the given element and returns them as a dictionnary.
+ * @param {Element} el
+ * @param {string[]} attributes
+ * @returns {Record<string, string>}
+ */
+export const extractAttributes = (el, attributes) => {
+    const attrs = Object.create(null);
+    for (const attr of attributes) {
+        attrs[attr] = el.getAttribute(attr) || "";
+        el.removeAttribute(attr);
+    }
+    return attrs;
+};
+
+/**
  * Combines the existing value of a node attribute with new given parts. The glue
  * is the string used to join the parts.
  *

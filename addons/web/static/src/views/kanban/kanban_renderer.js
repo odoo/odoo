@@ -16,13 +16,13 @@ import { session } from "@web/session";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { useBounceButton } from "@web/views/helpers/view_hook";
 import { isRelational } from "@web/views/helpers/view_utils";
-import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { isAllowedDateField } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { ViewWidget } from "@web/views/view_widget";
+import { KanbanAnimatedNumber } from "./kanban_animated_number";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
+import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
 const { Component, markup, useState, useRef, onWillDestroy, onWillStart, onMounted } = owl;

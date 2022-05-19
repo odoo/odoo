@@ -3,6 +3,7 @@
 import {
     combineAttributes,
     createElement,
+    extractAttributes,
     isTruthy,
     objectToString,
     XMLParser,
@@ -74,15 +75,6 @@ const applyDefaultAttributes = (kanbanBox) => {
         kanbanBox.setAttribute("t-on-click", "(ev) => this.onRecordClick(record, ev)");
     }
     return kanbanBox;
-};
-
-const extractAttributes = (el, attributes) => {
-    const attrs = Object.create(null);
-    for (const attr of attributes) {
-        attrs[attr] = el.getAttribute(attr) || "";
-        el.removeAttribute(attr);
-    }
-    return attrs;
 };
 
 export class KanbanArchParser extends XMLParser {

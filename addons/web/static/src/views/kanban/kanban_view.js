@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { KanbanArchParser } from "./kanban_arch_parser";
 import { KanbanController } from "./kanban_controller";
 import { KanbanModel } from "./kanban_model";
-import { KanbanArchParser } from "./kanban_arch_parser";
 import { KanbanRenderer } from "./kanban_renderer";
 
 export const kanbanView = {

@@ -9,7 +9,7 @@ const { Component, useEffect, xml } = owl;
 const viewWidgetRegistry = registry.category("view_widgets");
 
 const legacyWidgetTemplate = xml`
-    <ViewWidgetAdapter Component="Widget" widgetParams="widgetParams" />`;
+    <ViewWidgetAdapter Component="ViewWidget" viewWidgetParams="viewWidgetParams" />`;
 
 // ----------------------------------------------------------------------------
 // ViewWidgetAdapter
@@ -30,12 +30,12 @@ class ViewWidgetAdapter extends ComponentAdapter {
      * @override
      */
     get widgetArgs() {
-        const { record, node, options } = this.props.widgetParams;
+        const { record, node, options } = this.props.viewWidgetParams;
         return [record, node, options];
     }
 
     updateWidget(nextProps) {
-        const { record, node, options } = nextProps.widgetParams;
+        const { record, node, options } = nextProps.viewWidgetParams;
         if (this.oldWidget) {
             this.widget.destroy(); // we were already updating -> abort, and start over
         } else {
@@ -66,9 +66,9 @@ class ViewWidgetAdapter extends ComponentAdapter {
 const registerWidget = (name, LegacyWidgetWidget) => {
     class LegacyViewWidget extends Component {
         setup() {
-            this.Widget = LegacyWidgetWidget;
+            this.ViewWidget = LegacyWidgetWidget;
         }
-        get widgetParams() {
+        get viewWidgetParams() {
             const { record } = this.props;
             let legacyRecord;
             if (record.model.__bm__) {
@@ -87,7 +87,7 @@ const registerWidget = (name, LegacyWidgetWidget) => {
     LegacyViewWidget.template = legacyWidgetTemplate;
     LegacyViewWidget.components = { ViewWidgetAdapter };
     if (!viewWidgetRegistry.contains(name)) {
-        console.log(`Widgets: using legacy ${name} Widget`);
+        console.log(`View widgets: using legacy ${name} Widget`);
         viewWidgetRegistry.add(name, LegacyViewWidget);
     }
 };

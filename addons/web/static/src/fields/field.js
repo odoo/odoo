@@ -90,7 +90,7 @@ export class Field extends Component {
             o_field_invalid: invalid,
             o_field_empty: empty,
             [`o_field_${this.type}`]: true,
-            [this.props.class]: !!this.props.class,
+            [this.props.class]: Boolean(this.props.class),
         };
 
         // generate field decorations classNames (only if field-specific decorations

@@ -11,7 +11,7 @@ const { Component, useEffect, xml } = owl;
 const fieldRegistry = registry.category("fields");
 
 const legacyFieldTemplate = xml`
-    <FieldAdapter Component="FieldWidget" fieldParams="fieldParams" update.bind="update"/>`;
+    <FieldAdapter Component="FieldWidget" fieldParams="fieldParams" update.bind="update" />`;
 
 // -----------------------------------------------------------------------------
 // FieldAdapter
@@ -28,6 +28,7 @@ class FieldAdapter extends ComponentAdapter {
         });
         this.lastFieldChangedEvent = null;
     }
+
     /**
      * @override
      */
@@ -49,9 +50,10 @@ class FieldAdapter extends ComponentAdapter {
             return this.widget._widgetRenderAndInsert(() => {});
         } else {
             // the mode is the same, simply reset the FieldWidget with the new record
-            this.widget.reset(record, this.lastFieldChangedEvent);
+            return this.widget.reset(record, this.lastFieldChangedEvent);
         }
     }
+
     renderWidget() {
         if (this.oldWidget) {
             const parentEl = this.oldWidget.el.parentElement;
@@ -210,6 +212,7 @@ function registerField(name, LegacyFieldWidget) {
         setup() {
             this.FieldWidget = LegacyFieldWidget;
         }
+
         get fieldParams() {
             const { name, record } = this.props;
             if (record.model.__bm__) {
@@ -250,6 +253,7 @@ function registerField(name, LegacyFieldWidget) {
                 return { name, record: legacyRecord, options };
             }
         }
+
         update(fieldName, value) {
             if (fieldName === this.props.name) {
                 return this.props.update(value);
