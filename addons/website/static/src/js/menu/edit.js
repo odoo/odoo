@@ -185,6 +185,12 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _onEditionWillStop: function (ev) {
         this.$editorMessageElements && this.$editorMessageElements.removeAttr('data-editor-message');
+
+        if (ev.data.noWidgetsStop) {
+            // TODO adapt in master, this was added as a stable fix.
+            return;
+        }
+
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });

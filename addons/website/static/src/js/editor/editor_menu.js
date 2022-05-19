@@ -119,7 +119,15 @@ var EditorMenu = Widget.extend({
         }
         var self = this;
         this._saving = true;
-        this.trigger_up('edition_will_stopped');
+        this.trigger_up('edition_will_stopped', {
+            // TODO adapt in master, this was added as a stable fix. This
+            // trigger to 'edition_will_stopped' was left by mistake
+            // during an editor refactoring + revert fail. It stops the public
+            // widgets at the wrong time, potentially dead-locking the editor.
+            // 'ready_to_clean_for_save' is the one in charge of stopping the
+            // widgets at the proper time.
+            noWidgetsStop: true,
+        });
         return this.wysiwyg.save(false).then(function (result) {
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
