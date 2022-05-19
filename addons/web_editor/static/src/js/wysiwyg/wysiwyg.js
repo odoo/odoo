@@ -797,24 +797,19 @@ const Wysiwyg = Widget.extend({
         return Promise.resolve({isDirty: isDirty, html: html});
     },
     /**
-     * Save the content for the normal mode or the translation mode.
-     */
-    saveContent: async function (reload = true) {
-        await this.saveToServer(reload);
-    },
-    /**
      * Reset the history.
      */
     historyReset: function () {
         this.odooEditor.historyReset();
     },
-
     /**
-     * Save the content to the server for the normal mode.
+     * Saves the content.
+     *
+     * @param {boolean} [reload=true]
+     * @returns {Promise}
      */
-    saveToServer: async function (reload = true) {
+    saveContent: async function (reload = true) {
         const defs = [];
-        this.trigger_up('edition_will_stopped');
         this.trigger_up('ready_to_save', {defs: defs});
         await Promise.all(defs);
 
@@ -824,7 +819,6 @@ const Wysiwyg = Widget.extend({
         await this.saveModifiedImages(editables.length ? $(editables) : this.$editable);
         await this._saveViewBlocks();
 
-        this.trigger_up('edition_was_stopped');
         window.removeEventListener('beforeunload', this._onBeforeUnload);
         if (reload) {
             window.location.reload();

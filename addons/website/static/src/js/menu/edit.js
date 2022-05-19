@@ -16,7 +16,6 @@ var _t = core._t;
  */
 var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     assetLibs: ['web_editor.compiled_assets_wysiwyg', 'website.compiled_assets_wysiwyg'],
-
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions, {
         edit: '_startEditMode',
@@ -29,8 +28,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
         snippet_removed: '_onSnippetRemoved',
-        edition_will_stopped: '_onEditionWillStop',
-        edition_was_stopped: '_onEditionWasStopped',
         request_save: '_onSnippetRequestSave',
         request_cancel: '_onSnippetRequestCancel',
     }),
@@ -90,7 +87,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         return def;
     },
-
     /**
      * Asks the snippets to clean themself, then saves the page, then reloads it
      * if asked to.
@@ -103,35 +99,34 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this._saving) {
             return false;
         }
-        if (this.observer) {
-            this.observer.disconnect();
-            this.observer = undefined;
-        }
-        var self = this;
         this._saving = true;
-        this.trigger_up('edition_will_stopped');
+
+        this._prepareLeavingEditMode();
+
         const destroy = () => {
-            self.wysiwyg.destroy();
-            self.trigger_up('edition_was_stopped');
-            self.destroy();
+            this.wysiwyg.destroy();
+            this.destroy();
         };
         if (!this.wysiwyg.isDirty()) {
             destroy();
             window.location.reload();
             return;
         }
+
         return this.wysiwyg.saveContent(false).then((result) => {
             var $wrapwrap = $('#wrapwrap');
-            self.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
+            this.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
             if (reload) {
                 // remove top padding because the connected bar is not visible
                 $('body').removeClass('o_connected_user');
-                return self._reload();
+                return this._reload();
             } else {
                 destroy();
+                this.editModeEnabled = false;
             }
             return true;
         }).guardedCatch(() => {
+            this._unprepareLeavingEditMode();
             this._saving = false;
         });
     },
@@ -145,31 +140,32 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     cancel: function (reload = true) {
-        var self = this;
-        var def = new Promise(function (resolve, reject) {
-            if (!self.wysiwyg.isDirty()) {
+        const prom = new Promise((resolve, reject) => {
+            if (!this.wysiwyg.isDirty()) {
                 resolve();
             } else {
-                var confirm = Dialog.confirm(self, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
+                var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
                     confirm_callback: resolve,
                 });
-                confirm.on('closed', self, reject);
+                confirm.on('closed', this, reject);
             }
         });
 
-        return def.then(function () {
-            self.trigger_up('edition_will_stopped');
+        return prom.then(() => {
+            this._prepareLeavingEditMode();
+
             var $wrapwrap = $('#wrapwrap');
-            self.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
+            this.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
             if (reload) {
                 window.onbeforeunload = null;
-                self.wysiwyg.destroy();
-                return self._reload();
+                this.wysiwyg.destroy();
+                return this._reload();
             } else {
-                self.wysiwyg.destroy();
-                self.trigger_up('readonly_mode');
-                self.trigger_up('edition_was_stopped');
-                self.destroy();
+                this.wysiwyg.destroy();
+                this.trigger_up('readonly_mode');
+                this.destroy();
+
+                this.editModeEnabled = false;
             }
         });
     },
@@ -207,9 +203,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _startEditMode: async function () {
         var self = this;
-        if (this.editModeEnable) {
+        if (this.editModeEnabled) {
             return;
         }
+        this.editModeEnabled = true;
 
         $.blockUI({overlayCSS: {
             backgroundColor: '#000',
@@ -223,7 +220,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this.$welcomeMessage) {
             this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by wysiwyg.
         }
-        this.editModeEnable = true;
 
         await this._createWysiwyg();
 
@@ -305,18 +301,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             }
         };
         this.observer = new MutationObserver(processRecords);
-        const observe = () => {
-            if (this.observer) {
-                this.observer.observe(document.body, {
-                    childList: true,
-                    subtree: true,
-                    attributes: true,
-                    attributeOldValue: true,
-                    characterData: true,
-                });
-            }
-        };
-        observe();
+        this._observe();
 
         this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
             if (this.observer) {
@@ -324,7 +309,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 this.observer.disconnect();
             }
         });
-        this.wysiwyg.odooEditor.addEventListener('observerActive', observe);
+        this.wysiwyg.odooEditor.addEventListener('observerActive', () => {
+            this._observe();
+        });
 
         $('body').addClass('editor_started');
     },
@@ -337,6 +324,49 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
     _getReadOnlyAreas () {
         return [];
+    },
+    /**
+     * @private
+     */
+    _observe() {
+        if (this.observer) {
+            this.observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeOldValue: true,
+                characterData: true,
+            });
+        }
+    },
+    /**
+     * Cleans what must be cleaned for both saving and discarding the changes
+     * that were made during edition.
+     *
+     * @private
+     */
+    _prepareLeavingEditMode() {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+        if (this.$editorMessageElements) {
+            this.$editorMessageElements.removeAttr('data-editor-message');
+        }
+    },
+    /**
+     * Restores what was done in preparation of leaving the edit mode (e.g.
+     * in case leaving failed for example). @see _prepareLeavingEditMode.
+     *
+     * FIXME this method was created to make the existing code readable and
+     * logical but it cannot actually be called and have an editor that is still
+     * usable afterwards (if the save/cancel failed for some reason, the editor
+     * seems dead no matter what).
+     *
+     * @private
+     */
+    _unprepareLeavingEditMode() {
+        this._addEditorMessages();
+        this._observe();
     },
     /**
      * Call preventDefault of an event.
@@ -565,23 +595,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
     },
     /**
-     * Called when edition will stop. Notifies the
-     * WebsiteRoot that is should stop the public widgets.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onEditionWillStop: function (ev) {
-        this.$editorMessageElements && this.$editorMessageElements.removeAttr('data-editor-message');
-        this.trigger_up('widgets_stop_request', {
-            $target: this._targetForEdition(),
-        });
-        if (this.observer) {
-            this.observer.disconnect();
-            this.observer = undefined;
-        }
-    },
-    /**
      * Called when edition was stopped. Notifies the
      * WebsiteRoot that is should start the public widgets.
      *
@@ -589,7 +602,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onEditionWasStopped: function (ev) {
-        this.editModeEnable = false;
+        this.editModeEnabled = false;
     },
     /**
      * Called when a snippet is about to be cloned in the page. Notifies the
