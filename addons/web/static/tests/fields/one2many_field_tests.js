@@ -434,8 +434,8 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_many2one input");
     });
 
-    QUnit.skipWOWL("one2many list editable with cell readonly modifier", async function (assert) {
-        assert.expect(4);
+    QUnit.test("one2many list editable with cell readonly modifier", async function (assert) {
+        assert.expect(5);
 
         serverData.models.partner.records[0].p = [2];
         serverData.models.partner.records[1].turtles = [1, 2];
@@ -485,15 +485,10 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Simulating a TAB key
-        triggerEvent(targetInput, null, "keydown", { key: "tab" });
-
-        var secondTarget = target.querySelector(".o_selected_row .o_input[name=qux]");
-
-        assert.equal(
-            secondTarget,
-            document.activeElement,
-            "The second input of the line should have the focus after the TAB press"
-        );
+        const secondTarget = target.querySelector(".o_selected_row [name=qux] input");
+        assert.strictEqual(getNextTabableElement(target), secondTarget);
+        assert.defaultBehavior(targetInput, null, "keydown", { key: "Tab" });
+        secondTarget.focus();
 
         await editInput(secondTarget, null, 9);
         await editInput(secondTarget, null, secondTarget.value + 9);
