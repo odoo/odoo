@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import AbstractThreadWindow from '@im_livechat/legacy/widgets/abstract_thread_window';
+import AbstractThreadWindow from '@im_livechat/legacy/widgets/abstract_thread_window/abstract_thread_window';
 
 /**
  * This is the widget that represent windows of livechat in the frontend.

@@ -8,7 +8,7 @@ import utils from 'web.utils';
 import Widget from 'web.Widget';
 
 import { LIVECHAT_COOKIE_HISTORY } from 'im_livechat.legacy.im_livechat.Constants';
-import Feedback from '@im_livechat/legacy/widgets/feedback';
+import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
 import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
 import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
 import WebsiteLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';

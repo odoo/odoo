@@ -27,7 +27,10 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):
         templates = [
-            'im_livechat/static/src/legacy/public_livechat.xml',
+            'im_livechat/static/src/legacy/widgets/feedback/feedback.xml',
+            'im_livechat/static/src/legacy/widgets/abstract_thread_window/abstract_thread_window.xml',
+            'im_livechat/static/src/legacy/widgets/thread/thread.xml',
+            'im_livechat/static/src/legacy/widgets/document_viewer/document_viewer.xml',
             'im_livechat/static/src/legacy/public_livechat_chatbot.xml',
         ]
         return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]

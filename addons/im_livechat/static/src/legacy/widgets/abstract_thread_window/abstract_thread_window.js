@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import ThreadWidget from '@im_livechat/legacy/widgets/thread';
+import ThreadWidget from '@im_livechat/legacy/widgets/thread/thread';
 
 import config from 'web.config';
 import core from 'web.core';
