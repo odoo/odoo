@@ -56,8 +56,8 @@ var ProjectKanbanView = KanbanView.extend({
 
 KanbanColumn.include({
     _onDeleteColumn: function (event) {
-        event.preventDefault();
-        if (this.modelName === 'project.task') {
+        if (this.modelName === 'project.task' && this.groupedBy === 'stage_id') {
+            event.preventDefault();
             this.trigger_up('kanban_column_delete_wizard');
             return;
         }
