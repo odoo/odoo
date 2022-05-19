@@ -28,6 +28,7 @@
         'data/account_chart_template_data.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
+        'views/res_config_settings_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
