@@ -262,9 +262,22 @@ QUnit.test("concurrency with custom debounce delay", async (assert) => {
 
 QUnit.test("custom placeholder", async (assert) => {
     await mount(TestComponent, target, { env });
+    const configByNamespace = {
+        default: {
+            placeholder: "default placeholder",
+        },
+        "@": {
+            placeholder: "@ placeholder",
+        },
+    };
     const config = {
-        placeholder: "placeholder test",
-        providers: [],
+        configByNamespace,
+        providers: [
+            {
+                namespace: "@",
+                provide: () => [],
+            },
+        ],
     };
     env.services.dialog.add(CommandPalette, {
         config,
@@ -275,7 +288,13 @@ QUnit.test("custom placeholder", async (assert) => {
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
     assert.strictEqual(
         target.querySelector(".o_command_palette_search input").placeholder,
-        "placeholder test"
+        "default placeholder"
+    );
+
+    await editSearchBar("@");
+    assert.strictEqual(
+        target.querySelector(".o_command_palette_search input").placeholder,
+        "@ placeholder"
     );
 });
 
@@ -1179,6 +1198,7 @@ QUnit.test("multi level command", async (assert) => {
     const configByNamespace = {
         default: {
             emptyMessage: "Empty Default",
+            placeholder: "placeholder test",
         },
     };
     const commands = [
@@ -1199,7 +1219,6 @@ QUnit.test("multi level command", async (assert) => {
     const config = {
         configByNamespace,
         FooterComponent,
-        placeholder: "placeholder test",
         providers,
     };
     env.services.dialog.add(CommandPalette, {

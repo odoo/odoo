@@ -685,9 +685,13 @@ QUnit.test("multi level commands", async (assert) => {
     clearRegistryWithCleanup(commandProviderRegistry);
     const defaultNames = ["John", "Snow"];
     const otherNames = ["Cersei", "Lannister"];
-
+    const configByNamespace = {
+        default: {
+            placeholder: "Who is the next King ?",
+        },
+    };
     const action = () => ({
-        placeholder: "Who is the next King ?",
+        configByNamespace,
         providers: [
             {
                 provide: () =>
@@ -753,8 +757,13 @@ QUnit.test("multi level commands with hotkey", async (assert) => {
     clearRegistryWithCleanup(commandProviderRegistry);
 
     const otherNames = ["Cersei", "Lannister"];
+    const configByNamespace = {
+        default: {
+            placeholder: "Who is the next King ?",
+        },
+    };
     const action = () => ({
-        placeholder: "Who is the next King ?",
+        configByNamespace,
         providers: [
             {
                 provide: () =>

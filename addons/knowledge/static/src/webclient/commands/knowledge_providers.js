@@ -25,6 +25,7 @@ commandSetupRegistry.add("?", {
     debounceDelay: 200,
     emptyMessage: _lt("No article found."),
     name: _lt("articles"),
+    placeholder: _lt("Search for an article..."),
 });
 
 const commandProviderRegistry = registry.category("command_provider");
