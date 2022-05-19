@@ -1,55 +1,58 @@
 /** @odoo-module */
 
-import Dialog from 'web.Dialog';
 import KanbanRenderer from 'web.KanbanRenderer';
 import ListRenderer from 'web.ListRenderer';
-import { qweb as QWeb, _t } from 'web.core';
+import { Markup } from 'web.utils';
 
-const SurveySampleModalMixin = {
+const SurveySampleMixin = {
+
     /**
-     * Opens a dialog allowing the user to load a sample survey
-     * We currently have 3 different samples to load (and one "tile" to click on
-     * for each in the modal).
+     * @override
+     */
+    _render: function () {
+        // Remove "Try It" buttons of the no content helper if user can not create surveys
+        if (!this.activeActions.create) {
+            this.noContentHelp = Markup(this.noContentHelp.replaceAll(
+                '<a class="btn btn-primary o_survey_load_sample text-white"><span>Try It</span></a>',
+                ''
+            ));
+        }
+        this.isLoadingSample = false;
+        this._super.apply(this, arguments);
+    },
+
+    /**
+     * Load and show the sample survey related to the clicked element,
+     * when there is no survey to display.
+     * We currently have 3 different samples to load:
      * - Sample Feedback Form
      * - Sample Certification
      * - Sample Live Presentation
+     * 
+     * @private
+     * @param {Event} ev
      */
-    _onOpenSurveySampleModalClick: function () {
-        const $content = $(QWeb.render('survey.survey_sample_modal_body'));
-        $content.find('.o_survey_sample_tile').each((_index, tile) => {
-            const $tile = $(tile);
-            $tile.on('click', async () => {
-                const surveySampleAction = await this._rpc({
-                    model: 'survey.survey',
-                    method: $tile.data('action'),
-                });
-                this.do_action(surveySampleAction);
-            });
-        });
-        const dialog = new Dialog(this, {
-            title: _t('Load a Survey'),
-            $content: $content,
-            renderFooter: false,
-        });
-        dialog.open();
+    _loadSample: function (ev) {
+        // Prevent loading multiple samples if double clicked
+        if (!this.isLoadingSample && this.activeActions.create) {
+            this.isLoadingSample = true;
+            this.do_action(this._rpc({
+                model: 'survey.survey',
+                method: $(ev.target).closest('.o_survey_sample_container').attr('action'),
+            }));
+        }
     },
-}
+};
 
-const SurveyKanbanRenderer = KanbanRenderer.extend(SurveySampleModalMixin, {
-    xmlDependencies: (KanbanRenderer.prototype.xmlDependencies || []).concat([
-        'survey/static/src/xml/survey_sample_modal.xml',
-    ]),
+const SurveyKanbanRenderer = KanbanRenderer.extend(SurveySampleMixin, {
     events: _.extend({}, KanbanRenderer.prototype.events, {
-        'click .o_survey_open_sample_modal': '_onOpenSurveySampleModalClick',
+        'click .o_survey_load_sample': '_loadSample',
     }),
 });
 
-const SurveyListRenderer = ListRenderer.extend(SurveySampleModalMixin, {
-    xmlDependencies: (ListRenderer.prototype.xmlDependencies || []).concat([
-        'survey/static/src/xml/survey_sample_modal.xml',
-    ]),
+const SurveyListRenderer = ListRenderer.extend(SurveySampleMixin, {
     events: _.extend({}, ListRenderer.prototype.events, {
-        'click .o_survey_open_sample_modal': '_onOpenSurveySampleModalClick',
+        'click .o_survey_load_sample': '_loadSample',
     }),
 });
 
