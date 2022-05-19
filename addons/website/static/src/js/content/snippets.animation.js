@@ -1201,7 +1201,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 200);
         this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
-        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate', () => {
+        $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
             this.windowsHeight = $(window).height();
             this._scrollWebsiteAnimate(this.$scrollingElement[0]);
         }).trigger("resize");
