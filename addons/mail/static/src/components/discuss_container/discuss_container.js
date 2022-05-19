@@ -6,7 +6,7 @@ import { useUpdate } from '@mail/component_hooks/use_update';
 import '@mail/components/discuss/discuss';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component, onWillUnmount } = owl;
+const { Component, onWillDestroy } = owl;
 
 export class DiscussContainer extends Component {
 
@@ -20,7 +20,18 @@ export class DiscussContainer extends Component {
         useModels();
         super.setup();
         useUpdate({ func: () => this._update() });
-        onWillUnmount(() => this._willUnmount());
+        onWillDestroy(() => this._willDestroy());
+        /**
+         * When executing the discuss action while it's already opened, the
+         * action manager first mounts the newest DiscussContainer, then
+         * unmounts the oldest one. The issue is that messaging.discussView is
+         * updated on setup but is cleared during the unmount. This leads to
+         * errors because there is no discussView anymore. In order to handle
+         * this situation, let's keep a reference to the currentInstance so that
+         * we can check we're deleting the discussView only when there is no
+         * incoming DiscussContainer.
+         */
+        DiscussContainer.currentInstance = this;
     }
 
     _update() {
@@ -30,8 +41,8 @@ export class DiscussContainer extends Component {
         this.messaging.discuss.open();
     }
 
-    _willUnmount() {
-        if (this.messaging && this.messaging.discuss) {
+    _willDestroy() {
+        if (this.messaging && this.messaging.discuss && DiscussContainer.currentInstance === this) {
             this.messaging.discuss.close();
         }
     }
