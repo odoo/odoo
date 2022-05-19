@@ -3,7 +3,7 @@
 import core, { _t } from "web.core";
 import session from "web.session";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
 import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
@@ -68,12 +68,10 @@ function checkGlobalObjectsIntegrity() {
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
     luxon.Settings.defaultLocale = "en";
-    const originalZone = luxon.Settings.defaultZone;
-    luxon.Settings.defaultZone = "Europe/Brussels";
     registerCleanup(() => {
         luxon.Settings.defaultLocale = originalLocale;
-        luxon.Settings.defaultZone = originalZone;
     });
+    patchTimeZone(60);
 }
 
 function makeMockLocation(hasListeners = () => true) {

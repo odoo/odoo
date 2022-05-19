@@ -1,7 +1,12 @@
 /** @odoo-module **/
 
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { click, getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    patchDate,
+    patchTimeZone,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { localization } from "@web/core/l10n/localization";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { browser } from "@web/core/browser/browser";
@@ -444,12 +449,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("custom filter datetime with equal operator", async function (assert) {
         assert.expect(5);
 
-        const originalZone = luxon.Settings.defaultZone;
-        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(-240);
-        registerCleanup(() => {
-            luxon.Settings.defaultZone = originalZone;
-        });
-
+        patchTimeZone(-240);
         patchDate(2017, 1, 22, 12, 30, 0);
 
         const controlPanel = await makeWithSearch({
@@ -494,12 +494,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("custom filter datetime between operator", async function (assert) {
         assert.expect(5);
 
-        const originalZone = luxon.Settings.defaultZone;
-        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(-240);
-        registerCleanup(() => {
-            luxon.Settings.defaultZone = originalZone;
-        });
-
+        patchTimeZone(-240);
         patchDate(2017, 1, 22, 12, 30, 0);
 
         const controlPanel = await makeWithSearch({
