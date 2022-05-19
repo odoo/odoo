@@ -152,7 +152,6 @@ export class WebsitePreview extends Component {
     reloadIframe(url) {
         return new Promise((resolve, reject) => {
             this.iframe.el.addEventListener('OdooFrameContentLoaded', resolve, { once: true });
-            this.websiteService.websiteRootInstance = undefined;
             if (url) {
                 this.iframe.el.contentWindow.location = url;
             } else {
@@ -187,6 +186,8 @@ export class WebsitePreview extends Component {
     }
 
     _onPageLoaded() {
+        this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
+
         // This replaces the browser url (/web#action=website...) with
         // the iframe's url (it is clearer for the user).
         this.currentUrl = this.iframe.el.contentDocument.location.href;
@@ -206,17 +207,6 @@ export class WebsitePreview extends Component {
 
         // This is needed for the registerThemeHomepageTour tours
         this.container.el.dataset.viewXmlid = this.iframe.el.contentDocument.documentElement.dataset.viewXmlid;
-
-        // Before leaving the iframe, its content is replicated on an
-        // underlying iframe, to avoid for white flashes (visible on
-        // Chrome Windows/Linux).
-        this.iframe.el.contentWindow.addEventListener('beforeunload', () => {
-            this.iframe.el.setAttribute('is-ready', 'false');
-            if (!this.websiteContext.edition) {
-                this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
-                $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
-            }
-        });
 
         // The clicks on the iframe are listened, so that links with external
         // redirections can be opened in the top window.
@@ -245,6 +235,18 @@ export class WebsitePreview extends Component {
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
             this.iframe.el.dispatchEvent(new KeyboardEvent('keyup', ev));
         });
+    }
+
+    _onPageUnload() {
+        this.websiteService.websiteRootInstance = undefined;
+        this.iframe.el.setAttribute('is-ready', 'false');
+        // Before leaving the iframe, its content is replicated on an
+        // underlying iframe, to avoid for white flashes (visible on
+        // Chrome Windows/Linux).
+        if (!this.websiteContext.edition) {
+            this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+            $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+        }
     }
 }
 WebsitePreview.template = 'website.WebsitePreview';
