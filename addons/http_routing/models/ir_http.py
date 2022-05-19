@@ -29,10 +29,6 @@ from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
-# global resolver (GeoIP API is thread-safe, for multithreaded workers)
-# This avoids blowing up open files limit
-odoo._geoip_resolver = None
-
 # ------------------------------------------------------------
 # Slug API
 # ------------------------------------------------------------
