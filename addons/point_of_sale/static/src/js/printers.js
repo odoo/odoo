@@ -92,23 +92,19 @@ var PrinterMixin = {
      * @param {String} receipt: The receipt to be printed, in HTML
      */
     htmlToImg: function (receipt) {
-        var self = this;
         $('.pos-receipt-print').html(receipt);
-        var promise = new Promise(function (resolve, reject) {
-            self.receipt = $('.pos-receipt-print>.pos-receipt');
-            html2canvas(self.receipt[0], {
-                onparsed: function(queue) {
-                    queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
-                    queue.stack.ctx.width = Math.ceil(self.receipt.outerWidth() + 2 * self.receipt.offset().left);
-                },
-                onrendered: function (canvas) {
-                    $('.pos-receipt-print').empty();
-                    resolve(self.process_canvas(canvas));
-                },
-                letterRendering: self.pos.htmlToImgLetterRendering(),
-            })
+        this.receipt = $('.pos-receipt-print>.pos-receipt');
+        // Odoo RTL support automatically flip left into right but html2canvas
+        // won't work as expected if the receipt is aligned to the right of the
+        // screen so we need to flip it back.
+        this.receipt.parent().css({ left: 0, right: 'auto' });
+        return html2canvas(this.receipt[0], {
+            height: Math.ceil(this.receipt.outerHeight() + this.receipt.offset().top),
+            width: Math.ceil(this.receipt.outerWidth() + 2 * this.receipt.offset().left),
+        }).then(canvas => {
+            $('.pos-receipt-print').empty();
+            return this.process_canvas(canvas);
         });
-        return promise;
     },
 
     _onIoTActionResult: function (data){

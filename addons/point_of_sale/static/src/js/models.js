@@ -980,9 +980,6 @@ class PosGlobalState extends PosModel {
         });
         this._loadProductProduct(product);
     }
-    htmlToImgLetterRendering() {
-        return false;
-    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 Registries.Model.add(PosGlobalState);
