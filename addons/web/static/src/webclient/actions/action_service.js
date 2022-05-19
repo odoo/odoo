@@ -1200,7 +1200,8 @@ function makeActionManager(env) {
             activeCtx.active_id = params.resId;
             activeCtx.active_ids = [params.resId];
         }
-        action.context = makeContext([currentCtx, params.buttonContext, activeCtx, action.context]);
+        const buttonContext = Object.fromEntries(Object.entries(params.buttonContext).filter(e => !e[0].startsWith('default_')));
+        action.context = makeContext([currentCtx, buttonContext, activeCtx, action.context]);
         // in case an effect is returned from python and there is already an effect
         // attribute on the button, the priority is given to the button attribute
         const effect = params.effect ? evaluateExpr(params.effect) : action.effect;
