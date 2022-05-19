@@ -26,19 +26,18 @@
                                     <span class="font-weight-normal">Last update:</span>
                                     <t t-esc="slide.date_published" t-options="{'widget': 'date'}"/>
                                 </div>
-
-                                <div t-else="" t-if="not slide.channel_id.completed" class="d-flex align-items-center pb-3">
+                                <div t-else="" t-attf-class="o_wslides_channel_completion_progressbar #{'d-none' if slide.channel_id.completed else 'd-flex'} align-items-center pb-3">
                                     <div class="progress w-50 bg-black-25" style="height: 10px;">
                                         <div class="progress-bar rounded-left" role="progressbar"
                                             t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
                                             t-attf-style="width: #{slide.channel_id.completion}%;">
                                         </div>
                                     </div>
-                                    <i t-att-class="'fa fa-trophy m-0 ml-2 p-0 %s' % ('text-warning' if slide.channel_id.completed else 'text-black-50')"></i>
-                                    <small class="ml-2 text-white-50"><t t-esc="slide.channel_id.completion"/> %</small>
+                                    <i class="fa fa-trophy m-0 ml-2 p-0 text-black-50"></i>
+                                    <small class="ml-2 text-white-50"><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/> %</small>
                                 </div>
                             </div>
-                            <div t-if="slide.channel_id.completed" class="col-12 col-sm-3">
+                            <div t-attf-class="o_wslides_channel_completion_completed col-12 col-sm-3 #{'d-none' if not slide.channel_id.completed else ''}">
                                 <h2>
                                     <small><span class="badge badge-pill badge-success font-weight-normal"><i class="fa fa-check"/> Completed</span></small>
                                 </h2>
@@ -136,7 +135,7 @@
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section mt-2">
         <a t-att-href="('#collapse-%s') % (category.id if category else 0)" data-toggle="collapse" role="button" aria-expanded="true"
-            class="o_wslides_lesson_aside_list_link pl-2 text-600 text-uppercase text-decoration-none py-1 small d-block"
+            class="o_wslides_lesson_aside_list_link pl-2 text-600 text-uppercase text-decoration-none p-1 small d-block"
             t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
             <t t-if="category">
                 <b t-field="category.name"/>
@@ -151,23 +150,28 @@
                 <t t-set="is_member" t-value="slide.channel_id.is_member"/>
                 <t t-set="can_access" t-value="aside_slide.is_preview or is_member or slide.channel_id.can_publish"/>
                 <li class="p-0 pb-1">
-                    <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
-                        t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-center px-2 py-1 text-decoration-none %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">
-                        <i t-if="is_member" t-att-id="'o_wslides_lesson_aside_slide_check_%s' % (aside_slide.id)"
-                            t-att-class="'mr-2 fa text-left %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle')">
-                        </i>
-                        <t t-call="website_slides.slide_icon">
+                    <div t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-center p-1 %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')"
+                        t-att-data-id="slide.id"
+                        t-att-data-completed="slide_completed">
+                        <t t-call="website_slides.slide_sidebar_done_button">
                             <t t-set="slide" t-value="aside_slide"/>
+                            <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
                         </t>
-                        <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
-                            <span t-esc="aside_slide.name" class="mr-2 text-truncate"/>
-                        </div>
-                        <div class="ml-auto" t-if="aside_slide.question_ids">
-                            <span t-att-class="'badge badge-pill %s' % ('badge-success' if channel_progress[aside_slide.id].get('completed') else 'badge-light text-600')">
-                                <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
-                            </span>
-                        </div>
-                    </a>
+                        <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
+                            t-attf-class="d-flex align-items-center text-decoration-none mw-100 overflow-hidden ml-2">
+                            <t t-call="website_slides.slide_icon">
+                                <t t-set="slide" t-value="aside_slide"/>
+                            </t>
+                            <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
+                                <span t-esc="aside_slide.name" class="mr-2 text-truncate"/>
+                            </div>
+                            <div class="ml-auto" t-if="aside_slide.question_ids">
+                                <span t-att-class="'badge badge-pill %s' % ('badge-success' if channel_progress[aside_slide.id].get('completed') else 'badge-light text-600')">
+                                    <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
+                                </span>
+                            </div>
+                        </a>
+                    </div>
                     <ul t-if="aside_slide.slide_resource_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
                         <t t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'url'">
                             <li class="pl-4">
@@ -179,9 +183,10 @@
                                 </span>
                             </li>
                         </t>
-                        <div class="o_wslides_js_course_join pl-4" t-if="aside_slide.slide_resource_ids">
+                        <t t-set="resource_file_ids" t-value="aside_slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
+                        <div class="o_wslides_js_course_join pl-4" t-if="resource_file_ids">
                             <t t-if="is_member or aside_slide.channel_id.can_publish">
-                                <li t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file'">
+                                <li t-foreach="resource_file_ids" t-as="resource">
                                     <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" class="text-decoration-none small">
                                         <i class="fa fa-download mr-1"/><span t-field="resource.name"/>
                                     </a>
@@ -210,40 +215,65 @@
 
 <!-- Slide: all its content, not fullscreen mode -->
 <template id="slide_content_detailed" name="Slide: Detailed Content">
-    <div class="row align-items-center my-3">
+    <div class="row align-items-start my-3 w-100">
+        <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
         <div class="col-12 col-md order-2 order-md-1 d-flex">
-            <div class="d-flex align-items-center">
-                <h1 class="h4 my-0">
+            <div class="d-flex align-items-start">
+                <h1 class="h4 my-0 d-flex flex_row">
                     <t t-call="website_slides.slide_icon">
-                        <t t-set="icon_class" t-valuef="mr-1"/>
+                        <t t-set="icon_class" t-valuef="mr-2"/>
                     </t>
                     <span t-field="slide.name"/>
                 </h1>
-                <span t-if="slide.question_ids"
-                    t-att-class="'ml-2 badge %s' % ('badge-success' if channel_progress[slide.id].get('completed') else 'badge-info')">
-                    <span t-if="channel_progress[slide.id].get('completed')">
-                        <i class="fa fa-check-circle"/>
-                        <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0)"/>
-                    </span>
-                    <span t-else="" t-esc="channel_progress[slide.id].get('quiz_karma_gain', 0)"/>
-                    <span>XP</span>
-                </span>
             </div>
         </div>
-        <div class="col-12 col-md order-1 order-md-2 text-nowrap flex-grow-0 d-flex justify-content-end mb-3 mb-md-0">
+        <div class="col-12 col-md order-1 order-md-2 text-nowrap flex-grow-0 d-flex justify-content-end align-items-center mb-3 mb-md-0">
+            <t t-set="quiz_karma_won" t-value="channel_progress[slide.id].get('quiz_karma_won', 0)"/>
+            <t t-set="quiz_karma_gain" t-value="channel_progress[slide.id].get('quiz_karma_gain', 0)"/>
+            <span t-if="slide.question_ids and (slide_completed or quiz_karma_gain)"
+                t-attf-class="mx-2 badge #{'badge-success' if slide_completed else 'badge-info'}">
+                <span t-if="slide_completed">
+                    <i class="fa fa-check-circle"/>
+                    <t t-if="quiz_karma_won">
+                        <t t-esc="quiz_karma_won" />
+                        <span>XP</span>
+                    </t>
+                </span>
+                <t t-else="">
+                    <span t-esc="quiz_karma_gain"/>
+                    <span>XP</span>
+                </t>
+            </span>
             <div class="btn-group flex-grow-1 flex-sm-0" role="group" aria-label="Lesson Nav">
-                <a t-att-class="'btn btn-light border %s' % ('disabled' if not previous_slide else '')"
+                <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not previous_slide else ''} mr-2"
                     role="button" t-att-aria-disabled="'disabled' if not previous_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
                     <i class="fa fa-chevron-left mr-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
                 </a>
-                <t t-set="allow_done_btn" t-value="slide.slide_category in ['infographic', 'document', 'article', 'video'] and not slide.question_ids and not channel_progress[slide.id].get('completed') and slide.channel_id.is_member"/>
-                <a t-att-class="'btn btn-primary border text-white %s' % ('disabled' if not allow_done_btn else '')"
-                    role="button" t-att-aria-disabled="'true' if not allow_done_btn else None"
-                    t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '') if allow_done_btn else '#'">
-                    Set Done
-                </a>
-                <a t-att-class="'btn btn-light border %s' % ('disabled' if not next_slide else '')"
+                <t t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.is_member">
+                    <t t-set="is_quiz" t-value="slide.slide_category == 'quiz' or slide.question_ids"/>
+                    <a t-if="slide_completed and slide.can_self_mark_uncompleted" role="button"
+                        class="o_wslides_undone_button btn btn-light border mr-2"
+                        t-attf-href="/slides/slide/#{slide.id}/set_uncompleted">
+                        Mark To Do
+                    </a>
+                    <a t-elif="not slide_completed and is_quiz" role="button"
+                        class="o_wslides_done_button btn btn-primary border text-white mr-2"
+                        href="#quiz_container">
+                        Take Quiz
+                    </a>
+                    <a t-else="not slide_completed and slide.can_self_mark_completed" role="button"
+                        class="o_wslides_done_button btn btn-primary border text-white mr-2"
+                        t-attf-href="/slides/slide/#{slide.id}/set_completed?next_slide_id=#{next_slide.id if next_slide else ''}">
+                        Mark Done
+                    </a>
+                </t>
+                <div t-if="slide.channel_id.channel_type == 'documentation' and not slide.channel_id.is_member" class="mr-2">
+                    <t t-call="website_slides.course_join">
+                        <t t-set="channel" t-value="slide.channel_id"/>
+                    </t>
+                </div>
+                <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not next_slide else ''}"
                     role="button" t-att-aria-disabled="'disabled' if not next_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
                     <span class="d-none d-sm-inline-block">Next</span> <i class="fa fa-chevron-right ml-2"></i>
@@ -389,7 +419,7 @@
             </div>
         </div>
     </div>
-    <div class="o_wslides_js_quiz_container" t-att-data-slide-id="slide.id">
+    <div class="o_wslides_js_quiz_container" t-att-data-slide-id="slide.id" id="quiz_container">
         <div class="row" t-if="slide.slide_category != 'certification'">
             <t t-if="slide.question_ids">
                 <t t-call="website_slides.lesson_content_quiz"/>
@@ -436,7 +466,9 @@
         t-att-data-name="slide.name"
         t-att-data-slide-category="slide.slide_category"
         t-att-data-is-member="slide.channel_id.is_member"
-        t-att-data-completed="1 if slide_completed else 0"
+        t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
+        t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
+        t-att-data-completed="slide_completed"
         t-att-data-quiz-attempts-count="quiz_attempts_count"
         t-att-data-quiz-karma-max="quiz_karma_max"
         t-att-data-quiz-karma-gain="quiz_karma_gain"

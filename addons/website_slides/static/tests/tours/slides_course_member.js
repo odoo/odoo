@@ -28,8 +28,10 @@ tour.register('course_member', {
 },
 // eLearning: follow course by cliking on first lesson and going to fullscreen player
 {
-    trigger: '.o_wslides_fs_sidebar_list_item div:contains("Home Gardening")'
-}, {
+    trigger: '.o_wslides_fs_slide_name:contains("Home Gardening")',
+    run: 'click',
+},
+{
     trigger: '.o_wslides_fs_sidebar_header',
     run: function () {
         // check navigation with arrow keys
@@ -87,7 +89,8 @@ tour.register('course_member', {
     extra_trigger: '.o_wslides_progress_percentage:contains("60")',
     run: function () {} // check that previous step succeeded
 }, {
-    trigger: '.o_wslides_fs_sidebar_list_item div:contains("How to Grow and Harvest The Best Strawberries | Basics")'
+    trigger: '.o_wslides_fs_slide_name:contains("How to Grow and Harvest The Best Strawberries | Basics")',
+    run: 'click',
 }, {
     trigger: '.o_wslides_fs_sidebar_section_slides li:contains("How to Grow and Harvest The Best Strawberries | Basics") .o_wslides_slide_completed',
     run: function () {} // check that video slide is marked as 'done'
@@ -97,7 +100,8 @@ tour.register('course_member', {
 },
 // eLearning: last slide is a quiz, complete it
 {
-    trigger: '.o_wslides_fs_sidebar_list_item div:contains("Test your knowledge")'
+    trigger: '.o_wslides_fs_slide_name:contains("Test your knowledge")',
+    run: 'click',
 }, {
     trigger: '.o_wslides_js_lesson_quiz_question:first .list-group a:first'
 }, {
