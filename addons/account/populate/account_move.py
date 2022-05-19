@@ -30,7 +30,7 @@ class AccountMove(models.Model):
 
     def _populate_factories(self):
         @lru_cache()
-        def search_account_ids(company_id, type=None, group=None):
+        def search_account_ids(company_id, types=None, group=None):
             """Search all the accounts of a certain type and group for a company.
 
             This method is cached, only one search is done per tuple(company_id, type, group).
@@ -42,8 +42,8 @@ class AccountMove(models.Model):
             :return (Model<account.account>): the recordset of accounts found.
             """
             domain = [('company_id', '=', company_id)]
-            if type:
-                domain += [('internal_type', '=', type)]
+            if types:
+                domain += [('account_type', 'in', types)]
             if group:
                 domain += [('internal_group', '=', group)]
             return self.env['account.account'].search(domain)
@@ -116,15 +116,31 @@ class AccountMove(models.Model):
             currency_id = values['currency_id']
             partner_id = values['partner_id']
 
+            other_type = (
+                'asset_current',
+                'asset_non_current',
+                'asset_prepayments',
+                'asset_fixed',
+                'liability_current',
+                'liability_non_current',
+                'equity',
+                'equity_unaffected',
+                'income',
+                'income_other',
+                'expense',
+                'expense_depreciation',
+                'expense_direct_cost',
+                'off_balance',
+            )
             # Determine the right sets of accounts depending on the move_type
             if move_type in self.get_sale_types(include_receipts=True):
-                account_ids = search_account_ids(company_id, 'other', 'income')
-                balance_account_ids = search_account_ids(company_id, 'receivable', 'asset')
+                account_ids = search_account_ids(company_id, other_type, 'income')
+                balance_account_ids = search_account_ids(company_id, ('asset_receivable',), 'asset')
             elif move_type in self.get_purchase_types(include_receipts=True):
-                account_ids = search_account_ids(company_id, 'other', 'expense')
-                balance_account_ids = search_account_ids(company_id, 'payable', 'liability')
+                account_ids = search_account_ids(company_id, other_type, 'expense')
+                balance_account_ids = search_account_ids(company_id, ('liability_payable',), 'liability')
             else:
-                account_ids = search_account_ids(company_id, 'other', 'asset')
+                account_ids = search_account_ids(company_id, other_type, 'asset')
                 balance_account_ids = account_ids
 
             # Determine the right balance sign depending on the move_type

@@ -77,25 +77,23 @@ class AccountJournal(models.Model):
         "Select 'Purchase' for vendor bills journals.\n"\
         "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
         "Select 'General' for miscellaneous operations journals.")
-    type_control_ids = fields.Many2many('account.account.type', 'journal_account_type_control_rel', 'journal_id', 'type_id', string='Allowed account types')
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Allowed accounts',
         check_company=True,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]")
-    default_account_type = fields.Many2one('account.account.type', compute="_compute_default_account_type")
+    default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "'|', ('user_type_id', '=', default_account_type), ('user_type_id', 'in', type_control_ids),"
-               "('user_type_id.type', 'not in', ('receivable', 'payable'))]")
+               "'|', ('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
-                             ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id)
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
+                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
+                ('account_type', '=', 'asset_current')]")
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
@@ -149,17 +147,16 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True,
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
-                             ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
-                                                             self.env.ref('account.data_account_type_other_income').id])
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
+                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
+                ('account_type', 'in', ('income', 'income_other'))]")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
-                             ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
+                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
+                ('account_type', '=', 'expense')]")
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
@@ -277,15 +274,15 @@ class AccountJournal(models.Model):
     @api.depends('type')
     def _compute_default_account_type(self):
         default_account_id_types = {
-            'bank': 'account.data_account_type_liquidity',
-            'cash': 'account.data_account_type_liquidity',
-            'sale': 'account.data_account_type_revenue',
-            'purchase': 'account.data_account_type_expenses'
+            'bank': 'asset_cash',
+            'cash': 'asset_cash',
+            'sale': 'income',
+            'purchase': 'expense'
         }
 
         for journal in self:
             if journal.type in default_account_id_types:
-                journal.default_account_type = self.env.ref(default_account_id_types[journal.type]).id
+                journal.default_account_type = default_account_id_types[journal.type]
             else:
                 journal.default_account_type = False
 
@@ -382,23 +379,6 @@ class AccountJournal(models.Model):
         for journal in self:
             journal.alias_name = journal.alias_id.alias_name
 
-    @api.constrains('type_control_ids')
-    def _constrains_type_control_ids(self):
-        self.env['account.move.line'].flush_model(['account_id', 'journal_id'])
-        self.env['account.account'].flush_model(['user_type_id'])
-        self.flush_recordset(['type_control_ids'])
-        self._cr.execute("""
-            SELECT aml.id
-            FROM account_move_line aml
-            WHERE aml.journal_id in (%s)
-            AND EXISTS (SELECT 1 FROM journal_account_type_control_rel rel WHERE rel.journal_id = aml.journal_id)
-            AND NOT EXISTS (SELECT 1 FROM account_account acc
-                            JOIN journal_account_type_control_rel rel ON acc.user_type_id = rel.type_id
-                            WHERE acc.id = aml.account_id AND rel.journal_id = aml.journal_id)
-        """, tuple(self.ids))
-        if self._cr.fetchone():
-            raise ValidationError(_('Some journal items already exist in this journal but with accounts from different types than the allowed ones.'))
-
     @api.constrains('account_control_ids')
     def _constrains_account_control_ids(self):
         self.env['account.move.line'].flush_model(['account_id', 'journal_id', 'display_type'])
@@ -445,7 +425,7 @@ class AccountJournal(models.Model):
     @api.constrains('type', 'default_account_id')
     def _check_type_default_account_id_type(self):
         for journal in self:
-            if journal.type in ('sale', 'purchase') and journal.default_account_id.user_type_id.type in ('receivable', 'payable'):
+            if journal.type in ('sale', 'purchase') and journal.default_account_id.account_type in ('asset_receivable', 'liability_payable'):
                 raise ValidationError(_("The type of the journal's default credit/debit account shouldn't be 'receivable' or 'payable'."))
 
     @api.constrains('inbound_payment_method_line_ids', 'outbound_payment_method_line_ids')
@@ -601,7 +581,7 @@ class AccountJournal(models.Model):
         return {
             'name': vals.get('name'),
             'code': code,
-            'user_type_id': self.env.ref('account.data_account_type_liquidity').id,
+            'account_type': 'asset_cash',
             'currency_id': vals.get('currency_id'),
             'company_id': company.id,
         }
@@ -621,9 +601,6 @@ class AccountJournal(models.Model):
         # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
         random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
         digits = len(random_account.code) if random_account else 6
-
-        liquidity_type = self.env.ref('account.data_account_type_liquidity')
-        current_assets_type = self.env.ref('account.data_account_type_current_assets')
 
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')

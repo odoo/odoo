@@ -980,7 +980,7 @@ class AccountBankStatementLine(models.Model):
             ('account_id.reconcile', '=', True),
             # Special domain for payments.
             '|',
-            ('account_id.internal_type', 'not in', ('receivable', 'payable')),
+            ('account_id.account_type', 'not in', ('asset_receivable', 'liability_payable')),
             ('payment_id', '=', False),
             # Special domain for statement lines.
             ('statement_line_id', '!=', self.id),

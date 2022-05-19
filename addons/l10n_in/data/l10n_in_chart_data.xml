@@ -31,7 +31,7 @@
         <record id="p10055" model="account.account.template">
             <field name="name">CESS Receivable</field>
             <field name="code">10055</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="account_type">asset_current</field>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
             <field name="tag_ids" eval="[(6,0,[ref('cess_tag_account'),])]"/>
@@ -39,14 +39,14 @@
         <record id="p10056" model="account.account.template">
             <field name="name">Tax Receivable</field>
             <field name="code">10056</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="account_type">asset_current</field>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
         </record>
         <record model="account.account.template" id="p11235">
             <field name="name">CESS Payable</field>
             <field name="code">11235</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="account_type">liability_current</field>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
             <field name="tag_ids" eval="[(6,0,[ref('cess_tag_account'),])]"/>
@@ -54,7 +54,7 @@
         <record id="p11236" model="account.account.template">
             <field name="name">Tax Payable</field>
             <field name="code">11236</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="account_type">liability_current</field>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
         </record>

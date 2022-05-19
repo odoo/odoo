@@ -99,11 +99,10 @@ class AccountPaymentMethodLine(models.Model):
         check_company=True,
         copy=False,
         ondelete='restrict',
-        domain=lambda self: "[('deprecated', '=', False), "
-                            "('company_id', '=', company_id), "
-                            "('user_type_id.type', 'not in', ('receivable', 'payable')), "
-                            "'|', ('user_type_id', '=', %s), ('id', '=', parent.default_account_id)]"
-                            % self.env.ref('account.data_account_type_current_assets').id
+        domain="[('deprecated', '=', False), "
+                "('company_id', '=', company_id), "
+                "('account_type', 'not in', ('asset_receivable', 'liability_payable')), "
+                "'|', ('account_type', '=', 'asset_current'), ('id', '=', parent.default_account_id)]"
     )
     journal_id = fields.Many2one(comodel_name='account.journal', ondelete="cascade")
 
@@ -159,7 +158,7 @@ class AccountPaymentMethodLine(models.Model):
         :param account_id: The id of an account.account.
         """
         account = self.env['account.account'].browse(account_id)
-        if not account.reconcile and account.internal_type != 'liquidity' and account.internal_group != 'off_balance':
+        if not account.reconcile and account.account_type not in ('asset_cash', 'liability_credit_card') and account.internal_group != 'off_balance':
             account.reconcile = True
 
     @api.model_create_multi

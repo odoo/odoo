@@ -308,25 +308,24 @@ class ResPartner(models.Model):
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
-        self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
+        self._cr.execute("""SELECT account_move_line.partner_id, a.account_type, SUM(account_move_line.amount_residual)
                       FROM """ + tables + """
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
-                      LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
-                      WHERE act.type IN ('receivable','payable')
+                      WHERE a.account_type IN ('asset_receivable','liability_payable')
                       AND account_move_line.partner_id IN %s
                       AND account_move_line.reconciled IS NOT TRUE
                       """ + where_clause + """
-                      GROUP BY account_move_line.partner_id, act.type
+                      GROUP BY account_move_line.partner_id, a.account_type
                       """, where_params)
         treated = self.browse()
         for pid, type, val in self._cr.fetchall():
             partner = self.browse(pid)
-            if type == 'receivable':
+            if type == 'asset_receivable':
                 partner.credit = val
                 if partner not in treated:
                     partner.debit = False
                     treated |= partner
-            elif type == 'payable':
+            elif type == 'liability_payable':
                 partner.debit = -val
                 if partner not in treated:
                     partner.credit = False
@@ -341,7 +340,7 @@ class ResPartner(models.Model):
         if type(operand) not in (float, int):
             return []
         sign = 1
-        if account_type == 'payable':
+        if account_type == 'liability_payable':
             sign = -1
         res = self._cr.execute('''
             SELECT partner.id
@@ -349,7 +348,7 @@ class ResPartner(models.Model):
             LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
             JOIN account_move move ON move.id = aml.move_id
             RIGHT JOIN account_account acc ON aml.account_id = acc.id
-            WHERE acc.internal_type = %s
+            WHERE acc.account_type = %s
               AND NOT acc.deprecated AND acc.company_id = %s
               AND move.state = 'posted'
             GROUP BY partner.id
@@ -361,11 +360,11 @@ class ResPartner(models.Model):
 
     @api.model
     def _credit_search(self, operator, operand):
-        return self._asset_difference_search('receivable', operator, operand)
+        return self._asset_difference_search('asset_receivable', operator, operand)
 
     @api.model
     def _debit_search(self, operator, operand):
-        return self._asset_difference_search('payable', operator, operand)
+        return self._asset_difference_search('liability_payable', operator, operand)
 
     def _invoice_total(self):
         self.total_invoiced = 0
@@ -466,12 +465,12 @@ class ResPartner(models.Model):
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
+        domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
+        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,

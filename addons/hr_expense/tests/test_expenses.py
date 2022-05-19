@@ -346,13 +346,12 @@ class TestExpenses(TestExpenseCommon):
             'include_base_amount': False,
             'tax_exigibility': 'on_payment'
         })
-        current_assets_type = self.env.ref('account.data_account_type_current_assets')
         company = self.env.company.id
         tax.cash_basis_transition_account_id = self.env['account.account'].create({
             'name': "test",
             'code': 999991,
             'reconcile': True,
-            'user_type_id': current_assets_type.id,
+            'account_type': 'asset_current',
             'company_id': company,
         }).id
 

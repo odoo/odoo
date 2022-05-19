@@ -13,9 +13,9 @@ class AccruedExpenseRevenue(models.TransientModel):
 
     def _get_account_domain(self):
         if self.env.context.get('active_model') == 'purchase.order':
-            return [('user_type_id', '=', self.env.ref('account.data_account_type_current_liabilities').id), ('company_id', '=', self._get_default_company())]
+            return [('account_type', '=', 'liability_current'), ('company_id', '=', self._get_default_company())]
         else:
-            return [('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id), ('company_id', '=', self._get_default_company())]
+            return [('account_type', '=', 'asset_current'), ('company_id', '=', self._get_default_company())]
 
     def _get_default_company(self):
         if not self._context.get('active_model'):

@@ -170,7 +170,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'code': 'X1012 - POS',
             'name': 'Debtors - (POS)',
             'reconcile': True,
-            'user_type_id': cls.env.ref('account.data_account_type_receivable').id,
+            'account_type': 'asset_receivable',
         })
         cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id
         cls.pos_receivable_cash = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Cash'})
@@ -180,7 +180,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',
             'code': 'RCV00' ,
-            'user_type_id': cls.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'receivable', 'internal_group': 'asset'}).id,
+            'account_type': 'asset_receivable',
             'internal_group': 'asset',
             'reconcile': True,
         })
@@ -217,7 +217,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.sale_account = cls.categ_basic.property_account_income_categ_id
         cls.other_sale_account = cls.env['account.account'].search([
             ('company_id', '=', cls.company.id),
-            ('user_type_id', '=', cls.env.ref('account.data_account_type_revenue').id),
+            ('account_type', '=', 'income'),
             ('id', '!=', cls.sale_account.id)
         ], limit=1)
 

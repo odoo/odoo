@@ -111,7 +111,7 @@ class AccountPayment(models.Model):
         string='Destination Account',
         store=True, readonly=False,
         compute='_compute_destination_account_id',
-        domain="[('user_type_id.type', 'in', ('receivable', 'payable')), ('company_id', '=', company_id)]",
+        domain="[('account_type', 'in', ('asset_receivable', 'liability_payable')), ('company_id', '=', company_id)]",
         check_company=True)
     destination_journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -186,7 +186,7 @@ class AccountPayment(models.Model):
         for line in self.move_id.line_ids:
             if line.account_id in self._get_valid_liquidity_accounts():
                 liquidity_lines += line
-            elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
+            elif line.account_id.account_type in ('asset_receivable', 'liability_payable') or line.partner_id == line.company_id.partner_id:
                 counterpart_lines += line
             else:
                 writeoff_lines += line
@@ -531,7 +531,7 @@ class AccountPayment(models.Model):
                 else:
                     pay.destination_account_id = self.env['account.account'].search([
                         ('company_id', '=', pay.company_id.id),
-                        ('internal_type', '=', 'receivable'),
+                        ('account_type', '=', 'asset_receivable'),
                         ('deprecated', '=', False),
                     ], limit=1)
             elif pay.partner_type == 'supplier':
@@ -541,7 +541,7 @@ class AccountPayment(models.Model):
                 else:
                     pay.destination_account_id = self.env['account.account'].search([
                         ('company_id', '=', pay.company_id.id),
-                        ('internal_type', '=', 'payable'),
+                        ('account_type', '=', 'liability_payable'),
                         ('deprecated', '=', False),
                     ], limit=1)
 
@@ -608,7 +608,7 @@ class AccountPayment(models.Model):
                 part.credit_move_id = counterpart_line.id
             JOIN account_move invoice ON invoice.id = counterpart_line.move_id
             JOIN account_account account ON account.id = line.account_id
-            WHERE account.internal_type IN ('receivable', 'payable')
+            WHERE account.account_type IN ('asset_receivable', 'liability_payable')
                 AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND invoice.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
@@ -827,7 +827,7 @@ class AccountPayment(models.Model):
                         move.display_name,
                     ))
 
-                if counterpart_lines.account_id.user_type_id.type == 'receivable':
+                if counterpart_lines.account_id.account_type == 'asset_receivable':
                     partner_type = 'customer'
                 else:
                     partner_type = 'supplier'

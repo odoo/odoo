@@ -21,16 +21,15 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.income_currency_exchange_account_id",
         string="Gain Account",
         readonly=False,
-        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
-                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
-                                                             self.env.ref('account.data_account_type_other_income').id])
+        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', company_id),\
+                ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
         string="Loss Account",
         readonly=False,
-        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
+        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', company_id),\
+                ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
         domain="[('visible','=', True)]")
@@ -43,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
         string='Bank Suspense Account',
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_current_assets').id, self.env.ref('account.data_account_type_current_liabilities').id],
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('account_type', 'in', ('asset_current', 'liability_current'))]",
         help='Bank Transactions are posted immediately after import or synchronization. '
              'Their counterparty is the bank suspense account.\n'
              'Reconciliation replaces the latter by the definitive account(s).')
@@ -52,7 +51,7 @@ class ResConfigSettings(models.TransientModel):
         string='Outstanding Receipts Account',
         readonly=False,
         related='company_id.account_journal_payment_debit_account_id',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('account_type', '=', 'asset_current')]",
         help='Incoming payments are posted on an Outstanding Receipts Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable '
@@ -62,13 +61,13 @@ class ResConfigSettings(models.TransientModel):
         string='Outstanding Payments Account',
         readonly=False,
         related='company_id.account_journal_payment_credit_account_id',
-        domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id,
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('account_type', '=', 'asset_current')]",
         help='Outgoing Payments are posted on an Outstanding Payments Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer Account",
         related='company_id.transfer_account_id', readonly=False,
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)],
+        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')

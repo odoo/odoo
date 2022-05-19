@@ -19,7 +19,7 @@ class PosPaymentMethod(models.Model):
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
         ondelete='restrict',
-        domain=[('reconcile', '=', True), ('user_type_id.type', '=', 'receivable')],
+        domain=[('reconcile', '=', True), ('account_type', '=', 'asset_receivable')],
         help="Leave empty to use the default account from the company setting.\n"
              "Overrides the company's receivable account (for Point of Sale) used in the journal entries.")
     is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
