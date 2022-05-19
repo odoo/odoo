@@ -53,7 +53,13 @@
     <record id="mail_message_interviewer_rule" model="ir.rule">
         <field name="name">Interviewer: No Applicant Chatter</field>
         <field name="model_id" ref="mail.model_mail_message"/>
-        <field name="domain_force">[('model', '!=', 'hr.applicant')]</field>
+        <field name="domain_force">[
+            '|',
+                ('model', '!=', 'hr.applicant'),
+                '&amp;',
+                    ('model', '=', 'hr.applicant'),
+                    ('mail_activity_type_id', '!=', False)
+        ]</field>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
