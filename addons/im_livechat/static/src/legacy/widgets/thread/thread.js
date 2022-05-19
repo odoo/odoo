@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import DocumentViewer from '@im_livechat/legacy/widgets/document_viewer';
+import DocumentViewer from '@im_livechat/legacy/widgets/document_viewer/document_viewer';
 import * as mailUtils from '@mail/js/utils';
 
 import core from 'web.core';
