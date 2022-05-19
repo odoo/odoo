@@ -4,6 +4,7 @@
 import logging
 
 from odoo.tools.translate import _
+from odoo.tools.sql import escape_psql
 from odoo.tools import email_normalize
 from odoo.exceptions import UserError
 
@@ -238,7 +239,7 @@ class PortalWizardUser(models.TransientModel):
 
         user = self.env['res.users'].sudo().with_context(active_test=False).search([
             ('id', '!=', self.user_id.id),
-            ('login', '=ilike', email),
+            ('login', '=ilike', escape_psql(email)),
         ])
 
         if user:
