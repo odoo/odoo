@@ -185,9 +185,8 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         ref_base_tag = self._create_tax_tag('refund_base')
         ref_tax_tag = self._create_tax_tag('refund_tax')
 
-        user_type = self.env.ref('account.data_account_type_current_assets')
-        account_1 = self.env['account.account'].create({'name': 'test1', 'code': 'test1', 'user_type_id': user_type.id})
-        account_2 = self.env['account.account'].create({'name': 'test2', 'code': 'test2', 'user_type_id': user_type.id})
+        account_1 = self.env['account.account'].create({'name': 'test1', 'code': 'test1', 'account_type': 'asset_current'})
+        account_2 = self.env['account.account'].create({'name': 'test2', 'code': 'test2', 'account_type': 'asset_current'})
 
         tax = self.env['account.tax'].create({
             'name': "Tax with account",
@@ -242,7 +241,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         invoice.action_post()
 
         self.assertEqual(len(invoice.line_ids), 4, "There should be 4 account move lines created for the invoice: payable, base and 2 tax lines")
-        inv_base_line = invoice.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
+        inv_base_line = invoice.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.account_type != 'asset_receivable')
         self.assertEqual(len(inv_base_line), 1, "There should be only one base line generated")
         self.assertEqual(abs(inv_base_line.balance), 100, "Base amount should be 100")
         self.assertEqual(inv_base_line.tax_tag_ids, inv_base_tag, "Base line should have received base tag")
@@ -258,7 +257,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         refund.action_post()
 
         self.assertEqual(len(refund.line_ids), 4, "There should be 4 account move lines created for the refund: payable, base and 2 tax lines")
-        ref_base_line = refund.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.user_type_id.type != 'receivable')
+        ref_base_line = refund.line_ids.filtered(lambda x: not x.tax_repartition_line_id and x.account_id.account_type != 'asset_receivable')
         self.assertEqual(len(ref_base_line), 1, "There should be only one base line generated")
         self.assertEqual(abs(ref_base_line.balance), 100, "Base amount should be 100")
         self.assertEqual(ref_base_line.tax_tag_ids, ref_base_tag, "Base line should have received base tag")
@@ -710,6 +709,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'balance': -119.16,
         }])
 
-        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable'), [{
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable'), [{
             'balance': 686.54
         }])

@@ -99,7 +99,7 @@ class L10nInPaymentReport(models.AbstractModel):
     def _where(self):
         return """WHERE aml.payment_id IS NOT NULL
             AND tax.tax_group_id in (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('igst_group','gst_group'))
-            AND ac.internal_type IN ('receivable', 'payable') AND am.state = 'posted'"""
+            AND ac.account_type IN ('asset_receivable', 'liability_payable') AND am.state = 'posted'"""
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)

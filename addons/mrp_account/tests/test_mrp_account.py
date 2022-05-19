@@ -271,12 +271,12 @@ class TestMrpAccountMove(TestAccountMove):
         wip_incoming_account = self.env['account.account'].create({
             'name': 'wip incoming',
             'code': '000001',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
         })
         wip_outgoing_account = self.env['account.account'].create({
             'name': 'wip outgoing',
             'code': '000002',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
         })
         production_location.write({
             'valuation_in_account_id': wip_incoming_account.id,

@@ -37,7 +37,6 @@ class TestDeliveryCost(common.TransactionCase):
             'parent_id': self.partner_4.id,
         })
         self.product_uom_hour = self.env.ref('uom.product_uom_hour')
-        self.account_data = self.env.ref('account.data_account_type_revenue')
         self.account_tag_operating = self.env.ref('account.account_tag_operating')
         self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct'})
         self.product_category = self.env.ref('product.product_category_all')
@@ -73,7 +72,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.a_sale = self.AccountAccount.create({
             'code': 'X2020',
             'name': 'Product Sales - (test)',
-            'user_type_id': self.account_data.id,
+            'account_type': 'income',
             'tag_ids': [(6, 0, {
                 self.account_tag_operating.id
             })]

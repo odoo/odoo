@@ -2292,7 +2292,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ]
         })
 
-        receivable_lines = move.line_ids.filtered(lambda line: line.account_id.user_type_id.type == 'receivable')
+        receivable_lines = move.line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
         not_receivable_lines = move.line_ids - receivable_lines
 
         # Write a receivable account on a not-receivable line.
@@ -2822,13 +2822,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'expense_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Expense Account',
                 'code': '234567',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'reconcile': True,
             }).id,
         })
@@ -2936,13 +2936,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'expense_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Expense Account',
                 'code': '234567',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'reconcile': True,
             }).id,
             'revenue_accrual_account': self.env['account.account'].create({
                 'name': 'Accrual Revenue Account',
                 'code': '765432',
-                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'account_type': 'expense',
                 'reconcile': True,
             }).id,
         })
@@ -3298,20 +3298,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         tax_waiting_account = self.env['account.account'].create({
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
-            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'account_type': 'liability_current',
             'reconcile': True,
             'company_id': self.company_data['company'].id,
         })
         tax_final_account = self.env['account.account'].create({
             'name': 'TAX_TO_DEDUCT',
             'code': 'TDEDUCT',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'company_id': self.company_data['company'].id,
         })
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'account_type': 'asset_current',
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account

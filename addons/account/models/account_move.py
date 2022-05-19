@@ -588,7 +588,7 @@ class AccountMove(models.Model):
         for line in self.line_ids:
             line.partner_id = self.partner_id.commercial_partner_id
 
-            if new_term_account and line.account_id.user_type_id.type in ('receivable', 'payable'):
+            if new_term_account and line.account_id.account_type in ('asset_receivable', 'liability_payable'):
                 line.account_id = new_term_account
 
         self._compute_bank_partner_id()
@@ -619,7 +619,7 @@ class AccountMove(models.Model):
 
     @api.onchange('payment_reference')
     def _onchange_payment_reference(self):
-        for line in self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
+        for line in self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable')):
             line.name = self.payment_reference or ''
 
     @api.onchange('invoice_vendor_bill_id')
@@ -1057,7 +1057,7 @@ class AccountMove(models.Model):
                 self.line_ids -= existing_cash_rounding_line
                 existing_cash_rounding_line = self.env['account.move.line']
 
-        others_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type not in ('receivable', 'payable'))
+        others_lines = self.line_ids.filtered(lambda line: line.account_id.account_type not in ('asset_receivable', 'liability_payable'))
         others_lines -= existing_cash_rounding_line
         total_amount_currency = sum(others_lines.mapped('amount_currency'))
 
@@ -1107,7 +1107,7 @@ class AccountMove(models.Model):
                 # Search new account.
                 domain = [
                     ('company_id', '=', self.company_id.id),
-                    ('internal_type', '=', 'receivable' if self.move_type in ('out_invoice', 'out_refund', 'out_receipt') else 'payable'),
+                    ('account_type', '=', 'asset_receivable' if self.move_type in ('out_invoice', 'out_refund', 'out_receipt') else 'liability_payable'),
                 ]
                 return self.env['account.account'].search(domain, limit=1)
 
@@ -1180,8 +1180,8 @@ class AccountMove(models.Model):
                     candidate.update(candidate._get_fields_onchange_balance(force_computation=True))
             return new_terms_lines
 
-        existing_terms_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
-        others_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type not in ('receivable', 'payable'))
+        existing_terms_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+        others_lines = self.line_ids.filtered(lambda line: line.account_id.account_type not in ('asset_receivable', 'liability_payable'))
         company_currency_id = (self.company_id or self.env.company).currency_id
         total_balance = sum(others_lines.mapped(lambda l: company_currency_id.round(l.balance)))
         total_amount_currency = sum(others_lines.mapped('amount_currency'))
@@ -1576,7 +1576,7 @@ class AccountMove(models.Model):
                     SELECT
                         source_line.id AS source_line_id,
                         source_line.move_id AS source_move_id,
-                        account_type.type AS source_line_account_type,
+                        account.account_type AS source_line_account_type,
                         ARRAY_AGG(counterpart_move.reversed_entry_id)
                             FILTER (WHERE counterpart_move.reversed_entry_id IS NOT NULL) AS counterpart_reversed_entry_ids,
                         ARRAY_AGG(counterpart_move.move_type)
@@ -1586,7 +1586,6 @@ class AccountMove(models.Model):
                     FROM account_partial_reconcile part
                     JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
                     JOIN account_account account ON account.id = source_line.account_id
-                    JOIN account_account_type account_type ON account_type.id = account.user_type_id
                     JOIN account_move_line counterpart_line ON counterpart_line.id = part.{counterpart_field}_move_id
                     JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
                     LEFT JOIN account_payment pay ON pay.id = counterpart_move.payment_id
@@ -1639,7 +1638,7 @@ class AccountMove(models.Model):
                         total_tax_currency += line.amount_currency
                         total += line.balance
                         total_currency += line.amount_currency
-                    elif line.account_id.user_type_id.type in ('receivable', 'payable') and move.state == 'posted':
+                    elif line.account_id.account_type in ('asset_receivable', 'liability_payable') and move.state == 'posted':
                         # Residual amount.
                         total_to_pay += line.balance
                         total_residual += line.amount_residual
@@ -1672,7 +1671,7 @@ class AccountMove(models.Model):
 
             # Restrict on 'receivable'/'payable' lines for invoices/expense entries.
             if payment_state_matters:
-                reconciliation_vals = [x for x in reconciliation_vals if x['source_line_account_type'] in ('receivable', 'payable')]
+                reconciliation_vals = [x for x in reconciliation_vals if x['source_line_account_type'] in ('asset_receivable', 'liability_payable')]
 
             new_pmt_state = 'not_paid'
             if move.state == 'posted':
@@ -1751,7 +1750,7 @@ class AccountMove(models.Model):
                 continue
 
             pay_term_lines = move.line_ids\
-                .filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+                .filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
             domain = [
                 ('account_id', 'in', pay_term_lines.account_id.ids),
@@ -1897,7 +1896,7 @@ class AccountMove(models.Model):
             else:
                 move.tax_lock_date_message = False
 
-    @api.depends('line_ids.account_id.internal_type')
+    @api.depends('line_ids.account_id.account_type')
     def _compute_always_tax_exigible(self):
         for record in self:
             # We need to check is_invoice as well because always_tax_exigible is used to
@@ -2426,7 +2425,7 @@ class AccountMove(models.Model):
         currencies = set()
         has_term_lines = False
         for line in self.line_ids:
-            if line.account_internal_type in ('receivable', 'payable'):
+            if line.account_type in ('asset_receivable', 'liability_payable'):
                 sign = 1 if line.balance > 0.0 else -1
 
                 currencies.add(line.currency_id)
@@ -2595,28 +2594,28 @@ class AccountMove(models.Model):
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
                           reconciled_lines.mapped('matched_credit_ids.credit_move_id')
         return reconciled_amls.move_id.payment_id
 
     def _get_reconciled_statement_lines(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
                           reconciled_lines.mapped('matched_credit_ids.credit_move_id')
         return reconciled_amls.move_id.statement_line_id
 
     def _get_reconciled_invoices(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         reconciled_amls = reconciled_lines.mapped('matched_debit_ids.debit_move_id') + \
                           reconciled_lines.mapped('matched_credit_ids.credit_move_id')
         return reconciled_amls.move_id.filtered(lambda move: move.is_invoice(include_receipts=True))
 
     def _get_all_reconciled_invoice_partials(self):
         self.ensure_one()
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         if not reconciled_lines:
             return {}
 
@@ -2698,7 +2697,7 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
         pay_term_lines = self.line_ids\
-            .filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
+            .filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
         invoice_partials = []
         exchange_diff_moves = []
 
@@ -2892,7 +2891,7 @@ class AccountMove(models.Model):
                 for line in (move.line_ids + reverse_move.line_ids).filtered(lambda l: not l.reconciled):
                     group[(line.account_id, line.currency_id)].append(line.id)
                 for (account, dummy), line_ids in group.items():
-                    if account.reconcile or account.internal_type == 'liquidity':
+                    if account.reconcile or account.account_type in ('asset_cash', 'liability_credit_card'):
                         self.env['account.move.line'].browse(line_ids).with_context(move_reverse_cancel=cancel).reconcile()
 
         return reverse_moves
@@ -3066,7 +3065,7 @@ class AccountMove(models.Model):
                     'payment_reference': move._get_invoice_computed_reference(),
                     'line_ids': []
                 }
-                for line in move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
+                for line in move.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable')):
                     to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
                 move.write(to_write)
 
@@ -3701,8 +3700,8 @@ class AccountMoveLine(models.Model):
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",
         check_company=True,
         tracking=True)
-    account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", readonly=True)
-    account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
+    account_type = fields.Selection(related='account_id.account_type', readonly=True)
+    account_internal_group = fields.Selection(related='account_id.internal_group', readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
     name = fields.Char(string='Label', tracking=True)
@@ -4432,7 +4431,7 @@ class AccountMoveLine(models.Model):
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
-        need_residual_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
+        need_residual_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
         stored_lines = need_residual_lines.filtered('id')
 
         if stored_lines:
@@ -4590,7 +4589,6 @@ class AccountMoveLine(models.Model):
             account_currency = account.currency_id
             if account_currency and account_currency != line.company_currency_id and account_currency != line.currency_id:
                 raise UserError(_('The account selected on your journal entry forces to provide a secondary currency. You should remove the secondary currency on the account.'))
-
             if account.allowed_journal_ids and journal not in account.allowed_journal_ids:
                 raise UserError(_('You cannot use this account (%s) in this journal, check the field \'Allowed Journals\' on the related account.', account.display_name))
 
@@ -4598,9 +4596,8 @@ class AccountMoveLine(models.Model):
                 continue
 
             is_account_control_ok = not journal.account_control_ids or account in journal.account_control_ids
-            is_type_control_ok = not journal.type_control_ids or account.user_type_id in journal.type_control_ids
 
-            if not is_account_control_ok or not is_type_control_ok:
+            if not is_account_control_ok:
                 raise UserError(_("You cannot use this account (%s) in this journal, check the section 'Control-Access' under "
                                   "tab 'Advanced Settings' on the related journal.", account.display_name))
 
@@ -4815,14 +4812,14 @@ class AccountMoveLine(models.Model):
 
             # Check switching receivable / payable accounts.
             if account_to_write:
-                account_type = line.account_id.user_type_id.type
+                account_type = line.account_id.account_type
                 if line.move_id.is_sale_document(include_receipts=True):
-                    if (account_type == 'receivable' and account_to_write.user_type_id.type != account_type) \
-                            or (account_type != 'receivable' and account_to_write.user_type_id.type == 'receivable'):
+                    if (account_type == 'asset_receivable' and account_to_write.account_type != account_type) \
+                            or (account_type != 'asset_receivable' and account_to_write.account_type == 'asset_receivable'):
                         raise UserError(_("You can only set an account having the receivable type on payment terms lines for customer invoice."))
                 if line.move_id.is_purchase_document(include_receipts=True):
-                    if (account_type == 'payable' and account_to_write.user_type_id.type != account_type) \
-                            or (account_type != 'payable' and account_to_write.user_type_id.type == 'payable'):
+                    if (account_type == 'liability_payable' and account_to_write.account_type != account_type) \
+                            or (account_type != 'liability_payable' and account_to_write.account_type == 'liability_payable'):
                         raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
         # Tracking stuff can be skipped for perfs using tracking_disable context key
@@ -5700,7 +5697,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.reconciled:
                 raise UserError(_("You are trying to reconcile some entries that are already reconciled."))
-            if not line.account_id.reconcile and line.account_id.internal_type != 'liquidity':
+            if not line.account_id.reconcile and line.account_id.account_type not in ('asset_cash', 'liability_credit_card'):
                 raise UserError(_("Account %s does not allow reconciliation. First change the configuration of this account to allow it.")
                                 % line.account_id.display_name)
             if line.move_id.state != 'posted':
@@ -5745,7 +5742,7 @@ class AccountMoveLine(models.Model):
 
         # ==== Create entries for cash basis taxes ====
 
-        is_cash_basis_needed = account.user_type_id.type in ('receivable', 'payable')
+        is_cash_basis_needed = account.account_type in ('asset_receivable', 'liability_payable')
         if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
             tax_cash_basis_moves = partials._create_tax_cash_basis_moves()
             results['tax_cash_basis_moves'] = tax_cash_basis_moves
@@ -5789,7 +5786,7 @@ class AccountMoveLine(models.Model):
                 )
 
                 # Exchange difference for cash basis entries.
-                is_cash_basis_needed = account.internal_type in ('receivable', 'payable')
+                is_cash_basis_needed = account.account_type in ('asset_receivable', 'liability_payable')
                 if is_cash_basis_needed:
                     involved_lines._add_exchange_difference_cash_basis_vals(exchange_diff_vals)
 
@@ -5838,7 +5835,7 @@ class AccountMoveLine(models.Model):
 
         for line, values in zip(self, res):
             # Don't copy the name of a payment term line.
-            if line.move_id.is_invoice() and line.account_id.user_type_id.type in ('receivable', 'payable'):
+            if line.move_id.is_invoice() and line.account_id.account_type in ('asset_receivable', 'liability_payable'):
                 values['name'] = ''
             # Don't copy restricted fields of notes
             if line.display_type in ('line_section', 'line_note'):
@@ -6007,7 +6004,7 @@ class AccountMoveLine(models.Model):
             domain += [(date_field, '<=', context['date_to'])]
         if context.get('date_from'):
             if not context.get('strict_range'):
-                domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
+                domain += ['|', (date_field, '>=', context['date_from']), ('account_id.include_initial_balance', '=', True)]
             elif context.get('initial_bal'):
                 domain += [(date_field, '<', context['date_from'])]
             else:

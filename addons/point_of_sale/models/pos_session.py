@@ -1002,8 +1002,8 @@ class PosSession(models.Model):
         split_cash_receivable_lines = {}
         combine_cash_receivable_lines = {}
         for statement in self.statement_ids:
-            split_cash_statement_lines[statement] = BankStatementLine.create(split_cash_statement_line_vals[statement]).mapped('move_id.line_ids').filtered(lambda line: line.account_id.internal_type == 'receivable')
-            combine_cash_statement_lines[statement] = BankStatementLine.create(combine_cash_statement_line_vals[statement]).mapped('move_id.line_ids').filtered(lambda line: line.account_id.internal_type == 'receivable')
+            split_cash_statement_lines[statement] = BankStatementLine.create(split_cash_statement_line_vals[statement]).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
+            combine_cash_statement_lines[statement] = BankStatementLine.create(combine_cash_statement_line_vals[statement]).mapped('move_id.line_ids').filtered(lambda line: line.account_id.account_type == 'asset_receivable')
             split_cash_receivable_lines[statement] = MoveLine.create(split_cash_receivable_vals[statement])
             combine_cash_receivable_lines[statement] = MoveLine.create(combine_cash_receivable_vals[statement])
 

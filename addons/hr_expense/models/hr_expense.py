@@ -90,7 +90,7 @@ class HrExpense(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
-        default=_default_account_id, domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]", help="An expense account is expected")
+        default=_default_account_id, domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -200,7 +200,7 @@ class HrExpense(models.Model):
             else:
                 residual_field = 'amount_residual_currency'
             payment_term_lines = expense.sheet_id.account_move_id.sudo().line_ids \
-                .filtered(lambda line: line.expense_id == expense and line.account_internal_type in ('receivable', 'payable'))
+                .filtered(lambda line: line.expense_id == expense and line.account_type in ('asset_receivable', 'liability_payable'))
             expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
     @api.depends('currency_rate', 'total_amount', 'amount_tax')

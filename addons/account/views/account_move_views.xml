@@ -156,7 +156,7 @@
                     <field name="journal_id" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" optional="show" widget="open_move_widget"/>
                     <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
-                    <field name="partner_id" optional="hide" attrs="{'readonly':[('account_internal_type','in', ('payable','receivable'))]}"/>
+                    <field name="partner_id" optional="hide" attrs="{'readonly':[('account_type','in', ('liability_payable','asset_receivable'))]}"/>
                     <field name="ref" optional="hide"/>
                     <field name="product_id" optional="hide"/>
                     <field name="name" optional="show"/>
@@ -172,17 +172,16 @@
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
                     <field name="cumulated_balance" optional="hide"/>
                     <field name="matching_number" optional="show"/>
-                    <field name="amount_residual" string="Residual" optional="hide" attrs="{'invisible':[('account_internal_type', 'not in', ('payable','receivable'))]}"/>
-                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('account_internal_type', 'not in', ('payable','receivable'))]}"/>
+                    <field name="amount_residual" string="Residual" optional="hide" attrs="{'invisible':[('account_type', 'not in', ('liability_payable','asset_receivable'))]}"/>
+                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('account_type', 'not in', ('liability_payable','asset_receivable'))]}"/>
 
                     <field name="parent_state" invisible="1"/>
-                    <field name="account_internal_type" invisible="1"/>
+                    <field name="account_type" invisible="1"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="is_same_currency" invisible="1"/>
-                    
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
                     </groupby>
@@ -305,7 +304,7 @@
                     <field name="date"/>
                     <field name="account_id"/>
                     <field name="account_root_id"/>
-                    <field name="account_internal_type"/>
+                    <field name="account_type"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="move_id" string="Journal Entry" filter_domain="[
@@ -327,10 +326,10 @@
                     <filter string="Cash" name="cash" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
                     <filter string="Miscellaneous" domain="[('journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
-                    <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable'), ('account_id.non_trade', '=', False)]" help="From Trade Payable accounts" name="trade_payable"/>
-                    <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable'), ('account_id.non_trade', '=', False)]" help="From Trade Receivable accounts" name="trade_receivable"/>
-                    <filter string="Non Trade Payable" domain="[('account_id.internal_type', '=', 'payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable" invisible="1"/>
-                    <filter string="Non Trade Receivable" domain="[('account_id.internal_type', '=', 'receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable" invisible="1"/>
+                    <filter string="Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]" help="From Trade Payable accounts" name="trade_payable"/>
+                    <filter string="Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]" help="From Trade Receivable accounts" name="trade_receivable"/>
+                    <filter string="Non Trade Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable" invisible="1"/>
+                    <filter string="Non Trade Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable" invisible="1"/>
                     <filter string="P&amp;L Accounts" domain="[('account_id.internal_group', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
@@ -859,7 +858,7 @@
                                                context="{'partner_id': partner_id, 'move_type': parent.move_type}"
                                                groups="account.group_account_readonly"
                                                options="{'no_create': True}"
-                                               domain="[('deprecated', '=', False), ('user_type_id.type', 'not in', ('receivable', 'payable')), ('company_id', '=', parent.company_id), ('is_off_balance', '=', False)]"
+                                               domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('company_id', '=', parent.company_id), ('is_off_balance', '=', False)]"
                                                attrs="{'required': [('display_type', '=', False)]}"/>
                                         <field name="analytic_account_id"
                                                domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
@@ -907,7 +906,6 @@
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
-                                        <field name="account_internal_type" invisible="1"/>
                                         <field name="account_internal_group" invisible="1"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
@@ -983,7 +981,6 @@
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
-                                        <field name="account_internal_type" invisible="1"/>
                                         <field name="account_internal_group" invisible="1"/>
                                     </kanban>
 
@@ -1094,7 +1091,7 @@
                                                     ('tax_line_id', '!=', False),
                                                     '&amp;',
                                                     ('parent.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
-                                                    ('account_internal_type', 'in', ('receivable', 'payable')),
+                                                    ('account_type', 'in', ('asset_receivable', 'liability_payable')),
                                                 ]}"/>
                                         <field name="debit"
                                                sum="Total Debit"
@@ -1151,8 +1148,8 @@
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
-                                        <field name="account_internal_type" invisible="1"/>
                                         <field name="account_internal_group" invisible="1"/>
+                                        <field name="account_type" invisible="1"/>
                                     </tree>
                                     <!-- Form view to cover mobile use -->
                                     <form>
