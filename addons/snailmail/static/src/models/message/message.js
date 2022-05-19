@@ -2,7 +2,7 @@
 
 import { registerInstancePatchModel } from '@mail/model/model_core';
 
-registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.message.js', {
+registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message/message.js', {
 
     //----------------------------------------------------------------------
     // Public
