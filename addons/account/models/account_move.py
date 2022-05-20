@@ -2997,18 +2997,20 @@ class AccountMove(models.Model):
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.mapped('line_ids').create_analytic_lines()
+
+        for move in to_post:
+            # Fix inconsistencies that may occure if the OCR has been editing the invoice at the same time of a user. We force the
+            # partner on the lines to be the same as the one on the move, because that's the only one the user can see/edit.
+            wrong_lines = move.is_invoice() and move.line_ids.filtered(lambda aml: aml.partner_id != move.commercial_partner_id and not aml.display_type)
+            if wrong_lines:
+                wrong_lines.write({'partner_id': move.commercial_partner_id.id})
+
         to_post.write({
             'state': 'posted',
             'posted_before': True,
         })
 
         for move in to_post:
-            # Fix inconsistencies that may occure if the OCR has been editing the invoice at the same time of a user. We force the
-            # partner on the lines to be the same as the one on the move, because that's the only one the user can see/edit.
-            wrong_lines = move.is_invoice() and move.line_ids.filtered(lambda aml: aml.partner_id != move.commercial_partner_id)
-            if wrong_lines:
-                wrong_lines.write({'partner_id': move.commercial_partner_id.id})
-
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
             # Compute 'ref' for 'out_invoice'.
