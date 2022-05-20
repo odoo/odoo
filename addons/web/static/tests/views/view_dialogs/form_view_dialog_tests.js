@@ -154,7 +154,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             "partner,false,form": `
                     <form string="Partner">
                         <field name="poney_ids"><tree editable="top"><field name="display_name"/></tree></field>
-                        <footer><button string="Custom Button" type="object" class="btn-primary"/></footer>
+                        <footer><button string="Custom Button" type="object" class="my_button"/></footer>
                     </form>
                 `,
         };
@@ -164,15 +164,16 @@ QUnit.module("ViewDialogs", (hooks) => {
             resModel: "partner",
             resId: 1,
         });
-
         await nextTick();
 
-        assert.containsOnce(target, ".modal button.btn-primary", "should have 1 buttons in modal");
+        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".modal button.my_button", "should have 1 buttons in modal");
 
         await click(target, ".o_field_x2many_list_row_add a");
         triggerHotkey("escape");
         await nextTick();
 
+        assert.containsOnce(target, ".modal");
         assert.containsOnce(
             target,
             ".modal button.btn-primary",

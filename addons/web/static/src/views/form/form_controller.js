@@ -135,14 +135,15 @@ export class FormController extends Component {
                 : "x_active" in activeFields
                 ? !activeFields.x_active.readonly
                 : false;
-        if (this.archInfo.xmlDoc.querySelector("footer")) {
+
+        // select footers that are not in subviews and move them to another arch
+        // that will be moved to the dialog's footer (if we are in a dialog)
+        const footers = [...this.archInfo.xmlDoc.querySelectorAll("footer:not(field footer")];
+        if (footers.length) {
             this.footerArchInfo = Object.assign({}, this.archInfo);
             this.footerArchInfo.xmlDoc = createElement("t");
-            this.footerArchInfo.xmlDoc.append(
-                ...[...this.archInfo.xmlDoc.querySelectorAll("footer")]
-            );
+            this.footerArchInfo.xmlDoc.append(...footers);
             this.footerArchInfo.arch = this.footerArchInfo.xmlDoc.outerHTML;
-            [...this.archInfo.xmlDoc.querySelectorAll("footer")].forEach((x) => x.remove());
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 

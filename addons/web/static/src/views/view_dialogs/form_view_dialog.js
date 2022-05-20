@@ -4,7 +4,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 
-const { Component, useEffect } = owl;
+const { Component, onMounted } = owl;
 
 export class FormViewDialog extends Component {
     setup() {
@@ -38,17 +38,14 @@ export class FormViewDialog extends Component {
             },
         };
 
-        useEffect(
-            () => {
-                if (this.modalRef.el.querySelector(".modal-footer").childElementCount > 1) {
-                    const defaultButton = this.modalRef.el.querySelector(
-                        ".modal-footer button.o-default-button"
-                    );
-                    defaultButton.classList.add("d-none");
-                }
-            },
-            () => []
-        );
+        onMounted(() => {
+            if (this.modalRef.el.querySelector(".modal-footer").childElementCount > 1) {
+                const defaultButton = this.modalRef.el.querySelector(
+                    ".modal-footer button.o-default-button"
+                );
+                defaultButton.classList.add("d-none");
+            }
+        });
     }
 }
 
