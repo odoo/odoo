@@ -2918,6 +2918,20 @@ class AccountMove(models.Model):
         move.message_subscribe(list(all_followers_ids))
         return move
 
+    def _post_check_invoice_non_negative(self):
+        """It checks that the total amount of a normal account cannot be less than zero.
+
+        In some accounting localizations this should be adjusted/disabled.
+        """
+        for move in self:
+            if (
+                move.is_invoice(include_receipts=True)
+                and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0
+            ):
+                raise UserError(_("You cannot validate an invoice with a negative total amount. "
+                                  "You should create a credit note instead. Use the action menu to transform it into "
+                                  "a credit note or refund."))
+
     def post(self):
         warnings.warn(
             "RedirectWarning method 'post()' is a deprecated alias to 'action_post()' or _post()",
@@ -2975,8 +2989,7 @@ class AccountMove(models.Model):
                 elif move.is_purchase_document():
                     raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
-            if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
-                raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
+            move._post_check_invoice_non_negative()
 
             if move.display_inactive_currency_warning:
                 raise UserError(_("You cannot validate an invoice with an inactive currency: %s",
