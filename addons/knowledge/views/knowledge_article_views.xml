@@ -79,7 +79,8 @@
                                                attrs="{'invisible': [('id', '=', False)]}">
                                                 <i class="fa fa-share-alt"/> Share
                                             </a>
-                                            <a type="button" role="button" class="btn btn-secondary btn-chatter mr-1" data-hotkey="d">
+                                            <a type="button" role="button" class="btn btn-secondary btn-chatter mr-1" data-hotkey="d"
+                                                attrs="{'invisible': [('id', '=', False)]}">
                                                 <i class="rounded-circle text-center fa fa-comments" title="Open chatter"/>
                                             </a>
                                             <div class="o_knowledge_share_panel dropdown-menu" role="menu">
@@ -203,13 +204,7 @@
                                         </div>
                                         <!-- Chatter -->
                                         <div class="o_knowledge_chatter col-12 col-lg-4 position-relative d-none d-print-none p-0">
-                                            <div class="o_scroll_view_lg">
-                                                <div class="oe_chatter">
-                                                    <field name="message_follower_ids" groups="base.group_user"/>
-                                                    <field name="activity_ids"/>
-                                                    <field name="message_ids"/>
-                                                </div>
-                                            </div>
+                                            <div class="o_scroll_view_lg o_knowledge_chatter_container"/>
                                         </div>
                                     </div>
                                 </div>
