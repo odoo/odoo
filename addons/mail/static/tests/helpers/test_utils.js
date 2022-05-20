@@ -189,6 +189,13 @@ async function getModelDefinitions() {
 }
 
 let pyEnv;
+const VIEW_TYPE_TO_ARCH = {
+    activity: '<activity><templates></templates></activity>',
+    form: '<form/>',
+    list: '<tree/>',
+    search: '<search/>',
+    kanban: '<kanban><templates></templates></kanban>',
+};
 /**
  * Creates an environment that can be used to setup test data as well as
  * creating data after test start.
@@ -198,6 +205,7 @@ let pyEnv;
  */
  export async function startServer() {
     const data = { ...TEST_USER_IDS };
+    const views = {};
     const modelDefinitions = await modelDefinitionsPromise;
     const recordsToInsertRegistry = registry.category('mail.model.definitions').category('recordsToInsert');
     for (const [modelName, fields] of modelDefinitions) {
@@ -207,12 +215,20 @@ let pyEnv;
             records.push(...JSON.parse(JSON.stringify(recordsToInsertRegistry.get(modelName))));
         }
         data[modelName] = { fields: { ...fields }, records };
+
+        // generate default views for this model.
+        for (const [viewType, viewArch] of Object.entries(VIEW_TYPE_TO_ARCH)) {
+            views[`${modelName},false,${viewType}`] = viewArch;
+        }
     }
     pyEnv = new Proxy(
         {
             ...TEST_USER_IDS,
             get currentPartner() {
                 return this.mockServer.currentPartner;
+            },
+            getViews() {
+                return views;
             }
         },
         {
@@ -761,6 +777,7 @@ async function start(param0 = {}) {
         if (hasWebClient) {
             param0.serverData = param0.serverData || getActionManagerServerData();
             param0.serverData.models = data;
+            param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
         } else {
             param0.data = data;
         }
@@ -871,6 +888,7 @@ async function start(param0 = {}) {
         mockServer,
         pyEnv,
         widget,
+        wowlEnv: hasWebClient ? widget.env : undefined,
     };
     if (hasTimeControl) {
         result['advanceTime'] = env.testUtils.advanceTime;
@@ -898,7 +916,7 @@ async function start(param0 = {}) {
         result['discussWidget'] = discussWidget;
     }
     await waitUntilEventPromise;
-    const target = widget.el;
+    const target = hasWebClient ? webclientTarget : widget.el;
     return {
         ...result,
         afterNextRender,
