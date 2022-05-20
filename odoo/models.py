@@ -5022,11 +5022,14 @@ Fields:
                      { 'id': ['module.ext_id', 'module.ext_id_bis'],
                        'id2': [] }
         """
-        result = {record.id: [] for record in self}
+        result = defaultdict(list)
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
         for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id'], order='id'):
             result[data['res_id']].append('%(module)s.%(name)s' % data)
-        return result
+        return {
+            record.id: result[record._origin.id]
+            for record in self
+        }
 
     def get_external_id(self):
         """Retrieve the External ID of any database record, if there
