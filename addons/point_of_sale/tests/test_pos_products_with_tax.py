@@ -30,6 +30,12 @@ class TestPoSProductsWithTax(TestPoSCommon):
             15.0,
             tax_ids=self.taxes['tax_group_7_10'].ids,
         )
+        self.product4 = self.create_product(
+            'Product 4',
+            self.categ_basic,
+            54.99,
+            tax_ids=[self.taxes['tax_fixed006'].id, self.taxes['tax_fixed012'].id, self.taxes['tax21'].id],
+        )
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
@@ -207,20 +213,26 @@ class TestPoSProductsWithTax(TestPoSCommon):
             is_invoiced=True,
             uid='09876-098-0987',
         ))
+        orders.append(self.create_ui_order_data(
+            [(self.product4, 1)],
+            payments=[(self.bank_pm, 54.99)],
+            customer=self.customer,
+            is_invoiced=True,
+        ))
 
         # sync orders
         order = self.env['pos.order'].create_from_ui(orders)
 
         # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
+        self.assertEqual(4, self.pos_session.order_count)
         orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
         self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
         # check account move in the invoiced order
-        invoiced_order = self.pos_session.order_ids.filtered(lambda order: '09876-098-0987' in order.pos_reference)
-        self.assertEqual(1, len(invoiced_order), 'Only one order is invoiced in this test.')
-        invoice = invoiced_order.account_move
-        self.assertAlmostEqual(invoice.amount_total, 426.09)
+        invoiced_orders = self.pos_session.order_ids.filtered(lambda order: order.is_invoiced)
+        self.assertEqual(2, len(invoiced_orders), 'Only one order is invoiced in this test.')
+        invoices = invoiced_orders.mapped('account_move')
+        self.assertAlmostEqual(sum(invoices.mapped('amount_total')), 481.08)
 
         # close the session
         self.pos_session.action_pos_session_validate()
@@ -234,16 +246,16 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertAlmostEqual(sum(sales_lines.mapped('balance')), -515.46)
 
         # check receivable line
-        # should be equivalent to receivable in the invoice
+        # should be equivalent to receivable in the invoices
         # should also be fully-reconciled
         receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
-        self.assertAlmostEqual(receivable_line.balance, -426.09)
+        self.assertAlmostEqual(receivable_line.balance, -481.08)
         self.assertTrue(receivable_line.full_reconcile_id, msg='Receivable line for invoices should be fully reconciled.')
 
         pos_receivable_line_bank = session_move.line_ids.filtered(
             lambda line: self.bank_pm.name in line.name and line.account_id == self.bank_pm.receivable_account_id
         )
-        self.assertAlmostEqual(pos_receivable_line_bank.balance, 836.79)
+        self.assertAlmostEqual(pos_receivable_line_bank.balance, 891.78)
 
         pos_receivable_line_cash = session_move.line_ids.filtered(
             lambda line: self.cash_pm.name in line.name and line.account_id == self.bank_pm.receivable_account_id
@@ -252,7 +264,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertTrue(pos_receivable_line_cash.full_reconcile_id)
 
         receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
-        self.assertAlmostEqual(receivable_line.balance, -invoice.amount_total)
+        self.assertAlmostEqual(receivable_line.balance, -sum(invoices.mapped('amount_total')))
 
         tax_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
 
