@@ -279,6 +279,19 @@ class TestKnowledgeArticleConstraints(KnowledgeCommonWData):
         with self.assertRaises(exceptions.ValidationError, msg='Cannot remove the last writer on an article'):
             article_private._add_members(membership_sudo.partner_id, 'none')
 
+        # add a second member with write access on the workspace article
+        self.article_workspace.sudo().write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.user_employee2.partner_id.id,
+                'permission': 'write',
+            })]
+        })
+        # moving the article to private will remove the second member
+        # but should not trigger an error since we also add 'employee' as a write member
+        self.article_workspace.move_to(is_private=True)
+        self.assertEqual(self.article_workspace.category, 'private')
+        self.assertTrue(self.article_workspace._has_write_member())
+
     @mute_logger('odoo.sql_db')
     @users('employee')
     def test_favourite_uniqueness(self):
