@@ -63,7 +63,7 @@ const ProjectTaskKanbanColumn = KanbanColumn.extend({
      * @private
      */
     _onDeleteColumn: function (event) {
-        if (this.modelName === 'project.task' && this.groupedBy === 'stage_id') {
+        if (this.groupedBy === 'stage_id') {
             event.preventDefault();
             this.trigger_up('kanban_column_delete_wizard');
             return;
