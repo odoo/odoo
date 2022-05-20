@@ -2,10 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+
 from odoo.exceptions import ValidationError
 from odoo.addons.hr_contract.tests.common import TestContractCommon
+from odoo.tests import tagged
 
-
+@tagged('test_contracts')
 class TestHrContracts(TestContractCommon):
 
     @classmethod
@@ -101,3 +104,15 @@ class TestHrContracts(TestContractCommon):
         # New contract, with gap
         self.create_contract('open', 'normal', date(2016, 1, 1), date(2016, 1, 31))
         self.assertEqual(self.employee.first_contract_date, date(2017, 1, 1))
+
+    def test_current_contract_stage_change(self):
+        today = date.today()
+        contract = self.create_contract('open', 'normal', today + relativedelta(day=1), today + relativedelta(day=31))
+        self.assertEqual(self.employee.contract_id, contract)
+
+        draft_contract = self.create_contract('draft', 'normal', today + relativedelta(months=1, day=1), today + relativedelta(months=1, day=31))
+        draft_contract.state = 'open'
+        self.assertEqual(self.employee.contract_id, draft_contract)
+
+        draft_contract.state = 'draft'
+        self.assertEqual(self.employee.contract_id, contract)
