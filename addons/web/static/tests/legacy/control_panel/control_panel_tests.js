@@ -281,5 +281,27 @@ odoo.define('web.control_panel_tests', function (require) {
                 "hasn't autofocused search field");
         });
 
+        QUnit.test("dynamic domains evaluation using global context", async function (assert) {
+            const arch = `
+                <search>
+                    <filter name="filter" domain="[('date_deadline', '&lt;', context.get('my_date'))]"/>
+                </search>
+            `;
+            const context = {
+                search_default_filter: true,
+                my_date: "2021-09-17",
+            };
+            const fields = this.fields;
+            const searchMenuTypes = ['filter'];
+            const controlPanel = await createControlPanel({
+                cpModelConfig: { arch, fields, searchMenuTypes, context },
+                cpProps: { fields, searchMenuTypes },
+            });
+            assert.deepEqual(
+                controlPanel.getQuery().domain,
+                [['date_deadline', '<', "2021-09-17"]]
+            );
+        });
+
     });
 });

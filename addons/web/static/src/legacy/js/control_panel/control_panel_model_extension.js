@@ -429,7 +429,10 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             const groups = this._getGroups();
             const userContext = this.env.session.user_context;
             try {
-                return Domain.prototype.stringToArray(this._getDomain(groups), userContext);
+                return Domain.prototype.stringToArray(
+                    this._getDomain(groups),
+                    Object.assign({}, this.actionContext, userContext)
+                );
             } catch (err) {
                 throw new Error(
                     `${this.env._t("Control panel model extension failed to evaluate domain")}:/n${JSON.stringify(err)}`
