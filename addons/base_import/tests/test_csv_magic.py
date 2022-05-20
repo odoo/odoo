@@ -150,3 +150,51 @@ class TestNumberSeparators(common.TransactionCase):
             ['1.62', '-1.62', '+1.62', '+1.62', '-1.62',
              '1234567.89', '1234567.89']
         )
+
+
+class TestLanguageDetection(ImportCase):
+
+    def test_preview_language_detection(self):
+        """Preview language warning test.
+
+        The language warning informs the user that the imported file is in the wrong
+        language if the detected language of the file is different from the user language interface.
+        """
+        french_name = 'French (BE) / Français (BE)'
+        english_name = 'English (US)'
+        for code, label in [('fr_BE', french_name), ('en_US', english_name)]:
+            self.env['res.lang'].search(['&', ('code', '=', code), '|', ('active', '=', True), ('active', '!=', True)])\
+                .write({'active': True, 'name': label})
+        self.env['ir.translation'].create([
+            {
+                'name': 'ir.model.fields,field_description',
+                'lang': 'fr_BE',
+                'src': src,
+                'value': value,
+                'type': 'model',
+            }
+            for src, value in [('name', 'Nom'), ('country', 'Pays'), ('city', 'Ville')]
+        ])
+        french_headers = ' Nom |  pays | ville'
+        english_headers = ' Name |  country | City'
+        french_headers_partial = ' Nom |  pays | city'
+        no_known_lg_headers = ' Nztcv | Pztcv | Vztcv '
+
+        for user_lang, headers, expected_lang_code, expected_lang_name, lang_is_different in \
+                [('en_US', french_headers, 'fr_BE', french_name, True),
+                 ('fr_BE', french_headers, 'fr_BE', french_name, False),
+                 ('en_US', english_headers, 'en_US', english_name, False),
+                 ('fr_BE', english_headers, 'en_US', english_name, True),
+                 ('en_US', french_headers_partial, 'fr_BE', french_name, True),
+                 ('en_US', no_known_lg_headers, 'en_US', english_name, False),
+                 ('fr_BE', no_known_lg_headers, 'fr_BE', french_name, False)]:
+            preview = self._make_import(f'{headers}\nAndré Dupont|Belgique|Bruxelles') \
+                .with_context({'lang': user_lang}) \
+                .parse_preview({'separator': '|', 'has_headers': True, 'quoting': '"'})
+
+            self.assertEqual(preview['lang_information'],
+                             {
+                                 'lang_code': expected_lang_code,
+                                 'lang_name': expected_lang_name,
+                                 'lang_is_different': lang_is_different,
+                             })

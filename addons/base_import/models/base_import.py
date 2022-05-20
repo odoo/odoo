@@ -40,6 +40,9 @@ BOM_MAP = {
     'utf-32le': codecs.BOM_UTF32_LE,
     'utf-32be': codecs.BOM_UTF32_BE,
 }
+COLUMN_FIELD_HINT_REGEX = re.compile(r'\n\s*\n\s*\([^)]+\)')  # Example: Nom\n{17 spaces}\n{21 spaces}(name) -> Nom
+# Ratio (#term in detected lang/#terms) to reach to have confidence in the detected language of the headers of the file
+GUESSED_LANG_TERM_RATIO_THRESHOLD = 0.5
 
 try:
     import xlrd
@@ -907,8 +910,16 @@ class Import(models.TransientModel):
             :param options: format-specific options.
                             CSV: {quoting, separator, headers}
             :type options: {str, str, str, bool}
-            :returns: ``{fields, matches, headers, preview} | {error, preview}``
-            :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str))} | {str, str}
+            :returns: ``{fields, matches, headers, preview, lang_information} | {error, preview}``
+            :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str)), dict(str: str)} |
+            {str, str}
+              - lang_information: language information (lang_code:str, lang_name:str, lang_is_different:bool)
+                - either the language guessed from the header of the file
+                - or context lang if present and language detection fails (or the detected language is not installed)
+                - or None in other cases (language detection fails and context lang missing)
+                If the guessed language is different from the user language, lang_is_different is True, otherwise False
+                (ex.: {lang_code: "fr_BE, lang_name: "French (BE) / Français (BE)", lang_is_different: False}).
+                Note that the language is always one of the language installed
         """
         self.ensure_one()
         fields_tree = self.get_fields_tree(self.res_model)
@@ -927,8 +938,13 @@ class Import(models.TransientModel):
             else:
                 header_types, headers = {}, []
 
+            # Prepare language information
+            lang_information = None
+            lang_inst_code_to_name = dict(self.env['res.lang'].get_installed())
+
             # Get matches: the ones already selected by the user or propose a new matching.
             matches = {}
+
             # If user checked to the advanced mode, we re-parse the file but we keep the mapping "as is".
             # No need to make another mapping proposal
             if options.get('keep_matches') and options.get('fields'):
@@ -937,6 +953,21 @@ class Import(models.TransientModel):
                         matches[index] = match.split('/')
             elif options.get('has_headers'):
                 matches = self._get_mapping_suggestions(headers, header_types, fields_tree)
+                # Guess the file language if more than one language is installed and at least 2 headers are not matched
+                if len(lang_inst_code_to_name) > 1 and \
+                        sum(1 for k, v in matches.items() if v is None or v['distance'] > 0) > 1:
+                    guessed_lang_code, guessed_lang_term_ratio = self.env['ir.translation']._guess_language_of_terms(
+                        terms=[re.sub(COLUMN_FIELD_HINT_REGEX, '', header)
+                               for header_full in headers for header in header_full.split('/')],
+                        types={'model'})
+                    if guessed_lang_term_ratio > GUESSED_LANG_TERM_RATIO_THRESHOLD \
+                            and guessed_lang_code in lang_inst_code_to_name:
+                        lang_information = dict(
+                            lang_code=guessed_lang_code,
+                            lang_name=lang_inst_code_to_name[guessed_lang_code],
+                            lang_is_different=guessed_lang_code != self.env.context.get('lang'),
+                        )
+
                 # remove header_name for matches keys as tuples are no supported in json.
                 # and remove distance from suggestion (keep only the field path) as not used at client side.
                 matches = {
@@ -944,6 +975,15 @@ class Import(models.TransientModel):
                     for header_key, suggestion in matches.items()
                     if suggestion
                 }
+
+            # If the language could not be guessed, returns the current language
+            if not lang_information and self.env.context.get('lang'):
+                lang_code = self.env.context['lang']
+                lang_information = dict(
+                    lang_code=lang_code,
+                    lang_name=lang_inst_code_to_name[lang_code],
+                    lang_is_different=False,
+                )
 
             # compute if we should activate advanced mode or not:
             # if was already activated of if file contains "relational fields".
@@ -987,6 +1027,7 @@ class Import(models.TransientModel):
             return {
                 'fields': fields_tree,
                 'matches': matches or False,
+                'lang_information': lang_information or False,  # False if detection fails and lang context missing
                 'headers': headers or False,
                 'header_types': list(header_types.values()) or False,
                 'preview': column_example,

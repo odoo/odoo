@@ -11,6 +11,7 @@ from difflib import get_close_matches
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules import get_module_path, get_module_resource
+from odoo.osv.expression import get_unaccent_wrapper
 
 _logger = logging.getLogger(__name__)
 
@@ -925,3 +926,52 @@ class IrTranslation(models.Model):
             'multi_lang': len(self.env['res.lang'].sudo().get_installed()) > 1,
         }
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True).encode()).hexdigest()
+
+    @api.model
+    def _guess_language_of_terms(self, terms, types=None):
+        """Guess the language of the terms based on the translations stored in the database.
+
+        Note that the search relies on some non indexed fields.
+        :param tuple(str) terms: terms used in the application for which we want to guess the language
+        :param set types: if set, limit the search to the given types (increase performance)
+        :return tuple(str, float):
+            - best_candidate (str): the best language (code) candidate or None if none (ex.: fr_BE)
+            - best_candidate_term_ratio (float): ratio of term found in the database for the best_candidate language
+        """
+        unaccent = get_unaccent_wrapper(self.env.cr)
+        # Normalize the terms using the database to have consistent matching
+        self._cr.execute(query=f"""
+        SELECT {unaccent('TRIM(LOWER(term))')}
+          FROM (VALUES {','.join(map(lambda i: f'(%(v{i})s)', range(len(terms))))}) terms(term)
+        """,
+                         params={f'v{i}': term for i, term in enumerate(terms)})
+        params = dict(terms=tuple(map(lambda e: e[0], self._cr.fetchall())),
+                      main_lang='en_US')
+        if types:
+            params['types'] = tuple(types)
+        restrict_to_types_clause = ' AND type IN %(types)s ' if types else ''
+        # Count is done outside the sub query to avoid duplicate count for the main language
+        self._cr.execute(f"""
+        WITH lang_terms AS (
+          SELECT DISTINCT lang, 
+                          TRIM(LOWER(value)) term        
+            FROM ir_translation
+           WHERE {unaccent('TRIM(LOWER(value))')} IN %(terms)s {restrict_to_types_clause}
+           UNION
+          SELECT DISTINCT %(main_lang)s lang, 
+                          TRIM(LOWER(src)) term
+            FROM ir_translation
+           WHERE {unaccent('TRIM(LOWER(src))')} IN %(terms)s {restrict_to_types_clause}
+        )
+           SELECT lang, 
+                  COUNT(DISTINCT term) uniq_term_count
+             FROM lang_terms
+         GROUP BY lang
+         ORDER BY uniq_term_count DESC
+            LIMIT 1
+        """, params=params)
+        candidates = self._cr.fetchall()
+        if not candidates or not candidates[0][1]:
+            return None, 0
+        best_lang_candidate, uniq_term_count = candidates[0]
+        return best_lang_candidate, uniq_term_count/len(terms)

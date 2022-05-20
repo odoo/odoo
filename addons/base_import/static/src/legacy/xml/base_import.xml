@@ -225,7 +225,12 @@
                 <span class="o_import_partial_count">0</span>.<br/>
                 You can test or reload your file before resuming the import.
             </div>
-            <div class="oe_import_error_report px-3 py-2"></div>
+            <div class="oe_import_lang_warn alert alert-warning d-none mx-3 my-1 font-weight-bold">
+                The file you are trying to import seems to be in another language
+                (<span class="oe_import_lang_warn_lang"></span>), labels and values may not match.
+                Try <a class="oe_import_lang_warn_action_change_lang">switching to that language</a>.
+            </div>
+            <div class="oe_import_error_report px-3"></div>
             <div class="table-responsive">
                 <table class="table-striped oe_import_grid w-100 overflow-hidden" />
             </div>

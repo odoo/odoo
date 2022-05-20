@@ -126,6 +126,7 @@ var DataImport = AbstractAction.extend({
                 target: 'new',
             }));
         },
+        'click .oe_import_lang_warn_action_change_lang': '_onClickChangeLanguage',
     },
     init: function (parent, action) {
         this._super.apply(this, arguments);
@@ -139,6 +140,8 @@ var DataImport = AbstractAction.extend({
         this.do_not_change_match = false;
         this.sheets = [];
         this.selectionFields = {};  // Used to compute fallback values in backend.
+        // Used to display a warning when the user lang is different from the detected file lang
+        this.langInformation = null;
     },
     /**
      * @override
@@ -464,6 +467,7 @@ var DataImport = AbstractAction.extend({
         if (result.headers.length === 1) {
             messages.push({type: 'warning', message: _t("A single column was found in the file, this often means the file separator is incorrect")});
         }
+        this._setLangInformation(result.lang_information);
 
         if (!_.isEmpty(messages)) {
             this.$('.oe_import_options').show();
@@ -632,6 +636,40 @@ var DataImport = AbstractAction.extend({
 
             $fieldInput.closest('.oe_import_match_cell').find('.select2-input').attr('placeholder', _t('Search for a field...'));
         });
+    },
+
+    /**
+     * Language information of the file defaulted to the user language when the language of the file to be imported
+     * could not be detected (or is not installed).
+     *
+     * Used to display a language warning when the user language is different of the detected language of the file to
+     * be imported (lang_is_different). In that case, the goal is to warn the user that the import will likely fail.
+     * Note that the language is always an installed one, so it is safe to switch to that language.
+     *
+     * @private
+     * @param langInformation (ex.: { lang_code: "fr_BE", lang_name: "French (BE) / Français (BE)",
+     * lang_is_different:False}) or undefined
+     */
+    _setLangInformation(langInformation) {
+        this.langInformation = langInformation;
+        const lang_is_different = this.langInformation && langInformation.lang_is_different;
+        if (lang_is_different) {
+            this.$('.oe_import_lang_warn_lang').text(langInformation.lang_name);
+        }
+        this.$('.oe_import_lang_warn').toggleClass('d-none', !lang_is_different);
+    },
+
+     /**
+      * Change the user preference language to the language of the file to be imported (langInformation.lang_code).
+      *
+      * The goal is to allow the user to change easily his language to the language of the file to be imported.
+     */
+    _onClickChangeLanguage: function () {
+        this._rpc({
+            model: 'res.users',
+            method: 'write',
+            args: [this.getSession().uid, { lang: this.langInformation.lang_code }]
+        }).then(() => window.location.reload());
     },
 
     /**
