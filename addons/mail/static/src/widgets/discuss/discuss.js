@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
 import { DiscussContainer } from "@mail/components/discuss_container/discuss_container";
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 import AbstractAction from 'web.AbstractAction';
 
-const { App, Component } = owl;
+const { App } = owl;
 
 export const DiscussWidget = AbstractAction.extend({
     template: 'mail.widgets.Discuss',
@@ -23,31 +22,8 @@ export const DiscussWidget = AbstractAction.extend({
         this._super(...arguments);
 
         this.app = undefined;
-
-        Component.env.services.messaging.modelManager.messagingCreatedPromise.then(async () => {
-            const messaging = Component.env.services.messaging.modelManager.messaging;
-            const initActiveId = options.active_id ||
-                (action.context && action.context.active_id) ||
-                (action.params && action.params.default_active_id) ||
-                'mail.box_inbox';
-            const discuss = messaging.discuss;
-            discuss.update({
-                discussView: insertAndReplace({
-                    actionId: action.id,
-                    actionManager: parent,
-                }),
-                initActiveId,
-            });
-            // Wait for messaging to be initialized to make sure the system
-            // knows of the "init thread" if it exists.
-            await messaging.initializedPromise;
-            if (!discuss.isInitThreadHandled) {
-                discuss.update({ isInitThreadHandled: true });
-                if (!discuss.thread) {
-                    discuss.openInitThread();
-                }
-            }
-        });
+        this.action = action;
+        this.actionManager = parent;
     },
     /**
      * @override {web.AbstractAction}
@@ -78,6 +54,10 @@ export const DiscussWidget = AbstractAction.extend({
             dev: owl.Component.env.isDebug(),
             translateFn: owl.Component.env._t,
             translatableAttributes: ["data-tooltip"],
+            props: {
+                action: this.action,
+                actionManager: this.actionManager,
+            },
         });
         await this.app.mount(this.el);
     },
