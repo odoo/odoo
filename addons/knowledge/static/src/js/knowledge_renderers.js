@@ -6,11 +6,16 @@ import FormRenderer from 'web.FormRenderer';
 import KnowledgeTreePanelMixin from '@knowledge/js/tools/tree_panel_mixin';
 import { qweb as QWeb } from 'web.core';
 
+import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
+import { ComponentWrapper } from 'web.OwlCompatibility';
+
+class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
 const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin, {
     className: 'o_knowledge_form_view',
     events: _.extend({}, FormRenderer.prototype.events, {
-        'click .btn-chatter': '_onBtnChatterClick',
+        'click .btn-chatter.active': '_onCloseChatter',
+        'click .btn-chatter:not(.active)': '_onOpenChatter',
         'click .btn-create': '_onBtnCreateClick',
         'click .btn-duplicate': '_onBtnDuplicateClick',
         'click .btn-move': '_onBtnMoveClick',
@@ -28,6 +33,30 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
     init: function (parent, state, params) {
         this._super(...arguments);
         this.breadcrumbs = params.breadcrumbs;
+        /**
+         * Manually set values for the chatter props as it is custom handled
+         * and not loaded with the view (oe_chatter is not used in Knowledge,
+         * the chatter is only rendered when the user clicks on the button).
+         */
+        this.chatterFields = {
+            // `knowledge.article` has `mail.activity.mixin`
+            hasActivities: true,
+            hasFollowers: true,
+            hasMessageIds: true,
+        };
+    },
+    /**
+     * @private
+     */
+    _closeChatter: function () {
+        const chatter = this.el.querySelector('.o_knowledge_chatter_container');
+        while (chatter.firstChild) {
+            chatter.removeChild(chatter.firstChild);
+        }
+        if (this._chatterContainerComponent) {
+            this._chatterContainerComponent.destroy();
+            this._chatterContainerComponent = undefined;
+        }
     },
     /**
      * @param {Event} event
@@ -94,6 +123,17 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         });
     },
     /**
+     * Update the btn-chatter appearance and hide the chatter section in the
+     * view. Closes the chatter.
+     *
+     * @private
+     */
+    _onCloseChatter: function () {
+        this.el.querySelector('.o_knowledge_chatter').classList.add('d-none');
+        this.el.querySelector('.btn-chatter').classList.remove('active');
+        this._closeChatter();
+    },
+    /**
      * Opens the selected record.
      * @param {Event} event
      */
@@ -106,6 +146,21 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                 res_id: $li.data('article-id')
             }
         });
+    },
+    /**
+     * Update tbe btn-chatter appearance and show the chatter section in the
+     * view. Open the chatter.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onOpenChatter: async function (ev) {
+        ev.stopPropagation();
+        if (this.state.res_id) {
+            this.el.querySelector('.o_knowledge_chatter').classList.remove('d-none');
+            this.el.querySelector('.btn-chatter').classList.add('active');
+            await this._renderChatter();
+        }
     },
     /**
      * By default, Bootstrap closes automatically the dropdown menu when the user
@@ -132,6 +187,27 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         });
         this.$('.breadcrumb').prepend(items);
     },
+    /**
+     * Render and mount the chatter of the current record.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _renderChatter: async function () {
+        if (!this.state.res_id) {
+            return;
+        }
+        this._closeChatter();
+        const props = this._makeChatterContainerProps();
+        this._chatterContainerComponent = new ChatterContainerWrapperComponent(
+            this,
+            ChatterContainer,
+            props
+        );
+        const target = this.el.querySelector('.o_knowledge_chatter_container');
+        await this._chatterContainerComponent.mount(target);
+    },
+
     /**
      * Attaches an emoji picker widget to every emoji dropdown of the container.
      * Note: The widget will be attached to the view when the user clicks on
