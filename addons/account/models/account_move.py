@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re
+from odoo.tools import float_compare, date_utils, email_split, email_re, float_is_zero
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -1086,10 +1086,23 @@ class AccountMove(models.Model):
         '''
         for invoice in self:
             # Dispatch lines and pre-compute some aggregated values like taxes.
+
+            # determine required tax_lines by finding all non-zero tax amounts
+            lines_with_taxes = invoice.line_ids.filtered(
+                lambda l: l.tax_ids and l.move_id.currency_id.compare_amounts(l.price_subtotal, l.price_total))
+
+            needed_taxes = lines_with_taxes.tax_ids._origin.flatten_taxes_hierarchy().filtered(
+                lambda tax: (
+                        tax.amount_type == 'fixed' and not invoice.company_id.currency_id.is_zero(tax.amount)
+                        or not float_is_zero(tax.amount, precision_digits=4)
+                )
+            )
+            current_taxes = invoice.line_ids.tax_line_id._origin
+
             if (
                 recompute_all_taxes
                 or any(line.recompute_tax_line for line in invoice.line_ids)
-                or invoice.line_ids.tax_ids.flatten_taxes_hierarchy()._origin > invoice.line_ids.tax_line_id._origin
+                or needed_taxes > current_taxes
             ):
                 invoice.line_ids.recompute_tax_line = False
                 invoice._recompute_tax_lines()
