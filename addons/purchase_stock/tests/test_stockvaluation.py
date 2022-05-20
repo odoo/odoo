@@ -82,14 +82,8 @@ class TestStockValuation(TransactionCase):
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_ids[0]
 
-        # the unit price of the purchase order line is copied to the in move
-        self.assertEqual(move1.price_unit, 100)
-
         # update the unit price on the purchase order line
         po1.order_line.price_unit = 200
-
-        # the unit price on the stock move is not directly updated
-        self.assertEqual(move1.price_unit, 100)
 
         # validate the receipt
         res_dict = picking1.button_validate()
@@ -101,53 +95,6 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(self.product1.value_svl, 2000)
 
-    def test_standard_price_change_1(self):
-        """ Confirm a purchase order and create the associated receipt, change the unit cost of the
-        purchase order and the standard price of the product before validating the receipt, the
-        value of the received goods should be set according to the last standard price.
-        """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-
-        # set a standard price
-        self.product1.product_tmpl_id.standard_price = 10
-
-        po1 = self.env['purchase.order'].create({
-            'partner_id': self.partner_id.id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product1.name,
-                    'product_id': self.product1.id,
-                    'product_qty': 10.0,
-                    'product_uom': self.product1.uom_po_id.id,
-                    'price_unit': 11.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                }),
-            ],
-        })
-        po1.button_confirm()
-
-        picking1 = po1.picking_ids[0]
-        move1 = picking1.move_ids[0]
-
-        # the move's unit price reflects the purchase order line's cost even if it's useless when
-        # the product's cost method is standard
-        self.assertEqual(move1.price_unit, 11)
-
-        # set a new standard price
-        self.product1.product_tmpl_id.standard_price = 12
-
-        # the unit price on the stock move is not directly updated
-        self.assertEqual(move1.price_unit, 11)
-
-        # validate the receipt
-        res_dict = picking1.button_validate()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        wizard.process()
-
-        # the unit price of the valuation layer used the latest value
-        self.assertEqual(move1.stock_valuation_layer_ids.unit_cost, 12)
-
-        self.assertEqual(self.product1.value_svl, 120)
 
     def test_extra_move_fifo_1(self):
         """ Check that the extra move when over processing a receipt is correctly merged back in
@@ -176,7 +123,6 @@ class TestStockValuation(TransactionCase):
 
         # there should be only one move
         self.assertEqual(len(picking1.move_ids), 1)
-        self.assertEqual(move1.price_unit, 100)
         self.assertEqual(move1.stock_valuation_layer_ids.unit_cost, 100)
         self.assertEqual(move1.product_qty, 15)
         self.assertEqual(self.product1.value_svl, 1500)
@@ -210,7 +156,6 @@ class TestStockValuation(TransactionCase):
         wizard.process()
 
         self.assertEqual(len(picking1.move_ids), 1)
-        self.assertEqual(move1.price_unit, 100)
         self.assertEqual(move1.product_qty, 5)
 
         picking2 = po1.picking_ids.filtered(lambda p: p.backorder_id)

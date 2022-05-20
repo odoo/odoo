@@ -433,23 +433,6 @@ class PurchaseOrderLine(models.Model):
                 moves = line._create_stock_moves(picking)
                 moves._action_confirm()._action_assign()
 
-    def _get_stock_move_price_unit(self):
-        self.ensure_one()
-        order = self.order_id
-        price_unit = self.price_unit
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-        if self.taxes_id:
-            qty = self.product_qty or 1
-            price_unit = self.taxes_id.with_context(round=False).compute_all(
-                price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id, partner=self.order_id.partner_id
-            )['total_void']
-            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
-        if self.product_uom.id != self.product_id.uom_id.id:
-            price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
-        if order.currency_id != order.company_id.currency_id:
-            price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
-        return price_unit
 
     def _prepare_stock_moves(self, picking):
         """ Prepare the stock moves data for one order line. This function returns a list of
@@ -460,9 +443,7 @@ class PurchaseOrderLine(models.Model):
         if self.product_id.type not in ['product', 'consu']:
             return res
 
-        price_unit = self._get_stock_move_price_unit()
         qty = self._get_qty_procurement()
-
         move_dests = self.move_dest_ids
         if not move_dests:
             move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier')
@@ -479,10 +460,10 @@ class PurchaseOrderLine(models.Model):
 
         if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
-            res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
+            res.append(self._prepare_stock_move_vals(picking, product_uom_qty, product_uom))
         if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
-            extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
+            extra_move_vals = self._prepare_stock_move_vals(picking, product_uom_qty, product_uom)
             extra_move_vals['move_dest_ids'] = False  # don't attach
             res.append(extra_move_vals)
         return res
@@ -504,7 +485,7 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_('For the product %s, the warehouse of the operation type (%s) is inconsistent with the location (%s) of the reordering rule (%s). Change the operation type or cancel the request for quotation.',
                               self.product_id.display_name, self.order_id.picking_type_id.display_name, self.orderpoint_id.location_id.display_name, self.orderpoint_id.display_name))
 
-    def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
+    def _prepare_stock_move_vals(self, picking, product_uom_qty, product_uom):
         self.ensure_one()
         self._check_orderpoint_picking_type()
         product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
@@ -524,7 +505,6 @@ class PurchaseOrderLine(models.Model):
             'state': 'draft',
             'purchase_line_id': self.id,
             'company_id': self.order_id.company_id.id,
-            'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
