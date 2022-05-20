@@ -69,6 +69,9 @@ HOST = '127.0.0.1'
 ADMIN_USER_ID = odoo.SUPERUSER_ID
 
 
+NON_ROLLBACKDED_SEQUENCES = {'ir_profile_id_seq', 'ir_sequence_id_seq', 'bus_bus_id_seq'}
+
+
 def get_db_name():
     db = odoo.tools.config['db_name']
     # If the database name is not provided on the command-line,
@@ -708,6 +711,7 @@ class TransactionCase(BaseCase):
     registry: Registry = None
     env: api.Environment = None
     cr: Cursor = None
+    rollback_sequences = False
 
     @classmethod
     def setUpClass(cls):
@@ -718,6 +722,17 @@ class TransactionCase(BaseCase):
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
+        if cls.rollback_sequences:
+            cls.cr.execute("SELECT sequencename, last_value FROM pg_sequences")
+            cls._starting_sequences = {sequence: last_value for sequence, last_value in cls.cr.fetchall() if sequence not in NON_ROLLBACKDED_SEQUENCES}
+
+            @cls.addClassCleanup
+            def _reset_sequences():
+                cls.cr.execute("SELECT sequencename, last_value FROM pg_sequences")
+                for sequence, last_value in cls.cr.fetchall():
+                    start_value = cls._starting_sequences.get(sequence, last_value)
+                    if start_value != last_value:
+                        cls.cr.execute('SELECT setval(%s, %s)', (sequence, start_value))
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
