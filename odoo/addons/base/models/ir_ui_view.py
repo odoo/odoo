@@ -1173,8 +1173,6 @@ actual arch.
                     # in the main form view.
                     current_view_types = [el.tag for el in node.xpath("./*[descendant::field]")]
                     missing_view_types = []
-                    if 'form' not in current_view_types:
-                        missing_view_types.append('form')
                     if not any(view_type in current_view_types for view_type in node.get('mode', 'kanban,tree').split(',')):
                         missing_view_types.append(
                             node.get('mode', 'kanban' if node_info.get('mobile') else 'tree').split(',')[0]
