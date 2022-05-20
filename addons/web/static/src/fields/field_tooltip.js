@@ -25,7 +25,7 @@ export function getTooltipInfo(params) {
             widget: params.activeField.widget,
             widgetDescription,
             context: params.activeField.context,
-            domain: params.activeField.domain.toString(),
+            domain: params.activeField.domain,
             modifiers: JSON.stringify(params.activeField.modifiers),
             changeDefault: params.field.change_default,
             relation: params.field.relation,

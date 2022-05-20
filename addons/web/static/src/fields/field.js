@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { isTruthy } from "@web/core/utils/xml";
@@ -205,7 +204,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         name,
         viewType,
         context: node.getAttribute("context") || "{}",
-        domain: new Domain(node.getAttribute("domain") || []),
+        domain: node.getAttribute("domain") || "[]",
         string: node.getAttribute("string") || field.string,
         widget,
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),

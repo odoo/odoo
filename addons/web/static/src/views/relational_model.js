@@ -15,6 +15,7 @@ import { unique } from "@web/core/utils/arrays";
 import { isTruthy } from "@web/core/utils/xml";
 import { makeContext } from "@web/core/context";
 import { Model } from "@web/views/helpers/model";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
@@ -625,7 +626,7 @@ export class Record extends DataPoint {
         return Domain.and([
             this._domains[fieldName] || [],
             this.fields[fieldName].domain || [],
-            this.activeFields[fieldName].domain || [],
+            evaluateExpr(this.activeFields[fieldName].domain, this.evalContext),
         ]);
     }
 
