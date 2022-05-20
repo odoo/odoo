@@ -24,6 +24,17 @@ class PaymentAcquirer(models.Model):
     paypal_use_ipn = fields.Boolean(
         string="Use IPN", help="Paypal Instant Payment Notification", default=True)
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'paypal').update({
+            'support_fees': True,
+        })
+
+    #=== BUSINESS METHODS ===#
+
     @api.model
     def _get_compatible_acquirers(self, *args, currency_id=None, **kwargs):
         """ Override of payment to unlist PayPal acquirers when the currency is not supported. """

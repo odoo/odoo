@@ -39,6 +39,8 @@ class PaymentAcquirer(models.Model):
         required_if_provider='authorize',
     )
 
+    # === CONSTRAINT METHODS ===#
+
     @api.constrains('authorize_payment_method_type')
     def _check_payment_method_type(self):
         for acquirer in self.filtered(lambda acq: acq.provider == "authorize"):
@@ -48,6 +50,18 @@ class PaymentAcquirer(models.Model):
                     "type, please disable the acquirer and duplicate it. Then, change the payment "
                     "method type on the duplicated acquirer."
                 ))
+
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'authorize').update({
+            'support_manual_capture': True,
+            'support_tokenization': True,
+        })
+
+    # === ONCHANGE METHODS ===#
 
     @api.onchange('authorize_payment_method_type')
     def _onchange_authorize_payment_method_type(self):
@@ -64,6 +78,8 @@ class PaymentAcquirer(models.Model):
                 'payment.payment_icon_cc_jcb',
                 'payment.payment_icon_cc_visa',
             )])]
+
+    # === ACTION METHODS ===#
 
     def action_update_merchant_details(self):
         """ Fetch the merchant details to update the client key and the account currency. """
@@ -89,6 +105,8 @@ class PaymentAcquirer(models.Model):
         currency = self.env['res.currency'].search([('name', 'in', res_content.get('currencies'))])
         self.authorize_currency_id = currency
         self.authorize_client_key = res_content.get('publicClientKey')
+
+    # === BUSINESS METHODS ===#
 
     @api.model
     def _get_compatible_acquirers(self, *args, currency_id=None, **kwargs):
