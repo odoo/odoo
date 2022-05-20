@@ -1315,14 +1315,14 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "form views are restored with the correct id in its url when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(3);
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             // open a record in form view
-            await click(target.querySelector(".o_list_view .o_data_row"));
+            await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             await nextTick(); // wait for the router to update its state
             assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
             // do some other action
@@ -2199,15 +2199,12 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["web_search_read"]);
     });
 
-    QUnit.skipWOWL("pushState also changes the title of the tab", async (assert) => {
-        assert.expect(3);
-
+    QUnit.test("pushState also changes the title of the tab", async (assert) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3); // list view
         const titleService = webClient.env.services.title;
         assert.strictEqual(titleService.current, '{"zopenerp":"Odoo","action":"Partners"}');
-        await click(target.querySelector(".o_data_row"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(titleService.current, '{"zopenerp":"Odoo","action":"First record"}');
         await click(target.querySelector(".o_pager_next"));
         assert.strictEqual(titleService.current, '{"zopenerp":"Odoo","action":"Second record"}');
