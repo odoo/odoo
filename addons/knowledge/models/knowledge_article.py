@@ -859,6 +859,8 @@ class Article(models.Model):
                 'body': Markup('<h1>%s</h1>') % title,
                 'name': title,
             })
+        else:
+            values['body'] = Markup('<h1 class="oe-hint"><br></h1>')
 
         if parent:
             if not is_private and parent.category == "private":
