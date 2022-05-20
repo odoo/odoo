@@ -6,8 +6,8 @@ import FormController from 'web.FormController';
 import { MoveArticleToDialog } from './widgets/knowledge_dialogs.js';
 import emojis from '@mail/js/emojis';
 
-const emojisBlacklist = ['💩', '👎', '💔', '😭', '😢', '😐', '😕', '😞', '😢'];
-const safeEmojis = emojis.filter(emoji => !emojisBlacklist.includes(emoji.unicode));
+const disallowedEmojis = ['💩', '👎', '💔', '😭', '😢', '😐', '😕', '😞', '😢', '💀'];
+const emojisRandomPickerSource = emojis.filter(emoji => !disallowedEmojis.includes(emoji.unicode));
 
 const KnowledgeArticleFormController = FormController.extend({
     events: Object.assign({}, FormController.prototype.events, {
@@ -70,7 +70,7 @@ const KnowledgeArticleFormController = FormController.extend({
         this.trigger_up('field_changed', {
             dataPointID: this.handle,
             changes: {
-                'icon': safeEmojis[Math.floor(Math.random() * safeEmojis.length)].unicode,
+                'icon': emojisRandomPickerSource[Math.floor(Math.random() * emojisRandomPickerSource.length)].unicode,
             }
         });
     },
@@ -325,7 +325,7 @@ const KnowledgeArticleFormController = FormController.extend({
         } else {
             let message, confirmation_message;
             if (data.newCategory === 'workspace') {
-                message = _t("Are you sure you want to move this to workspace? It will be accessible by everyone in the company.");
+                message = _t("Are you sure you want to move this article to the Workspace? It will be shared with all internal users.");
                 confirmation_message = _t("Move to Workspace");
             } else if (data.newCategory === 'private') {
                 message = _t("Are you sure you want to move this to private? Only you will be able to access it.");

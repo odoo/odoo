@@ -1453,15 +1453,15 @@ class Article(models.Model):
             ], limit=1, order='sequence, internal_permission desc')
         return article
 
-    def get_valid_parent_options(self, term=""):
+    def get_valid_parent_options(self, search_term=""):
         """ Returns the list of articles that can be set as parent for the
         current article (to avoid recursions) """
         return self.search_read(
             domain=['&',
-                    ['name', '=ilike', '%%%s%%' % term],
+                    ['name', 'ilike', search_term],
                     ['id', 'not in', (self._get_descendants() + self).ids]
-                   ],
-            fields=['id', 'icon', 'name'],
+                    ],
+            fields=['id', 'display_name', 'root_article_id'],
             limit=15,
         )
 
