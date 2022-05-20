@@ -24,6 +24,10 @@ odoo.define('fg_custom.ReceiptScreen', function(require) {
                     this.currentOrder.save_to_db();
                     this.env.pos.push_orders(this.currentOrder, {});
                 }
+                const isPrinted1 = await this._printReceipt();
+                if (isPrinted1) {
+                    this.currentOrder._printed = true;
+                }
             }
         };
 
