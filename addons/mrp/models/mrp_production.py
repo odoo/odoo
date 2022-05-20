@@ -89,6 +89,8 @@ class MrpProduction(models.Model):
         readonly=False, required=True, precompute=True,
         domain="[('usage','=','internal'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Location where the system will look for components.")
+    # this field was added to be passed a default in view for manual raw moves
+    warehouse_id = fields.Many2one(related='location_src_id.warehouse_id')
     location_dest_id = fields.Many2one(
         'stock.location', 'Finished Products Location',
         compute='_compute_locations', store=True, check_company=True,
