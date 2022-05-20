@@ -1609,7 +1609,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'order_id.date_order', 'order_id.partner_id')
     def _compute_analytic_tag_ids(self):
-        for line in self:
+        for line in self.exists():
             if not line.analytic_tag_ids:
                 default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
                     product_id=line.product_id.id,
