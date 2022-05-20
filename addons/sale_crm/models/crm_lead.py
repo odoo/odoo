@@ -73,7 +73,6 @@ class CrmLead(models.Model):
         """ Prepares the context for a new quotation (sale.order) by sharing the values of common fields """
         self.ensure_one()
         quotation_context = {
-            'search_default_partner_id': self.partner_id.id,
             'default_opportunity_id': self.id,
             'default_partner_id': self.partner_id.id,
             'default_campaign_id': self.campaign_id.id,
