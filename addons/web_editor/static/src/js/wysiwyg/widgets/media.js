@@ -120,7 +120,14 @@ var SearchableMediaWidget = MediaWidget.extend({
      */
     _onSearchInput: function (ev) {
         this.attachments = [];
-        this.search($(ev.currentTarget).val() || '').then(() => this._renderThumbnails());
+        // Disable user interactions with attachments while updating results.
+        this.$('.o_we_existing_attachments').css('pointer-events', 'none');
+        this.search($(ev.currentTarget).val() || "")
+            .then(() => this._renderThumbnails())
+            .then(() => {
+                // Re-enable user interactions after updating results.
+                this.$(".o_we_existing_attachments").css("pointer-events", "");
+            });
         this.hasSearched = true;
     },
 });
