@@ -26,7 +26,7 @@ from weakref import WeakSet
 from decorator import decorate
 
 from .exceptions import CacheMiss
-from .tools import frozendict, classproperty, lazy_property, StackMap
+from .tools import frozendict, classproperty, lazy_property, StackMap, OrderedSet
 from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -821,7 +821,7 @@ class Transaction:
         # fields to protect {field: ids}
         self.protected = StackMap()
         # pending computations {field: ids}
-        self.tocompute = defaultdict(set)
+        self.tocompute = defaultdict(OrderedSet)
         # pending updates {model: {id: {field: value}}}
         self.towrite = defaultdict(lambda: defaultdict(dict))
 
