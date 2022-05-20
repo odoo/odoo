@@ -258,4 +258,25 @@
         <field name="country_id" ref="base.ch"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_autres_mouv" model="account.tax.report.line">
+        <field name="name">AUTRES MOUVEMENTS DE FONDS</field>
+        <field name="sequence" eval="6"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_900" model="account.tax.report.line">
+        <field name="name">900 Subventions, taxes touristiques</field>
+        <field name="tag_name">900 Subventions, taxes touristiques</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_autres_mouv"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_910" model="account.tax.report.line">
+        <field name="name">910 Les dons, les dividendes, les dédommagements, ...</field>
+        <field name="tag_name">910 Les dons, les dividendes, les dédommagements, ...</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_autres_mouv"/>
+        <field name="country_id" ref="base.ch"/>
+    </record>
 </odoo>
