@@ -140,17 +140,7 @@ class Article(models.Model):
         Ǹote: computation is done in Py instead of using optimized SQL queries
         because value are not yet in DB at this point."""
         for article in self:
-            def has_write_member(a, child_members=False):
-                if not child_members:
-                    child_members = self.env['knowledge.article.member']
-                article_members = a.article_member_ids
-                if any(m.permission == 'write' and m.partner_id not in child_members.mapped('partner_id')
-                       for m in article_members):
-                    return True
-                if a.parent_id and not a.is_desynchronized:
-                    return has_write_member(a.parent_id, article_members | child_members)
-                return False
-            if article.inherited_permission != 'write' and not has_write_member(article):
+            if article.inherited_permission != 'write' and not article._has_write_member():
                 raise ValidationError(_("The article '%s' needs at least one member with 'Write' access.", article.display_name))
 
     @api.constrains('parent_id')
@@ -1230,18 +1220,54 @@ class Article(models.Model):
 
             writable_self = self.sudo()
             self_member = writable_self.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
-            member_command = [(2, member.id) for member in writable_self.article_member_ids if member.partner_id != self.env.user.partner_id]
 
+            # first add or update the new membership with 'write' access
             if self_member:
-                member_command.append((1, self_member.id, {'permission': 'write'}))
+                write_member_command = [(1, self_member.id, {'permission': 'write'})]
             else:
-                member_command.append((0, 0, {
+                write_member_command = [(0, 0, {
                     'partner_id': self.env.user.partner_id.id,
                     'permission': 'write'
-                }))
-            article_values['article_member_ids'] = member_command
+                })]
+            # then remove other members as the article is moved to private
+            article_values['article_member_ids'] = [
+                (2, member.id)
+                for member in writable_self.article_member_ids if member.partner_id != self.env.user.partner_id
+            ] + write_member_command
 
         return writable_self.with_context(knowledge_member_skip_writable_check=True).write(article_values)
+
+    def _has_write_member(self, partners_to_exclude=False, members_to_exclude=False):
+        """ Method allowing to check if this article still has at least one member
+        with write access. Typically used during constraints checks.
+
+        Please note that this method is *not* optimized and should be avoided by
+        using ``_get_article_member_permissions`` instead when possible.
+
+        :param <res.partner> partners_to_exclude: used when checking recursively
+          through article parents, we only check for the most specific access
+          for a given partner;
+        :param <knowledge.article.member> members_to_exclude: memberships that
+          should not be considered when checking for a write access, used when
+          unlinking members that should not be taken into account;
+
+        :return boolean: whether a write member has been found;
+        """
+        self.ensure_one()
+        partners_to_exclude = partners_to_exclude if partners_to_exclude else self.env['res.partner']
+
+        article_members = self.article_member_ids
+        if members_to_exclude:
+            article_members -= members_to_exclude
+
+        if any(m.permission == 'write' and m.partner_id not in partners_to_exclude
+               for m in article_members):
+            return True
+        if not self.is_desynchronized and self.parent_id:
+            return self.parent_id._has_write_member(
+                partners_to_exclude=article_members.partner_id | partners_to_exclude
+            )
+        return False
 
     # ------------------------------------------------------------
     # PERMISSIONS BATCH COMPUTATION

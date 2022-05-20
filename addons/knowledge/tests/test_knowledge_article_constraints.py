@@ -319,6 +319,13 @@ class TestKnowledgeArticleConstraints(KnowledgeCommon):
         with self.assertRaises(exceptions.ValidationError, msg='Cannot remove the last writer on an article'):
             article_private._add_members(membership_sudo.partner_id, 'none')
 
+        # moving the article to private will remove the second member
+        # but should not trigger an error since we also add 'employee' as a write member
+        article_workspace = self.article_workspace.with_env(self.env)
+        article_workspace.move_to(is_private=True)
+        self.assertEqual(article_workspace.category, 'private')
+        self.assertTrue(article_workspace._has_write_member())
+
     @mute_logger('odoo.sql_db')
     @users('employee')
     def test_favourite_uniqueness(self):
