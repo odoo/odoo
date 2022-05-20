@@ -1423,7 +1423,9 @@ export class SearchModel extends EventBus {
         let domain;
         try {
             domain = Domain.and(domains);
-            return params.raw ? domain : domain.toList(this.userService.context);
+            return params.raw ? domain : domain.toList(
+                Object.assign({}, this.globalContext, this.userService.context)
+            );
         } catch (error) {
             throw new Error(
                 `${this.env._t("Failed to evaluate the domain")} ${domain.toString()}.\n${

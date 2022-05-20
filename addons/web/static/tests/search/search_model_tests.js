@@ -870,4 +870,23 @@ QUnit.module("Search", (hooks) => {
             model.toggleSearchItem(i + 1);
         }
     });
+
+    QUnit.test("dynamic domains evaluation using global context", async function (assert) {
+        const searchViewArch = `
+            <search>
+                <filter name="filter" domain="[('date_deadline', '&lt;', context.get('my_date'))]"/>
+            </search>
+        `;
+
+        const model = await makeSearchModel({
+            serverData,
+            searchViewArch,
+            context: {
+                "my_date": "2021-09-17"
+            }
+        });
+
+        model.toggleSearchItem(1);
+        assert.deepEqual(model.domain, [['date_deadline', '<', "2021-09-17"]]);
+    });
 });
