@@ -332,7 +332,7 @@ class CustomerPortal(Controller):
         # Avoid using sudo or creating access_token when not necessary: internal
         # users can create attachments, as opposed to public and portal users.
         if not request.env.user._is_internal():
-            IrAttachment = IrAttachment.sudo().with_context(binary_field_real_user=IrAttachment.env.user)
+            IrAttachment = IrAttachment.sudo()
             access_token = IrAttachment._generate_access_token()
 
         # At this point the related message does not exist yet, so we assign

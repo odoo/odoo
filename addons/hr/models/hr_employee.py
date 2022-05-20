@@ -505,19 +505,6 @@ class HrEmployeePrivate(models.Model):
             'template': '/hr/static/xls/hr_employee.xls'
         }]
 
-    def _post_author(self):
-        """
-        When a user updates his own employee's data, all operations are performed
-        by super user. However, tracking messages should not be posted as OdooBot
-        but as the actual user.
-        This method is used in the overrides of `_message_log` and `message_post`
-        to post messages as the correct user.
-        """
-        real_user = self.env.context.get('binary_field_real_user')
-        if self.env.is_superuser() and real_user:
-            self = self.with_user(real_user)
-        return self
-
     def _get_unusual_days(self, date_from, date_to=None):
         # Checking the calendar directly allows to not grey out the leaves taken
         # by the employee or fallback to the company calendar
@@ -532,13 +519,6 @@ class HrEmployeePrivate(models.Model):
 
     def _phone_get_number_fields(self):
         return ['mobile_phone']
-
-    def _message_log(self, **kwargs):
-        return super(HrEmployeePrivate, self._post_author())._message_log(**kwargs)
-
-    @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
-        return super(HrEmployeePrivate, self._post_author()).message_post(**kwargs)
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['user_partner_id']

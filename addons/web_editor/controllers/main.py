@@ -756,12 +756,11 @@ class Web_Editor(http.Controller):
             name = '_'.join([media[id]['query'], url.split('/')[-1]])
             # Need to bypass security check to write image with mimetype image/svg+xml
             # ok because svgs come from whitelisted origin
-            context = {'binary_field_real_user': request.env['res.users'].sudo().browse([SUPERUSER_ID])}
-            attachment = request.env['ir.attachment'].sudo().with_context(context).create({
+            attachment = request.env['ir.attachment'].with_user(SUPERUSER_ID).create({
                 'name': name,
                 'mimetype': req.headers['content-type'],
-                'datas': b64encode(req.content),
                 'public': True,
+                'raw': req.content,
                 'res_model': 'ir.ui.view',
                 'res_id': 0,
             })
