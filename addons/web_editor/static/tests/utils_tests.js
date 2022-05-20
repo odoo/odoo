@@ -7,7 +7,7 @@ QUnit.module('utils', {}, function () {
     // Test weUtils
 
     QUnit.test('compare CSS property values', async function (assert) {
-        assert.expect(74);
+        assert.expect(86);
 
         let $div = $(`<div>abc</div>`);
         let currentProperty = 'font-size';
@@ -31,6 +31,9 @@ QUnit.module('utils', {}, function () {
         compare(false, '15px', '25px');
         compare(false, '15px', '');
         compare(false, '15px', 'auto');
+        compare(true, '15px', '1.5e+1px');
+        compare(true, '15px', '1.5e1px');
+        compare(true, '15px', '150e-1px');
 
         currentProperty = 'background-size';
         compare(true, '', '');
@@ -53,6 +56,9 @@ QUnit.module('utils', {}, function () {
         compare(false, 'auto 25px', 'auto 15px');
         compare(false, '25px auto', '15px auto');
         compare(false, '25px', '15px auto');
+        compare(true, '15px 15px', '1.5e+1px 1.5e+1px');
+        compare(true, '15px 15px', '1.5e1px 1.5e1px');
+        compare(true, '15px 15px', '150e-1px 150e-1px');
 
         currentProperty = 'color';
         compare(true, '', '');
