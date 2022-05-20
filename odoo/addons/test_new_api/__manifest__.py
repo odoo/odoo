@@ -20,6 +20,8 @@
             'test_new_api/static/tests/tours/constraint.js',
             # inside .
             'test_new_api/static/tests/tours/x2many.js',
+            # inside .
+            'test_new_api/static/tests/tours/onchangespec.js',
         ],
     },
     'license': 'LGPL-3',

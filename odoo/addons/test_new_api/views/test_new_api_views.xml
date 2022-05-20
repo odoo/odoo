@@ -367,5 +367,53 @@
             </field>
         </record>
 
+        <!-- on_change_spec.parent view -->
+        <record id="on_change_spec_parent_view" model="ir.ui.view">
+            <field name="name">test_new_api.on_change_spec_parent.form</field>
+            <field name="model">test_new_api.on_change_spec.parent</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="a"/>
+                        </group>
+                        <label for="child_ids"/>
+                        <field name="child_ids">
+                            <tree>
+                                <field name="name"/>
+                                <field name="b"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- on_change_spec.child view -->
+        <record id="on_change_spec_child_view" model="ir.ui.view">
+            <field name="name">test_new_api.on_change_spec_child.form</field>
+            <field name="model">test_new_api.on_change_spec.child</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="b"/>
+                            <field name="c"/>
+                            <field name="d"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_main_on_changes" name="On Changes" sequence="30" parent="base.menu_tests"/>
+        <record id="action_on_change_spec" model="ir.actions.act_window">
+            <field name="name">On Change Spec</field>
+            <field name="res_model">test_new_api.on_change_spec.parent</field>
+        </record>
+        <menuitem id="menu_on_change_spec" action="action_on_change_spec" parent="menu_main_on_changes"/>
+
     </data>
 </odoo>

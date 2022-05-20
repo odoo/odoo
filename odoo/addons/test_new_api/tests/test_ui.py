@@ -20,6 +20,9 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/web#action=test_new_api.action_discussions",
             'widget_x2many', step_delay=100, login="admin", timeout=120)
 
+    def test_02_onchangespec(self):
+        self.start_tour("/web#action=test_new_api.action_on_change_spec", 'on_change_spec', login="admin")
+
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslation(odoo.tests.HttpCase):

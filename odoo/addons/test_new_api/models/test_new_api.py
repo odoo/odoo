@@ -1617,3 +1617,38 @@ class Prefetch(models.Model):
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
     hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
     gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
+
+
+class OnChangeSpec(models.Model):
+    _name = 'test_new_api.on_change_spec.parent'
+    _description = 'test_new_api.on_change_spec.parent'
+
+    name = fields.Char("Name")
+    child_ids = fields.One2many('test_new_api.on_change_spec.child', 'parent_id', 'Children')
+    a = fields.Integer('A')
+
+
+class OnChangeSpeciChild(models.Model):
+    _name = 'test_new_api.on_change_spec.child'
+    _description = 'test_new_api.on_change_spec.parent'
+
+    name = fields.Char("Name")
+    parent_id = fields.Many2one('test_new_api.on_change_spec.parent', 'Parent')
+    b = fields.Integer('B', compute='_compute_b')
+    c = fields.Integer('C', compute='_compute_c')
+    d = fields.Integer('D', compute='_compute_d')
+
+    @api.depends('parent_id.a')
+    def _compute_b(self):
+        for record in self:
+            record.b = record.parent_id.a + 1
+
+    @api.depends('b')
+    def _compute_c(self):
+        for record in self:
+            record.c = record.b + 1
+
+    @api.depends('c')
+    def _compute_d(self):
+        for record in self:
+            record.d = record.c + 1
