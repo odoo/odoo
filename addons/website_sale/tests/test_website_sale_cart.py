@@ -47,3 +47,19 @@ class WebsiteSaleCart(TransactionCase):
         with self.assertRaises(UserError):
             with MockRequest(product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
                 self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+
+    def test_update_pricelist_with_invalid_product(self):
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+        })
+
+        # Should not raise an exception
+        website = self.website.with_user(self.public_user)
+        with MockRequest(product.with_user(self.public_user).env, website=website):
+            order = website.sale_get_order(force_create=True)
+            order.write({
+                'order_line': [(0, 0, {
+                    'product_id': product.id,
+                })]
+            })
+            website.sale_get_order(update_pricelist=True)
