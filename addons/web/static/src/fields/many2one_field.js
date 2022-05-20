@@ -266,6 +266,7 @@ export class Many2OneField extends Component {
                 },
                 searchViewId: false,
                 dynamicFilters,
+                noCreate: !this.props.canCreate,
             })
         );
     }

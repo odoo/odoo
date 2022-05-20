@@ -7,10 +7,12 @@ import {
     clickDiscard,
     clickDropdown,
     clickEdit,
+    clickOpenedDropdownItem,
     clickSave,
     dragAndDrop,
     editInput,
     getFixture,
+    getNodesTextContent,
     makeDeferred,
     nextTick,
     patchWithCleanup,
@@ -3217,6 +3219,69 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_many2one input", "new product");
         await triggerEvent(target, ".o_field_many2one input", "blur");
         assert.containsNone(target, ".modal", "should not display the create modal");
+    });
+
+    QUnit.test("propagate can_create onto the search popup", async function (assert) {
+        serverData.models.product.records = [
+            { id: 1, name: "Tromblon1" },
+            { id: 2, name: "Tromblon2" },
+            { id: 3, name: "Tromblon3" },
+            { id: 4, name: "Tromblon4" },
+            { id: 5, name: "Tromblon5" },
+            { id: 6, name: "Tromblon6" },
+            { id: 7, name: "Tromblon7" },
+            { id: 8, name: "Tromblon8" },
+        ];
+        serverData.views = {
+            "product,false,list": `
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                `,
+            "product,false,search": `
+                    <search>
+                        <field name="name"/>
+                    </search>
+                `,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="name"/>
+                    <field name="product_id" can_create="false"/>
+                </form>
+            `,
+            mockRPC: function (route, args) {
+                if (args.method === "get_formview_id") {
+                    return Promise.resolve(false);
+                }
+            },
+        });
+
+        await click(target, ".o_form_button_edit");
+        await click(target.querySelector(".o_field_widget[name=product_id] input"));
+
+        assert.containsNone(target, ".o-autocomplete a:contains(Start typing...)");
+
+        await editInput(target, ".o_field_widget[name=product_id] input", "a");
+
+        assert.containsNone(target, ".ui-autocomplete a:contains(Create and Edit)");
+
+        await editInput(target, ".o_field_many2one[name=product_id] input", "");
+        await clickOpenedDropdownItem(target, "product_id", "Search More...");
+
+        assert.containsOnce(target, ".modal-dialog.modal-lg");
+
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".modal-footer button")),
+            ["Cancel"],
+            "Only the cancel button is present in modal"
+        );
     });
 
     QUnit.test(
