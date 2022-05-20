@@ -214,9 +214,22 @@ class Contract(models.Model):
         return 'wage'
 
     def write(self, vals):
+        old_state = {c.id: c.state for c in self}
         res = super(Contract, self).write(vals)
+        new_state = {c.id: c.state for c in self}
         if vals.get('state') == 'open':
             self._assign_open_contract()
+        today = fields.Date.today()
+        for contract in self:
+            if contract == contract.employee_id.contract_id \
+                and old_state[contract.id] == 'open' \
+                and new_state[contract.id] != 'open':
+                running_contract = self.env['hr.contract'].search([
+                    ('employee_id', '=', contract.employee_id.id),
+                    ('company_id', '=', contract.company_id.id),
+                    ('state', '=', 'open'),
+                ]).filtered(lambda c: c.date_start <= today and (not c.date_end or c.date_end >= today))
+                contract.employee_id.contract_id = running_contract
         if vals.get('state') == 'close':
             for contract in self.filtered(lambda c: not c.date_end):
                 contract.date_end = max(date.today(), contract.date_start)
