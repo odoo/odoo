@@ -140,17 +140,7 @@ class Article(models.Model):
         Ǹote: computation is done in Py instead of using optimized SQL queries
         because value are not yet in DB at this point."""
         for article in self:
-            def has_write_member(a, child_members=False):
-                if not child_members:
-                    child_members = self.env['knowledge.article.member']
-                article_members = a.article_member_ids
-                if any(m.permission == 'write' and m.partner_id not in child_members.mapped('partner_id')
-                       for m in article_members):
-                    return True
-                if a.parent_id and not a.is_desynchronized:
-                    return has_write_member(a.parent_id, article_members | child_members)
-                return False
-            if article.inherited_permission != 'write' and not has_write_member(article):
+            if article.inherited_permission != 'write' and not article._has_write_member():
                 raise ValidationError(_("The article '%s' needs at least one member with 'Write' access.", article.display_name))
 
     @api.constrains('parent_id')
@@ -763,15 +753,24 @@ class Article(models.Model):
                 )
             self_sudo = self.sudo()
             self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
-            member_command = [(2, member.id) for member in self_sudo.article_member_ids if member.partner_id != self.env.user.partner_id]
+
             if self_member:
-                member_command.append((1, self_member.id, {'permission': 'write'}))
+                write_member_command = [(1, self_member.id, {'permission': 'write'})]
             else:
-                member_command.append((0, 0, {
+                write_member_command = [(0, 0, {
                     'partner_id': self.env.user.partner_id.id,
                     'permission': 'write'
-                }))
-            values['article_member_ids'] = member_command
+                })]
+            # has to be done in 2 separate write operations:
+            # first add or update the new membership with 'write' access
+            self_sudo.write({'article_member_ids': write_member_command})
+
+            # then remove other members as the article is moved to private
+            # this helps avoiding a temporary state where we don't have a writer on the article (see '_has_write_member')
+            values['article_member_ids'] = [
+                (2, member.id)
+                for member in self_sudo.article_member_ids if member.partner_id != self.env.user.partner_id
+            ]
             return self_sudo.write(values)
         return self.write(values)
 
@@ -1077,6 +1076,34 @@ class Article(models.Model):
             current_membership = self.article_member_ids.filtered(lambda m: m.partner_id == member.partner_id)
             if current_membership:
                 self.sudo().write({'article_member_ids': [(2, current_membership.id)]})
+
+    def _has_write_member(self, child_members=False, exclude_memberships=False):
+        """ Method allowing to check if this article still has at least one member with write access.
+        Typically used during constraints checks.
+
+        Please note that this method is *not* optimized and should be avoided by using
+        '_get_article_member_permissions' instead when possible.
+
+        :param <knowledge.article.member> child_members: used when checking recursively through
+          article parents, we only check for the most specific access for a given partner.
+        :param <knowledge.article.member> exclude_memberships: memberships that should not be
+          considered when checking for a writer, useful when unlinking members. """
+
+        self.ensure_one()
+
+        if not child_members:
+            child_members = self.env['knowledge.article.member']
+
+        article_members = self.article_member_ids
+        if exclude_memberships:
+            article_members -= exclude_memberships
+
+        if any(m.permission == 'write' and m.partner_id not in child_members.mapped('partner_id')
+                for m in article_members):
+            return True
+        if self.parent_id and not self.is_desynchronized:
+            return self.parent_id._has_write_member(article_members | child_members)
+        return False
 
     def _add_members(self, partners, permission, force_update=True):
         """ Adds new members to the current article with the given permission.
