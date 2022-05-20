@@ -3,8 +3,10 @@
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import ActivityMenu from '@mail/js/systray/systray_activity_menu';
 
+import { Items as legacySystrayItems } from 'web.SystrayMenu';
 import testUtils from 'web.test_utils';
-import { patchDate } from "@web/../tests/helpers/utils";
+import { registerCleanup } from '@web/../tests/helpers/cleanup';
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('calendar', {}, function () {
 QUnit.module('ActivityMenu');
@@ -29,23 +31,25 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
             attendee_ids: [calendarAttendeeId1],
         },
     ]);
-    const { widget } = await start();
-
-    const activityMenu = new ActivityMenu(widget);
-    await activityMenu.appendTo($('#qunit-fixture'));
-
-    assert.hasClass(activityMenu.$el, 'o_mail_systray_item', 'should be the instance of widget');
-
-    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-
-    testUtils.mock.intercept(activityMenu, 'do_action', function (event) {
-        assert.strictEqual(event.data.action, "calendar.action_calendar_event", 'should open meeting calendar view in day mode');
+    legacySystrayItems.push(ActivityMenu);
+    registerCleanup(() => legacySystrayItems.pop());
+    const { wowlEnv: env } = await start({
+        hasWebClient: true,
     });
-    await testUtils.dom.click(activityMenu.$('.o_mail_preview'));
+    assert.containsOnce(document.body, '.o_mail_systray_item', 'should contain an instance of widget');
 
-    assert.ok(activityMenu.$('.o_meeting_filter'), "should be a meeting");
-    assert.containsN(activityMenu, '.o_meeting_filter', 2, 'there should be 2 meetings');
-    assert.hasClass(activityMenu.$('.o_meeting_filter').eq(0), 'o_meeting_bold', 'this meeting is yet to start');
-    assert.doesNotHaveClass(activityMenu.$('.o_meeting_filter').eq(1), 'o_meeting_bold', 'this meeting has been started');
+    await testUtils.dom.click(document.querySelector('.dropdown-toggle[title="Activities"]'));
+
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            assert.strictEqual(action, "calendar.action_calendar_event", 'should open meeting calendar view in day mode');
+        },
+    });
+    await testUtils.dom.click(document.querySelector('.o_mail_preview'));
+
+    assert.ok(document.querySelector('.o_meeting_filter'), "should be a meeting");
+    assert.containsN(document.body, '.o_meeting_filter', 2, 'there should be 2 meetings');
+    assert.hasClass(document.querySelector('.o_meeting_filter'), 'o_meeting_bold', 'this meeting is yet to start');
+    assert.doesNotHaveClass(document.querySelectorAll('.o_meeting_filter')[1], 'o_meeting_bold', 'this meeting has been started');
 });
 });
