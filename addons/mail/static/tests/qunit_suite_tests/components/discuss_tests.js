@@ -1739,16 +1739,16 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         partner_id: resPartnerId1,
     });
     const mailChannelId1 = pyEnv['mail.channel'].create({ uuid: 'randomuuid' });
-    let lastMessage;
+    let lastMessageId;
     for (let i = 1; i <= 25; i++) {
-        lastMessage = pyEnv['mail.message'].create({
+        lastMessageId = pyEnv['mail.message'].create({
             body: "not empty",
             model: 'mail.channel',
             res_id: mailChannelId1,
         });
     }
     const [mailChannelPartnerId] = pyEnv['mail.channel.partner'].search([['channel_id', '=', mailChannelId1], ['partner_id', '=', pyEnv.currentPartnerId]]);
-    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: lastMessage.id });
+    pyEnv['mail.channel.partner'].write([mailChannelPartnerId], { seen_message_id: lastMessageId });
     const { afterEvent, messaging } = await this.start({
         discuss: {
             params: {
