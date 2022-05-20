@@ -102,7 +102,7 @@ def check_identity(fn):
 
         w = self.sudo().env['res.users.identitycheck'].create({
             'request': json.dumps([
-                { # strip non-jsonable keys (e.g. mapped to recordsets like binary_field_real_user)
+                { # strip non-jsonable keys (e.g. mapped to recordsets)
                     k: v for k, v in self.env.context.items()
                     if _jsonable(v)
                 },
@@ -617,7 +617,7 @@ class Users(models.Model):
                     if values['company_id'] not in self.env.user.company_ids.ids:
                         del values['company_id']
                 # safe fields only, so we write as super-user to bypass access rights
-                self = self.sudo().with_context(binary_field_real_user=self.env.user)
+                self = self.sudo()
 
         if 'groups_id' in values:
             default_user = self.env.ref('base.default_user', raise_if_not_found=False)
