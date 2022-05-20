@@ -32,7 +32,7 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/>
-                           <label for="number_of_days" string="Quotation expires after"/>
+                           <label for="number_of_days" string="Quotation Validity"/>
                            <div id="number_of_days">
                                <field name="number_of_days" class="oe_inline"/> days
                            </div>
@@ -115,9 +115,11 @@
                             <field name="mail_template_id" context="{'default_model':'sale.order'}"/>
                         </group>
                     </page>
+                    <page string="Terms &amp; Conditions" name="terms_and_conditions">
+                        <field name="note" nolabel="1"
+                            placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                    </page>
                     </notebook>
-                    <field name="note" nolabel="1"
-                        placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
                 </sheet>
             </form>
         </field>
