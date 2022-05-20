@@ -190,8 +190,20 @@ else:
     guess_mimetype = _odoo_guess_mimetype
 
 
+
 def neuter_mimetype(mimetype, user):
     wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
     if wrong_type and not user._is_system():
         return 'text/plain'
     return mimetype
+
+
+def get_extension(filename):
+    """ Return the extension the current filename based on the heuristic that
+    ext is less than or equal to 10 chars and is alphanumeric.
+
+    :param str filename: filename to try and guess a extension for
+    :returns: detected extension or ``
+    """
+    ext = '.' in filename and filename.split('.')[-1]
+    return ext and len(ext) <= 10 and ext.isalnum() and '.' + ext.lower() or ''
