@@ -121,21 +121,22 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         });
 
         // Allow drag and drop between sections:
-
-        const selectors = [
-            'section[data-section="workspace"] .o_tree',
-            'section[data-section="shared"] .o_tree',
+        this.$('section[data-section="workspace"] .o_tree').nestedSortable(
+            'option',
+            'connectWith',
             'section[data-section="private"] .o_tree'
-        ];
-
-        selectors.forEach(selector => {
-            // Note: An element can be connected to one selector at most.
-            this.$(selector).nestedSortable(
-                'option',
-                'connectWith',
-                `.o_tree:not(${selector})`
-            );
-        });
+        );
+        this.$('section[data-section="private"] .o_tree').nestedSortable(
+            'option',
+            'connectWith',
+            'section[data-section="workspace"] .o_tree'
+        );
+        // connectWith both workspace and private sections:
+        this.$('section[data-section="shared"] .o_tree').nestedSortable(
+            'option',
+            'connectWith',
+            'section[data-section="workspace"] .o_tree, section[data-section="private"] .o_tree'
+        );
     },
 
     /**
@@ -184,7 +185,7 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         const { data } = this.state;
         const $dropdown = this.$('.o_knowledge_icon > .o_article_emoji_dropdown');
         $dropdown.attr('data-article-id', this.state.res_id);
-        $dropdown.find('.o_article_emoji').text(data.icon);
+        $dropdown.find('.o_article_emoji').text(data.icon || '');
     },
 
     /**
