@@ -36,7 +36,7 @@ class TestPayments(PaymentCommon):
     def test_full_amount_available_for_refund_when_refunds_are_pending(self):
         self.acquirer.write({
             'support_refund': 'full_only',  # Should simply not be False
-            'support_authorization': True,  # To create transaction in the 'authorized' state
+            'support_manual_capture': True,  # To create transaction in the 'authorized' state
         })
         tx = self.create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment

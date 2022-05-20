@@ -61,6 +61,17 @@ class PaymentAcquirer(models.Model):
             if values.get(field_name):  # Test the value in case we're duplicating an acquirer
                 values[field_name] = re.sub(r'[vV]\d+(/.*)?', '', values[field_name])
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'adyen').update({
+            'support_manual_capture': True,
+            'support_refund': 'partial',
+            'support_tokenization': True,
+        })
+
     #=== BUSINESS METHODS ===#
 
     def _adyen_make_request(

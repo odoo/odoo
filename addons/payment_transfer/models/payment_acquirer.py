@@ -19,7 +19,7 @@ class PaymentAcquirer(models.Model):
         :return: None
         """
         super()._compute_view_configuration_fields()
-        self.filtered(lambda acq: acq.provider == 'transfer').write({
+        self.filtered(lambda acq: acq.provider == 'transfer').update({
             'show_credentials_page': False,
             'show_payment_icon_ids': False,
             'show_pre_msg': False,

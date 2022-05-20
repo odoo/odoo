@@ -34,6 +34,16 @@ class PaymentAcquirer(models.Model):
              "authenticate the messages sent from Stripe to Odoo.",
         groups='base.group_system')
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'stripe').update({
+            'support_manual_capture': True,
+            'support_tokenization': True,
+        })
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('state', 'stripe_publishable_key', 'stripe_secret_key')

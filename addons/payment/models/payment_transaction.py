@@ -159,7 +159,7 @@ class PaymentTransaction(models.Model):
     def _check_state_authorized_supported(self):
         """ Check that authorization is supported for a transaction in the 'authorized' state. """
         illegal_authorize_state_txs = self.filtered(
-            lambda tx: tx.state == 'authorized' and not tx.acquirer_id.support_authorization
+            lambda tx: tx.state == 'authorized' and not tx.acquirer_id.support_manual_capture
         )
         if illegal_authorize_state_txs:
             raise ValidationError(_(
