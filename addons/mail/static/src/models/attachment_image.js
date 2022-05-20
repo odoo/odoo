@@ -3,15 +3,36 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'AttachmentImage',
     identifyingFields: ['attachmentList', 'attachment'],
     recordMethods: {
         /**
-         * Opens the attachment viewer when clicking on viewable attachment.
+         * Called when clicking on download icon.
+         *
+         * @param {MouseEvent} ev
          */
-        onClickImage() {
+        onClickDownload(ev) {
+            markEventHandled(ev, 'AttachmentImage.onClickDownload');
+            if (!this.exists()) {
+                return;
+            }
+            this.attachment.download();
+        },
+        /**
+         * Opens the attachment viewer when clicking on viewable attachment.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickImage(ev) {
+            if (isEventHandled(ev, 'AttachmentImage.onClickDownload')) {
+                return;
+            }
+            if (isEventHandled(ev, 'AttachmentImage.onClickUnlink')) {
+                return;
+            }
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
@@ -26,8 +47,8 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickUnlink(ev) {
-            ev.stopPropagation(); // prevents from opening viewer
-            if (!this.attachment) {
+            markEventHandled(ev, 'AttachmentImage.onClickUnlink');
+            if (!this.exists()) {
                 return;
             }
             if (this.attachmentList.composerViewOwner) {
@@ -35,6 +56,16 @@ registerModel({
             } else {
                 this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
             }
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasDownloadButton() {
+            if (!this.attachment || !this.attachmentList) {
+                return clear();
+            }
+            return !this.attachmentList.composerViewOwner && !this.attachment.isUploading;
         },
         /**
          * @private
@@ -98,6 +129,13 @@ registerModel({
             inverse: 'attachmentImages',
             readonly: true,
             required: true,
+        }),
+        /**
+         * Determines whether `this` should display a download button.
+         */
+        hasDownloadButton: attr({
+            compute: '_computeHasDownloadButton',
+            default: false,
         }),
         /**
          * Determines the max height of this attachment image in px.
