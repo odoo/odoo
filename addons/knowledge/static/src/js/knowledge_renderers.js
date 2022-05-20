@@ -83,7 +83,8 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                 if ($next.length > 0) {
                     data.before_article_id = $next.data('article-id');
                 }
-
+                $li.siblings('.o_knowledge_empty_info').addClass('d-none');
+                this.$('.o_knowledge_empty_info:only-child').removeClass('d-none');
                 this.trigger_up('move', {...data,
                     onSuccess: () => {
                         const id = $li.data('parent-id');
@@ -112,6 +113,8 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                     onReject: () => {
                         $sortable.sortable('cancel');
                         $sortable.sortable('enable');
+                        this.$('.o_knowledge_empty_info').addClass('d-none');
+                        this.$('.o_knowledge_empty_info:only-child').removeClass('d-none');
                     }
                 });
             },
@@ -271,9 +274,9 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
      * @param {integer} id - Article id
      * @param {String} unicode
      */
-    _setEmoji: function (id, unicode) {
+    _setEmoji: function (id, emoji) {
         const emojis = this.$(`.o_article_emoji_dropdown[data-article-id="${id}"] > .o_article_emoji`);
-        emojis.text(unicode || '📄');
+        emojis.text(emoji || '');
     },
 
     /**
