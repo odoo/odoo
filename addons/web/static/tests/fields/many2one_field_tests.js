@@ -1507,7 +1507,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["name_search", "name_create"]);
     });
 
-    // QUnit.skipWOWL('onchange on a many2one to a different model', async function (assert) {
+    // QUnit.test('onchange on a many2one to a different model', async function (assert) {
     // This test is commented because the mock server does not give the correct response.
     // It should return a couple [id, display_name], but I don't know the logic used
     // by the server, so it's hard to emulate it correctly
