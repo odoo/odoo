@@ -24,9 +24,4 @@
         <field name="company_id" eval="False"/>
     </record>
 
-    <!-- Update existing picking types to include autobatch settings for incoming/outgoing -->
-    <function model="stock.picking.type" name="write">
-        <value model="stock.picking.type" eval="obj().search([('code', 'in', ['incoming', 'outgoing'])]).ids"/>
-        <value eval="{'auto_batch': True, 'batch_group_by_partner': True}"/>
-    </function>
 </data></odoo>
