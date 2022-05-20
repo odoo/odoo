@@ -303,7 +303,7 @@ export class MockServer {
                     !node.getAttribute("invisible")
                 ) {
                     const inlineViewTypes = Array.from(node.children).map((c) => c.tagName);
-                    const missingViewtypes = inlineViewTypes.includes("form") ? [] : ["form"];
+                    const missingViewtypes = [];
                     const mode = node.getAttribute("mode") || "kanban,tree";
                     if (!intersection(inlineViewTypes, mode.split(",")).length) {
                         // TODO: use a kanban view by default in mobile
