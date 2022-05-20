@@ -11,6 +11,10 @@
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids" eval="[Command.link(ref('group_project_milestone'))]"/>
         </record>
+        <!-- The feature is also enabled to portal user because the feature is displayed in the Project Sharing feature -->
+        <record id="base.group_portal" model="res.groups">
+            <field name="implied_ids" eval="[Command.link(ref('group_project_milestone'))]"/>
+        </record>
 
         <!-- Categories -->
         <record id="project_tags_00" model="project.tags">
