@@ -15,7 +15,7 @@ QUnit.module("Fields", (hooks) => {
                     fields: {
                         bar: { string: "Bar", type: "boolean", default: true, searchable: true },
                     },
-                    records: [],
+                    records: [{ id: 1, bar: false }],
                 },
             },
         };
@@ -26,8 +26,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("BooleanToggleField");
 
     QUnit.test("use BooleanToggleField in form view", async function (assert) {
-        assert.expect(3);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -58,9 +56,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("readonly switch", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("readonly BooleanToggleField is not disabled in edit mode", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -77,5 +73,53 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget[name='bar'] label");
 
         assert.containsOnce(target, ".o_boolean_toggle input:disabled:checked");
+    });
+
+    QUnit.test("BooleanToggleField is not disabled in readonly mode", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".custom-checkbox.o_boolean_toggle");
+        assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
+        await click(target, ".o_field_widget[name='bar'] label");
+        assert.ok(target.querySelector(".o_boolean_toggle input").checked);
+    });
+
+    QUnit.test("BooleanToggleField is disabled with a readonly attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="bar" widget="boolean_toggle" readonly="1"/></form>',
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".custom-checkbox.o_boolean_toggle");
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
+        await click(target, ".o_field_widget[name='bar'] label");
+        assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
+    });
+
+    QUnit.test("BooleanToggleField is enabled in edit mode", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".custom-checkbox.o_boolean_toggle");
+        await click(target.querySelector(".o_form_button_edit"));
+
+        assert.notOk(target.querySelector(".o_boolean_toggle input").checked);
+        await click(target, ".o_field_widget[name='bar'] label");
+        assert.ok(target.querySelector(".o_boolean_toggle input").checked);
     });
 });
