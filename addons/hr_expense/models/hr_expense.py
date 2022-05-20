@@ -297,6 +297,12 @@ class HrExpense(models.Model):
         self.analytic_account_id = self.analytic_account_id or rec.analytic_id.id
         self.analytic_tag_ids = self.analytic_tag_ids or rec.analytic_tag_ids.ids
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not (self.product_id and self.product_has_cost):
+            # reset to zero to invite user to input the value
+            self.total_amount = 0
+
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
         for expense in self:
