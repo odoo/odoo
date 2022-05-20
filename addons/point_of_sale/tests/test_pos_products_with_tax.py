@@ -5,6 +5,8 @@ from odoo import tools
 
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.tests.common import Form
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSProductsWithTax(TestPoSCommon):
@@ -35,6 +37,12 @@ class TestPoSProductsWithTax(TestPoSCommon):
             30.0,
             15.0,
             tax_ids=self.taxes['tax_group_7_10'].ids,
+        )
+        self.product4 = self.create_product(
+            'Product 4',
+            self.categ_basic,
+            54.99,
+            tax_ids=[self.taxes['tax_fixed006'].id, self.taxes['tax_fixed012'].id, self.taxes['tax21'].id],
         )
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
@@ -161,20 +169,26 @@ class TestPoSProductsWithTax(TestPoSCommon):
             is_invoiced=True,
             uid='09876-098-0987',
         ))
+        orders.append(self.create_ui_order_data(
+            [(self.product4, 1)],
+            payments=[(self.bank_pm, 54.99)],
+            customer=self.customer,
+            is_invoiced=True,
+        ))
 
         # sync orders
         order = self.env['pos.order'].create_from_ui(orders)
 
         # check values before closing the session
-        self.assertEqual(3, self.pos_session.order_count)
+        self.assertEqual(4, self.pos_session.order_count)
         orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
         self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
         # check account move in the invoiced order
-        invoiced_order = self.pos_session.order_ids.filtered(lambda order: '09876-098-0987' in order.pos_reference)
-        self.assertEqual(1, len(invoiced_order), 'Only one order is invoiced in this test.')
-        invoice = invoiced_order.account_move
-        self.assertAlmostEqual(invoice.amount_total, 426.09)
+        invoiced_orders = self.pos_session.order_ids.filtered(lambda order: order.is_invoiced)
+        self.assertEqual(2, len(invoiced_orders), 'Only one order is invoiced in this test.')
+        invoices = invoiced_orders.mapped('account_move')
+        self.assertAlmostEqual(sum(invoices.mapped('amount_total')), 481.08)
 
         # close the session
         self.pos_session.action_pos_session_validate()
@@ -188,16 +202,16 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertAlmostEqual(sum(sales_lines.mapped('balance')), -515.46)
 
         # check receivable line
-        # should be equivalent to receivable in the invoice
+        # should be equivalent to receivable in the invoices
         # should also be fully-reconciled
         receivable_line = session_move.line_ids.filtered(lambda line: line.account_id in self.receivable_account + self.env['account.account'].search([('name', '=', 'Account Receivable')]) and line.name == 'From invoiced orders')
-        self.assertAlmostEqual(receivable_line.balance, -426.09)
+        self.assertAlmostEqual(receivable_line.balance, -481.08)
         self.assertTrue(receivable_line.full_reconcile_id, msg='Receivable line for invoices should be fully reconciled.')
 
         pos_receivable_line_bank = session_move.line_ids.filtered(
             lambda line: self.bank_pm.name in line.name and line.account_id == self.bank_pm.receivable_account_id
         )
-        self.assertAlmostEqual(pos_receivable_line_bank.balance, 836.79)
+        self.assertAlmostEqual(pos_receivable_line_bank.balance, 891.78)
 
         pos_receivable_line_cash = session_move.line_ids.filtered(
             lambda line: self.cash_pm.name in line.name and line.account_id == self.bank_pm.receivable_account_id
@@ -206,7 +220,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertTrue(pos_receivable_line_cash.full_reconcile_id)
 
         receivable_line = session_move.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
-        self.assertAlmostEqual(receivable_line.balance, -invoice.amount_total)
+        self.assertAlmostEqual(receivable_line.balance, -sum(invoices.mapped('amount_total')))
 
         tax_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
 
@@ -293,6 +307,95 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertAlmostEqual(sum(manually_calculated_taxes), sum(tax_lines.mapped('balance')))
         for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
             self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined and should be debit.')
+
+    def test_entry_move_creation_with_unrelated_pos_session_open(self):
+        """
+            Ensure correct tags assignment during entry move creation while a POS session is still open
+        """
+        # Create a new tax with its corresponding tax report lines
+        # in order to simulate the tags affectation
+        tax_report = self.env["account.tax.report"].create({
+            "name": "Tax report",
+        })
+        base_20 = self.env["account.tax.report.line"].create({
+            "name": "Base 20",
+            "tag_name": "20B",
+            "report_id": tax_report.id,
+            "sequence": 1,
+        })
+        base_20_tag_plus, base_20_tag_minus = base_20.tag_ids.sorted("tax_negate")
+        tax_20 = self.env["account.tax.report.line"].create({
+            "name": "20",
+            "tag_name": "20T",
+            "report_id": tax_report.id,
+            "sequence": 2,
+        })
+        tax_20_tag_plus, tax_20_tag_minus = tax_20.tag_ids.sorted("tax_negate")
+        tax_20_incl = self.env['account.tax'].create({
+            "name": "20%",
+            "amount": 20,
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            'price_include': True,
+            "invoice_repartition_line_ids": [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, base_20_tag_plus.ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_received_account.id,
+                    'tag_ids': [(6, 0, tax_20_tag_plus.ids)],
+                }),
+            ]
+        })
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (self.product1, 1),
+        ])])
+
+        # Create an entry
+        with Form(self.env["account.move"].with_context(
+                default_move_type="entry")) as move_form:
+            with move_form.line_ids.new() as line_form:
+                line_form.account_id = self.sale_account
+                line_form.credit = 50.0
+                line_form.tax_ids.add(tax_20_incl)
+            with move_form.line_ids.new() as line_form_2:
+                line_form_2.account_id = self.pos_receivable_account
+                line_form_2.debit = 60.0
+        move = move_form.save()
+        # Ensure that tags are not affected by opened POS session
+        sale_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.sale_account).tax_tag_ids
+        self.assertEqual(sale_line_tag, base_20_tag_minus)
+        tax_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.tax_received_account).tax_tag_ids
+        self.assertEqual(tax_line_tag, tax_20_tag_minus)
+
+        # Close POS session
+        self.pos_session.action_pos_session_validate()
+
+        # Create an entry - check if the result is the same as above
+        with Form(self.env["account.move"].with_context(
+                default_move_type="entry")) as move_form:
+            with move_form.line_ids.new() as line_form:
+                line_form.account_id = self.sale_account
+                line_form.credit = 50.0
+                line_form.tax_ids.add(tax_20_incl)
+            with move_form.line_ids.new() as line_form_2:
+                line_form_2.account_id = self.pos_receivable_account
+                line_form_2.debit = 60.0
+        move = move_form.save()
+        # Ensure that tags are not affected by opened POS session
+        sale_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.sale_account).tax_tag_ids
+        self.assertEqual(sale_line_tag, base_20_tag_minus)
+        tax_line_tag = move.line_ids.filtered(
+            lambda line: line.account_id == self.tax_received_account).tax_tag_ids
+        self.assertEqual(tax_line_tag, tax_20_tag_minus)
 
     def test_pos_create_correct_account_move(self):
         """ Test for orders with global rounding disabled
