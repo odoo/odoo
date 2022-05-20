@@ -246,94 +246,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target, '.o_field_widget[name="instrument"] button.o_external_button');
     });
 
-    // We are not sure about the behaviour of this test.
-    // It seems that the first record uses 1 context and the next ones uses a different one.
-    // This is confusing and maybe wrong.
-    QUnit.skipWOWL(
-        "Form dialog replaces the context with _createContext method when specified",
-        async function (assert) {
-            assert.expect(5);
-            serverData.views = {
-                "partner,false,form": `
-                        <form string="Partner">
-                            <sheet>
-                                <group><field name="foo"/></group>
-                            </sheet>
-                        </form>
-                `,
-            };
-
-            const mockRPC = async function (route, args) {
-                if (args.method === "create") {
-                    assert.step(JSON.stringify(args.kwargs.context));
-                }
-            };
-            const webClient = await createWebClient({ serverData, mockRPC });
-
-            webClient.env.services.dialog.add(FormViewDialog, {
-                resModel: "partner",
-                context: { answer: 42 },
-                _createContext: () => ({ dolphin: 64 }),
-            });
-
-            await nextTick();
-
-            assert.containsNone(target, ".modal-body button", "should not have any button in body");
-            assert.containsN(target, ".modal-footer button", 3, "should have 3 buttons in footer");
-
-            await click(target, ".modal-footer .o_fvd_button_save_new");
-            await click(target, ".modal-footer .o_fvd_button_save_new");
-
-            assert.verifySteps([
-                '{"lang":"en","uid":7,"tz":"taht","answer":42}',
-                '{"lang":"en","uid":7,"tz":"taht","dolphin":64}',
-            ]);
-        }
-    );
-
-    // does not make sense anymore
-    QUnit.skipWOWL(
-        "Form dialog keeps full context between created records",
-        async function (assert) {
-            assert.expect(5);
-
-            serverData.views = {
-                "partner,false,form": `
-                    <form string="Partner">
-                        <sheet>
-                            <group><field name="foo"/></group>
-                        </sheet>
-                    </form>
-            `,
-            };
-            const mockRPC = async function (route, args) {
-                if (args.method === "create") {
-                    assert.step(JSON.stringify(args.kwargs.context));
-                }
-            };
-            const webClient = await createWebClient({ serverData, mockRPC });
-            webClient.env.services.dialog.add(FormViewDialog, {
-                resModel: "partner",
-                context: { answer: 42 },
-            });
-
-            await nextTick();
-
-            assert.containsNone(target, ".modal-body button", "should not have any button in body");
-            assert.containsN(target, ".modal-footer button", 3, "should have 3 buttons in footer");
-
-            await click(target, ".modal-footer .o_form_button_save_new");
-            await click(target, ".modal-footer .o_form_button_save_new");
-
-            assert.verifySteps([
-                '{"lang":"en","uid":7,"tz":"taht","answer":42}',
-                '{"lang":"en","uid":7,"tz":"taht","answer":42}',
-            ]);
-        }
-    );
-
-    // does not make sense anymore
-    QUnit.skipWOWL(
+    QUnit.test(
         "formviewdialog is not closed when button handlers return a rejected promise",
         async function (assert) {
             serverData.views = {
@@ -346,13 +259,15 @@ QUnit.module("ViewDialogs", (hooks) => {
                 `,
             };
             let reject = true;
-            const webClient = await createWebClient({ serverData });
+            function mockRPC(route, args) {
+                if (args.method === "create" && reject) {
+                    return Promise.reject();
+                }
+            }
+            const webClient = await createWebClient({ serverData, mockRPC });
             webClient.env.services.dialog.add(FormViewDialog, {
                 resModel: "partner",
                 context: { answer: 42 },
-                save: () => {
-                    return reject ? Promise.reject() : Promise.resolve();
-                },
             });
 
             await nextTick();
