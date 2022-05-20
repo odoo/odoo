@@ -5,8 +5,8 @@
         <field name="model">stock.picking.type</field>
         <field name="inherit_id" ref="stock.view_picking_type_form"/>
         <field name="arch" type="xml">
-            <sheet position="inside">
-                <group attrs="{'invisible': [('code', 'not in', ('incoming', 'outgoing', 'internal'))]}">
+            <xpath expr="//group[@name='second']" position="after">
+                <group name="batch" attrs="{'invisible': [('code', 'not in', ('incoming', 'outgoing', 'internal'))]}">
                     <group string="Batch Transfers">
                         <field name="auto_batch"/>
                         <span class="o_form_label fw-bold" attrs="{'invisible':[('auto_batch', '=', False)]}">Group by</span>
@@ -34,7 +34,7 @@
                         <field name="batch_auto_confirm" attrs="{'invisible': [('auto_batch', '=', False)]}"/>
                     </group>
                 </group>
-            </sheet>
+            </xpath>
         </field>
     </record>
 </odoo>
