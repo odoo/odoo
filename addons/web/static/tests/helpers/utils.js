@@ -395,8 +395,22 @@ export function clickDiscard(htmlElement) {
     }
 }
 
-export async function mouseEnter(el, selector) {
-    return triggerEvent(el, selector, "mouseenter");
+/**
+ * Triggers a mouseenter event on the given target. If no
+ * coordinates are given, the event is located by default
+ * in the middle of the target to simplify the test process
+ *
+ * @param {HTMLElement} el
+ * @param {string} selector
+ * @param {Object} coordinates position of the mouseenter event
+ */
+export async function mouseEnter(el, selector, coordinates) {
+    const target = el.querySelector(selector) || el;
+    const atPos = coordinates || {
+        clientX: target.getBoundingClientRect().left + target.getBoundingClientRect().width / 2,
+        clientY: target.getBoundingClientRect().top + target.getBoundingClientRect().height / 2,
+    };
+    return triggerEvent(target, null, "mouseenter", atPos);
 }
 
 export async function editInput(el, selector, value) {
