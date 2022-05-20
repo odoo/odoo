@@ -60,10 +60,10 @@ class Employee(models.Model):
 
     def _compute_contracts_count(self):
         # read_group as sudo, since contract count is displayed on form view
-        contract_data = self.env['hr.contract'].sudo()._read_group([('employee_id', 'in', self.ids)], ['employee_id'], ['employee_id'])
-        result = dict((data['employee_id'][0], data['employee_id_count']) for data in contract_data)
+        contract_histories = self.env['hr.contract.history'].sudo().search([('employee_id', 'in', self.ids)])
         for employee in self:
-            employee.contracts_count = result.get(employee.id, 0)
+            contract_history = contract_histories.filtered(lambda ch: ch.employee_id == employee)
+            employee.contracts_count = contract_history.contract_count
 
     def _get_contracts(self, date_from, date_to, states=['open'], kanban_state=False):
         """
