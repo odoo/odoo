@@ -46,6 +46,21 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         };
     },
     /**
+     * Called when the chatter triggers a reload on the Form view with the
+     * param 'keepChanges=true'. In this case, we only need to update the
+     * chatter.
+     *
+     * @returns {Promise}
+     */
+    updateChatter: function () {
+        if (this._chatterContainerComponent && this.state.res_id) {
+            const props = this._makeChatterContainerProps();
+            return this._chatterContainerComponent.update(props);
+        }
+        this._closeChatter();
+        return Promise.resolve();
+    },
+    /**
      * @private
      */
     _closeChatter: function () {
