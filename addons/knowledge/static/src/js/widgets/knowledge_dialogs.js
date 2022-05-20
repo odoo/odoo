@@ -92,9 +92,7 @@ const MoveArticleToDialog = Dialog.extend({
                         model: 'knowledge.article',
                         method: 'get_valid_parent_options',
                         args: [state.data.id],
-                        kwargs: {
-                            term
-                        }
+                        kwargs: { search_term: term }
                     });
                     params.success({ term, results });
                 },
@@ -124,8 +122,8 @@ const MoveArticleToDialog = Dialog.extend({
                             children: data.results.map(record => {
                                 return {
                                     id: record.id,
-                                    icon: record.icon,
-                                    text: record.name,
+                                    text: record.display_name,
+                                    subject: record.root_article_id[1],
                                 }
                             })
                         });
@@ -143,9 +141,6 @@ const MoveArticleToDialog = Dialog.extend({
                 if (data.id === 'private') {
                     const src = escapeMarkup(this.getLoggedUserPicture());
                     markup.push(`<img src="${src}" class="rounded-circle mr-1"/>`);
-                } else if (typeof data.icon !== 'undefined') {
-                    const icon = data.icon || '📄';
-                    markup.push(`<span class="mr-1">${escapeMarkup(icon)}</span>`);
                 }
                 markup.push(escapeMarkup(data.text));
                 return markup.join('');
@@ -157,15 +152,15 @@ const MoveArticleToDialog = Dialog.extend({
              * @param {Function} escapeMarkup
              */
             formatResult: (result, container, query, escapeMarkup) => {
-                const { text } = result;
+                const { text, subject } = result;
                 const markup = [];
                 window.Select2.util.markMatch(text, query.term, markup, escapeMarkup);
                 if (result.id === 'private') {
                     const src = escapeMarkup(this.getLoggedUserPicture());
                     markup.unshift(`<img src="${src}" class="rounded-circle mr-1"/>`);
-                } else if (typeof result.icon !== 'undefined') {
-                    const icon = result.icon || '📄';
-                    markup.unshift(`<span class="mr-1">${escapeMarkup(icon)}</span>`);
+                }
+                if (subject && subject !== text) {
+                    markup.push(`<span class="test-ellipsis small">  -  ${escapeMarkup(subject)}</span>`);
                 }
                 return markup.join('');
             },

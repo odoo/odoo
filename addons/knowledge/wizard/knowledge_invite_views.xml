@@ -7,20 +7,22 @@
             <form class="py-0">
                 <field name="article_id" invisible="1"/>
                 <field name="have_share_partners" invisible="1"/>
-                <div class="alert alert-warning mt-3" role="alert"
+                <div colspan="2" class="alert alert-info text-center mb-0" role="alert"
                      attrs="{'invisible': ['|', ('have_share_partners', '=', False), ('permission', '!=', 'write')]}">
-                    <i class="fa fa-w fa-warning"/> All the external users you selected will only have a read access.
+                    <i class="fa fa-w fa-info-circle"/> External users cannot write on Articles and will be granted read access instead.
                 </div>
-                <div class="alert alert-info mt-3" role="alert"
+                <div colspan="2" class="alert alert-info text-center mb-0" role="alert"
                      attrs="{'invisible': ['|', ('have_share_partners', '=', False), ('permission', '!=', 'none')]}">
-                    <i class="fa fa-w fa-info-circle"/> All the external users you selected won't be added to the members.
+                    <i class="fa fa-w fa-info-circle"/> All external users you selected won't be added to the members.
                 </div>
-                <group>
-                    <field name="permission"/>
-                    <field name="partner_ids" widget="many2many_tags_email"
-                        placeholder="Invite users (email address)..."
-                        context="{'force_email': True, 'show_email': True}"/>
-                </group>
+                <sheet>
+                    <group>
+                        <field name="permission"/>
+                        <field name="partner_ids" widget="many2many_tags_email"
+                            placeholder="Invite users (email address)..."
+                            context="{'force_email': True, 'show_email': True}"/>
+                    </group>
+                </sheet>
                 <footer>
                     <button string="Invite" type="object" name="action_invite_members" class="btn-primary"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>
