@@ -99,12 +99,19 @@ class PaymentAcquirer(models.Model):
         default=lambda self: _("Your payment has been cancelled."), translate=True)
 
     # Feature support fields
-    support_authorization = fields.Boolean(string="Authorize Mechanism Supported")
-    support_fees_computation = fields.Boolean(string="Fees Computation Supported")
-    support_tokenization = fields.Boolean(string="Tokenization Supported")
+    support_fees = fields.Boolean(
+        string="Fees Supported", compute='_compute_feature_support_fields'
+    )
+    support_manual_capture = fields.Boolean(
+        string="Manual Capture Supported", compute='_compute_feature_support_fields'
+    )
     support_refund = fields.Selection(
         string="Type of Refund Supported",
         selection=[('full_only', "Full Only"), ('partial', "Partial")],
+        compute='_compute_feature_support_fields',
+    )
+    support_tokenization = fields.Boolean(
+        string="Tokenization Supported", compute='_compute_feature_support_fields'
     )
 
     # Kanban view fields
@@ -203,6 +210,18 @@ class PaymentAcquirer(models.Model):
                     payment_method_line.journal_id = acquirer.journal_id
             elif payment_method_line:
                 payment_method_line.unlink()
+
+    def _compute_feature_support_fields(self):
+        """ Compute the feature support fields.
+
+        For an acquirer to support one or more additional feature, it must override this method.
+
+        :return: None
+        """
+        self.update(dict.fromkeys(
+            ('support_fees', 'support_manual_capture', 'support_refund', 'support_tokenization'),
+            None,
+        ))
 
     def _get_default_payment_method_id(self):
         self.ensure_one()

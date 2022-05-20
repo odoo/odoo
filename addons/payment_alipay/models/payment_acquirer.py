@@ -29,6 +29,17 @@ class PaymentAcquirer(models.Model):
     alipay_seller_email = fields.Char(
         string="Alipay Seller Email", help="The public Alipay partner email")
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'alipay').update({
+            'support_fees': True,
+        })
+
+    # === BUSINESS METHODS ===#
+
     @api.model
     def _get_compatible_acquirers(self, *args, currency_id=None, **kwargs):
         """ Override of payment to unlist Alipay acquirers for unsupported currencies. """

@@ -9,6 +9,8 @@ class PaymentAcquirer(models.Model):
 
     provider = fields.Selection(selection_add=[('test', 'Test')], ondelete={'test': 'set default'})
 
+    #=== COMPUTE METHODS ===#
+
     @api.depends('provider')
     def _compute_view_configuration_fields(self):
         """ Override of payment to hide the credentials page.
@@ -17,6 +19,15 @@ class PaymentAcquirer(models.Model):
         """
         super()._compute_view_configuration_fields()
         self.filtered(lambda acq: acq.provider == 'test').show_credentials_page = False
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'test').update({
+            'support_tokenization': True,
+        })
+
+    # === CONSTRAINT METHODS ===#
 
     @api.constrains('state', 'provider')
     def _check_acquirer_state(self):

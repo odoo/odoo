@@ -6,8 +6,8 @@
         <field name="model">payment.acquirer</field>
         <field name="arch" type="xml">
             <form string="Payment Acquirer">
-                <field name="support_authorization" invisible="1"/>
-                <field name="support_fees_computation" invisible="1"/>
+                <field name="support_fees" invisible="1"/>
+                <field name="support_manual_capture" invisible="1"/>
                 <field name="support_tokenization" invisible="1"/>
                 <field name="module_id" invisible="1"/>
                 <field name="module_state" invisible="1"/>
@@ -57,7 +57,7 @@
                                     <field name="display_as" placeholder="If not defined, the acquirer name will be used."/>
                                     <field name="payment_icon_ids" attrs="{'invisible': [('show_payment_icon_ids', '=', False)]}" widget="many2many_tags"/>
                                     <field name="allow_tokenization" attrs="{'invisible': ['|', ('support_tokenization', '=', False), ('show_allow_tokenization', '=', False)]}"/>
-                                    <field name="capture_manually" attrs="{'invisible': [('support_authorization', '=', False)]}"/>
+                                    <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
                                 </group>
                                 <group string="Availability" name="availability">
                                     <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere." options="{'no_open': True, 'no_create': True}"/>
@@ -68,7 +68,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Fees" name="fees" attrs="{'invisible': [('support_fees_computation', '=', False)]}">
+                        <page string="Fees" name="fees" attrs="{'invisible': [('support_fees', '=', False)]}">
                             <group name="payment_fees">
                                 <field name="fees_active"/>
                                 <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
@@ -83,7 +83,7 @@
                             <group>
                                 <field name="pre_msg" attrs="{'invisible': [('show_pre_msg', '=', False)]}"/>
                                 <field name="pending_msg" attrs="{'invisible': [('show_pending_msg', '=', False)]}"/>
-                                <field name="auth_msg" attrs="{'invisible': ['|', ('support_authorization', '=', False), ('show_auth_msg', '=', False)]}"/>
+                                <field name="auth_msg" attrs="{'invisible': ['|', ('support_manual_capture', '=', False), ('show_auth_msg', '=', False)]}"/>
                                 <field name="done_msg" attrs="{'invisible': [('show_done_msg', '=', False)]}"/>
                                 <field name="cancel_msg" attrs="{'invisible': [('show_cancel_msg', '=', False)]}"/>
                             </group>

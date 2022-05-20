@@ -31,6 +31,17 @@ class PaymentAcquirer(models.Model):
     ogone_shakey_out = fields.Char(
         string="SHA Key OUT", required_if_provider='ogone', groups='base.group_system')
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'ogone').update({
+            'support_tokenization': True,
+        })
+
+    #=== BUSINESS METHODS ===#
+
     @api.model
     def _get_compatible_acquirers(self, *args, is_validation=False, **kwargs):
         """ Override of payment to unlist Ogone acquirers for validation operations. """
