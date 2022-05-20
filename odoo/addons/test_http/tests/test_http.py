@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import html
 import json
 from unittest.mock import patch
 from urllib.parse import urlparse
@@ -368,7 +369,7 @@ class TestHttpModels(TestHttpBase):
         milky_way = self.env.ref('test_http.milky_way')
         res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, 400)
-        self.assertIn("The goa'uld destroyed the gate", res.text)
+        self.assertIn("The goa'uld destroyed the gate", html.unescape(res.text))
 
 
 @tagged('post_install', '-at_install')
@@ -498,6 +499,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(new_session.uid, None)
 
         # follow redirection
+        self.opener.cookies['session_id'] = new_session.sid
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)

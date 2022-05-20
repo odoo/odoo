@@ -160,6 +160,7 @@ from .tools.geoipresolver import GeoIPResolver
 from .tools.func import filter_kwargs, lazy_property
 from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
+from .tools._vendor.useragents import UserAgent
 
 
 _logger = logging.getLogger(__name__)
@@ -888,7 +889,7 @@ class Response(werkzeug.wrappers.Response):
             _logger.warning("%s returns an HTTPException instead of raising it.", fname)
             raise result
 
-        if isinstance(result, werkzeug.wrappers.BaseResponse):
+        if isinstance(result, werkzeug.wrappers.Response):
             response = cls.force_type(result)
             response.set_default()
             return response
@@ -1736,6 +1737,7 @@ class Application:
             return response(environ, start_response)
 
         httprequest = werkzeug.wrappers.Request(environ)
+        httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = (
             werkzeug.datastructures.ImmutableOrderedMultiDict)
         request = Request(httprequest)
