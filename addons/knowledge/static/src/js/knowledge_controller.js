@@ -49,6 +49,19 @@ const KnowledgeArticleFormController = FormController.extend({
         this.onFieldSavedListeners = new Map();
     },
     /**
+     * If a reload is called with param 'keepChanges', only the chatter needs
+     * to be updated, no need for a full reload
+     *
+     * @override
+     */
+    reload: function (params) {
+        if (params && params.keepChanges) {
+            return this.renderer.updateChatter();
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+    /**
      * @override
      */
     saveRecord: async function () {
