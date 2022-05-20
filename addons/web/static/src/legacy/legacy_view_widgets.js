@@ -76,7 +76,6 @@ const registerWidget = (name, LegacyWidgetWidget) => {
             } else {
                 legacyRecord = mapRecordDatapoint(record);
             }
-            legacyRecord = owl.reactive(legacyRecord);
             const options = {
                 viewType: legacyRecord.viewType,
                 mode: record.mode,
