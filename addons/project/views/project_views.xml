@@ -173,6 +173,33 @@
             </field>
         </record>
 
+        <record id="personal_task_type_edit" model="ir.ui.view">
+            <field name="name">project.task.type.form</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <form string="Task Stage" delete="0">
+                    <field name="active" invisible="1" />
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="task_type_tree" model="ir.ui.view">
             <field name="name">project.task.type.tree</field>
             <field name="model">project.task.type</field>
