@@ -150,7 +150,7 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
  * @returns {Array|null}
  */
 function _getNumericAndUnit(value) {
-    const m = value.trim().match(/^(-?[0-9.]+)([A-Za-z% -]*)$/);
+    const m = value.trim().match(/^(-?[0-9.]+(?:e[+|-]?[0-9]+)?)\s*([A-Za-z%-]*)$/);
     if (!m) {
         return null;
     }
@@ -176,7 +176,7 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
     if (cssProp && cssProp.endsWith('-size')) {
         // Avoid re-splitting each part during their individual comparison.
         const pseudoPartProp = cssProp + '-part';
-        const re = /-?[0-9.]+\s*[A-Za-z%-]+|auto/g;
+        const re = /-?[0-9.]+(?:e[+|-]?[0-9]+)?\s*[A-Za-z%-]+|auto/g;
         const parts1 = value1.match(re);
         const parts2 = value2.match(re);
         for (const index of [0, 1]) {
