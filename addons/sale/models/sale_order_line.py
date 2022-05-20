@@ -85,6 +85,7 @@ class SaleOrderLine(models.Model):
         domain=[('sale_ok', '=', True)])
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
 
+<<<<<<< HEAD
     product_custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='sale_order_line_id',
         string="Custom Values",
@@ -178,6 +179,23 @@ class SaleOrderLine(models.Model):
         string="Packaging Quantity",
         compute='_compute_product_packaging_qty',
         store=True, readonly=False, precompute=True)
+=======
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    def _compute_amount(self):
+        """
+        Compute the amounts of the SO line.
+        """
+        for line in self:
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
+            line.update({
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+            })
+            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
+                line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
+>>>>>>> 0b6ca67ebd7... temp
 
     customer_lead = fields.Float(
         string="Lead Time",
