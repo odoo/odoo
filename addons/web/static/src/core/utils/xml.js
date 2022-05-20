@@ -141,6 +141,30 @@ export const createElement = (tagName, ...args) => {
  */
 export const createTextNode = (data) => xmlDocument.createTextNode(data);
 
+/**
+ * @param {any} string
+ * @return {OrderTerm[]}
+ */
+export function stringToOrderBy(string) {
+    if (!string) {
+        return [];
+    }
+    return string.split(",").map((order) => {
+        const splitOrder = order.trim().split(" ");
+        if (splitOrder.length === 2) {
+            return {
+                name: splitOrder[0],
+                asc: splitOrder[1].toLowerCase() === "asc",
+            };
+        } else {
+            return {
+                name: splitOrder[0],
+                asc: true,
+            };
+        }
+    });
+}
+
 /* Transforms a string into a valid expression to be injected
  * in a template as a props via setAttribute.
  * Example: myString = `Some weird language quote (") `;

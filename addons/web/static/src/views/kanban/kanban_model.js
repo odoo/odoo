@@ -439,7 +439,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                     record.load(),
                 ]);
             }
-            await targetGroup.list.resequence();
+            await targetGroup.list.resequence(dataRecordId, refId, { preventSwap: true });
         } catch (err) {
             this.model.transaction.abort();
             this.model.notify();
@@ -501,7 +501,7 @@ export class KanbanDynamicRecordList extends DynamicRecordList {
         this.addRecord(this.removeRecord(record), refIndex >= 0 ? refIndex + 1 : 0);
 
         try {
-            await this.resequence();
+            await this.resequence(dataRecordId, refId, { preventSwap: true });
         } catch (err) {
             this.model.transaction.abort();
             this.model.notify();

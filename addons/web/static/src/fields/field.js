@@ -2,7 +2,7 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { isTruthy } from "@web/core/utils/xml";
+import { isTruthy, stringToOrderBy } from "@web/core/utils/xml";
 import { X2M_TYPES } from "@web/views/helpers/view_utils";
 import { getTooltipInfo } from "./field_tooltip";
 
@@ -246,7 +246,13 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             const xmlSerializer = new XMLSerializer();
             const subArch = xmlSerializer.serializeToString(child);
             const archInfo = new ArchParser().parse(subArch, models, field.relation);
-
+            if (
+                ["list", "kanban"].includes(viewType) &&
+                !archInfo.defaultOrder.length &&
+                archInfo.handleField
+            ) {
+                archInfo.defaultOrder = stringToOrderBy(archInfo.handleField);
+            }
             views[viewType] = {
                 ...archInfo,
                 fields: models[field.relation],

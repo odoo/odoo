@@ -4377,7 +4377,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("delete a column in grouped on m2o", async (assert) => {
+    QUnit.skipWOWL("delete a column in grouped on m2o", async (assert) => {
         assert.expect(36);
 
         let resequencedIDs = [];

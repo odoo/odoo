@@ -148,17 +148,17 @@ export const formatFloat = (value, options = {}) => {
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
     let precision;
-    if (options.digits) {
+    if (options.digits && options.digits[1] !== undefined) {
         precision = options.digits[1];
     } else {
         precision = 2;
     }
-    const formatted = (value || 0).toFixed(precision || 2).split(".");
+    const formatted = (value || 0).toFixed(precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.noTrailingZeros) {
         formatted[1] = formatted[1].replace(/0+$/, "");
     }
-    return formatted[1].length ? formatted.join(decimalPoint) : formatted[0];
+    return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
 };
 
 /**

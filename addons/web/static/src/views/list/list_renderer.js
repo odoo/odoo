@@ -119,7 +119,9 @@ export class ListRenderer extends Component {
                 }
                 element.classList.remove("o_row_draggable");
                 const refId = previous ? previous.dataset.id : null;
-                await this.props.list.resequence(dataRowId, refId);
+                await this.props.list.resequence(dataRowId, refId, {
+                    handleField: this.props.archInfo.handleField,
+                });
                 element.classList.add("o_row_draggable");
             },
         });

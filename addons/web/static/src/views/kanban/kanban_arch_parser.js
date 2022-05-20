@@ -5,12 +5,11 @@ import {
     createElement,
     extractAttributes,
     isTruthy,
-    objectToString,
+    stringToOrderBy,
     XMLParser,
 } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 import { getActiveActions } from "@web/views/helpers/view_utils";
-import { stringToOrderBy } from "@web/views/relational_model";
 
 const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 const ACTION_TYPES = ["action", "object"];
@@ -34,7 +33,6 @@ const TRANSPILED_EXPRESSIONS = [
             const infoString = Object.entries(recordInfo)
                 .map(([k, v]) => `${k}:${v}`)
                 .join(",");
-            objectToString;
             return `imageSrcFromRecordInfo({${infoString}},record)`;
         },
     },

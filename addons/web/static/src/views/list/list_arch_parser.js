@@ -1,10 +1,9 @@
 /** @odoo-module */
 
-import { isFalsy, isTruthy, XMLParser } from "@web/core/utils/xml";
+import { isFalsy, isTruthy, stringToOrderBy, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
 import { archParseBoolean } from "@web/views/helpers/utils";
 import { getActiveActions, getDecoration, processButton } from "../helpers/view_utils";
-import { stringToOrderBy } from "../relational_model";
 
 export class GroupListArchParser extends XMLParser {
     parse(arch, models, modelName, jsClass) {
@@ -141,10 +140,6 @@ export class ListArchParser extends XMLParser {
                 treeAttr.decorations = getDecoration(xmlDoc);
             }
         });
-
-        if (!treeAttr.defaultOrder.length && handleField) {
-            treeAttr.defaultOrder = stringToOrderBy(handleField);
-        }
 
         return {
             creates,

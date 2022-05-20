@@ -14,6 +14,7 @@ import {
     clickDiscard,
     clickEdit,
     clickSave,
+    dragAndDrop,
     editInput,
     editSelect,
     getFixture,
@@ -3143,11 +3144,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="int_field" widget="handle" />
                     <field name="foo" />
                 </tree>`,
-                viewOptions: {
-                    action: {
-                        help: '<p class="hello">click to add a foo</p>',
-                    },
-                },
+                noContentHelp: markup('<p class="hello">click to add a foo</p>'),
             });
 
             // as help is being provided in the action, table won't be rendered until a record exists
@@ -3169,8 +3166,8 @@ QUnit.module("Views", (hooks) => {
             );
 
             // creating one record
-            await editInput($(target).find("tr.o_selected_row input[name='foo']"), "test_foo");
-            await click($(target).find(".o_list_button_save"));
+            await editInput(target, ".o_selected_row [name='foo'] input", "test_foo");
+            await clickSave(target);
             assert.strictEqual(
                 handleWidgetHeader.css("min-width"),
                 handleWidgetMinWidth,
@@ -8027,7 +8024,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("list with handle widget", async function (assert) {
+    QUnit.test("list with handle widget", async function (assert) {
         assert.expect(11);
 
         await makeView({
@@ -8058,55 +8055,52 @@ QUnit.module("Views", (hooks) => {
                     );
                     return Promise.resolve();
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
+        let rows = target.querySelectorAll(".o_data_row");
         assert.strictEqual(
-            $(target).find("tbody tr:eq(0) td:last").text(),
+            rows[0].querySelector("[name='amount']").textContent,
             "1200",
             "default first record should have amount 1200"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(1) td:last").text(),
+            rows[1].querySelector("[name='amount']").textContent,
             "500",
             "default second record should have amount 500"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(2) td:last").text(),
+            rows[2].querySelector("[name='amount']").textContent,
             "300",
             "default third record should have amount 300"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(3) td:last").text(),
+            rows[3].querySelector("[name='amount']").textContent,
             "0",
             "default fourth record should have amount 0"
         );
 
         // Drag and drop the fourth line in second position
-        await testUtils.dom.dragAndDrop(
-            $(target).find(".ui-sortable-handle").eq(3),
-            $(target).find("tbody tr").first(),
-            { position: "bottom" }
-        );
-
+        await dragAndDrop("tbody tr:nth-child(4) .o_handle_cell", "tbody tr:nth-child(2)");
+        // await nextTick()
+        rows = target.querySelectorAll(".o_data_row");
         assert.strictEqual(
-            $(target).find("tbody tr:eq(0) td:last").text(),
+            rows[0].querySelector("[name='amount']").textContent,
             "1200",
             "new first record should have amount 1200"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(1) td:last").text(),
+            rows[1].querySelector("[name='amount']").textContent,
             "0",
             "new second record should have amount 0"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(2) td:last").text(),
+            rows[2].querySelector("[name='amount']").textContent,
             "500",
             "new third record should have amount 500"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:eq(3) td:last").text(),
+            rows[3].querySelector("[name='amount']").textContent,
             "300",
             "new fourth record should have amount 300"
         );
@@ -8178,7 +8172,6 @@ QUnit.module("Views", (hooks) => {
                         }
                         moves += 1;
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
             assert.strictEqual(
@@ -8186,10 +8179,15 @@ QUnit.module("Views", (hooks) => {
                 "1234",
                 "default should be sorted by id"
             );
-            await testUtils.dom.dragAndDrop(
-                $(target).find(".ui-sortable-handle").eq(3),
-                $(target).find("tbody tr").eq(2),
-                { position: "top" }
+            // await testUtils.dom.dragAndDrop(
+            //     $(target).find(".ui-sortable-handle").eq(3),
+            //     $(target).find("tbody tr").eq(2),
+            //     { position: "top" }
+            // );
+            await dragAndDrop(
+                "tbody tr:nth-child(4) .o_handle_cell",
+                "tbody tr:nth-child(3)",
+                "top"
             );
             assert.strictEqual(
                 $(target).find("tbody tr td.o_list_number").text(),
@@ -8197,10 +8195,15 @@ QUnit.module("Views", (hooks) => {
                 "the int_field (sequence) should have been correctly updated"
             );
 
-            await testUtils.dom.dragAndDrop(
-                $(target).find(".ui-sortable-handle").eq(2),
-                $(target).find("tbody tr").eq(1),
-                { position: "top" }
+            // await testUtils.dom.dragAndDrop(
+            //     $(target).find(".ui-sortable-handle").eq(2),
+            //     $(target).find("tbody tr").eq(1),
+            //     { position: "top" }
+            // );
+            await dragAndDrop(
+                "tbody tr:nth-child(3) .o_handle_cell",
+                "tbody tr:nth-child(2)",
+                "top"
             );
             assert.deepEqual(
                 $(target).find("tbody tr td.o_list_number").text(),
@@ -8208,10 +8211,15 @@ QUnit.module("Views", (hooks) => {
                 "the int_field (sequence) should have been correctly updated"
             );
 
-            await testUtils.dom.dragAndDrop(
-                $(target).find(".ui-sortable-handle").eq(1),
-                $(target).find("tbody tr").eq(3),
-                { position: "top" }
+            // await testUtils.dom.dragAndDrop(
+            //     $(target).find(".ui-sortable-handle").eq(1),
+            //     $(target).find("tbody tr").eq(3),
+            //     { position: "top" }
+            // );
+            await dragAndDrop(
+                "tbody tr:nth-child(2) .o_handle_cell",
+                "tbody tr:nth-child(4)",
+                "top"
             );
             assert.deepEqual(
                 $(target).find("tbody tr td.o_list_number").text(),
@@ -8219,6 +8227,11 @@ QUnit.module("Views", (hooks) => {
                 "the int_field (sequence) should have been correctly updated"
             );
 
+            await dragAndDrop(
+                "tbody tr:nth-child(3) .o_handle_cell",
+                "tbody tr:nth-child(2)",
+                "top"
+            );
             await testUtils.dom.dragAndDrop(
                 $(target).find(".ui-sortable-handle").eq(2),
                 $(target).find("tbody tr").eq(1),

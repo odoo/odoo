@@ -78,29 +78,6 @@ function orderByToString(orderBy) {
 }
 
 /**
- * @param {any} string
- * @return {OrderTerm[]}
- */
-export function stringToOrderBy(string) {
-    if (!string) {
-        return [];
-    }
-    return string.split(",").map((order) => {
-        const splitOrder = order.trim().split(" ");
-        if (splitOrder.length === 2) {
-            return {
-                name: splitOrder[0],
-                asc: splitOrder[1].toLowerCase() === "asc",
-            };
-        } else {
-            return {
-                name: splitOrder[0],
-                asc: true,
-            };
-        }
-    });
-}
-/**
  * @param {Array[] | boolean} modifier
  * @param {Object} evalContext
  * @returns {boolean}
@@ -1479,31 +1456,79 @@ class DynamicList extends DataPoint {
      * @param {string} [targetId]
      * @param {Object} [options={}]
      * @param {string} [options.handleField]
+     * @param {string} [options.preventSwap]
      * @returns {Promise<(Group | Record)[]>}
      */
     async _resequence(list, idProperty, movedId, targetId, options = {}) {
-        if (movedId) {
-            const target = list.find((r) => r.id === movedId);
-            const index = targetId ? list.findIndex((r) => r.id === targetId) : 0;
-            list = list.filter((r) => r.id !== movedId);
-            list.splice(index, 0, target);
-        }
         const handleField = options.handleField || "sequence";
-        const model = this.resModel;
-        const ids = [];
-        const sequences = [];
-        for (const el of list) {
-            if (el[idProperty]) {
-                ids.push(el[idProperty]);
-                sequences.push(el[handleField]);
+        const fromIndex = list.findIndex((r) => r.id === movedId);
+        let targetIndex = null;
+        let toIndex = 0;
+        if (targetId !== null) {
+            targetIndex = list.findIndex((r) => r.id === targetId);
+            toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
+        }
+
+        const record = list[fromIndex];
+
+        const lowerIndex = Math.min(fromIndex, toIndex);
+        const upperIndex = Math.max(fromIndex, toIndex) + 1;
+
+        const order = this.orderBy.find((o) => o.name === handleField);
+        const asc = !order || order.asc;
+
+        // determine if we need to reorder all records
+        let reorderAll = false;
+        let sequence = (asc ? -1 : 1) * Infinity;
+
+        // determine if we need to reorder all records
+        for (let index = 0; index < list.length; index++) {
+            const { data } = list[index];
+            const handleFieldValue = data[handleField];
+            if (
+                ((index < lowerIndex || index >= upperIndex) &&
+                    ((asc && sequence >= handleFieldValue) ||
+                        (!asc && sequence <= handleFieldValue))) ||
+                (index >= lowerIndex && index < upperIndex && sequence === handleFieldValue)
+            ) {
+                reorderAll = true;
+            }
+            sequence = handleFieldValue;
+        }
+        if (!options.preventSwap) {
+            list = list.filter((r) => r.id !== movedId);
+            list.splice(toIndex, 0, record);
+        }
+
+        let records = [...list];
+        if (!reorderAll) {
+            records = records.slice(lowerIndex, upperIndex).filter((r) => r.id !== movedId);
+            if (fromIndex < toIndex) {
+                records.push(record);
+            } else {
+                records.unshift(record);
             }
         }
+        if (!asc) {
+            records.reverse();
+        }
+
+        const ids = [];
+        const sequences = [];
+        for (const r of records) {
+            if (r[idProperty]) {
+                ids.push(r[idProperty]);
+                sequences.push(r.data[handleField]);
+            }
+        }
+        const offset = Math.min(...sequences);
+
         // FIMME: can't go though orm, so no context given
         const wasResequenced = await this.model.rpc("/web/dataset/resequence", {
-            model,
+            model: this.resModel,
             ids,
             field: handleField,
-            offset: Math.min(...sequences),
+            offset,
             context: this.context,
         });
 
