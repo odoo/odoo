@@ -14,6 +14,8 @@ class MailTestSimple(models.Model):
     name = fields.Char()
     email_from = fields.Char()
 
+    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+        return super()._notify_get_reply_to(default=default, records=records, company=company, doc_names=doc_names)
 
 class MailTestGateway(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass

@@ -496,7 +496,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(len(admin_mails), 1, 'There should be exactly one email sent to admin')
         admin_mail = admin_mails[0].get('body')
         admin_access_link = admin_mail[admin_mail.index('model='):admin_mail.index('/>') - 1] if 'model=' in admin_mail else None
-  
+
         self.assertIsNotNone(admin_access_link, 'The email sent to admin should contain an access link')
         self.assertIn('model=%s' % self.test_record._name, admin_access_link, 'The access link should contain a valid model argument')
         self.assertIn('res_id=%d' % self.test_record.id, admin_access_link, 'The access link should contain a valid res_id argument')
@@ -506,6 +506,20 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         partner_mail = partner_mails[0].get('body')
         self.assertNotIn('/mail/view?model=', partner_mail, 'The email sent to admin should not contain an access link')
         # todo xdo add test message_notify on thread with followers and stuff
+
+    @patch('odoo.addons.test_mail.models.test_mail_models.MailTestSimple._notify_get_reply_to')
+    def test_message_nofity_inheritance(self, _notify_get_reply_to):
+        """ Test that message_notify correctly calls overridden methods"""
+        # mail.test.simple inherits from mail.thread, and overrides _notify_by_email_prepare_rendering_context
+        # which is called by message_notify.
+        # assert that the overridden method is indeed called
+        record = self.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'bob@example.com'})
+        record.message_notify(
+            subject='Test',
+            body='<p>Hello</p>',
+            partner_ids=[self.partner_1.id],
+        )
+        _notify_get_reply_to.assert_called_once()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_post_w_template(self):

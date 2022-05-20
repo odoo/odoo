@@ -1973,6 +1973,9 @@ class MailThread(models.AbstractModel):
         on the user configuration, like other notifications. """
         if self:
             self.ensure_one()
+        model = model or self._name
+        res_id = res_id or self.id
+
         # split message additional values from notify additional values
         msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
         notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
@@ -1987,7 +1990,7 @@ class MailThread(models.AbstractModel):
             model = False
             res_id = False
 
-        MailThread = self.env['mail.thread']
+        Model = model if issubclass(type(model), self.env.registry['mail.thread']) else self.env[self._name]
         values = {
             'parent_id': parent_id,
             'model': self._name if self else model,
@@ -2001,12 +2004,12 @@ class MailThread(models.AbstractModel):
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'is_internal': True,
             'record_name': False,
-            'reply_to': MailThread._notify_get_reply_to(default=email_from, records=None)[False],
+            'reply_to': list(Model._notify_get_reply_to(default=email_from, records=None).values())[0],
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
         values.update(msg_kwargs)
-        new_message = MailThread._message_create(values)
-        MailThread._notify_thread(new_message, values, **notif_kwargs)
+        new_message = Model._message_create(values)
+        Model._notify_thread(new_message, values, **notif_kwargs)
         return new_message
 
     def _message_log_with_view(self, views_or_xmlid, **kwargs):
