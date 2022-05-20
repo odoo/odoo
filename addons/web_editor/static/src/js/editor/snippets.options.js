@@ -2452,7 +2452,9 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     }),
     // Data-attributes that will be read into `this.options` on init and not
     // transfered to inner buttons.
-    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith', 'createMethod'],
+
+    // defaultMessage: default message to display when no records are selected
+    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith', 'createMethod', 'defaultMessage'],
 
     /**
      * @override
@@ -2542,7 +2544,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
                 // FIXME: value may not be an id if callWith is specified!
                 this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
             } else {
-                this.menuTogglerEl.textContent = _t("Choose a record...");
+                this.menuTogglerEl.textContent = this.options.defaultMessage ? this.options.defaultMessage : _t("Choose a record...");
             }
         }
     },

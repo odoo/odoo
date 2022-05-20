@@ -14,6 +14,13 @@ odoo.define("website_sale.tour_utils", function (require) {
         };
     }
 
+    function assertCartContains(productName, backend = false) {
+        return {
+                content: `Checking if ${productName} is in the cart`,
+                trigger: `${backend ? "iframe" : ""} a:contains(${productName})`,
+            }
+    }
+
     /**
      * Used to select a pricelist on the /shop view
      */
@@ -43,8 +50,9 @@ odoo.define("website_sale.tour_utils", function (require) {
     }
 
     return {
+        assertCartContains,
+        assertProductPrice,
         goToCart,
         selectPriceList,
-        assertProductPrice
     };
 });

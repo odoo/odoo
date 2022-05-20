@@ -13,6 +13,19 @@ function addMedia(position = "right") {
         run: "click",
     };
 }
+function assertPathName(pathName, trigger){
+    return {
+        content: `Check if we have been redirected to ${pathName}`,
+        trigger: trigger,
+        run: () => {
+            console.log(window.location.pathname);
+            if (!window.location.pathname.startsWith(pathName)) {
+                console.error(`We should be on ${pathName}.`);
+            }
+        }
+    }
+
+}
 
 function changeBackground(snippet, position = "bottom") {
     return {
@@ -127,6 +140,19 @@ function clickOnEdit(position = "bottom") {
         position: position,
         timeout: 30000,
     };
+}
+
+/**
+ * Simple click on an element in the page.
+ * @param {*} elementName
+ * @param {*} selector
+ */
+function clickOnElement(elementName, selector) {
+    return {
+            content: `Clicking on the ${elementName}`,
+            trigger: selector,
+            run: 'click'
+        }
 }
 
 /**
@@ -314,8 +340,30 @@ function registerBackendAndFrontend(name, options, steps) {
     }, tourSteps);
 }
 
+/**
+ * Selects an element inside a we-select, if the we-select is from a m2o widget, searches for it.
+ *
+ * @param widgetName {string} The widget's data-name
+ * @param elementName {string} the element to search
+ * @param searchNeeded {Boolean} if the widget is a m2o widget and a search is needed
+ */
+function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = false) {
+    let steps = [clickOnElement(`${widgetName} toggler`, `we-select[data-name=${widgetName}] we-toggler`)];
+
+    if (searchNeeded) {
+        steps.push({
+            content: `Inputing ${elementName} in m2o widget search`,
+            trigger: `we-select[data-name=${widgetName}] div.o_we_m2o_search input`,
+            run: `text ${elementName}`
+        });
+    }
+    steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`, `we-select[data-name=${widgetName}] we-button:contains(${elementName})`))
+    return steps;
+}
+
 return {
     addMedia,
+    assertPathName,
     changeBackground,
     changeBackgroundColor,
     changeColumnSize,
@@ -324,6 +372,7 @@ return {
     changeOption,
     changePaddingSize,
     clickOnEdit,
+    clickOnElement,
     clickOnSave,
     clickOnSnippet,
     clickOnText,
@@ -339,5 +388,6 @@ return {
     clickOnExtraMenuItem,
     registerEditionTour,
     registerBackendAndFrontend,
+    selectElementInWeSelectWidget,
 };
 });
