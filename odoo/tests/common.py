@@ -780,7 +780,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         if not hasattr(self, 'profile_session'):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
-            description='%s %s %s' % (test_method, self.env.user.name, 'warm' if self.warm else 'cold'),
+            description='%s uid:%s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold'),
             db=self.env.cr.dbname,
             profile_session=self.profile_session,
             **kwargs)
