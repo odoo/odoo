@@ -1750,7 +1750,7 @@ class Task(models.Model):
     # Case management
     # ----------------------------------------
 
-    def stage_find(self, section_id, domain=[], order='sequence'):
+    def stage_find(self, section_id, domain=[], order='sequence, id'):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - section_id: if set, stages must belong to this section or
