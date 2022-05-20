@@ -45,6 +45,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'legend_done',
     'user_ids',
     'display_parent_task_button',
+    'allow_milestones',
+    'milestone_id',
+    'has_late_and_unreached_milestone',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -1138,7 +1141,6 @@ class Task(models.Model):
     has_late_and_unreached_milestone = fields.Boolean(
         compute='_compute_has_late_and_unreached_milestone',
         search='_search_has_late_and_unreached_milestone',
-        groups='project.group_project_milestone',
     )
 
     # Task Dependencies fields
@@ -2024,7 +2026,7 @@ class Task(models.Model):
         if all(not task.allow_milestones for task in self):
             self.has_late_and_unreached_milestone = False
             return
-        late_milestones = self.env['project.milestone']._search([
+        late_milestones = self.env['project.milestone'].sudo()._search([  # sudo is needed for the portal user in Project Sharing.
             ('id', 'in', self.milestone_id.ids),
             ('is_reached', '=', False),
             ('deadline', '<', fields.Date.today()),
