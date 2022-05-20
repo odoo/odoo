@@ -2932,6 +2932,22 @@ class AccountMove(models.Model):
                                   "You should create a credit note instead. Use the action menu to transform it into "
                                   "a credit note or refund."))
 
+    def _post_check_lock_date(self):
+        """When the accounting date is prior to a lock date, change it automatically upon posting.
+
+        /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+        environment.
+
+        In some accounting localizations this should be disabled.
+        """
+        for move in self:
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
+            if lock_dates:
+                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
+                move.with_context(check_move_validity=False)._onchange_currency()
+
+
     def post(self):
         warnings.warn(
             "RedirectWarning method 'post()' is a deprecated alias to 'action_post()' or _post()",
@@ -3007,13 +3023,7 @@ class AccountMove(models.Model):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
             # When the accounting date is prior to a lock date, change it automatically upon posting.
-            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
-            # environment.
-            affects_tax_report = move._affect_tax_report()
-            lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
-            if lock_dates:
-                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
-                move.with_context(check_move_validity=False)._onchange_currency()
+            move._post_check_lock_date()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.mapped('line_ids').create_analytic_lines()
