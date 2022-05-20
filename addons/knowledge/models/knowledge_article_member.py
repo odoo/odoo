@@ -61,7 +61,6 @@ class ArticleMember(models.Model):
             for member in self.filtered(lambda member: member.article_id in articles_to_check):
                 deleted_members_by_article[member.article_id.id] |= member
 
-        parents_members_permission = articles_to_check.parent_id._get_article_member_permissions()
         for article in articles_to_check:
             # Check on permission on members
             members_to_check = article.article_member_ids
@@ -70,15 +69,8 @@ class ArticleMember(models.Model):
             if any(m.permission == 'write' for m in members_to_check):
                 continue
 
-            # we need to add the members on parents to check the validity
-            parent_write_members = any(
-                values['permission'] == 'write' for partner_id, values
-                in parents_members_permission[article.parent_id.id].items()
-                if article.parent_id and not article.is_desynchronized
-                and partner_id not in article.article_member_ids.partner_id.ids
-            )
-
-            if not parent_write_members:
+            members_to_exclude = deleted_members_by_article[article.id] if on_unlink else False
+            if not article._has_write_member(members_to_exclude=members_to_exclude):
                 raise ValidationError(
                     _("Article '%s' should always have a writer: inherit write permission, or have a member with write access",
                       article.display_name)
