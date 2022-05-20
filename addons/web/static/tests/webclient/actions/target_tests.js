@@ -395,7 +395,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([]);
     });
 
-    QUnit.skipWOWL('breadcrumbs of actions in target="new"', async function (assert) {
+    QUnit.test('breadcrumbs of actions in target="new"', async function (assert) {
         const webClient = await createWebClient({ serverData });
 
         // execute an action in target="current"
@@ -441,46 +441,6 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".modal .o_data_row .o_data_cell"));
         assert.containsOnce(target, ".modal .o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
-    });
-
-    QUnit.module('Actions in target="inline"');
-
-    QUnit.skipWOWL(
-        'form views for actions in target="inline" open in edit mode',
-        async function (assert) {
-            const mockRPC = async (route, args) => {
-                assert.step(args.method || route);
-            };
-            const webClient = await createWebClient({ serverData, mockRPC });
-            await doAction(webClient, 6);
-            assert.containsOnce(
-                target,
-                ".o_form_view.o_form_editable",
-                "should have rendered a form view in edit mode"
-            );
-            assert.verifySteps([
-                "/web/webclient/load_menus",
-                "/web/action/load",
-                "get_views",
-                "read",
-            ]);
-        }
-    );
-
-    QUnit.skipWOWL("breadcrumbs and actions with target inline", async function (assert) {
-        serverData.actions[4].views = [[false, "form"]];
-        serverData.actions[4].target = "inline";
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 4);
-        assert.containsNone(target, ".o_control_panel");
-        await doAction(webClient, 1, { clearBreadcrumbs: true });
-        assert.containsOnce(target, ".o_control_panel");
-        assert.isVisible(target.querySelector(".o_control_panel"));
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
-            "Partners Action 1",
-            "should have only one current action visible in breadcrumbs"
-        );
     });
 
     QUnit.module('Actions in target="fullscreen"');
