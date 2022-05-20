@@ -303,6 +303,13 @@ class StockQuant(models.Model):
                 group['inventory_quantity_auto_apply'] = group['quantity']
         return result
 
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Inventory Adjustments'),
+            'template': '/stock/static/xlsx/stock_quant.xlsx'
+        }]
+
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         allowed_fields = self._get_inventory_fields_write()
