@@ -173,7 +173,7 @@ class SaleOrder(models.Model):
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
         product = self.env['product.product'].browse(int(product_id)).exists()
 
-        if not product or not product._is_add_to_cart_allowed():
+        if not product or (not line_id and not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
         try:
