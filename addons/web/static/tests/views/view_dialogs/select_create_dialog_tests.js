@@ -1,11 +1,16 @@
 /** @odoo-module */
 
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { makeView } from "@web/../tests/views/helpers";
+import {
+    click,
+    getFixture,
+    nextTick,
+    editInput,
+    selectDropdownItem,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -14,14 +19,11 @@ import {
     editFavoriteName,
     removeFacet,
     saveFavorite,
-    setupControlPanelServiceRegistry,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleMenuItem,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
@@ -76,13 +78,12 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
         };
         target = getFixture();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
+        setupViewRegistries();
     });
 
     QUnit.module("SelectCreateDialog");
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "SelectCreateDialog use domain, group_by and search default",
         async function (assert) {
             assert.expect(3);
@@ -113,8 +114,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 lang: "en",
                                 tz: "taht",
                                 uid: 7,
-                                search_default_foo: "piou",
-                                search_default_groupby_bar: true,
                             },
                             domain: [
                                 "&",
@@ -126,64 +125,63 @@ QUnit.module("ViewDialogs", (hooks) => {
                             fields: ["display_name", "foo", "bar"],
                             groupby: ["bar"],
                             orderby: "",
+                            expand: false,
                             lazy: true,
                             limit: 80,
+                            offset: 0,
                         },
                         "should search with the complete domain (domain + search), and group by 'bar'"
                     );
-                }
-                if (search === 0 && args.method === "web_search_read") {
-                    assert.deepEqual(
-                        args.kwargs,
-                        {
-                            context: {
-                                search_default_foo: "piou",
-                                search_default_groupby_bar: true,
-                                bin_size: true,
-                                lang: "en",
-                                tz: "taht",
-                                uid: 7,
-                            }, // not part of the test, may change
-                            domain: [
-                                "&",
-                                ["display_name", "like", "a"],
-                                "&",
-                                ["display_name", "ilike", "piou"],
-                                ["foo", "ilike", "piou"],
-                            ],
-                            fields: ["display_name", "foo"],
-                            model: "partner",
-                            limit: 80,
-                            sort: "",
-                        },
-                        "should search with the complete domain (domain + search)"
-                    );
-                } else if (search === 1 && args.method === "web_search_read") {
-                    assert.deepEqual(
-                        args.kwargs,
-                        {
-                            context: {
-                                search_default_foo: "piou",
-                                search_default_groupby_bar: true,
-                                bin_size: true,
-                                lang: "en",
-                                tz: "taht",
-                                uid: 7,
-                            }, // not part of the test, may change
-                            domain: [["display_name", "like", "a"]],
-                            fields: ["display_name", "foo"],
-                            model: "partner",
-                            limit: 80,
-                            sort: "",
-                        },
-                        "should search with the domain"
-                    );
+                } else if (args.method === "web_search_read") {
+                    if (search === 0) {
+                        assert.deepEqual(
+                            args.kwargs,
+                            {
+                                context: {
+                                    bin_size: true,
+                                    lang: "en",
+                                    tz: "taht",
+                                    uid: 7,
+                                }, // not part of the test, may change
+                                domain: [
+                                    "&",
+                                    ["display_name", "like", "a"],
+                                    "&",
+                                    ["display_name", "ilike", "piou"],
+                                    ["foo", "ilike", "piou"],
+                                ],
+                                fields: ["display_name", "foo"],
+                                limit: 80,
+                                offset: 0,
+                                order: "",
+                            },
+                            "should search with the complete domain (domain + search)"
+                        );
+                    } else if (search === 1) {
+                        assert.deepEqual(
+                            args.kwargs,
+                            {
+                                context: {
+                                    bin_size: true,
+                                    lang: "en",
+                                    tz: "taht",
+                                    uid: 7,
+                                }, // not part of the test, may change
+                                domain: [["display_name", "like", "a"]],
+                                fields: ["display_name", "foo"],
+                                limit: 80,
+                                offset: 0,
+                                order: "",
+                            },
+                            "should search with the domain"
+                        );
+                    }
+                    search++;
                 }
             };
             const webClient = await createWebClient({ serverData, mockRPC });
             webClient.env.services.dialog.add(SelectCreateDialog, {
                 noCreate: true,
-                readonly: true, //Not used
                 resModel: "partner",
                 domain: [["display_name", "like", "a"]],
                 context: {
@@ -192,9 +190,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                 },
             });
             await nextTick();
-            const modal = target.querySelector(".modal");
-            removeFacet(modal, "Bar");
-            removeFacet(modal);
+            await removeFacet(target.querySelector(".modal"), "Bar");
+            await removeFacet(target.querySelector(".modal"));
         }
     );
 
@@ -263,7 +260,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("SelectCreateDialog cascade x2many in create mode", async function (assert) {
+    QUnit.test("SelectCreateDialog cascade x2many in create mode", async function (assert) {
         assert.expect(5);
         serverData.views = {
             "partner,false,form": `
@@ -272,7 +269,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="instrument" widget="one2many" mode="tree"/>
                 </form>
             `,
-
             "instrument,false,form": `
                 <form>
                     <field name="name"/>
@@ -283,18 +279,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                     </field>
                 </form>
             `,
-
-            "badassery,false,list": `
-                <tree>
-                    <field name="level"/>
-                </tree>
-            `,
-
-            "badassery,false,search": `
-                <search>
-                    <field name="level"/>
-                </search>
-            `,
+            "badassery,false,list": `<tree><field name="level"/></tree>`,
+            "badassery,false,search": `<search><field name="level"/></search>`,
         };
 
         await makeView({
@@ -334,38 +320,23 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target, ".o_form_button_edit");
         await click(target, ".o_field_x2many_list_row_add a");
 
-        // await testUtils.fields.many2one.createAndEdit("instrument");
+        await editInput(target, ".o_field_widget[name=instrument] input", "ABC");
+        await selectDropdownItem(target, "instrument", "Create and Edit...");
 
-        // var $modal = $(".modal-lg");
+        assert.containsOnce(target, ".modal .modal-lg");
 
-        // assert.equal($modal.length, 1, "There should be one modal");
+        await click(target.querySelector(".modal .o_field_x2many_list_row_add a"));
 
-        // await testUtils.dom.click($modal.find(".o_field_x2many_list_row_add a"));
+        assert.containsN(target, ".modal .modal-lg", 2);
 
-        // var $modals = $(".modal-lg");
+        await click(target.querySelector(".modal .o_data_row input[type=checkbox]"));
+        await nextTick(); // wait for the select button to be enabled
+        await click(target.querySelector(".modal .o_select_button"));
 
-        // assert.equal($modals.length, 2, "There should be two modals");
+        assert.containsOnce(target, ".modal .modal-lg");
+        assert.strictEqual(target.querySelector(".modal .o_data_cell").innerText, "Awsome");
 
-        // var $second_modal = $modals.not($modal);
-        // await testUtils.dom.click(
-        //     $second_modal.find(
-        //         ".o_list_table.table.table-sm.table-striped.o_list_table_ungrouped .o_data_row input[type=checkbox]"
-        //     )
-        // );
-
-        // await testUtils.dom.click($second_modal.find(".o_select_button"));
-
-        // $modal = $(".modal-lg");
-
-        // assert.equal($modal.length, 1, "There should be one modal");
-
-        // assert.equal(
-        //     $modal.find(".o_data_cell").text(),
-        //     "Awsome",
-        //     "There should be one item in the list of the modal"
-        // );
-
-        // await testUtils.dom.click($modal.find(".btn.btn-primary"));
+        await click(target.querySelector(".modal .o_form_button_save"));
     });
 
     QUnit.test("SelectCreateDialog: save current search", async function (assert) {

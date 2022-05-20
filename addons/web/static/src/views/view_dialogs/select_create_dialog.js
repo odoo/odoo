@@ -1,27 +1,17 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { sprintf } from "@web/core/utils/strings";
-import { View } from "@web/views/view";
 import { useService } from "@web/core/utils/hooks";
+import { View } from "@web/views/view";
 
 const { Component, markup, useState } = owl;
 
 export class SelectCreateDialog extends Component {
     setup() {
-        super.setup();
         this.viewService = useService("view");
-        this.state = useState({
-            resIds: [],
-        });
-
-        let viewId = "false";
-        if (this.props.context) {
-            viewId = this.props.context.tree_view_ref || "false";
-        }
-
-        this.propsView = {
-            viewId,
+        this.state = useState({ resIds: [] });
+        this.viewProps = {
+            viewId: (this.props.context && this.props.context.tree_view_ref) || false,
             resModel: this.props.resModel,
             domain: this.props.domain,
             context: this.props.context,
@@ -41,7 +31,7 @@ export class SelectCreateDialog extends Component {
             noBreadcrumbs: true,
             searchViewId: this.props.searchViewId || false,
             display: { searchPanel: false },
-            noContentHelp: markup(sprintf("<p>%s</p>", this.env._t("No records found!"))),
+            noContentHelp: markup(`<p>${this.env._t("No records found!")}</p>`),
             dynamicFilters: this.props.dynamicFilters || [],
         };
     }

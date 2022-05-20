@@ -11,6 +11,7 @@ import {
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { Domain } from "@web/core/domain";
 import { isNumeric, isRelational, isX2Many } from "@web/views/helpers/view_utils";
+import { unique } from "@web/core/utils/arrays";
 import { isTruthy } from "@web/core/utils/xml";
 import { makeContext } from "@web/core/context";
 import { Model } from "@web/views/helpers/model";
@@ -1978,7 +1979,7 @@ export class DynamicGroupList extends DynamicList {
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,
-            this.fieldNames,
+            unique([...this.fieldNames, this.groupBy[0]]),
             this.groupBy,
             {
                 orderby,
