@@ -698,6 +698,36 @@ QUnit.test('prevent attachment delete on non-authored message in channels', asyn
     );
 });
 
+QUnit.test('allow attachment image download on message', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const irAttachmentId1 = pyEnv['ir.attachment'].create({
+        name: "Blah.jpg",
+        mimetype: 'image/jpeg',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [irAttachmentId1],
+        body: '<p>Test</p>',
+        model: 'mail.channel',
+        res_id: mailChannelId1,
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            context: {
+                active_id: mailChannelId1,
+            },
+        },
+    });
+    await openDiscuss();
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentImage_actionDownload',
+        "should have download attachment button"
+    );
+});
+
 QUnit.test('subtype description should be displayed if it is different than body', async function (assert) {
     assert.expect(2);
 
