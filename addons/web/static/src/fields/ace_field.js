@@ -24,15 +24,9 @@ export class AceField extends Component {
             return Promise.all(proms);
         });
 
-        useEffect(
-            () => {
-                this.setupAce();
-                return () => this.destroyAce();
-            },
-            () => []
-        );
         useEffect(() => {
-            this.patchAce();
+            this.setupAce();
+            return () => this.destroyAce();
         });
     }
 
@@ -54,23 +48,16 @@ export class AceField extends Component {
             useSoftTabs: true,
         });
 
-        this.aceEditor.on("blur", this.onBlur.bind(this));
-    }
-    patchAce() {
-        const formattedValue = formatText(this.props.value);
-        if (this.aceSession.getValue() !== formattedValue) {
-            this.aceSession.setValue(formattedValue);
-        }
-
         this.aceSession.setOptions({
             mode: `ace/mode/${this.props.mode === "xml" ? "qweb" : this.props.mode}`,
         });
 
         this.aceEditor.setOptions({
+            readOnly: this.props.readonly,
             highlightActiveLine: !this.props.readonly,
             highlightGutterLine: !this.props.readonly,
-            readOnly: this.props.readonly,
         });
+
         this.aceEditor.renderer.setOptions({
             displayIndentGuides: !this.props.readonly,
             showGutter: !this.props.readonly,
@@ -79,7 +66,15 @@ export class AceField extends Component {
         this.aceEditor.renderer.$cursorLayer.element.style.display = this.props.readonly
             ? "none"
             : "block";
+
+        const formattedValue = formatText(this.props.value);
+        if (this.aceSession.getValue() !== formattedValue) {
+            this.aceSession.setValue(formattedValue);
+        }
+
+        this.aceEditor.on("blur", this.onBlur.bind(this));
     }
+
     destroyAce() {
         if (this.aceEditor) {
             this.aceEditor.destroy();

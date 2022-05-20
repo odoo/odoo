@@ -24,7 +24,7 @@ QUnit.module("Fields", (hooks) => {
                     records: [
                         {
                             id: 1,
-                            foo: "yop",
+                            foo: `yop`,
                         },
                     ],
                 },
@@ -37,8 +37,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("AceEditorField");
 
     QUnit.test("AceEditorField on text fields works", async function (assert) {
-        assert.expect(2);
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -57,5 +55,7 @@ QUnit.module("Fields", (hooks) => {
             "div.ace_content",
             "should have rendered something with ace editor"
         );
+
+        assert.ok(target.querySelector(".o_field_ace").textContent.includes("yop"));
     });
 });
