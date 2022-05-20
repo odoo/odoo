@@ -125,6 +125,7 @@ class KnowledgeController(http.Controller):
             "private_articles": root_articles.filtered(
                 lambda article: article.category == "private" and article.user_has_write_access),
             "unfolded_articles": unfolded_articles,
+            'portal_readonly_mode': request.env.user._is_public(),
         }
         favorites = request.env['knowledge.article.favorite']
         if not request.env.user._is_public():
