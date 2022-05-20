@@ -117,7 +117,11 @@ class ActionAdapter extends ComponentAdapter {
                 this.wowlEnv.config.setDisplayName(actionTitle);
             }
         }
-        this.router.pushState(query);
+        if (this.props.onPushState) {
+            this.props.onPushState(query);
+        } else {
+            this.router.pushState(query);
+        }
     }
 
     _trigger_up(ev) {
