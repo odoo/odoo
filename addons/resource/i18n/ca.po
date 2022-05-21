@@ -57,6 +57,8 @@ msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
 msgstr ""
+"Confirmes que vols canviar aquest calendari a un calendari d'1 setmana? Es "
+"perdran totes les entrades"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -64,6 +66,8 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
+"Esteu segur que voleu canviar aquest calendari a 2 setmanes? Es perdran "
+"totes les entrades"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -74,19 +78,21 @@ msgstr "Les assistències no poden solapar-se"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr ""
+msgstr "Hora mitjana per dia"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"Mitjana d'hores per dia se suposa que un recurs funciona amb aquest "
+"calendari."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "Calendari en mode 2 setmanes"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -222,6 +228,7 @@ msgstr "Divendres matí"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
+"Dona la seqüència d'aquesta línia quan es mostra el calendari de recursos."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -260,6 +267,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Si està buit, aquest és un temps lliure genèric per a l'empresa. Si "
+"s'estableix un recurs, el temps d'espera és només per a aquest recurs"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -276,6 +285,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Si l'àmbit actiu s'estableix en fals, li permetrà amagar el temps de treball"
+" sense eliminar-lo."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -316,7 +327,7 @@ msgstr "Última actualització el"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
-msgstr ""
+msgstr "Data de sortida"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -404,7 +415,7 @@ msgstr "Mescla de Recursos"
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr ""
+msgstr "Temps de recurs desactivat"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -434,7 +445,7 @@ msgstr "Recursos"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Temps d'inactivitat dels recursos"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -462,7 +473,7 @@ msgstr "Cerca recurs"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Temps de treball de la cerca desactivat"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -580,6 +591,11 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Aquest camp s'utilitza per calcular la durada esperada d'una ordre de "
+"treball en aquest centre de treball. Per exemple, si una ordre de treball "
+"dura una hora i el factor d'eficiència és del 100%, la durada prevista serà "
+"d'una hora. Si el factor d'eficiència és del 200%, la durada esperada serà "
+"de 30 minuts."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
