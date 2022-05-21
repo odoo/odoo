@@ -195,7 +195,7 @@ class HrExpense(models.Model):
             else:
                 residual_field = 'amount_residual_currency'
             payment_term_lines = expense.sheet_id.account_move_id.sudo().line_ids \
-                .filtered(lambda line: line.expense_id == self and line.account_internal_type in ('receivable', 'payable'))
+                .filtered(lambda line: line.expense_id == expense and line.account_internal_type in ('receivable', 'payable'))
             expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
     @api.depends('currency_rate', 'total_amount', 'amount_tax')
