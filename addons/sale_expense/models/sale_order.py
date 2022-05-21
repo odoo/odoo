@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo import SUPERUSER_ID
 from odoo.osv import expression
 
 
@@ -13,12 +12,16 @@ class SaleOrder(models.Model):
     expense_count = fields.Integer("# of Expenses", compute='_compute_expense_count', compute_sudo=True)
 
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
         """ For expense, we want to show all sales order but only their name_get (no ir.rule applied), this is the only way to do it. """
-        if self._context.get('sale_expense_all_order') and self.user_has_groups('sales_team.group_sale_salesman') and not self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
-            domain = expression.AND([args or [], ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]])
-            return super(SaleOrder, self.sudo())._name_search(name=name, args=domain, operator=operator, limit=limit, name_get_uid=SUPERUSER_ID)
-        return super(SaleOrder, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+        if (
+            self._context.get('sale_expense_all_order')
+            and self.user_has_groups('sales_team.group_sale_salesman')
+            and not self.user_has_groups('sales_team.group_sale_salesman_all_leads')
+        ):
+            domain = expression.AND([domain or [], ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]])
+            return super(SaleOrder, self.sudo())._name_search(name, domain, operator, limit, order, name_get_uid)
+        return super()._name_search(name, domain, operator, limit, order, name_get_uid)
 
     @api.depends('expense_ids')
     def _compute_expense_count(self):

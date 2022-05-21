@@ -1585,26 +1585,28 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
-        ids = self._name_search(name, args, operator, limit=limit)
+        ids = self._name_search(name, args, operator, limit=limit, order=self._order)
         return self.browse(ids).sudo().name_get()
 
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        """ _name_search(name='', args=None, operator='ilike', limit=100, name_get_uid=None) -> ids
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        """ _name_search(name='', domain=None, operator='ilike', limit=None, order=None, name_get_uid=None) -> ids
 
-        Private implementation of name_search, allows passing a dedicated user
-        for the name_get part to solve some access rights issues.
+        Private implementation of name_search, returning ids or a :class:`Query` object.
+        It allows passing a dedicated user for the name_get part to solve some
+        access rights issues.
+
+        No default is applied for parameters ``limit`` and ``order``.
         """
-        args = list(args or [])
+        domain = list(domain or ())
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
             _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
         # optimize out the default criterion of ``like ''`` that matches everything
         elif not (name == '' and operator in ('like', 'ilike')):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain = aggregator([[(field_name, operator, name)] for field_name in search_fnames])
-            args += domain
-        return self._search(args, limit=limit, order=self._order, access_rights_uid=name_get_uid)
+            domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+        return self._search(domain, limit=limit, order=order, access_rights_uid=name_get_uid)
 
     @api.model
     def _add_missing_default_values(self, values):

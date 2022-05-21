@@ -81,18 +81,18 @@ class Country(models.Model):
             'The code of the country must be unique !')
     ]
 
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        if domain is None:
+            domain = []
 
         ids = []
         if len(name) == 2:
-            ids = list(self._search([('code', 'ilike', name)] + args, limit=limit, order=self._order))
+            ids = list(self._search([('code', 'ilike', name)] + domain, limit=limit, order=order))
 
         search_domain = [('name', operator, name)]
         if ids:
             search_domain.append(('id', 'not in', ids))
-        ids += list(self._search(search_domain + args, limit=limit, order=self._order))
+        ids += list(self._search(search_domain + domain, limit=limit, order=order))
 
         return ids
 
@@ -168,23 +168,27 @@ class CountryState(models.Model):
     ]
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        domain = domain or []
         if self.env.context.get('country_id'):
-            args = expression.AND([args, [('country_id', '=', self.env.context.get('country_id'))]])
+            domain = expression.AND([domain, [('country_id', '=', self.env.context.get('country_id'))]])
 
         if operator == 'ilike' and not (name or '').strip():
-            first_domain = []
-            domain = []
+            domain1 = []
+            domain2 = []
         else:
-            first_domain = [('code', '=ilike', name)]
-            domain = [('name', operator, name)]
+            domain1 = [('code', '=ilike', name)]
+            domain2 = [('name', operator, name)]
 
-        first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, order=self._order, access_rights_uid=name_get_uid) if first_domain else []
-        return list(first_state_ids) + [
+        first_state_ids = []
+        if domain1:
+            first_state_ids = list(self._search(
+                expression.AND([domain1, domain]), limit=limit, order=order, access_rights_uid=name_get_uid,
+            ))
+        return first_state_ids + [
             state_id
-            for state_id in self._search(expression.AND([domain, args]),
-                                         limit=limit, order=self._order, access_rights_uid=name_get_uid)
+            for state_id in self._search(expression.AND([domain2, domain]),
+                                         limit=limit, order=order, access_rights_uid=name_get_uid)
             if state_id not in first_state_ids
         ]
 

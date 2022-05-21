@@ -425,8 +425,8 @@ class CurrencyRate(models.Model):
                 }
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        return super()._name_search(parse_date(self.env, name), args, operator, limit, name_get_uid)
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        return super()._name_search(parse_date(self.env, name), domain, operator, limit, order, name_get_uid)
 
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):
