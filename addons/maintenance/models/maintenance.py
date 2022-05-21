@@ -101,12 +101,12 @@ class MaintenanceEquipment(models.Model):
         return result
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        equipment_ids = []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
+        domain = domain or []
+        query = None
         if name and operator not in expression.NEGATIVE_TERM_OPERATORS and operator != '=':
-            equipment_ids = self._search([('name', '=', name)] + args, limit=limit, order=self._order, access_rights_uid=name_get_uid)
-        return equipment_ids or super()._name_search(name, args, operator, limit, name_get_uid)
+            query = self._search([('name', '=', name)] + domain, limit=limit, order=order, access_rights_uid=name_get_uid)
+        return query or super()._name_search(name, domain, operator, limit, order, name_get_uid)
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
