@@ -174,13 +174,13 @@ class PickingType(models.Model):
         return res
 
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
         # Try to reverse the `name_get` structure
         parts = name.split(': ')
         if len(parts) == 2:
-            domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
-            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return super()._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+            name_domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+            return self._search(expression.AND([name_domain, domain]), limit=limit, order=order, access_rights_uid=name_get_uid)
+        return super()._name_search(name, domain, operator, limit, order, name_get_uid)
 
     @api.onchange('code')
     def _onchange_picking_code(self):

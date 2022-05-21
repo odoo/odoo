@@ -528,7 +528,7 @@ class expression(object):
                 return list({
                     rid
                     for name in names
-                    for rid in comodel._name_search(name, [], 'ilike', limit=None)
+                    for rid in comodel._name_search(name, [], 'ilike')
                 })
             return list(value)
 
@@ -760,7 +760,7 @@ class expression(object):
                     if isinstance(right, str):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = comodel._name_search(right, domain or [], op2, limit=None)
+                        ids2 = comodel._name_search(right, domain or [], op2)
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
@@ -838,7 +838,7 @@ class expression(object):
                         domain = field.get_domain_list(model)
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = comodel._name_search(right, domain or [], op2, limit=None)
+                        ids2 = comodel._name_search(right, domain or [], op2)
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
@@ -898,7 +898,7 @@ class expression(object):
                         operator = dict_op[operator]
                     elif isinstance(right, list) and operator in ('!=', '='):  # for domain (FIELD,'=',['value1','value2'])
                         operator = dict_op[operator]
-                    res_ids = comodel.with_context(active_test=False)._name_search(right, [], operator, limit=None)
+                    res_ids = comodel.with_context(active_test=False)._name_search(right, [], operator)
                     if operator in NEGATIVE_TERM_OPERATORS:
                         for dom_leaf in ('|', (left, 'in', res_ids), (left, '=', False)):
                             push(dom_leaf, model, alias)
