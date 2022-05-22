@@ -6,23 +6,24 @@
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
-# hed shefetr <hed@laylinetech.com>, 2019
+# hed shefer <hed@laylinetech.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # david danilov, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: david danilov, 2021\n"
+"Last-Translator: Netta Waizer, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,13 +48,31 @@ msgstr "\" התראה עם"
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
-msgstr ""
+msgstr "\"URL to\" לא יכול להיות ריק."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr "\"URL to\" לא יכול להכיל פרמטר %sשלא השתמשו בו ב  \"URL from\"."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr "\"URL to\" לא חוקי: %s"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr "\"URL to\" חייב להכיל פרמטר %s אשר שומש ב \"URL from\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must start with a leading slash."
-msgstr ""
+msgstr "\"URL to\" חייב להתחיל ב /."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -71,17 +90,6 @@ msgstr "%s (מזהה:%s)"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website
 #. openerp-web
@@ -124,11 +132,6 @@ msgid ""
 msgstr ""
 ".\n"
 "            שינוי שמו ישבור קריאות אלה."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -390,6 +393,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Enable billing on your Google Project"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+" אפשר חיוב בפרויקט הגוגל שלך"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -998,7 +1003,7 @@ msgstr "אסימון גישה חייב להיות ייחודי."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
-msgstr ""
+msgstr "חשבון &amp; ניהול מכירות"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
@@ -1194,7 +1199,7 @@ msgstr "בארכיון"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
 msgid "Are newly created user accounts website specific"
-msgstr ""
+msgstr "האם חשבונות משתמש שזה עתה נוצרו הם ספציפיים לאתר"
 
 #. module: website
 #. openerp-web
@@ -2811,6 +2816,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"אם התצוגה הזו עוברת בירושה,\n"
+"* אם נכון, התצוגה תמיד מרחיבה את ההורה שלה\n"
+"* אם שקר, התצוגה כרגע לא מרחיבה את ההורה שלה אבל אפשר להפעיל אותה"
 
 #. module: website
 #. openerp-web
@@ -2841,6 +2849,8 @@ msgid ""
 "In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.\n"
 "        Each modification on the master page is automatically applied to all translated versions."
 msgstr ""
+"במצב זה, אתה יכול לתרגם רק טקסטים. כדי לשנות את מבנה העמוד, עליך לערוך את עמוד האב.\n"
+"כל שינוי בדף האב חל באופן אוטומטי על כל הגרסאות המתורגמות."
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0
@@ -2911,7 +2921,7 @@ msgstr "יישומים מותקנים"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Localizations / Account Charts"
-msgstr ""
+msgstr "לוקליזציות מותקנות / תרשימי חשבון"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -2940,7 +2950,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Iris Joe, CFO"
-msgstr ""
+msgstr "אייריס ג'ו, מנהלת כספים"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -2986,17 +2996,6 @@ msgstr "מחובר ?"
 #, python-format
 msgid "It looks like your file is being called by"
 msgstr "נראה שהקובץ שלך נקרא ע\"י"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"יתכן שניתן יהיה לערוך את הפריטים הרלוונטיים או לתקן את הבעיה ב <a "
-"href=\"%s\">ממשק Odoo הקלאסי</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -3599,7 +3598,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Popup"
-msgstr ""
+msgstr "דיוור(ניוזלטר) קופץ"
 
 #. module: website
 #. openerp-web
@@ -3648,7 +3647,7 @@ msgstr "ללא"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not SEO optimized"
-msgstr ""
+msgstr "לא מותאם לקידום אתרים"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -3658,7 +3657,7 @@ msgstr "לא בתפריט הראשי"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not indexed"
-msgstr ""
+msgstr "לא באינדקס"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -3791,6 +3790,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"חל רק אם תצוגה זו עוברת בירושה מתצוגה אחרת (יורש_מזהה אינו שלילי/חסר).\n"
+"\n"
+"* אם הרחבה (ברירת מחדל), אם תצוגה זו מבקשת את התצוגה הראשית הקרובה ביותר\n"
+"נחפש למעלה (באמצעות יורש_מזהה), אז כל התצוגות יורשות ממנו עם\n"
+"מודל התצוגה מיושם שם\n"
+" * אם ראשי, התצוגה הראשית הקרובה ביותר נפתרת במלואה (גם אם היא משתמשת ב-\n"
+"דגם שונה מזה), ואז מפרט הירושה של תצוגה זו\n"
+"(<xpath/>) מיושמים, והתוצאה משמשת כאילו היא של תצוגה זו\n"
+"כקשת בפועל.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4000,7 +4008,7 @@ msgstr "לקוחות/ספקים"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Pill"
-msgstr ""
+msgstr "כדור"
 
 #. module: website
 #. openerp-web
@@ -4899,6 +4907,12 @@ msgid ""
 msgstr ""
 "זו יחידה פשוטה, רכיב פשוט בסגנון ג'ומבוטרון <br/>על מנת להפנות תשומת לב יתרה"
 " לתכנים ומידע שמוצג."
+
+#. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "הפעולה אינה נתמכת"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -5994,11 +6008,6 @@ msgstr "כתובת אתר"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "אתר אינטרנט"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500

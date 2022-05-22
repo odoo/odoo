@@ -12,6 +12,7 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
+# Joakim Weckman, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:07+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019\n"
+"Last-Translator: Joakim Weckman, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
-msgstr ""
+msgstr "<i class=“fa fa-calendar”/> Alkaen"
 
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
@@ -60,6 +61,8 @@ msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
 msgstr ""
+"Analyyttinen oletussääntö edellyttää vähintään analyyttistä tiliä tai "
+"analyyttistä tunnistetta."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
@@ -71,7 +74,7 @@ msgstr "Kustannuspaikka"
 #. module: account_analytic_default
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Analytic Default Rule"
-msgstr ""
+msgstr "Analyyttinen oletussääntö"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -235,6 +238,10 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
 msgstr ""
+"Valitse kirjanpitotili, joka käyttää analyyttisessä oletussäännössä "
+"määritettyä analyyttistä tiliä (esim. luo uusi myyntilasku tai myyntitilaus,"
+" jos valitsemme tämän kirjanpidontilin, se ottaa tämän automaattisesti tämän"
+" analyyttisenä tilinä)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
@@ -261,3 +268,11 @@ msgstr "Käyttäjä"
 #: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
 msgstr " "
+
+#. module: account_analytic_default
+#: code:addons/account_analytic_default/models/account_move.py:30
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""

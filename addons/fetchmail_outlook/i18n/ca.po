@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Eric Antones <eantones@users.noreply.github.com>, 2022
+# Eugeni Chafer <eugeni@chafer.cat>, 2022
 # marcescu, 2022
 # 
 msgid ""
@@ -26,13 +27,15 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                       Connecta el teu compte d'Outlook"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
 msgid ""
 "<i class=\"fa fa-cog\"/>\n"
 "                        Edit Settings"
-msgstr ""
+msgstr "Editar configuració"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -41,6 +44,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Token Vàlid de l'Outlook\n"
+"                    </span>"
 
 #. module: fetchmail_outlook
 #: model:ir.model,name:fetchmail_outlook.model_fetchmail_server
@@ -70,7 +76,7 @@ msgstr ""
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required ."
-msgstr ""
+msgstr "SSL és necessari"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form

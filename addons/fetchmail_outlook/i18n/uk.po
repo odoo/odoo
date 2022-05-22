@@ -26,6 +26,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Підключіть ваш обліковий запис Outlook"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -33,6 +35,8 @@ msgid ""
 "<i class=\"fa fa-cog\"/>\n"
 "                        Edit Settings"
 msgstr ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Редагувати налаштування"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -41,6 +45,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Дійсний токен Outlook\n"
+"                    </span>"
 
 #. module: fetchmail_outlook
 #: model:ir.model,name:fetchmail_outlook.model_fetchmail_server
@@ -56,7 +63,7 @@ msgstr "Outlook"
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "Outlook mail server %r only supports IMAP server type."
-msgstr ""
+msgstr "Поштовий сервер Outlook підтримує лише сервер типу IMAP."
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
@@ -65,12 +72,14 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Залиште поле пароля порожнім для поштового сервера Outlook. Обробка OAuth "
+"цього не вимагає"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required ."
-msgstr ""
+msgstr "Потрібен SSL."
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -78,3 +87,5 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Налаштуйте облікові дані Outlook API у загальних налаштуваннях, щоб зв’язати"
+" обліковий запис Outlook."
