@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2020
-# Johanna Valkonen <johanna@vividi.fi>, 2020
+# Johanna Valkonen <miujohanna@gmail.com>, 2020
 # Simo Suurla <simo@suurla.fi>, 2020
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2020
@@ -27,8 +27,8 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Joni Winsten, 2021
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -555,6 +555,8 @@ msgstr "Kaikki odottavat ostoehdotukset"
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
+"Mahdollista automaattinen muistutussähköposti toimittajille ennen "
+"toimituspäivämäärää"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -658,6 +660,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
+"Lähetä automaattisesti vahvistussähköposti toimittajalle X päivää ennen "
+"odotettua toimituspäivää, pyytäen vahvistusta toimituspäivämäärälle."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -1351,7 +1355,7 @@ msgstr "Myöhässä olevat ostoehdotukset"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
-msgstr ""
+msgstr "Oston läpimenoaika"
 
 #. module: purchase
 #. openerp-web
@@ -1622,6 +1626,8 @@ msgstr "Toimenpiteiden määrä"
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
 msgstr ""
+"Päivien lukumäärä, jolloin sähköpostimuistutus pitäisi lähettää ennen "
+"luvattua vastaanottopäivää"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -2058,7 +2064,7 @@ msgstr "Ostettu"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days ("
-msgstr ""
+msgstr "Ostot viim. 7 päivää ("
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2190,12 +2196,12 @@ msgstr "Vastaanottopvm"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
 msgid "Receipt Reminder"
-msgstr ""
+msgstr "Muistutus toimituksesta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
 msgid "Receipt Reminder Email"
-msgstr ""
+msgstr "Toimituksen muistutussähköposti"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2413,7 +2419,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
-msgstr ""
+msgstr "Lähetä automaattinen muistutussähköposti toimituksen vahvistuksesta"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form

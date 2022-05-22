@@ -24,6 +24,7 @@
 # Alejandro Concepción <alconor23@hotmail.com>, 2021
 # marcescu, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
+# Luis D Lafaurie, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
+"Last-Translator: Luis D Lafaurie, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,14 +55,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Grupo de impuestos: el impuesto es un conjunto de sub impuestos.\n"
+"Grupo de impuestos: el impuesto es un conjunto de subimpuestos.\n"
 "     - Fijo: el importe del impuesto permanece igual independientemente del precio.\n"
-"     - Porcentaje del precio: el monto del impuesto es un % del precio:\n"
-"         Por ejemplo, 100 * (1 + 10%) = 110 (sin precio incluido)\n"
+"     - Porcentaje del precio: el importe del impuesto es un % del precio:\n"
+"         por ejemplo, 100 * (1 + 10%) = 110 (sin precio incluido)\n"
 "         por ejemplo, 110 / (1 + 10%) = 100 (precio incluido)\n"
-"     - Porcentaje del precio impuesto incluido: El monto del impuesto es una división del precio:\n"
+"     - Porcentaje del precio, impuesto incluido: el importe del impuesto es una división del precio:\n"
 "         Por ejemplo, 180 / (1 - 10%) = 200 (sin precio incluido)\n"
-"         Por ejemplo, 200 * (1-10%) =  180  (precio incluido)\n"
+"         Por ejemplo, 200 * (1 - 10%) =  180  (precio incluido)\n"
 "        "
 
 #. module: account
@@ -353,7 +354,7 @@ msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Periodo\" role=\"img\" title=\"Periodo\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -437,8 +438,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Factura de proveedor</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Facturas de proveedor</span>"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Factura</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Facturas</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -509,10 +510,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" aria-label=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/> "
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -520,8 +520,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
-" son específicos de la empresa.\"/> "
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -586,7 +586,7 @@ msgid ""
 "<span class=\"o_form_label\">Main Currency</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Moneda Principal</span>\n"
+"<span class=\"o_form_label\">Moneda principal</span>\n"
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -596,7 +596,7 @@ msgid ""
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Método de redondeo</span>\n"
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores configurados aquí son específicos de la compañía.\" aria-label=\"Los valores configurados aquí son específicos de la compañía.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -633,7 +633,7 @@ msgid ""
 " account, or select a journal to link it with the bank account.</span>"
 msgstr ""
 "<span class=\"text-muted\">Déjelo en blanco para crear un nuevo diario para "
-"esta cuenta bancaria o seleccione un diario para vincularlo con la cuenta "
+"esta cuenta bancaria, o seleccione un diario para vincularlo con la cuenta "
 "bancaria.</span>"
 
 #. module: account
@@ -855,12 +855,12 @@ msgstr "<strong>Fecha de vencimiento:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr "<strong>Balance de Cierre</strong>"
+msgstr "<strong>Saldo de cierre</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Apuntes ordenados por:</strong>"
+msgstr "<strong>Asientos ordenados por:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -890,7 +890,7 @@ msgstr "<strong>Importe del pago: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Date: </strong>"
-msgstr "<strong>Fecha del Pago: </strong>"
+msgstr "<strong>Fecha de pago: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -915,7 +915,7 @@ msgstr "<strong>Origen:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr "<strong>Balance Inicial</strong>"
+msgstr "<strong>Saldo inicial</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -933,7 +933,7 @@ msgid ""
 "<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
-"<strong>Esta moneda ya se ha utilizado para generar asientos contables..</strong> <br/>\n"
+"<strong>Esta moneda ya se ha utilizado para generar asientos contables.</strong> <br/>\n"
 "                        Cambiar su factor de redondeo ahora no cambiará el redondeo realizado en entradas anteriores; posiblemente causando una inconsistencia con los nuevos."
 
 #. module: account
