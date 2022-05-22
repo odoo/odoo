@@ -40,7 +40,8 @@ registerModel({
         /**
          * Handles the click on the detail button
          */
-        onClickDetailsButton() {
+        onClickDetailsButton(ev) {
+            ev.preventDefault();
             this.update({ areDetailsVisible: !this.areDetailsVisible });
         },
         /**
