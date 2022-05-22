@@ -17,7 +17,6 @@
 # Umur Akın <umura@projetgrup.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
@@ -26,6 +25,7 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2022\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,7 @@ msgstr ""
 msgid ""
 "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
+"%(user)s, bu giderin benzer gidere sahip bir kopya olmadığını onaylar."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -159,7 +160,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -298,7 +299,7 @@ msgstr "Masraf hesabı gerekiyor"
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #, python-format
 msgid "An expense of same category, amount and date already exists."
-msgstr ""
+msgstr "Aynı kategoride, tutarda ve tarihte bir masraf zaten mevcut."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -519,7 +520,7 @@ msgstr "İstatistik için yeni bir masraf raporu oluştur"
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #, python-format
 msgid "Create record"
-msgstr ""
+msgstr "Kayıt oluşturma"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_submit
@@ -723,7 +724,7 @@ msgstr "Masraf Satırları"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "Masraf Satırları Geçerli Kullanıcı Tarafından Düzenlenebilir"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -1072,12 +1073,12 @@ msgstr "Takipçi mi"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
 msgid "Is currency_id different from the company_currency_id"
-msgstr ""
+msgstr "Farklı mı currency_id  company_currency_id den"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Is product with non zero cost selected"
-msgstr ""
+msgstr "Sıfır maliyetli olmayan ürün seçilir mi"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1416,6 +1417,8 @@ msgid ""
 "Please configure Default Expense account for Category expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Lütfen Varsayılan Masraf hesabını Kategori gideri için yapılandırın: "
+"'property_account_expense_categ_id'."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
@@ -1688,6 +1691,8 @@ msgid ""
 "Selected Unit of Measure for expense %(expense)s does not belong to the same"
 " category as the Unit of Measure of product %(product)s."
 msgstr ""
+"Masraf %(expense)s için seçilen Ölçü Birimi, ürün %(product)s Ölçü Birimi "
+"ile aynı kategoriye ait değildir."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1698,6 +1703,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Tek bir tıklamayla masraf oluşturmak için bu e-posta rumuzuna fişi ekte olan"
+" bir e-posta gönderin. Posta konusunun ilk sözcüğü kategorinin iç "
+"başvurusunu veya kategori adını içeriyorsa, ilgili kategori otomatik olarak "
+"ayarlanır. Masraf tutarını, masraf üzerinde de ayarlamak için postaya konu "
+"olarak yazın."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1745,7 +1755,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "Yevmiye kayıtları oluşturmak için masraf yevmiyesini belirtin."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1860,6 +1870,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
+"E-posta konusunun ilk kelimesi herhangi bir kategori koduna karşılık "
+"gelmiyordu. Kategoriyi masraf üzerinde manuel olarak ayarlamanız gerekir."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1868,6 +1880,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Aşağıdaki onaylanmış giderler, bu raporun bazı giderlerinden benzer çalışan,"
+" tutar ve kategoriye sahiptir. Lütfen bu raporun kopya içermediğini "
+"doğrulayın."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -1948,7 +1963,7 @@ msgstr "Toplam Şirket Para Birimi"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "Para Birimi Cinsinden Toplam"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
@@ -2006,7 +2021,7 @@ msgstr "Vergi Hariç Tutar"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
 msgid "UoM Category"
-msgstr ""
+msgstr "UoM Kategorisi"
 
 #. module: hr_expense
 #. openerp-web
@@ -2069,6 +2084,11 @@ msgid ""
 "company at fixed cost like allowances for mileage, per diem, accomodation or"
 " meal."
 msgstr ""
+"Bir masraf ürününün maliyeti 0'dan farklı olduğunda, bu ürünü kullanan "
+"kullanıcı giderin tutarını değiştiremez, yalnızca miktarını değiştirebilir. "
+"Şirket tarafından kilometre, günlük ücret, konaklama veya yemek için "
+"ödenekler gibi sabit maliyetle finanse edilen masraf kategorileri için 0'dan"
+" farklı bir maliyet kullanın."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2091,7 +2111,7 @@ msgstr "Bu masraf raporunu düzenleme yetkiniz yok."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without category."
-msgstr ""
+msgstr "Kategori olmadan rapor oluşturamazsınız."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2177,6 +2197,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
+"Devam etmek için veritabanınızda Masraf olabilir seçili en az bir kategoriye"
+" sahip olmanız gerekir!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"POT-Creation-Date: 2022-03-15 12:06+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -31,6 +31,12 @@ msgid "ConformanceLevel"
 msgstr "ConformanceLevel"
 
 #. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid "Display the currency"
+msgstr "Відобразити валюту"
+
+#. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "DocumentFileName"
 msgstr "DocumentFileName"
@@ -39,12 +45,6 @@ msgstr "DocumentFileName"
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "DocumentType"
 msgstr "DocumentType"
-
-#. module: account_edi_facturx
-#: code:addons/account_edi_facturx/models/account_edi_format.py:0
-#, python-format
-msgid "Display the currency"
-msgstr ""
 
 #. module: account_edi_facturx
 #: model:ir.model,name:account_edi_facturx.model_account_edi_format
@@ -79,14 +79,6 @@ msgstr "Рахунок, створений Odoo"
 #. module: account_edi_facturx
 #: code:addons/account_edi_facturx/models/account_edi_format.py:0
 #, python-format
-msgid ""
-"The currency (%s) of the document you are uploading is not active in this database.\n"
-"Please activate it before trying again to import."
-msgstr ""
-
-#. module: account_edi_facturx
-#: code:addons/account_edi_facturx/models/account_edi_format.py:0
-#, python-format
 msgid "No information about the journal or the type of invoice is passed"
 msgstr "Пропущено інформацію про журнал або тип рахунку"
 
@@ -109,6 +101,16 @@ msgstr "Фактична версія XML-схеми Factur-X"
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "The conformance level of the embedded Factur-X data"
 msgstr "Рівень відповідності вбудованих даних Factur-X"
+
+#. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The currency (%s) of the document you are uploading is not active in this database.\n"
+"Please activate it before trying again to import."
+msgstr ""
+"Валюта (%s) документа, який ви завантажуєте, не активний у цій базі даних.\n"
+"Будь ласка, активуйте його перед повторною спробою імпортувати."
 
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
