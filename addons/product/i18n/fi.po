@@ -3,7 +3,7 @@
 # 	* product
 # 
 # Translators:
-# Johanna Valkonen <johanna@vividi.fi>, 2020
+# Johanna Valkonen <miujohanna@gmail.com>, 2020
 # Simo Suurla <simo@suurla.fi>, 2020
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2020
 # Miku Laitinen <miku.laitinen@gmail.com>, 2020
@@ -20,13 +20,13 @@
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2020
 # Martin Trigaux, 2020
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Eppu Tuominen <eppu.tuominen@emsystems.fi>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1182,7 +1182,7 @@ msgstr "Tuo mallia toimittajahinnoittelijoille"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
@@ -2367,6 +2367,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "Tuotemalli arkistoidaan, joten mikään yhdistelmä ei ole mahdollista."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2413,6 +2419,15 @@ msgid "This comes from the product form."
 msgstr "Tämä tulee tuotelomakkeelta"
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Tämä on kaikkien attribuuttien ylimääräisen hinnan summa"
@@ -2420,7 +2435,7 @@ msgstr "Tämä on kaikkien attribuuttien ylimääräisen hinnan summa"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "Tämä huomautus lisätään myyntitilauksiin ja laskuihin."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view

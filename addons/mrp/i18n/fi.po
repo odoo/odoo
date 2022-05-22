@@ -6,7 +6,7 @@
 # Tommi Rintala <tommi.rintala@gmail.com>, 2020
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2020
 # Kimmo Lehtonen <leban@netzionale.com>, 2020
-# Johanna Valkonen <johanna@vividi.fi>, 2020
+# Johanna Valkonen <miujohanna@gmail.com>, 2020
 # Simo Suurla <simo@suurla.fi>, 2020
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2020
 # Timo Koukkari <ti.ko@netikka.fi>, 2020
@@ -20,7 +20,6 @@
 # Mikko Salmela <salmemik@gmail.com>, 2020
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2020
 # Jukka Paulin <jukka.paulin@gmail.com>, 2020
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2020
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2020
@@ -32,6 +31,8 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Pekka Ikonen, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Joakim Weckman, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Pekka Ikonen, 2021\n"
+"Last-Translator: Joakim Weckman, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,7 +134,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Structure - %s' % object.display_name"
-msgstr ""
+msgstr "'Osaluettelon rakenne - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -566,7 +567,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_consumption_warning__consumption__warning
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__warning
 msgid "Allowed with warning"
-msgstr ""
+msgstr "Sallittu virheilmoituksella"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -699,7 +700,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Structure Report"
-msgstr ""
+msgstr "Osaluettelon rakenneraportti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -714,7 +715,7 @@ msgstr "Jälkitoimituksen vahvistusrivi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr ""
+msgstr "Jälkitoimituksen vahvistusrivit"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -1765,7 +1766,7 @@ msgstr "Font awesome ikoni esim.. fa-tasks"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Pakota"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2123,6 +2124,14 @@ msgid "It has already been unblocked."
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr ""
@@ -2141,7 +2150,7 @@ msgstr "Avain"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Kit"
-msgstr ""
+msgstr "Tuotesetti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty____last_update
@@ -3116,7 +3125,7 @@ msgstr "Suunnittelu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Suunnitteluongelmia"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_plastic_laminate
@@ -3183,7 +3192,7 @@ msgstr "Tulosta"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print Unfolded"
-msgstr ""
+msgstr "Tulosta avattuna"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__priority
@@ -3547,7 +3556,7 @@ msgstr ""
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Report:"
-msgstr ""
+msgstr "Raportti:"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -3970,7 +3979,7 @@ msgstr "Varastosiirrot"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Varaston täydennyksen raportti"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
@@ -4006,7 +4015,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Structure & Cost"
-msgstr ""
+msgstr "Rakenne & Kulut"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
@@ -4122,6 +4131,12 @@ msgstr ""
 "määritelty."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4164,6 +4179,15 @@ msgstr ""
 msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
 msgstr ""
 
 #. module: mrp

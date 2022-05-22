@@ -6,6 +6,7 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # jabelchi, 2022
 # Martin Trigaux, 2022
+# Eugeni Chafer <eugeni@chafer.cat>, 2022
 # marcescu, 2022
 # 
 msgid ""
@@ -28,13 +29,15 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                       Connecta el teu compte d'Outlook"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
 msgid ""
 "<i class=\"fa fa-cog\"/>\n"
 "                        Edit Settings"
-msgstr ""
+msgstr "Editar configuració"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -43,11 +46,14 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Token Vàlid de l'Outlook\n"
+"                    </span>"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "URI d'autenticació"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__display_name
@@ -67,7 +73,7 @@ msgstr "Servidor de Correu entrant"
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Està configurat la Credencial d'Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server____last_update
@@ -82,22 +88,22 @@ msgstr "Outlook"
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Testimoni d'accés de l'Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Marca horària de caducitat del testimoni d'autenticació de l'Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__use_microsoft_outlook_service
 msgid "Outlook Authentication"
-msgstr ""
+msgstr "Autenticació de l'Outlook"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Token de refresc de l'Outlook"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
@@ -117,7 +123,7 @@ msgstr ""
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required ."
-msgstr ""
+msgstr "SSL és necessari"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
