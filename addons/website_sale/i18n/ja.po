@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
+# 江口和志 <k_eguchi@enzantrades.co.jp>, 2020
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
@@ -16,8 +16,8 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
 # Noma Yuki, 2021
-# Yabe Takahiro <yabe@quartile.co>, 2021
-# Ryoko Tsuda <ryoko@quartile.co>, 2021
+# Tack Yabe <yabe@quartile.co>, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,7 +192,7 @@ msgstr "<b>出荷先: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "<b>Your order: </b>"
-msgstr ""
+msgstr "<b>自分のオーダ: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -201,6 +201,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<br/>\n"
+"                30日返金保証<br/>\n"
+"                発送: 2-3 営業日"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1665,6 +1668,7 @@ msgstr "マイカート"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #, python-format
 msgid "Name"
 msgstr "名称"
@@ -2128,7 +2132,7 @@ msgstr "プロダクト名"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr ""
+msgstr "プロダクトページ追加項目"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2362,7 +2366,7 @@ msgstr "オーダレビュー"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr ""
+msgstr "リボン"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
@@ -2849,7 +2853,7 @@ msgstr "ウェブサイトからの確認済み注文はありません"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There is no recent confirmed order."
-msgstr ""
+msgstr "最近確定された注文はありません。"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce

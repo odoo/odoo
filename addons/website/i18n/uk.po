@@ -9,8 +9,8 @@
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
 # Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2020
-# Martin Trigaux, 2021
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,18 +50,20 @@ msgstr "\"URL\" не може бути пустою."
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
+"\"URL to\" не може містити параметр %s, який не використовується в \"URL "
+"from\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "\"URL to\" недійсний: %s"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "\"URL to\" повинен містити параметр %s, що використовується в \"URL from\"."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -169,7 +171,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -1973,7 +1975,7 @@ msgstr "Перевірте ваші налаштування."
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Check your connection and try again"
-msgstr ""
+msgstr "Перевірте ваше з'єднання та спробуйте знову"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -3028,7 +3030,7 @@ msgstr "Пончик"
 #, python-format
 msgid ""
 "Drag the <b>%s</b> building block and drop it at the bottom of the page."
-msgstr ""
+msgstr "Перетягніть конструкторський блок <b>%s</b> вниз сторінки."
 
 #. module: website
 #. openerp-web
@@ -7419,6 +7421,12 @@ msgid "This page"
 msgstr "Ця сторінка"
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Цей оператор не підтримується"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
@@ -9059,7 +9067,7 @@ msgstr "https://fonts.google.com/specimen/Roboto"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "https://www.odoo.com"
-msgstr ""
+msgstr "https://www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
