@@ -189,7 +189,7 @@
 
         <!--SLIDE RESOURCE-->
         <record id="rule_slide_slide_resource_downloadable" model="ir.rule">
-            <field name="name">Resource: restricted to channel members and channel responsible</field>
+            <field name="name">Resource: read restricted to channel members</field>
             <field name="model_id" ref="model_slide_slide_resource"/>
             <field name="domain_force">[('slide_id.channel_id.partner_ids', '=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
@@ -197,6 +197,39 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_slide_slide_resource_officer_read" model="ir.rule">
+            <field name="name">Resource: officer: read all</field>
+            <field name="model_id" ref="model_slide_slide_resource"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_website_slides_officer'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_slide_slide_resource_officer_crud" model="ir.rule">
+            <field name="name">Resource: officer: crud own only</field>
+            <field name="model_id" ref="model_slide_slide_resource"/>
+            <field name="domain_force">[('slide_id.channel_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_website_slides_officer'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_slide_slide_resource_manager" model="ir.rule">
+            <field name="name">Resource: manager: crud all</field>
+            <field name="model_id" ref="model_slide_slide_resource"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_website_slides_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
     </data>
 </odoo>

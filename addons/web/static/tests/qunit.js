@@ -409,4 +409,16 @@
             addSortButton();
         }
     });
+
+    // -----------------------------------------------------------------------------
+    // FIXME: This sounds stupid, it feels stupid... but it fixes visibility check in folded <details> since Chromium 97+ 💩
+    // Since https://bugs.chromium.org/p/chromium/issues/detail?id=1185950
+    // See regression report https://bugs.chromium.org/p/chromium/issues/detail?id=1276028
+    // -----------------------------------------------------------------------------
+
+    QUnit.begin(() => {
+        const el = document.createElement("style");
+        el.innerText = "details:not([open]) > :not(summary) { display: none; }";
+        document.head.appendChild(el);
+    });
 })();

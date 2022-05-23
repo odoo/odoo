@@ -516,7 +516,7 @@ class HolidaysAllocation(models.Model):
             partners_to_subscribe = set()
             if holiday.employee_id.user_id:
                 partners_to_subscribe.add(holiday.employee_id.user_id.partner_id.id)
-            if holiday.validation_type == 'hr':
+            if holiday.validation_type == 'officer':
                 partners_to_subscribe.add(holiday.employee_id.parent_id.user_id.partner_id.id)
                 partners_to_subscribe.add(holiday.employee_id.leave_manager_id.partner_id.id)
             holiday.message_subscribe(partner_ids=tuple(partners_to_subscribe))
@@ -690,10 +690,7 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         responsible = self.env.user
 
-        if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
-            if self.employee_id.leave_manager_id:
-                responsible = self.employee_id.leave_manager_id
-        elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
+        if self.validation_type == 'officer':
             if self.holiday_status_id.responsible_id:
                 responsible = self.holiday_status_id.responsible_id
 

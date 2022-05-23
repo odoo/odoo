@@ -315,7 +315,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     characterData: true,
                 });
             }
-        }
+        };
         observe();
 
         this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
@@ -323,8 +323,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 processRecords(this.observer.takeRecords());
                 this.observer.disconnect();
             }
-        })
-        this.wysiwyg.odooEditor.addEventListener('observerActive', observe)
+        });
+        this.wysiwyg.odooEditor.addEventListener('observerActive', observe);
 
         $('body').addClass('editor_started');
     },
@@ -333,6 +333,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
             return !$(el).closest('.o_not_editable').length;
         }).toArray();
+    },
+
+    _getReadOnlyAreas () {
+        return [];
     },
     /**
      * Call preventDefault of an event.
@@ -419,6 +423,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             powerboxCommands: this._getSnippetsCommands(),
             bindLinkTool: true,
             showEmptyElementHint: false,
+            getReadOnlyAreas: this._getReadOnlyAreas.bind(this),
         }, collaborationConfig);
         return wysiwygLoader.createWysiwyg(this,
             Object.assign(params, this.wysiwygOptions),

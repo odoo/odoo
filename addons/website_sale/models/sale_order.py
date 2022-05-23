@@ -164,7 +164,10 @@ class SaleOrder(models.Model):
         SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
         # change lang to get correct name of attributes/values
         product_with_context = self.env['product.product'].with_context(product_context)
-        product = product_with_context.browse(int(product_id))
+        product = product_with_context.browse(int(product_id)).exists()
+
+        if not product or (not line_id and not product._is_add_to_cart_allowed()):
+            raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
         try:
             if add_qty:
@@ -186,9 +189,6 @@ class SaleOrder(models.Model):
 
         # Create line if no line with product_id can be located
         if not order_line:
-            if not product:
-                raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
-
             no_variant_attribute_values = kwargs.get('no_variant_attribute_values') or []
             received_no_variant_values = product.env['product.template.attribute.value'].browse([int(ptav['value']) for ptav in no_variant_attribute_values])
             received_combination = product.product_template_attribute_value_ids | received_no_variant_values

@@ -72,7 +72,7 @@ msgstr "رمز الدفع "
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "معاملة السداد"
+msgstr "معاملة الدفع "
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
@@ -92,12 +92,14 @@ msgid ""
 "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
+"البيانات المستلمة مع توقيع غير صالح. المتوقع: %(exp)s؛ ما تم الحصول عليه: %(rec)s؛ البيانات: \n"
+"%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received feedback data with unknown type: %s"
-msgstr ""
+msgstr "تم استلام بيانات الملاحظات ذات نوع مجهول: %s "
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
@@ -113,23 +115,24 @@ msgstr "SHA Key OUT"
 #: code:addons/payment_ogone/models/payment_token.py:0
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been archived."
-msgstr ""
+msgstr "لا يمكن استعادة طرق الدفع المحفوظة بمجرد أن تتم أرشفتها. "
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"من المهم أن تقوم بتخزين بيانات الدفع الخاصة بك لاستخدامها في المستقبل. "
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "المعرف مُستخدم فقط لتعريف مستخدم الواجهة البرمجية للتطبيق مع Ogone "
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "المعرف مُستخدم فقط لتعريف الحساب مع Ogone "
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
@@ -146,7 +149,7 @@ msgstr "فشل الاتصال مع الواجهة البرمجية للتطبي�
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "لقد تم رفض الدفع: %s "
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0

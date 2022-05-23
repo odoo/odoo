@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import tagged
+from odoo.tests import tagged, HttpCase
 
 from .test_project_base import TestProjectCommon
 
@@ -89,3 +89,10 @@ class TestPersonalStages(TestProjectCommon):
             'read_group should not have returned more tasks than the user is assigned to.')
         self.assertEqual(1, total_stage_0)
         self.assertEqual(1, total_stage_1)
+
+@tagged('-at_install', 'post_install')
+class TestPersonalStageTour(HttpCase, TestProjectCommon):
+
+    def test_personal_stage_tour(self):
+        # Test customizing personal stages as a project user
+        self.start_tour('/web', 'personal_stage_tour', login="armandel")

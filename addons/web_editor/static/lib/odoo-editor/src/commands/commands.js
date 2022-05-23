@@ -284,11 +284,11 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
     const [
         normalizedStartContainer,
         normalizedStartOffset
-    ] = getNormalizedCursorPosition(startContainer, startOffset)
+    ] = getNormalizedCursorPosition(startContainer, startOffset);
     const [
         normalizedEndContainer,
         normalizedEndOffset
-    ] = getNormalizedCursorPosition(endContainer, endOffset)
+    ] = getNormalizedCursorPosition(endContainer, endOffset);
     const selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
         const atLeastOneCharFromNodeInSelection = !(
             (node === normalizedEndContainer && normalizedEndOffset === 0) ||
@@ -308,7 +308,7 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
                     ancestor = ancestor.parentElement;
                 }
             }
-        } else{
+        } else {
             isApplied = isFormat[style] && isFormat[style](node);
         }
         return shouldApply ? !isApplied : isApplied;
@@ -346,7 +346,7 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
             newParent.appendChild(textNode);
         }
         applyStyle(textNode.parentElement);
-        changedElements.push(textNode.parentElement)
+        changedElements.push(textNode.parentElement);
     }
     if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
         setSelection(selectedTextNodes[0], 0);
@@ -385,7 +385,8 @@ const styles = {
     switchDirection: {
         is: editable => isSelectionFormat(editable, 'switchDirection'),
     },
-}
+};
+
 export function toggleFormat(editor, format) {
     const selection = editor.document.getSelection();
     if (!selection.rangeCount) return;
@@ -403,12 +404,12 @@ export function toggleFormat(editor, format) {
     const {anchorNode, anchorOffset, focusNode, focusOffset} = editor.document.getSelection();
     const style = styles[format];
     const selectedTextNodes = getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.length);
     const isAlreadyFormatted = style.is(editor.editable);
     let changedElements = [];
     if (isAlreadyFormatted && style.name === 'textDecorationLine') {
-        const decoratedPairs = new Set(selectedTextNodes.map(n => [closestElement(n, `[style*="text-decoration-line: ${style.value}"]`), n]));
-        for (const [closestDecorated, textNode] of decoratedPairs) {
+        for (const textNode of selectedTextNodes) {
+            const closestDecorated = closestElement(textNode, `[style*="text-decoration-line: ${style.value}"]`);
             if (closestDecorated) {
                 const splitResult = splitAroundUntil(textNode, closestDecorated);
                 const decorationToRemove = splitResult[0] || splitResult[1] || closestDecorated;

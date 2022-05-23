@@ -169,6 +169,11 @@ class ProjectCustomerPortal(CustomerPortal):
         user_context = request.session.get_context() if request.session.uid else {}
         mods = conf.server_wide_modules or []
         qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
+        if request.env.lang:
+            lang = request.env.lang
+            session_info['user_context']['lang'] = lang
+            # Update Cache
+            user_context['lang'] = lang
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
         cache_hashes = {
