@@ -99,7 +99,7 @@ msgstr "Thời điểm tạo"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
+msgid "Data Endpoint"
 msgstr ""
 
 #. module: auth_oauth
@@ -153,6 +153,11 @@ msgid "Log in with Odoo.com"
 msgstr "Đăng nhập bằng Odoo.com"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
+msgstr "Nhãn nút đăng nhập"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
 msgid "OAuth Access Token"
 msgstr ""
@@ -171,7 +176,7 @@ msgstr "Nhà cung cấp OAuth"
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "OAuth UID phải là duy nhất với mỗi nhà cung cấp"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
@@ -181,7 +186,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr ""
+msgstr "Nhà cung cấp UAuth2"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
@@ -228,6 +233,16 @@ msgstr "Đăng ký không được cho phép đối với cơ sở dữ liệu n
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "Thông số Hệ thống"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users

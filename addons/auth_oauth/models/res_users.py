@@ -50,7 +50,9 @@ class ResUsers(models.Model):
         if oauth_provider.data_endpoint:
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
             validation.update(data)
-        # unify subject key under standard (sub), pop all possible and get most sensible
+        # unify subject key, pop all possible and get most sensible. When this
+        # is reworked, BC should be dropped and only the `sub` key should be
+        # used (here, in _generate_signup_values, and in _auth_oauth_signin)
         subject = next(filter(None, [
             validation.pop(key, None)
             for key in [
@@ -61,15 +63,13 @@ class ResUsers(models.Model):
         ]), None)
         if not subject:
             raise AccessDenied('Missing subject identity')
-        # also set on user_id for BC reasons, remove in master when the entire
-        # thing gets reworked
-        validation['sub'] = validation['user_id'] = subject
+        validation['user_id'] = subject
 
         return validation
 
     @api.model
     def _generate_signup_values(self, provider, validation, params):
-        oauth_uid = validation['sub']
+        oauth_uid = validation['user_id']
         email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
         name = validation.get('name', email)
         return {
@@ -93,7 +93,7 @@ class ResUsers(models.Model):
 
             This method can be overridden to add alternative signin methods.
         """
-        oauth_uid = validation['sub']
+        oauth_uid = validation['user_id']
         try:
             oauth_user = self.search([("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
             if not oauth_user:

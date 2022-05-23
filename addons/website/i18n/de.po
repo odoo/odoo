@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jan Meyer, 2019
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Gab_Odoo <gab@odoo.com>, 2019
 # Martin K <martinkuenz@gmail.com>, 2019
 # Andi, 2019
@@ -11,7 +12,6 @@
 # Bülent Tiknas <btiknas@googlemail.com>, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Felix Schubert <felix.schubert@go-erp.com>, 2019
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Anja Funk <anja.funk@afimage.de>, 2019
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
 # Torsten Wichmann <t.wichmann@intero-technologies.de>, 2019
@@ -35,14 +35,15 @@
 # Chris Egal <sodaswed@web.de>, 2021
 # Martin Trigaux, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +73,26 @@ msgstr "\"Link zu\" darf nicht leer sein."
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr ""
+"\"URL to\" darf Parameter %s nicht enthalten, der nicht in \"URL from\" "
+"verwendet wird."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr "\"URL to\" ist ungültig: %s"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr "\"URL to\" muss Parameter %s enthalten, der in \"URL from\" verwendet wird."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" must start with a leading slash."
 msgstr "\"URL zu\" muss mit einem führenden Schrägstrich beginnen."
 
@@ -91,17 +112,6 @@ msgstr "%s (id:%s)"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website
 #. openerp-web
@@ -144,11 +154,6 @@ msgid ""
 msgstr ""
 ".\n"
 " Die Änderung des Namens wird diese Aufrufe beenden."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3092,17 +3097,6 @@ msgid "It looks like your file is being called by"
 msgstr "Anscheinend wird die Datei aufgerufen von"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"Möglicherweise können die relevanten Elemente bearbeitet oder das Problem in"
-" <a href=\"%s\">der klassischen Odoo-Benutzeroberfläche</a> behoben werden."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Item 1"
@@ -5035,6 +5029,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Dieser Betreiber wird nicht unterstützt"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
@@ -6166,11 +6166,6 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "Website"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500

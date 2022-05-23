@@ -19,6 +19,7 @@
 # hed shefer <hed@laylinetech.com>, 2020
 # david danilov, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: Netta Waizer, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14285,6 +14286,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"אם התצוגה הזו עוברת בירושה,\n"
+"* אם נכון, התצוגה תמיד מרחיבה את ההורה שלה\n"
+"* אם שקר, התצוגה כרגע לא מרחיבה את ההורה שלה אבל אפשר להפעיל אותה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -14647,7 +14651,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inherit"
-msgstr ""
+msgstr "יורש"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -18900,6 +18904,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"חל רק אם תצוגה זו עוברת בירושה מתצוגה אחרת (יורש_מזהה אינו שלילי/חסר).\n"
+"\n"
+"* אם הרחבה (ברירת מחדל), אם תצוגה זו מבקשת את התצוגה הראשית הקרובה ביותר\n"
+"נחפש למעלה (באמצעות יורש_מזהה), אז כל התצוגות יורשות ממנו עם\n"
+"מודל התצוגה מיושם שם\n"
+" * אם ראשי, התצוגה הראשית הקרובה ביותר נפתרת במלואה (גם אם היא משתמשת ב-\n"
+"דגם שונה מזה), ואז מפרט הירושה של תצוגה זו\n"
+"(<xpath/>) מיושמים, והתוצאה משמשת כאילו היא של תצוגה זו\n"
+"כקשת בפועל.\n"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day

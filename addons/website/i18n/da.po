@@ -12,24 +12,24 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2019
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
-# Martin Trigaux, 2019
 # Jonathan Stein <cgs@image.dk>, 2019
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
-# walther_b <wba@miracle.dk>, 2020
+# Walther Barnett <walther@gundogpro.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
 # Preben Lisby <preben.lisby@gmail.com>, 2020
-# Mads Søndergaard, 2021
+# Mads Søndergaard, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Mads Søndergaard, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +59,24 @@ msgstr "\"URL til\" kan ikke være tom."
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr "\"URL til\" kan ikke indeholde parametre %s som ikke anvendes i \"URL fra\"."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr "\"URL til\" er ugyldig: %s"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr "\"URL til\" skal indeholde parametre %s anvendt i \"URL fra\"."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" must start with a leading slash."
 msgstr "\"URL til\" skal starte med skråstreg. "
 
@@ -78,17 +96,6 @@ msgstr "%s (id:%s)"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website
 #. openerp-web
@@ -131,11 +138,6 @@ msgid ""
 msgstr ""
 ".\n"
 "            Ændring af navnet vil ødelægge disse kald."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3056,17 +3058,6 @@ msgid "It looks like your file is being called by"
 msgstr "Det ser ud til at din fil bliver kaldet af"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"Det kan være muligt at redigere relevante genstande, eller at løse "
-"problemet, i <a href=\"%s\">det klassiske Odoo interface</a>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Item 1"
@@ -5000,6 +4991,12 @@ msgstr ""
 "at påkalde ekstra opmærksom til udvalgt indhold eller information."
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Denne operatør er ikke understøttet"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
@@ -6123,11 +6120,6 @@ msgstr "url"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "Hjemmeside"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
