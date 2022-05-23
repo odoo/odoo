@@ -881,6 +881,7 @@ var FormRenderer = BasicRenderer.extend({
             class: 'nav-link',
             role: 'tab',
             text: page.attrs.string,
+            name: page.attrs.name,
         });
         return $('<li>', {class: 'nav-item'}).append($a);
     },
