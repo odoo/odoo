@@ -1,28 +1,3 @@
-odoo.define('website_sale.editMenu', function (require) {
-    'use strict';
-
-var WebsiteEditMenu = require('website.editMenu');
-
-WebsiteEditMenu.include({
-    /**
-     * @override
-     */
-    _getContentEditableAreas () {
-        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
-            return !$(el).closest('.o_not_editable, .oe_website_sale .products_header').length;
-        }).toArray();
-    },
-    /**
-     * @override
-     */
-    _getReadOnlyAreas () {
-        return $("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray();
-    },
-});
-});
-
-//==============================================================================
-
 odoo.define('website_sale.editor', function (require) {
 'use strict';
 
