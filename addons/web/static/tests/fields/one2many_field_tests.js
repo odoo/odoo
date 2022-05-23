@@ -3727,7 +3727,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, "tr.o_data_row");
     });
 
-    QUnit.skipWOWL("pressing enter in a o2m with a required empty field", async function (assert) {
+    QUnit.test("pressing enter in a o2m with a required empty field", async function (assert) {
         serverData.models.turtle.fields.turtle_foo.required = true;
 
         await makeView({
@@ -3753,13 +3753,13 @@ QUnit.module("Fields", (hooks) => {
         // edit mode, then click on Add an item, then press enter
         await clickEdit(target);
         await addRow(target);
-        await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "enter" });
+        await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "Enter" });
         assert.hasClass(
             target.querySelector('[name="turtle_foo"]'),
             "o_field_invalid",
             "input should be marked invalid"
         );
-        assert.verifySteps(["read", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange"]);
     });
 
     QUnit.test("editing a o2m, with required field and onchange", async function (assert) {

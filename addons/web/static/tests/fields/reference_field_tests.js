@@ -11,6 +11,7 @@ import {
     triggerEvent,
     editSelect,
     clickSave,
+    clickEdit,
 } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
@@ -923,13 +924,9 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            await click(target, ".o_form_button_edit");
+            await clickEdit(target);
 
-            assert.strictEqual(
-                target.querySelector(".reference_field").textContent,
-                "xpad",
-                "should have the second product"
-            );
+            assert.strictEqual(target.querySelector(".reference_field").textContent, "xpad");
 
             // Select the second product without changing the model
             await click(target, ".o_list_table .reference_field");

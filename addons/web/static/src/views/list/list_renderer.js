@@ -731,8 +731,22 @@ export class ListRenderer extends Component {
      * @param {KeyboardEvent} event
      */
     onKeydown(event) {
-        if (event.key === "Escape") {
-            this.props.list.unselectRecord();
+        const { classList, tagName } = event.target;
+        switch (event.key) {
+            case "Escape":
+                this.props.list.unselectRecord();
+                break;
+            case "Enter":
+                if (tagName === "TEXTAREA" || [...classList].includes("o-autocomplete--input")) {
+                    return;
+                }
+                // TODO: we need to refactor switchMode and unselectRecord!!!
+                if (this.props.list.editedRecord && this.props.list.editedRecord.checkValidity()) {
+                    this.props.list.unselectRecord();
+                }
+                break;
+            default:
+                break;
         }
     }
 
