@@ -398,7 +398,8 @@ class AccountReconcileModel(models.Model):
                 if match:
                     sign = 1 if residual_balance > 0.0 else -1
                     try:
-                        extracted_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                        extracted_match_group = re.sub(r'[^\d' + self.decimal_separator + ']', '', match.group(1))
+                        extracted_balance = float(extracted_match_group.replace(self.decimal_separator, '.'))
                         balance = copysign(extracted_balance * sign, residual_balance)
                     except ValueError:
                         balance = 0
