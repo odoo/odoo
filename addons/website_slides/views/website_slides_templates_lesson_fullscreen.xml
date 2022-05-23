@@ -155,7 +155,7 @@
                                     </li>
                                 </div>
                             </t>
-                            <div class="o_wslides_js_course_join o_wslides_no_access pl-0">
+                            <div t-else="" class="o_wslides_js_course_join o_wslides_no_access pl-0">
                                 <li t-if="slide.channel_id.enroll == 'public'" class="o_wslides_fs_slide_link mb-1">
                                     <i class="fa fa-download mr-1"/>
                                     <t t-call="website_slides.join_course_link"/>
