@@ -837,7 +837,14 @@ export class ViewCompiler {
 
         append(sheetBG, sheetFG);
         for (const child of el.childNodes) {
-            append(sheetFG, this.compileNode(child, params));
+            const compiled = this.compileNode(child, params);
+            if (!compiled) {
+                continue;
+            }
+            if (child.nodeName === "field") {
+                compiled.setAttribute("showTooltip", true);
+            }
+            append(sheetFG, compiled);
         }
         return sheetBG;
     }

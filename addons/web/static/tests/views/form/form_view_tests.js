@@ -8819,63 +8819,62 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_catch_attention");
     });
 
-    QUnit.skipWOWL("proper stringification in debug mode tooltip", async function (assert) {
+    QUnit.test("proper stringification in debug mode tooltip", async function (assert) {
         assert.expect(6);
+        patchWithCleanup(odoo, { debug: true });
 
-        var initialDebugMode = odoo.debug;
-        odoo.debug = true;
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<field name=\"product_id\" context=\"{'lang': 'en_US'}\" " +
-                'attrs=\'{"invisible": [["product_id", "=", 33]]}\' ' +
-                'widget="many2one" />' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" context="{'lang': 'en_US'}" attrs='{"invisible": [["product_id", "=", 33]]}' widget="many2one"/>
+                    </sheet>
+                </form>`,
         });
 
-        var $field = target.querySelector('[name="product_id"]');
-        $field.tooltip("show", true);
-        $field.trigger($.Event("mouseenter"));
-        assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="context"]').length,
-            1,
+        await mouseEnter(target.querySelector("[name='product_id']"));
+        await nextTick();
+        assert.containsOnce(
+            target,
+            ".o-tooltip--technical > li[data-item='context']",
             "context should be present for this field"
         );
         assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="context"]')[0].lastChild.wholeText.trim(),
+            target.querySelector('.o-tooltip--technical > li[data-item="context"]').lastChild
+                .textContent,
             "{'lang': 'en_US'}",
             "context should be properly stringified"
         );
-
-        assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="modifiers"]').length,
-            1,
+        assert.containsOnce(
+            target,
+            ".o-tooltip--technical > li[data-item='modifiers']",
             "modifiers should be present for this field"
         );
         assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="modifiers"]')[0].lastChild.wholeText.trim(),
+            target.querySelector('.o-tooltip--technical > li[data-item="modifiers"]').lastChild
+                .textContent,
             '{"invisible":[["product_id","=",33]]}',
             "modifiers should be properly stringified"
         );
 
-        assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="widget"]').length,
-            1,
+        assert.containsOnce(
+            target,
+            ".o-tooltip--technical > li[data-item='widget']",
             "widget should be present for this field"
         );
         assert.strictEqual(
-            $('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
-            "Many2one (many2one)",
+            target.querySelector('.o-tooltip--technical > li[data-item="widget"]').textContent,
+            "Widget:many2one",
             "widget description should be correct"
         );
-
-        odoo.debug = initialDebugMode;
     });
 
     QUnit.test("do not change pager when discarding current record", async function (assert) {
