@@ -88,7 +88,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'campaign_id': order.campaign_id.id,
             'medium_id': order.medium_id.id,
             'source_id': order.source_id.id,
-            'referrer_id': order.referrer_id.id if order.referrer_id else None,
+            'referrer_id': order.referrer_id.id if hasattr(order, 'referrer_id') else None,
             'invoice_line_ids': [(0, 0, {
                 'name': name,
                 'price_unit': amount,
