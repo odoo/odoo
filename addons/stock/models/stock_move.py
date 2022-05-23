@@ -432,11 +432,11 @@ class StockMove(models.Model):
             warehouse_id = move.location_dest_id.warehouse_id.id if incoming else move.location_id.warehouse_id.id
             return warehouse_id, max(move.date, now)
 
-        # Prefetch efficiently virtual_available for _consuming_picking_types draft move.
+        # Prefetch efficiently virtual_available for _is_consuming draft move.
         prefetch_virtual_available = defaultdict(set)
         virtual_available_dict = {}
         for move in product_moves:
-            if move.picking_type_id.code in self._consuming_picking_types() and move.state == 'draft':
+            if move._is_consuming() and move.state == 'draft':
                 prefetch_virtual_available[key_virtual_available(move)].add(move.product_id.id)
             elif move.picking_type_id.code == 'incoming':
                 prefetch_virtual_available[key_virtual_available(move, incoming=True)].add(move.product_id.id)
@@ -445,12 +445,12 @@ class StockMove(models.Model):
             virtual_available_dict[key_context] = {res['id']: res['virtual_available'] for res in read_res}
 
         for move in product_moves:
-            if move.picking_type_id.code in self._consuming_picking_types():
+            if move._is_consuming():
                 if move.state == 'assigned':
                     move.forecast_availability = move.product_uom._compute_quantity(
                         move.reserved_availability, move.product_id.uom_id, rounding_method='HALF-UP')
                 elif move.state == 'draft':
-                    # for move _consuming_picking_types and in draft -> the forecast_availability > 0 if in stock
+                    # for move _is_consuming and in draft -> the forecast_availability > 0 if in stock
                     move.forecast_availability = virtual_available_dict[key_virtual_available(move)][move.product_id.id] - move.product_qty
                 elif move.state in ('waiting', 'confirmed', 'partially_available'):
                     outgoing_unreserved_moves_per_warehouse[move.location_id.warehouse_id].add(move.id)
@@ -723,7 +723,7 @@ class StockMove(models.Model):
             'active_model': 'product.product',
             'move_to_match_ids': self.ids,
         }
-        if self.picking_type_id.code in self._consuming_picking_types():
+        if self._is_consuming():
             warehouse = self.location_id.warehouse_id
         else:
             warehouse = self.location_dest_id.warehouse_id
@@ -1787,9 +1787,11 @@ class StockMove(models.Model):
         for state, moves_ids in moves_state_to_write.items():
             self.browse(moves_ids).filtered(lambda m: m.state != state).state = state
 
-    @api.model
-    def _consuming_picking_types(self):
-        return ['outgoing']
+    def _is_consuming(self):
+        self.ensure_one()
+        from_wh = self.location_id.warehouse_id
+        to_wh = self.location_dest_id.warehouse_id
+        return self.picking_type_id.code == 'outgoing' or (from_wh and to_wh and from_wh != to_wh)
 
     def _get_lang(self):
         """Determine language to use for translated description"""
@@ -2087,6 +2089,8 @@ class StockMove(models.Model):
                     unreconciled_outs.append((demand, out))
 
             for demand, out in unreconciled_outs:
-                _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False)
+                remaining = _reconcile_out_with_ins(result, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False)
+                if not float_is_zero(remaining, precision_rounding=out.product_id.uom_id.rounding) and out not in result:
+                    result[out] = (-remaining, False)
 
         return result

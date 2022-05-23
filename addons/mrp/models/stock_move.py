@@ -403,11 +403,8 @@ class StockMove(models.Model):
                 vals['state'] = 'assigned'
         return vals
 
-    @api.model
-    def _consuming_picking_types(self):
-        res = super()._consuming_picking_types()
-        res.append('mrp_operation')
-        return res
+    def _is_consuming(self):
+        return super()._is_consuming() or self.picking_type_id.code == 'mrp_operation'
 
     def _get_backorder_move_vals(self):
         self.ensure_one()
