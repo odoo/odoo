@@ -69,6 +69,7 @@ const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("role", "article");
     kanbanBox.setAttribute("t-att-class", "getRecordClasses(record,groupOrRecord.group)");
     kanbanBox.setAttribute("t-att-data-id", "canResequenceRecords and record.id");
+    kanbanBox.setAttribute("t-on-keydown", "(ev) => this.onRecordKeydown(ev)");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
         kanbanBox.setAttribute("t-on-click", "(ev) => this.onRecordClick(record, ev)");
     }

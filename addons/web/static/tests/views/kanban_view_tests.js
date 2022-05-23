@@ -11,6 +11,7 @@ import {
     patchWithCleanup,
     triggerEvent,
     triggerEvents,
+    triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import {
     getFacetTexts,
@@ -8140,7 +8141,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["createRecord"]);
     });
 
-    QUnit.skipWOWL("keyboard navigation on kanban basic rendering", async (assert) => {
+    QUnit.test("keyboard navigation on kanban basic rendering", async (assert) => {
         assert.expect(3);
 
         await makeView({
@@ -8159,7 +8160,7 @@ QUnit.module("Views", (hooks) => {
         getCard(0).focus();
         assert.strictEqual(document.activeElement, getCard(0), "the kanban cards are focussable");
 
-        await triggerEvent(getCard(0), null, "keydown", { key: "ArrowRight" });
+        triggerHotkey("ArrowRight");
 
         assert.strictEqual(
             document.activeElement,
@@ -8167,12 +8168,12 @@ QUnit.module("Views", (hooks) => {
             "the second card should be focussed"
         );
 
-        await triggerEvent(getCard(1), null, "keydown", { key: "ArrowLeft" });
+        triggerHotkey("ArrowLeft");
 
         assert.strictEqual(document.activeElement, getCard(0), "the first card should be focussed");
     });
 
-    QUnit.skipWOWL("keyboard navigation on kanban grouped rendering", async (assert) => {
+    QUnit.test("keyboard navigation on kanban grouped rendering", async (assert) => {
         assert.expect(3);
 
         await makeView({
@@ -8187,49 +8188,44 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["bar"],
         });
+        const cardsByColumn = [...target.querySelectorAll(".o_kanban_group")].map((c) => [
+            ...c.querySelectorAll(".o_kanban_record"),
+        ]);
+        const firstColumnFirstCard = cardsByColumn[0][0];
+        const secondColumnFirstCard = cardsByColumn[1][0];
+        const secondColumnSecondCard = cardsByColumn[1][1];
 
-        const $firstColumnFisrtCard = target.querySelector(".o_kanban_record:first-child");
-        const $secondColumnFirstCard = target.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:first-child"
-        );
-        const $secondColumnSecondCard = target.querySelector(
-            ".o_kanban_group:nth-child(2) .o_kanban_record:nth-child(2)"
-        );
+        firstColumnFirstCard.focus();
 
-        $firstColumnFisrtCard.focus();
-
-        //RIGHT should select the next column
-        $firstColumnFisrtCard.trigger(
-            $.Event("keydown", { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT })
-        );
+        // RIGHT should select the next column
+        triggerHotkey("ArrowRight");
+        await nextTick();
         assert.strictEqual(
             document.activeElement,
-            $secondColumnFirstCard[0],
+            secondColumnFirstCard,
             "RIGHT should select the first card of the next column"
         );
 
-        //DOWN should move up one card
-        $secondColumnFirstCard.trigger(
-            $.Event("keydown", { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN })
-        );
+        // DOWN should move up one card
+        triggerHotkey("ArrowDown");
+        await nextTick();
         assert.strictEqual(
             document.activeElement,
-            $secondColumnSecondCard[0],
+            secondColumnSecondCard,
             "DOWN should select the second card of the current column"
         );
 
-        //LEFT should go back to the first column
-        $secondColumnSecondCard.trigger(
-            $.Event("keydown", { which: $.ui.keyCode.LEFT, keyCode: $.ui.keyCode.LEFT })
-        );
+        // LEFT should go back to the first column
+        triggerHotkey("ArrowLeft");
+        await nextTick();
         assert.strictEqual(
             document.activeElement,
-            $firstColumnFisrtCard[0],
+            firstColumnFirstCard,
             "LEFT should select the first card of the first column"
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "keyboard navigation on kanban grouped rendering with empty columns",
         async (assert) => {
             assert.expect(2);
@@ -8247,84 +8243,80 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="foo"/></div>' +
                     "</t></templates></kanban>",
                 groupBy: ["state"],
-                async mockRPC(route, args) {
+                async mockRPC(route, args, performRpc) {
                     if (args.method === "web_read_group") {
                         // override read_group to return empty groups, as this is
                         // the case for several models (e.g. project.task grouped
                         // by stage_id)
-                        return this._super.apply(this, arguments).then(function (result) {
-                            // add 2 empty columns in the middle
-                            result.groups.splice(1, 0, {
-                                state_count: 0,
-                                state: "def",
-                                __domain: [["state", "=", "def"]],
-                            });
-                            result.groups.splice(1, 0, {
-                                state_count: 0,
-                                state: "def",
-                                __domain: [["state", "=", "def"]],
-                            });
-
-                            // add 1 empty column in the beginning and the end
-                            result.groups.unshift({
-                                state_count: 0,
-                                state: "def",
-                                __domain: [["state", "=", "def"]],
-                            });
-                            result.groups.push({
-                                state_count: 0,
-                                state: "def",
-                                __domain: [["state", "=", "def"]],
-                            });
-                            return result;
+                        const result = await performRpc(route, args);
+                        // add 2 empty columns in the middle
+                        result.groups.splice(1, 0, {
+                            state_count: 0,
+                            state: "md1",
+                            __domain: [["state", "=", "md1"]],
                         });
+                        result.groups.splice(1, 0, {
+                            state_count: 0,
+                            state: "md2",
+                            __domain: [["state", "=", "md2"]],
+                        });
+                        // add 1 empty column in the beginning and the end
+                        result.groups.unshift({
+                            state_count: 0,
+                            state: "beg",
+                            __domain: [["state", "=", "beg"]],
+                        });
+                        result.groups.push({
+                            state_count: 0,
+                            state: "end",
+                            __domain: [["state", "=", "end"]],
+                        });
+                        return result;
                     }
                 },
             });
 
             /**
-             * DEF columns are empty
+             * Added columns in mockRPC are empty
              *
-             *    | DEF | ABC  | DEF | DEF | GHI  | DEF
+             *    | BEG | ABC  | MD1 | MD2 | GHI  | END
              *    |-----|------|-----|-----|------|-----
              *    |     | yop  |     |     | gnap |
              *    |     | blip |     |     | blip |
              */
-            const $yop = target.querySelector(".o_kanban_record:first-child");
-            const $gnap = target.querySelector(
-                ".o_kanban_group:nth-child(4) .o_kanban_record:first-child"
-            );
+            const cardsByColumn = [...target.querySelectorAll(".o_kanban_group")].map((c) => [
+                ...c.querySelectorAll(".o_kanban_record"),
+            ]);
+            const yop = cardsByColumn[1][0];
+            const gnap = cardsByColumn[4][0];
 
-            $yop.focus();
+            yop.focus();
 
-            //RIGHT should select the next column that has a card
-            $yop.trigger(
-                $.Event("keydown", { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT })
-            );
+            // RIGHT should select the next column that has a card
+            triggerHotkey("ArrowRight");
+            await nextTick();
             assert.strictEqual(
                 document.activeElement,
-                $gnap[0],
+                gnap,
                 "RIGHT should select the first card of the next column that has a card"
             );
 
-            //LEFT should go back to the first column that has a card
-            $gnap.trigger(
-                $.Event("keydown", { which: $.ui.keyCode.LEFT, keyCode: $.ui.keyCode.LEFT })
-            );
+            // LEFT should go back to the first column that has a card
+            triggerHotkey("ArrowLeft");
+            await nextTick();
             assert.strictEqual(
                 document.activeElement,
-                $yop[0],
+                yop,
                 "LEFT should select the first card of the first column that has a card"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "keyboard navigation on kanban when the focus is on a link that " +
             "has an action and the kanban has no oe_kanban_global_... class",
         async (assert) => {
-            assert.expect(1);
-            const kanban = await makeView({
+            await makeView({
                 type: "kanban",
                 resModel: "partner",
                 serverData,
@@ -8332,22 +8324,17 @@ QUnit.module("Views", (hooks) => {
                     '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
                     '<div><a type="edit">Edit</a></div>' +
                     "</t></templates></kanban>",
+                selectRecord: (resId) => {
+                    assert.equal(
+                        resId,
+                        1,
+                        "When selecting focusing a card and hitting ENTER, the first link or button is clicked"
+                    );
+                },
             });
-
-            testUtils.mock.intercept(kanban, "switch_view", function (event) {
-                assert.deepEqual(
-                    event.data,
-                    {
-                        view_type: "form",
-                        res_id: 1,
-                        mode: "edit",
-                        resModel: "partner",
-                    },
-                    "When selecting focusing a card and hitting ENTER, the first link or button is clicked"
-                );
-            });
-
-            await triggerEvents(getCard(0), null, ["focus", ["keydown", { key: "Enter" }]]);
+            const firstCard = getCard(0);
+            firstCard.focus();
+            await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
         }
     );
 
@@ -8794,9 +8781,9 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skipWOWL("quick create: keyboard navigation to buttons", async (assert) => {
+        // SKIPWOWL: Cannot trigger native TAB
         assert.expect(2);
-
-        const kanban = await makeView({
+        await makeView({
             arch: `
                 <kanban on_create="quick_create">
                     <field name="bar"/>
@@ -8820,7 +8807,7 @@ QUnit.module("Views", (hooks) => {
         // Fill in mandatory field
         await editQuickCreateInput("display_name", "aaa");
         // Tab -> goes to first primary button
-        await triggerEvent(kanban, ".o_field_widget[name=display_name]", "keydown", { key: "Tab" });
+        await triggerEvent(target, ".o_field_widget[name=display_name]", "keydown", { key: "Tab" });
 
         assert.hasClass(document.activeElement, "btn btn-primary o_kanban_add");
     });

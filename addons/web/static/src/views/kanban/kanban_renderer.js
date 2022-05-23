@@ -6,7 +6,7 @@ import { SimpleDialog } from "@web/core/dialog/dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf, uniqueId } from "@web/core/utils/strings";
 import { useSortable } from "@web/core/utils/ui";
 import { url } from "@web/core/utils/urls";
@@ -102,18 +102,17 @@ export class KanbanRenderer extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.mousedownTarget = null;
         this.colors = COLORS;
         this.exampleData = registry.category("kanban_examples").get(examples, null);
         this.ghostColumns = this.generateGhostColumns();
         // Draggable
         let dataRecordId;
         let dataGroupId;
-        const rootRef = useRef("root");
+        this.rootRef = useRef("root");
         useSortable({
             isActive: () => this.canResequenceRecords,
             // Params
-            ref: rootRef,
+            ref: this.rootRef,
             elements: ".o_record_draggable",
             groups: () => this.props.list.isGrouped && ".o_kanban_group",
             connectGroups: () => this.canMoveRecords,
@@ -140,7 +139,7 @@ export class KanbanRenderer extends Component {
         useSortable({
             isActive: () => this.canResequenceGroups,
             // Params
-            ref: rootRef,
+            ref: this.rootRef,
             elements: ".o_group_draggable",
             handle: ".o_column_title",
             cursor: "move",
@@ -157,7 +156,7 @@ export class KanbanRenderer extends Component {
                 element.classList.add("o_group_draggable");
             },
         });
-        useBounceButton(rootRef, (clickedEl) => {
+        useBounceButton(this.rootRef, (clickedEl) => {
             if (!this.props.list.count || this.props.list.model.useSampleModel) {
                 return clickedEl.matches(
                     [
@@ -173,6 +172,15 @@ export class KanbanRenderer extends Component {
         });
         onWillDestroy(() => {
             this.dialogClose.forEach((close) => close());
+        });
+
+        useBus(this.env.searchModel, "focus-view", () => {
+            const { model } = this.props.list;
+            if (model.useSampleModel || !model.hasData()) {
+                return;
+            }
+            // Focus first kanban card
+            this.rootRef.el.querySelector(".o_kanban_record").focus();
         });
     }
 
@@ -553,11 +561,92 @@ export class KanbanRenderer extends Component {
         this.props.openRecord(record);
     }
 
-    onCardClicked(record, ev) {
-        if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
-            return;
+    /**
+     * @param {KeyboardEvent} event
+     */
+    onRecordKeydown(event) {
+        switch (event.key) {
+            case "Enter": {
+                if (!document.activeElement.classList.contains("o_kanban_record")) {
+                    return;
+                }
+
+                // Open first link
+                const firstLink = document.activeElement.querySelector("a, button");
+                if (firstLink && firstLink instanceof HTMLElement) {
+                    firstLink.click();
+                    event.preventDefault();
+                }
+                return;
+            }
+            case "ArrowDown":
+            case "ArrowUp":
+            case "ArrowRight":
+            case "ArrowLeft": {
+                /** @type {any} */
+                const direction = event.key.slice(5).toLowerCase();
+                const nextCard = this.getNextCard(direction);
+                if (nextCard && nextCard instanceof HTMLElement) {
+                    nextCard.focus();
+                    event.preventDefault();
+                }
+                if (!nextCard && direction === "up") {
+                    this.env.searchModel.trigger("focus-search");
+                    event.preventDefault();
+                }
+                return;
+            }
         }
-        this.openRecord(record);
+    }
+
+    /**
+     * @param {"down"|"up"|"right"|"left"} direction
+     * @returns {Element?}
+     */
+    getNextCard(direction) {
+        const { isGrouped } = this.props.list;
+        const groups = isGrouped
+            ? [...this.rootRef.el.querySelectorAll(".o_kanban_group")]
+            : [this.rootRef.el];
+        const cards = [...groups]
+            .map((group) => [...group.querySelectorAll(".o_kanban_record")])
+            .filter((group) => group.length);
+
+        // Search current card position
+        let iGroup;
+        let iCard;
+        for (iGroup = 0; iGroup < cards.length; iGroup++) {
+            const i = cards[iGroup].indexOf(document.activeElement);
+            if (i !== -1) {
+                iCard = i;
+                break;
+            }
+        }
+        // Find next card to focus
+        let nextCard;
+        switch (direction) {
+            case "down":
+                nextCard = iCard < cards[iGroup].length - 1 && cards[iGroup][iCard + 1];
+                break;
+            case "up":
+                nextCard = iCard > 0 && cards[iGroup][iCard - 1];
+                break;
+            case "right":
+                if (isGrouped) {
+                    nextCard = iGroup < cards.length - 1 && cards[iGroup + 1][0];
+                } else {
+                    nextCard = iCard < cards[0].length - 1 && cards[0][iCard + 1];
+                }
+                break;
+            case "left":
+                if (isGrouped) {
+                    nextCard = iGroup > 0 && cards[iGroup - 1][0];
+                } else {
+                    nextCard = iCard > 0 && cards[0][iCard - 1];
+                }
+                break;
+        }
+        return nextCard;
     }
 
     //-------------------------------------------------------------------------
