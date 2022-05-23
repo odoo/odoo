@@ -37,7 +37,7 @@ class AccountChartTemplate(models.Model):
     def _get_demo_data_move(self):
         cid = self.env.company.id
         model, data = super()._get_demo_data_move()
-        if self.env.company.country_code == "AR":
+        if self.env.company.account_fiscal_country_id.code == "AR":
             data[f'{cid}_demo_invoice_5']['l10n_latam_document_number'] = '1-1'
             data[f'{cid}_demo_invoice_equipment_purchase']['l10n_latam_document_number'] = '1-2'
         return model, data
