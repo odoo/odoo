@@ -4152,7 +4152,10 @@ QUnit.module("Views", (hooks) => {
                 '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
                 '<div><a type="edit">Edit</a></div>' +
                 "</t></templates></kanban>",
-            selectRecord: (resId) => assert.equal(resId, 1),
+            selectRecord: (resId, { mode }) => {
+                assert.equal(resId, 1);
+                assert.equal(mode, "edit");
+            },
         });
         await click(getCard(0), "a");
     });

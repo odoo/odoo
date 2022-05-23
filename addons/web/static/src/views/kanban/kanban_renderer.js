@@ -500,7 +500,10 @@ export class KanbanRenderer extends Component {
     triggerAction(record, group, params) {
         const { type } = params;
         switch (type) {
-            case "edit":
+            case "edit": {
+                this.props.openRecord(record, "edit");
+                break;
+            }
             case "open": {
                 this.props.openRecord(record);
                 break;
