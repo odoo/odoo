@@ -810,7 +810,7 @@ class MailThread(models.AbstractModel):
                 self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
 
     @api.model
-    def _check_primary_email(self):
+    def _get_primary_email_field(self):
         """Check if the "_primary_email" model attribute is correctly set.
 
         If it is correctly set, return the _primary_email field name
@@ -821,19 +821,19 @@ class MailThread(models.AbstractModel):
             return primary_email
 
     @api.model
-    def _routing_detect_loop_from_records_domain(self, email_from_normalized):
+    def _detect_loop_sender_domain(self, email_from_normalized):
         """Return the domain to be used to detect duplicated records created by alias.
 
         :param email_from_normalized: FROM of the incoming email, normalized
         """
-        primary_email = self._check_primary_email()
+        primary_email = self._get_primary_email_field()
         if primary_email:
             return [(primary_email, 'ilike', email_from_normalized)]
 
         _logger.info('Primary email missing on %s', self._name)
 
     @api.model
-    def _routing_detect_loop_from_records(self, message, message_dict, routes):
+    def _detect_loop_sender(self, message, message_dict, routes):
         """This method returns True if the incoming email should be ignored.
 
         The goal of this method is to prevent loops which can occur if an auto-replier
@@ -845,13 +845,17 @@ class MailThread(models.AbstractModel):
 
         email_from_normalized = tools.email_normalize(email_from)
 
+        if self.env['mail.gateway.allowed'].sudo().search_count(
+           [('email_normalized', '=', email_from_normalized)]):
+            return False
+
         # Detect the email address sent to many emails
         get_param = self.env['ir.config_parameter'].sudo().get_param
         # Period in minutes in which we will look for <mail.mail>
-        INCOMING_LIMIT_PERIOD = int(get_param('mail.gateway.loop.minutes', 120))
-        INCOMING_LIMIT_ALIAS = int(get_param('mail.gateway.loop.threshold', 20))
+        LOOP_MINUTES = int(get_param('mail.gateway.loop.minutes', 120))
+        LOOP_THRESHOLD = int(get_param('mail.gateway.loop.threshold', 20))
 
-        create_date_limit = self.env.cr.now() - datetime.timedelta(minutes=INCOMING_LIMIT_PERIOD)
+        create_date_limit = self.env.cr.now() - datetime.timedelta(minutes=LOOP_MINUTES)
 
         # Search only once per model
         models = {
@@ -861,13 +865,11 @@ class MailThread(models.AbstractModel):
         }
 
         for model in models:
-            if not hasattr(model, '_routing_detect_loop_from_records_domain'):
+            if not hasattr(model, '_detect_loop_sender_domain'):
                 continue
 
-            domain = model._routing_detect_loop_from_records_domain(email_from_normalized)
-
+            domain = model._detect_loop_sender_domain(email_from_normalized)
             if not domain:
-                _logger.info('Domain missing for %s, could not find duplicated.', self._name)
                 continue
 
             mail_incoming_messages_count = model.sudo().search_count(
@@ -877,7 +879,7 @@ class MailThread(models.AbstractModel):
                 ]),
             )
 
-            if mail_incoming_messages_count >= INCOMING_LIMIT_ALIAS:
+            if mail_incoming_messages_count >= LOOP_THRESHOLD:
                 _logger.info('Email address %s created too many <%s>.', email_from, model)
 
                 body = self.env['ir.qweb']._render(
@@ -898,22 +900,10 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.model
-    def _routing_detect_loop_from_headers(self, message, msg_dict):
-        """Detect common headers set by the auto-repliers / mailing lists."""
-
-        # Detect if the email has been sent by an auto-replier or by a mailing list
-        for header in ('X-Autoreply', 'X-Autorespond', 'Feedback-ID', 'List-Id', 'List-Unsubscribe'):
-            if header in message:
-                _logger.info('Email sent by an auto-replier (%s), ignoring it.', header)
-                return True
-
-        precedence = 'Precedence' in message and tools.decode_message_header(message, 'Precedence')
-        if precedence and precedence.lower() in ('bulk', 'auto_reply', 'list'):
-            _logger.info('Email sent by an auto-replier (Precedence), ignoring it.')
-            return True
-
-        if '-loop-detection-bounce-email@' in msg_dict.get('references', '') \
-           or '-loop-detection-bounce-email@' in msg_dict.get('in_reply_to', ''):
+    def _detect_loop_headers(self, msg_dict):
+        """Return True if the email must be ignored based on its headers."""
+        if ('-loop-detection-bounce-email@' in msg_dict.get('references', '')
+           or '-loop-detection-bounce-email@' in msg_dict.get('in_reply_to', '')):
             _logger.info('Email is a reply to the bounce notification, ignoring it.')
             return True
 
@@ -1202,12 +1192,12 @@ class MailThread(models.AbstractModel):
                          msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
             return False
 
-        if self._routing_detect_loop_from_headers(message, msg_dict):
+        if self._detect_loop_headers(msg_dict):
             return
 
         # find possible routes for the message
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
-        if self._routing_detect_loop_from_records(message, msg_dict, routes):
+        if self._detect_loop_sender(message, msg_dict, routes):
             return
 
         thread_id = self._message_route_process(message, msg_dict, routes)
@@ -1241,7 +1231,7 @@ class MailThread(models.AbstractModel):
         if name_field in fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
 
-        primary_email = self._check_primary_email()
+        primary_email = self._get_primary_email_field()
         if primary_email and msg_dict.get('email_from'):
             data[primary_email] = msg_dict['email_from']
 

@@ -1417,6 +1417,12 @@ class TestMailgateway(TestMailCommon):
         self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
         self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
 
+        self.env['mail.gateway.allowed'].create([
+            {'email': 'Bob@EXAMPLE.com'},
+            {'email': '"Alice From Example" <alice@EXAMPLE.com>'},
+            {'email': '"Eve From Example" <eve@EXAMPLE.com>'},
+        ])
+
         alias = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
@@ -1483,6 +1489,19 @@ class TestMailgateway(TestMailCommon):
             )
 
         self.assertNotSentEmail()
+
+        # Email address in the whitelist should not have the restriction
+        for i in range(10):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'alice@example.com',
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject=f'Whitelist test alias loop {i}',
+                target_model=alias.alias_model_id.model,
+            )
+
+        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
+        self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
 
 class TestMailThreadCC(TestMailCommon):
