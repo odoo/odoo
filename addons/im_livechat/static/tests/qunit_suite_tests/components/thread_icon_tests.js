@@ -2,23 +2,13 @@
 
 import {
     afterNextRender,
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_icon_tests.js', {
-    beforeEach() {
-        this.createThreadIcon = async (thread, target) => {
-            await createRootMessagingComponent(thread.env, "ThreadIcon", {
-                props: { thread },
-                target,
-            });
-        };
-    },
-});
+QUnit.module('thread_icon_tests.js');
 
 QUnit.test('livechat: public website visitor is typing', async function (assert) {
     assert.expect(4);
@@ -33,12 +23,12 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, target);
+    await createRootMessagingComponent('ThreadIcon', { thread });
     assert.containsOnce(
         document.body,
         '.o_ThreadIcon',

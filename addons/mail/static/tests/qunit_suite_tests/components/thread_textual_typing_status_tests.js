@@ -2,7 +2,6 @@
 
 import {
     afterNextRender,
-    createRootMessagingComponent,
     nextAnimationFrame,
     start,
     startServer,
@@ -10,16 +9,7 @@ import {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_textual_typing_status_tests.js', {
-    beforeEach() {
-        this.createThreadTextualTypingStatusComponent = async (thread, target) => {
-            await createRootMessagingComponent(thread.env, "ThreadTextualTypingStatus", {
-                props: { thread },
-                target,
-            });
-        };
-    },
-});
+QUnit.module('thread_textual_typing_status_tests.js');
 
 QUnit.test('receive other member typing status "is typing"', async function (assert) {
     assert.expect(2);
@@ -32,12 +22,12 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, target);
+    await createRootMessagingComponent('ThreadTextualTypingStatus', { thread });
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -73,12 +63,12 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, target);
+    await createRootMessagingComponent('ThreadTextualTypingStatus', { thread });
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -129,14 +119,14 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { advanceTime, messaging, target } = await start({
+    const { advanceTime, createRootMessagingComponent, messaging } = await start({
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, target);
+    await createRootMessagingComponent('ThreadTextualTypingStatus', { thread });
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -179,14 +169,14 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             [0, 0, { partner_id: resPartnerId1 }],
         ],
     });
-    const { advanceTime, messaging, target } = await start({
+    const { advanceTime, createRootMessagingComponent, messaging } = await start({
         hasTimeControl: true,
     });
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, target);
+    await createRootMessagingComponent('ThreadTextualTypingStatus', { thread });
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
@@ -251,12 +241,12 @@ QUnit.test('receive several other members typing status "is typing"', async func
             [0, 0, { partner_id: resPartnerId3 }],
         ],
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, target);
+    await createRootMessagingComponent('ThreadTextualTypingStatus', { thread });
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,

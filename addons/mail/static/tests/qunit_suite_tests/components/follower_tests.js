@@ -3,7 +3,6 @@
 import { insert, replace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 import {
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -12,21 +11,12 @@ import Bus from 'web.Bus';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('follower_tests.js', {
-    beforeEach() {
-        this.createFollowerComponent = async (follower, target) => {
-            await createRootMessagingComponent(follower.env, "Follower", {
-                props: { follower },
-                target,
-            });
-        };
-    },
-});
+QUnit.module('follower_tests.js');
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
 
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: false,
@@ -42,7 +32,7 @@ QUnit.test('base rendering not editable', async function (assert) {
         id: 2,
         isActive: true,
     });
-    await this.createFollowerComponent(follower, target);
+    await createRootMessagingComponent('Follower', { follower });
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -73,7 +63,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].create({
         hasWriteAccess: true,
         id: 100,
@@ -88,7 +78,7 @@ QUnit.test('base rendering editable', async function (assert) {
         id: 2,
         isActive: true,
     });
-    await this.createFollowerComponent(follower, target);
+    await createRootMessagingComponent('Follower', { follower });
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -147,7 +137,7 @@ QUnit.test('click on partner follower details', async function (assert) {
     });
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { messaging, target } = await start({ env: { bus } });
+    const { createRootMessagingComponent, messaging } = await start({ env: { bus } });
     const thread = messaging.models['Thread'].create({
         id: resPartnerId1,
         model: 'res.partner',
@@ -162,7 +152,7 @@ QUnit.test('click on partner follower details', async function (assert) {
             name: "François Perusse",
         }),
     });
-    await this.createFollowerComponent(follower, target);
+    await createRootMessagingComponent('Follower', { follower });
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -193,7 +183,7 @@ QUnit.test('click on edit follower', async function (assert) {
         res_id: resPartnerId1,
         res_model: 'res.partner',
     });
-    const { click, messaging, target } = await start({
+    const { click, createRootMessagingComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -206,7 +196,7 @@ QUnit.test('click on edit follower', async function (assert) {
         model: 'res.partner',
     });
     await thread.fetchData(['followers']);
-    await this.createFollowerComponent(thread.followers[0], target);
+    await createRootMessagingComponent('Follower', { follower: thread.followers[0] });
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -235,7 +225,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, messaging, target } = await start({
+    const { click, createRootMessagingComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -265,7 +255,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             name: "François Perusse",
         }),
     });
-    await this.createFollowerComponent(follower, target);
+    await createRootMessagingComponent('Follower', { follower });
     assert.containsOnce(
         document.body,
         '.o_Follower',

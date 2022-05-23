@@ -2,23 +2,13 @@
 
 import {
     afterNextRender,
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_icon_tests.js', {
-    async beforeEach() {
-        this.createThreadIcon = async (thread, target) => {
-            await createRootMessagingComponent(thread.env, "ThreadIcon", {
-                props: { thread },
-                target,
-            });
-        };
-    },
-});
+QUnit.module('thread_icon_tests.js');
 
 QUnit.test('chat: correspondent is typing', async function (assert) {
     assert.expect(5);
@@ -35,12 +25,12 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         ],
         channel_type: 'chat',
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, target);
+    await createRootMessagingComponent('ThreadIcon', { thread });
 
     assert.containsOnce(
         document.body,

@@ -55,7 +55,7 @@ QUnit.module('mail', {}, function () {
         const resPartnerId1 = pyEnv['res.partner'].create({ display_name: 'Partner 1' });
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario", partner_id: resPartnerId1 });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
-        const { target: form } = await start({
+        await start({
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.user',
@@ -63,7 +63,7 @@ QUnit.module('mail', {}, function () {
             res_id: m2xAvatarUserId1,
         });
 
-        await dom.click(form.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
+        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
         assert.containsOnce(document.body, '.o_ChatWindow', 'Chat window should be opened');
         assert.strictEqual(
             document.querySelector('.o_ChatWindowHeader_name').textContent,
@@ -81,7 +81,7 @@ QUnit.module('mail', {}, function () {
         );
         pyEnv['m2x.avatar.user'].create({ user_ids: resUsersIds });
 
-        const { target: kanban } = await start({
+        await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.user',
@@ -104,17 +104,17 @@ QUnit.module('mail', {}, function () {
                 </kanban>`,
         });
 
-        assert.containsOnce(kanban, '.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty',
+        assert.containsOnce(document.body, '.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty',
             "should have o_m2m_avatar_empty span");
-        assert.strictEqual(kanban.querySelector('.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty').innerText.trim(), "+2",
+        assert.strictEqual(document.querySelector('.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty').innerText.trim(), "+2",
             "should have +2 in o_m2m_avatar_empty");
 
-        kanban.querySelector('.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty').dispatchEvent(new Event('mouseover'));
+        document.querySelector('.o_kanban_record .o_field_many2manytags .o_m2m_avatar_empty').dispatchEvent(new Event('mouseover'));
         await nextTick();
-        assert.containsOnce(kanban, '.popover',
+        assert.containsOnce(document.body, '.popover',
             "should open a popover hover on o_m2m_avatar_empty");
-        assert.strictEqual(kanban.querySelector('.popover .popover-body > div').innerText.trim(), 'Luigi', 'should have a right text in popover');
-        assert.strictEqual(kanban.querySelectorAll('.popover .popover-body > div')[1].innerText.trim(), 'Tapu', 'should have a right text in popover');
+        assert.strictEqual(document.querySelector('.popover .popover-body > div').innerText.trim(), 'Luigi', 'should have a right text in popover');
+        assert.strictEqual(document.querySelectorAll('.popover .popover-body > div')[1].innerText.trim(), 'Tapu', 'should have a right text in popover');
     });
 
     QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
@@ -308,7 +308,7 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
-        const { target: list } = await start({
+        await start({
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.user',
@@ -316,7 +316,7 @@ QUnit.module('mail', {}, function () {
             res_id: m2xAvatarUserId1,
         });
         assert.strictEqual(
-            list.querySelector('.o_m2o_avatar > img').getAttribute('data-src'),
+            document.querySelector('.o_m2o_avatar > img').getAttribute('data-src'),
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
@@ -328,7 +328,7 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_id: resUsersId1 });
-        const { target: kanban } = await start({
+        await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.user',
@@ -344,7 +344,7 @@ QUnit.module('mail', {}, function () {
             res_id: m2xAvatarUserId1,
         });
         assert.strictEqual(
-            kanban.querySelector('.o_m2o_avatar > img').getAttribute('data-src'),
+            document.querySelector('.o_m2o_avatar > img').getAttribute('data-src'),
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
@@ -356,7 +356,7 @@ QUnit.module('mail', {}, function () {
         const pyEnv = await startServer();
         const resUsersId1 = pyEnv['res.users'].create({ name: "Mario" });
         const m2xAvatarUserId1 = pyEnv['m2x.avatar.user'].create({ user_ids: [resUsersId1] });
-        const { target: form } = await start({
+        await start({
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.user',
@@ -364,7 +364,7 @@ QUnit.module('mail', {}, function () {
             res_id: m2xAvatarUserId1,
         });
         assert.strictEqual(
-            form.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+            document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
             `/web/image/res.users/${resUsersId1}/avatar_128`,
             'Should have correct avatar image'
         );
