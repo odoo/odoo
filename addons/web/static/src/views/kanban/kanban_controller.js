@@ -38,7 +38,7 @@ export class KanbanController extends Component {
         });
     }
 
-    async openRecord(record, mode) {
+    async openRecord(record, mode = "edit") {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
         this.props.selectRecord(record.resId, { activeIds, mode });
     }
