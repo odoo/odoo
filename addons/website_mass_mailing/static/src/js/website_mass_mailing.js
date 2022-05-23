@@ -17,6 +17,8 @@ const session = require('web.session');
 
 var _t = core._t;
 
+let alertReCaptchaDisplayed;
+
 publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",
     disabledInEditableMode: false,
@@ -48,7 +50,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         var self = this;
         var def = this._super.apply(this, arguments);
 
-        if (!this._recaptcha && this.editableMode && session.is_admin) {
+        if (!this._recaptcha && this.editableMode && session.is_admin && !alertReCaptchaDisplayed) {
             this.displayNotification({
                 type: 'info',
                 message: _t("Do you want to install Google reCAPTCHA to secure your newsletter subscriptions?"),
@@ -79,6 +81,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
                     });
                 }}],
             });
+            alertReCaptchaDisplayed = true;
         }
 
         this.$popup = this.$target.closest('.o_newsletter_modal');
