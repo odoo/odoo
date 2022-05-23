@@ -1137,6 +1137,30 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('notebook name transferred to DOM', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page name="choucroute" string="Choucroute">' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.hasClass(form.$(".o_notebook .nav .nav-link[name='choucroute']"), 'active');
+
+        form.destroy();
+    });
+
     QUnit.test('invisible attrs on group are re-evaluated on field change', async function (assert) {
         assert.expect(2);
 
