@@ -14,7 +14,7 @@
             t-on-keydown="_onKeydown"
         >
             <t t-if="composerView">
-                <t t-if="isDropZoneVisible.value">
+                <t t-if="isDropZoneVisible.value and composerView.hasDropZone">
                     <DropZone
                         class="o_Composer_dropZone"
                         t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
