@@ -248,3 +248,16 @@ body.editor_enable {
         }
     }
 }
+
+// TODO Put the following rules in a file that is not sent to the visitors
+// in the right app (website_mass_mailing).
+body.editor_enable {
+    .s_newsletter_subscribe_form {
+        .o_enable_preview {
+            display: block !important;
+        }
+        .o_disable_preview {
+            display: none !important;
+        }
+    }
+}
