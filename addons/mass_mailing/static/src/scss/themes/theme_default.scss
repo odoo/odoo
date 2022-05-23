@@ -130,11 +130,6 @@ div.col:not([align]) {
 
 // ===== Snippets (specific) =====
 .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
-    .o_mail_logo_container {
-        img {
-            width: auto;
-        }
-    }
     .o_mail_header_social {
         a:not(.btn), .btn.btn-link {
             display: inline-block;
@@ -148,6 +143,9 @@ div.col:not([align]) {
 .o_mail_block_footer_social {
     .btn-link{
         padding: 0;
+    }
+    p {
+        padding-bottom: 0;
     }
 }
 
@@ -169,13 +167,6 @@ div.col:not([align]) {
 }
 
 // ===== Misc =====
-.o_mail_no_margin {
-    margin: 0;
-
-    &.o_mail_display_coupon {
-        line-height: 1.1;
-    }
-}
 
 .o_mail_snippet_general .container {
     width: 100%;
