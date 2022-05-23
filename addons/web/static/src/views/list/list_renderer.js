@@ -172,7 +172,9 @@ export class ListRenderer extends Component {
     }
 
     get canResequenceRows() {
-        return true;
+        const orderBy = this.props.list.orderBy;
+        const handleField = this.props.archInfo.handleField;
+        return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
     }
 
     /**

@@ -1533,10 +1533,15 @@ class DynamicList extends DataPoint {
         });
 
         if (wasResequenced) {
-            await this.model.orm.read(this.resModel, ids, [handleField], {
+            const result = await this.model.orm.read(this.resModel, ids, [handleField], {
                 context: this.context,
             });
-            // TODO: use result of read (see wasResequenced in BasicModel)
+            for (const record of list) {
+                const change = result.find((el) => el.id === record.resId);
+                if (change) {
+                    record.update({ [handleField]: change[handleField] });
+                }
+            }
         }
 
         this.model.notify();
