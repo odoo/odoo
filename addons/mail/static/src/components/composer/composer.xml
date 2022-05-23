@@ -17,7 +17,7 @@
             t-ref="root"
         >
             <t t-if="composerView">
-                <t t-if="isDropZoneVisible.value">
+                <t t-if="isDropZoneVisible.value and composerView.hasDropZone">
                     <DropZone
                         className="'o_Composer_dropZone'"
                         onDropzoneFilesDropped="_onDropZoneFilesDropped"
