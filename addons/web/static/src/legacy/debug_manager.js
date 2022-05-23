@@ -2,9 +2,11 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
+import { FormViewDialog } from 'web.view_dialogs';
 import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { formatMany2one } from "@web/fields/formatters";
 import { registry } from "@web/core/registry";
+import { standaloneAdapter } from 'web.OwlCompatibility';
 
 const { Component, onWillStart, useState } = owl;
 
@@ -19,6 +21,25 @@ class GetMetadataDialog extends Component {
 
     async onWillStart() {
         await this.getMetadata();
+    }
+
+    async onClickCreateXmlid() {
+        const context = Object.assign({}, this.context, {
+            default_module: '__custom__',
+            default_res_id: this.state.id,
+            default_model: this.props.res_model,
+        });
+        const adapterParent = standaloneAdapter({ Component });
+        const dialog = new FormViewDialog(adapterParent, {
+            context: context,
+            on_saved: () => this.getMetadata(),
+            disable_multiple_selection: true,
+            res_model: 'ir.model.data',
+        });
+        dialog.on('dialog_form_loaded', this, () => {
+            dialog.$el.find('[name="name"]').focus();
+        });
+        await dialog.open();
     }
 
     async toggleNoupdate() {
