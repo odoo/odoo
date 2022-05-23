@@ -26,5 +26,23 @@ QUnit.test('livechat: no add attachment button', async function (assert) {
     );
 });
 
+QUnit.test('livechat: disable attachment upload via drag and drop', async function (assert) {
+    assert.expect(2);
+
+    const { createComposerComponent, messaging } = await start();
+    const thread = messaging.models['Thread'].create({
+        channel_type: 'livechat',
+        id: 10,
+        model: 'mail.channel',
+    });
+    await createComposerComponent(thread.composer);
+    assert.containsOnce(document.body, '.o_Composer', "should have a composer");
+    assert.containsNone(
+        document.body,
+        '.o_Composer_dropZone',
+        "composer linked to livechat should not have a dropzone"
+    );
+});
+
 });
 });
