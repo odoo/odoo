@@ -9391,13 +9391,11 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "one2many shortcut tab should not crash when there is no input widget",
         async function (assert) {
-            assert.expect(2);
-
             // create a one2many view which has no input (only 1 textarea in this case)
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9410,22 +9408,33 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
+
+            await clickEdit(target);
 
             // add a row, fill it, then trigger the tab shortcut
             await addRow(target);
-            await testUtils.fields.editInput(form.$('.o_input[name="turtle_foo"]'), "ninja");
-            await testUtils.fields.triggerKeydown(form.$('.o_input[name="turtle_foo"]'), "tab");
+            await editInput(target, "[name=turtle_foo] textarea", "ninja");
 
-            assert.strictEqual(
-                form.$(".o_field_text").text(),
-                "blipninja",
-                "current line should be saved"
+            // simulates two Tabs with an automatic "Add a line"
+            const deleteButton = target.querySelector(
+                ".o_selected_row .o_list_record_remove button"
             );
-            assert.containsOnce(form, "textarea.o_field_text", "new line should be created");
+            assert.strictEqual(getNextTabableElement(target), deleteButton);
+            assert.defaultBehavior(deleteButton, null, "keydown", { key: "Tab" });
+            deleteButton.focus();
+
+            const addButton = target.querySelector(".o_field_x2many_list_row_add a");
+            assert.strictEqual(getNextTabableElement(target), addButton);
+            assert.defaultBehavior(addButton, null, "keydown", { key: "Tab" });
+            addButton.focus();
+            await nextTick();
+
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_field_text")].map((el) => el.textContent),
+                ["blip", "ninja", ""]
+            );
+            assert.containsOnce(target, ".o_field_text textarea");
         }
     );
 
@@ -9438,8 +9447,8 @@ QUnit.module("Fields", (hooks) => {
                 turtle_foo: function () {},
             };
 
-            var prom;
-            const form = await makeView({
+            let def;
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -9451,43 +9460,38 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                mockRPC(route, args) {
-                    var result = this._super.apply(this, arguments);
+                async mockRPC(route, args) {
                     if (args.method === "onchange") {
-                        return Promise.resolve(prom).then(_.constant(result));
+                        await Promise.resolve(def);
                     }
-                    return result;
                 },
-                // simulate what happens in the client:
-                // the new value isn't notified directly to the model
-                fieldDebounce: 5000,
             });
 
-            var value = "hello";
+            const value = "hello";
 
             // add a new line
             await addRow(target);
 
             // we want to add a delay to simulate an onchange
-            prom = testUtils.makeTestPromise();
+            def = makeDeferred();
 
             // write something in the field
-            var $input = form.$('input[name="turtle_foo"]');
-            await testUtils.fields.editInput($input, value);
-            await testUtils.fields.triggerKeydown($input, "enter");
+            const input = target.querySelector("[name=turtle_foo] input");
+            await editInput(target, "[name=turtle_foo] input", value);
+            await triggerEvent(input, null, "keydown", { key: "Enter" });
 
             // check that nothing changed before the onchange finished
-            assert.strictEqual($input.val(), value, "input content shouldn't change");
-            assert.containsOnce(form, ".o_data_row", "should still contain only one row");
+            assert.strictEqual(input.value, value);
+            assert.containsOnce(target, ".o_data_row");
 
             // unlock onchange
-            prom.resolve();
-            await testUtils.nextTick();
+            def.resolve();
+            await nextTick();
 
             // check the current line is added with the correct content and a new line is editable
-            assert.strictEqual(form.$("td.o_data_cell").text(), value);
-            assert.strictEqual(form.$('input[name="turtle_foo"]').val(), "");
-            assert.containsN(form, ".o_data_row", 2, "should now contain two rows");
+            assert.strictEqual(target.querySelector("[name=turtle_foo]").innerText, value);
+            assert.strictEqual(target.querySelector("[name=turtle_foo] input").value, "");
+            assert.containsN(target, ".o_data_row", 2);
         }
     );
 

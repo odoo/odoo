@@ -32,7 +32,13 @@
                             class="o_field_x2many_list_row_add"
                             >
                             <t t-foreach="creates" t-as="create" t-key="create_index">
-                                <a href="#" role="button" t-att-class="create_index !== 0 ? 'ml16' : ''" t-on-click.stop.prevent="() => props.onAdd(create.context)">
+                                <a
+                                    href="#"
+                                    role="button"
+                                    t-att-class="create_index !== 0 ? 'ml16' : ''"
+                                    t-on-click.stop.prevent="() => props.onAdd(create.context)"
+                                    t-on-focus="() => props.onAdd(create.context)"
+                                >
                                     <t t-esc="create.description"/>
                                 </a>
                             </t>
