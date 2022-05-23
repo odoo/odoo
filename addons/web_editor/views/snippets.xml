@@ -146,11 +146,13 @@
                            data-toggle-bg-image="true"
                            data-no-preview="true">
                 </we-button>
-                <we-button title="Shape"
-                           data-toggle-bg-shape="true"
-                           t-att-data-dependencies="images_dependencies"
-                           data-no-preview="true"
-                           data-img="/web_editor/static/src/img/snippets_options/bg_shape.svg"/>
+                <t t-if="with_shapes">
+                    <we-button title="Shape"
+                            data-toggle-bg-shape="true"
+                            t-att-data-dependencies="images_dependencies"
+                            data-no-preview="true"
+                            data-img="/web_editor/static/src/img/snippets_options/bg_shape.svg"/>
+                </t>
             </t>
         </we-row>
     </div>
