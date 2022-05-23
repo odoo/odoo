@@ -423,7 +423,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector(
                 "div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)"
-            ).innerText,
+            ).textContent,
             "yop",
             "first line in one2many of second tab contains yop"
         );
@@ -436,7 +436,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector(
                 "div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)"
-            ).innerText,
+            ).textContent,
             "hello",
             "first line in one2many of second tab contains hello"
         );
@@ -453,7 +453,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector(
                 "div.tab-content table.o_list_table:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)"
-            ).innerText,
+            ).textContent,
             "My little Foo Value",
             "first line in one2many of second tab contains hello"
         );
@@ -941,14 +941,14 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_notebook .nav-link", 2);
         assert.containsOnce(target, ".o_notebook .nav .nav-link.active");
         assert.hasClass(target.querySelector(".o_notebook .nav .nav-link"), "active");
-        assert.strictEqual(target.querySelector(".o_notebook .nav-link.active").innerText, "A");
+        assert.strictEqual(target.querySelector(".o_notebook .nav-link.active").textContent, "A");
 
         await click(target.querySelector(".o_field_widget[name=bar] input"));
 
         assert.containsN(target, ".o_notebook .nav-link", 2);
         assert.containsOnce(target, ".o_notebook .nav .nav-link.active");
         assert.hasClass(target.querySelector(".o_notebook .nav .nav-link"), "active");
-        assert.strictEqual(target.querySelector(".o_notebook .nav-link.active").innerText, "B");
+        assert.strictEqual(target.querySelector(".o_notebook .nav-link.active").textContent, "B");
     });
 
     QUnit.test("invisible attrs on first notebook page", async function (assert) {
@@ -1476,7 +1476,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, "label.o_form_label");
-        assert.strictEqual(target.querySelector("label.o_form_label").innerText, "customstring");
+        assert.strictEqual(target.querySelector("label.o_form_label").textContent, "customstring");
     });
 
     QUnit.skipWOWL(
@@ -2659,7 +2659,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name=int_field]").innerText,
+                target.querySelector(".o_field_widget[name=int_field]").textContent,
                 "14",
                 "value should still be 14"
             );
@@ -2797,7 +2797,7 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        assert.strictEqual(target.querySelector(".o_field_widget").innerText, "ok");
+        assert.strictEqual(target.querySelector(".o_field_widget").textContent, "ok");
     });
 
     QUnit.test("can create a record with default values", async function (assert) {
@@ -3084,13 +3084,13 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "first record",
             "should have the display name of the record as  title"
         );
         await click(target.querySelector(".o_form_button_create"));
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "New",
             "should have the display name of the record as title"
         );
@@ -3171,7 +3171,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "first record",
             "should have the display name of the record as  title"
         );
@@ -3180,7 +3180,7 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Duplicate");
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "first record (copy)",
             "should have duplicated the record"
         );
@@ -3221,7 +3221,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "first record",
             "should have the display name of the record as  title"
         );
@@ -3331,7 +3331,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "second record",
             "should have correct display_name"
         );
@@ -3340,7 +3340,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".oe_stat_button"));
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").textContent,
             "GOLDORAK",
             "should have correct display_name"
         );
@@ -3467,12 +3467,12 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, "label.o_form_label", 2);
         assert.strictEqual(
-            target.querySelectorAll("label.o_form_label")[0].innerText,
+            target.querySelectorAll("label.o_form_label")[0].textContent,
             "Product",
             "one should be the one for the product field"
         );
         assert.strictEqual(
-            target.querySelectorAll("label.o_form_label")[1].innerText,
+            target.querySelectorAll("label.o_form_label")[1].textContent,
             "Bar",
             "one should be the one for the bar field"
         );
@@ -3598,7 +3598,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_cancel"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "yop",
             "field in readonly should display yop"
         );
@@ -3639,7 +3639,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_cancel"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "yop",
             "field in readonly should display yop"
         );
@@ -3839,12 +3839,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "1",
             "pager value should be 1"
         );
         assert.strictEqual(
-            target.querySelector(".o_pager_limit").innerText,
+            target.querySelector(".o_pager_limit").textContent,
             "2",
             "pager limit should be 2"
         );
@@ -3869,7 +3869,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_pager_next"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "2",
             "pager value should be 2"
         );
@@ -3882,7 +3882,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_pager_previous"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "1",
             "pager value should be 1"
         );
@@ -3912,7 +3912,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "1",
             "pager value should be 1"
         );
@@ -3943,7 +3943,7 @@ QUnit.module("Views", (hooks) => {
             "no confirm modal should be displayed"
         );
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "2",
             "pager value should be 2"
         );
@@ -3966,7 +3966,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_pager_next"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "1",
             "pager value should be 1"
         );
@@ -3986,7 +3986,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         await click(target.querySelector(".o_pager_next"));
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "2",
             "pager value should be 2"
         );
@@ -4036,8 +4036,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_pager");
-        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1");
-        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "2");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
 
         await click(target.querySelector(".o_form_button_create"));
 
@@ -4046,8 +4046,8 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
 
         assert.containsOnce(target, ".o_pager");
-        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3");
-        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "3");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "3");
     });
 
     QUnit.test("switching to another record, in readonly mode", async function (assert) {
@@ -4066,11 +4066,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_form_readonly");
-        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(form.env.services.router.current.hash.id, 1);
 
         await click(target.querySelector(".o_pager_next"));
-        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "2");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
         assert.containsOnce(target, ".o_form_readonly");
         assert.strictEqual(form.env.services.router.current.hash.id, 2);
     });
@@ -4158,8 +4158,8 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1");
-        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "3");
 
         // open action menu and delete
         await toggleActionMenu(target);
@@ -4168,8 +4168,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(document.body, ".modal", "a confirm modal should be displayed");
         await click(document.body.querySelector(".modal-footer button.btn-primary"));
 
-        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1");
-        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "2");
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
+        assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
         assert.containsOnce(
             target,
             ".o_field_widget[name=foo]:contains(blip)",
@@ -4350,9 +4350,9 @@ QUnit.module("Views", (hooks) => {
             "10"
         );
         assert.containsOnce(document.body, ".modal");
-        assert.strictEqual(document.body.querySelector(".modal-title").innerText, "Warning");
+        assert.strictEqual(document.body.querySelector(".modal-title").textContent, "Warning");
         assert.strictEqual(
-            document.body.querySelector(".modal-body").innerText,
+            document.body.querySelector(".modal-body").textContent,
             "You must first select a partner"
         );
     });
@@ -4401,11 +4401,11 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(document.body, ".o_notification");
             assert.hasClass(document.body.querySelector(".o_notification"), "abc");
             assert.strictEqual(
-                document.body.querySelector(".o_notification_title").innerText,
+                document.body.querySelector(".o_notification_title").textContent,
                 "Warning"
             );
             assert.strictEqual(
-                document.body.querySelector(".o_notification_content").innerText,
+                document.body.querySelector(".o_notification_content").textContent,
                 "You must first select a partner"
             );
         }
@@ -4553,7 +4553,7 @@ QUnit.module("Views", (hooks) => {
             "there should be one one2many record linked at first"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_one2many .o_data_row td").innerText,
+            target.querySelector(".o_field_one2many .o_data_row td").textContent,
             "aaa",
             "the 'display_name' of the one2many record should be correct"
         );
@@ -4563,12 +4563,12 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "let us trigger an onchange");
         assert.containsN(target, ".o_data_row", 2, "there should be two linked record");
         assert.strictEqual(
-            target.querySelector(".o_data_row .o_data_cell").innerText,
+            target.querySelector(".o_data_row .o_data_cell").textContent,
             "updated record",
             "the 'display_name' of the first one2many record should have been updated"
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell").innerText,
+            target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell").textContent,
             "created record",
             "the 'display_name' of the second one2many record should be correct"
         );
@@ -4761,12 +4761,12 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "let us trigger an onchange");
         assert.containsN(target, ".o_data_row", 2, "there should be two linked records");
         assert.strictEqual(
-            target.querySelector(".o_data_row td").innerText,
+            target.querySelector(".o_data_row td").textContent,
             "gold",
             "the 'display_name' of the first m2m record should be correctly displayed"
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_data_row")[1].querySelector("td").innerText,
+            target.querySelectorAll(".o_data_row")[1].querySelector("td").textContent,
             "silver",
             "the 'display_name' of the second m2m record should be correctly displayed"
         );
@@ -4943,11 +4943,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=date]").innerText,
+            target.querySelector(".o_field_widget[name=date]").textContent,
             "01/25/2017"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=datetime]").innerText,
+            target.querySelector(".o_field_widget[name=datetime]").textContent,
             "12/12/2016 12:55:05"
         );
 
@@ -5097,7 +5097,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').textContent,
             "blip",
             "field foo should be displayed to initial value"
         );
@@ -5109,7 +5109,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_cancel"));
         assert.containsNone(target, ".modal");
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').textContent,
             "blip",
             "field foo should still be displayed to initial value"
         );
@@ -5118,7 +5118,7 @@ QUnit.module("Views", (hooks) => {
         def.resolve();
         await nextTick();
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').textContent,
             "blip",
             "field foo should still be displayed to initial value"
         );
@@ -5175,7 +5175,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".modal", "Confirm dialog should not be displayed");
         assert.containsOnce(target, ".o_form_view .o_form_readonly");
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="foo"]').innerText,
+            target.querySelector('.o_field_widget[name="foo"]').textContent,
             "1234",
             "value should have been saved and rerendered in readonly"
         );
@@ -5292,7 +5292,7 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "trigger an onchange");
 
         assert.strictEqual(
-            target.querySelector(".o_data_row td").innerText,
+            target.querySelector(".o_data_row td").textContent,
             "foo changed",
             "onchange should have been correctly applied on field in o2m list"
         );
@@ -5356,7 +5356,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            target.querySelector(".o_data_row td").innerText,
+            target.querySelector(".o_data_row td").textContent,
             "My little Foo Value",
             "the initial value should be the default one"
         );
@@ -5364,14 +5364,14 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "trigger an onchange");
 
         assert.strictEqual(
-            target.querySelector(".o_data_row td").innerText,
+            target.querySelector(".o_data_row td").textContent,
             "foo changed",
             "onchange should have been correctly applied on field in o2m list"
         );
 
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(
-            target.querySelector(".modal .modal-title").innerText.trim(),
+            target.querySelector(".modal .modal-title").textContent.trim(),
             "Open: one2many field",
             "the field string is displayed in the modal title"
         );
@@ -5413,7 +5413,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
-                target.querySelector(".o_data_row td").innerText,
+                target.querySelector(".o_data_row td").textContent,
                 "My little Foo Value",
                 "the initial value should be the default one"
             );
@@ -5471,7 +5471,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
-                target.querySelector(".o_data_row td").innerText,
+                target.querySelector(".o_data_row td").textContent,
                 "My little Foo Value",
                 "the initial value should be the default one"
             );
@@ -5485,7 +5485,7 @@ QUnit.module("Views", (hooks) => {
             );
             await click(target.querySelector(".modal-footer .btn-primary"));
             assert.strictEqual(
-                target.querySelector(".o_data_row td").innerText,
+                target.querySelector(".o_data_row td").textContent,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
@@ -5493,7 +5493,7 @@ QUnit.module("Views", (hooks) => {
             // create a new o2m record
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
             assert.strictEqual(
-                target.querySelector(".modal .modal-title").innerText.trim(),
+                target.querySelector(".modal .modal-title").textContent.trim(),
                 "Create custom label",
                 "the custom field label is applied in the modal title"
             );
@@ -5504,7 +5504,7 @@ QUnit.module("Views", (hooks) => {
             );
             await click(target.querySelector(".modal-footer .btn-primary"));
             assert.strictEqual(
-                target.querySelectorAll(".o_data_row")[1].querySelector("td").innerText,
+                target.querySelectorAll(".o_data_row")[1].querySelector("td").textContent,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
@@ -5653,7 +5653,7 @@ QUnit.module("Views", (hooks) => {
             "the field widget should have 2 children, the text and the value"
         );
         assert.strictEqual(
-            parseInt(target.querySelector("button .o_field_widget .o_stat_value").innerText),
+            parseInt(target.querySelector("button .o_field_widget .o_stat_value").textContent),
             9,
             "the value rendered should be the same as the field value"
         );
@@ -6148,7 +6148,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo]").innerText,
+            target.querySelector(".o_field_widget[name=foo]").textContent,
             "New foo value",
             "new value for foo field should have been saved"
         );
@@ -6355,7 +6355,7 @@ QUnit.module("Views", (hooks) => {
             ".o_form_view .o_form_sheet .oe_button_box .oe_stat_button"
         );
         assert.strictEqual(
-            $button.innerText,
+            $button.textContent,
             "Inventory Moves",
             "the stat button should contain a span with the string attribute value"
         );
@@ -6885,7 +6885,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_external_button"));
         assert.containsOnce(target, ".modal");
         assert.strictEqual(
-            target.querySelector(".modal .modal-title").innerText.trim(),
+            target.querySelector(".modal .modal-title").textContent.trim(),
             "Open: Product"
         );
         assert.strictEqual(
@@ -6904,7 +6904,7 @@ QUnit.module("Views", (hooks) => {
 
         // Check that data in first dialog is correctly updated
         assert.strictEqual(
-            target.querySelector(".modal .o_data_row .o_data_cell").innerText,
+            target.querySelector(".modal .o_data_row .o_data_cell").textContent,
             "xtv"
         );
         await click(target.querySelector(".modal .modal-footer .btn-primary:not(.d-none"));
@@ -7082,7 +7082,7 @@ QUnit.module("Views", (hooks) => {
 
         function getFooValues(row) {
             const rows = target.querySelectorAll(".o_data_row");
-            return [...rows].map((r) => r.querySelectorAll(".o_data_cell")[1].innerText);
+            return [...rows].map((r) => r.querySelectorAll(".o_data_cell")[1].textContent);
         }
 
         assert.deepEqual(getFooValues(), ["yop", "My little Foo Value"]);
@@ -7518,7 +7518,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(
-            target.querySelector(".modal .modal-title").innerText,
+            target.querySelector(".modal .modal-title").textContent,
             "Open: custom label"
         );
     });
@@ -8348,7 +8348,7 @@ QUnit.module("Views", (hooks) => {
         checkOnchange = false;
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.strictEqual(
-            target.querySelector(".modal .o_field_widget[name=foo]").innerText,
+            target.querySelector(".modal .o_field_widget[name=foo]").textContent,
             "foo value",
             "the edited value should have been kept"
         );
@@ -8423,7 +8423,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".modal-footer .btn-primary"));
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").innerText,
+            target.querySelector(".o_field_widget").textContent,
             "first record",
             "should have come back to previous record"
         );
@@ -8712,7 +8712,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_widget").innerText,
+            target.querySelector(".o_widget").textContent,
             '{"foo":"My little Foo Value","bar":false}'
         );
 
@@ -8754,8 +8754,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, "button.o_attachment_button");
         assert.strictEqual(
-            target.querySelector("span.o_attach_document").innerText.trim().toUpperCase(),
-            "Attach document".toUpperCase()
+            target.querySelector("span.o_attach_document").textContent,
+            "Attach document"
         );
     });
 
@@ -8787,7 +8787,7 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
 
         assert.strictEqual(
-            target.querySelector(".o_widget").innerText,
+            target.querySelector(".o_widget").textContent,
             "I am alive!",
             "widget should have been updated"
         );
@@ -8888,12 +8888,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "2",
             "pager should indicate that we are on second record"
         );
         assert.strictEqual(
-            target.querySelector(".o_pager_limit").innerText,
+            target.querySelector(".o_pager_limit").textContent,
             "2",
             "pager should indicate that we are on second record"
         );
@@ -8902,12 +8902,12 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_cancel"));
 
         assert.strictEqual(
-            target.querySelector(".o_pager_value").innerText,
+            target.querySelector(".o_pager_value").textContent,
             "2",
             "pager value should not have changed"
         );
         assert.strictEqual(
-            target.querySelector(".o_pager_limit").innerText,
+            target.querySelector(".o_pager_limit").textContent,
             "2",
             "pager limit should not have changed"
         );
@@ -9276,7 +9276,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_form_readonly", "form view should be in readonly");
         assert.strictEqual(
-            target.querySelector(".o_form_view").innerText.trim(),
+            target.querySelector(".o_form_view").textContent.trim(),
             "some foo value",
             "foo field should have correct value"
         );
@@ -9431,7 +9431,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_form_view"), "o_form_readonly");
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=display_name]").innerText,
+            target.querySelector(".o_field_widget[name=display_name]").textContent,
             "changed"
         );
         assert.containsNone(
@@ -10355,7 +10355,10 @@ QUnit.module("Views", (hooks) => {
             "Partner",
             "second record",
         ]);
-        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "name");
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="name"]').textContent,
+            "name"
+        );
 
         await click(target.querySelector(`.o_pager button.o_pager_previous`));
         assert.containsOnce(target, ".o_form_readonly");
@@ -10363,7 +10366,7 @@ QUnit.module("Views", (hooks) => {
             "Partner",
             "first record",
         ]);
-        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').textContent, "aaa");
     });
 
     QUnit.test("Auto save: save when breadcrumb clicked", async function (assert) {
@@ -10417,8 +10420,8 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".breadcrumb-item.o_back_button"));
 
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Partner");
-        assert.strictEqual(target.querySelector(".o_field_cell").innerText, "aaa");
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partner");
+        assert.strictEqual(target.querySelector(".o_field_cell").textContent, "aaa");
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
         assert.containsOnce(target, ".o_form_readonly");
@@ -10426,7 +10429,7 @@ QUnit.module("Views", (hooks) => {
             "Partner",
             "first record",
         ]);
-        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').textContent, "aaa");
     });
 
     QUnit.test("Auto save: save when action changed", async function (assert) {
@@ -10498,7 +10501,7 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 2, { clearBreadcrumbs: true });
 
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Other action");
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Other action");
 
         await doAction(webClient, 1, { clearBreadcrumbs: true });
 
@@ -10508,7 +10511,7 @@ QUnit.module("Views", (hooks) => {
             "Partner",
             "first record",
         ]);
-        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').innerText, "aaa");
+        assert.strictEqual(target.querySelector('.o_field_widget[name="name"]').textContent, "aaa");
     });
 
     QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
@@ -10650,7 +10653,7 @@ QUnit.module("Views", (hooks) => {
 
         // Return in the list view to detach the form view
         await click(target.querySelector(".o_back_button"));
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "Partner");
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partner");
 
         // Simulate tab/browser close in the list
         window.dispatchEvent(new Event("beforeunload"));
