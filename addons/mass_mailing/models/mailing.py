@@ -30,7 +30,11 @@ class MassMailing(models.Model):
     A mass mailing is an occurence of sending emails. """
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin', 'utm.source.mixin']
+    _inherit = ['mail.thread',
+                'mail.activity.mixin',
+                'mail.render.mixin',
+                'utm.source.mixin'
+    ]
     _order = 'calendar_date DESC'
     _rec_name = "subject"
 
@@ -65,67 +69,93 @@ class MassMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=False)
+    subject = fields.Char(
+        'Subject', help='Subject of your Mailing',
+        required=True, translate=False)
     preview = fields.Char(
         'Preview', translate=False,
         help='Catchy preview sentence that encourages recipients to open this email.\n'
              'In most inboxes, this is displayed next to the subject.\n'
              'Keep it empty if you prefer the first characters of your email content to appear instead.')
-    email_from = fields.Char(string='Send From', required=True, store=True, readonly=False, compute='_compute_email_from',
-                             default=lambda self: self.env.user.email_formatted)
+    email_from = fields.Char(
+        string='Send From',
+        compute='_compute_email_from', readonly=False, required=True, store=True,
+        default=lambda self: self.env.user.email_formatted)
     favorite = fields.Boolean('Favorite', copy=False, tracking=True)
-    favorite_date = fields.Datetime('Favorite Date', help='When this mailing was added in the favorites',
-                                    store=True, copy=False, compute='_compute_favorite_date')
+    favorite_date = fields.Datetime(
+        'Favorite Date',
+        compute='_compute_favorite_date', store=True,
+        copy=False,
+        help='When this mailing was added in the favorites')
     sent_date = fields.Datetime(string='Sent Date', copy=False)
-
-    schedule_type = fields.Selection([('now', 'Send now'), ('scheduled', 'Send on')], string='Schedule',
-                                     default='now', required=True, readonly=True,
-                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
-    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True,
-                                    states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
-                                    compute='_compute_schedule_date', store=True, copy=True)
-    calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
+    schedule_type = fields.Selection(
+        [('now', 'Send now'), ('scheduled', 'Send on')],
+        string='Schedule', default='now',
+        readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+    schedule_date = fields.Datetime(
+        string='Scheduled for',
+        compute='_compute_schedule_date', readonly=True, store=True,
+        copy=True, tracking=True,
+        states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+    calendar_date = fields.Datetime(
+        'Calendar Date',
+        compute='_compute_calendar_date', store=True,
+        copy=False,
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False, sanitize=False)
     body_html = fields.Html(string='Body converted to be sent by mail', render_engine='qweb', sanitize=False)
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty",
                                    help='Technical field used to determine if the mail body is empty')
-    attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
     campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True, ondelete='set null')
     medium_id = fields.Many2one(
         'utm.medium', string='Medium',
-        compute='_compute_medium_id', readonly=False, store=True, ondelete='restrict',
+        compute='_compute_medium_id', readonly=False, store=True,
+        ondelete='restrict',
         help="UTM Medium: delivery method (email, sms, ...)")
-    state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
-        string='Status', required=True, tracking=True, copy=False, default='draft', group_expand='_group_expand_states')
+    state = fields.Selection(
+        [('draft', 'Draft'), ('in_queue', 'In Queue'),
+         ('sending', 'Sending'), ('done', 'Sent')],
+        string='Status',
+        default='draft', required=True,
+        copy=False, tracking=True,
+        group_expand='_group_expand_states')
     color = fields.Integer(string='Color Index')
-    user_id = fields.Many2one('res.users', string='Responsible', tracking=True,  default=lambda self: self.env.user)
+    user_id = fields.Many2one(
+        'res.users', string='Responsible',
+        tracking=True,
+        default=lambda self: self.env.user)
     # mailing options
     mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
     mailing_type_description = fields.Char('Mailing Type Description', compute="_compute_mailing_type_description")
-    reply_to_mode = fields.Selection([
-        ('update', 'Recipient Followers'), ('new', 'Specified Email Address')],
-        string='Reply-To Mode', compute='_compute_reply_to_mode',
-        readonly=False, store=True,
+    reply_to_mode = fields.Selection(
+        [('update', 'Recipient Followers'), ('new', 'Specified Email Address')],
+        string='Reply-To Mode',
+        compute='_compute_reply_to_mode', readonly=False, store=True,
         help='Thread: replies go to target document. Email: replies are routed to a given email.')
     reply_to = fields.Char(
-        string='Reply To', compute='_compute_reply_to', readonly=False, store=True,
+        string='Reply To',
+        compute='_compute_reply_to', readonly=False, store=True,
         help='Preferred Reply-To Address')
     # recipients
-    mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_mailing_model_real')
+    mailing_model_real = fields.Char(
+        string='Recipients Real Model', compute='_compute_mailing_model_real')
     mailing_model_id = fields.Many2one(
-        'ir.model', string='Recipients Model', ondelete='cascade', required=True,
+        'ir.model', string='Recipients Model',
+        ondelete='cascade', required=True,
         domain=[('is_mailing_enabled', '=', True)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(
-        string='Recipients Model Name', related='mailing_model_id.model',
-        readonly=True, related_sudo=True)
+        string='Recipients Model Name',
+        related='mailing_model_id.model', readonly=True, related_sudo=True)
     mailing_domain = fields.Char(
-        string='Domain', compute='_compute_mailing_domain',
-        readonly=False, store=True)
+        string='Domain',
+        compute='_compute_mailing_domain', readonly=False, store=True)
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -136,25 +166,30 @@ class MassMailing(models.Model):
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
         'mailing.filter', string='Favorite Filter',
-        domain="[('mailing_model_name', '=', mailing_model_name)]",
-        compute='_compute_mailing_filter_id', readonly=False, store=True)
+        compute='_compute_mailing_filter_id', readonly=False, store=True,
+        domain="[('mailing_model_name', '=', mailing_model_name)]")
     mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
     mailing_filter_count = fields.Integer('# Favorite Filters', compute='_compute_mailing_filter_count')
     # A/B Testing
     ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed', store=True)
     ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")
-    ab_testing_enabled = fields.Boolean(string='Allow A/B Testing', default=False,
+    ab_testing_enabled = fields.Boolean(
+        string='Allow A/B Testing', default=False,
         help='If checked, recipients will be mailed only once for the whole campaign. '
              'This lets you send different mailings to randomly selected recipients and test '
              'the effectiveness of the mailings, without causing duplicate messages.')
     ab_testing_mailings_count = fields.Integer(related="campaign_id.ab_testing_mailings_count")
-    ab_testing_pc = fields.Integer(string='A/B Testing percentage',
-        help='Percentage of the contacts that will be mailed. Recipients will be chosen randomly.', default=10)
-    ab_testing_schedule_datetime = fields.Datetime(related="campaign_id.ab_testing_schedule_datetime", readonly=False,
+    ab_testing_pc = fields.Integer(
+        string='A/B Testing percentage',
+        default=10,
+        help='Percentage of the contacts that will be mailed. Recipients will be chosen randomly.')
+    ab_testing_schedule_datetime = fields.Datetime(
+        related="campaign_id.ab_testing_schedule_datetime", readonly=False,
         default=lambda self: fields.Datetime.now() + relativedelta(days=1))
-    ab_testing_winner_selection = fields.Selection(related="campaign_id.ab_testing_winner_selection",
-        default="opened_ratio", readonly=False, copy=True)
-
+    ab_testing_winner_selection = fields.Selection(
+        related="campaign_id.ab_testing_winner_selection", readonly=False,
+        default="opened_ratio",
+        copy=True)
     kpi_mail_required = fields.Boolean('KPI mail required', copy=False)
     # statistics data
     mailing_trace_ids = fields.One2many('mailing.trace', 'mass_mailing_id', string='Emails Statistics')
@@ -345,7 +380,7 @@ class MassMailing(models.Model):
     @api.depends('mailing_model_id')
     def _compute_mailing_model_real(self):
         for mailing in self:
-            mailing.mailing_model_real = (mailing.mailing_model_id.model != 'mailing.list') and mailing.mailing_model_id.model or 'mailing.contact'
+            mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model == 'mailing.list' else mailing.mailing_model_id.model
 
     @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
     def _compute_mailing_domain(self):
@@ -552,10 +587,9 @@ class MassMailing(models.Model):
         self.ensure_one()
         if self.schedule_date and self.schedule_date > fields.Datetime.now():
             return self.action_put_in_queue()
-        else:
-            action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
-            action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
-            return action
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
+        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
+        return action
 
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
@@ -683,6 +717,37 @@ class MassMailing(models.Model):
             }
         action['domain'] = [('list_ids', 'in', self.contact_list_ids.ids)]
         return action
+
+    @api.model
+    def action_fetch_favorites(self, extra_domain=None):
+        """Return all mailings set as favorite and skip mailings with empty body.
+
+        Return archived mailing templates as well, so the user can archive the templates
+        while keeping using it, without cluttering the Kanban view if they're a lot of
+        templates.
+        """
+        domain = [('favorite', '=', True)]
+        if extra_domain:
+            domain = expression.AND([domain, extra_domain])
+
+        values_list = self.with_context(active_test=False).search_read(
+            domain=domain,
+            fields=['id', 'subject', 'body_arch', 'user_id', 'mailing_model_id'],
+            order='favorite_date DESC',
+        )
+
+        values_list = [
+            values for values in values_list
+            if not tools.is_html_empty(values['body_arch'])
+        ]
+
+        # You see first the mailings without responsible, then your mailings and then the others
+        values_list.sort(
+            key=lambda values:
+            values['user_id'][0] != self.env.user.id if values['user_id'] else -1
+        )
+
+        return values_list
 
     def update_opt_out(self, email, list_ids, value):
         if len(list_ids) > 0:
@@ -1173,8 +1238,8 @@ class MassMailing(models.Model):
                 kpi,
                 {
                     'kpi_fullname': _('Business Benefits on %(expected)i %(mailing_type)s Sent',
-                                       expected=self.expected,
-                                       mailing_type=mailing_type
+                                      expected=self.expected,
+                                      mailing_type=mailing_type
                                      ),
                     'kpi_action': None,
                     'kpi_col1': {},
@@ -1188,8 +1253,7 @@ class MassMailing(models.Model):
         }
 
     def _get_pretty_mailing_type(self):
-        if self.mailing_type == 'mail':
-            return _('Emails')
+        return _('Emails')
 
     def _get_unsubscribe_token(self, user_id):
         """Generate a secure hash for this user. It allows to opt out from
@@ -1268,34 +1332,3 @@ class MassMailing(models.Model):
             return lxml.html.tostring(root, encoding='unicode')
 
         return body_html
-
-    @api.model
-    def action_fetch_favorites(self, extra_domain=None):
-        """Return all mailings set as favorite and skip mailings with empty body.
-
-        Return archived mailing templates as well, so the user can archive the templates
-        while keeping using it, without cluttering the Kanban view if they're a lot of
-        templates.
-        """
-        domain = [('favorite', '=', True)]
-        if extra_domain:
-            domain = expression.AND([domain, extra_domain])
-
-        values_list = self.with_context(active_test=False).search_read(
-            domain=domain,
-            fields=['id', 'subject', 'body_arch', 'user_id', 'mailing_model_id'],
-            order='favorite_date DESC',
-        )
-
-        values_list = [
-            values for values in values_list
-            if not tools.is_html_empty(values['body_arch'])
-        ]
-
-        # You see first the mailings without responsible, then your mailings and then the others
-        values_list.sort(
-            key=lambda values:
-            values['user_id'][0] != self.env.user.id if values['user_id'] else -1
-        )
-
-        return values_list

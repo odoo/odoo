@@ -28,13 +28,17 @@ class MassMailingList(models.Model):
         'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
         string='Mailing Lists', copy=False)
     mailing_count = fields.Integer(compute="_compute_mailing_list_count", string="Number of Mailing")
-    mailing_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mass Mailings', copy=False)
+    mailing_ids = fields.Many2many(
+        'mailing.mailing', 'mail_mass_mailing_list_rel',
+        string='Mass Mailings', copy=False)
     subscription_ids = fields.One2many(
-        'mailing.contact.subscription', 'list_id', string='Subscription Information',
+        'mailing.contact.subscription', 'list_id',
+        string='Subscription Information',
         copy=True, depends=['contact_ids'])
-    is_public = fields.Boolean(default=True, string='Show In Preferences',
-        help='The mailing list can be accessible by recipient in the unsubscription'
-        ' page to allows them to update their subscription preferences.')
+    is_public = fields.Boolean(
+        string='Show In Preferences', default=True,
+        help='The mailing list can be accessible by recipients in the subscription '
+             'management page to allows them to update their preferences.')
 
     # ------------------------------------------------------
     # COMPUTE / ONCHANGE
@@ -318,7 +322,7 @@ class MassMailingList(models.Model):
             if mass_mailing.id not in contact_counts:
                 contact_counts[mass_mailing.id] = {
                     field: 0
-                    for field in self._get_contact_statistics_fields().keys()
+                    for field in mass_mailing._get_contact_statistics_fields()
                 }
 
         return contact_counts
