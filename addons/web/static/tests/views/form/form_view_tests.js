@@ -4,6 +4,7 @@ import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services
 import {
     click,
     clickEdit,
+    clickSave,
     editInput,
     getFixture,
     getNodesTextContent,
@@ -25,23 +26,16 @@ import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { CharField } from "@web/fields/char_field";
 import { FormController } from "@web/views/form/form_controller";
 import { session } from "@web/session";
+import legacySession from "web.session";
 import { scrollerService } from "@web/core/scroller_service";
+import BasicModel from "web.BasicModel";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
 const widgetRegistry = registry.category("view_widgets");
 
 // WOWL remove after adapting tests
-let createView,
-    testUtils,
-    core,
-    _t,
-    ViewDialogs,
-    Widget,
-    BasicModel,
-    RamStorage,
-    AbstractStorageService,
-    clickLast;
+let createView, testUtils, _t, ViewDialogs, Widget, RamStorage, AbstractStorageService, clickLast;
 
 let target, serverData;
 QUnit.module("Views", (hooks) => {
@@ -9008,142 +9002,127 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL('edition in form view on a "noCache" model', async function (assert) {
-        assert.expect(5);
+    QUnit.test('edition in form view on a "noCache" model', async function (assert) {
+        assert.expect(3);
 
-        await testUtils.mock.patch(BasicModel, {
+        patchWithCleanup(BasicModel.prototype, {
             noCacheModels: BasicModel.prototype.noCacheModels.concat(["partner"]),
         });
 
-        await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + "<sheet>" + '<field name="display_name"/>' + "</sheet>" + "</form>",
+            arch: `<form><sheet><field name="display_name"/></sheet></form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
             mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.step("write");
                 }
-                return this._super.apply(this, arguments);
             },
         });
-        core.bus.on("clear_cache", target, assert.step.bind(assert, "clear_cache"));
 
-        await editInput(target, ".o_field_widget[name=display_name]", "new value");
-        await click(target.querySelector(".o_form_button_save"));
+        await clickEdit(target);
+
+        form.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
+
+        await editInput(target, "[name=display_name] input", "new value");
+        await clickSave(target);
 
         assert.verifySteps(["write", "clear_cache"]);
-        await testUtils.mock.unpatch(BasicModel);
-
-        assert.verifySteps(["clear_cache"]); // triggered by the test environment on destroy
     });
 
-    QUnit.skipWOWL('creation in form view on a "noCache" model', async function (assert) {
-        assert.expect(5);
+    QUnit.test('creation in form view on a "noCache" model', async function (assert) {
+        assert.expect(3);
 
-        await testUtils.mock.patch(BasicModel, {
+        patchWithCleanup(BasicModel.prototype, {
             noCacheModels: BasicModel.prototype.noCacheModels.concat(["partner"]),
         });
 
-        await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + "<sheet>" + '<field name="display_name"/>' + "</sheet>" + "</form>",
+            arch: `<form><sheet><field name="display_name"/></sheet></form>`,
+            resId: 1,
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.step("create");
+                if (args.method === "write") {
+                    assert.step("write");
                 }
-                return this._super.apply(this, arguments);
             },
         });
-        core.bus.on("clear_cache", target, assert.step.bind(assert, "clear_cache"));
 
-        await editInput(target, ".o_field_widget[name=display_name]", "value");
-        await click(target.querySelector(".o_form_button_save"));
+        await clickEdit(target);
 
-        assert.verifySteps(["create", "clear_cache"]);
-        await testUtils.mock.unpatch(BasicModel);
+        form.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
 
-        assert.verifySteps(["clear_cache"]); // triggered by the test environment on destroy
+        await editInput(target, "[name=display_name] input", "new value");
+        await clickSave(target);
+
+        assert.verifySteps(["write", "clear_cache"]);
     });
 
-    QUnit.skipWOWL('deletion in form view on a "noCache" model', async function (assert) {
-        assert.expect(5);
+    QUnit.test('deletion in form view on a "noCache" model', async function (assert) {
+        assert.expect(3);
 
-        await testUtils.mock.patch(BasicModel, {
+        patchWithCleanup(BasicModel.prototype, {
             noCacheModels: BasicModel.prototype.noCacheModels.concat(["partner"]),
         });
 
-        await makeView({
+        const form = await makeView({
             type: "form",
-            resModel: "partner",
             serverData,
-            arch: "<form>" + "<sheet>" + '<field name="display_name"/>' + "</sheet>" + "</form>",
+            resModel: "partner",
+            arch: `<form><sheet><field name="display_name"/></sheet></form>`,
             mockRPC(route, args) {
                 if (args.method === "unlink") {
                     assert.step("unlink");
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
-            viewOptions: {
-                hasActionMenus: true,
-            },
+            actionMenus: {},
         });
-        core.bus.on("clear_cache", target, assert.step.bind(assert, "clear_cache"));
+        form.env.bus.on("CLEAR-CACHES", target, assert.step.bind(assert, "clear_cache"));
 
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Delete");
-        await click($(".modal-footer .btn-primary"));
+        await click(target.querySelector(".modal-footer .btn-primary"));
 
         assert.verifySteps(["unlink", "clear_cache"]);
-        await testUtils.mock.unpatch(BasicModel);
-
-        assert.verifySteps(["clear_cache"]); // triggered by the test environment on destroy
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "reload currencies when writing on records of model res.currency",
         async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
-            this.data["res.currency"] = {
+            serverData.models["res.currency"] = {
                 fields: {},
                 records: [{ id: 1, display_name: "some currency" }],
             };
 
-            await makeView({
-                type: "form",
-                model: "res.currency",
-                serverData,
-                arch: '<form><field name="display_name"/></form>',
-                resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
-                mockRPC(route, args) {
-                    assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-                session: {
-                    reloadCurrencies: function () {
-                        assert.step("reload currencies");
-                    },
+            patchWithCleanup(legacySession, {
+                reloadCurrencies: function () {
+                    assert.step("reload currencies");
                 },
             });
 
-            await editInput(
-                target.querySelector(".o_field_widget[name=display_name]"),
-                "new value"
-            );
-            await click(target.querySelector(".o_form_button_save"));
+            await makeView({
+                type: "form",
+                resModel: "res.currency",
+                serverData,
+                arch: '<form><field name="display_name"/></form>',
+                resId: 1,
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                },
+            });
 
-            assert.verifySteps(["read", "write", "reload currencies", "read"]);
+            await clickEdit(target);
+
+            await editInput(target.querySelector("[name=display_name]"), "input", "new value");
+            await clickSave(target);
+            assert.verifySteps(["get_views", "read", "write", "reload currencies", "read"]);
         }
     );
 
