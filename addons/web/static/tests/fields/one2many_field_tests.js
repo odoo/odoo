@@ -3821,7 +3821,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "read", "onchange", "onchange", "write", "read", "read"]);
     });
 
-    QUnit.skipWOWL("editable o2m, pressing ESC discard current changes", async function (assert) {
+    QUnit.test("editable o2m, pressing ESC discard current changes", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -3844,19 +3844,17 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
         assert.containsOnce(target, "tr.o_data_row");
 
-        await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "escape" });
+        await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "Escape" });
         assert.containsNone(target, "tr.o_data_row");
-        assert.verifySteps(["read", "onchange"]);
+        assert.verifySteps(["get_views", "read", "onchange"]);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable o2m with required field, pressing ESC discard current changes",
         async function (assert) {
-            assert.expect(5);
-
             serverData.models.turtle.fields.turtle_foo.required = true;
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -3871,22 +3869,34 @@ QUnit.module("Fields", (hooks) => {
                 resId: 2,
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    return this._super.apply(this, arguments);
                 },
             });
 
             await clickEdit(target);
             await addRow(target);
-            assert.containsOnce(form, "tr.o_data_row", "there should be one data row");
+            assert.containsOnce(target, "tr.o_data_row");
 
-            await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), "escape");
-            assert.containsNone(form, "tr.o_data_row", "data row should have been discarded");
-            assert.verifySteps(["read", "onchange"]);
+            await triggerEvent(target, '[name="turtle_foo"] input', "keydown", { key: "Escape" });
+
+            assert.containsNone(target, "tr.o_data_row");
+            assert.verifySteps(["get_views", "read", "onchange"]);
         }
     );
 
-    QUnit.skipWOWL("pressing escape in editable o2m list in dialog", async function (assert) {
+    QUnit.test("pressing escape in editable o2m list in dialog", async function (assert) {
         assert.expect(3);
+
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>
+            `,
+        };
 
         await makeView({
             type: "form",
@@ -3894,43 +3904,26 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <group>
-                        <field name="p">
-                            <tree>
-                                <field name="display_name"/>
-                            </tree>
-                        </field>
-                    </group>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
                 </form>`,
             resId: 1,
-            archs: {
-                "partner,false,form": `
-                    <form>
-                        <field name="p">
-                            <tree editable="bottom">
-                                <field name="display_name"/>
-                            </tree>
-                        </field>
-                    </form>`,
-            },
-            viewOptions: {
-                mode: "edit",
-            },
         });
+
+        await clickEdit(target);
 
         await addRow(target);
         await addRow(target, ".modal");
 
-        assert.strictEqual(
-            $(".modal .o_data_row.o_selected_row").length,
-            1,
-            "there should be a row in edition in the dialog"
-        );
+        assert.containsOnce(target, ".modal .o_data_row.o_selected_row");
 
-        await testUtils.fields.triggerKeydown($(".modal .o_data_cell input"), "escape");
+        await triggerEvent(target, '[name="display_name"] input', "keydown", { key: "Escape" });
 
-        assert.strictEqual($(".modal").length, 1, "dialog should still be open");
-        assert.strictEqual($(".modal .o_data_row").length, 0, "the row should have been removed");
+        assert.containsOnce(target, ".modal");
+        assert.containsNone(target, ".modal .o_data_row");
     });
 
     QUnit.test(

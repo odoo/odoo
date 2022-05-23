@@ -11,6 +11,7 @@
                 t-att-placeholder="props.placeholder"
                 t-on-input="onInput"
                 t-on-change="onChange"
+                t-on-keydown.stop=""
                 t-ref="textarea"
             />
             <t t-if="isTranslatable">
