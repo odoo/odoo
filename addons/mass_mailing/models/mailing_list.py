@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, Command, fields, models
+from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError
 
 
@@ -27,7 +27,7 @@ class MassMailingList(models.Model):
     contact_ids = fields.Many2many(
         'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
         string='Mailing Lists', copy=False)
-    mailing_count = fields.Integer(compute="_compute_mailing_list_count", string="Number of Mailing")
+    mailing_count = fields.Integer(compute="_compute_mailing_count", string="Number of Mailing")
     mailing_ids = fields.Many2many(
         'mailing.mailing', 'mail_mass_mailing_list_rel',
         string='Mass Mailings', copy=False)
@@ -44,7 +44,8 @@ class MassMailingList(models.Model):
     # COMPUTE / ONCHANGE
     # ------------------------------------------------------
 
-    def _compute_mailing_list_count(self):
+    @api.depends('mailing_ids')
+    def _compute_mailing_count(self):
         data = {}
         if self.ids:
             self.env.cr.execute('''
@@ -56,12 +57,15 @@ class MassMailingList(models.Model):
         for mailing_list in self:
             mailing_list.mailing_count = data.get(mailing_list._origin.id, 0)
 
+    @api.depends('contact_ids')
     def _compute_mailing_list_statistics(self):
         """ Computes various statistics for this mailing.list that allow users
         to have a global idea of its quality (based on blacklist, opt-outs, ...).
 
         As some fields depend on the value of each other (mainly percentages),
         we compute everything in a single method. """
+        # flush, notably to have email_normalized computed on contact model
+        self.env.flush_all()
 
         # 1. Fetch contact data and associated counts (total / blacklist / opt-out)
         contact_statistics_per_mailing = self._fetch_contact_statistics()
@@ -201,7 +205,7 @@ class MassMailingList(models.Model):
             mailing list in 'self'. Possibility to archive the mailing lists
             'src_lists' after the merge except the destination mailing list 'self'.
         """
-        # Explation of the SQL query with an example. There are the following lists
+        # Explanation of the SQL query with an example. There are the following lists
         # A (id=4): yti@odoo.com; yti@example.com
         # B (id=5): yti@odoo.com; yti@openerp.com
         # C (id=6): nothing
@@ -215,7 +219,7 @@ class MassMailingList(models.Model):
         #           5 | yti@example.com           |          1 |        4 |
         #           7 | yti@openerp.com           |          1 |        5 |
         #
-        # The row_column is kind of an occurence counter for the email address.
+        # The row_column is kind of an occurrence counter for the email address.
         # Then we create the Many2many relation between the destination list and the contacts
         # while avoiding to insert an existing email address (if the destination is in the source
         # for example)
