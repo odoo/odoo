@@ -5105,7 +5105,7 @@ var luxon = (function (exports) {
   }
 
   var NBSP = String.fromCharCode(160);
-  var spaceOrNBSP = "( |" + NBSP + ")";
+  var spaceOrNBSP = "[ " + NBSP + "]";
   var spaceOrNBSPRegExp = new RegExp(spaceOrNBSP, "g");
 
   function fixListRegex(s) {
