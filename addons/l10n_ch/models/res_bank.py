@@ -249,13 +249,13 @@ class ResPartnerBank(models.Model):
     def build_swiss_code_url(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
         qr_code_vals = self._build_swiss_code_vals(amount, currency_name, debtor_partner, structured_communication, free_communication)
         # use quiet to remove blank around the QR and make it easier to place it
-        return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
+        return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1&barLevel=%s' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256, 'M')
 
     @api.model
     def build_swiss_code_base64(self, amount, currency_name, not_used_anymore_1, debtor_partner, not_used_anymore_2, structured_communication, free_communication):
         qr_code_vals = self._build_swiss_code_vals(amount, currency_name, debtor_partner, structured_communication, free_communication)
         try:
-            barcode = self.env['ir.actions.report'].barcode('QR', '\n'.join(qr_code_vals), width=256, height=256, quiet=1)
+            barcode = self.env['ir.actions.report'].barcode('QR', '\n'.join(qr_code_vals), width=256, height=256, quiet=1, barLevel='M')
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
