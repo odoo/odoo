@@ -138,9 +138,10 @@
             </t>
         </a>
         <ul class="collapse show p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
+            <t t-set="is_member" t-value="slide.channel_id.is_member"/>
+            <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
             <t t-foreach="category_slide_ids" t-as="aside_slide">
                 <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
-                <t t-set="is_member" t-value="slide.channel_id.is_member"/>
                 <t t-set="can_access" t-value="aside_slide.is_preview or is_member or slide.channel_id.can_publish"/>
                 <li class="p-0 pb-1">
                     <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
@@ -160,26 +161,25 @@
                             </span>
                         </div>
                     </a>
-                    <ul t-if="aside_slide.slide_resource_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
-                        <t t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'url'">
-                            <li class="pl-4">
-                                <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
-                                    <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
-                                </a>
-                                <span t-else="" class="text-decoration-none text-muted small">
-                                    <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
-                                </span>
-                            </li>
-                        </t>
-                        <div class="o_wslides_js_course_join pl-4" t-if="aside_slide.slide_resource_ids">
-                            <t t-if="is_member or aside_slide.channel_id.can_publish">
+                    <ul t-if="aside_slide._has_additional_resources() or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
+                        <t t-if="can_access_channel">
+                            <t t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'url'">
+                                <li class="pl-4">
+                                    <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
+                                        <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                            <div class="o_wslides_js_course_join pl-4" t-if="aside_slide._has_additional_resources()">
                                 <li t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file'">
                                     <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" class="text-decoration-none small">
                                         <i class="fa fa-download mr-1"/><span t-field="resource.name"/>
                                     </a>
                                 </li>
-                            </t>
-                            <li t-elif="aside_slide.channel_id.enroll == 'public'" class="text-decoration-none small">
+                            </div>
+                        </t>
+                        <div t-else="" class="o_wslides_js_course_join o_wslides_no_access">
+                            <li t-if="aside_slide.channel_id.enroll == 'public'" class="text-decoration-none small">
                                 <i class="fa fa-download mr-1"/>
                                 <t t-call="website_slides.join_course_link"/>
                             </li>
@@ -413,31 +413,43 @@
         </div>
     </div>
     <div class="row mt-3 mb-3">
-        <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
-        <t t-set="files" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file' and res.data)"/>
-        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0" t-if="links">
-            <span class="text-muted font-weight-bold mr-3">External sources</span>
-            <div class="text-muted mr-auto border-left pl-3">
-                <t t-foreach="links" t-as="link">
-                    <a t-att-href="link.link" t-esc="link.name"/><br />
-                </t>
-            </div>
-        </div>
-        <group>
-            <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0 o_wslides_js_course_join" t-if="files">
-                <span t-if="slide.channel_id.is_member or slide.channel_id.can_publish or slide.is_preview or slide.channel_id.enroll in ['private', 'payment']" class="text-muted font-weight-bold mr-3">
+        <t t-if="slide._has_additional_resources()">
+            <t t-set="can_access_channel" t-value="slide.channel_id.is_member or slide.channel_id.can_publish"/>
+            <t t-if="can_access_channel">
+                <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
+                <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0" t-if="links">
+                    <span class="text-muted font-weight-bold mr-3">External sources</span>
+                    <div class="text-muted mr-auto border-left pl-3">
+                        <t t-foreach="links" t-as="link">
+                            <a t-att-href="link.link" t-esc="link.name"/><br />
+                        </t>
+                    </div>
+                </div>
+                <group>
+                    <t t-set="files" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file' and res.data)"/>
+                    <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0 o_wslides_js_course_join" t-if="files">
+                        <span class="text-muted font-weight-bold mr-3">
+                            Additional Resources
+                        </span>
+                        <div t-if="slide.channel_id.is_member or slide.channel_id.can_publish" class="text-muted mr-auto border-left pl-3">
+                            <t t-foreach="slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file' and resource.data">
+                                <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" t-esc="resource.name"/><br />
+                            </t>
+                        </div>
+                    </div>
+                </group>
+            </t>
+            <t t-else="">
+                <span t-if="slide.is_preview or slide.channel_id.enroll in ['private', 'payment']" class="text-muted font-weight-bold mr-3">
                     Additional Resources
                 </span>
-                <div t-if="slide.channel_id.is_member or slide.channel_id.can_publish" class="text-muted mr-auto border-left pl-3">
-                    <t t-foreach="files" t-as="resource">
-                        <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" t-esc="resource.name"/><br />
-                    </t>
+                <div class="o_wslides_js_course_join o_wslides_no_access">
+                    <div t-if="slide.channel_id.enroll == 'public'" class="text-muted mr-auto border-left pl-3">
+                        <t t-call="website_slides.join_course_link"/>
+                    </div>
                 </div>
-                <div t-elif="slide.channel_id.enroll == 'public'" class="text-muted mr-auto border-left pl-3">
-                    <t t-call="website_slides.join_course_link"/>
-                </div>
-            </div>
-        </group>
+            </t>
+        </t>
     </div>
 </template>
 
