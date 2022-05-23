@@ -33,9 +33,9 @@
                                 <span><strong>Customer Address:</strong></span>
                             </div>
                             <div t-if="partner" name="partner_header">
-                                <div t-field="partner.self"
+                                <div t-field="partner.commercial_partner_id"
                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                                <p t-if="partner.sudo().vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner.sudo().vat"/></p>
+                                <p t-if="partner.sudo().commercial_partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner.sudo().commercial_partner_id.vat"/></p>
                             </div>
                         </div>
                     </div>
