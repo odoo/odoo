@@ -278,7 +278,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         message_unsub = contact_l1.message_ids[1]
         self.assertEqual(
             message_unsub.body,
-            Markup(f'<p>The recipient <strong>unsubscribed from {self.mailing_list_1.name}</strong> mailing list(s)</p>')
+            Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p><ul><li>{self.mailing_list_1.name}</li></ul>')
         )
 
         # posted messages on exclusion list record: activated, deactivated, activated again
@@ -346,14 +346,14 @@ class TestMailingControllers(TestMailingControllersCommon):
         message_unsub = contact_l1.message_ids[1]
         self.assertEqual(
             message_unsub.body,
-            Markup(f'<p>The recipient <strong>unsubscribed from {self.mailing_list_1.name}</strong> mailing list(s)</p>')
+            Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p><ul><li>{self.mailing_list_1.name}</li></ul>')
         )
 
         # posted messages on contact record for mailing list 3: subscription
         message_unsub = contact_l3.message_ids[0]
         self.assertEqual(
             message_unsub.body,
-            Markup(f'<p>The recipient <strong>subscribed to {self.mailing_list_3.name}</strong> mailing list(s)</p>')
+            Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p><ul><li>{self.mailing_list_3.name}</li></ul>')
         )
 
         # posted messages on exclusion list record: activated, deactivated, activated again
