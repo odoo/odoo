@@ -344,6 +344,68 @@ QUnit.module("SettingsFormView", (hooks) => {
     );
 
     QUnit.test(
+        "settings views can search when coming back in breadcrumbs",
+        async function (assert) {
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Settings view",
+                    res_model: "res.config.settings",
+                    type: "ir.actions.act_window",
+                    views: [[1, "form"]],
+                },
+                4: {
+                    id: 4,
+                    name: "Other action",
+                    res_model: "task",
+                    type: "ir.actions.act_window",
+                    views: [[2, "list"]],
+                },
+            };
+
+            serverData.views = {
+                "res.config.settings,1,form": `
+                    <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button name="4" string="Execute action" type="action"/>
+                            </div>
+                        </div>
+                    </form>`,
+                "task,2,list": `
+                    <tree>
+                        <field name="display_name"/>
+                    </tree>`,
+                "res.config.settings,false,search": "<search></search>",
+                "task,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({ serverData });
+
+            await doAction(webClient, 1);
+            await click(target.querySelector("button[name='4']"));
+            await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
+            await editSearch(target, "Fo");
+            assert.strictEqual(
+                target.querySelector(".highlighter").textContent,
+                "Fo",
+                "Fo word highlighted"
+            );
+        }
+    );
+
+    QUnit.test(
         "clicking on any button in setting should show discard warning if setting form is dirty",
         async function (assert) {
             assert.expect(11);

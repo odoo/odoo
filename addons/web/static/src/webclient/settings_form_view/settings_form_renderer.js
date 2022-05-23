@@ -12,11 +12,15 @@ const { useState } = owl;
 
 const fieldRegistry = registry.category("fields");
 
+const labels = Object.create(null);
+
 export class SettingsFormRenderer extends FormRenderer {
     setup() {
-        this.labels = [];
+        if (!labels[this.props.archInfo.arch]) {
+            labels[this.props.archInfo.arch] = [];
+        }
         this.compileParams = {
-            labels: this.labels,
+            labels: labels[this.props.archInfo.arch],
             getFieldExpr: this.getFieldExpr,
             record: this.record,
         };
@@ -24,10 +28,12 @@ export class SettingsFormRenderer extends FormRenderer {
         this.searchValue = useState(this.env.searchValue);
     }
     search(kind, value) {
-        const labels = this.labels
+        const labelsTmp = labels[this.props.archInfo.arch]
             .filter((x) => x[kind] === value)
             .map((x) => [x.label, x.groupName]);
-        return labels.join().match(new RegExp(`(${escapeRegExp(this.searchValue.value)})`, "ig"));
+        return labelsTmp
+            .join()
+            .match(new RegExp(`(${escapeRegExp(this.searchValue.value)})`, "ig"));
     }
     getFieldExpr(fieldName, fieldWidget) {
         const name = `base_settings.${fieldWidget}`;
