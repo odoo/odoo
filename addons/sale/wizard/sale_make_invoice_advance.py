@@ -100,6 +100,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'analytic_account_id': order.analytic_account_id.id or False,
             })],
         }
+        if hasattr(order, 'referrer_id'):
+            invoice_vals['referrer_id'] = order.referrer_id.id
 
         return invoice_vals
 
