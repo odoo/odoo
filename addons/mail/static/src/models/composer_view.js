@@ -566,6 +566,13 @@ registerModel({
         },
         /**
          * @private
+         * @return {boolean}
+         */
+        _computeHasDropZone() {
+            return true;
+        },
+        /**
+         * @private
          * @returns {boolean|FieldCommand}
          */
         _computeHasFollowers() {
@@ -1110,6 +1117,9 @@ registerModel({
             isCausal: true,
             readonly: true,
             required: true,
+        }),
+        hasDropZone: attr({
+            compute: '_computeHasDropZone',
         }),
         hasFollowers: attr({
             compute: '_computeHasFollowers',
