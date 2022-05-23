@@ -32,8 +32,8 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
                 document_id: this.customerData.documentId,
                 email: this.customerData.email,
                 hash_token: this.customerData.hashToken,
+                lists_optin_ids: mailingListIds,
                 mailing_id: this.customerData.mailingId,
-                opt_in_ids: mailingListIds,
             }
         ).then((result) => {
             this.trigger_up(

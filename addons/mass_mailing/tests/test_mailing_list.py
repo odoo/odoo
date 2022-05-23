@@ -274,3 +274,49 @@ class TestMailingContactImport(MassMailCommon):
 
         contact = self.env['mailing.contact'].search([('email', '=', 'already_exists_list_1@example.com')])
         self.assertEqual(len(contact), 1, 'Should have updated the existing contact instead of creating a new one')
+
+
+@tagged('mailing_list')
+class TestSubscriptionManagement(MassMailCommon):
+
+    @users('user_marketing')
+    def test_mailing_update_optout(self):
+        _email_formatted = '"Mireille Labeille" <mireille@test.example.com>'
+        _email_formatted_upd = '"Mireille Oreille-Labeille" <mireille@test.example.com>'
+        _email_normalized = 'mireille@test.example.com'
+        self._create_mailing_list()
+        ml_1, ml_2 = self.mailing_list_1.with_env(self.env), self.mailing_list_2.with_env(self.env)
+        ml_3 = self._create_mailing_list_of_x_contacts(3)
+        self.assertEqual(ml_1.contact_count, 3)
+        self.assertEqual(ml_1.contact_count_blacklisted, 0)
+        self.assertEqual(ml_1.contact_count_email, 3)
+        self.assertEqual(ml_1.contact_count_opt_out, 0)
+        self.assertEqual(ml_2.contact_count, 4)
+        self.assertEqual(ml_2.contact_count_blacklisted, 0)
+        self.assertEqual(ml_2.contact_count_email, 4)
+        self.assertEqual(ml_2.contact_count_opt_out, 0)
+        self.assertEqual(ml_3.contact_count, 3)
+        self.assertEqual(ml_3.contact_count_blacklisted, 0)
+        self.assertEqual(ml_3.contact_count_email, 3)
+        self.assertEqual(ml_3.contact_count_opt_out, 0)
+
+        # create a new test contact
+        contact = self.env['mailing.contact'].browse(
+            self.env['mailing.contact'].name_create(_email_formatted)[0]
+        )
+        self.assertEqual(contact.email, _email_normalized)
+        self.assertEqual(contact.name, 'Mireille Labeille')
+
+        # add new subscriptions (and ensure email_normalized is used)
+        (ml_1 + ml_2)._update_subscription_from_email(_email_formatted_upd, opt_out=False)
+        subs = self.env['mailing.contact.subscription'].search(
+            [('contact_id', '=', contact.id)]
+        )
+        self.assertEqual(subs.list_id, ml_1 + ml_2)
+
+        # opt-out from opted-in mailing list + 1 non opted-in mailing list
+        (ml_2 + ml_3)._update_subscription_from_email(_email_formatted_upd, opt_out=True)
+        subs = self.env['mailing.contact.subscription'].search(
+            [('contact_id', '=', contact.id)]
+        )
+        self.assertEqual(subs.list_id, ml_1 + ml_2)

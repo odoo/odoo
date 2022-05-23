@@ -326,7 +326,10 @@ class MassMailCommon(MailCommon, MassMailCase):
         return cls.env['mailing.list'].with_context(cls._test_context).create({
             'name': 'Test List',
             'contact_ids': [
-                (0, 0, {'name': 'Contact %s' % i, 'email': 'contact%s@example.com' % i})
-                for i in range(contacts_nbr)
+                (0, 0, {
+                    'name': f'Contact %{idx}',
+                    'email': f'contact%{idx}@example.com'
+                })
+                for idx in range(contacts_nbr)
             ],
         })
