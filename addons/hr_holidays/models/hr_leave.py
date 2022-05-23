@@ -893,9 +893,8 @@ class HolidaysRequest(models.Model):
                                 no_mail_to_attendees=True,
                                 active_model=self._name
                             ).create(meeting_values)
-        Holiday = self.env['hr.leave']
-        for meeting in meetings:
-            Holiday.browse(meeting.res_id).meeting_id = meeting
+            for holiday, meeting in zip(meeting_holidays, meetings):
+                holiday.meeting_id = meeting
 
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
