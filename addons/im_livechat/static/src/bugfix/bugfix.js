@@ -64,3 +64,22 @@ registerClassPatchModel('mail.message', 'im_livechat/static/src/models/message/m
 });
 
 });
+
+odoo.define('im_livechat/static/src/models/composer/composer.js', function (require) {
+'use strict';
+
+const { registerInstancePatchModel } = require('mail/static/src/model/model_core.js');
+
+registerInstancePatchModel('mail.composer', 'im_livechat/static/src/models/composer/composer.js', {
+    /**
+     * @override
+     */
+    _computeHasDropZone() {
+        if (this.thread && this.thread.channel_type === 'livechat') {
+            return false;
+        }
+        return this._super();
+    },
+});
+
+});

@@ -540,6 +540,14 @@ function factory(dependencies) {
          * @private
          * @return {boolean}
          */
+        _computeHasDropZone() {
+            return true;
+        }
+
+        /**
+         * @private
+         * @return {boolean}
+         */
         _computeHasSuggestions() {
             return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
         }
@@ -1169,6 +1177,13 @@ function factory(dependencies) {
                 'suggestionDelimiter',
             ],
         }),
+        hasDropZone: attr({
+            compute: '_computeHasDropZone',
+            dependencies: [
+                'thread',
+                'threadChannelType',
+            ],
+        }),
         /**
          * This field determines whether some attachments linked to this
          * composer are being uploaded.
@@ -1422,6 +1437,9 @@ function factory(dependencies) {
         }),
         thread: one2one('mail.thread', {
             inverse: 'composer',
+        }),
+        threadChannelType: attr({
+            related: 'thread.channel_type',
         }),
     };
 
