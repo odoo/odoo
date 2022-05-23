@@ -3,7 +3,7 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2021
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -23,7 +23,7 @@ msgstr ""
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "توصيل Stripe "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -34,12 +34,12 @@ msgstr "تعذر إنشاء الاتصال بالواجهة البرمجية ل�
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "إنشاء Webhook الخاص بك "
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "احصل على مفاتيحك السرية والقابلة للنشر "
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -47,6 +47,8 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"إذا كان webhook مفعلاً على حساب Stripe الخاص بك، يجب تعيين سر التوقيع هذا "
+"لمصادقة الرسالة المرسلة من Stripe إلى أودو. "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -57,27 +59,27 @@ msgstr "لم يتم العثور على معاملة تطابق المرجع %s.
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "معالج السداد"
+msgstr "بوابة الدفع "
 
 #. module: payment_stripe
 #: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
 msgid "Payment Acquirers"
-msgstr "معالجات السداد"
+msgstr "بوابات الدفع "
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_account_payment_method
 msgid "Payment Methods"
-msgstr "طرق السداد"
+msgstr "طرق الدفع "
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr "كلمة سر السداد"
+msgstr "رمز الدفع "
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "معاملة السداد"
+msgstr "معاملة الدفع "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
@@ -87,19 +89,19 @@ msgstr "المزود"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "المفتاح القابل للنشر "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "البيانات المستلمة مع حالة هدف غير صالحة: %s  "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "البيانات المستلمة مع حالة هدف غير موجودة. "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -110,7 +112,7 @@ msgstr "البيانات المستلمة دون مرجع التاجر "
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Secret Key"
-msgstr "مفتاح سري"
+msgstr "المفتاح السري "
 
 #. module: payment_stripe
 #: model:account.payment.method,name:payment_stripe.payment_method_stripe
@@ -121,30 +123,30 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr ""
+msgstr "معرف هدف دفع Stripe "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "معرف طريقة دفع Stripe "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "خطأ في وكيل Stripe: %(error)s "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "وكيل Stripe: حدث خطأ أثناء التواصل مع الوكيل. "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "وكيل Stripe: تعذر إنشاء الاتصال. "
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
@@ -160,11 +162,14 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"فشل التواصل مع الواجهة البرمجية للتطبيق.\n"
+"لقد منحنا Stripe المعلومات التالية عن المشكلة:\n"
+"'%s' "
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "المفتاح مُستخدم فقط لتعريف الحساب مع Stripe "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
@@ -176,18 +181,18 @@ msgstr "المعاملة غير مرتبطة برمز. "
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "تعذر تحويل رمز الدفع إلى واجهة برمجية جديدة. "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "سر توقيع Webhook "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "لقد تم تعيين Stripe Webhook الخاص بك بنجاح! "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -195,6 +200,8 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"لا يمكنك إنشاء Stripe Webhook إذا لم يكن مفتاح Stripe السري الخاص بك معيناً."
+" "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -203,9 +210,11 @@ msgid ""
 "You cannot set the acquirer to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
+"لا يمكنك وضع بوابة الدفع في وضع الاختبار عندما تكون مرتبطة بحساب Stripe "
+"الخاص بك. "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "تم ضبط Stripe Webhook الخاص بك بالفعل. "
