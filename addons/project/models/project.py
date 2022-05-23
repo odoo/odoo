@@ -1764,6 +1764,8 @@ class Task(models.Model):
                 vals['analytic_account_id'] = project.analytic_account_id.id
             if project.analytic_tag_ids:
                 vals['analytic_tag_ids'] = [Command.set(project.analytic_tag_ids.ids)]
+        else:
+            vals['user_ids'] = [Command.link(self.env.user.id)]
 
         return vals
 
@@ -1874,6 +1876,10 @@ class Task(models.Model):
             # user_ids change: update date_assign
             if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
+                if not project_id:
+                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
+                    if self.env.user.id not in user_ids:
+                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
