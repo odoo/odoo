@@ -75,6 +75,7 @@
         ],
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
+            'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
         ],
         'web.assets_common': [
