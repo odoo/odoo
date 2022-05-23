@@ -33,6 +33,7 @@ import AbstractField from "web.AbstractField";
 import Widget from "web.Widget";
 import widgetRegistry from "web.widget_registry";
 import legacyFieldRegistry from "web.field_registry";
+import { getNextTabableElement } from "@web/core/utils/ui";
 
 const { Component, markup } = owl;
 
@@ -8780,9 +8781,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("quick create: keyboard navigation to buttons", async (assert) => {
-        // SKIPWOWL: Cannot trigger native TAB
-        assert.expect(2);
+    QUnit.test("quick create: keyboard navigation to buttons", async (assert) => {
         await makeView({
             arch: `
                 <kanban on_create="quick_create">
@@ -8806,9 +8805,15 @@ QUnit.module("Views", (hooks) => {
 
         // Fill in mandatory field
         await editQuickCreateInput("display_name", "aaa");
-        // Tab -> goes to first primary button
-        await triggerEvent(target, ".o_field_widget[name=display_name]", "keydown", { key: "Tab" });
 
+        // Tab -> goes to first primary button
+        const nameInput = target.querySelector(".o_field_widget[name=display_name] input");
+        nameInput.focus();
+
+        const addButton = target.querySelector(".o_kanban_add");
+        assert.strictEqual(getNextTabableElement(target), addButton);
+        assert.defaultBehavior(nameInput, null, "keydown", { key: "Tab" });
+        addButton.focus();
         assert.hasClass(document.activeElement, "btn btn-primary o_kanban_add");
     });
 
