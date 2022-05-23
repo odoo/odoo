@@ -3,7 +3,6 @@
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -14,17 +13,6 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_subtype_tests.js', {
     beforeEach() {
-        this.createFollowerSubtypeComponent = async ({ follower, followerSubtype, target }) => {
-            const props = {
-                follower,
-                followerSubtype,
-            };
-            await createRootMessagingComponent(follower.env, "FollowerSubtype", {
-                props,
-                target,
-            });
-        };
-
         // FIXME archs could be removed once task-2248306 is done
         // The mockServer will try to get the list view
         // of every relational fields present in the main view.

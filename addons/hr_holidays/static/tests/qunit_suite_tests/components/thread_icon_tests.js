@@ -1,23 +1,13 @@
 /** @odoo-module **/
 
 import {
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_icon_tests.js', {
-    beforeEach() {
-        this.createThreadIcon = async (thread, target) => {
-            await createRootMessagingComponent(thread.env, "ThreadIcon", {
-                props: { thread },
-                target,
-            });
-        };
-    },
-});
+QUnit.module('thread_icon_tests.js');
 
 QUnit.test('thread icon of a chat when correspondent is on leave & online', async function (assert) {
     assert.expect(2);
@@ -34,12 +24,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
         ],
         channel_type: 'chat',
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, target);
+    await createRootMessagingComponent('ThreadIcon', { thread });
 
     assert.containsOnce(
         document.body,
@@ -68,12 +58,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
         ],
         channel_type: 'chat',
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, target);
+    await createRootMessagingComponent('ThreadIcon', { thread });
 
     assert.containsOnce(
         document.body,
@@ -102,12 +92,12 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
         ],
         channel_type: 'chat',
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadIcon(thread, target);
+    await createRootMessagingComponent('ThreadIcon', { thread });
 
     assert.containsOnce(
         document.body,

@@ -927,11 +927,11 @@ async function start(param0 = {}) {
         createMessageComponent: getCreateMessageComponent({ env: testEnv, modelManager, target }),
         createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: testEnv, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: testEnv, modelManager, target }),
+        createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(testEnv, componentName, { props, target }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: testEnv, target }),
         insertText,
         messaging: modelManager.messaging,
         openDiscuss,
-        target,
     };
 }
 
@@ -1009,7 +1009,6 @@ function pasteFiles(el, files) {
 
 export {
     afterNextRender,
-    createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
     nextAnimationFrame,

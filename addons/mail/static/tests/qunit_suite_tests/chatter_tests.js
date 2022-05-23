@@ -13,7 +13,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -27,8 +27,8 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         session: { uid: pyEnv.currentUserId },
     });
 
-    assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
-    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, '');
+    assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
+    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, '');
 
     assert.verifySteps(['/web/dataset/search_read']);
 });
@@ -56,7 +56,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
         activity_type_id: mailActivityTypeId2,
     });
 
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -69,11 +69,11 @@ QUnit.test('list activity widget with activities', async function (assert) {
         },
     });
 
-    const firstRow = list.querySelector('.o_data_row');
+    const firstRow = document.querySelector('.o_data_row');
     assert.containsOnce(firstRow, '.o_mail_activity .o_activity_color_today.fa-phone');
     assert.strictEqual(firstRow.querySelector('.o_activity_summary').innerText, 'Call with Al');
 
-    const secondRow = list.querySelectorAll('.o_data_row')[1];
+    const secondRow = document.querySelectorAll('.o_data_row')[1];
     assert.containsOnce(secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
     assert.strictEqual(secondRow.querySelector('.o_activity_summary').innerText, 'Type 2');
 
@@ -95,7 +95,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
         activity_exception_icon: 'fa-warning',
     });
 
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -108,8 +108,8 @@ QUnit.test('list activity widget with exception', async function (assert) {
         },
     });
 
-    assert.containsOnce(list, '.o_activity_color_today.text-warning.fa-warning');
-    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, 'Warning');
+    assert.containsOnce(document.body, '.o_activity_color_today.text-warning.fa-warning');
+    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Warning');
 
     assert.verifySteps(['/web/dataset/search_read']);
 });
@@ -146,7 +146,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         activity_type_id: mailActivityTypeId2,
     });
 
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -174,21 +174,21 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         },
     });
 
-    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, 'Call with Al');
+    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Call with Al');
 
     // click on the first record to open it, to ensure that the 'switch_view'
     // assertion is relevant (it won't be opened as there is no action manager,
     // but we'll log the 'switch_view' event)
-    await testUtils.dom.click(list.querySelector('.o_data_cell'));
+    await testUtils.dom.click(document.querySelector('.o_data_cell'));
 
     // from this point, no 'switch_view' event should be triggered, as we
     // interact with the activity widget
     assert.step('open dropdown');
-    await testUtils.dom.click(list.querySelector('.o_activity_btn span')); // open the popover
-    await testUtils.dom.click(list.querySelector('.o_mark_as_done')); // mark the first activity as done
-    await testUtils.dom.click(list.querySelector('.o_activity_popover_done')); // confirm
+    await testUtils.dom.click(document.querySelector('.o_activity_btn span')); // open the popover
+    await testUtils.dom.click(document.querySelector('.o_mark_as_done')); // mark the first activity as done
+    await testUtils.dom.click(document.querySelector('.o_activity_popover_done')); // confirm
 
-    assert.strictEqual(list.querySelector('.o_activity_summary').innerText, 'Meet FP');
+    assert.strictEqual(document.querySelector('.o_activity_summary').innerText, 'Meet FP');
 
     assert.verifySteps([
         '/web/dataset/search_read',
@@ -236,7 +236,7 @@ QUnit.test('list activity exception widget with activity', async function (asser
         activity_exception_decoration: 'warning',
         activity_exception_icon: 'fa-warning',
     });
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -245,10 +245,10 @@ QUnit.test('list activity exception widget with activity', async function (asser
             '</tree>',
     });
 
-    assert.containsN(list, '.o_data_row', 2, "should have two records");
-    assert.doesNotHaveClass(list.querySelector('.o_data_row .o_activity_exception_cell div'), 'fa-warning',
+    assert.containsN(document.body, '.o_data_row', 2, "should have two records");
+    assert.doesNotHaveClass(document.querySelector('.o_data_row .o_activity_exception_cell div'), 'fa-warning',
         "there is no any exception activity on record");
-    assert.hasClass(list.querySelectorAll('.o_data_row .o_activity_exception_cell div')[1], 'fa-warning',
+    assert.hasClass(document.querySelectorAll('.o_data_row .o_activity_exception_cell div')[1], 'fa-warning',
         "there is an exception on a record");
 });
 
@@ -275,7 +275,7 @@ QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortc
         activity_type_id: mailActivityTypeId1,
     });
 
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -285,8 +285,8 @@ QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortc
             </list>`,
     });
 
-    await testUtils.dom.click(list.querySelector('.o_activity_btn span'));
-    await testUtils.dom.click(list.querySelector('.o_mark_as_done'));
+    await testUtils.dom.click(document.querySelector('.o_activity_btn span'));
+    await testUtils.dom.click(document.querySelector('.o_mark_as_done'));
     pyEnv['res.users'].write([pyEnv.currentUserId], {
         activity_state: '',
     });
@@ -296,7 +296,7 @@ QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortc
         { key: 'Enter' },
     );
 
-    assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
+    assert.containsOnce(document.body, '.o_mail_activity .o_activity_color_default');
 });
 
 QUnit.test('list activity widget: done and schedule the next activity with "ENTER" keyboard shortcut', async function (assert) {
@@ -322,7 +322,7 @@ QUnit.test('list activity widget: done and schedule the next activity with "ENTE
         activity_type_id: mailActivityTypeId1,
     });
 
-    const { target: list } = await start({
+    await start({
         hasView: true,
         View: ListView,
         model: 'res.users',
@@ -337,8 +337,8 @@ QUnit.test('list activity widget: done and schedule the next activity with "ENTE
         },
     });
 
-    await testUtils.dom.click(list.querySelector('.o_activity_btn span'));
-    await testUtils.dom.click(list.querySelector('.o_mark_as_done'));
+    await testUtils.dom.click(document.querySelector('.o_activity_btn span'));
+    await testUtils.dom.click(document.querySelector('.o_mark_as_done'));
     await testUtils.dom.triggerEvent(
         document.querySelector('.o_activity_popover_done_next'),
         'keydown',
@@ -360,7 +360,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
         partner_ids: [resPartnerId1],
     });
 
-    var { target: form } = await start({
+    await start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
@@ -387,7 +387,7 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     });
 
     assert.verifySteps([`[${resPartnerId1}]`]);
-    assert.containsOnce(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0',
+    assert.containsOnce(document.body, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0',
         "should contain one tag");
 
     // add an other existing tag
@@ -405,9 +405,9 @@ QUnit.test('fieldmany2many tags email (edition)', async function (assert) {
     await testUtils.fields.editInput($('.modal-body.o_act_window input[name="email"]'), 'coucou@petite.perruche');
     await testUtils.dom.click($('.modal-footer .btn-primary'));
 
-    assert.containsN(form, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
+    assert.containsN(document.body, '.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0', 2,
         "should contain the second tag");
-    const firstTag = form.querySelector('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0');
+    const firstTag = document.querySelector('.o_field_many2manytags[name="partner_ids"] .badge.o_tag_color_0');
     assert.strictEqual(firstTag.querySelector('.o_badge_text').innerText, "gold",
         "tag should only show name");
     assert.hasAttrValue(firstTag.querySelector('.o_badge_text'), 'title', "coucou@petite.perruche",
@@ -429,7 +429,7 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
         partner_ids: messagePartnerIds,
     });
 
-    const { click, target: form } = await start({
+    const { click } = await start({
         hasView: true,
         View: FormView,
         model: 'mail.message',
@@ -437,17 +437,17 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
         res_id: mailMessageId1,
     });
 
-    assert.strictEqual(form.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 100);
+    assert.strictEqual(document.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 100);
 
     await click('.o_form_button_edit');
 
-    assert.hasClass(form.querySelector('.o_form_view'), 'o_form_editable');
+    assert.hasClass(document.querySelector('.o_form_view'), 'o_form_editable');
 
     // add a record to the relation
     await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
     await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
 
-    assert.strictEqual(form.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 101);
+    assert.strictEqual(document.querySelectorAll('.o_field_widget[name="partner_ids"] .badge').length, 101);
 });
 
 });

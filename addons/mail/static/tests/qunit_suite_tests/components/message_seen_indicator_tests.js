@@ -1,27 +1,13 @@
 /** @odoo-module **/
 
 import {
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('message_seen_indicator_tests.js', {
-    beforeEach() {
-        this.createMessageSeenIndicatorComponent = async ({ message, target, thread }, otherProps) => {
-            const props = Object.assign(
-                { message, thread },
-                otherProps
-            );
-            await createRootMessagingComponent(thread.env, "MessageSeenIndicator", {
-                props,
-                target,
-            });
-        };
-    },
-});
+QUnit.module('message_seen_indicator_tests.js');
 
 QUnit.test('rendering when just one has received the message', async function (assert) {
     assert.expect(3);

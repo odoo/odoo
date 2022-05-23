@@ -2,23 +2,13 @@
 
 import {
     afterNextRender,
-    createRootMessagingComponent,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_textual_typing_status_tests.js', {
-    beforeEach() {
-        this.createThreadTextualTypingStatusComponent = async (thread, target) => {
-            await createRootMessagingComponent(thread.env, "ThreadTextualTypingStatus", {
-                props: { thread },
-                target,
-            });
-        };
-    },
-});
+QUnit.module('thread_textual_typing_status_tests.js');
 
 QUnit.test('receive visitor typing status "is typing"', async function (assert) {
     assert.expect(2);
@@ -33,12 +23,12 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
         model: 'mail.channel',
     });
-    await this.createThreadTextualTypingStatusComponent(thread, target);
+    await createRootMessagingComponent('ThreadTextualTypingStatus', { thread });
 
     assert.strictEqual(
         document.querySelector('.o_ThreadTextualTypingStatus').textContent,
