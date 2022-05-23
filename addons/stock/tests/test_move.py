@@ -5723,3 +5723,21 @@ class StockMove(TransactionCase):
                 line.qty_done = 1
 
         self.assertEqual(picking.move_line_ids_without_package.location_dest_id, self.stock_location.child_ids[0])
+
+    def test_inter_wh_and_forecast_availability(self):
+        dest_wh = self.env['stock.warehouse'].create({
+            'name': 'Second Warehouse',
+            'code': 'WH02',
+        })
+
+        move = self.env['stock.move'].create({
+            'name': 'test_interwh',
+            'location_id': self.stock_location.id,
+            'location_dest_id': dest_wh.lot_stock_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        self.assertEqual(move.forecast_availability, -1)
+        move._action_confirm()
+        self.assertEqual(move.forecast_availability, -1)
