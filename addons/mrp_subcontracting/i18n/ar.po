@@ -8,6 +8,7 @@
 # Osoul <baruni@osoul.ly>, 2019
 # zahi chemaly <zahi@sercotex.net>, 2019
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2020\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +58,8 @@ msgstr "نوع قائمة المواد"
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
+"اختر مورداً من نوع المتعاقد من الباطن إذا أردت التعاقد من الباطن بشأن هذا "
+"المنتج "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -71,7 +74,7 @@ msgstr "جهة الاتصال"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
 msgid "Display Action Record Components"
-msgstr ""
+msgstr "مكونات سجل عرض الإجراء "
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -88,7 +91,7 @@ msgstr "تحركات المنتج (بنود حركة المخزون)"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
-msgstr ""
+msgstr "المواد الخام لـ %s "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_product_produce
@@ -98,36 +101,36 @@ msgstr "تسجيل الإنتاج"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Record components"
-msgstr ""
+msgstr "تسجيل المكونات "
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Register components for subcontracted product"
-msgstr ""
+msgstr "تسجيل المكونات للمنتج الذي تم التعاقد من الباطن بشأنه "
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
-msgstr ""
+msgstr "إعادة تزويد المتعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr ""
+msgstr "إعادة تزويد المتعاقد من الباطن حسب الطلب "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr ""
+msgstr "إعادة تزويد المتعاقدين من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply subcontractors with components"
-msgstr ""
+msgstr "إعادة تزويد المتعاقدين من الباطن بالمكونات "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -138,12 +141,12 @@ msgstr "استلام الشحنة المعادة"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence subcontracting"
-msgstr ""
+msgstr "تسلسل التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
-msgstr ""
+msgstr "إظهار تفاصيل التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -158,24 +161,24 @@ msgstr "قاعدة المخزون"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
-msgstr ""
+msgstr "تم التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
 #, python-format
 msgid "Subcontracting"
-msgstr ""
+msgstr "التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
-msgstr ""
+msgstr "موقع التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr ""
+msgstr "التعاقد من الباطن لقاعدة الإنتاج حسب الطلب "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
@@ -185,18 +188,18 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr ""
+msgstr "نوع عملية التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr ""
+msgstr "موقع المتعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 msgid "Subcontractors"
-msgstr ""
+msgstr "المتعاقدين من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -206,7 +209,7 @@ msgstr "قائمة أسعار المورد"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr ""
+msgstr "الحركة هي إيصال التعاقد من الباطن "
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -215,12 +218,14 @@ msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
 msgstr ""
+"موقع المخزون لاستخدامه كمصدر ووجهة عند إرسال البضائع إلى جهة الاتصال هذه "
+"أثناء عملية التعاقد من الباطن. "
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "To subcontract, use a planned transfer."
-msgstr ""
+msgstr "للتعاقد من الباطن، قم باستخدام شحنة مخطط لها. "
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
