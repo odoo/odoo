@@ -7857,20 +7857,17 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "focus is correctly reset after an onchange in an x2many",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("focus is correctly reset after an onchange in an x2many", async function (assert) {
+        serverData.models.partner.onchanges = {
+            int_field: function () {},
+        };
 
-            serverData.models.partner.onchanges = {
-                int_field: function () {},
-            };
-            var prom;
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        let def;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="p">
                             <tree editable="bottom">
@@ -7881,40 +7878,43 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                mockRPC(route, args) {
-                    var result = this._super.apply(this, arguments);
-                    if (args.method === "onchange") {
-                        // delay the onchange RPC
-                        return Promise.resolve(prom).then(_.constant(result));
-                    }
-                    return result;
-                },
-            });
+            async mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    // delay the onchange RPC
+                    await Promise.resolve(def);
+                }
+            },
+        });
 
-            await addRow(target);
-            prom = testUtils.makeTestPromise();
-            await testUtils.fields.editAndTrigger(form.$(".o_field_widget[name=int_field]"), "44", [
-                "input",
-                { type: "keydown", which: $.ui.keyCode.TAB },
-            ]);
-            prom.resolve();
-            await testUtils.nextTick();
+        await addRow(target);
 
-            assert.strictEqual(
-                document.activeElement,
-                form.$(".o_field_widget[name=qux]")[0],
-                "qux field should have the focus"
-            );
+        def = makeDeferred();
 
-            await clickOpenM2ODropdown(target, "trululu");
-            await clickM2OHighlightedItem(target, "trululu");
-            assert.strictEqual(
-                form.$(".o_field_many2one input").val(),
-                "first record",
-                "the one2many field should have the expected value"
-            );
-        }
-    );
+        editInput(target, "[name=int_field] input", "44");
+
+        click(target, ".o_field_widget[name=qux]");
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_field_widget[name=qux] input")
+        );
+
+        def.resolve();
+
+        await nextTick();
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_field_widget[name=qux] input")
+        );
+
+        await clickOpenM2ODropdown(target, "trululu");
+        await clickM2OHighlightedItem(target, "trululu");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "first record"
+        );
+    });
 
     QUnit.test("checkbox in an x2many that triggers an onchange", async function (assert) {
         serverData.models.partner.onchanges = {
