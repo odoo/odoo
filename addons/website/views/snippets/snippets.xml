@@ -181,11 +181,13 @@
 
 <template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options">
     <xpath expr="//we-button[@data-toggle-bg-image]" position="after">
-        <we-button title="Video" class="fa fa-fw fa-film"
-                   data-name="bg_video_toggler_opt"
-                   t-att-data-dependencies="images_dependencies"
-                   data-toggle-bg-video="true"
-                   data-no-preview="true"/>
+        <t t-if="with_videos">
+            <we-button title="Video" class="fa fa-fw fa-film"
+                    data-name="bg_video_toggler_opt"
+                    t-att-data-dependencies="images_dependencies"
+                    data-toggle-bg-video="true"
+                    data-no-preview="true"/>
+        </t>
     </xpath>
     <xpath expr="//t[@t-set='color_filter_dependencies']" position="after">
         <t t-set="color_filter_dependencies" t-valuef="#{color_filter_dependencies}, bg_video_toggler_opt"/>
@@ -409,6 +411,8 @@
         <t t-set="target" t-value="'> .carousel'"/>
         <t t-set="with_colors" t-value="True"/>
         <t t-set="with_images" t-value="True"/>
+        <t t-set="with_videos" t-value="True"/>
+        <t t-set="with_shapes" t-value="True"/>
         <t t-set="css_compatible" t-value="True"/>
         <t t-set="with_gradients" t-value="True"/>
     </t>
@@ -500,6 +504,8 @@
         <t t-set="exclude" t-value="both_bg_color_image_exclude"/>
         <t t-set="with_colors" t-value="True"/>
         <t t-set="with_images" t-value="True"/>
+        <t t-set="with_videos" t-value="True"/>
+        <t t-set="with_shapes" t-value="True"/>
         <t t-set="with_color_combinations" t-value="True"/>
         <t t-set="with_gradients" t-value="True"/>
     </t>
@@ -518,6 +524,8 @@
         <t t-set="exclude" t-value="only_bg_image_exclude"/>
         <t t-set="with_colors" t-value="False"/>
         <t t-set="with_images" t-value="True"/>
+        <t t-set="with_videos" t-value="True"/>
+        <t t-set="with_shapes" t-value="True"/>
     </t>
 
     <!-- Border | Columns -->
