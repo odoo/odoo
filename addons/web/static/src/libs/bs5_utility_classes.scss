@@ -93,3 +93,22 @@ $position-properties: (
 .fst-normal {
   font-style: normal !important;
 }
+
+// == Border-width
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-classes to handle border-width.
+// These classes definitions can be safely removed after migrating to BTS v5.
+
+$border-widths: (
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px
+);
+
+@each $length, $border-width in $border-widths {
+  .border-#{$length} {
+    border-width: $border-width !important;
+  }
+}
