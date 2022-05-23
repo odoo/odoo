@@ -4143,10 +4143,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o-kanban-button-new");
     });
 
-    QUnit.skipWOWL("clicking on a link triggers correct event", async (assert) => {
-        assert.expect(2);
-
-        const kanban = await makeView({
+    QUnit.test("clicking on a link triggers correct event", async (assert) => {
+        await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
@@ -4154,20 +4152,8 @@ QUnit.module("Views", (hooks) => {
                 '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
                 '<div><a type="edit">Edit</a></div>' +
                 "</t></templates></kanban>",
+            selectRecord: (resId) => assert.equal(resId, 1),
         });
-
-        patchWithCleanup(kanban.env.services.action, {
-            async switchView(viewType, props) {
-                assert.strictEqual(viewType, "form");
-                assert.deepEqual(props, {
-                    resId: 1,
-                    // FIXME: no more edit mode or resModel specified here?
-                    // mode: "edit",
-                    // resModel: "partner",
-                });
-            },
-        });
-
         await click(getCard(0), "a");
     });
 
