@@ -4,7 +4,8 @@
 import re
 
 import markupsafe
-from werkzeug import urls, utils
+from html import unescape
+from werkzeug import urls
 
 from odoo import api, models, tools
 
@@ -45,7 +46,7 @@ class MailRenderMixin(models.AbstractModel):
                 continue
             label = (match[3] or '').strip()
 
-            create_vals = dict(link_tracker_vals, url=utils.unescape(long_url), label=utils.unescape(label))
+            create_vals = dict(link_tracker_vals, url=unescape(long_url), label=unescape(label))
             link = self.env['link.tracker'].search_or_create(create_vals)
             if link.short_url:
                 # `str` manipulation required to support replacing "&" characters, common in urls
@@ -75,7 +76,7 @@ class MailRenderMixin(models.AbstractModel):
             if blacklist and any(item in parsed.path for item in blacklist):
                 continue
 
-            create_vals = dict(link_tracker_vals, url=utils.unescape(original_url))
+            create_vals = dict(link_tracker_vals, url=unescape(original_url))
             link = self.env['link.tracker'].search_or_create(create_vals)
             if link.short_url:
                 # Ensures we only replace the same link and not a subpart of a longer one, multiple times if applicable
