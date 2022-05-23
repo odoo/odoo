@@ -40,6 +40,7 @@
         'security/ir.model.access.csv',
         'views/discuss_public_templates.xml',
         'views/mail_alias_views.xml',
+        'views/mail_gateway_allowed_views.xml',
         'views/mail_guest_views.xml',
         'views/mail_message_reaction_views.xml',
         'views/res_users_views.xml',
