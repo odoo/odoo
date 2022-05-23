@@ -55,6 +55,18 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         return def;
     },
     /**
+     * @see this.selectClass for parameters
+     */
+    toggleThanksButton(previewMode, widgetValue, params) {
+        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
+        const thanksBtnEl = this.$target[0].querySelector('.js_subscribed_btn');
+
+        thanksBtnEl.classList.toggle('o_disable_preview', !widgetValue);
+        thanksBtnEl.classList.toggle('o_enable_preview', widgetValue);
+        subscribeBtnEl.classList.toggle('o_enable_preview', !widgetValue);
+        subscribeBtnEl.classList.toggle('o_disable_preview', widgetValue);
+    },
+    /**
      * @override
      */
     onBuilt: function () {
@@ -63,6 +75,42 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         this.select_mailing_list('click').guardedCatch(function () {
             self.getParent()._onRemoveClick($.Event( "click" ));
         });
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        const previewClasses = ['o_disable_preview', 'o_enable_preview'];
+        this.$target[0].querySelector('.js_subscribe_btn').classList.remove(...previewClasses);
+        this.$target[0].querySelector('.js_subscribed_btn').classList.remove(...previewClasses);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName !== 'toggleThanksButton') {
+            return this._super(...arguments);
+        }
+        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
+        return subscribeBtnEl && subscribeBtnEl.classList.contains('o_disable_preview') ?
+            'true' : '';
+    },
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        const checkboxEl = document.createElement('we-checkbox');
+        checkboxEl.setAttribute('string', _t("Display Thanks Button"));
+        checkboxEl.dataset.toggleThanksButton = 'true';
+        checkboxEl.dataset.noPreview = 'true';
+        // Prevent this option from triggering a refresh of the public widget.
+        checkboxEl.dataset.noWidgetRefresh = 'true';
+        uiFragment.appendChild(checkboxEl);
     },
 });
 
@@ -137,14 +185,17 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
         var self = this;
         var content = this.$target.data('content');
         if (content) {
+            const $layout = $('<div/>', {html: content});
+            const previewClasses = ['o_disable_preview', 'o_enable_preview'];
+            $layout[0].querySelector('.js_subscribe_btn').classList.remove(...previewClasses);
+            $layout[0].querySelector('.js_subscribed_btn').classList.remove(...previewClasses);
             this.trigger_up('get_clean_html', {
-                $layout: $('<div/>').html(content),
+                $layout: $layout,
                 callback: function (html) {
                     self.$target.data('content', html);
                 },
             });
         }
-        this._super.apply(this, arguments);
     },
     /**
      * @override
