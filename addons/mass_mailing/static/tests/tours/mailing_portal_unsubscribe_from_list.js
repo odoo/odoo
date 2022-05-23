@@ -11,23 +11,23 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list', 
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('unsubscribed from List1, List2')",
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
             run: "text My feedback",
         }, {
             content: "Hit Send",
-            trigger: "div#button_feedback",
+            trigger: "button#button_feedback",
         }, {
             content: "Confirmation feedback is sent",
-            trigger: "div#o_mailing_subscription_info_state:contains('Thanks for your feedback')",
+            trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
         }, {
             content: "Now exclude me",
             trigger: "div#button_blocklist_add",
         }, {
             content: "Confirmation exclusion is done",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('added to our blocklist')",
+            trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
             isCheck: true,
         },
     ],
@@ -45,32 +45,35 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
     steps: () => [
         {
             content: "Confirmation unsubscribe is done",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('unsubscribed from List1, List2')",
+            trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
         }, {
             content: "List1 is present, just opt-outed",
-            trigger: "li.list-group-item:contains('List1') span:contains('Unsubscribed')",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List1') span:contains('Not subscribed')",
         }, {
             content: "List3 is present, opt-outed (test starting data)",
-            trigger: "li.list-group-item:contains('List3') span:contains('Unsubscribed')",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List3') span:contains('Not subscribed')",
         }, {
-            content: "List2 is not present (not member -> not displayed)",
-            trigger: "ul:not(:has(li.list-group-item:contains('List2') span:contains('Unsubscribed')))",
+            content: "List2 is proposed (not member -> proposal to join)",
+            trigger: "ul#o_mailing_subscription_form_lists_additional li.list-group-item:contains('List2')",
+        }, {
+            content: "List4 is not proposed (not member but not private)",
+            trigger: "ul#o_mailing_subscription_form_lists_additional:not(:has(li.list-group-item:contains('List4')))",
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
             run: "text My feedback",
         }, {
             content: "Hit Send",
-            trigger: "div#button_feedback",
+            trigger: "button#button_feedback",
         }, {
             content: "Confirmation feedback is sent",
-            trigger: "div#o_mailing_subscription_info_state:contains('Thanks for your feedback')",
+            trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
         }, {
             content: "Now exclude me",
             trigger: "div#button_blocklist_add",
         }, {
             content: "Confirmation exclusion is done",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('added to our blocklist')",
+            trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
         }, {
             content: "This should disable the 'Update my subscriptions' button",
             trigger: "button#button_form_send[disabled]",
@@ -80,26 +83,53 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             trigger: "div#button_blocklist_remove",
         }, {
             content: "Confirmation exclusion list is removed",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('removed from our blocklist')",
+            trigger: "div#o_mailing_subscription_update_info span:contains('Email removed from our blocklist')",
         },  {
             content: "'Update my subscriptions' button usable again",
             trigger: "button#button_form_send:not([disabled])",
+            isCheck: true,
         }, {
             content: "Choose the mailing list 3 to come back",
-            trigger: "li.list-group-item:contains('List3') input",
+            trigger: "ul#o_mailing_subscription_form_lists input[title='List3']",
+        }, {
+            content: "Add list 2",
+            trigger: "ul#o_mailing_subscription_form_lists_additional input[title='List2']",
         }, {
             content: "Update subscription",
             trigger: "button#button_form_send",
         }, {
             content: "Confirmation changes are done",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('updated your memberships')",
+            trigger: "div#o_mailing_subscription_update_info span:contains('Membership updated')",
+        }, {
+            content: "List 3 is noted as subscribed again",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List3') span:contains('Subscribed')",
+        }, {
+            content: "List 2 has joined the subscriptions",
+            trigger: "ul#o_mailing_subscription_form_lists li.list-group-item:contains('List2') span:contains('Subscribed')",
+        }, {
+            content: "No list in proposals",
+            trigger: "div#o_mailing_subscription_form_manage:not(:has(ul#o_mailing_subscription_form_lists_additional))",
+        }, {
+            content: "Write feedback reason",
+            trigger: "textarea[name='feedback']",
+            run: "text Another feedback",
+        }, {
+            content: "Hit Send",
+            trigger: "button#button_feedback",
         }, {
             content: "Now exclude me (again)",
             trigger: "div#button_blocklist_add",
         }, {
             content: "Confirmation exclusion is done",
-            trigger: "div#o_mailing_subscription_info_state strong:contains('added to our blocklist')",
+            trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
+        }, {
+            content: "Should display warning about mailing lists",
+            trigger: "div#o_mailing_subscription_form_blocklisted p:contains('You will not receive any news from those mailing lists you are a member of')",
+        }, {
+            content: "Warning should contain reference to memberships",
+            trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List2')",
+            extra_trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List3')",
             isCheck: true,
-        }
+        },
     ],
 });

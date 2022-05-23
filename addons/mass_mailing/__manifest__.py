@@ -107,6 +107,9 @@
             'mass_mailing/static/src/js/mailing_portal_subscription_blocklist.js',
             'mass_mailing/static/src/js/mailing_portal_subscription_feedback.js',
             'mass_mailing/static/src/js/mailing_portal_subscription_form.js',
+            'mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml',
+            'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
+            'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
         'web_editor.assets_wysiwyg': [
             'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',
