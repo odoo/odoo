@@ -183,10 +183,13 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         Tour effects
           * unsubscribe from mailing based on a document = blocklist;
+          * add feedback (block list) 'My feedback';
           * remove email from exclusion list;
           * re-add email to exclusion list;
         """
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
+        test_feedback = "My feedback"
+
         for test_email, tour_name in [
             ('"Not Déboulonneur" <not.fleurus@example.com>', 'mailing_portal_unsubscribe_from_document'),
             (self.test_email, 'mailing_portal_unsubscribe_from_document_with_lists'),
@@ -198,6 +201,7 @@ class TestMailingControllers(TestMailingControllersCommon):
                 })
                 self.assertFalse(test_partner.is_blacklisted)
                 previous_messages = test_partner.message_ids
+                test_email_normalized = tools.email_normalize(test_email)
 
                 # launch unsubscription tour
                 hash_token = test_mailing._generate_mailing_recipient_token(test_partner.id, test_partner.email_normalized)
@@ -211,8 +215,14 @@ class TestMailingControllers(TestMailingControllersCommon):
                 # status update check
                 self.assertTrue(test_partner.is_blacklisted)
 
-                # partner (document): no messages added
-                self.assertEqual(test_partner.message_ids, previous_messages)
+                # partner (document): feedback message added
+                self.assertEqual(len(test_partner.message_ids), len(previous_messages) + 1)
+                message_feedback = test_partner.message_ids[0]
+                self.assertEqual(
+                    message_feedback.body,
+                    Markup(f'<p>Feedback from {test_email_normalized}: {test_feedback}</p>')
+                )
+
                 # posted messages on exclusion list record: activated, deactivated, activated again
                 bl_record = self.env['mail.blacklist'].search([('email', '=', test_partner.email_normalized)])
                 self.assertEqual(len(bl_record.message_ids), 4)
@@ -302,10 +312,13 @@ class TestMailingControllers(TestMailingControllersCommon):
           * add email to exclusion list;
           * remove email from exclusion list;
           * come back to List3;
+          * join List2;
+          * add feedback (opt-out) 'Another feedback';'
           * re-add email to exclusion list;
         """
         test_mailing = self.test_mailing_on_lists.with_env(self.env)
         test_feedback = "My feedback"
+        test_feedback_2 = "Another feedback"
 
         # fetch contact and its subscription and blacklist status, to see the tour effects
         contact_l1 = self.mailing_list_1.contact_ids.filtered(
@@ -337,23 +350,38 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertFalse(subscription_l3.opt_out)
         self.assertFalse(subscription_l3.unsubscription_date)
 
-        # posted messages on contact record for mailing list 1: feedback, unsubscription
-        message_feedback = contact_l1.message_ids[0]
+        # posted messages on contact record for mailing list 1: last feedback, subscription update, feedback, unsubscription
+        message_feedback_2 = contact_l1.message_ids[0]
+        self.assertEqual(
+            message_feedback_2.body,
+            Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback_2}</p>')
+        )
+        message_update = contact_l1.message_ids[1]
+        self.assertEqual(
+            message_update.body,
+            Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p><ul><li>{self.mailing_list_2.name}</li></ul>')
+        )
+        message_feedback = contact_l1.message_ids[2]
         self.assertEqual(
             message_feedback.body,
             Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback}</p>')
         )
-        message_unsub = contact_l1.message_ids[1]
+        message_unsub = contact_l1.message_ids[3]
         self.assertEqual(
             message_unsub.body,
             Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p><ul><li>{self.mailing_list_1.name}</li></ul>')
         )
 
-        # posted messages on contact record for mailing list 3: subscription
-        message_unsub = contact_l3.message_ids[0]
+        # posted messages on contact record for mailing list 3: last feedback, subscription
+        message_feedback = contact_l1.message_ids[0]
         self.assertEqual(
-            message_unsub.body,
-            Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p><ul><li>{self.mailing_list_3.name}</li></ul>')
+            message_feedback_2.body,
+            Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback_2}</p>')
+        )
+        message_sub = contact_l3.message_ids[1]
+        self.assertEqual(
+            message_sub.body,
+            Markup(f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p><ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>')
         )
 
         # posted messages on exclusion list record: activated, deactivated, activated again

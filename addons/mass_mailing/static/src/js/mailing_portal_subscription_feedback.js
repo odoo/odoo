@@ -1,7 +1,9 @@
 /** @odoo-module alias=mailing.PortalSubscriptionFeedback **/
 
+import { _t } from "@web/core/l10n/translation";
 import { jsonrpc } from "@web/core/network/rpc_service";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { renderToElement } from "@web/core/utils/render";
 
 
 publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.extend({
@@ -22,7 +24,7 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
      * @override
      */
     start: function () {
-        this._updateDisplay();
+        this._updateDisplay(true, false);
         return this._super.apply(this, arguments);
     },
 
@@ -45,7 +47,12 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
             }
         ).then((result) => {
             if (result === true) {
-                this._updateDisplay(true);
+                this._updateDisplay(false, true);
+                this._updateInfo('feedback_sent');
+            }
+            else {
+                this._updateDisplay(false, false);
+                this._updateInfo(result);
             }
             this.trigger_up(
                 'feedback_sent',
@@ -55,18 +62,68 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
     },
 
     /*
+     * Set last done action, which triggers some update in the feedback form
+     * allowing to contextualize the explanation given to the customer.
+     */
+    _setLastAction: function (lastAction) {
+        this.lastAction = lastAction;
+        if (this.lastAction === 'blocklist_add') {
+            document.querySelector('div#o_mailing_subscription_feedback p').innerHTML = _t(
+                'Please let us know why you want to be in our block list.'
+            );
+        }
+        else {
+            document.querySelector('div#o_mailing_subscription_feedback p').innerHTML = _t(
+                'Please let us know why you updated your subscription.'
+            );
+        }
+    },
+
+    /*
      * Update display after option changes, notably feedback textarea not being
      * always accessible.
      */
-    _updateDisplay: function (cleanFeedback) {
+    _updateDisplay: function (cleanFeedback, setReadonly) {
         const feedbackArea = document.querySelector('div#o_mailing_subscription_feedback textarea');
+        const feedbackButton = document.getElementById('button_feedback');
+        const feedbackInfo = document.getElementById('o_mailing_subscription_feedback_info');
         if (this.allowFeedback) {
             feedbackArea.classList.remove('d-none');
         } else {
             feedbackArea.classList.add('d-none');
         }
+        if (setReadonly) {
+            feedbackArea.setAttribute('disabled', 'disabled');
+            feedbackButton.setAttribute('disabled', 'disabled');
+        }
+        else {
+            feedbackArea.removeAttribute('disabled');
+            feedbackButton.removeAttribute('disabled');
+        }
         if (cleanFeedback) {
-            feedbackArea.values = '';
+            feedbackArea.value = '';
+            feedbackInfo.innerHTML = "";
+        }
+    },
+
+    /*
+     * Display feedback (visual tips) to the user concerning the last done action.
+     */
+    _updateInfo: function (infoKey) {
+        const feedbackInfo = document.getElementById('o_mailing_subscription_feedback_info');
+        if (infoKey !== undefined) {
+            const infoContent = renderToElement(
+                "mass_mailing.portal.feedback_update_info",
+                {
+                    infoKey: infoKey,
+                }
+            );
+            feedbackInfo.innerHTML = infoContent.innerHTML;
+            feedbackInfo.classList.add(infoKey === 'feedback_sent' ? 'text-success' : 'text-danger');
+            feedbackInfo.classList.remove('d-none', infoKey === 'feedback_sent' ? 'text-danger': 'text-success');
+        }
+        else {
+            feedbackInfo.classList.add('d-none');
         }
     },
 });
