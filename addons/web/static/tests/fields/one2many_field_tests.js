@@ -9304,12 +9304,20 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["link clicked"]);
     });
 
-    QUnit.skipWOWL("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
+    QUnit.test("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
         assert.expect(4);
 
-        await makeLegacyDialogMappingTestEnv();
+        patchSetTimeout();
 
-        const form = await makeView({
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>
+            `,
+        };
+
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9320,31 +9328,26 @@ QUnit.module("Fields", (hooks) => {
                             <field name="turtle_trululu"/>
                         </tree>
                     </field>
-                </form>`,
-            archs: {
-                "partner,false,form": '<form><field name="display_name"/></form>',
-            },
+                </form>
+            `,
         });
 
         await addRow(target);
 
-        assert.containsOnce(form, ".o_selected_row", "should have create a new row in edition");
+        assert.containsOnce(target, ".o_selected_row");
 
-        await testUtils.fields.many2one.createAndEdit("turtle_trululu", "ABC");
+        await clickOpenM2ODropdown(target, "turtle_trululu");
+        await editInput(target, "[name=turtle_trululu] input", "ABC");
+        await clickOpenedDropdownItem(target, "turtle_trululu", "Create and Edit...");
 
-        assert.strictEqual(
-            $(".modal .o_form_view").length,
-            1,
-            "should have opened a form view in a dialog"
-        );
+        assert.containsOnce(target, ".modal .o_form_view");
 
-        await testUtils.fields.triggerKeydown(
-            $(".modal .o_form_view .o_field_widget[name=display_name]"),
-            "escape"
-        );
+        await triggerEvent(target, ".modal [name=display_name] input", "keydown", {
+            key: "Escape",
+        });
 
-        assert.strictEqual($(".modal .o_form_view").length, 0, "should have closed the dialog");
-        assert.containsOnce(form, ".o_selected_row", "new row should still be present");
+        assert.containsNone(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".o_selected_row");
     });
 
     QUnit.test(
