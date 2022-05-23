@@ -64,11 +64,9 @@ export class PdfViewerField extends Component {
     }
 }
 
+PdfViewerField.template = "web.PdfViewerField";
 PdfViewerField.components = {
     FileUploader,
-};
-PdfViewerField.defaultProps = {
-    fileData: "",
 };
 PdfViewerField.props = {
     ...standardFieldProps,
@@ -76,16 +74,24 @@ PdfViewerField.props = {
     fileData: { type: String, optional: true },
     fileName: { type: String, optional: true },
     previewImage: { type: String, optional: true },
+    resId: { type: [Number, Boolean], optional: true },
+    resModel: { type: String, optional: true },
 };
-PdfViewerField.template = "web.PdfViewerField";
-PdfViewerField.supportedTypes = ["binary"];
+PdfViewerField.defaultProps = {
+    fileData: "",
+};
+
 PdfViewerField.displayName = _lt("PDF Viewer");
+PdfViewerField.supportedTypes = ["binary"];
+
 PdfViewerField.extractProps = (fieldName, record, attrs) => {
     return {
         defaultPage: record.data[fieldName + "_page"],
         fileData: record.data[fieldName] || "",
         fileName: record.data[attrs.filename] || "",
         previewImage: attrs.options.preview_image,
+        resId: record.resId,
+        resModel: record.resModel,
     };
 };
 

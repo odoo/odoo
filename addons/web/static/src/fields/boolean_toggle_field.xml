@@ -6,8 +6,8 @@
             className="'o_field_boolean o_boolean_toggle'"
             id="props.id"
             value="props.value or false"
-            disabled="props.record.isReadonly(props.name)"
-            onChange.bind="onChange"
+            disabled="props.readonly"
+            onChange="props.update"
             onKeydown.bind="onKeydown"
         >
             &#8203; <!-- Zero width space needed to set height -->

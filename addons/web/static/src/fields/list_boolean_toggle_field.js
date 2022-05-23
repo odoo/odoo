@@ -12,6 +12,7 @@ class ListBooleanToggleField extends Component {
         }
     }
 }
+
 ListBooleanToggleField.template = "web.ListBooleanToggleField";
 ListBooleanToggleField.components = { BooleanToggleField };
 

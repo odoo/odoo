@@ -38,9 +38,10 @@ export class RemainingDaysField extends Component {
     onDateTimeChanged(datetime) {
         if (datetime) {
             this.props.update(datetime);
+        } else if (typeof datetime === "string") {
+            // when the date is cleared
+            this.props.update(false);
         }
-        // when the date is cleared
-        typeof datetime === "string" && this.props.update(false);
     }
 }
 
@@ -48,6 +49,7 @@ RemainingDaysField.template = "web.RemainingDaysField";
 RemainingDaysField.props = {
     ...standardFieldProps,
 };
+
 RemainingDaysField.displayName = _lt("Remaining Days");
 RemainingDaysField.supportedTypes = ["date", "datetime"];
 

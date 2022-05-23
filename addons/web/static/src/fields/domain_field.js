@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
-import { CharField } from "./char_field";
 import { standardFieldProps } from "./standard_field_props";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
@@ -40,21 +40,20 @@ export class DomainField extends Component {
                 ev.detail.proms.push(prom);
                 await prom;
                 if (!this.state.isValid) {
-                    this.props.record.setInvalidField(this.props.name);
+                    this.props.invalidate();
                 }
             }
         });
     }
 
     onButtonClick() {
-        const context = this.props.record.getFieldContext(this.props.name);
         this.dialog.add(SelectCreateDialog, {
             title: this.env._t("Selected records"),
             noCreate: true,
             multiSelect: false,
-            resModel: this.getResModel(this.props),
-            domain: this.getDomain(this.props.value).toList(context) || [],
-            context: context || {},
+            resModel: this.props.resModel,
+            domain: this.getDomain(this.props.value).toList(this.props.context) || [],
+            context: this.props.context || {},
         });
     }
     get isValidDomain() {
@@ -67,27 +66,19 @@ export class DomainField extends Component {
         }
     }
 
-    getResModel(props) {
-        if (props.record.fieldNames.includes(props.model)) {
-            return props.record.data[props.model];
-        }
-        return props.model;
-    }
     getDomain(value) {
         return new Domain(value || "[]");
     }
     async loadCount(props) {
-        if (!this.getResModel(props)) {
+        if (!props.resModel) {
             Object.assign(this.state, { recordCount: 0, isValid: true });
         }
 
-        const resModel = this.getResModel(props);
-        const context = props.record.getFieldContext(props.name);
         let recordCount;
         try {
-            const domain = this.getDomain(props.value).toList(context);
-            recordCount = await this.orm.silent.call(resModel, "search_count", [domain], {
-                context,
+            const domain = this.getDomain(props.value).toList(props.context);
+            recordCount = await this.orm.silent.call(props.resModel, "search_count", [domain], {
+                context: props.context,
             });
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
@@ -104,19 +95,34 @@ export class DomainField extends Component {
 }
 
 DomainField.template = "web.DomainField";
-DomainField.props = {
-    ...standardFieldProps,
-    model: { type: String, optional: true },
-};
 DomainField.components = {
-    CharField,
     DomainSelector,
 };
+DomainField.props = {
+    ...standardFieldProps,
+    context: { type: Object, optional: true },
+    invalidate: { type: Function, optional: true },
+    resModel: { type: String, optional: true },
+};
+DomainField.defaultProps = {
+    context: {},
+    invalidate: () => {},
+};
+
+DomainField.displayName = _lt("Domain");
 DomainField.supportedTypes = ["char"];
+
 DomainField.isEmpty = () => false;
 DomainField.extractProps = (fieldName, record, attrs) => {
+    let resModel = attrs.options.model;
+    if (record.fieldNames.includes(resModel)) {
+        resModel = record.data[resModel];
+    }
+
     return {
-        model: attrs.options.model,
+        context: record.getFieldContext(fieldName),
+        invalidate: () => record.setInvalidField(fieldName),
+        resModel,
     };
 };
 

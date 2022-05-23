@@ -28,6 +28,9 @@ export class DateField extends Component {
 }
 
 DateField.template = "web.DateField";
+DateField.components = {
+    DatePicker,
+};
 DateField.props = {
     ...standardFieldProps,
     isDateTime: { type: Boolean, optional: true },
@@ -37,11 +40,10 @@ DateField.defaultProps = {
     isDateTime: false,
     pickerOptions: {},
 };
-DateField.components = {
-    DatePicker,
-};
+
 DateField.displayName = _lt("Date");
 DateField.supportedTypes = ["date", "datetime"];
+
 DateField.extractProps = (fieldName, record, attrs) => {
     return {
         isDateTime: record.fields[fieldName].type === "datetime",

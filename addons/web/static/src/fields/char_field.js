@@ -2,6 +2,8 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { isTruthy } from "../core/utils/xml";
+import { formatChar } from "./formatters";
 import { useInputField } from "./input_field_hook";
 import { standardFieldProps } from "./standard_field_props";
 import { TranslationButton } from "./translation_button";
@@ -14,11 +16,7 @@ export class CharField extends Component {
     }
 
     get formattedValue() {
-        let value = typeof this.props.value === "string" ? this.props.value : "";
-        if (this.props.isPassword) {
-            value = "*".repeat(value.length);
-        }
-        return value;
+        return formatChar(this.props.value, { isPassword: this.props.isPassword });
     }
 
     parse(value) {
@@ -37,6 +35,9 @@ export class CharField extends Component {
 }
 
 CharField.template = "web.CharField";
+CharField.components = {
+    TranslationButton,
+};
 CharField.props = {
     ...standardFieldProps,
     autocomplete: { type: String, optional: true },
@@ -48,11 +49,10 @@ CharField.props = {
     resId: { type: [Number, Boolean], optional: true },
     resModel: { type: String, optional: true },
 };
-CharField.components = {
-    TranslationButton,
-};
+
 CharField.displayName = _lt("Text");
 CharField.supportedTypes = ["char"];
+
 CharField.extractProps = (fieldName, record, attrs) => {
     return {
         shouldTrim: record.fields[fieldName].trim,
@@ -60,9 +60,8 @@ CharField.extractProps = (fieldName, record, attrs) => {
         isTranslatable: record.fields[fieldName].translate,
         resId: record.resId,
         resModel: record.resModel,
-
         autocomplete: attrs.autocomplete,
-        isPassword: Boolean(attrs.password && !/^(0|false)$/i.test(attrs.password)),
+        isPassword: isTruthy(attrs.password),
         placeholder: attrs.placeholder,
     };
 };

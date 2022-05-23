@@ -2,6 +2,7 @@
 /* global ace */
 
 import { loadJS } from "@web/core/assets";
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatText } from "./formatters";
 import { standardFieldProps } from "./standard_field_props";
@@ -96,7 +97,10 @@ AceField.props = {
 AceField.defaultProps = {
     mode: "qweb",
 };
+
+AceField.displayName = _lt("Ace Editor");
 AceField.supportedTypes = ["text"];
+
 AceField.extractProps = (fieldName, record, attrs) => {
     return {
         mode: attrs.options.mode,

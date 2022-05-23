@@ -15,7 +15,7 @@ export class BooleanField extends Component {
         }
     }
     /**
-     * @param {Event} ev
+     * @param {boolean} newValue
      */
     onChange(newValue) {
         this.props.update(newValue);
@@ -30,7 +30,7 @@ export class BooleanField extends Component {
         }
     }
     /**
-     * @param {MouseEvent} ev
+     * @param {{ key: string }} params
      */
     onKeydown({ key }) {
         switch (key) {
@@ -42,20 +42,23 @@ export class BooleanField extends Component {
 }
 
 BooleanField.template = "web.BooleanField";
+BooleanField.components = { CheckBox };
 BooleanField.props = {
     ...standardFieldProps,
     isReadonlyEnabled: { type: Boolean, optional: true },
 };
+
+BooleanField.displayName = _lt("Checkbox");
+BooleanField.supportedTypes = ["boolean"];
+
+BooleanField.isEmpty = () => false;
 BooleanField.extractProps = (fieldName, record) => {
     return {
+        // should we make a list specialization?
         readonly: !(record.isInEdition && !record.isReadonly(fieldName)),
         isReadonlyEnabled:
             record.activeFields[fieldName].viewType === "list" && !record.isReadonly(fieldName),
     };
 };
-BooleanField.displayName = _lt("Checkbox");
-BooleanField.supportedTypes = ["boolean"];
-BooleanField.isEmpty = () => false;
-BooleanField.components = { CheckBox };
 
 registry.category("fields").add("boolean", BooleanField);

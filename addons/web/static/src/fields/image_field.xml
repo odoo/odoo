@@ -38,9 +38,9 @@
             t-att-width="props.width"
             t-att-style="sizeStyle"
             t-on-error.stop="onLoadFailed"
-            t-att-data-tooltip-template="tooltipAttributes.template"
-            t-att-data-tooltip-info="tooltipAttributes.info"
-            t-att-data-tooltip-delay="props.zoomDelay"
+            t-att-data-tooltip-template="hasTooltip and tooltipAttributes.template"
+            t-att-data-tooltip-info="hasTooltip and tooltipAttributes.info"
+            t-att-data-tooltip-delay="hasTooltip and props.zoomDelay"
         />
     </t>
 

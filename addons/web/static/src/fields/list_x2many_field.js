@@ -12,9 +12,10 @@ export class ListX2ManyField extends Component {
     }
 }
 
-ListX2ManyField.useSubView = false;
-ListX2ManyField.props = { ...standardFieldProps };
 ListX2ManyField.template = "web.ListX2ManyField";
+ListX2ManyField.props = { ...standardFieldProps };
+
+ListX2ManyField.useSubView = false;
 
 registry.category("fields").add("list.one2many", ListX2ManyField);
 registry.category("fields").add("list.many2many", ListX2ManyField);

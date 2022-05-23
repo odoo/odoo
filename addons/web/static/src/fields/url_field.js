@@ -39,12 +39,15 @@ UrlField.props = {
     text: { type: String, optional: true },
     websitePath: { type: Boolean, optional: true },
 };
+
 UrlField.displayName = _lt("URL");
 UrlField.supportedTypes = ["char"];
+
 UrlField.extractProps = (fieldName, record, attrs) => {
     return {
         text: attrs.text,
-        websitePath: Boolean(attrs.options.website_path),
+        websitePath: attrs.options.website_path,
+        placeholder: attrs.placeholder,
     };
 };
 

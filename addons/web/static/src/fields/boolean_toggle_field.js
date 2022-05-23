@@ -9,13 +9,7 @@ const { Component } = owl;
 
 export class BooleanToggleField extends Component {
     /**
-     * @param {Event} ev
-     */
-    onChange(newValue) {
-        this.props.update(newValue);
-    }
-    /**
-     * @param {MouseEvent} ev
+     * @param {{ key: string }} params
      */
     onKeydown({ key }) {
         switch (key) {
@@ -27,12 +21,19 @@ export class BooleanToggleField extends Component {
 }
 
 BooleanToggleField.template = "web.BooleanToggleField";
+BooleanToggleField.components = { CheckBox };
 BooleanToggleField.props = {
     ...standardFieldProps,
 };
+
 BooleanToggleField.displayName = _lt("Toggle");
 BooleanToggleField.supportedTypes = ["boolean"];
+
 BooleanToggleField.isEmpty = () => false;
-BooleanToggleField.components = { CheckBox };
+BooleanToggleField.extractProps = (fieldName, record) => {
+    return {
+        readonly: record.isReadonly(fieldName),
+    };
+};
 
 registry.category("fields").add("boolean_toggle", BooleanToggleField);

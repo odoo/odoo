@@ -26,20 +26,22 @@ export class Many2ManyCheckboxesField extends Component {
     }
 }
 
-Many2ManyCheckboxesField.components = { CheckBox };
 Many2ManyCheckboxesField.template = "web.Many2ManyCheckboxesField";
+Many2ManyCheckboxesField.components = { CheckBox };
 Many2ManyCheckboxesField.props = {
     ...standardFieldProps,
     items: Object,
 };
+
+Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
+Many2ManyCheckboxesField.supportedTypes = ["many2many"];
+
+Many2ManyCheckboxesField.isEmpty = () => false;
 Many2ManyCheckboxesField.extractProps = (fieldName, record) => {
     return {
         items: record.preloadedData[fieldName],
     };
 };
-Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
-Many2ManyCheckboxesField.supportedTypes = ["many2many"];
-Many2ManyCheckboxesField.isEmpty = () => false;
 
 registry.category("fields").add("many2many_checkboxes", Many2ManyCheckboxesField);
 

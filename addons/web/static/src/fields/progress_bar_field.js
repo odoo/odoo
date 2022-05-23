@@ -37,18 +37,17 @@ export class ProgressBarField extends Component {
      * @param {String} part
      */
     onChangeValue(value, part) {
-        let parsedValue;
         try {
-            parsedValue = parseFloat(value);
+            let parsedValue = parseFloat(value);
             if (this.props[part].type === "integer") {
                 parsedValue = Math.floor(parsedValue);
             }
+            this.state[part] = parsedValue;
+            this.props.record.update({ [this.props[part].fieldName]: parsedValue });
         } catch {
-            this.props.setAsInvalid();
+            this.props.invalidate();
             return;
         }
-        this.state[part] = parsedValue;
-        this.props.record.update({ [this.props[part].fieldName]: parsedValue });
     }
 
     onInput(ev, part) {
@@ -61,9 +60,7 @@ export class ProgressBarField extends Component {
     }
 }
 
-ProgressBarField.defaultProps = {
-    setAsInvalid: () => {},
-};
+ProgressBarField.template = "web.ProgressBarField";
 ProgressBarField.props = {
     ...standardFieldProps,
     currentValue: { type: Object, optional: true },
@@ -71,9 +68,15 @@ ProgressBarField.props = {
     maxValue: { type: Object, optional: true },
     isCurrentValueEditable: { type: Boolean, optional: true },
     isMaxValueEditable: { type: Boolean, optional: true },
-    setAsInvalid: { type: Function, optional: true },
+    invalidate: { type: Function, optional: true },
 };
-ProgressBarField.template = "web.ProgressBarField";
+ProgressBarField.defaultProps = {
+    invalidate: () => {},
+};
+
+ProgressBarField.displayName = _lt("Progress Bar");
+ProgressBarField.supportedTypes = ["integer", "float"];
+
 ProgressBarField.extractProps = (fieldName, record, attrs) => {
     const getPart = (part) => {
         if (attrs.options[part]) {
@@ -107,10 +110,8 @@ ProgressBarField.extractProps = (fieldName, record, attrs) => {
             (attrs.options.editable && !attrs.options.edit_max_value) ||
             attrs.options.edit_current_value,
         isMaxValueEditable: attrs.options.edit_max_value,
-        setAsInvalid: () => record.setInvalidField(fieldName),
+        invalidate: () => record.setInvalidField(fieldName),
     };
 };
-ProgressBarField.displayName = _lt("Progress Bar");
-ProgressBarField.supportedTypes = ["integer", "float"];
 
 registry.category("fields").add("progressbar", ProgressBarField);

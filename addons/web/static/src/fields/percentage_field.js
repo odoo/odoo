@@ -23,15 +23,13 @@ export class PercentageField extends Component {
      * @param {Event} ev
      */
     onChange(ev) {
-        let parsedValue;
         try {
-            parsedValue = parsePercentage(ev.target.value);
+            const parsedValue = parsePercentage(ev.target.value);
+            this.props.update(parsedValue);
         } catch (_e) {
             // WOWL TODO: rethrow error when not the expected type
-            this.props.setAsInvalid();
-            return;
+            this.props.invalidate();
         }
-        this.props.update(parsedValue);
     }
 
     get formattedValue() {
@@ -42,23 +40,25 @@ export class PercentageField extends Component {
 }
 
 PercentageField.template = "web.PercentageField";
-PercentageField.defaultProps = {
-    setAsInvalid: () => {},
-};
 PercentageField.props = {
     ...standardFieldProps,
-    setAsInvalid: { type: Function, optional: true },
+    invalidate: { type: Function, optional: true },
     digits: { type: Array, optional: true },
 };
+PercentageField.defaultProps = {
+    invalidate: () => {},
+};
+
+PercentageField.displayName = _lt("Percentage");
+PercentageField.supportedTypes = ["integer", "float"];
+
 PercentageField.extractProps = (fieldName, record, attrs) => {
     return {
-        setAsInvalid: () => record.setInvalidField(fieldName),
+        invalidate: () => record.setInvalidField(fieldName),
         digits:
             (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
             record.fields[fieldName].digits,
     };
 };
-PercentageField.displayName = _lt("Percentage");
-PercentageField.supportedTypes = ["integer", "float"];
 
 registry.category("fields").add("percentage", PercentageField);

@@ -151,7 +151,6 @@ export class Field extends Component {
 
         return {
             ...fieldInfo.props,
-            required, // AAB: does the field really need this?
             update: async (value) => {
                 await record.update({ [this.props.name]: value });
                 if (record.selected && record.model.multiEdit) {

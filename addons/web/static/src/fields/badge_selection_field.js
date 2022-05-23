@@ -29,7 +29,7 @@ export class BadgeSelectionField extends Component {
     }
 
     /**
-     * @param {Event} ev
+     * @param {string | number | false} value
      */
     onChange(value) {
         switch (this.props.type) {
@@ -54,6 +54,11 @@ BadgeSelectionField.props = {
     options: Object,
     placeholder: { type: String, optional: true },
 };
+
+BadgeSelectionField.displayName = _lt("Badges");
+BadgeSelectionField.supportedTypes = ["many2one", "selection"];
+
+BadgeSelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 BadgeSelectionField.extractProps = (fieldName, record, attrs) => {
     const getOptions = () => {
         switch (record.fields[fieldName].type) {
@@ -72,9 +77,6 @@ BadgeSelectionField.extractProps = (fieldName, record, attrs) => {
         options: getOptions(),
     };
 };
-BadgeSelectionField.displayName = _lt("Badges");
-BadgeSelectionField.supportedTypes = ["many2one", "selection"];
-BadgeSelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 
 registry.category("fields").add("selection_badge", BadgeSelectionField);
 

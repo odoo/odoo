@@ -3,9 +3,9 @@
 
     <t t-name="web.DomainField" owl="1">
         <div t-att-class="{ o_inline_mode: !env.inDialog }">
-            <t t-if="getResModel(props)">
+            <t t-if="props.resModel">
                 <DomainSelector
-                    resModel="getResModel(props)"
+                    resModel="props.resModel"
                     value="displayedDomain || '[]'"
                     readonly="props.readonly"
                     update.bind="update"

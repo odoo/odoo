@@ -21,16 +21,11 @@ export class MonetaryField extends Component {
         useNumpadDecimal();
     }
     onChange(ev) {
-        let isValid = true;
-        let value = ev.target.value;
         try {
-            value = parseMonetary(value, { currencyId: this.props.currencyId });
-        } catch {
-            isValid = false;
-            this.props.setAsInvalid();
-        }
-        if (isValid) {
+            const value = parseMonetary(ev.target.value, { currencyId: this.props.currencyId });
             this.props.update(value);
+        } catch {
+            this.props.invalidate();
         }
     }
 
@@ -50,8 +45,12 @@ export class MonetaryField extends Component {
     }
 
     get currencyDigits() {
-        if (this.props.digits) return this.props.digits;
-        if (!this.currency) return null;
+        if (this.props.digits) {
+            return this.props.digits;
+        }
+        if (!this.currency) {
+            return null;
+        }
         return session.currencies[this.props.currencyId].digits;
     }
 
@@ -68,20 +67,21 @@ export class MonetaryField extends Component {
 }
 
 MonetaryField.template = "web.MonetaryField";
-MonetaryField.supportedTypes = ["monetary", "float"];
-MonetaryField.displayName = _lt("Monetary");
-
 MonetaryField.props = {
     ...standardFieldProps,
     currencyId: { type: Number, optional: true },
     inputType: { type: String, optional: true },
     digits: { type: Array, optional: true },
-    setAsInvalid: { type: Function, optional: true },
+    invalidate: { type: Function, optional: true },
+    placeholder: { type: String, optional: true },
 };
 MonetaryField.defaultProps = {
     inputType: "text",
-    setAsInvalid: () => {},
+    invalidate: () => {},
 };
+
+MonetaryField.supportedTypes = ["monetary", "float"];
+MonetaryField.displayName = _lt("Monetary");
 
 MonetaryField.extractProps = function (fieldName, record, attrs) {
     return {
@@ -92,7 +92,8 @@ MonetaryField.extractProps = function (fieldName, record, attrs) {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
-        setAsInvalid: () => record.setInvalidField(fieldName),
+        invalidate: () => record.setInvalidField(fieldName),
+        placeholder: attrs.placeholder,
     };
 };
 

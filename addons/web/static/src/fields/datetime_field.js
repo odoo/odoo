@@ -21,6 +21,9 @@ export class DateTimeField extends Component {
 }
 
 DateTimeField.template = "web.DateTimeField";
+DateTimeField.components = {
+    DateTimePicker,
+};
 DateTimeField.props = {
     ...standardFieldProps,
     pickerOptions: { type: Object, optional: true },
@@ -28,11 +31,10 @@ DateTimeField.props = {
 DateTimeField.defaultProps = {
     pickerOptions: {},
 };
-DateTimeField.components = {
-    DateTimePicker,
-};
+
 DateTimeField.displayName = _lt("Date & Time");
 DateTimeField.supportedTypes = ["datetime"];
+
 DateTimeField.extractProps = (fieldName, record, attrs) => {
     return {
         pickerOptions: attrs.options.datepicker,

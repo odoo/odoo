@@ -76,7 +76,7 @@ export class DateRangeField extends Component {
         try {
             formattedValue = formatter(value, { timezone: this.isDateTime });
         } catch {
-            this.props.setAsInvalid();
+            this.props.invalidate();
         }
         return formattedValue;
     }
@@ -87,7 +87,7 @@ export class DateRangeField extends Component {
         try {
             value = parse(ev.target.value, { timezone: this.isDateTime });
         } catch {
-            this.props.setAsInvalid();
+            this.props.invalidate();
             return;
         }
         this.props.update(value);
@@ -132,6 +132,7 @@ export class DateRangeField extends Component {
 DateRangeField.template = "web.DateRangeField";
 
 DateRangeField.supportedTypes = ["date", "datetime"];
+
 DateRangeField.extractProps = (fieldName, record, attrs) => {
     const relatedEndDate = attrs.options.related_end_date;
     const relatedStartDate = attrs.options.related_start_date;
@@ -140,9 +141,8 @@ DateRangeField.extractProps = (fieldName, record, attrs) => {
         relatedDateRange: relatedEndDate ? relatedEndDate : relatedStartDate,
         endDate: record.data[relatedEndDate || fieldName],
         formatType: attrs.options.format_type || record.fields[fieldName].type,
-        setAsInvalid: () => record.setInvalidField(fieldName),
+        invalidate: () => record.setInvalidField(fieldName),
         startDate: record.data[relatedStartDate || fieldName],
-        // pickerOptions: attrs.options.datepicker,
         async updateRange(start, end) {
             await record.update({
                 [relatedStartDate || fieldName]: start,

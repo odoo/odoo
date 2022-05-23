@@ -5,15 +5,18 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { groupBy } from "@web/core/utils/arrays";
-import { standardFieldProps } from "./standard_field_props";
 import { escape, sprintf } from "@web/core/utils/strings";
-import { Domain } from "../core/domain";
+import { Domain } from "@web/core/domain";
+import { _lt } from "@web/core/l10n/translation";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
 export class StatusBarField extends Component {
     setup() {
-        this.props.addCommand && this.initiateCommand();
+        if (this.props.addCommand) {
+            this.initiateCommand();
+        }
     }
 
     get dropdownClassNames() {
@@ -25,9 +28,7 @@ export class StatusBarField extends Component {
     }
 
     getVisibleMany2Ones() {
-        let items = this.props.record.preloadedData
-            ? this.props.record.preloadedData[this.props.name]
-            : [];
+        let items = this.props.options;
         // FIXME: do this somewhere else
         items = items.map((i) => {
             return {
@@ -43,7 +44,7 @@ export class StatusBarField extends Component {
     }
 
     getVisibleSelection() {
-        let selection = this.props.record.fields[this.props.name].selection;
+        let selection = this.props.options;
         if (this.props.visibleSelection.length) {
             selection = selection.filter(
                 (item) =>
@@ -129,15 +130,30 @@ StatusBarField.props = {
     displayName: { type: String, optional: true },
     isDisabled: { type: Boolean, optional: true },
     visibleSelection: { type: Array, optional: true },
+    options: Array,
 };
 StatusBarField.components = {
     Dropdown,
     DropdownItem,
 };
+
+StatusBarField.displayName = _lt("Status");
 StatusBarField.supportedTypes = ["many2one", "selection"];
+
 StatusBarField.isEmpty = () => false;
 StatusBarField.extractProps = (fieldName, record, attrs) => {
+    const getOptions = () => {
+        switch (record.fields[fieldName].type) {
+            case "many2one":
+                return record.preloadedData[fieldName];
+            case "selection":
+                return record.fields[fieldName].selection;
+            default:
+                return [];
+        }
+    };
     return {
+        options: getOptions(),
         addCommand: record.activeFields[fieldName].viewType === "form",
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),

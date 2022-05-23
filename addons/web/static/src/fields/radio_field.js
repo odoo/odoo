@@ -37,14 +37,22 @@ export class RadioField extends Component {
     }
 }
 
+RadioField.nextId = 0;
+
 RadioField.template = "web.RadioField";
 RadioField.props = {
     ...standardFieldProps,
-    horizontal: { type: Boolean, optional: true },
+    orientation: { type: String, optional: true },
     radioItems: Array,
+    string: { type: String, optional: true },
 };
+RadioField.defaultProps = {
+    orientation: "vertical",
+};
+
 RadioField.displayName = _lt("Radio");
 RadioField.supportedTypes = ["many2one", "selection"];
+
 RadioField.isEmpty = () => false;
 RadioField.extractProps = (fieldName, record, attrs) => {
     const getRadioItems = () => {
@@ -60,11 +68,11 @@ RadioField.extractProps = (fieldName, record, attrs) => {
         }
     };
     return {
-        horizontal: Boolean(attrs.options.horizontal),
+        orientation: attrs.options.horizontal ? "horizontal" : "vertical",
         radioItems: getRadioItems(),
+        string: record.activeFields[fieldName].string,
     };
 };
-RadioField.nextId = 0;
 
 registry.category("fields").add("radio", RadioField);
 

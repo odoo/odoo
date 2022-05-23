@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useInputField } from "./input_field_hook";
 import { useNumpadDecimal } from "./numpad_decimal_hook";
@@ -8,6 +9,7 @@ import { parseFloat } from "./parsers";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component, onWillUpdateProps } = owl;
+
 export class FloatField extends Component {
     setup() {
         this.defaultInputValue = this.getFormattedValue();
@@ -33,18 +35,13 @@ export class FloatField extends Component {
     }
 
     onChange(ev) {
-        let isValid = true;
-        let value = ev.target.value;
         try {
-            value = this.parse(value);
-        } catch (_e) {
-            // WOWL TODO: rethrow error when not the expected type
-            isValid = false;
-            this.props.setAsInvalid();
-        }
-        if (isValid) {
+            const value = this.parse(ev.target.value);
             this.props.update(value);
             this.defaultInputValue = ev.target.value;
+        } catch (_e) {
+            // WOWL TODO: rethrow error when not the expected type
+            this.props.invalidate();
         }
     }
 
@@ -62,18 +59,20 @@ FloatField.props = {
     inputType: { type: String, optional: true },
     step: { type: Number, optional: true },
     digits: { type: Array, optional: true },
-    setAsInvalid: { type: Function, optional: true },
-    field: { type: Object, optional: true },
+    invalidate: { type: Function, optional: true },
 };
 FloatField.defaultProps = {
     inputType: "text",
-    setAsInvalid: () => {},
+    invalidate: () => {},
 };
+
+FloatField.displayName = _lt("Float");
+FloatField.supportedTypes = ["float"];
+
 FloatField.isEmpty = () => false;
 FloatField.extractProps = (fieldName, record, attrs) => {
     return {
-        setAsInvalid: () => record.setInvalidField(fieldName),
-        field: record.fields[fieldName], // To remove
+        invalidate: () => record.setInvalidField(fieldName),
         inputType: attrs.options.type,
         step: attrs.options.step,
         // Sadly, digits param was available as an option and an attr.
@@ -83,6 +82,5 @@ FloatField.extractProps = (fieldName, record, attrs) => {
             record.fields[fieldName].digits,
     };
 };
-FloatField.supportedTypes = ["float"];
 
 registry.category("fields").add("float", FloatField);

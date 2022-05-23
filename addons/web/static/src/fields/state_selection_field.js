@@ -6,12 +6,15 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
+import { formatSelection } from "./formatters";
 
 const { Component } = owl;
 
 export class StateSelectionField extends Component {
     setup() {
-        this.props.addCommand && this.initiateCommand();
+        if (this.props.addCommand) {
+            this.initiateCommand();
+        }
         this.excludedValues = [];
         this.colorPrefix = "o_status_";
         this.colors = {
@@ -26,7 +29,7 @@ export class StateSelectionField extends Component {
         return this.props.value || this.props.options[0][0];
     }
     get label() {
-        return this.props.options.find((o) => o[0] === this.currentValue)[1];
+        return formatSelection(this.currentValue, { selection: this.props.options });
     }
 
     initiateCommand() {
@@ -56,13 +59,6 @@ export class StateSelectionField extends Component {
             console.log("Could not add command to service");
         }
     }
-    /**
-     * @param {Event} ev
-     */
-    onChange(value) {
-        this.props.update(value);
-    }
-
     statusColor(value) {
         return this.colors[value] ? this.colorPrefix + this.colors[value] : "";
     }
@@ -73,25 +69,28 @@ StateSelectionField.components = {
     Dropdown,
     DropdownItem,
 };
-StateSelectionField.defaultProps = {
-    addCommand: false,
-    showLabel: false,
-};
 StateSelectionField.props = {
     ...standardFieldProps,
     addCommand: { type: Boolean, optional: true },
     showLabel: { type: Boolean, optional: true },
     options: Object,
 };
+StateSelectionField.defaultProps = {
+    addCommand: false,
+    showLabel: false,
+};
+
 StateSelectionField.displayName = _lt("Label Selection");
 StateSelectionField.supportedTypes = ["selection"];
+
 StateSelectionField.extractProps = (fieldName, record, attrs) => {
     return {
         addCommand: record.activeFields[fieldName].viewType === "form",
         showLabel: record.activeFields[fieldName].viewType === "list" && !attrs.options.hide_label,
-        options: record.fields[fieldName].selection,
+        options: Array.from(record.fields[fieldName].selection),
         readonly: record.isReadonly(fieldName),
     };
 };
+
 registry.category("fields").add("state_selection", StateSelectionField);
 registry.category("fields").add("list.state_selection", StateSelectionField);

@@ -5,10 +5,11 @@ import { formatFloat } from "./formatters";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
+
 export class FloatToggleField extends Component {
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps
-    onChange(ev) {
+    onChange() {
         let currentIndex = this.props.range.indexOf(this.props.value * this.props.factor);
         currentIndex++;
         if (currentIndex > this.props.range.length - 1) {
@@ -25,21 +26,21 @@ export class FloatToggleField extends Component {
 }
 
 FloatToggleField.template = "web.FloatToggleField";
-FloatToggleField.supportedTypes = ["float"];
 FloatToggleField.props = {
     ...standardFieldProps,
     digits: { type: Array, optional: true },
-    setAsInvalid: { type: Function, optional: true },
     range: { type: Array, optional: true },
     factor: { type: Number, optional: true },
     disableReadOnly: { type: Boolean, optional: true },
 };
 FloatToggleField.defaultProps = {
-    setAsInvalid: () => {},
     range: [0.0, 0.5, 1.0],
     factor: 1,
     disableReadOnly: false,
 };
+
+FloatToggleField.supportedTypes = ["float"];
+
 FloatToggleField.isEmpty = () => false;
 FloatToggleField.extractProps = (fieldName, record, attrs) => {
     return {
@@ -48,9 +49,8 @@ FloatToggleField.extractProps = (fieldName, record, attrs) => {
             record.fields[fieldName].digits,
         range: attrs.options.range,
         factor: attrs.options.factor,
-        disableReadOnly: Boolean(attrs.options.force_button),
+        disableReadOnly: attrs.options.force_button || false,
     };
 };
-FloatToggleField.supportedTypes = ["float"];
 
 registry.category("fields").add("float_toggle", FloatToggleField);

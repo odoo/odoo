@@ -43,30 +43,27 @@ export class Many2ManyBinaryField extends Component {
     }
 }
 
+Many2ManyBinaryField.template = "web.Many2ManyBinaryField";
 Many2ManyBinaryField.components = {
     FileUploader,
 };
-Many2ManyBinaryField.template = "web.Many2ManyBinaryField";
 Many2ManyBinaryField.props = {
     ...standardFieldProps,
     acceptedFileExtensions: { type: String, optional: true },
     className: { type: String, optional: true },
     uploadText: { type: String, optional: true },
-    setAsInvalid: { type: Function, optional: true },
     items: { type: Object, optional: true },
 };
-Many2ManyBinaryField.defaultProps = {
-    setAsInvalid: () => {},
-};
+
+Many2ManyBinaryField.supportedTypes = ["many2many"];
+
 Many2ManyBinaryField.isEmpty = () => false;
 Many2ManyBinaryField.extractProps = (fieldName, record, attrs) => {
     return {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         className: attrs.class,
         uploadText: record.fields[fieldName].string,
-        setAsInvalid: () => record.setInvalidField(fieldName),
     };
 };
-Many2ManyBinaryField.supportedTypes = ["many2many"];
 
 registry.category("fields").add("many2many_binary", Many2ManyBinaryField);

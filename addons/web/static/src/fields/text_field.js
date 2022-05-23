@@ -47,15 +47,26 @@ export class TextField extends Component {
 }
 
 TextField.template = "web.TextField";
-TextField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
 TextField.components = {
     TranslationButton,
 };
+TextField.props = {
+    ...standardFieldProps,
+    placeholder: { type: String, optional: true },
+    resId: { type: [Number, Boolean], optional: true },
+    resModel: { type: String, optional: true },
+};
+
 TextField.displayName = _lt("Multiline Text");
 TextField.supportedTypes = ["html", "text"];
+
+TextField.extractProps = (fieldName, record, attrs) => {
+    return {
+        placeholder: attrs.placeholder,
+        resId: record.resId,
+        resModel: record.resModel,
+    };
+};
 
 registry.category("fields").add("text", TextField);
 registry.category("fields").add("list.text", TextField); // WOWL: because it exists in legacy

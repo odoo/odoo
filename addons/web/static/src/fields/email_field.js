@@ -24,6 +24,7 @@ EmailField.template = "web.EmailField";
 EmailField.props = {
     ...standardFieldProps,
 };
+
 EmailField.displayName = _lt("Email");
 EmailField.supportedTypes = ["char"];
 

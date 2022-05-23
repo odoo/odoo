@@ -5,7 +5,7 @@
         <div class="o_priority" role="radiogroup" name="priority" aria-label="Priority">
             <t t-foreach="props.options" t-as="value" t-key="value">
                 <t t-if="!value_first">
-                    <t t-if="props.record.activeFields[props.name].modifiers.readonly">
+                    <t t-if="props.readonly">
                         <span
                             class="o_priority_star fa"
                             role="radio"

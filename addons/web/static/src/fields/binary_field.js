@@ -35,8 +35,8 @@ export class BinaryField extends Component {
     async onFileDownload() {
         await download({
             data: {
-                model: this.props.record.resModel,
-                id: this.props.record.resId,
+                model: this.props.resModel,
+                id: this.props.resId,
                 field: this.props.name,
                 filename_field: this.file.name,
                 filename: this.file.name || "",
@@ -63,37 +63,43 @@ export class BinaryField extends Component {
     }
 }
 
+BinaryField.template = "web.BinaryField";
 BinaryField.components = {
     FileDownloader,
     FileUploader,
 };
 BinaryField.props = {
     ...standardFieldProps,
+    acceptedFileExtensions: { type: String, optional: true },
     fileData: { type: String, optional: true },
     fileName: { type: String, optional: true },
-    acceptedFileExtensions: { type: String, optional: true },
     isDownloadable: { type: Boolean, optional: true },
+    resId: { type: [Number, Boolean], optional: true },
+    resModel: { type: String, optional: true },
 };
 BinaryField.defaultProps = {
     acceptedFileExtensions: "*",
     fileData: "",
     isDownloadable: true,
 };
-BinaryField.template = "web.BinaryField";
+
 BinaryField.displayName = _lt("File");
 BinaryField.supportedTypes = ["binary"];
+
 BinaryField.extractProps = (fieldName, record, attrs) => {
     return {
+        acceptedFileExtensions: attrs.options.accepted_file_extensions,
         fileData: record.data[fieldName] || "",
         fileName: record.data[attrs.filename] || "",
-        acceptedFileExtensions: attrs.options.accepted_file_extensions,
         isDownloadable: !(record.isReadonly(fieldName) && record.mode === "edit"),
+        resId: record.resId,
+        resModel: record.resModel,
         update: (file) => {
             const changes = { [fieldName]: file.data || false };
             if (attrs.filename && attrs.filename !== fieldName) {
                 changes[attrs.filename] = file.name || false;
             }
-            record.update(changes);
+            return record.update(changes);
         },
     };
 };

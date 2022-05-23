@@ -3,14 +3,13 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
+import { formatSelection } from "./formatters";
 
 const { Component } = owl;
 
 export class FontSelectionField extends Component {
     get string() {
-        return this.props.value !== false
-            ? this.props.options.find((o) => o[0] === this.props.value)[1]
-            : "";
+        return formatSelection(this.props.value, { selection: this.props.options });
     }
 
     stringify(value) {
@@ -31,13 +30,21 @@ FontSelectionField.props = {
     ...standardFieldProps,
     options: Object,
     placeholder: { type: String, optional: true },
+    required: { type: Boolean, optional: true },
 };
-FontSelectionField.extractProps = (fieldName, record) => {
-    return {
-        options: record.fields[fieldName].selection,
-    };
+FontSelectionField.defaultProps = {
+    required: false,
 };
+
 FontSelectionField.displayName = _lt("Font Selection");
 FontSelectionField.supportedTypes = ["selection"];
+
+FontSelectionField.extractProps = (fieldName, record, attrs) => {
+    return {
+        options: Array.from(record.fields[fieldName].selection),
+        required: record.isRequired(fieldName),
+        placeholder: attrs.placeholder,
+    };
+};
 
 registry.category("fields").add("font", FontSelectionField);

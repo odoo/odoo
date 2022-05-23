@@ -254,16 +254,14 @@ export class Many2ManyTagsField extends Component {
     }
 }
 
+Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+Many2ManyTagsField.SEARCH_MORE_LIMIT = 320;
+
+Many2ManyTagsField.template = "web.Many2ManyTagsField";
 Many2ManyTagsField.components = {
     AutoComplete,
     Popover: Many2ManyTagsFieldColorListPopover,
     TagItem,
-};
-Many2ManyTagsField.template = "web.Many2ManyTagsField";
-Many2ManyTagsField.defaultProps = {
-    canEditColor: true,
-    canQuickCreate: true,
-    searchLimit: 7,
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
@@ -276,13 +274,17 @@ Many2ManyTagsField.props = {
     context: { type: Object },
     searchLimit: { type: Number, optional: true },
 };
-Many2ManyTagsField.RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+Many2ManyTagsField.defaultProps = {
+    canEditColor: true,
+    canQuickCreate: true,
+    searchLimit: 7,
+};
+
 Many2ManyTagsField.displayName = _lt("Tags");
 Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
-Many2ManyTagsField.SEARCH_MORE_LIMIT = 320;
 
 Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
     const colorField = attrs.options.color_field;

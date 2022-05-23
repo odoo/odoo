@@ -317,7 +317,12 @@ export class Many2OneField extends Component {
     }
 }
 
+Many2OneField.SEARCH_MORE_LIMIT = 320;
+
 Many2OneField.template = "web.Many2OneField";
+Many2OneField.components = {
+    AutoComplete,
+};
 Many2OneField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
@@ -339,11 +344,10 @@ Many2OneField.defaultProps = {
     searchLimit: 7,
     string: "",
 };
-Many2OneField.components = {
-    AutoComplete,
-};
+
 Many2OneField.displayName = _lt("Many2one");
 Many2OneField.supportedTypes = ["many2one"];
+
 Many2OneField.extractProps = (fieldName, record, attrs) => {
     const noOpen = Boolean(attrs.options.no_open);
     const noCreate = Boolean(attrs.options.no_create);
@@ -363,8 +367,6 @@ Many2OneField.extractProps = (fieldName, record, attrs) => {
         string: attrs.string || record.fields[fieldName].string,
     };
 };
-
-Many2OneField.SEARCH_MORE_LIMIT = 320;
 
 registry.category("fields").add("many2one", Many2OneField);
 

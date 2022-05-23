@@ -8,6 +8,7 @@ class KanbanMany2ManyTagsField extends Many2ManyTagsField {
         return super.tags.filter((tag) => tag.colorIndex !== 0);
     }
 }
+
 KanbanMany2ManyTagsField.template = "web.KanbanMany2ManyTagsField";
 
 registry.category("fields").add("kanban.many2many_tags", KanbanMany2ManyTagsField);

@@ -7,11 +7,7 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
-export class BooleanFavoriteField extends Component {
-    onClick() {
-        this.props.update(!this.props.value);
-    }
-}
+export class BooleanFavoriteField extends Component {}
 
 BooleanFavoriteField.template = "web.BooleanFavoriteField";
 BooleanFavoriteField.props = {
@@ -21,8 +17,10 @@ BooleanFavoriteField.props = {
 BooleanFavoriteField.defaultProps = {
     noLabel: false,
 };
+
 BooleanFavoriteField.displayName = _lt("Favorite");
 BooleanFavoriteField.supportedTypes = ["boolean"];
+
 BooleanFavoriteField.isEmpty = () => false;
 BooleanFavoriteField.extractProps = (fieldName, record, attrs) => {
     return {

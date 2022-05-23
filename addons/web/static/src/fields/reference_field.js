@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Many2OneField } from "./many2one_field";
 import { standardFieldProps } from "./standard_field_props";
@@ -84,6 +85,9 @@ ReferenceField.props = {
         },
     },
 };
+
+ReferenceField.displayName = _lt("Reference");
+ReferenceField.supportedTypes = ["reference", "char"];
 
 ReferenceField.extractProps = (fieldName, record, attrs) => {
     let props = {};

@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { isTruthy } from "@web/core/utils/xml";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -20,14 +22,17 @@ StatInfoField.props = {
     noLabel: { type: Boolean, optional: true },
     digits: { type: Array, optional: true },
 };
+
+StatInfoField.label = _lt("Stat Info");
 StatInfoField.supportedTypes = ["float", "integer", "monetary"];
+
 StatInfoField.isEmpty = () => false;
 StatInfoField.extractProps = (fieldName, record, attrs) => {
     return {
         label: attrs.options.label_field
             ? record.data[attrs.options.label_field]
             : record.activeFields[fieldName].string,
-        noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
+        noLabel: isTruthy(attrs.nolabel),
         digits:
             (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) ||
             record.fields[fieldName].digits,

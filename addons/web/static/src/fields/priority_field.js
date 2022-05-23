@@ -16,7 +16,9 @@ export class PriorityField extends Component {
         this.state = useState({
             index: -1,
         });
-        this.props.addCommand && this.initiateCommand();
+        if (this.props.addCommand) {
+            this.initiateCommand();
+        }
     }
 
     get index() {
@@ -75,14 +77,17 @@ PriorityField.props = {
     addCommand: { type: Boolean, optional: true },
     tooltipLabel: { type: String, optional: true },
 };
+
+PriorityField.displayName = _lt("Priority");
+PriorityField.supportedTypes = ["selection"];
+
 PriorityField.extractProps = (fieldName, record) => {
     return {
         addCommand: record.activeFields[fieldName].viewType === "form",
-        options: record.fields[fieldName].selection,
+        options: Array.from(record.fields[fieldName].selection),
         tooltipLabel: record.fields[fieldName].string,
+        readonly: record.isReadonly(fieldName),
     };
 };
-PriorityField.displayName = _lt("Priority");
-PriorityField.supportedTypes = ["selection"];
 
 registry.category("fields").add("priority", PriorityField);

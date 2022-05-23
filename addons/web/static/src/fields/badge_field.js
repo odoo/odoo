@@ -2,6 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 const formatters = registry.category("formatters");
@@ -25,6 +26,10 @@ export class BadgeField extends Component {
 }
 
 BadgeField.template = "web.BadgeField";
+BadgeField.props = {
+    ...standardFieldProps,
+};
+
 BadgeField.displayName = _lt("Badge");
 BadgeField.supportedTypes = ["selection", "many2one", "char"];
 

@@ -17,7 +17,7 @@
                     </div>
                 </t>
                 <t t-foreach="availableOptions" t-as="option" t-key="option[0]">
-                    <DropdownItem t-if="option[0] != currentValue" onSelected="() => this.onChange(option[0])">
+                    <DropdownItem t-if="option[0] != currentValue" onSelected="() => props.update(option[0])">
                         <div class="d-flex align-items-center">
                             <span t-attf-class="{{ 'mx-2 o_status ' + statusColor(option[0]) }} "/>
                             <span t-esc="option[1]"/>

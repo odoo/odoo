@@ -53,7 +53,13 @@ SelectionField.props = {
     ...standardFieldProps,
     options: Object,
     placeholder: { type: String, optional: true },
+    required: { type: Boolean, optional: true },
 };
+
+SelectionField.displayName = _lt("Selection");
+SelectionField.supportedTypes = ["many2one", "selection"];
+
+SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 SelectionField.extractProps = (fieldName, record, attrs) => {
     const getOptions = () => {
         switch (record.fields[fieldName].type) {
@@ -68,11 +74,9 @@ SelectionField.extractProps = (fieldName, record, attrs) => {
     return {
         options: getOptions(),
         placeholder: attrs.placeholder,
+        required: record.isRequired(fieldName),
     };
 };
-SelectionField.displayName = _lt("Selection");
-SelectionField.supportedTypes = ["many2one", "selection"];
-SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 
 registry.category("fields").add("selection", SelectionField);
 

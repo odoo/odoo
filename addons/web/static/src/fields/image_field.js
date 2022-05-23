@@ -28,13 +28,14 @@ export class ImageField extends Component {
             isValid: true,
         });
     }
+
     get url() {
         if (this.state.isValid && this.props.value) {
             if (isBinarySize(this.props.value)) {
                 const previewFieldName = this.props.previewImage || this.props.name;
                 return url("/web/image", {
-                    model: this.props.record.resModel,
-                    id: this.props.record.resId,
+                    model: this.props.resModel,
+                    id: this.props.resId,
                     field: previewFieldName,
                 });
             } else {
@@ -55,15 +56,14 @@ export class ImageField extends Component {
         }
         return style;
     }
-
+    get hasTooltip() {
+        return this.props.enableZoom && this.props.readonly && this.props.value;
+    }
     get tooltipAttributes() {
-        if (this.props.enableZoom && this.props.readonly && this.props.value) {
-            return {
-                template: "web.ImageZoomTooltip",
-                info: JSON.stringify({ url: this.url }),
-            };
-        }
-        return {};
+        return {
+            template: "web.ImageZoomTooltip",
+            info: JSON.stringify({ url: this.url }),
+        };
     }
 
     onFileRemove() {
@@ -83,6 +83,9 @@ export class ImageField extends Component {
 }
 
 ImageField.template = "web.ImageField";
+ImageField.components = {
+    FileUploader,
+};
 ImageField.props = {
     ...standardFieldProps,
     enableZoom: { type: Boolean, optional: true },
@@ -91,23 +94,26 @@ ImageField.props = {
     acceptedFileExtensions: { type: String, optional: true },
     width: { type: Number, optional: true },
     height: { type: Number, optional: true },
+    resId: { type: [Number, Boolean], optional: true },
+    resModel: { type: String, optional: true },
 };
 ImageField.defaultProps = {
     acceptedFileExtensions: "image/*",
 };
-ImageField.components = {
-    FileUploader,
-};
+
 ImageField.displayName = _lt("Image");
 ImageField.supportedTypes = ["binary"];
+
 ImageField.extractProps = (fieldName, record, attrs) => {
     return {
         enableZoom: attrs.options.zoom,
         zoomDelay: attrs.options.zoom_delay,
         previewImage: attrs.preview_image,
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
-        width: attrs.options.size && attrs.options.size[0],
-        height: attrs.options.size && attrs.options.size[1],
+        width: attrs.options.size ? attrs.options.size[0] : attrs.width,
+        height: attrs.options.size ? attrs.options.size[1] : attrs.height,
+        resId: record.resId,
+        resModel: record.resModel,
     };
 };
 
