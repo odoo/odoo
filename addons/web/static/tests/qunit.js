@@ -330,10 +330,6 @@ import { canDefaultBehaviorHappen } from "./helpers/utils";
         skip(name, cb);
     };
 
-    QUnit.skipNotInline = (name, cb) => {
-        skip(name, cb);
-    };
-
     // Override global UnhandledRejection that is assigned wayyy before this file
     // Do not really crash on non-errors rejections
     const qunitUnhandledReject = QUnit.onUnhandledRejection;
