@@ -408,7 +408,7 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         "clicking on any button in setting should show discard warning if setting form is dirty",
         async function (assert) {
-            assert.expect(11);
+            assert.expect(12);
 
             serverData.actions = {
                 1: {
@@ -456,6 +456,10 @@ QUnit.module("SettingsFormView", (hooks) => {
                 if (route === "/web/dataset/call_button") {
                     if (args.method === "execute") {
                         assert.ok("execute method called");
+                        return true;
+                    }
+                    if (args.method === "cancel") {
+                        assert.ok("cancel method called");
                         return true;
                     }
                 }
@@ -809,4 +813,77 @@ QUnit.module("SettingsFormView", (hooks) => {
             ]);
         }
     );
+    QUnit.test("Discard button clean the settings view", async function (assert) {
+        assert.expect(5);
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                    <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                `,
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,list": "<tree></tree>",
+            "task,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/dataset/call_button" && args.method === "cancel") {
+                assert.step("cancel");
+                return Promise.resolve({
+                    name: "Settings view",
+                    res_model: "res.config.settings",
+                    type: "ir.actions.act_window",
+                    target: "inline",
+                    views: [[false, "form"]],
+                });
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
+        assert.containsNone(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should not be checked"
+        );
+
+        await click(target.querySelector(".custom-checkbox input"));
+        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
+
+        await click(target.querySelector(".o_form_button_cancel"));
+
+        assert.containsNone(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should not be checked"
+        );
+
+        assert.verifySteps(["cancel"]);
+    });
 });
