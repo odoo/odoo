@@ -181,7 +181,7 @@ class PosOrder(models.Model):
                 order['partner_id'] = order['partner_id'][0]
             if order['table_id']:
                 order['table_id'] = order['table_id'][0]
-            if order['employee_id']:
+            if 'employee_id' in order:
                 order['employee_id'] = order['employee_id'][0] if order['employee_id'] else False
 
             if not 'lines' in order:
