@@ -406,6 +406,10 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
+            # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
+            # manually edited
+            if line.qty_invoiced > 0:
+                continue
             if not line.product_uom or not line.product_id or not line.order_id.pricelist_id:
                 line.price_unit = 0.0
             else:
