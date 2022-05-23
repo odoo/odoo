@@ -1,6 +1,7 @@
 /** @odoo-module alias=mailing.PortalSubscriptionBlocklist **/
 
 import { jsonrpc } from "@web/core/network/rpc_service";
+import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 
@@ -46,6 +47,7 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
                 this.customerData.isBlocklisted = true;
             }
             this._updateDisplay();
+            this._updateInfo(result === true ? 'blocklist_add' : 'error');
             this.trigger_up(
                 'blocklist_add',
                 {'callKey': result === true ? 'blocklist_add' : result,
@@ -75,6 +77,7 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
                 this.customerData.isBlocklisted = false;
             }
             this._updateDisplay();
+            this._updateInfo(result === true ? 'blocklist_remove' : 'error');
             this.trigger_up(
                 'blocklist_remove',
                 {'callKey': result === true ? 'blocklist_remove' : result,
@@ -85,8 +88,8 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
     },
 
     /*
-     * Display buttons according to current state. Removing from blocklist is
-     * always available when being blocklisted. Adding in blocklist is available
+     * Display buttons and info according to current state. Removing from blocklist
+     * is always available when being blocklisted. Adding in blocklist is available
      * when not being blocklisted, if the action is possible (valid email mainly)
      * and if the option is activated.
      */
@@ -102,6 +105,34 @@ publicWidget.registry.MailingPortalSubscriptionBlocklist = publicWidget.Widget.e
             buttonRemoveNode.classList.remove('d-none');
         } else {
             buttonRemoveNode.classList.add('d-none');
+        }
+    },
+
+    /*
+     * Display feedback (visual tips) to the user concerning the last done action.
+     */
+    _updateInfo: function (infoKey) {
+        const updateInfo = document.getElementById('o_mailing_subscription_update_info');
+        if (infoKey !== undefined) {
+            const infoContent = renderToElement(
+                "mass_mailing.portal.blocklist_update_info",
+                {
+                    infoKey: infoKey,
+                }
+            );
+            updateInfo.innerHTML = infoContent.innerHTML;
+            if (['blocklist_add', 'blocklist_remove'].includes(infoKey)) {
+                updateInfo.classList.add('text-success');
+                updateInfo.classList.remove('text-danger');
+            }
+            else {
+                updateInfo.classList.add('text-danger');
+                updateInfo.classList.remove('text-success');
+            }
+            updateInfo.classList.remove('d-none');
+        }
+        else {
+            updateInfo.classList.add('d-none');
         }
     },
 });
