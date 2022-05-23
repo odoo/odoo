@@ -689,6 +689,7 @@ odoo.define('web.OwlCompatibility', function (require) {
                     cb();
                 }
             });
+            this.node.status = 1;
             this.status = "mounted";
         }
 
