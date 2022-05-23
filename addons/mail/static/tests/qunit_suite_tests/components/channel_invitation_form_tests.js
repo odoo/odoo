@@ -123,5 +123,42 @@ QUnit.test('should be able to create a new group chat from an existing chat', as
     );
 });
 
+QUnit.test('Invitation form should display channel group restriction', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
+    const resGroupId1 = pyEnv['res.groups'].create({
+        name: "testGroup",
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_last_seen_partner_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+        ],
+        channel_type: 'channel',
+        public: 'groups',
+        group_public_id: resGroupId1,
+    });
+    const { click, openDiscuss } = await start({
+        discuss: {
+            context: {
+                active_id: mailChannelId1,
+            },
+        },
+    });
+    await openDiscuss();
+
+    await click(`.o_ThreadViewTopbar_inviteButton`);
+    assert.containsOnce(
+        document.body,
+        '.o_ChannelInvitationForm_accessRestrictedToGroup',
+        "should display the channel restriction warning"
+    );
+});
+
 });
 });

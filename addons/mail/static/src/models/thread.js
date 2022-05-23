@@ -41,6 +41,9 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
+            if ('authorizedGroupFullName' in data) {
+                data2.authorizedGroupFullName = data.authorizedGroupFullName;
+            }
             if ('avatarCacheKey' in data) {
                 data2.avatarCacheKey = data.avatarCacheKey;
             }
@@ -1814,6 +1817,7 @@ registerModel({
         attachments: many('Attachment', {
             inverse: 'threads',
         }),
+        authorizedGroupFullName: attr(),
         /**
          * Cache key to force a reload of the avatar when avatar is changed.
          * It only makes sense for channels.
