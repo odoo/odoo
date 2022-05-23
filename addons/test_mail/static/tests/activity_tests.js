@@ -7,13 +7,12 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import testUtils from 'web.test_utils';
 import domUtils from 'web.dom';
 
-import { getFixture, legacyExtraNextTick, patchWithCleanup, click } from "@web/../tests/helpers/utils";
+import { legacyExtraNextTick, patchWithCleanup, click } from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from '@web/session';
 
 let serverData;
 let pyEnv;
-let target;
 
 QUnit.module('test_mail', {}, function () {
 QUnit.module('activity view', {
@@ -77,7 +76,6 @@ QUnit.module('activity view', {
                 'mail.test.activity,false,search': '<search/>',
             },
         };
-        target = getFixture();
     }
 });
 
@@ -107,7 +105,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
             "should do a do_action with correct parameters");
             event.data.options.on_close();
     };
-    var { target } = await start({
+    await start({
         View: ActivityView,
         hasView: true,
         model: 'mail.test.activity',
@@ -122,7 +120,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
             do_action: actionServiceInterceptor,
         },
     });
-    const $activity = $(target);
+    const $activity = $(document);
 
     assert.containsOnce($activity, 'table',
         'should have a table');
@@ -163,7 +161,7 @@ QUnit.test('activity view: no content rendering', async function (assert) {
     // reset incompatible setup
     pyEnv['mail.activity.type'].unlink(pyEnv['mail.activity.type'].search([]));
 
-    var { target } = await start({
+    await start({
         hasView: true,
         View: ActivityView,
         model: 'mail.test.activity',
@@ -175,7 +173,7 @@ QUnit.test('activity view: no content rendering', async function (assert) {
                 '</templates>' +
             '</activity>',
     });
-    const $activity = $(target);
+    const $activity = $(document);
 
     assert.containsOnce($activity, '.o_view_nocontent',
         "should display the no content helper");
@@ -189,7 +187,7 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
 
     const mailTestActivityIds = pyEnv['mail.test.activity'].search([]);
     const mailTemplateIds = pyEnv['mail.template'].search([]);
-    var { target } = await start({
+    await start({
         hasView: true,
         View: ActivityView,
         model: 'mail.test.activity',
@@ -208,7 +206,7 @@ QUnit.test('activity view: batch send mail on activity', async function (assert)
             return this._super.apply(this, arguments);
         },
     });
-    const $activity = $(target);
+    const $activity = $(document);
     assert.notOk($activity.find('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show').length,
         'dropdown shouldn\'t be displayed');
 
@@ -288,8 +286,8 @@ QUnit.test('activity view: activity widget', async function (assert) {
         },
     };
 
-    var { target } = await start(params);
-    const activity = $(target);
+    await start(params);
+    const activity = $(document);
     var today = activity.find('table tbody tr:first td:nth-child(2).today');
     var dropdown = today.find('.dropdown-menu.o_activity');
 
@@ -354,17 +352,17 @@ QUnit.test("activity view: no group_by_menu and no comparison_menu", async funct
     await doAction(webClient, 1);
 
     assert.containsN(
-        target,
+        document.body,
         ".o_search_options .dropdown button:visible",
         2,
         "only two elements should be available in view search"
     );
     assert.isVisible(
-        target.querySelector(".o_search_options .dropdown.o_filter_menu > button"),
+        document.querySelector(".o_search_options .dropdown.o_filter_menu > button"),
         "filter should be available in view search"
     );
     assert.isVisible(
-        target.querySelector(".o_search_options .dropdown.o_favorite_menu > button"),
+        document.querySelector(".o_search_options .dropdown.o_favorite_menu > button"),
         "favorites should be available in view search"
     );
 });
@@ -394,7 +392,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
                 "should execute an action with correct params");
             ev.data.options.on_close();
     };
-    var { target } = await start({
+    await start({
         hasView: true,
         View: ActivityView,
         model: 'mail.test.activity',
@@ -419,7 +417,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
             do_action: actionServiceInterceptor,
         },
     });
-    const $activity = $(target);
+    const $activity = $(document);
 
     assert.containsOnce($activity, 'table tfoot tr .o_record_selector',
         'should contain search more selector to choose the record to schedule an activity for it');
@@ -465,7 +463,7 @@ QUnit.test("Activity view: discard an activity creation dialog", async function 
     await doAction(webClient, 1);
 
     await testUtils.dom.click(
-        target.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
+        document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
     );
     await legacyExtraNextTick();
     assert.containsOnce($, ".modal.o_technical_modal", "Activity Modal should be opened");
@@ -509,10 +507,10 @@ QUnit.test('Activity view: many2one_avatar_user widget in activity view', async 
     await doAction(webClient, 1);
 
     await legacyExtraNextTick();
-    assert.containsN(target, '.o_m2o_avatar', 2);
-    assert.containsOnce(target, `tr[data-res-id=${mailTestActivityId1}] .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`,
+    assert.containsN(document.body, '.o_m2o_avatar', 2);
+    assert.containsOnce(document.body, `tr[data-res-id=${mailTestActivityId1}] .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`,
         "should have m2o avatar image");
-    assert.containsNone(target, '.o_m2o_avatar > span',
+    assert.containsNone(document.body, '.o_m2o_avatar > span',
         "should not have text on many2one_avatar_user if onlyImage node option is passed");
 });
 
@@ -584,7 +582,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     ])
 
     // click on "Schedule activity"
-    await click(target.querySelector(".o_activity_view .o_record_selector"));
+    await click(document.querySelector(".o_activity_view .o_record_selector"));
 
     assert.verifySteps([
         '[[false,"list"],[false,"search"]]',
@@ -604,7 +602,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     ])
 
     // click on "Schedule activity"
-    await click(target.querySelector(".o_activity_view .o_record_selector"));
+    await click(document.querySelector(".o_activity_view .o_record_selector"));
 
     assert.verifySteps([
         '[[false,"list"],[1,"search"]]',
@@ -628,28 +626,28 @@ QUnit.test('Activity view: apply progressbar filter', async function (assert) {
 
     await doAction(webClient, 1);
 
-    assert.containsNone(target.querySelector('.o_activity_view thead'),
+    assert.containsNone(document.querySelector('.o_activity_view thead'),
         '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
         "should not have active filter");
-    assert.containsNone(target.querySelector('.o_activity_view tbody'),
+    assert.containsNone(document.querySelector('.o_activity_view tbody'),
         '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
         "should not have active filter");
-    assert.strictEqual(target.querySelector('.o_activity_view tbody .o_activity_record').textContent,
+    assert.strictEqual(document.querySelector('.o_activity_view tbody .o_activity_record').textContent,
         'Office planning', "'Office planning' should be first record");
-    assert.containsOnce(target.querySelector('.o_activity_view tbody'), '.planned',
+    assert.containsOnce(document.querySelector('.o_activity_view tbody'), '.planned',
         "other records should be available");
 
-    await testUtils.dom.click(target.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="planned"]'));
-    assert.containsOnce(target.querySelector('.o_activity_view thead'), '.o_activity_filter_planned',
+    await testUtils.dom.click(document.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="planned"]'));
+    assert.containsOnce(document.querySelector('.o_activity_view thead'), '.o_activity_filter_planned',
         "planned should be active filter");
-    assert.containsN(target.querySelector('.o_activity_view tbody'), '.o_activity_filter_planned', 5,
+    assert.containsN(document.querySelector('.o_activity_view tbody'), '.o_activity_filter_planned', 5,
         "planned should be active filter");
-    assert.strictEqual(target.querySelector('.o_activity_view tbody .o_activity_record').textContent,
+    assert.strictEqual(document.querySelector('.o_activity_view tbody .o_activity_record').textContent,
         'Meeting Room Furnitures', "'Office planning' should be first record");
-    const tr = target.querySelectorAll('.o_activity_view tbody tr')[1];
+    const tr = document.querySelectorAll('.o_activity_view tbody tr')[1];
     assert.hasClass(tr.querySelectorAll('td')[1], 'o_activity_empty_cell',
         "other records should be hidden");
-    assert.containsNone(target.querySelector('.o_activity_view tbody'), 'planned',
+    assert.containsNone(document.querySelector('.o_activity_view tbody'), 'planned',
         "other records should be hidden");
 });
 

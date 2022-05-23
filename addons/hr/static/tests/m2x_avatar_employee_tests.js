@@ -40,7 +40,7 @@ QUnit.module('hr', {}, function () {
             { employee_id: hrEmployeePublicId2 },
             { employee_id: hrEmployeePublicId1 },
         ]);
-        const { target: list } = await start({
+        await start({
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.employee',
@@ -53,13 +53,13 @@ QUnit.module('hr', {}, function () {
             },
         });
 
-        assert.strictEqual(list.querySelector('.o_data_cell span').innerText, 'Mario');
-        assert.strictEqual(list.querySelectorAll('.o_data_cell span')[1].innerText, 'Luigi');
-        assert.strictEqual(list.querySelectorAll('.o_data_cell span')[2].innerText, 'Mario');
+        assert.strictEqual(document.querySelector('.o_data_cell span').innerText, 'Mario');
+        assert.strictEqual(document.querySelectorAll('.o_data_cell span')[1].innerText, 'Luigi');
+        assert.strictEqual(document.querySelectorAll('.o_data_cell span')[2].innerText, 'Mario');
 
         // click on first employee
         await afterNextRender(() =>
-            dom.click(list.querySelector('.o_data_cell .o_m2o_avatar > img'))
+            dom.click(document.querySelector('.o_data_cell .o_m2o_avatar > img'))
         );
         assert.verifySteps(
             [`read hr.employee.public ${hrEmployeePublicId1}`],
@@ -78,7 +78,7 @@ QUnit.module('hr', {}, function () {
 
         // click on second employee
         await afterNextRender(() =>
-            dom.click(list.querySelectorAll('.o_data_cell .o_m2o_avatar > img')[1]
+            dom.click(document.querySelectorAll('.o_data_cell .o_m2o_avatar > img')[1]
         ));
         assert.verifySteps(
             [`read hr.employee.public ${hrEmployeePublicId2}`],
@@ -98,7 +98,7 @@ QUnit.module('hr', {}, function () {
 
         // click on third employee (same as first)
         await afterNextRender(() =>
-            dom.click(list.querySelectorAll('.o_data_cell .o_m2o_avatar > img')[2])
+            dom.click(document.querySelectorAll('.o_data_cell .o_m2o_avatar > img')[2])
         );
         assert.verifySteps(
             [],
@@ -120,7 +120,7 @@ QUnit.module('hr', {}, function () {
         const resUsersId1 = pyEnv['res.users'].create({ partner_id: resPartnerId1 });
         const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ user_id: resUsersId1, user_partner_id: resPartnerId1 });
         pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1, employee_ids: [hrEmployeePublicId1] });
-        const { target: kanban } = await start({
+        await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.employee',
@@ -137,9 +137,9 @@ QUnit.module('hr', {}, function () {
                 </kanban>`,
         });
 
-        assert.strictEqual(kanban.querySelector('.o_kanban_record').innerText.trim(), '');
-        assert.containsOnce(kanban, '.o_m2o_avatar');
-        assert.strictEqual(kanban.querySelector('.o_m2o_avatar > img').getAttribute('data-src'), `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`);
+        assert.strictEqual(document.querySelector('.o_kanban_record').innerText.trim(), '');
+        assert.containsOnce(document.body, '.o_m2o_avatar');
+        assert.strictEqual(document.querySelector('.o_m2o_avatar > img').getAttribute('data-src'), `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`);
     });
 
     QUnit.test('many2one_avatar_employee: click on an employee not associated with a user', async function (assert) {
@@ -148,7 +148,7 @@ QUnit.module('hr', {}, function () {
         const pyEnv = await startServer();
         const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ name: 'Mario' });
         const m2xHrAvatarUserId1 = pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1 });
-        const { target: form, widget } = await start({
+        const { widget } = await start({
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.employee',
@@ -183,9 +183,9 @@ QUnit.module('hr', {}, function () {
             }
         }, true);
 
-        assert.strictEqual(form.querySelector('.o_field_widget[name=employee_id]').innerText.trim(), 'Mario');
+        assert.strictEqual(document.querySelector('.o_field_widget[name=employee_id]').innerText.trim(), 'Mario');
 
-        await dom.click(form.querySelector('.o_m2o_avatar > img'));
+        await dom.click(document.querySelector('.o_m2o_avatar > img'));
 
         assert.verifySteps([
             `read m2x.avatar.employee ${m2xHrAvatarUserId1}`,
@@ -206,7 +206,7 @@ QUnit.module('hr', {}, function () {
         const m2xAvatarEmployeeId1 = pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        const { target: form } = await start({
+        await start({
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.employee',
@@ -221,14 +221,14 @@ QUnit.module('hr', {}, function () {
             res_id: m2xAvatarEmployeeId1,
         });
 
-        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
-        assert.strictEqual(form.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(form.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
-        await dom.click(form.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read m2x.avatar.employee ${m2xAvatarEmployeeId1}`,
@@ -261,7 +261,7 @@ QUnit.module('hr', {}, function () {
         pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        const { target: list } = await start({
+        await start({
             hasView: true,
             View: ListView,
             model: 'm2x.avatar.employee',
@@ -274,12 +274,12 @@ QUnit.module('hr', {}, function () {
             },
         });
 
-        assert.containsN(list, '.o_data_cell:first .o_field_many2manytags > span', 2,
+        assert.containsN(document.body, '.o_data_cell:first .o_field_many2manytags > span', 2,
             "should have two avatar");
 
         // click on first employee badge
         await afterNextRender(() =>
-            dom.click(list.querySelector('.o_data_cell .o_m2m_avatar'))
+            dom.click(document.querySelector('.o_data_cell .o_m2m_avatar'))
         );
         assert.verifySteps(
             [`read hr.employee.public ${hrEmployeePublicId1},${hrEmployeePublicId2}`, `read hr.employee.public ${hrEmployeePublicId1}`],
@@ -298,7 +298,7 @@ QUnit.module('hr', {}, function () {
 
         // click on second employee
         await afterNextRender(() =>
-            dom.click(list.querySelectorAll('.o_data_cell .o_m2m_avatar')[1])
+            dom.click(document.querySelectorAll('.o_data_cell .o_m2m_avatar')[1])
         );
         assert.verifySteps(
             [`read hr.employee.public ${hrEmployeePublicId2}`],
@@ -330,7 +330,7 @@ QUnit.module('hr', {}, function () {
         pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        const { target: kanban } = await start({
+        await start({
             hasView: true,
             View: KanbanView,
             model: 'm2x.avatar.employee',
@@ -358,17 +358,17 @@ QUnit.module('hr', {}, function () {
             },
         });
 
-        assert.containsN(kanban, '.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar', 2,
+        assert.containsN(document.body, '.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar', 2,
             "should have 2 avatar images");
-        assert.strictEqual(kanban.querySelector('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
-        assert.strictEqual(kanban.querySelectorAll('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar')[1].getAttribute('data-src'),
+        assert.strictEqual(document.querySelectorAll('.o_kanban_record .o_field_many2manytags img.o_m2m_avatar')[1].getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId2}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(kanban.querySelector('.o_kanban_record .o_m2m_avatar'));
-        await dom.click(kanban.querySelectorAll('.o_kanban_record .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_kanban_record .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_kanban_record .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read hr.employee.public ${hrEmployeePublicId1},${hrEmployeePublicId2}`,
@@ -390,7 +390,7 @@ QUnit.module('hr', {}, function () {
         const m2xAvatarEmployeeId1 = pyEnv['m2x.avatar.employee'].create(
             { employee_ids: [hrEmployeePublicId1, hrEmployeePublicId2] },
         );
-        const { target: form, widget } = await start({
+        const { widget } = await start({
             hasView: true,
             View: FormView,
             model: 'm2x.avatar.employee',
@@ -425,14 +425,14 @@ QUnit.module('hr', {}, function () {
             }
         }, true);
 
-        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(document.body, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
-        assert.strictEqual(form.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
+        assert.strictEqual(document.querySelector('.o_field_many2manytags.avatar.o_field_widget .badge img').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");
 
-        await dom.click(form.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
-        await dom.click(form.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
+        await dom.click(document.querySelector('.o_field_many2manytags.avatar .badge .o_m2m_avatar'));
+        await dom.click(document.querySelectorAll('.o_field_many2manytags.avatar .badge .o_m2m_avatar')[1]);
 
         assert.verifySteps([
             `read m2x.avatar.employee ${hrEmployeePublicId1}`,

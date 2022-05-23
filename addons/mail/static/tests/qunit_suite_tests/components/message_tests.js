@@ -4,7 +4,6 @@ import { insert, insertAndReplace, replace } from '@mail/model/model_field_comma
 import { makeDeferred } from '@mail/utils/deferred';
 import {
     afterNextRender,
-    createRootMessagingComponent,
     nextAnimationFrame,
     start,
     startServer,
@@ -496,7 +495,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
 QUnit.test('do not show messaging seen indicator if before last seen by all message', async function (assert) {
     assert.expect(3);
 
-    const { env, messaging, target } = await start();
+    const { createRootMessagingComponent, messaging } = await start();
     const currentPartner = messaging.models['Partner'].insert({
         id: messaging.currentPartner.id,
         display_name: "Demo User",
@@ -538,9 +537,8 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
             thread: replace(thread),
         },
     ]);
-     await createRootMessagingComponent(env, "Message", {
-        props: { record: threadViewer.threadView.messageViews[0] },
-        target,
+     await createRootMessagingComponent("Message", {
+        record: threadViewer.threadView.messageViews[0],
     });
 
     assert.containsOnce(
