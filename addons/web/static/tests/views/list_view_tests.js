@@ -1873,7 +1873,7 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable list view: click on last element after creation empty new line",
         async function (assert) {
             serverData.models.bar = {
