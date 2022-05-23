@@ -13,7 +13,10 @@ class MailShortcode(models.Model):
 
     _name = 'mail.shortcode'
     _description = 'Canned Response / Shortcode'
-    source = fields.Char('Shortcut', required=True, index='trigram', help="The shortcut which must be replaced in the Chat Messages")
-    substitution = fields.Text('Substitution', required=True, help="The escaped html code replacing the shortcut")
+    source = fields.Char('Shortcut', required=True, index='trigram',
+        help="Shortcut that will automatically be substituted with longer content in your messages."
+             " Type ':' followed by the name of your shortcut (e.g. :hello) to use in your messages.")
+    substitution = fields.Text('Substitution', required=True,
+        help="Content that will automatically replace the shortcut of your choosing. This content can still be adapted before sending your message.")
     description = fields.Char('Description')
     message_ids = fields.Many2one('mail.message', string="Messages", store=False)

@@ -941,12 +941,10 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        required=True, domain="[('company_id', '=', company_id)]",
-        help="Define the schedule of resource")
+        required=True, domain="[('company_id', '=', company_id)]")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
-        help="This field is used in order to define in which timezone the resources will work.")
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
 
     _sql_constraints = [
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
