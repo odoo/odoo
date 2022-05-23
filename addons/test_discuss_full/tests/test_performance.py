@@ -6,17 +6,18 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command
 from odoo.tests.common import users, tagged, TransactionCase, warmup
-from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(TransactionCase):
     def setUp(self):
         super().setUp()
+        self.group_user = self.env.ref('base.group_user')
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
-                'groups_id': [Command.link(self.env.ref('base.group_user').id)],
+                'groups_id': [Command.link(self.group_user.id)],
                 'login': 'emp',
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',
@@ -100,7 +101,7 @@ class TestDiscussFullPerformance(TransactionCase):
         self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=82):
+        with self.assertQueryCount(emp=83):
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
@@ -108,6 +109,7 @@ class TestDiscussFullPerformance(TransactionCase):
             'starred_counter': 1,
             'channels': [
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_general._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': user_root.id,
@@ -122,7 +124,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'is_pinned': True,
                     'last_interest_dt': channel_general.channel_last_seen_partner_ids.filtered(lambda p: p.partner_id == self.users[0].partner_id).last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                     'last_message_id': next(res['message_id'] for res in channel_general._channel_last_message_ids()),
-                    'memberCount': len(self.env.ref('base.group_user').users | user_root),
+                    'memberCount': len(self.group_user.users | user_root),
                     'message_needaction_counter': 0,
                     'message_unread_counter': 5,
                     'name': 'general',
@@ -133,6 +135,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_general.uuid,
                 },
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_channel_public_1._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -158,6 +161,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_channel_public_1.uuid,
                 },
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_channel_public_2._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -183,6 +187,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_channel_public_2.uuid,
                 },
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_channel_group_1._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -208,6 +213,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_channel_group_1.uuid,
                 },
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_channel_group_2._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -233,6 +239,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_channel_group_2.uuid,
                 },
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_channel_private_1._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -258,6 +265,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_channel_private_1.uuid,
                 },
                 {
+                    'authorizedGroupFullName': self.group_user.full_name,
                     'avatarCacheKey': channel_channel_private_2._get_avatar_cache_key(),
                     'channel_type': 'channel',
                     'create_uid': self.env.user.id,
@@ -283,6 +291,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_channel_private_2.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_group_1._get_avatar_cache_key(),
                     'channel_type': 'group',
                     'create_uid': self.env.user.id,
@@ -347,6 +356,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_group_1.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_chat_1._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
@@ -411,6 +421,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_chat_1.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_chat_2._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
@@ -475,6 +486,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_chat_2.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_chat_3._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
@@ -539,6 +551,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_chat_3.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_chat_4._get_avatar_cache_key(),
                     'channel_type': 'chat',
                     'create_uid': self.env.user.id,
@@ -603,6 +616,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_chat_4.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_livechat_1._get_avatar_cache_key(),
                     'channel_type': 'livechat',
                     'create_uid': self.env.user.id,
@@ -667,6 +681,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': channel_livechat_1.uuid,
                 },
                 {
+                    'authorizedGroupFullName': False,
                     'avatarCacheKey': channel_livechat_2._get_avatar_cache_key(),
                     'channel_type': 'livechat',
                     'create_uid': self.env.ref('base.public_user').id,
