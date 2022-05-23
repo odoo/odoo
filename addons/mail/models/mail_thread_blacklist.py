@@ -126,7 +126,7 @@ class MailBlackListMixin(models.AbstractModel):
             raise AccessError(_("You do not have the access right to unblacklist emails. Please contact your administrator."))
 
     @api.model
-    def _routing_detect_loop_from_records_domain(self, email_from_normalized):
+    def _detect_loop_sender_domain(self, email_from_normalized):
         """Return the domain to be used to detect duplicated records created by alias.
 
         :param email_from_normalized: FROM of the incoming email, normalized
