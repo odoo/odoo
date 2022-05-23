@@ -72,7 +72,12 @@
                 </tr>
                 <tr>
                     <th>XML ID:</th>
-                    <td><t t-esc="state.xmlid or '/'"/></td>
+                    <td>
+                        <t t-esc="state.xmlid or '/'"/>
+                        <t t-if="!state.xmlid">
+                            <a t-on-click="onClickCreateXmlid"> (create)</a>
+                        </t>
+                    </td>
                 </tr>
                 <tr>
                     <th>No Update:</th>
