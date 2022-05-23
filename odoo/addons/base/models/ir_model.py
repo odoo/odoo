@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 import logging
+import random
 import re
 import psycopg2
 from ast import literal_eval
@@ -1958,6 +1959,13 @@ class IrModelData(models.Model):
         if raise_on_access_error:
             raise AccessError(_('Not enough access rights on the external ID:') + ' %s.%s' % (module, xml_id))
         return model, False
+
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        rand = "%04x" % random.getrandbits(16)
+        default = dict(default or {}, name="%s_%s" % (self.name, rand))
+        return super().copy(default)
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
