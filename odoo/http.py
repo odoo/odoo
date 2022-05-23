@@ -283,7 +283,10 @@ def db_list(force=False, host=None):
     :returns: the list of available databases
     :rtype: List[str]
     """
-    dbs = odoo.service.db.list_dbs(force)
+    try:
+        dbs = odoo.service.db.list_dbs(force)
+    except psycopg2.OperationalError:
+        return []
     return db_filter(dbs, host)
 
 def db_filter(dbs, host=None):
