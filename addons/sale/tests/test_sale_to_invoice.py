@@ -475,3 +475,29 @@ class TestSaleToInvoice(TestSaleCommon):
 
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])
+
+    def test_invoice_after_product_return_price_not_default(self):
+        so = self.env['sale.order'].create({
+            'name': 'Sale order',
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'name': self.product_a.name, 'product_id': self.product_a.id, 'product_uom_qty': 1, 'price_unit': 123}),
+            ]
+        })
+        self._check_order_search(so, [('invoice_ids', '=', False)], so)
+        so.action_confirm()
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [so.id],
+            'active_id': so.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        invoicing_wizard = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
+        invoicing_wizard.create_invoices()
+        self.assertTrue(so.invoice_ids, "The invoice was not created")
+        # simulating return by changing product_uom_qty to 0
+        so.order_line.product_uom_qty = 0
+        # checking if the price_unit is the same
+        self.assertEqual(so.order_line.price_unit, 123,
+                         "The unit price should be the same as the one used to create the sales order line")
