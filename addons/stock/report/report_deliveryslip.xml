@@ -33,7 +33,7 @@
                                 <span><strong>Customer Address:</strong></span>
                             </div>
                             <div t-if="partner" name="partner_header">
-                                <div t-field="partner.self"
+                                <div t-field="partner.commercial_partner_id"
                                      t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
                             </div>
                         </div>
