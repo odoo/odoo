@@ -479,6 +479,13 @@ registerModel({
          * @private
          * @return {boolean}
          */
+        _computeHasDropZone() {
+            return true;
+        },
+        /**
+         * @private
+         * @return {boolean}
+         */
         _computeHasSuggestions() {
             return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
         },
@@ -870,6 +877,9 @@ registerModel({
          */
         extraSuggestedRecords: many2many('mail.model', {
             compute: '_computeExtraSuggestedRecords',
+        }),
+        hasDropZone: attr({
+            compute: '_computeHasDropZone',
         }),
         hasFocus: attr({
             default: false,
