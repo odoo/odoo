@@ -107,6 +107,32 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     }
 });
 
+// Options for the s_hr snippet.
+options.registry.hr_options = options.Class.extend({
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const res = await this._super(...arguments);
+        if (!res && methodName === 'selectClass' && params.possibleValues.includes('mx-auto')) {
+            const styles = getComputedStyle(this.$target[0]);
+            // We suppose any margin is equivalent to 'auto' in this context
+            if (+styles.marginLeft.replace('px', '')) {
+                return +styles.marginRight.replace('px', '') ? 'mx-auto' : 'ml-auto';
+            } else {
+                return styles.direction === 'rtl' ? 'ml-auto' : 'mr-auto'; // Default to text direction.
+            }
+        } else if (methodName === 'selectStyle' && params.cssProperty === 'width' && (!res || res.endsWith('px'))) {
+            const styles = getComputedStyle(this.$target[0]);
+            const parentStyles = window.getComputedStyle(this.$target[0].parentElement);
+            const ratio = 100 * +styles.width.replace('px', '').trim() / +parentStyles.width.replace('px', '').trim();
+            return Math.round(ratio) + '%';
+        } else {
+            return res;
+        }
+    }
+});
+
 options.registry.ImageTools.include({
 
     //--------------------------------------------------------------------------
