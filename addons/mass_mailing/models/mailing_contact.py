@@ -18,8 +18,10 @@ class MassMailingContactListRel(models.Model):
 
     contact_id = fields.Many2one('mailing.contact', string='Contact', ondelete='cascade', required=True)
     list_id = fields.Many2one('mailing.list', string='Mailing List', ondelete='cascade', required=True)
-    opt_out = fields.Boolean(string='Opt Out',
-                             help='The contact has chosen not to receive mails anymore from this list', default=False)
+    opt_out = fields.Boolean(
+        string='Opt Out',
+        default=False,
+        help='The contact has chosen not to receive mails anymore from this list')
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
     message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
     is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
@@ -58,12 +60,12 @@ class MassMailingContact(models.Model):
     _order = 'email'
     _mailing_enabled = True
 
-    def default_get(self, fields):
+    def default_get(self, fields_list):
         """ When coming from a mailing list we may have a default_list_ids context
         key. We should use it to create subscription_list_ids default value that
         are displayed to the user as list_ids is not displayed on form view. """
-        res = super(MassMailingContact, self).default_get(fields)
-        if 'subscription_list_ids' in fields and not res.get('subscription_list_ids'):
+        res = super(MassMailingContact, self).default_get(fields_list)
+        if 'subscription_list_ids' in fields_list and not res.get('subscription_list_ids'):
             list_ids = self.env.context.get('default_list_ids')
             if 'default_list_ids' not in res and list_ids and isinstance(list_ids, (list, tuple)):
                 res['subscription_list_ids'] = [
@@ -77,12 +79,15 @@ class MassMailingContact(models.Model):
     list_ids = fields.Many2many(
         'mailing.list', 'mailing_contact_list_rel',
         'contact_id', 'list_id', string='Mailing Lists')
-    subscription_list_ids = fields.One2many('mailing.contact.subscription', 'contact_id', string='Subscription Information')
+    subscription_list_ids = fields.One2many(
+        'mailing.contact.subscription', 'contact_id', string='Subscription Information')
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
-    opt_out = fields.Boolean('Opt Out', compute='_compute_opt_out', search='_search_opt_out',
-                             help='Opt out flag for a specific mailing list.'
-                                  'This field should not be used in a view without a unique and active mailing list context.')
+    opt_out = fields.Boolean(
+        'Opt Out',
+        compute='_compute_opt_out', search='_search_opt_out',
+        help='Opt out flag for a specific mailing list. '
+             'This field should not be used in a view without a unique and active mailing list context.')
 
     @api.model
     def _search_opt_out(self, operator, value):
@@ -97,8 +102,7 @@ class MassMailingContact(models.Model):
             [active_list_id] = self._context['default_list_ids']
             contacts = self.env['mailing.contact.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
-        else:
-            return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
+        return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
 
     @api.depends('subscription_list_ids')
     @api.depends_context('default_list_ids')
