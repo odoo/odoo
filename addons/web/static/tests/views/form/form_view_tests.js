@@ -29,6 +29,7 @@ import { scrollerService } from "@web/core/scroller_service";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
+const widgetRegistry = registry.category("view_widgets");
 
 // WOWL remove after adapting tests
 let createView,
@@ -37,8 +38,6 @@ let createView,
     _t,
     ViewDialogs,
     Widget,
-    widgetRegistry,
-    widgetRegistryOwl,
     BasicModel,
     RamStorage,
     AbstractStorageService,
@@ -8912,42 +8911,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_statusbar .btn-secondary"));
     });
 
-    QUnit.skipWOWL("basic support for widgets", async function (assert) {
-        // This test could be removed as soon as we drop the support of legacy widgets (see test
-        // below, which is a duplicate of this one, but with an Owl Component instead).
-        assert.expect(1);
-
-        var MyWidget = Widget.extend({
-            init: function (parent, dataPoint) {
-                this.data = dataPoint.data;
-            },
-            start: function () {
-                this.$el.text(JSON.stringify(this.data));
-            },
-        });
-        widgetRegistry.add("test", MyWidget);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<field name="foo"/>' +
-                '<field name="bar"/>' +
-                '<widget name="test"/>' +
-                "</form>",
-        });
-
-        assert.strictEqual(
-            target.querySelector(".o_widget").innerText,
-            '{"foo":"My little Foo Value","bar":false}',
-            "widget should have been instantiated"
-        );
-        delete widgetRegistry.map.test;
-    });
-
-    QUnit.skipWOWL("basic support for widgets (being Owl Components)", async function (assert) {
+    QUnit.test("basic support for widgets", async function (assert) {
         assert.expect(1);
 
         class MyComponent extends owl.Component {
@@ -8956,17 +8920,17 @@ QUnit.module("Views", (hooks) => {
             }
         }
         MyComponent.template = owl.xml`<div t-esc="value"/>`;
-        widgetRegistryOwl.add("test", MyComponent);
+        widgetRegistry.add("test_widget", MyComponent);
 
         await makeView({
             type: "form",
-            resModel: "partner",
             serverData,
+            resModel: "partner",
             arch: `
             <form>
                 <field name="foo"/>
                 <field name="bar"/>
-                <widget name="test"/>
+                <widget name="test_widget"/>
             </form>`,
         });
 
@@ -8974,84 +8938,84 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_widget").innerText,
             '{"foo":"My little Foo Value","bar":false}'
         );
-        delete widgetRegistryOwl.map.test;
+
+        widgetRegistry.remove("test_widget");
     });
 
-    QUnit.skipWOWL(
-        "attach document widget calls action with attachment ids",
-        async function (assert) {
-            assert.expect(1);
+    QUnit.test("attach document widget calls action with attachment ids", async function (assert) {
+        assert.expect(1);
 
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                mockRPC(route, args) {
-                    if (args.method === "my_action") {
-                        assert.deepEqual(args.kwargs.attachment_ids, [5, 2]);
-                        return Promise.resolve();
-                    }
-                    return this._super.apply(this, arguments);
-                },
-                arch: "<form>" + '<widget name="attach_document" action="my_action"/>' + "</form>",
-            });
-
-            var onFileLoadedEventName = target.querySelector(".o_form_binary_form").attr("target");
-            // trigger _onFileLoaded function
-            $(window).trigger(onFileLoadedEventName, [{ id: 5 }, { id: 2 }]);
-        }
-    );
-
-    QUnit.skipWOWL("support header button as widgets on form statusbar", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<header>" +
-                '<widget name="attach_document" string="Attach document"/>' +
-                "</header>" +
-                "</form>",
+            mockRPC(route, args) {
+                if (args.method === "my_action") {
+                    assert.deepEqual(args.kwargs.attachment_ids, [5, 2]);
+                    return true;
+                }
+            },
+            arch: `<form><widget name="attach_document" action="my_action"/></form>`,
+        });
+
+        var onFileLoadedEventName = target.querySelector(".o_form_binary_form").target;
+        // trigger _onFileLoaded function
+        // TODO wowl remove line below when implem don't require jquery
+        $(window).trigger(onFileLoadedEventName, [{ id: 5 }, { id: 2 }]);
+        // await triggerEvent(window, null, onFileLoadedEventName, {
+        //     attachment_ids: [{ id: 5 }, { id: 2 }],
+        // });
+    });
+
+    QUnit.test("support header button as widgets on form statusbar", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
         });
 
         assert.containsOnce(target, "button.o_attachment_button");
         assert.strictEqual(
-            target.querySelector("span.o_attach_document").innerText.trim(),
-            "Attach document"
+            target.querySelector("span.o_attach_document").innerText.trim().toUpperCase(),
+            "Attach document".toUpperCase()
         );
     });
 
-    QUnit.skipWOWL("basic support for widgets", async function (assert) {
+    QUnit.test("basic support for widgets: onchange update", async function (assert) {
         assert.expect(1);
 
-        var MyWidget = Widget.extend({
-            init: function (parent, dataPoint) {
-                this.data = dataPoint.data;
-            },
-            start: function () {
-                this.$el.text(this.data.foo + "!");
-            },
-            updateState: function (dataPoint) {
-                this.$el.text(dataPoint.data.foo + "!");
-            },
-        });
-        widgetRegistry.add("test", MyWidget);
+        class MyWidget extends owl.Component {
+            setup() {
+                this.state = owl.useState({
+                    dataToDisplay: this.props.record.data.foo,
+                });
+                owl.useEffect(() => {
+                    this.state.dataToDisplay = this.props.record.data.foo + "!";
+                });
+            }
+        }
+        MyWidget.template = owl.xml`<t t-esc="state.dataToDisplay" />`;
+
+        widgetRegistry.add("test_widget", MyWidget);
 
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="foo"/>' + '<widget name="test"/>' + "</form>",
+            arch: `<form><field name="foo"/><widget name="test_widget"/></form>`,
         });
 
         await editInput(target, '.o_field_widget[name="foo"] input', "I am alive");
+        await nextTick();
+
         assert.strictEqual(
             target.querySelector(".o_widget").innerText,
             "I am alive!",
             "widget should have been updated"
         );
-        delete widgetRegistry.map.test;
+
+        widgetRegistry.remove("test_widget");
     });
 
     QUnit.test("bounce edit button in readonly mode", async function (assert) {
