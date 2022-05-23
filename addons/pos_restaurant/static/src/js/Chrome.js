@@ -53,6 +53,10 @@ odoo.define('pos_restaurant.chrome', function (require) {
                 }
             }
             _actionAfterIdle() {
+                // We also need to check if the action still need to be triggered
+                if (!this._shouldResetIdleTimer()) {
+                    return;
+                }
                 if (this.tempScreen.isShown) {
                     this.trigger('close-temp-screen');
                 }
