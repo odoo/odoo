@@ -30,11 +30,15 @@ class Mailing(models.Model):
     # otherwise 'sms_subject' will get the old helper from 'mass_mailing' module.
     # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
     # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
-    sms_subject = fields.Char('Title', help='For an email, the subject your recipients will see in their inbox.\n'
-                              'For an SMS, the internal title of the message.',
-                              related='subject', translate=False, readonly=False)
+    sms_subject = fields.Char(
+        'Title', related='subject',
+        readonly=False, translate=False,
+        help='For an email, the subject your recipients will see in their inbox.\n'
+             'For an SMS, the internal title of the message.')
     # sms options
-    body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
+    body_plaintext = fields.Text(
+        'SMS Body', compute='_compute_body_plaintext',
+        store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     sms_has_insufficient_credit = fields.Boolean(
         'Insufficient IAP credits', compute='_compute_sms_has_iap_failure',
@@ -47,7 +51,9 @@ class Mailing(models.Model):
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
     # A/B Testing
-    ab_testing_sms_winner_selection = fields.Selection(related="campaign_id.ab_testing_sms_winner_selection", default="clicks_ratio", readonly=False, copy=True)
+    ab_testing_sms_winner_selection = fields.Selection(
+        related="campaign_id.ab_testing_sms_winner_selection",
+        default="clicks_ratio", readonly=False, copy=True)
 
     @api.depends('mailing_type')
     def _compute_medium_id(self):
@@ -78,7 +84,7 @@ class Mailing(models.Model):
 
             trace_dict = dict.fromkeys(self.ids, {key: False for key in failures})
             for t in traces:
-                trace_dict[t['mass_mailing_id'][0]][t['failure_type']] =  t['__count'] and True or False
+                trace_dict[t['mass_mailing_id'][0]][t['failure_type']] = bool(t['__count'])
 
             for mail in self:
                 mail.sms_has_insufficient_credit = trace_dict[mail.id]['sms_credit']
