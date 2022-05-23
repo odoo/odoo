@@ -273,13 +273,6 @@ const Wysiwyg = Widget.extend({
             $(this.odooEditor.document.body).addClass('editor_enable');
             this.snippetsMenu = this._createSnippetsMenuInstance(options);
             await this._insertSnippetMenu();
-
-            this._onBeforeUnload = (event) => {
-                if (this.isDirty()) {
-                    event.returnValue = _t('This document is not saved!');
-                }
-            };
-            window.addEventListener('beforeunload', this._onBeforeUnload);
         }
         if (this.options.getContentEditableAreas) {
             $(this.options.getContentEditableAreas()).find('*').off('mousedown mouseup click');
@@ -677,7 +670,6 @@ const Wysiwyg = Widget.extend({
             window.removeEventListener('online', this._checkConnectionChange);
             window.removeEventListener('offline', this._checkConnectionChange);
         }
-        window.removeEventListener('beforeunload', this._onBeforeUnload);
         this._super();
     },
     /**
@@ -821,7 +813,6 @@ const Wysiwyg = Widget.extend({
         await this.saveModifiedImages(editables.length ? $(editables) : this.$editable);
         await this._saveViewBlocks();
 
-        window.removeEventListener('beforeunload', this._onBeforeUnload);
         if (reload) {
             window.location.reload();
         }
@@ -848,7 +839,6 @@ const Wysiwyg = Widget.extend({
             }
         }).then(function () {
             if (reload !== false) {
-                window.onbeforeunload = null;
                 return self._reload();
             }
         });
@@ -1947,9 +1937,7 @@ const Wysiwyg = Widget.extend({
                 });
             });
         });
-        return Promise.all(defs).then(function () {
-            window.onbeforeunload = null;
-        }).guardedCatch((failed) => {
+        return Promise.all(defs).guardedCatch((failed) => {
             // If there were errors, re-enable edition
             this.cancel(false);
         });

@@ -493,8 +493,10 @@ var FormController = BasicController.extend({
      *
      * @override
      */
-    _onBeforeUnload: function () {
-        this._urgentSave(this.handle);
+    _onBeforeUnload: function (event) {
+        if (this.isDirty()) {
+            event.returnValue = _t('You have unsaved changes');
+        }
     },
     /**
      * @private

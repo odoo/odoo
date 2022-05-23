@@ -101,11 +101,6 @@ const KnowledgeArticleFormController = FormController.extend({
         return Promise.resolve(true);
     },
 
-    /**
-     * @override
-     */
-    _urgentSave: function () {},
-
     commitAndSaveRecord: async function () {
         console.log('canBeRemoved (before): this.isDirty', this.isDirty(this.handle));
         await this.renderer.commitChanges(this.handle);

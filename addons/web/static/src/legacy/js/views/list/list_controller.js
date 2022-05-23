@@ -753,7 +753,6 @@ var ListController = BasicController.extend({
     _onBeforeUnload: function () {
         const recordId = this.renderer.getEditableRecordID();
         if (recordId) {
-            this._urgentSave(recordId);
         }
     },
     /**
