@@ -232,9 +232,6 @@ class Website(models.Model):
             'website_id': self._context.get('website_id'),
             'company_id': self.company_id.id,
         }
-        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
-            values['note'] = self.company_id.sale_note or ""
-
         return values
 
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
