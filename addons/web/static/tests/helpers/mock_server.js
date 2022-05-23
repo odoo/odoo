@@ -682,7 +682,7 @@ export class MockServer {
         const result = [];
         for (const r of records) {
             const isInDomain = this.evaluateDomain(domain, r);
-            if (isInDomain && (!str.length || r.display_name.includes(str))) {
+            if (isInDomain && (!str.length || (r.display_name && r.display_name.includes(str)))) {
                 result.push([r.id, r.display_name]);
             }
         }

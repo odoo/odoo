@@ -1416,12 +1416,19 @@ class DynamicList extends DataPoint {
             const dialogProps = {
                 confirm: async () => {
                     const resIds = validSelection.map((r) => r.resId);
-                    await this.model.orm.write(this.resModel, resIds, changes, this.context);
+                    try {
+                        await this.model.orm.write(this.resModel, resIds, changes, this.context);
+                        validSelection.forEach((record) => {
+                            record.selected = false;
+                        });
+                        await Promise.all(validSelection.map((record) => record.load()));
+                        record.switchMode("readonly");
+                    } catch (_) {
+                        record.discard();
+                    }
                     validSelection.forEach((record) => {
                         record.selected = false;
                     });
-                    await Promise.all(validSelection.map((record) => record.load()));
-                    record.switchMode("readonly");
                 },
                 cancel: () => {
                     record.discard();
@@ -1622,7 +1629,7 @@ export class DynamicRecordList extends DynamicList {
             this.model.useSampleModel = false;
             await this.load();
         }
-        await this.model.mutex.exec(() => newRecord.load());
+        await this.model.keepLast.add(this.model.mutex.exec(() => newRecord.load()));
         this.editedRecord = newRecord;
         this.onCreateRecord(newRecord);
         return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);

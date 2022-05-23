@@ -8559,7 +8559,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("multiple clicks on Add do not create invalid rows", async function (assert) {
+    QUnit.test("multiple clicks on Add do not create invalid rows", async function (assert) {
         assert.expect(2);
 
         serverData.models.foo.onchanges = {
@@ -9731,51 +9731,48 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "editable list view: multi edition server error handling",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("editable list view: multi edition server error handling", async function (assert) {
+        assert.expect(3);
 
-            await makeView({
-                type: "list",
-                resModel: "foo",
-                serverData,
-                arch: '<tree multi_edit="1">' + '<field name="foo" required="1"/>' + "</tree>",
-                mockRPC: function (route, args) {
-                    if (args.method === "write") {
-                        return Promise.reject();
-                    }
-                },
-            });
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree multi_edit="1">' + '<field name="foo" required="1"/>' + "</tree>",
+            mockRPC: function (route, args) {
+                if (args.method === "write") {
+                    return Promise.reject();
+                }
+            },
+        });
 
-            // select two records
-            const rows = target.querySelectorAll(".o_data_row");
-            await click(rows[0], ".o_list_record_selector input");
-            await click(rows[1], ".o_list_record_selector input");
+        // select two records
+        const rows = target.querySelectorAll(".o_data_row");
+        await click(rows[0], ".o_list_record_selector input");
+        await click(rows[1], ".o_list_record_selector input");
 
-            // edit a line and confirm
-            await click(rows[0].querySelector(".o_data_cell"));
-            await editInput(target, ".o_selected_row [name=foo] input", "abc");
-            await click(target, ".o_list_view");
-            await click(target, ".modal .btn-primary");
-            // Server error: if there was a crash manager, there would be an open error at this point...
-            assert.strictEqual(
-                $(target).find(".o_data_row:eq(0) .o_data_cell").text(),
-                "yop",
-                "first cell should have discarded any change"
-            );
-            assert.strictEqual(
-                $(target).find(".o_data_row:eq(1) .o_data_cell").text(),
-                "blip",
-                "second selected record should not have changed"
-            );
-            assert.containsNone(
-                target,
-                ".o_data_cell input.o_field_widget",
-                "no field should be editable anymore"
-            );
-        }
-    );
+        // edit a line and confirm
+        await click(rows[0].querySelector(".o_data_cell"));
+        await editInput(target, ".o_selected_row [name=foo] input", "abc");
+        await click(target, ".o_list_view");
+        await click(target, ".modal .btn-primary");
+        // Server error: if there was a crash manager, there would be an open error at this point...
+        assert.strictEqual(
+            $(target).find(".o_data_row:eq(0) .o_data_cell").text(),
+            "yop",
+            "first cell should have discarded any change"
+        );
+        assert.strictEqual(
+            $(target).find(".o_data_row:eq(1) .o_data_cell").text(),
+            "blip",
+            "second selected record should not have changed"
+        );
+        assert.containsNone(
+            target,
+            ".o_data_cell input.o_field_widget",
+            "no field should be editable anymore"
+        );
+    });
 
     QUnit.skipWOWL("editable readonly list view: navigation", async function (assert) {
         assert.expect(6);
@@ -10269,22 +10266,21 @@ QUnit.module("Views", (hooks) => {
 
             // focus and write something in the m2o
             await editInput(target, ".o_field_many2one input", "abcdef");
-            await triggerEvent(target, "input.o_searchview_input", "keydown", { key: "ArrowUp" });
 
-            await testUtils.nextTick();
+            await nextTick();
 
             // then simulate a mousedown outside
             target.querySelector('.o_field_widget[name="display_name"]').focus();
             await triggerEvent(target, '.o_field_widget[name="display_name"]', "mousedown");
-            await testUtils.nextTick();
+            await nextTick();
             assert.containsOnce(target, ".modal", "should ask confirmation to create a record");
 
             // trigger the mouseup and the click
-            target
-                .querySelector('.o_field_widget[name="display_name"]')
-                .trigger("mouseup")
-                .trigger("click");
-            await testUtils.nextTick();
+            await triggerEvents(target, '.o_field_widget[name="display_name"]', [
+                "mouseup",
+                "click",
+            ]);
+            await nextTick();
 
             assert.containsOnce(target, ".modal", "modal should still be displayed");
             assert.containsOnce(target, ".o_data_row", "the row should still be there");
