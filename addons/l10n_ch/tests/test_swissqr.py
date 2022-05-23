@@ -141,7 +141,7 @@ class TestSwissQR(AccountingTestCase):
         )
 
         expected_url = ("/report/barcode/?type=QR&value={}"
-                        "&width=256&height=256&quiet=1").format(payload)
+                        "&width=256&height=256&quiet=1&barLevel=M").format(payload)
 
         url = invoice.invoice_partner_bank_id.build_swiss_code_url(
             invoice.amount_residual,
