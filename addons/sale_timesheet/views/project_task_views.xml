@@ -94,6 +94,16 @@
                     </a>
                 </div> 
             </xpath>
+        </field>
+    </record>
+
+    <!-- We do a separate inheritance from the base view for the SO button to give the buttons a deterministic order using priorities -->
+    <record id="project_project_view_kanban_inherit_sale_timesheet_so_button" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.sale.timesheet.so.button</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                 <div t-if="record.allow_billable.raw_value and record.sale_order_id.raw_value and record.pricing_type.raw_value != 'task_rate'"
                     role="menuitem"
