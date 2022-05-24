@@ -117,6 +117,29 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
     def _onchange_partner_id(self):
         self.l10n_in_fiscal_position_id = self.partner_id.property_account_position_id
 
+    def action_l10n_in_edi_view_invoice(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
+        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = self.l10n_in_related_invoice_id.id
+        return action
+
+    def button_l10n_in_edi_create_invoice(self):
+        self.ensure_one()
+        invoice = self._l10n_in_create_invoice()
+        if invoice:
+            self.l10n_in_related_invoice_id = invoice.id
+            values = []
+            for move_line in self.move_ids_without_package:
+                invoice_line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == move_line.product_id)
+                if invoice_line.quantity != move_line.quantity_done:
+                    values.append((1, invoice_line.id, {'quantity': move_line.quantity_done}))
+            if values:
+                invoice.write({'invoice_line_ids': values})
+            invoice.message_post(body=_("This invoice created from %s", self.name))
+            return self.action_l10n_in_edi_view_invoice()
+        else:
+            raise UserError(_("Related Sale or Purchase order not found."))
+
     def button_l10n_in_send_ewaybill(self):
         self.ensure_one()
         self._l10n_in_edi_ewaybill_check_configuration()
@@ -233,16 +256,16 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
                 get_ewaybill_response = self._get_l10n_in_edi_stock_details_by_consigner(
                     self.company_id, json_payload.get('docType'), json_payload.get('docNo'))
                 if not get_ewaybill_response.get("error"):
-                    response = get_ewaybill_response
-                    error_codes = []
-                    error = []
-                    odoobot = self.env.ref("base.partner_root")
-                    self.message_post(author_id=odoobot.id, body=_(
-                        "Somehow this ewaybill had been submited to government before." \
-                        "<br/>Normally, this should not happen too often" \
-                        "<br/>Just verify value of ewaybill by fillup details on government website " \
-                        "<a href='https://ewaybill2.nic.in/ewaybill_nat2/Others/EBPrintnew.aspx'>here<a>."
-                    ))
+                    if json_payload.get('docDate') in get_ewaybill_response.get("data", {}).get('ewayBillDate', ''):
+                        response = get_ewaybill_response
+                        error_codes = []
+                        error = []
+                        self.message_post(body=_(
+                            "Somehow this ewaybill had been submited to government before." \
+                            "<br/>Normally, this should not happen too often" \
+                            "<br/>Just verify value of ewaybill by fillup details on government website " \
+                            "<a href='https://ewaybill2.nic.in/ewaybill_nat2/Others/EBPrintnew.aspx'>here<a>."
+                        ))
             if "no-credit" in error_codes:
                 self.write({
                     "l10n_in_edi_error_message": self._l10n_in_edi_stock_get_iap_buy_credits_message(self.company_id),
@@ -284,13 +307,12 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
                 'l10n_in_ewaybill_number': response_data.get('ewayBillNo'),
                 'l10n_in_ewaybill_valid_upto': fields.Datetime.to_string(utc_time),
             })
-            odoobot = self.env.ref("base.partner_root")
-            self.message_post(author_id=odoobot.id, body=_(
-                "Generated E-Waybill with Document Number %s and Document Date %s",
+            self.message_post(body=_(
+                "E-Waybill send with Document Number %s and Document Date %s",
                 json_payload.get('docNo'), json_payload.get('docDate')
             ))
             if response_data.get('alert'):
-                self.message_post(author_id=odoobot.id, body=_('%s', response_data['alert']))
+                self.message_post(body=_('%s', response_data['alert']))
 
     def _process_l10n_in_edi_stock_cancel(self):
         json_payload = {
@@ -376,6 +398,8 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
             required_fields.append('l10n_in_sub_supply_desc')
         error_message += self._l10n_in_edi_check_require_fields(required_fields)
         if self.l10n_in_related_invoice_id:
+            if self.l10n_in_related_invoice_id.state != "posted":
+                error_message.append(_("- Invoice is not Posted."))
             saler_buyer = self.env['account.edi.format']._get_l10n_in_edi_saler_buyer_party(
                 self.l10n_in_related_invoice_id)
             error_message += self._l10n_in_edi_check_saler_buyer_party(saler_buyer)
@@ -517,12 +541,13 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split('-')[0] or 'OTH',
             "taxableAmount": rounding_function(line.l10n_in_price_taxexcl * line.quantity_done),
         }
-        if 'igst' in line_tax_details:
-            line_details.update({"igstRate": rounding_function(line_tax_details.get("gst_rate"))})
-        elif line_tax_details.get("gst_rate"):
+        gst_rate = line_tax_details.get("gst_rate", 0.00)
+        if line_tax_details.get('igst_rate'):
+            line_details.update({"igstRate": rounding_function(line_tax_details["igst_rate"])})
+        else:
             line_details.update({
-                "cgstRate": rounding_function(line_tax_details.get("gst_rate") / 2),
-                "sgstRate": rounding_function(line_tax_details.get("gst_rate") / 2)
+                "cgstRate": gst_rate and rounding_function(line_tax_details["gst_rate"] / 2) or 0.00,
+                "sgstRate": gst_rate and rounding_function(line_tax_details["gst_rate"] / 2) or 0.00,
             })
         if line_tax_details.get("cess_rate"):
             line_details.update({"cessRate": rounding_function(line_tax_details.get("cess_rate"))})
@@ -559,20 +584,27 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
 
     def _get_l10n_in_edi_line_tax_details(self):
         gst_tag_ids = {
-            "igst": self.env.ref("l10n_in.tax_report_line_igst").tag_ids,
             "sgst": self.env.ref("l10n_in.tax_report_line_sgst").tag_ids,
             "cgst": self.env.ref("l10n_in.tax_report_line_cgst").tag_ids,
         }
         all_gst_tag_ids = sum(gst_tag_ids.values(), self.env["account.account.tag"])
+        igst_tag_ids = {"igst": self.env.ref("l10n_in.tax_report_line_igst").tag_ids}
         cess_tag_ids = {"cess": self.env.ref("l10n_in.tax_report_line_cess").tag_ids}
         state_cess_tag_ids = {"state_cess": self.env.ref("l10n_in.tax_report_line_state_cess").tag_ids}
         line_tax_details = {}
         for move_line in self.move_ids_without_package:
             line_tax_details.setdefault(move_line, {})
-            tax_ids = move_line.l10n_in_tax_ids.flatten_taxes_hierarchy()
+            fiscal_position_id = self.l10n_in_fiscal_position_id
+            if not fiscal_position_id:
+                fiscal_position_id = self.env["account.fiscal.position"]._get_fiscal_position(move_line.partner_id)
+            tax_ids = move_line.product_id.taxes_id.filtered(lambda t: t.company_id == move_line.company_id)
+            tax_ids = fiscal_position_id.map_tax(tax_ids._origin)
+            tax_ids = tax_ids.flatten_taxes_hierarchy()
             extra_tax_details = {
                 "gst_rate": sum(tax.amount for tax in tax_ids if any(
                     tag for tag in tax.invoice_repartition_line_ids.tag_ids if tag in all_gst_tag_ids)),
+                "igst_rate": sum(tax.amount for tax in tax_ids if any(
+                    tag for tag in tax.invoice_repartition_line_ids.tag_ids if tag in igst_tag_ids['igst'])),
                 "cess_rate": sum(tax.amount for tax in tax_ids if tax.amount_type == "percent" and any(
                     tag for tag in tax.invoice_repartition_line_ids.tag_ids if tag in cess_tag_ids["cess"])),
                 "state_cess_rate": sum(tax.amount for tax in tax_ids if tax.amount_type == "percent" and any(
@@ -580,7 +612,7 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
                 ),
                 "other": 0.00,
             }
-            taxes_compute = move_line.l10n_in_tax_ids.compute_all(
+            taxes_compute = tax_ids.compute_all(
                 price_unit=move_line.l10n_in_price_taxexcl,
                 quantity=move_line.quantity_done,
                 product=move_line.product_id,
@@ -591,7 +623,7 @@ If it is more than 15 chars, last 15 chars may be entered""", copy=False
                 tax_id = self.env["account.tax"].browse(tax["id"])
                 tax_repartition_line_id = self.env["account.tax.repartition.line"].browse(
                     tax["tax_repartition_line_id"])
-                for tax_key, tag_ids in {**gst_tag_ids, **cess_tag_ids, **state_cess_tag_ids}.items():
+                for tax_key, tag_ids in {**gst_tag_ids, **igst_tag_ids, **cess_tag_ids, **state_cess_tag_ids}.items():
                     if tax_id.amount_type != "percent" and "cess" in tax_key:
                         tax_key = tax_key + "_non_advol"
                     if any(tag for tag in tax["tag_ids"] if tag in tag_ids.ids):

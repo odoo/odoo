@@ -9,6 +9,16 @@
             <xpath expr="//button[@name='action_cancel']" position="after">
                 <field name="picking_type_code" invisible="1"/>
                 <field name="country_code" invisible="1"/>
+                <field name="l10n_in_has_linked_with_sale_purchase" invisible="1"/>
+                <button name="button_l10n_in_edi_create_invoice" string="Create Invoice" type="object"
+                    attrs="{'invisible': ['|', '|', '|', '|', '|',
+                        ('state', '!=', 'done'),
+                        ('is_locked', '=', False),
+                        ('picking_type_code', '=', 'internal'),
+                        ('l10n_in_related_invoice_id', '!=', False),
+                        ('l10n_in_has_linked_with_sale_purchase', '=', False),
+                        ('country_code', '!=', 'IN')]}"
+                        groups="account.group_account_invoice"/>
                 <button name="button_l10n_in_send_ewaybill" string="Create EWayBill" type="object"
                     attrs="{'invisible': ['|', '|', '|', '|',
                         ('state', '!=', 'done'),
@@ -51,6 +61,20 @@
                         groups="account.group_account_invoice"/>
             </xpath>
 
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_l10n_in_edi_view_invoice"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    attrs="{'invisible': [('l10n_in_related_invoice_id', '=', False)]}">
+                        <span attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}">
+                            Invoice
+                        </span>
+                        <span attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}">
+                            Vendor Bill
+                        </span>
+                </button>
+            </xpath>
             <xpath expr="//header" position="after">
                 <field name="l10n_in_edi_blocking_level" invisible="1"/>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
@@ -77,11 +101,11 @@
             <xpath expr="//notebook" position="inside">
                 <page string="E-WayBill" attrs="{'invisible': ['|', ('picking_type_code', 'in', (False, 'internal')), ('country_code', '!=', 'IN')]}">
                     <group>
-                        <group string="Invoice Details" attrs="{'invisible': [('picking_type_code', 'not in', ('incoming', 'outgoing'))]}">
+                        <group string="Invoice Details" attrs="{'invisible': [('picking_type_code', 'not in', ('incoming', 'outgoing'))]}" groups="base.group_no_one">
                             <field name="l10n_in_related_invoice_ids" invisible="1"/>
                             <field name="l10n_in_related_invoice_id" domain="[('id', 'in', l10n_in_related_invoice_ids), ('state', '=', 'posted')]" attrs="{'readonly': [('l10n_in_edi_stock_state', 'in', ('send', 'to_cancel'))]}" options="{'no_create': 1, 'no_edit': 1}"/>
                         </group>
-                        <group string="Fiscal Information">
+                        <group string="Fiscal Information" attrs="{'invisible': [('l10n_in_related_invoice_id', '!=', False)]}">
                             <field name="l10n_in_fiscal_position_id" attrs="{'readonly': [('l10n_in_edi_stock_state', 'in', ('send', 'to_cancel'))]}"/>
                         </group>
                     </group>
