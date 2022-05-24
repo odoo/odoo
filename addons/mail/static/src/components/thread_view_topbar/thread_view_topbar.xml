@@ -50,16 +50,16 @@
                         <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickUnstarAll">Unstar all</button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.thread.rtcSessions.length === 0">
-                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none bg-transparent shadow-none opacity-100 opacity-75-hover o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="threadViewTopbar.onClickPhone">
-                            <i class="fa fa-lg fa-phone text-800"/>
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="threadViewTopbar.onClickPhone">
+                            <i class="fa fa-lg fa-phone text-700"/>
                         </button>
-                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none bg-transparent shadow-none opacity-100 opacity-75-hover o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="threadViewTopbar.onClickCamera">
-                            <i class="fa fa-lg fa-video-camera text-800"/>
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="threadViewTopbar.onClickCamera">
+                            <i class="fa fa-lg fa-video-camera text-700"/>
                         </button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasInviteFeature">
-                        <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button btn px-2 border-none bg-transparent shadow-none"  t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'opacity-100 opacity-75-hover o-active' : 'opacity-75 opacity-100-hover' }}" title="Add users" t-on-click="threadViewTopbar.onClickInviteButton" t-ref="inviteButton">
-                            <i class="fa fa-lg fa-user-plus" t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'text-800' : 'text-600' }}"/>
+                        <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none"  t-attf-class="{{ threadViewTopbar.invitePopoverView ? '' : '' }}" title="Add users" t-on-click="threadViewTopbar.onClickInviteButton" t-ref="inviteButton">
+                            <i class="fa fa-lg fa-user-plus" t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'text-500' : 'text-700' }}"/>
                         </button>
                         <t t-if="threadViewTopbar.invitePopoverView">
                             <PopoverView className="'o_ThreadViewTopbar_invitePopoverView'" record="threadViewTopbar.invitePopoverView"/>
@@ -67,13 +67,13 @@
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
                     <t t-if="!messaging.isCurrentUserGuest and threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and !threadViewTopbar.threadView.isMemberListOpened">
-                        <button class="o_ThreadViewTopbar_showMemberListButton o_ThreadViewTopbar_button btn px-2 border-none bg-transparent shadow-none opacity-75 opacity-100-hover" title="Show Member List" t-on-click="threadViewTopbar.onClickShowMemberList">
-                            <i class="fa fa-lg fa-users text-600"/>
+                        <button class="o_ThreadViewTopbar_showMemberListButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Show Member List" t-on-click="threadViewTopbar.onClickShowMemberList">
+                            <i class="fa fa-lg fa-users text-700"/>
                         </button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and threadViewTopbar.threadView.isMemberListOpened">
-                        <button class="o_ThreadViewTopbar_hideMemberListButton o_ThreadViewTopbar_button btn px-2 border-none bg-transparent shadow-none opacity-100 opacity-75-hover o-active" title="Hide Member List" t-on-click="threadViewTopbar.onClickHideMemberList">
-                            <i class="fa fa-lg fa-users text-800"/>
+                        <button class="o_ThreadViewTopbar_hideMemberListButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Hide Member List" t-on-click="threadViewTopbar.onClickHideMemberList">
+                            <i class="fa fa-lg fa-users text-500"/>
                         </button>
                     </t>
                 </div>
