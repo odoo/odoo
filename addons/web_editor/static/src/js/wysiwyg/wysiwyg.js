@@ -94,6 +94,7 @@ const Wysiwyg = Widget.extend({
         // more heuristics to bypass the limitation.
         this._isOnline = true;
         this._signalOnline = this._signalOnline.bind(this);
+        this.tooltipTimeouts = [];
     },
     /**
      *
@@ -680,6 +681,9 @@ const Wysiwyg = Widget.extend({
             window.removeEventListener('offline', this._checkConnectionChange);
         }
         window.removeEventListener('beforeunload', this._onBeforeUnload);
+        for (const timeout of this.tooltipTimeouts) {
+            clearTimeout(timeout);
+        }
         this._super();
     },
     /**
@@ -1700,16 +1704,19 @@ const Wysiwyg = Widget.extend({
         if (isInMedia || (link && link.isContentEditable)) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
-            setTimeout(() => {
+            this.tooltipTimeouts.push(setTimeout(() => {
                 // Do not show tooltip on double-click and if there is already one
                 if (!this.showTooltip || $target.attr('title') !== undefined) {
                     return;
                 }
                 this.odooEditor.observerUnactive();
-                $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                // Tooltips need to be cleared before leaving the editor.
+                this.saving_mutex.exec(() => {
+                    $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                });
                 this.odooEditor.observerActive();
-                setTimeout(() => $target.tooltip('dispose'), 800);
-            }, 400);
+                this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
+            }, 400));
         }
         // Update color of already opened colorpickers.
         setTimeout(() => {
