@@ -36,13 +36,6 @@ export class FollowerListMenu extends Component {
         return this.props.record;
     }
 
-    /**
-     * @return {Thread}
-     */
-    get thread() {
-        return this.props.thread;
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -54,7 +47,7 @@ export class FollowerListMenu extends Component {
     _onClickAddFollowers(ev) {
         ev.preventDefault();
         this.followerListMenuView.hide();
-        this.thread.promptAddPartnerFollower();
+        this.followerListMenuView.chatterOwner.thread.promptAddPartnerFollower();
     }
 
     /**
@@ -73,14 +66,7 @@ export class FollowerListMenu extends Component {
 }
 
 Object.assign(FollowerListMenu, {
-    defaultProps: {
-        isChatterButton: false,
-    },
-    props: {
-        thread: Object,
-        isChatterButton: { type: Boolean, optional: true },
-        record: Object,
-    },
+    props: { record: Object },
     template: 'mail.FollowerListMenu',
 });
 
