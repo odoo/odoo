@@ -12,13 +12,14 @@ from odoo.tools import Query
 class Project(models.Model):
     _inherit = 'project.project'
 
-    allow_billable = fields.Boolean("Billable", help="Invoice your time and material from tasks.")
+    allow_billable = fields.Boolean("Billable")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
         domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', '=?', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
-        "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
+        help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
+            " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
+            "It can be modified on each task and timesheet entry individually if necessary.")
     sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
@@ -472,7 +473,9 @@ class ProjectTask(models.Model):
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
         domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', '=?', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
-        help="Sales Order Item to which the time spent on this task will be added, in order to be invoiced to your customer.")
+        help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
+             "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
+             "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
 
