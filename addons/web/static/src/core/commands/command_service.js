@@ -22,7 +22,6 @@ const { Component, xml } = owl;
  *  activeElement?: HTMLElement;
  *  category?: string;
  *  global?: boolean;
- *  area?: () => HTMLElement;
  *  hotkey?: string;
  * }} CommandOptions
  */
