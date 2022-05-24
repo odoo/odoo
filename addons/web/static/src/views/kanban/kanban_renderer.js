@@ -10,6 +10,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf, uniqueId } from "@web/core/utils/strings";
 import { useSortable } from "@web/core/utils/ui";
 import { url } from "@web/core/utils/urls";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Field } from "@web/fields/field";
 import { fileTypeMagicWordMap } from "@web/fields/image_field";
 import { session } from "@web/session";
@@ -108,11 +109,11 @@ export class KanbanRenderer extends Component {
         // Draggable
         let dataRecordId;
         let dataGroupId;
-        this.rootRef = useRef("root");
+        const rootRef = useRef("root");
         useSortable({
             isActive: () => this.canResequenceRecords,
             // Params
-            ref: this.rootRef,
+            ref: rootRef,
             elements: ".o_record_draggable",
             groups: () => this.props.list.isGrouped && ".o_kanban_group",
             connectGroups: () => this.canMoveRecords,
@@ -139,7 +140,7 @@ export class KanbanRenderer extends Component {
         useSortable({
             isActive: () => this.canResequenceGroups,
             // Params
-            ref: this.rootRef,
+            ref: rootRef,
             elements: ".o_group_draggable",
             handle: ".o_column_title",
             cursor: "move",
@@ -156,7 +157,7 @@ export class KanbanRenderer extends Component {
                 element.classList.add("o_group_draggable");
             },
         });
-        useBounceButton(this.rootRef, (clickedEl) => {
+        useBounceButton(rootRef, (clickedEl) => {
             if (!this.props.list.count || this.props.list.model.useSampleModel) {
                 return clickedEl.matches(
                     [
@@ -180,8 +181,39 @@ export class KanbanRenderer extends Component {
                 return;
             }
             // Focus first kanban card
-            this.rootRef.el.querySelector(".o_kanban_record").focus();
+            rootRef.el.querySelector(".o_kanban_record").focus();
         });
+
+        useHotkey(
+            "Enter",
+            ({ target }) => {
+                if (!target.classList.contains("o_kanban_record")) {
+                    return;
+                }
+
+                // Open first link
+                const firstLink = target.querySelector("a, button");
+                if (firstLink && firstLink instanceof HTMLElement) {
+                    firstLink.click();
+                }
+                return;
+            },
+            { area: () => rootRef.el }
+        );
+
+        const arrowsOptions = { area: () => rootRef.el, allowRepeat: true };
+        useHotkey(
+            "ArrowUp",
+            ({ area }) => {
+                if (!this.focusNextCard(area, "up")) {
+                    this.env.searchModel.trigger("focus-search");
+                }
+            },
+            arrowsOptions
+        );
+        useHotkey("ArrowDown", ({ area }) => this.focusNextCard(area, "down"), arrowsOptions);
+        useHotkey("ArrowLeft", ({ area }) => this.focusNextCard(area, "left"), arrowsOptions);
+        useHotkey("ArrowRight", ({ area }) => this.focusNextCard(area, "right"), arrowsOptions);
     }
 
     // ------------------------------------------------------------------------
@@ -586,52 +618,15 @@ export class KanbanRenderer extends Component {
     }
 
     /**
-     * @param {KeyboardEvent} event
-     */
-    onRecordKeydown(event) {
-        switch (event.key) {
-            case "Enter": {
-                if (!document.activeElement.classList.contains("o_kanban_record")) {
-                    return;
-                }
-
-                // Open first link
-                const firstLink = document.activeElement.querySelector("a, button");
-                if (firstLink && firstLink instanceof HTMLElement) {
-                    firstLink.click();
-                    event.preventDefault();
-                }
-                return;
-            }
-            case "ArrowDown":
-            case "ArrowUp":
-            case "ArrowRight":
-            case "ArrowLeft": {
-                /** @type {any} */
-                const direction = event.key.slice(5).toLowerCase();
-                const nextCard = this.getNextCard(direction);
-                if (nextCard && nextCard instanceof HTMLElement) {
-                    nextCard.focus();
-                    event.preventDefault();
-                }
-                if (!nextCard && direction === "up") {
-                    this.env.searchModel.trigger("focus-search");
-                    event.preventDefault();
-                }
-                return;
-            }
-        }
-    }
-
-    /**
+     * Focus next card in the area within the chosen direction.
+     *
+     * @param {HTMLElement} area
      * @param {"down"|"up"|"right"|"left"} direction
-     * @returns {Element?}
+     * @returns {true?} true if the next card has been focused
      */
-    getNextCard(direction) {
+    focusNextCard(area, direction) {
         const { isGrouped } = this.props.list;
-        const groups = isGrouped
-            ? [...this.rootRef.el.querySelectorAll(".o_kanban_group")]
-            : [this.rootRef.el];
+        const groups = isGrouped ? [...area.querySelectorAll(".o_kanban_group")] : [area];
         const cards = [...groups]
             .map((group) => [...group.querySelectorAll(".o_kanban_record")])
             .filter((group) => group.length);
@@ -670,7 +665,11 @@ export class KanbanRenderer extends Component {
                 }
                 break;
         }
-        return nextCard;
+
+        if (nextCard && nextCard instanceof HTMLElement) {
+            nextCard.focus();
+            return true;
+        }
     }
 
     //-------------------------------------------------------------------------
