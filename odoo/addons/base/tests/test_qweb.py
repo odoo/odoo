@@ -1613,6 +1613,48 @@ class TestQWebBasic(TransactionCase):
         expected = markupsafe.Markup('Text 1' + emptyline + emptyline + 'Text 2' + emptyline + 'ok')
         self.assertEqual(self.env['ir.qweb']._render(view1.id).strip(), expected)
 
+    def test_render_comments(self):
+        """ Test the rendering of comments with and without the
+            preserve_comments option.
+        """
+        comment = '<!-- Hello, world! -->'
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy',
+            'type': 'qweb',
+            'arch': f'<t><p>{comment}</p></t>'
+        })
+        QWeb = self.env['ir.qweb']
+        self.assertEqual(
+            QWeb.with_context(preserve_comments=False)._render(view.id),
+            markupsafe.Markup('<p></p>'),
+            "Should not have the comment")
+        QWeb.clear_caches()
+        self.assertEqual(
+            QWeb.with_context(preserve_comments=True)._render(view.id),
+            markupsafe.Markup(f'<p>{comment}</p>'),
+            "Should have the comment")
+
+    def test_render_processing_instructions(self):
+        """ Test the rendering of processing instructions with and without the
+            preserve_comments option.
+        """
+        p_instruction = '<?hello world?>'
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy',
+            'type': 'qweb',
+            'arch': f'<t><p>{p_instruction}</p></t>'
+        })
+        QWeb = self.env['ir.qweb']
+        self.assertEqual(
+            QWeb.with_context(preserve_comments=False)._render(view.id),
+            markupsafe.Markup('<p></p>'),
+            "Should not have the processing instruction")
+        QWeb.clear_caches()
+        self.assertEqual(
+            QWeb.with_context(preserve_comments=True)._render(view.id),
+            markupsafe.Markup(f'<p>{p_instruction}</p>'),
+            "Should have the processing instruction")
+
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({
             'name': 'master',

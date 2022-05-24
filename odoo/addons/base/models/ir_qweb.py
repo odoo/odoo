@@ -1616,6 +1616,9 @@ class IrQWeb(models.AbstractModel):
             if isinstance(item, etree._Comment):
                 if compile_context.get('preserve_comments'):
                     self._append_text(f"<!--{item.text}-->", compile_context)
+            elif isinstance(item, etree._ProcessingInstruction):
+                if compile_context.get('preserve_comments'):
+                    self._append_text(f"<?{item.target} {item.text}?>", compile_context)
             else:
                 body.extend(self._compile_node(item, compile_context, level))
             # comments can also contains tail text
