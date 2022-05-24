@@ -32,7 +32,7 @@ class MrpWorkcenter(models.Model):
         help="Description of the Work Center.")
     capacity = fields.Float(
         'Capacity', default=1.0,
-        help="Number of pieces that can be produced in parallel. In case the work center has a capacity of 5 and you have to produce 10 units on your work order, the usual operation time will be multiplied by 2.")
+        help="Number of pieces (in product UoM) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
