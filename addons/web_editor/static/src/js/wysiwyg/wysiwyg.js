@@ -1256,7 +1256,12 @@ const Wysiwyg = Widget.extend({
     },
     _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
-        $toolbar.find('.btn-group').on('mousedown', e => e.preventDefault());
+        $toolbar.find('.btn-group').on('mousedown', e => {
+            // Do not prevent events on popovers.
+            if (!e.target.closest('.dropdown-menu')) {
+                e.preventDefault();
+            }
+        });
         const openTools = e => {
             e.preventDefault();
             e.stopImmediatePropagation();
