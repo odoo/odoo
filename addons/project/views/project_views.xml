@@ -572,7 +572,7 @@
                     <field name="display_name" string="Name" class="font-weight-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="privacy_visibility" optional="hide"/>
-                    <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create': True}"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
                     <field name="date_start" string="Start Date" widget="daterange" options="{'related_end_date': 'date'}"/>
                     <field name="date" string="End Date" widget="daterange" options="{'related_start_date': 'date_start'}"/>
