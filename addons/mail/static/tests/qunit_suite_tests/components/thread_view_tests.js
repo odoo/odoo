@@ -4,6 +4,7 @@ import { insert, insertAndReplace, link } from '@mail/model/model_field_command'
 import {
     afterNextRender,
     dragenterFiles,
+    isScrolledToBottom,
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
@@ -814,9 +815,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 20 initially"
     );
 
@@ -838,9 +838,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         predicate: data => threadViewer === data.threadViewer,
     });
     const messageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should scroll to bottom on receiving new message because the list is initially scrolled to bottom"
     );
 });
@@ -886,9 +885,8 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 1 initially"
     );
 

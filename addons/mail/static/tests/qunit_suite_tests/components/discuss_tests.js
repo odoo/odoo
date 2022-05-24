@@ -4,6 +4,7 @@ import BusService from 'bus.BusService';
 
 import {
     afterNextRender,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
     startServer,
@@ -1618,7 +1619,7 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
                     thread &&
                     thread.model === 'mail.channel' &&
                     thread.id === mailChannelId1 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -1631,9 +1632,8 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
         "should have 25 messages"
     );
     const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should have scrolled to bottom of thread"
     );
 });
@@ -1666,7 +1666,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
                     thread &&
                     thread.model === 'mail.channel' &&
                     thread.id === mailChannelId1 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -1745,7 +1745,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
                     thread &&
                     thread.model === 'mail.channel' &&
                     thread.id === mailChannelId1 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -1815,7 +1815,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === mailChannelId1 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1879,9 +1879,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
         .o_Discuss_thread
         .o_ThreadView_messageList
     `);
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 1 initially"
     );
 
@@ -1924,7 +1923,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === mailChannelId2 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1987,14 +1986,13 @@ QUnit.test('restore thread scroll position', async function (assert) {
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === mailChannelId2 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
     const messageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should have recovered scroll position of channel 2 (scroll to bottom)"
     );
 });
@@ -3460,7 +3458,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                     thread.model === 'mail.box' &&
                     thread.id === 'inbox' &&
                     orderedMessages.length === 30 &&
-                    scrollTop === messageList.scrollHeight - messageList.clientHeight
+                    isScrolledToBottom(messageList)
                 );
             },
         },
@@ -3490,7 +3488,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
                 thread.model === 'mail.box' &&
                 thread.id === 'history' &&
                 orderedMessages.length === 30 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
