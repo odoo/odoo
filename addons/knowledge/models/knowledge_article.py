@@ -8,7 +8,7 @@ from markupsafe import Markup
 from werkzeug.urls import url_join
 
 from odoo import Command, fields, models, api, _
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import get_lang
 
@@ -1190,6 +1190,10 @@ class Article(models.Model):
         with write access. Requires a sudo to bypass member ACLs after checking
         write access on the article.
 
+        Children articles to which the user also has a write access to are made
+        private as well. Other articles are detached, see '_detach_unwritable_descendants'
+        for details.
+
         :param <knowledge.article> parent: an optional parent to move the article under;
         :param <knowledge.article> before_article: article before which the article
           should be moved. Otherwise it is put as last parent children;
@@ -1200,47 +1204,68 @@ class Article(models.Model):
         parent = parent if parent is not False else self.env['knowledge.article']
         before_article = before_article if before_article is not False else self.env['knowledge.article']
 
-        article_values = {'parent_id': parent.id}
+        try:
+            self.check_access_rights('write')
+            (self + parent).check_access_rule('write')
+        except (AccessError, UserError):
+            if parent:
+                raise AccessError(
+                    _("You are not allowed to move '%(article_name)s' under '%(parent_name)s'.",
+                      article_name=self.display_name,
+                      parent_name=parent.display_name)
+                )
+            raise AccessError(
+                _("You are not allowed to make '%(article_name)s' private.", article_name=self.display_name)
+            )
+
+        # first detach unwritable children (see ``_detach_unwritable_descendants``)
+        writable_descendants = self._detach_unwritable_descendants()
+
+        article_values = {
+            # reset internal permission if parent is set (will inherit) or force private (aka 'none')
+            'internal_permission': False if parent else 'none',
+            # cannot be desync when made private as we wipe members access
+            'is_desynchronized': False,
+            'parent_id': parent.id if parent else False,
+        }
         if before_article:
             article_values['sequence'] = before_article.sequence
 
-        # when moving as root: imply member manipulations hence sudo and forced ACL check
-        writable_self = self
+        self_sudo = self.sudo()
+        # remove members as the article is moved to private
+        members_to_remove = self_sudo.article_member_ids
+        self_member_command = []
         if not parent:
-            try:
-                self.check_access_rights('write')
-                (self + parent).check_access_rule('write')
-            except:
-                raise AccessError(
-                    _("You are not allowed to move this article under article %(parent_name)s",
-                      parent_name=parent.display_name)
-                )
-
-            # be sure to have an internal permission on the article if moved outside
-            # of an hierarchy
-            article_values.update({
-                'internal_permission': 'none',
-                'is_desynchronized': False,
-            })
-
-            writable_self = self.sudo()
-            self_member = writable_self.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
-
-            # first add or update the new membership with 'write' access
+            # make sure the current user is the only member left with write access to the article
+            # if we have a parent, this is not necessary as we will inherit members access from them
+            self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
             if self_member:
-                write_member_command = [(1, self_member.id, {'permission': 'write'})]
+                self_member_command = [(1, self_member.id, {'permission': 'write'})]
+                # keep current member
+                members_to_remove = members_to_remove.filtered(
+                    lambda member: member.partner_id != self.env.user.partner_id
+                )
             else:
-                write_member_command = [(0, 0, {
+                self_member_command = [(0, 0, {
                     'partner_id': self.env.user.partner_id.id,
                     'permission': 'write'
                 })]
-            # then remove other members as the article is moved to private
-            article_values['article_member_ids'] = [
-                (2, member.id)
-                for member in writable_self.article_member_ids if member.partner_id != self.env.user.partner_id
-            ] + write_member_command
 
-        return writable_self.with_context(knowledge_member_skip_writable_check=True).write(article_values)
+        article_values['article_member_ids'] = [
+            (2, member.id)
+            for member in members_to_remove
+        ] + self_member_command
+
+        res = self_sudo.with_context(knowledge_member_skip_writable_check=True).write(article_values)
+
+        # remove all specific memberships configurations on children. They now inherit
+        # the only 'write' member from their parent now, making them private.
+        writable_descendants.with_context(knowledge_member_skip_writable_check=True).write({
+            'internal_permission': False,
+            'article_member_ids': [(5, 0)],
+        })
+
+        return res
 
     def _has_write_member(self, partners_to_exclude=False, members_to_exclude=False):
         """ Method allowing to check if this article still has at least one member
