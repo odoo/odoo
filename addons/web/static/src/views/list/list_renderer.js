@@ -143,7 +143,10 @@ export class ListRenderer extends Component {
             },
             () => [this.state.columns, this.isEmpty, this.showTable]
         );
-        useExternalListener(window, "resize", this.freezeColumnWidths);
+        useExternalListener(window, "resize", () => {
+            this.columnWidths = null;
+            this.freezeColumnWidths();
+        });
     }
 
     // The following code manipulates the DOM directly to avoid having to wait for a
@@ -228,6 +231,7 @@ export class ListRenderer extends Component {
                     maxWidth = 92;
                     canKeepShrinking = false;
                 }
+                th.style.maxWidth = `${maxWidth}px`;
                 columnWidths[index] = maxWidth;
             }
             return canKeepShrinking;

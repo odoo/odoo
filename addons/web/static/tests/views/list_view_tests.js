@@ -63,7 +63,6 @@ let testUtils,
     ListView,
     ListRenderer,
     core,
-    _t,
     clickFirst,
     BasicModel,
     AbstractStorageService,
@@ -3456,37 +3455,33 @@ QUnit.module("Views", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skipWOWL(
-        "empty list: state with nameless and stringless buttons",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("empty list: state with nameless and stringless buttons", async function (assert) {
+        assert.expect(2);
 
-            serverData.models.foo.records = [];
-            await makeView({
-                type: "list",
-                arch: `
+        serverData.models.foo.records = [];
+        await makeView({
+            type: "list",
+            arch: `
                 <tree>
                     <field name="foo"/>
                     <button string="choucroute"/>
                     <button icon="fa-heart"/>
                 </tree>`,
-                serverData,
-                resModel: "foo",
-            });
+            serverData,
+            resModel: "foo",
+        });
 
-            assert.strictEqual(
-                [...target.querySelectorAll("th")].find((el) => el.textContent === "Foo").style
-                    .width,
-                "50%",
-                "Field column should be frozen"
-            );
-            assert.strictEqual(
-                target.querySelector("th:last-child").style.width,
-                "50%",
-                "Buttons column should be frozen"
-            );
-        }
-    );
+        assert.strictEqual(
+            [...target.querySelectorAll("th")].find((el) => el.textContent === "Foo").style.width,
+            "50%",
+            "Field column should be frozen"
+        );
+        assert.strictEqual(
+            target.querySelector("th:last-child").style.width,
+            "50%",
+            "Buttons column should be frozen"
+        );
+    });
 
     QUnit.skipWOWL("editable list: unnamed columns cannot be resized", async function (assert) {
         assert.expect(2);
@@ -3776,7 +3771,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list view with data: text columns are not crushed", async function (assert) {
+    QUnit.test("list view with data: text columns are not crushed", async function (assert) {
         assert.expect(2);
 
         const longText =
@@ -3840,16 +3835,13 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("button columns in a list view don't have a max width", async function (assert) {
+    QUnit.test("button columns in a list view don't have a max width", async function (assert) {
         assert.expect(2);
-
-        testUtils.mock.patch(ListRenderer, {
-            RESIZE_DELAY: 0,
-        });
 
         // set a long foo value s.t. the column can be squeezed
         serverData.models.foo.records[0].foo = "Lorem ipsum dolor sit amet";
         await makeView({
+            type: "list",
             arch: `
                 <tree>
                     <field name="foo"/>
@@ -3862,25 +3854,23 @@ QUnit.module("Views", (hooks) => {
         });
 
         // simulate a window resize (buttons column width should not be squeezed)
-        $(target).findel.width("300px");
-        core.bus.trigger("resize");
-        await testUtils.nextTick();
+        target.style.width = "300px";
+        window.dispatchEvent(new Event("resize"));
+        await nextTick();
 
         assert.strictEqual(
-            $(target).find("th:nth(1)").css("max-width"),
+            window.getComputedStyle(target.querySelectorAll("th")[1]).maxWidth,
             "92px",
             "max-width should be set on column foo to the minimum column width (92px)"
         );
         assert.strictEqual(
-            $(target).find("th:nth(2)").css("max-width"),
+            window.getComputedStyle(target.querySelectorAll("th")[2]).maxWidth,
             "100%",
             "no max-width should be harcoded on the buttons column"
         );
-
-        testUtils.mock.unpatch(ListRenderer);
     });
 
-    QUnit.skipWOWL("column widths are kept when editing multiple records", async function (assert) {
+    QUnit.test("column widths are kept when editing multiple records", async function (assert) {
         assert.expect(4);
 
         await makeView({
@@ -3894,7 +3884,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
 
-        var width = $(target).find('th[data-name="datetime"]')[0].offsetWidth;
+        var width = target.querySelector('th[data-name="datetime"]').offsetWidth;
 
         // select two records and edit
         const rows = target.querySelectorAll(".o_data_row");
@@ -3907,12 +3897,12 @@ QUnit.module("Views", (hooks) => {
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
             "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus " +
             "bibendum est.";
-        await editInput($(target).find(".o_field_widget[name=text]"), longVal);
+        await editInput(target, ".o_field_widget[name=text] textarea", longVal);
         assert.containsOnce(document.body, ".modal");
         await click(target, ".modal .btn-primary");
 
         assert.containsNone(target, ".o_selected_row");
-        assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, width);
+        assert.strictEqual(target.querySelector('th[data-name="datetime"]').offsetWidth, width);
     });
 
     QUnit.skipWOWL(
@@ -3921,16 +3911,21 @@ QUnit.module("Views", (hooks) => {
             // Warning: this test is css dependant
             assert.expect(5);
 
-            var multiLang = _t.database.multi_lang;
-            _t.database.multi_lang = true;
+            serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+                force: true,
+            });
 
             serverData.models.foo.fields.foo.translate = true;
             serverData.models.foo.fields.boolean = { type: "boolean", string: "Bool" };
-            var currencies = {};
-            _.each(serverData.models.res_currency.records, function (currency) {
+            const currencies = {};
+            serverData.models.res_currency.records.forEach((currency) => {
                 currencies[currency.id] = currency;
             });
+            patchWithCleanup(session, { currencies });
 
+            // the width is hardcoded to make sure we have the same condition
+            // between debug mode and non debug mode
+            target.style.width = "1200px";
             await makeView({
                 type: "list",
                 resModel: "foo",
@@ -3947,36 +3942,25 @@ QUnit.module("Views", (hooks) => {
                     '<field name="m2o"/>' +
                     '<field name="m2m" widget="many2many_tags"/>' +
                     "</tree>",
-                session: {
-                    currencies: currencies,
-                },
             });
-
-            // the width is hardcoded to make sure we have the same condition
-            // between debug mode and non debug mode
-            $(target).findel.width("1200px");
-            var startHeight = $(target).find(".o_data_row:first").outerHeight();
-            var startWidth = $(target).find(".o_data_row:first").outerWidth();
+            const startHeight = target.querySelector(".o_data_row").offsetHeight;
+            const startWidth = target.querySelector(".o_data_row").offsetWidth;
 
             // start edition of first row
-            await click(
-                $(target).find(".o_data_row:first > td:not(.o_list_record_selector)").first()
-            );
-            assert.hasClass($(target).find(".o_data_row:first"), "o_selected_row");
-            var editionHeight = $(target).find(".o_data_row:first").outerHeight();
-            var editionWidth = $(target).find(".o_data_row:first").outerWidth();
+            await click(target.querySelector(".o_data_row > td:not(.o_list_record_selector)"));
+            assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+            const editionHeight = target.querySelector(".o_data_row").offsetHeight;
+            const editionWidth = target.querySelector(".o_data_row").offsetWidth;
 
             // leave edition
             await click(target.querySelector(".o_list_button_save"));
-            var readonlyHeight = $(target).find(".o_data_row:first").outerHeight();
-            var readonlyWidth = $(target).find(".o_data_row:first").outerWidth();
+            const readonlyHeight = target.querySelector(".o_data_row").offsetHeight;
+            const readonlyWidth = target.querySelector(".o_data_row").offsetWidth;
 
             assert.strictEqual(startHeight, editionHeight);
             assert.strictEqual(startHeight, readonlyHeight);
             assert.strictEqual(startWidth, editionWidth);
             assert.strictEqual(startWidth, readonlyWidth);
-
-            _t.database.multi_lang = multiLang;
         }
     );
 
