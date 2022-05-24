@@ -452,6 +452,122 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee')
+    def test_article_make_private(self):
+        """ Testing the API that makes an article 'private'.
+
+        Making an article private generally:
+          - internal_permission set to 'none'
+          - only the current environment user has a write access to it
+
+        A lot of extra post-processing is applied, see 'knowledge.article#_make_private' for details """
+
+        article_workspace = self.article_workspace.with_env(self.env)
+        workspace_children = self.workspace_children.with_env(self.env)
+
+        # add an additional member on 'article_workspace' for further checks
+        article_workspace.sudo().write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.customer.id,
+                'permission': 'read',
+            })]
+        })
+
+        # add an additional member on one child of 'article_workspace' for further checks
+        workspace_children[0].sudo().write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.customer.id,
+                'permission': 'read',
+            })]
+        })
+
+        # add 2 extra articles for further checks
+        # - one to which 'employee' only has 'read' access to (as sudo)
+        # - one to which 'employee' does NOT have access to (as sudo)
+        #   only "employee2" has access to that one in write mode
+        [
+            wkspace_child_read_access,
+            wkspace_child_no_access,
+        ] = self.env['knowledge.article'].sudo().create([{
+            'name': 'Read Child',
+            'internal_permission': 'write',
+            'parent_id': article_workspace.id,
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.partner_employee.id,
+                'permission': 'read',
+            })]
+        }, {
+            'name': 'Hidden Child',
+            'internal_permission': 'read',
+            'parent_id': article_workspace.id,
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.partner_employee2.id,
+                'permission': 'write',
+            })]
+        }])
+
+        article_workspace._make_private()
+
+        # 1. main article was correctly moved to private
+        self.assertEqual(article_workspace.category, 'private')
+        self.assertEqual(article_workspace.internal_permission, 'none')
+        self.assertTrue(len(article_workspace.article_member_ids), 1)
+        employee_membership = article_workspace.article_member_ids
+        self.assertTrue(employee_membership.partner_id, self.partner_employee)
+        self.assertTrue(employee_membership.permission, 'write')
+
+        # 2. accessible children were correctly moved to private
+        for workspace_child in workspace_children:
+            self.assertEqual(workspace_child.category, 'private')
+            self.assertEqual(workspace_child.parent_id, article_workspace)
+            self.assertFalse(workspace_child.internal_permission)
+            # all specific members should have been wiped
+            self.assertFalse(bool(workspace_child.article_member_ids))
+
+        # 3.children that were not accessible were moved as a root articles...
+        for unreachable_article in wkspace_child_read_access | wkspace_child_no_access:
+            self.assertEqual(unreachable_article.category, 'workspace')
+            self.assertFalse(bool(unreachable_article.parent_id))
+            # ... and kept their access rights for the customer
+            self.assertTrue(bool(unreachable_article.article_member_ids.filtered(
+                lambda member: member.partner_id == self.customer
+            )))
+
+        # internal permission should stay untouched for unaccessible children
+        self.assertEqual(wkspace_child_read_access.internal_permission, 'write')
+        self.assertEqual(wkspace_child_no_access.internal_permission, 'read')
+
+        # and that 'Hidden Child' is still accessible for employee2
+        self.assertTrue(bool(wkspace_child_no_access.article_member_ids.filtered(
+            lambda member: member.partner_id == self.partner_employee2
+        )))
+
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    @users('employee_manager')
+    def test_article_make_private_w_parent(self):
+        """ Test a special case when making private: moving under an existing private parent. """
+        article_shared = self.article_shared.with_env(self.env)
+        article_private_manager = self.article_private_manager.with_env(self.env)
+
+        # first test that making 'article_shared' fails since 'employee_manager'
+        # does not have write access to it (only read)
+        with self.assertRaises(exceptions.AccessError):
+            article_shared._make_private(parent=article_private_manager)
+
+        # then grant write access to test the flow
+        article_shared.sudo().article_member_ids.filtered(
+            lambda member: member.partner_id == self.partner_employee_manager
+        ).write({'permission': 'write'})
+
+        article_shared._make_private(parent=article_private_manager)
+
+        self.assertEqual(article_shared.category, 'private')
+        # the internal permission should not be set as we inherit from our private parent
+        self.assertEqual(article_shared.internal_permission, False)
+        # members should be wiped as we inherit from our private parent
+        self.assertFalse(bool(article_shared.article_member_ids))
+
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    @users('employee')
     def test_article_move_to(self):
         """ Testing the API for moving articles. """
         article_workspace = self.article_workspace.with_env(self.env)
