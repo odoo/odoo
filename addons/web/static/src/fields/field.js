@@ -169,10 +169,13 @@ export class Field extends Component {
 
     get tooltip() {
         if (this.props.showTooltip) {
-            return getTooltipInfo({
+            const tooltip = getTooltipInfo({
                 field: this.props.record.fields[this.props.name],
                 activeField: this.props.record.activeFields[this.props.name],
             });
+            if (Boolean(odoo.debug) || (tooltip && JSON.parse(tooltip).field.help)) {
+                return tooltip;
+            }
         }
         return false;
     }
