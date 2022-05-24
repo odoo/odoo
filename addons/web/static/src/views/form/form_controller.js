@@ -161,9 +161,7 @@ export class FormController extends Component {
                     return this.model.root.save({ noReload: true, stayInEdition: true });
                 }
             },
-            beforeUnload: () => {
-                return this.model.root.urgentSave();
-            },
+            beforeUnload: () => this.beforeUnload(),
             getLocalState: () => {
                 // TODO: export the whole model?
                 return { resId: this.model.root.resId };
@@ -203,6 +201,10 @@ export class FormController extends Component {
         onRendered(() => {
             this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
         });
+    }
+
+    beforeUnload() {
+        return this.model.root.urgentSave();
     }
 
     getActionMenuItems() {

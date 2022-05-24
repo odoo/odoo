@@ -71,6 +71,9 @@ export class SettingsFormController extends formView.Controller {
         });
     }
 
+    //This is needed to avoid the auto save when unload
+    beforeUnload() {}
+
     onSearchInput(ev) {
         this.searchInput.value = ev.target.value;
     }

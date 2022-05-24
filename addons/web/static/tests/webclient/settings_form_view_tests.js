@@ -344,6 +344,45 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
+    QUnit.test("Auto save: don't save on closing tab/browser", async function (assert) {
+        assert.expect(3);
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <div class="app_settings_block" string="Base Setting" data-key="base-setting">
+                                <div class="o_setting_box">
+                                    <field name="bar"/>Make Changes
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>`,
+            mockRPC(route, { args, method, model }) {
+                if (method === "create" && model === "res.config.settings") {
+                    assert.notOk(args, "settings should not be saved");
+                }
+            },
+        });
+
+        assert.containsNone(
+            target,
+            ".o_field_boolean input:checked",
+            "checkbox should not be checked"
+        );
+        assert.containsNone(target, ".o_dirty_warning", "warning message should not be shown");
+        await click(target.querySelector("input.custom-control-input[id='field_bar_1']"));
+        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await nextTick();
+    });
+
     QUnit.test(
         "settings views can search when coming back in breadcrumbs",
         async function (assert) {
