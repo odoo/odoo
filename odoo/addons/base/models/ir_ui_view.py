@@ -1900,7 +1900,12 @@ actual arch.
                 if not attrs.intersection(descendant.attrib):
                     continue
                 self._pop_view_branding(descendant)
-            # TODO: find a better name and check if we have a string to boolean helper
+
+            # Remove the processing instructions indicating where nodes were
+            # removed (see apply_inheritance_specs)
+            for descendant in e.iterdescendants(tag=etree.ProcessingInstruction):
+                if descendant.target == 'apply-inheritance-specs-node-removal':
+                    descendant.getparent().remove(descendant)
             return
 
         node_path = e.get('data-oe-xpath')
