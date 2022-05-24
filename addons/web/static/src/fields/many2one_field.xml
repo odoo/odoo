@@ -40,7 +40,7 @@
         </t>
         <t t-else="">
             <div class="o_field_many2one_selection">
-                <div class="o_input_dropdown">
+                <div class="o_input_dropdown" t-ref="autocomplete_container">
                     <AutoComplete
                         value="displayName"
                         placeholder="props.placeholder"

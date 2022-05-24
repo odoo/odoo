@@ -2,15 +2,18 @@
 
 import { XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
+import { archParseBoolean } from "@web/views/helpers/utils";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 
 export class FormArchParser extends XMLParser {
     parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
         const jsClass = xmlDoc.getAttribute("js_class");
+        const disableAutofocus = archParseBoolean(xmlDoc.getAttribute("disable_autofocus") || "");
         const activeActions = getActiveActions(xmlDoc);
         const fieldNodes = {};
         const fieldNextIds = {};
+        let autofocusFieldId = null;
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "form", jsClass);
@@ -22,6 +25,9 @@ export class FormArchParser extends XMLParser {
                 }
                 fieldNodes[fieldId] = fieldInfo;
                 node.setAttribute("field_id", fieldId);
+                if (archParseBoolean(node.getAttribute("default_focus") || "")) {
+                    autofocusFieldId = fieldId;
+                }
                 return false;
             } else if (node.tagName === "div") {
                 // TODO TO FIX WITH MAIL
@@ -45,6 +51,15 @@ export class FormArchParser extends XMLParser {
             //     activeFields[fieldNode.name] = { readonly, required, onChange };
             // }
         }
-        return { arch, activeActions, activeFields, fieldNodes, xmlDoc, __rawArch: arch };
+        return {
+            arch,
+            activeActions,
+            activeFields,
+            autofocusFieldId,
+            disableAutofocus,
+            fieldNodes,
+            xmlDoc,
+            __rawArch: arch,
+        };
     }
 }

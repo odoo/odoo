@@ -10,7 +10,7 @@ import { standardFieldProps } from "./standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "../views/view_dialogs/select_create_dialog";
 
-const { Component, onWillDestroy, onWillUpdateProps, useState } = owl;
+const { Component, onWillDestroy, onWillUpdateProps, useRef, useState } = owl;
 
 class CreateConfirmationDialog extends Component {
     get title() {
@@ -31,6 +31,7 @@ export class Many2OneField extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.dialogClose = [];
+        this.autocompleteContainerRef = useRef("autocomplete_container");
 
         this.state = useState({
             isFloating: !this.props.value,
@@ -211,6 +212,9 @@ export class Many2OneField extends Component {
                     },
                     {
                         onClose: () => {
+                            if (this.autocompleteContainerRef.el) {
+                                this.autocompleteContainerRef.el.querySelector("input").focus();
+                            }
                             resolve();
                         },
                     }

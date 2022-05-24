@@ -1463,38 +1463,36 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector("label.o_form_label").textContent, "customstring");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "input ids for multiple occurrences of fields in form view",
         async function (assert) {
             // A same field can occur several times in the view, but its id must be
             // unique by occurrence, otherwise there is a warning in the console (in
             // edit mode) as we get several inputs with the same "id" attribute, and
             // several labels the same "for" attribute.
-            assert.expect(2);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: `
-                <form>
-                    <group>
-                        <field name="foo"/>
-                        <label for="qux"/>
-                        <div><field name="qux"/></div>
-                    </group>
-                    <group>
-                        <field name="foo"/>
-                        <label for="qux2"/>
-                        <div><field name="qux" id="qux2"/></div>
-                    </group>
-                </form>`,
+                    <form>
+                        <group>
+                            <field name="foo"/>
+                            <label for="qux"/>
+                            <div><field name="qux"/></div>
+                        </group>
+                        <group>
+                            <field name="foo"/>
+                            <label for="qux2"/>
+                            <div><field name="qux" id="qux2"/></div>
+                        </group>
+                    </form>`,
             });
 
-            const fieldIdAttrs = [...target.querySelector(".o_field_widget")].map((n) =>
+            const fieldIdAttrs = [...target.querySelectorAll(".o_field_widget input")].map((n) =>
                 n.getAttribute("id")
             );
-            const labelForAttrs = [...target.querySelector(".o_form_label")].map((n) =>
+            const labelForAttrs = [...target.querySelectorAll(".o_form_label")].map((n) =>
                 n.getAttribute("for")
             );
 
@@ -1511,15 +1509,13 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "input ids for multiple occurrences of fields in sub form view (inline)",
         async function (assert) {
             // A same field can occur several times in the view, but its id must be
             // unique by occurrence, otherwise there is a warning in the console (in
             // edit mode) as we get several inputs with the same "id" attribute, and
             // several labels the same "for" attribute.
-            assert.expect(3);
-
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -1548,7 +1544,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsOnce(document.body, ".modal .o_form_view");
 
-            const fieldIdAttrs = [...$(".modal .o_form_view .o_field_widget")].map((n) =>
+            const fieldIdAttrs = [...$(".modal .o_form_view .o_field_widget input")].map((n) =>
                 n.getAttribute("id")
             );
             const labelForAttrs = [...$(".modal .o_form_view .o_form_label")].map((n) =>
@@ -1568,23 +1564,16 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "input ids for multiple occurrences of fields in sub form view (not inline)",
         async function (assert) {
             // A same field can occur several times in the view, but its id must be
             // unique by occurrence, otherwise there is a warning in the console (in
             // edit mode) as we get several inputs with the same "id" attribute, and
             // several labels the same "for" attribute.
-            assert.expect(3);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: '<form><field name="p"/></form>',
-                archs: {
-                    "partner,false,list": '<tree><field name="foo"/></tree>',
-                    "partner,false,form": `
+            serverData.views = {
+                "partner,false,list": '<tree><field name="foo"/></tree>',
+                "partner,false,form": `
                     <form>
                         <group>
                             <field name="foo"/>
@@ -1597,14 +1586,19 @@ QUnit.module("Views", (hooks) => {
                             <div><field name="qux" id="qux2"/></div>
                         </group>
                     </form>`,
-                },
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="p" widget="one2many"/></form>',
             });
 
             await click(target.querySelector(".o_field_x2many_list_row_add a"));
 
             assert.containsOnce(document.body, ".modal .o_form_view");
 
-            const fieldIdAttrs = [...$(".modal .o_form_view .o_field_widget")].map((n) =>
+            const fieldIdAttrs = [...$(".modal .o_form_view .o_field_widget input")].map((n) =>
                 n.getAttribute("id")
             );
             const labelForAttrs = [...$(".modal .o_form_view .o_form_label")].map((n) =>
@@ -6408,51 +6402,218 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("in edit mode, first field is focused", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("in edit mode, first field is focused", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="foo"/>' + '<field name="bar"/>' + "</form>",
+            arch: '<form><field name="foo"/><field name="bar"/></form>',
             resId: 1,
         });
         await click(target.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
             document.activeElement,
-            target.querySelector('.o_field_widget[name="foo"] input')[0],
-            "foo field should have focus"
+            target.querySelector('.o_field_widget[name="foo"] input')
         );
         assert.strictEqual(
-            target.querySelector('.o_field_widget[name="foo"] input')[0].selectionStart,
+            target.querySelector('.o_field_widget[name="foo"] input').selectionStart,
             3,
             "cursor should be at the end"
         );
     });
 
-    QUnit.skipWOWL("autofocus fields are focused", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("autofocus fields are focused", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="bar"/>' +
-                '<field name="foo" default_focus="1"/>' +
-                "</form>",
+            arch: '<form><field name="int_field"/><field name="foo" default_focus="1"/></form>',
             resId: 1,
         });
         await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             document.activeElement,
-            target.querySelector('.o_field_widget[name="foo"] input')[0],
-            "foo field should have focus"
+            target.querySelector('.o_field_widget[name="foo"] input')
         );
     });
+
+    QUnit.test("in create mode, autofocus fields are focused", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="int_field"/><field name="foo" default_focus="1"/></form>',
+        });
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector('.o_field_widget[name="foo"] input')
+        );
+    });
+
+    QUnit.test("autofocus first visible field", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="int_field" invisible="1"/><field name="foo"/></form>',
+        });
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector('.o_field_widget[name="foo"] input')
+        );
+    });
+
+    QUnit.test(
+        "no autofocus with disable_autofocus option [REQUIRE FOCUS]",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form disable_autofocus="1"><field name="int_field"/></form>',
+            });
+
+            assert.notStrictEqual(
+                document.activeElement,
+                target.querySelector('.o_field_widget[name="int_field"] input')
+            );
+            await click(target.querySelector(".o_form_button_save"));
+            await click(target.querySelector(".o_form_button_edit"));
+            assert.notStrictEqual(
+                document.activeElement,
+                target.querySelector('.o_field_widget[name="int_field"] input')
+            );
+        }
+    );
+
+    QUnit.test("In READ mode, focus the first primary button of the form", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <field name="state" invisible="1"/>
+                        <header>
+                            <button name="post" class="btn-primary firstButton" string="Confirm" type="object"/>
+                            <button name="post" class="btn-primary secondButton" string="Confirm2" type="object"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <div class="oe_title">
+                                    <field name="display_name"/>
+                                </div>
+                            </group>
+                        </sheet>
+                    </form>`,
+            resId: 2,
+        });
+        assert.strictEqual(target.querySelector("button.firstButton"), document.activeElement);
+    });
+
+    QUnit.test(
+        "In READ mode, focus EDIT button no primary button on the form",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="state" invisible="1"/>
+                        <header>
+                            <button name="post" class="not-primary" string="Confirm" type="object"/>
+                            <button name="post" class="not-primary" string="Confirm2" type="object"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <div class="oe_title">
+                                    <field name="display_name"/>
+                                </div>
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 2,
+            });
+            assert.strictEqual(target.querySelector(".o_form_button_edit"), document.activeElement);
+        }
+    );
+
+    QUnit.skipWOWL(
+        "no focus set on form when closing many2one modal if lastActivatedFieldIndex is not set",
+        async function (assert) {
+            assert.expect(8);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch:
+                    "<form>" +
+                    '<field name="display_name"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="p"/>' +
+                    '<field name="timmy"/>' +
+                    '<field name="product_ids"/>' +
+                    '<field name="trululu"/>' +
+                    "</form>",
+                resId: 2,
+                archs: {
+                    "partner,false,list": '<tree><field name="display_name"/></tree>',
+                    "partner_type,false,list": '<tree><field name="name"/></tree>',
+                    "partner,false,form": '<form><field name="trululu"/></form>',
+                    "product,false,list": '<tree><field name="name"/></tree>',
+                },
+                mockRPC(route, args) {
+                    if (args.method === "get_formview_id") {
+                        return Promise.resolve(false);
+                    }
+                    return this._super(route, args);
+                },
+            });
+
+            // set max-height to have scroll forcefully so that we can test scroll position after modal close
+            $(".o_content").css({ overflow: "auto", "max-height": "300px" });
+            // Open many2one modal, lastActivatedFieldIndex will not set as we directly click on external button
+            await click(target.querySelector(".o_form_button_edit"));
+            assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
+
+            target.querySelector(".o_field_many2one[name='trululu'] .o_input").focus();
+            assert.notStrictEqual(
+                $(".o_content").scrollTop(),
+                0,
+                "scroll position should not be 0"
+            );
+
+            await click(target.querySelector(".o_external_button"));
+            // Close modal
+            await click($(".modal").last().find('button[class="close"]'));
+            assert.notStrictEqual(
+                $(".o_content").scrollTop(),
+                0,
+                "scroll position should not be 0 after closing modal"
+            );
+            assert.containsNone(document.body, ".modal", "There should be no modal");
+            assert.doesNotHaveClass($("body"), "modal-open", "Modal is not said opened");
+            // assert.strictEqual(
+            //     form.renderer.lastActivatedFieldIndex,
+            //     -1,
+            //     "lastActivatedFieldIndex is -1"
+            // );
+            assert.equal(
+                document.activeElement,
+                $("body")[0],
+                "body is focused, should not set focus on form widget"
+            );
+            assert.notStrictEqual(
+                document.activeElement,
+                target.querySelector('.o_field_many2one[name="trululu"] .o_input'),
+                "field widget should not be focused when lastActivatedFieldIndex is -1"
+            );
+        }
+    );
 
     QUnit.test("correct amount of buttons", async function (assert) {
         assert.expect(7);
@@ -6541,101 +6702,6 @@ QUnit.module("Views", (hooks) => {
         });
     });
 
-    QUnit.skipWOWL(
-        "no focus set on form when closing many2one modal if lastActivatedFieldIndex is not set",
-        async function (assert) {
-            assert.expect(8);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    '<field name="display_name"/>' +
-                    '<field name="foo"/>' +
-                    '<field name="bar"/>' +
-                    '<field name="p"/>' +
-                    '<field name="timmy"/>' +
-                    '<field name="product_ids"/>' +
-                    '<field name="trululu"/>' +
-                    "</form>",
-                resId: 2,
-                archs: {
-                    "partner,false,list": '<tree><field name="display_name"/></tree>',
-                    "partner_type,false,list": '<tree><field name="name"/></tree>',
-                    "partner,false,form": '<form><field name="trululu"/></form>',
-                    "product,false,list": '<tree><field name="name"/></tree>',
-                },
-                mockRPC(route, args) {
-                    if (args.method === "get_formview_id") {
-                        return Promise.resolve(false);
-                    }
-                    return this._super(route, args);
-                },
-            });
-
-            // set max-height to have scroll forcefully so that we can test scroll position after modal close
-            $(".o_content").css({ overflow: "auto", "max-height": "300px" });
-            // Open many2one modal, lastActivatedFieldIndex will not set as we directly click on external button
-            await click(target.querySelector(".o_form_button_edit"));
-            assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
-
-            target.querySelector(".o_field_many2one[name='trululu'] .o_input").focus();
-            assert.notStrictEqual(
-                $(".o_content").scrollTop(),
-                0,
-                "scroll position should not be 0"
-            );
-
-            await click(target.querySelector(".o_external_button"));
-            // Close modal
-            await click($(".modal").last().find('button[class="close"]'));
-            assert.notStrictEqual(
-                $(".o_content").scrollTop(),
-                0,
-                "scroll position should not be 0 after closing modal"
-            );
-            assert.containsNone(document.body, ".modal", "There should be no modal");
-            assert.doesNotHaveClass($("body"), "modal-open", "Modal is not said opened");
-            // assert.strictEqual(
-            //     form.renderer.lastActivatedFieldIndex,
-            //     -1,
-            //     "lastActivatedFieldIndex is -1"
-            // );
-            assert.equal(
-                document.activeElement,
-                $("body")[0],
-                "body is focused, should not set focus on form widget"
-            );
-            assert.notStrictEqual(
-                document.activeElement,
-                target.querySelector('.o_field_many2one[name="trululu"] .o_input'),
-                "field widget should not be focused when lastActivatedFieldIndex is -1"
-            );
-        }
-    );
-
-    QUnit.skipWOWL("in create mode, autofocus fields are focused", async function (assert) {
-        assert.expect(1);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<field name="int_field"/>' +
-                '<field name="foo" default_focus="1"/>' +
-                "</form>",
-        });
-        assert.strictEqual(
-            document.activeElement,
-            target.querySelector('.o_field_widget[name="foo"] input')[0],
-            "foo field should have focus"
-        );
-    });
-
     QUnit.test("create with false values", async function (assert) {
         assert.expect(1);
         await makeView({
@@ -6652,56 +6718,6 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_form_button_save"));
     });
-
-    QUnit.skipWOWL("autofocus first visible field", async function (assert) {
-        assert.expect(1);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                "<form>" +
-                '<field name="int_field" invisible="1"/>' +
-                '<field name="foo"/>' +
-                "</form>",
-        });
-        assert.strictEqual(
-            document.activeElement,
-            target.querySelector('.o_field_widget[name="foo"] input')[0],
-            "foo field should have focus"
-        );
-    });
-
-    QUnit.skipWOWL(
-        "no autofocus with disable_autofocus option [REQUIRE FOCUS]",
-        async function (assert) {
-            assert.expect(2);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: "<form>" + '<field name="int_field"/>' + '<field name="foo"/>' + "</form>",
-                viewOptions: {
-                    disable_autofocus: true,
-                },
-            });
-            assert.notStrictEqual(
-                document.activeElement,
-                target.querySelector('.o_field_widget[name="int_field"] input')[0],
-                "int_field field should not have focus"
-            );
-
-            // await form.update({});
-
-            assert.notStrictEqual(
-                document.activeElement,
-                target.querySelector('.o_field_widget[name="int_field"] input')[0],
-                "int_field field should not have focus"
-            );
-        }
-    );
 
     QUnit.test("open one2many form containing many2many_tags", async function (assert) {
         serverData.models.partner.records[0].product_ids = [37];
@@ -9827,74 +9843,6 @@ QUnit.module("Views", (hooks) => {
             assert.ok(
                 target.querySelector("th:contains(Bar)").is(":visible"),
                 "should have a visible bar field"
-            );
-        }
-    );
-
-    QUnit.skipWOWL(
-        "In READ mode, the default button with focus is the first primary button of the form",
-        async function (assert) {
-            assert.expect(1);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    '<field name="state" invisible="1"/>' +
-                    "<header>" +
-                    '<button name="post" class="btn-primary firstButton" string="Confirm" type="object"/>' +
-                    '<button name="post" class="btn-primary secondButton" string="Confirm2" type="object"/>' +
-                    "</header>" +
-                    "<sheet>" +
-                    "<group>" +
-                    '<div class="oe_title">' +
-                    '<field name="display_name"/>' +
-                    "</div>" +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                resId: 2,
-            });
-            assert.strictEqual(
-                target.querySelector("button.firstButton")[0],
-                document.activeElement,
-                "by default the focus in edit mode should go to the first primary button of the form (not edit)"
-            );
-        }
-    );
-
-    QUnit.skipWOWL(
-        "In READ mode, the default button when pressing TAB is EDIT when there is no primary button on the form",
-        async function (assert) {
-            assert.expect(1);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    "<form>" +
-                    '<field name="state" invisible="1"/>' +
-                    "<header>" +
-                    '<button name="post" class="not-primary" string="Confirm" type="object"/>' +
-                    '<button name="post" class="not-primary" string="Confirm2" type="object"/>' +
-                    "</header>" +
-                    "<sheet>" +
-                    "<group>" +
-                    '<div class="oe_title">' +
-                    '<field name="display_name"/>' +
-                    "</div>" +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                resId: 2,
-            });
-            assert.strictEqual(
-                target.querySelector(".o_form_button_edit"),
-                document.activeElement,
-                "in read mode, when there are no primary buttons on the form, the default button with the focus should be edit"
             );
         }
     );
