@@ -1,3 +1,13 @@
+.odoo-editor-editable ::selection {
+    /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
+        X = converted color component (R, G, B) (0 <= X <= 255)
+        Y = desired apparent color component (R, G, B) (0 <= Y <= 255)
+        P = opacity (0 <= P <=1)
+        (limitation: Y + 255P >= 255)
+    */
+    background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+}
+
 .oe-floating {
     box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
     border-radius: 4px;
