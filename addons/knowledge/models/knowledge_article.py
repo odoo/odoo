@@ -8,7 +8,7 @@ from markupsafe import Markup
 from werkzeug.urls import url_join
 
 from odoo import Command, fields, models, api, _
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import get_lang
 
@@ -710,6 +710,10 @@ class Article(models.Model):
         parent = self.browse(parent_id)
         before_article = self.browse(before_article_id)
 
+        if is_private:
+            # making an article private requires a lot of extra-processing, use specific method
+            return self._make_private(parent=parent, sequence=before_article.sequence or False)
+
         values = {'parent_id': parent_id}
         if before_article:
             values['sequence'] = before_article.sequence
@@ -717,43 +721,10 @@ class Article(models.Model):
             # be sure to have an internal permission on the article if moved outside
             # of an hierarchy
             values.update({
-                'internal_permission': 'none' if is_private else 'write',
+                'internal_permission': 'write',
                 'is_desynchronized': False
             })
 
-        # if set as standalone private: remove members, ensure current user is the
-        # only member -> require sudo to bypass member ACLs
-        if not parent and is_private:
-            # explicitly check for rights before going into sudo
-            try:
-                self.check_access_rights('write')
-                (self + parent).check_access_rule('write')
-            except:
-                raise AccessError(
-                    _("You are not allowed to move this article under article %(parent_name)s",
-                      parent_name=parent.display_name)
-                )
-            self_sudo = self.sudo()
-            self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
-
-            if self_member:
-                write_member_command = [(1, self_member.id, {'permission': 'write'})]
-            else:
-                write_member_command = [(0, 0, {
-                    'partner_id': self.env.user.partner_id.id,
-                    'permission': 'write'
-                })]
-            # has to be done in 2 separate write operations:
-            # first add or update the new membership with 'write' access
-            self_sudo.write({'article_member_ids': write_member_command})
-
-            # then remove other members as the article is moved to private
-            # this helps avoiding a temporary state where we don't have a writer on the article (see '_has_write_member')
-            values['article_member_ids'] = [
-                (2, member.id)
-                for member in self_sudo.article_member_ids if member.partner_id != self.env.user.partner_id
-            ]
-            return self_sudo.write(values)
         return self.write(values)
 
     def _resequence(self):
@@ -1179,6 +1150,81 @@ class Article(models.Model):
             })
 
         return writable_descendants
+
+    def _make_private(self, parent=False, sequence=False):
+        """ Set as private: remove members, ensure current user is the only member
+        Requires a sudo to bypass member ACLs after checking write access on the article.
+
+        Children articles to which the user also has a write access to are made private as well.
+        Other articles are detached, see '_detach_unwritable_descendants' for details.
+
+        :param <knowledge.article> parent: an optional parent to move the article under
+        :param int sequence: an optional specific sequence to set for the article """
+
+        self.ensure_one()
+
+        parent = parent or self.env['knowledge.article']
+        # explicitly check for rights before going into sudo
+        try:
+            self.check_access_rights('write')
+            (self + parent).check_access_rule('write')
+        except (AccessError, UserError):
+            raise AccessError(
+                _("You are not allowed to make '%(article_name)s' private.", article_name=self.display_name)
+            )
+
+        # first detach unwritable children (see '_detach_unwritable_descendants' docstring)
+        writable_descendants = self._detach_unwritable_descendants()
+
+        self_sudo = self.sudo()
+        write_member_commands = []
+        article_values = {
+            # reset internal permission if parent is set (will inherit) or force private (aka 'none')
+            'internal_permission': False if parent else 'none',
+            # cannot be desync when made private as we wipe members access
+            'is_desynchronized': False,
+            'parent_id': parent.id if parent else False,
+        }
+
+        if not parent:
+            # make sure the current user is the only member left with write access to the article
+            # if we have a parent, this is not necessary as we will inherit members access from him
+            self_member = self_sudo.article_member_ids.filtered(lambda m: m.partner_id == self.env.user.partner_id)
+            if self_member:
+                write_member_commands = [(1, self_member.id, {'permission': 'write'})]
+            else:
+                write_member_commands = [(0, 0, {
+                    'partner_id': self.env.user.partner_id.id,
+                    'permission': 'write'
+                })]
+            # has to be done in 2 separate write operations:
+            # first add or update the new membership with 'write' access
+            # this helps avoiding a temporary state where we don't have a writer on the article
+            # (see '_has_write_member')
+            self_sudo.write({'article_member_ids': write_member_commands})
+
+        # then remove other members as the article is moved to private
+        members_to_remove = self_sudo.article_member_ids
+        if not parent:
+            members_to_remove = members_to_remove.filtered(
+                lambda member: member.partner_id != self.env.user.partner_id
+            )
+
+        article_values['article_member_ids'] = [
+            (2, member.id)
+            for member in members_to_remove
+        ]
+
+        self_sudo.write(article_values)
+
+        # remove all specific memberships configurations on children
+        # they will inherit the (only) 'write' member from their parent now, making them private
+        writable_descendants.write({
+            'internal_permission': False,
+            'article_member_ids': [(5, 0)],
+        })
+
+        return True
 
     def _copy_access_from_parents_commands(self, force_partners=False, force_member_permission=False):
         """ Prepare commands for all inherited accesses from parents on the article in order
