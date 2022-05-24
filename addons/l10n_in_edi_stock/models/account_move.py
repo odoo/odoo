@@ -16,7 +16,7 @@ class AccountMove(models.Model):
             move.l10n_in_edi_stock_has_picking = bool(self.env['stock.picking'].search_count([
                 ('l10n_in_related_invoice_id', '=', move.id)]))
 
-    def action_l10n_in_edi_view_stock(self):
+    def action_l10n_in_edi_stock_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
         pickings = self.env['stock.picking'].search([('l10n_in_related_invoice_id', '=', self.id)])
         if len(pickings) > 1:
