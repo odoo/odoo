@@ -1985,7 +1985,7 @@ class MrpProduction(models.Model):
         if multiple_lot_components:
             if message:
                 message += "\n"
-            message += _("Component Lots must be unique for mass production. Please review consumption for:\n")
+            message += _("Component Lots must be unique for mass production. Please review reservation for:\n")
             message += "\n".join(component.name for component in multiple_lot_components)
         if message:
             raise UserError(message)
