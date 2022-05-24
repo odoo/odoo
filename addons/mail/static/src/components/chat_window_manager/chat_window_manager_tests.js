@@ -6,6 +6,7 @@ const {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } = require('mail/static/src/utils/test_utils.js');
@@ -1028,7 +1029,7 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1799,7 +1800,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1885,9 +1886,8 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
         )
     );
     const messageList = document.querySelector('.o_MessageList');
-    assert.strictEqual(
-        messageList.scrollHeight - messageList.scrollTop,
-        messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "chat window should scroll to the newly posted message just after posting it"
     );
 });
@@ -2038,7 +2038,7 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
