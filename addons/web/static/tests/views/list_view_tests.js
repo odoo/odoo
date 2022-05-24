@@ -5628,9 +5628,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_group_header button");
     });
 
-    QUnit.skipWOWL("editable list view with groupby node and modifiers", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("editable list view with groupby node and modifiers", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -5652,14 +5650,14 @@ QUnit.module("Views", (hooks) => {
             "first row should be in readonly mode"
         );
 
-        await click($(target).find(".o_data_row:first .o_data_cell"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.hasClass(
             $(target).find(".o_data_row:first"),
             "o_selected_row",
             "the row should be in edit mode"
         );
 
-        await testUtils.fields.triggerKeydown($(document.activeElement), "escape");
+        await triggerEvent(document.activeElement, null, "keydown", { key: "escape" });
         assert.doesNotHaveClass(
             $(target).find(".o_data_row:first"),
             "o_selected_row",
@@ -6701,12 +6699,11 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
             mockRPC: function (route) {
                 assert.step(route);
-                return this._super.apply(this, arguments);
             },
         });
 
         // click on 3rd line
-        await click($(target).find("td:contains(gnap)"));
+        await click($(target).find("td:contains(gnap)")[0]);
         assert.hasClass(
             $(target).find("tr.o_data_row:eq(2)"),
             "o_selected_row",
@@ -6714,10 +6711,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // press enter in input
-        await testUtils.fields.triggerKeydown(
-            $(target).find('tr.o_selected_row input[name="foo"]'),
-            "enter"
-        );
+        await triggerEvent(target, '.o_selected_row [name="foo"] input', "keydown", {
+            key: "enter",
+        });
         assert.hasClass(
             $(target).find("tr.o_data_row:eq(3)"),
             "o_selected_row",
@@ -6730,10 +6726,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // press enter on last row
-        await testUtils.fields.triggerKeydown(
-            $(target).find('tr.o_selected_row input[name="foo"]'),
-            "enter"
-        );
+        await triggerEvent(target, '.o_selected_row [name="foo"] input', "keydown", {
+            key: "enter",
+        });
         assert.containsN(target, "tr.o_data_row", 5, "should have created a 5th row");
 
         assert.verifySteps(["/web/dataset/search_read", "/web/dataset/call_kw/foo/onchange"]);
@@ -7941,9 +7936,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("pressing ESC discard the current line changes", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("pressing ESC discard the current line changes", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -7954,20 +7947,15 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_add"));
         assert.containsN(target, "tr.o_data_row", 5, "should currently adding a 5th data row");
 
-        await testUtils.fields.triggerKeydown($(target).find('input[name="foo"]'), "escape");
+        await triggerEvent(target, '[name="foo"] input', "keydown", { key: "escape" });
         assert.containsN(target, "tr.o_data_row", 4, "should have only 4 data row after escape");
         assert.containsNone(target, "tr.o_data_row.o_selected_row", "no rows should be selected");
-        assert.ok(
-            !target.querySelector(".o_list_button_save").is(":visible"),
-            "should not have a visible save button"
-        );
+        assert.containsNone(target, ".o_list_button_save", "should not have a save button");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "pressing ESC discard the current line changes (with required)",
         async function (assert) {
-            assert.expect(4);
-
             await makeView({
                 type: "list",
                 resModel: "foo",
@@ -7978,7 +7966,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_list_button_add"));
             assert.containsN(target, "tr.o_data_row", 5, "should currently adding a 5th data row");
 
-            await testUtils.fields.triggerKeydown($(target).find('input[name="foo"]'), "escape");
+            await triggerEvent(target, '[name="foo"] input', "keydown", { key: "escape" });
             assert.containsN(
                 target,
                 "tr.o_data_row",
@@ -7990,10 +7978,7 @@ QUnit.module("Views", (hooks) => {
                 "tr.o_data_row.o_selected_row",
                 "no rows should be selected"
             );
-            assert.ok(
-                !target.querySelector(".o_list_button_save").is(":visible"),
-                "should not have a visible save button"
-            );
+            assert.containsNone(target, ".o_list_button_save", "should not have a save button");
         }
     );
 
@@ -11434,7 +11419,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "pressing ESC in editable grouped list should discard the current line changes",
         async function (assert) {
             assert.expect(6);
@@ -11447,20 +11432,18 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await click($(target).find(".o_group_header:first")); // open first group
+            await click(target.querySelectorAll(".o_group_header")[1]); // open first group
             assert.containsN(target, "tr.o_data_row", 3);
 
-            await click($(target).find(".o_data_cell:first"));
+            await click(target.querySelector(".o_data_cell"));
 
             // update name by "foo"
-            await testUtils.fields.editAndTrigger(
-                $(target).find('tr.o_selected_row .o_data_cell:first input[name="foo"]'),
-                "new_value",
-                "input"
-            );
+            const input = target.querySelector('.o_data_cell [name="foo"] input');
+            input.value = "new_value";
+            await triggerEvent(input, null, "input");
             // discard by pressing ESC
-            await testUtils.fields.triggerKeydown($(target).find('input[name="foo"]'), "escape");
-            assert.containsNone(document.body, ".modal", "should not open modal");
+            await triggerEvent(target, '[name="foo"] input', "keydown", { key: "escape" });
+            assert.containsNone(target, ".modal", "should not open modal");
 
             assert.containsOnce(target, "tbody tr td:contains(yop)");
             assert.containsN(target, "tr.o_data_row", 3);

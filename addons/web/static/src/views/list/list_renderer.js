@@ -736,12 +736,12 @@ export class ListRenderer extends Component {
      */
     async onKeydown(event) {
         const { classList } = event.target;
-        switch (event.key) {
-            case "Escape":
+        switch (event.key.toLowerCase()) {
+            case "escape":
                 event.stopPropagation();
                 this.props.list.unselectRecord();
                 break;
-            case "Enter":
+            case "enter":
                 if ([...classList].includes("o-autocomplete--input")) {
                     return;
                 }
