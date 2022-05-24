@@ -7,6 +7,7 @@ from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
 
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+from calendar import monthrange
 from collections import defaultdict
 from contextlib import contextmanager
 from itertools import zip_longest
@@ -300,9 +301,14 @@ class AccountMove(models.Model):
         default='no', required=True, copy=False,
         help='Specify whether this entry is posted automatically on its accounting date, and any similar recurring invoices.')
     auto_post_until = fields.Date(
-        string='Auto-post Until',
+        string='Auto-post until',
         copy=False,
         help='Determine an end date for recurring invoices.')
+    auto_post_origin = fields.Many2one(
+        comodel_name='account.move',
+        string='First recurring entry',
+        readonly=True, copy=False,
+    )
 
     # ==== Reverse feature fields ====
     reversed_entry_id = fields.Many2one(
@@ -3154,24 +3160,39 @@ class AccountMove(models.Model):
         Meant to be called right after posting a periodic entry.
         Copies extra fields as defined by get_fields_to_copy_recurring_entries().
         '''
+        def apply_delta(date, date_origin, months):
+            # Advances date by some months, maintaining original day of the month if possible
+            delta = relativedelta(months=months)  # does not overflow when lands on shorter month
+            next_date = date + delta
+            next_month_days = monthrange(next_date.year, next_date.month)[1]
+            origin_day = date_origin.day
+            return next_date + relativedelta(days=min(next_month_days, origin_day) - next_date.day)
+
         deltas = {'monthly': 1, 'quarterly': 3, 'yearly': 12}
         for record in self:
-            delta = relativedelta(months=deltas[record.auto_post])
-            next_date = record.date + delta
-            if not record.auto_post_until or next_date <= record.auto_post_until:
+            record.auto_post_origin = record.auto_post_origin or record  # original entry references itself
+            next_date = apply_delta(record.date, record.auto_post_origin.date, deltas[record.auto_post])
+
+            if not record.auto_post_until or next_date <= record.auto_post_until:  # recurrence continues
                 copy = record.copy()
-                copy.write({field: getattr(record, field) for field in record.get_fields_to_copy_recurring_entries()})
+                copy.write({field: value for field, value in record.get_fields_to_copy_recurring_entries().items()})
                 copy.date = next_date
-                copy.invoice_date = record.invoice_date + delta
-                if not copy.invoice_payment_term_id:
+                copy.invoice_date = apply_delta(record.invoice_date, record.auto_post_origin.invoice_date, deltas[record.auto_post])
+                if not copy.invoice_payment_term_id:  # no payment terms: maintain timedelta between due date and accounting date
                     copy.invoice_date_due = copy.date + (record.invoice_date_due - record.date)
+                copy.message_post(body=f'This recurring entry originated from {copy.auto_post_origin._get_html_link()}')
 
     def get_fields_to_copy_recurring_entries(self):
         ''' Determines which extra fields to copy when copying a recurring entry.
         To be extended by modules that add fields with copy=False (implicit or explicit)
         whenever the opposite behavior is expected for recurring invoices.
         '''
-        return ['auto_post', 'auto_post_until', 'invoice_payment_term_id', 'invoice_user_id']
+        return {
+            'auto_post': self.auto_post,  # copy=False to avoid mistakes but should be the same in recurring copies
+            'auto_post_until': self.auto_post_until,  # same as above
+            'auto_post_origin': self.auto_post_origin,  # same as above
+            'invoice_user_id': self.invoice_user_id,  # otherwise user would be OdooBot
+        }
 
     # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
     def action_duplicate(self):
