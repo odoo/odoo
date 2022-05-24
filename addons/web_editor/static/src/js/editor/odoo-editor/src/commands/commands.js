@@ -136,6 +136,66 @@ function hasColor(element, mode) {
             getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
     );
 }
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/commands/commands.js
+||||||| parent of ad7d9884514 (temp):addons/web_editor/static/lib/odoo-editor/src/commands/commands.js
+function addColumn(editor, beforeOrAfter) {
+    getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
+    const c = getInSelection(editor.document, 'td');
+    if (!c) return;
+    const i = [...closestElement(c, 'tr').querySelectorAll('th, td')].findIndex(td => td === c);
+    const column = closestElement(c, 'table').querySelectorAll(`tr td:nth-of-type(${i + 1})`);
+    column.forEach(row => row[beforeOrAfter](document.createElement('td')));
+}
+function addRow(editor, beforeOrAfter) {
+    getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
+    const row = getInSelection(editor.document, 'tr');
+    if (!row) return;
+    const newRow = document.createElement('tr');
+    const cells = row.querySelectorAll('td');
+    newRow.append(...Array.from(Array(cells.length)).map(() => document.createElement('td')));
+    row[beforeOrAfter](newRow);
+}
+function deleteTable(editor, table) {
+    table = table || getInSelection(editor.document, 'table');
+    if (!table) return;
+    const p = document.createElement('p');
+    p.appendChild(document.createElement('br'));
+    table.before(p);
+    table.remove();
+    setSelection(p, 0);
+}
+=======
+function addColumn(editor, beforeOrAfter) {
+    getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
+    const c = getInSelection(editor.document, 'td');
+    if (!c) return;
+    const i = [...closestElement(c, 'tr').querySelectorAll('th, td')].findIndex(td => td === c);
+    const column = closestElement(c, 'table').querySelectorAll(`tr td:nth-of-type(${i + 1})`);
+    column.forEach(row => row[beforeOrAfter](document.createElement('td')));
+}
+function addRow(editor, beforeOrAfter) {
+    getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
+    const row = getInSelection(editor.document, 'tr');
+    if (!row) return;
+    const newRow = document.createElement('tr');
+    const cells = row.querySelectorAll('td');
+    newRow.append(...Array.from(Array(cells.length)).map(() => {
+        const td = document.createElement('td');
+        td.append(document.createElement('br'));
+        return td;
+    }));
+    row[beforeOrAfter](newRow);
+}
+function deleteTable(editor, table) {
+    table = table || getInSelection(editor.document, 'table');
+    if (!table) return;
+    const p = document.createElement('p');
+    p.appendChild(document.createElement('br'));
+    table.before(p);
+    table.remove();
+    setSelection(p, 0);
+}
+>>>>>>> ad7d9884514 (temp):addons/web_editor/static/lib/odoo-editor/src/commands/commands.js
 
 // This is a whitelist of the commands that are implemented by the
 // editor itself rather than the node prototypes. It might be

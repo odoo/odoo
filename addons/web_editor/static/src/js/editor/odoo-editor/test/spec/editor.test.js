@@ -4177,6 +4177,7 @@ X[]
         });
     });
 
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/editor.test.js
     describe('columnize', () => {
         const columnsContainer = contents => `<div class="container o_text_columns"><div class="row">${contents}</div></div>`;
         const column = (size, contents) => `<div class="col-lg-${size}">${contents}</div>`;
@@ -5471,6 +5472,21 @@ X[]
         });
     });
 
+||||||| parent of ad7d9884514 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
+=======
+    describe('tables', () => {
+        describe('tab', () => {
+            it('should add a new row on press tab at the end of a table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+                    stepFunction: async editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab'}),
+                    contentAfter: '<table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr><tr><td>[]<br></td><td><br></td><td><br></td></tr></tbody></table>',
+                });
+            });
+        });
+    });
+
+>>>>>>> ad7d9884514 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
     // Note that arrow keys test have a contentAfter that is not reflective of
     // reality. The browser doesn't apply the selection change after triggering
     // an event programmatically so what we are testing here is that if a custom
