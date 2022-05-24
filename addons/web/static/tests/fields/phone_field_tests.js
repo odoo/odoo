@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, triggerEvent } from "../helpers/utils";
+import { click, editInput, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
+import { getNextTabableElement } from "@web/core/utils/ui";
 
 let serverData;
 let target;
@@ -97,11 +98,6 @@ QUnit.module("Fields", (hooks) => {
             type: "list",
             resModel: "partner",
             arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
-            // config: {
-            //     device: {
-            //         size_class: config.device.SIZES.LG,
-            //     },
-            // },
         });
 
         assert.containsN(target, "tbody td:not(.o_list_record_selector).o_data_cell", 2);
@@ -150,7 +146,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("use TAB to navigate to a PhoneField", async function (assert) {
+    QUnit.test("use TAB to navigate to a PhoneField", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -167,18 +163,15 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
         });
-        await click(target.querySelector(".o_field_widget[name=display_name]"));
+        target.querySelector(".o_field_widget[name=display_name] input").focus();
         assert.strictEqual(
             document.activeElement,
-            target.querySelector('.o_field_widget[name="display_name"]'),
+            target.querySelector('.o_field_widget[name="display_name"] input'),
             "display_name should be focused"
         );
-        await triggerEvent(target, '.o_field_widget[name="display_name"]', "keydown", {
-            key: "Tab",
-        });
         assert.strictEqual(
-            document.activeElement,
-            target.querySelector('input[name="foo"]'),
+            getNextTabableElement(target),
+            target.querySelector('[name="foo"] input'),
             "foo should be focused"
         );
     });
