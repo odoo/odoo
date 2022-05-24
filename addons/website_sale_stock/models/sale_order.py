@@ -9,6 +9,21 @@ class SaleOrder(models.Model):
 
     warning_stock = fields.Char('Warning')
 
+    def _get_warehouse_available(self):
+        self.ensure_one()
+        warehouse = self.website_id._get_warehouse_available()
+        if not warehouse and self.user_id and self.company_id:
+            warehouse = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id()
+        if not warehouse:
+            warehouse = self.env.user._get_default_warehouse_id()
+        return warehouse
+
+    def _compute_warehouse_id(self):
+        website_orders = self.filtered('website_id')
+        super(SaleOrder, self - website_orders)._compute_warehouse_id()
+        for order in website_orders:
+            order.warehouse_id = order._get_warehouse_available()
+
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
