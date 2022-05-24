@@ -79,6 +79,9 @@ export class SettingsFormController extends formView.Controller {
     //This is needed to avoid the auto save when unload
     beforeUnload() {}
 
+    //This is needed to avoid writing the id on the url
+    updateURL() {}
+
     onSearchInput(ev) {
         this.searchInput.value = ev.target.value;
     }

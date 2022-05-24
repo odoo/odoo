@@ -383,6 +383,64 @@ QUnit.module("SettingsFormView", (hooks) => {
         await nextTick();
     });
 
+    QUnit.test("settings views does not write the id on the url", async function (assert) {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                    <form string="Settings" js_class="base_settings">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`,
+            "task,2,list": `
+                    <tree>
+                        <field name="display_name"/>
+                    </tree>`,
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,search": "<search></search>",
+        };
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/dataset/call_button") {
+                if (args.method === "execute") {
+                    return true;
+                }
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
+        assert.notOk(target.querySelector(".custom-checkbox input").disabled);
+        await click(target.querySelector(".custom-checkbox input"));
+        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
+        await click(target.querySelector(".o_form_button_save"));
+
+        await nextTick();
+        assert.notOk(webClient.env.services.router.current.hash.id);
+    });
+
     QUnit.test(
         "settings views can search when coming back in breadcrumbs",
         async function (assert) {

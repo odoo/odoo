@@ -124,7 +124,7 @@ export class FormController extends Component {
 
         useEffect(() => {
             if (!this.env.inDialog) {
-                this.router.pushState({ id: this.model.root.resId || undefined });
+                this.updateURL();
             }
         });
 
@@ -205,6 +205,10 @@ export class FormController extends Component {
 
     beforeUnload() {
         return this.model.root.urgentSave();
+    }
+
+    updateURL() {
+        this.router.pushState({ id: this.model.root.resId || undefined });
     }
 
     getActionMenuItems() {
