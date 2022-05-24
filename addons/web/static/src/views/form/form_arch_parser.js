@@ -9,11 +9,19 @@ export class FormArchParser extends XMLParser {
         const xmlDoc = this.parseXML(arch);
         const jsClass = xmlDoc.getAttribute("js_class");
         const activeActions = getActiveActions(xmlDoc);
-        const activeFields = {};
+        const fieldNodes = {};
+        const fieldNextIds = {};
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "form", jsClass);
-                activeFields[fieldInfo.name] = fieldInfo;
+                let fieldId = fieldInfo.name;
+                if (fieldInfo.name in fieldNextIds) {
+                    fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+                } else {
+                    fieldNextIds[fieldInfo.name] = 1;
+                }
+                fieldNodes[fieldId] = fieldInfo;
+                node.setAttribute("field_id", fieldId);
                 return false;
             } else if (node.tagName === "div") {
                 // TODO TO FIX WITH MAIL
@@ -22,6 +30,21 @@ export class FormArchParser extends XMLParser {
                 }
             }
         });
-        return { arch, activeActions, activeFields, xmlDoc, __rawArch: arch };
+        // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
+        const activeFields = {};
+        for (const fieldNode of Object.values(fieldNodes)) {
+            activeFields[fieldNode.name] = fieldNode;
+            // const { onChange, modifiers } = fieldNode;
+            // let readonly = modifiers.readonly || [];
+            // let required = modifiers.required || [];
+            // if (activeFields[fieldNode.name]) {
+            //     activeFields[fieldNode.name].readonly = Domain.combine([activeFields[fieldNode.name].readonly, readonly], "|");
+            //     activeFields[fieldNode.name].required = Domain.combine([activeFields[fieldNode.name].required, required], "|");
+            //     activeFields[fieldNode.name].onChange = activeFields[fieldNode.name].onChange || onChange;
+            // } else {
+            //     activeFields[fieldNode.name] = { readonly, required, onChange };
+            // }
+        }
+        return { arch, activeActions, activeFields, fieldNodes, xmlDoc, __rawArch: arch };
     }
 }

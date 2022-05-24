@@ -854,13 +854,11 @@ export class ListRenderer extends Component {
     }
 
     makeTooltip(column) {
-        const field = this.props.list.fields[column.name];
-        const activeField = this.props.list.activeFields[column.name];
         return getTooltipInfo({
             viewMode: "list",
             resModel: this.props.list.resModel,
-            field,
-            activeField,
+            field: this.props.list.fields[column.name],
+            fieldInfo: this.props.list.activeFields[column.name],
         });
     }
 }

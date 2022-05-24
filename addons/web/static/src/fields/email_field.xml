@@ -8,6 +8,7 @@
         <t t-else="">
             <input
                 class="o_input"
+                t-att-id="props.id"
                 type="email"
                 t-att-required="props.required"
                 t-on-change="onChange"

@@ -293,69 +293,59 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });
 
-    QUnit.skipWOWL("duplicate fields rendered properly", async function (assert) {
-        assert.expect(6);
-        serverData.models.partner.records.push({
-            id: 6,
-            bar: true,
-            foo: "blip",
-            int_field: 9,
-        });
+    QUnit.test("duplicate fields rendered properly", async function (assert) {
         await makeView({
             type: "form",
-            viewOptions: { mode: "edit" },
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                "<group>" +
-                "<field name=\"foo\" attrs=\"{'invisible': [('bar','=',True)]}\"/>" +
-                "<field name=\"foo\" attrs=\"{'invisible': [('bar','=',False)]}\"/>" +
-                '<field name="foo"/>' +
-                "<field name=\"int_field\" attrs=\"{'readonly': [('bar','=',False)]}\"/>" +
-                "<field name=\"int_field\" attrs=\"{'readonly': [('bar','=',True)]}\"/>" +
-                '<field name="bar"/>' +
-                "</group>" +
-                "</group>" +
-                "</form>",
-            resId: 6,
+            arch: `
+                <form>
+                    <group>
+                        <group>
+                            <field name="foo" class="foo_1" attrs="{'invisible': [('bar','=',False)]}"/>
+                            <field name="foo" class="foo_2" attrs="{'invisible': [('bar','=',True)]}"/>
+                            <field name="foo" class="foo_3"/>
+                            <field name="int_field" class="int_field_1" attrs="{'readonly': [('bar','=',True)]}"/>
+                            <field name="int_field" class="int_field_2" attrs="{'readonly': [('bar','=',False)]}"/>
+                            <field name="bar"/>
+                        </group>
+                    </group>
+                </form>`,
         });
 
-        assert.hasClass(
-            target.querySelector('div.o_group .o_field_widget[name="foo"]:eq(0)'),
-            "o_invisible_modifier",
-            "first foo widget should be invisible"
-        );
-        assert.containsOnce(
-            target,
-            'div.o_group .o_field_widget[name="foo"]:eq(1):not(.o_invisible_modifier)',
-            "second foo widget should be visible"
-        );
-        assert.containsOnce(
-            target,
-            'div.o_group .o_field_widget[name="foo"]:eq(2):not(.o_invisible_modifier)',
-            "third foo widget should be visible"
-        );
-        await editInput(
-            target.querySelector('div.o_group .o_field_widget[name="foo"]:eq(2)'),
+        assert.containsNone(target, ".o_field_widget[name=foo].foo_1");
+        assert.containsOnce(target, ".o_field_widget[name=foo].foo_2");
+        assert.containsOnce(target, ".o_field_widget[name=foo].foo_3");
+
+        await editInput(target, ".o_field_widget[name=foo].foo_3 input", "hello");
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo].foo_2 input").value,
             "hello"
         );
-        assert.strictEqual(
-            target.querySelector('div.o_group .o_field_widget[name="foo"]:eq(1) input').value,
-            "hello",
-            "second foo widget should be 'hello'"
-        );
-        assert.containsOnce(
-            target,
-            'div.o_group .o_field_widget[name="int_field"]:eq(0):not(.o_readonly_modifier)',
-            "first int_field widget should not be readonly"
+        assert.doesNotHaveClass(
+            target.querySelector(".o_field_widget[name=int_field].int_field_1"),
+            "o_readonly_modifier"
         );
         assert.hasClass(
-            target.querySelector('div.o_group .o_field_widget[name="int_field"]:eq(0)'),
-            "o_readonly_modifier",
-            "second int_field widget should be readonly"
+            target.querySelector(".o_field_widget[name=int_field].int_field_2"),
+            "o_readonly_modifier"
         );
+        assert.containsOnce(target, ".int_field_1 input");
+        assert.containsOnce(target, ".int_field_2 span");
+
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name=int_field].int_field_1"),
+            "o_readonly_modifier"
+        );
+        assert.doesNotHaveClass(
+            target.querySelector(".o_field_widget[name=int_field].int_field_2"),
+            "o_readonly_modifier"
+        );
+        assert.containsOnce(target, ".int_field_1 span");
+        assert.containsOnce(target, ".int_field_2 input");
     });
 
     QUnit.skipWOWL("duplicate fields rendered properly (one2many)", async function (assert) {
@@ -1686,28 +1676,28 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
 
-        await mouseEnter(target.querySelector(".o_form_label[for='field_foo_1']"));
+        await mouseEnter(target.querySelector(".o_form_label[for=foo]"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "foo tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for='field_bar_2']"));
+        await mouseEnter(target.querySelector(".o_form_label[for=bar]"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "bar tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for='field_foo_3']"));
+        await mouseEnter(target.querySelector(".o_form_label[for=foo_1]"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "foo tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for='field_bar_4']"));
+        await mouseEnter(target.querySelector(".o_form_label[for=bar_1]"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
@@ -10189,14 +10179,14 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             });
 
-            await mouseEnter(target.querySelector(".o_form_label[for='field_product_id_2']"));
+            await mouseEnter(target.querySelector(".o_form_label[for=product_id]"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,
                 "this is a tooltip\n\nValues set here are company-specific."
             );
 
-            await mouseEnter(target.querySelector(".o_form_label[for='field_foo_1']"));
+            await mouseEnter(target.querySelector(".o_form_label[for=foo]"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,

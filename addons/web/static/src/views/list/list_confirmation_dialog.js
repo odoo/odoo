@@ -7,14 +7,6 @@ import { Field } from "@web/fields/field";
 const { Component } = owl;
 
 export class ListConfirmationDialog extends Component {
-    setup() {
-        this.isDomainSelected = this.props.isDomainSelected;
-        this.nbRecords = this.props.nbRecords;
-        this.nbValidRecords = this.props.nbValidRecords;
-        this.fields = this.props.fields;
-        this.record = this.props.record;
-    }
-
     _cancel() {
         if (this.props.cancel) {
             this.props.cancel();
@@ -48,6 +40,7 @@ ListConfirmationDialog.props = {
     nbRecords: Number,
     nbValidRecords: Number,
     record: Object,
+    fieldNodes: Object,
 };
 ListConfirmationDialog.defaultProps = {
     title: _lt("Confirmation"),

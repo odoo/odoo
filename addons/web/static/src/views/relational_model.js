@@ -10,6 +10,7 @@ import {
 } from "@web/core/l10n/dates";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { Domain } from "@web/core/domain";
+import { evalDomain } from "@web/views/helpers/utils";
 import { isNumeric, isRelational, isX2Many } from "@web/views/helpers/view_utils";
 import { unique } from "@web/core/utils/arrays";
 import { isTruthy } from "@web/core/utils/xml";
@@ -75,18 +76,6 @@ export const isAllowedDateField = (groupByField) => {
  */
 function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
-}
-
-/**
- * @param {Array[] | boolean} modifier
- * @param {Object} evalContext
- * @returns {boolean}
- */
-export function evalDomain(modifier, evalContext) {
-    if (Array.isArray(modifier)) {
-        modifier = new Domain(modifier).contains(evalContext);
-    }
-    return !!modifier;
 }
 
 /**
@@ -1443,6 +1432,7 @@ class DynamicList extends DataPoint {
                 nbRecords: selection.length,
                 nbValidRecords: validSelection.length,
                 record,
+                fieldNodes: this.model.fieldNodes,
             };
             await this.model.dialogService.add(ListConfirmationDialog, dialogProps);
         } else {
@@ -3020,6 +3010,7 @@ export class RelationalModel extends Model {
             resModel: params.resModel,
             groupByInfo: params.groupByInfo,
         };
+        this.fieldNodes = params.fieldNodes; // used by the ListConfirmationDialog
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
             this.rootParams.resIds = params.resIds;

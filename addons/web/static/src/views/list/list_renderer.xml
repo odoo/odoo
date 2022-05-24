@@ -159,7 +159,7 @@
                     <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="() => this.onCellClicked(record, column)">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
                             <t t-if="canUseFormatter(column, record)" t-esc="getFormattedValue(column, record)"/>
-                            <Field t-else="" name="column.name" record="record" type="column.widget" />
+                            <Field t-else="" name="column.name" record="record" type="column.widget" fieldInfo="props.archInfo.fieldNodes[column.name]"/>
                         </t>
                     </td>
                 </t>

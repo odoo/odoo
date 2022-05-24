@@ -3,7 +3,7 @@
 
     <t t-name="web.FloatField" owl="1">
         <span t-if="props.readonly" t-esc="getFormattedValue()" />
-        <input t-else="" t-ref="numpadDecimal" t-att-type="props.inputType" inputmode="numeric" class="o_input" t-on-change="onChange" t-att-step="props.step" />
+        <input t-else="" t-att-id="props.id" t-ref="numpadDecimal" t-att-type="props.inputType" inputmode="numeric" class="o_input" t-on-change="onChange" t-att-step="props.step" />
     </t>
 
 </templates>

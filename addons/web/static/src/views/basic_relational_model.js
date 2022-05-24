@@ -18,6 +18,7 @@ import {
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { Domain } from "@web/core/domain";
 import { Model } from "@web/views/helpers/model";
+import { evalDomain } from "@web/views/helpers/utils";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { escape } from "@web/core/utils/strings";
 
@@ -157,18 +158,6 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType) {
         fieldsInfo[viewType][fieldName] = fieldInfo;
     }
     return fieldsInfo;
-}
-
-/**
- * @param {any} modifier
- * @param {Object} evalContext
- * @returns {boolean}
- */
-export function evalDomain(modifier, evalContext) {
-    if (Array.isArray(modifier)) {
-        modifier = new Domain(modifier).contains(evalContext);
-    }
-    return !!modifier;
 }
 
 let nextId = 0;

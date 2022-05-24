@@ -30,6 +30,10 @@ export class FormRenderer extends Component {
     get record() {
         return this.props.record;
     }
+
+    get fieldNodes() {
+        return this.props.archInfo.fieldNodes;
+    }
 }
 
 FormRenderer.template = xml`<t t-call="{{ templateId }}" />`;

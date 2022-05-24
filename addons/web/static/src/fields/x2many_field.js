@@ -2,10 +2,10 @@
 
 import { createElement } from "@web/core/utils/xml";
 import { Dialog } from "@web/core/dialog/dialog";
-import { evalDomain } from "@web/views/relational_model";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
+import { evalDomain } from "@web/views/helpers/utils";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { makeContext } from "@web/core/context";

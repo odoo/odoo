@@ -9,9 +9,10 @@ const { Component, xml } = owl;
 export class FormLabel extends Component {
     get className() {
         const { invalid, empty } = fieldVisualFeedback(
-            null,
+            this.props.fieldInfo.FieldComponent,
             this.props.record,
-            this.props.fieldName
+            this.props.fieldName,
+            this.props.fieldInfo
         );
         const classes = this.props.className ? [this.props.className] : [];
         if (invalid) {
@@ -36,14 +37,11 @@ export class FormLabel extends Component {
         return help;
     }
     get tooltipInfo() {
-        const field = this.props.record.fields[this.props.fieldName];
-        const activeField = this.props.record.activeFields[this.props.fieldName];
-
         return getTooltipInfo({
             viewMode: "form",
             resModel: this.props.record.resModel,
-            field,
-            activeField,
+            field: this.props.record.fields[this.props.fieldName],
+            fieldInfo: this.props.fieldInfo,
             help: this.tooltipHelp,
         });
     }

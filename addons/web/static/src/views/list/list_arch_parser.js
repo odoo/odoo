@@ -7,7 +7,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 
 export class GroupListArchParser extends XMLParser {
     parse(arch, models, modelName, jsClass) {
-        const activeFields = {};
+        const fieldNodes = {};
         const buttons = [];
         let buttonId = 0;
         this.visitXML(arch, (node) => {
@@ -18,17 +18,18 @@ export class GroupListArchParser extends XMLParser {
                 });
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "list", jsClass);
-                activeFields[fieldInfo.name] = fieldInfo;
+                fieldNodes[fieldInfo.name] = fieldInfo;
+                node.setAttribute("field_id", fieldInfo.name);
             }
         });
-        return { activeFields, buttons };
+        return { fieldNodes, buttons };
     }
 }
 
 export class ListArchParser extends XMLParser {
     parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
-        const activeFields = {};
+        const fieldNodes = {};
         const columns = [];
         const fields = models[modelName];
         let buttonId = 0;
@@ -67,7 +68,8 @@ export class ListArchParser extends XMLParser {
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "list");
-                activeFields[fieldInfo.name] = fieldInfo;
+                fieldNodes[fieldInfo.name] = fieldInfo;
+                node.setAttribute("field_id", fieldInfo.name);
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
@@ -93,7 +95,8 @@ export class ListArchParser extends XMLParser {
                 const groupByArchInfo = groupListArchParser.parse(groupByArch, models, coModelName);
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
-                    activeFields: groupByArchInfo.activeFields,
+                    activeFields: groupByArchInfo.fieldNodes,
+                    fieldNodes: groupByArchInfo.fieldNodes,
                     fields: models[coModelName],
                 };
                 return false;
@@ -145,7 +148,8 @@ export class ListArchParser extends XMLParser {
             creates,
             handleField,
             headerButtons,
-            activeFields,
+            fieldNodes,
+            activeFields: fieldNodes, // TODO: process
             columns,
             groupBy,
             __rawArch: arch,

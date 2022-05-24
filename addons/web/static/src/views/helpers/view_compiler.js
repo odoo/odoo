@@ -431,12 +431,13 @@ export class ViewCompiler {
     compileField(el, params) {
         const fieldName = el.getAttribute("name");
         const fieldString = el.getAttribute("string");
-        const fieldId = `field_${fieldName}_${this.id++}`;
+        const fieldId = el.getAttribute("field_id") || fieldName;
 
         const field = createElement("Field");
         field.setAttribute("id", `'${fieldId}'`);
         field.setAttribute("name", `'${fieldName}'`);
         field.setAttribute("record", "record");
+        field.setAttribute("fieldInfo", `fieldNodes['${fieldId}']`);
 
         // FIXME WOWL: not necessary?
         // if ("mode" in el.attributes) {
@@ -481,6 +482,7 @@ export class ViewCompiler {
             id: `'${fieldId}'`,
             fieldName: `'${fieldName}'`,
             record: "record",
+            fieldInfo: `fieldNodes['${fieldId}']`,
         };
         let labelText = label.textContent || fieldString;
         labelText = labelText ? `'${labelText}'` : `record.fields['${fieldName}'].string`;
@@ -601,13 +603,15 @@ export class ViewCompiler {
                 if (addLabel && !isOuterGroup) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
                     const fieldName = child.getAttribute("name");
+                    const fieldId = slotContent.getAttribute("id") || fieldName;
                     const props = {
-                        id: `${slotContent.getAttribute("id")}`,
+                        id: `${fieldId}`,
                         fieldName: `'${fieldName}'`,
                         record: "record",
                         string: child.hasAttribute("string")
                             ? `'${child.getAttribute("string")}'`
                             : `record.fields.${fieldName}.string`,
+                        fieldInfo: `fieldNodes[${fieldId}]`,
                     };
                     // note: remove this oe_read/edit_only logic when form view
                     // will always be in edit mode

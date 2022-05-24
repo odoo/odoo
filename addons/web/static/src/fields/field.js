@@ -3,6 +3,7 @@
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { isTruthy, stringToOrderBy } from "@web/core/utils/xml";
+import { evalDomain } from "@web/views/helpers/utils";
 import { X2M_TYPES } from "@web/views/helpers/view_utils";
 import { getTooltipInfo } from "./field_tooltip";
 
@@ -49,21 +50,21 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
     return DefaultField;
 }
 
-export function fieldVisualFeedback(FieldComponent, record, fieldName) {
-    const Cls = FieldComponent || record.activeFields[fieldName].FieldComponent;
-    const readonly = record.isReadonly(fieldName);
+export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
+    const modifiers = fieldInfo.modifiers || {};
+    const readonly = evalDomain(modifiers.readonly, record.evalContext);
     const inEdit = record.mode !== "readonly";
 
     let empty = !record.isVirtual;
-    if ("isEmpty" in Cls) {
-        empty = empty && Cls.isEmpty(record, fieldName);
+    if ("isEmpty" in FieldComponent) {
+        empty = empty && FieldComponent.isEmpty(record, fieldName);
     } else {
         empty = empty && !record.data[fieldName];
     }
     empty = inEdit ? empty && readonly : empty;
     return {
         readonly,
-        required: record.isRequired(fieldName),
+        required: evalDomain(modifiers.required, record.evalContext),
         invalid: record.isInvalid(fieldName),
         empty,
     };
@@ -71,7 +72,7 @@ export function fieldVisualFeedback(FieldComponent, record, fieldName) {
 
 export class Field extends Component {
     setup() {
-        this.FieldComponent = this.props.record.activeFields[this.props.name].FieldComponent;
+        this.FieldComponent = this.props.fieldInfo.FieldComponent;
         if (!this.FieldComponent) {
             const fieldType = this.props.record.fields[this.props.name].type;
             this.FieldComponent = getFieldClassFromRegistry(fieldType, this.props.type);
@@ -79,10 +80,12 @@ export class Field extends Component {
     }
 
     get classNames() {
+        const { class: _class, fieldInfo, name, record } = this.props;
         const { readonly, required, invalid, empty } = fieldVisualFeedback(
             this.FieldComponent,
-            this.props.record,
-            this.props.name
+            record,
+            name,
+            fieldInfo
         );
         const classNames = {
             o_field_widget: true,
@@ -91,14 +94,14 @@ export class Field extends Component {
             o_field_invalid: invalid,
             o_field_empty: empty,
             [`o_field_${this.type}`]: true,
-            [this.props.class]: Boolean(this.props.class),
+            [_class]: Boolean(_class),
         };
 
         // generate field decorations classNames (only if field-specific decorations
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
         // only handle the text-decoration.
-        const { decorations } = this.props.record.activeFields[this.props.name];
-        const evalContext = this.props.record.evalContext;
+        const { decorations } = fieldInfo;
+        const evalContext = record.evalContext;
         for (const decoName in decorations) {
             const value = evaluateExpr(decorations[decoName], evalContext);
             classNames[`text-${decoName}`] = value;
@@ -113,40 +116,42 @@ export class Field extends Component {
 
     get fieldComponentProps() {
         const record = this.props.record;
+        const evalContext = record.evalContext;
         const field = record.fields[this.props.name];
-        const activeField = record.activeFields[this.props.name];
+        const fieldInfo = this.props.fieldInfo;
 
-        const readonlyFromModifiers = this.props.record.isReadonly(this.props.name);
+        const modifiers = fieldInfo.modifiers || {};
+        const required = evalDomain(modifiers.required, evalContext);
+        const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
         const readonlyFromViewMode = !this.props.record.isInEdition;
-        const emptyRequiredValue =
-            this.props.record.isRequired(this.props.name) && !this.props.value;
+        const emptyRequiredValue = required && !this.props.value;
 
         // Decoration props
         const decorationMap = {};
-        const { decorations } = this.props.record.activeFields[this.props.name];
-        const evalContext = this.props.record.evalContext;
+        const { decorations } = fieldInfo;
         for (const decoName in decorations) {
             const value = evaluateExpr(decorations[decoName], evalContext);
             decorationMap[decoName] = value;
         }
-
-        const props = { ...this.props };
-        delete props.style;
-        delete props.class;
-        delete props.showTooltip;
 
         let extractedPropsForStandaloneComponent = {};
         if (this.FieldComponent.extractProps) {
             extractedPropsForStandaloneComponent = this.FieldComponent.extractProps(
                 this.props.name,
                 record,
-                activeField.attrs
+                fieldInfo.attrs
             );
         }
 
+        const props = { ...this.props };
+        delete props.style;
+        delete props.class;
+        delete props.showTooltip;
+        delete props.fieldInfo;
+
         return {
-            ...activeField.props,
-            required: this.props.record.isRequired(this.props.name), // AAB: does the field really need this?
+            ...fieldInfo.props,
+            required, // AAB: does the field really need this?
             update: async (value) => {
                 await record.update({ [this.props.name]: value });
                 if (record.selected && record.model.multiEdit) {
@@ -171,7 +176,7 @@ export class Field extends Component {
         if (this.props.showTooltip) {
             const tooltip = getTooltipInfo({
                 field: this.props.record.fields[this.props.name],
-                activeField: this.props.record.activeFields[this.props.name],
+                fieldInfo: this.props.fieldInfo,
             });
             if (Boolean(odoo.debug) || (tooltip && JSON.parse(tooltip).field.help)) {
                 return tooltip;

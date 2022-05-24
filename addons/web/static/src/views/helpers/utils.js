@@ -1,5 +1,8 @@
 /** @odoo-module **/
+
+import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+
 /**
  * Parse the arch to check if is true or false
  * If the string is empty, 0, False or false it's considered as false
@@ -96,3 +99,15 @@ export const processMeasure = (measure) => {
     }
     return measure === "__count__" ? "__count" : measure;
 };
+
+/**
+ * @param {Array[] | boolean} modifier
+ * @param {Object} evalContext
+ * @returns {boolean}
+ */
+export function evalDomain(modifier, evalContext) {
+    if (Array.isArray(modifier)) {
+        modifier = new Domain(modifier).contains(evalContext);
+    }
+    return !!modifier;
+}

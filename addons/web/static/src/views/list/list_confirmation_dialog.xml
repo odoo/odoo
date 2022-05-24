@@ -5,17 +5,17 @@
         <Dialog size="'md'" title="props.title">
             <main role="alert">
                 <p>
-                    <t t-if="isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
-                    <t t-if="nbRecords != nbValidRecords">
-                        Among the <t t-esc="nbRecords"/> selected records,
-                        <t t-esc="nbValidRecords"/> are valid for this update.<br/>
+                    <t t-if="props.isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
+                    <t t-if="props.nbRecords != props.nbValidRecords">
+                        Among the <t t-esc="props.nbRecords"/> selected records,
+                        <t t-esc="props.nbValidRecords"/> are valid for this update.<br/>
                     </t>
-                    Are you sure you want to perform the following update on those <t t-esc="nbValidRecords"/> records ?
+                    Are you sure you want to perform the following update on those <t t-esc="props.nbValidRecords"/> records ?
                 </p>
                 <div class="table-responsive">
                     <table class="o_modal_changes">
                         <tbody>
-                            <t t-foreach="fields" t-as="field" t-key="field_index">
+                            <t t-foreach="props.fields" t-as="field" t-key="field_index">
                                 <tr>
                                     <td>Field:</td>
                                     <td><t t-esc="field.label"/></td>
@@ -23,7 +23,7 @@
                                 <tr>
                                     <td>Update to:</td>
                                     <td style="pointer-events: none;">
-                                        <Field name="field.name" record="record" type="field.widget" readonly="true" />
+                                        <Field name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="props.fieldNodes[field.name]"/>
                                     </td>
                                 </tr>
                             </t>

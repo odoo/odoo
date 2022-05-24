@@ -8,6 +8,7 @@
         <t t-else="">
             <textarea
                 class="o_input"
+                t-att-id="props.id"
                 t-att-placeholder="props.placeholder"
                 t-on-input="onInput"
                 t-on-change="onChange"

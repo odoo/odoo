@@ -3,11 +3,12 @@
 
     <t t-name="web.CharField" owl="1">
         <t t-if="props.readonly">
-            <span class="o-char-field" t-esc="formattedValue" />
+            <span t-esc="formattedValue" />
         </t>
         <t t-else="">
             <input
-                class="o-char-field o_input"
+                class="o_input"
+                t-att-id="props.id"
                 t-att-type="props.isPassword ? 'password' : 'text'"
                 t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
                 t-att-maxlength="props.maxLength > 0 and props.maxLength"

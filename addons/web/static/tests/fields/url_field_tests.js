@@ -53,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        const matchingEl = target.querySelector("a.o_url_field.o_field_widget.o_form_uri");
+        const matchingEl = target.querySelector("a.o_field_widget.o_form_uri");
         assert.containsOnce(target, matchingEl, "should have a anchor with correct classes");
         assert.hasAttrValue(matchingEl, "href", "http://yop", "should have proper href link");
         assert.hasAttrValue(
@@ -81,7 +81,7 @@ QUnit.module("Fields", (hooks) => {
 
         // save
         await click(target.querySelector(".o_form_button_save"));
-        const editedElement = target.querySelector("a.o_url_field.o_field_widget.o_form_uri");
+        const editedElement = target.querySelector("a.o_field_widget.o_form_uri");
         assert.containsOnce(
             target,
             editedElement,

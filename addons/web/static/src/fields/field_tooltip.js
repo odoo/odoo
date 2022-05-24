@@ -4,12 +4,12 @@ import fieldRegistry from "web.field_registry";
 
 export function getTooltipInfo(params) {
     let widgetDescription = undefined;
-    if (params.activeField.widget) {
-        if (params.activeField.FieldComponent.name === "LegacyField") {
-            const widget = fieldRegistry.get(params.activeField.widget);
+    if (params.fieldInfo.widget) {
+        if (params.fieldInfo.FieldComponent.name === "LegacyField") {
+            const widget = fieldRegistry.get(params.fieldInfo.widget);
             widgetDescription = widget.prototype.description;
         } else {
-            widgetDescription = params.activeField.FieldComponent.description;
+            widgetDescription = params.fieldInfo.FieldComponent.description;
         }
     }
 
@@ -22,11 +22,11 @@ export function getTooltipInfo(params) {
             name: params.field.name,
             help: params.help || params.field.help,
             type: params.field.type,
-            widget: params.activeField.widget,
+            widget: params.fieldInfo.widget,
             widgetDescription,
-            context: params.activeField.context,
-            domain: params.activeField.domain,
-            modifiers: JSON.stringify(params.activeField.modifiers),
+            context: params.fieldInfo.context,
+            domain: params.fieldInfo.domain,
+            modifiers: JSON.stringify(params.fieldInfo.modifiers),
             changeDefault: params.field.change_default,
             relation: params.field.relation,
             selection: params.field.selection,

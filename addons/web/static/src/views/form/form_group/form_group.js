@@ -2,9 +2,8 @@
 import { sortBy } from "@web/core/utils/arrays";
 
 class Group extends owl.Component {
-
     getItems() {
-        const items = Object.entries(this.props.slots).filter(([k,v]) => v.type==="item");
+        const items = Object.entries(this.props.slots).filter(([k, v]) => v.type === "item");
         return sortBy(items, (i) => i[1].sequence);
     }
 
@@ -14,7 +13,7 @@ class Group extends owl.Component {
 }
 Group.props = ["class?", "slots?", "maxCols?", "style?"];
 Group.defaultProps = {
-    maxCols: 2
+    maxCols: 2,
 };
 
 export class OuterGroup extends Group {
@@ -23,18 +22,17 @@ export class OuterGroup extends Group {
         const colSize = Math.max(1, Math.round(12 / nbCols));
 
         // Dispatch items across table rows
-        const items = super.getItems().filter(([k,v]) => !("isVisible" in v) || v.isVisible);
+        const items = super.getItems().filter(([k, v]) => !("isVisible" in v) || v.isVisible);
         return items.map((item) => {
-           const [slotName, slot] = item;
-           const itemSpan = slot.itemSpan || 1;
-           return {name: slotName, size: itemSpan * colSize, newline: slot.newline };
+            const [slotName, slot] = item;
+            const itemSpan = slot.itemSpan || 1;
+            return { name: slotName, size: itemSpan * colSize, newline: slot.newline };
         });
     }
 }
 OuterGroup.template = "web.Form.OuterGroup";
 
 export class InnerGroup extends Group {
-
     getRows() {
         const maxCols = this.props.maxCols;
 
@@ -46,14 +44,14 @@ export class InnerGroup extends Group {
         const items = this.getItems();
         while (items.length) {
             const [slotName, slot] = items.shift();
-            const {newline, itemSpan, subType, Component, props} = slot;
+            const { newline, itemSpan, subType, Component, props } = slot;
             if (newline) {
                 rows.push(currentRow);
                 currentRow = [];
                 reservedSpace = 0;
             }
 
-            const fullItemSpan = (itemSpan || 1);
+            const fullItemSpan = itemSpan || 1;
 
             if (fullItemSpan + reservedSpace > maxCols) {
                 rows.push(currentRow);
@@ -62,7 +60,7 @@ export class InnerGroup extends Group {
             }
 
             const isVisible = !("isVisible" in slot) || slot.isVisible;
-            currentRow.push({name: slotName, subType, itemSpan, props, isVisible, Component });
+            currentRow.push({ name: slotName, subType, itemSpan, props, isVisible, Component });
             reservedSpace += itemSpan || 1;
         }
         rows.push(currentRow);
@@ -71,11 +69,11 @@ export class InnerGroup extends Group {
         // The aim is for cells containing business data to occupy as much space as possible
         rows.forEach((row) => {
             let labelCount = 0;
-            const dataCells =[];
+            const dataCells = [];
             for (const c of row) {
                 if (c.subType === "label") {
                     labelCount++;
-                } else if (c.subType === "item_component"){
+                } else if (c.subType === "item_component") {
                     labelCount++;
                     dataCells.push(c);
                 } else {
@@ -84,7 +82,7 @@ export class InnerGroup extends Group {
             }
 
             const sizeOfDataCell = 100 / (maxCols - labelCount);
-            dataCells.forEach((c) =>  {
+            dataCells.forEach((c) => {
                 const itemSpan = c.subType === "item_component" ? c.itemSpan - 1 : c.itemSpan;
                 c.width = (itemSpan || 1) * sizeOfDataCell;
             });

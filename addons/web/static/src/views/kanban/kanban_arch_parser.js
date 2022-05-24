@@ -102,7 +102,7 @@ export class KanbanArchParser extends XMLParser {
         let colorField = "color";
         let cardColorField = null;
         let handleField = null;
-        const activeFields = {};
+        const fieldNodes = {};
         const jsClass = xmlDoc.getAttribute("js_class");
 
         // Root level of the template
@@ -116,7 +116,8 @@ export class KanbanArchParser extends XMLParser {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "kanban", jsClass);
                 const name = fieldInfo.name;
-                activeFields[name] = fieldInfo;
+                fieldNodes[name] = fieldInfo;
+                node.setAttribute("field_id", name);
                 if (fieldInfo.options.group_by_tooltip) {
                     tooltipInfo[name] = fieldInfo.options.group_by_tooltip;
                 }
@@ -142,9 +143,9 @@ export class KanbanArchParser extends XMLParser {
                 if (
                     attSrc &&
                     attSrc.includes("imageSrcFromRecordInfo") &&
-                    !activeFields.__last_update
+                    !fieldNodes.__last_update
                 ) {
-                    activeFields.__last_update = { type: "datetime" };
+                    fieldNodes.__last_update = { type: "datetime" };
                 }
             }
         });
@@ -250,7 +251,7 @@ export class KanbanArchParser extends XMLParser {
                         el,
                         ["data-field", "auto-open"]
                     );
-                    const widget = activeFields[fieldName].widget;
+                    const widget = fieldNodes[fieldName].widget;
                     Object.assign(params, { fieldName, widget, autoOpen });
                 }
                 const strParams = Object.keys(params)
@@ -273,9 +274,10 @@ export class KanbanArchParser extends XMLParser {
         return {
             arch,
             activeActions,
-            activeFields,
+            activeFields: fieldNodes, // TODO process
             className,
             defaultGroupBy,
+            fieldNodes,
             handleField,
             colorField,
             defaultOrder,
