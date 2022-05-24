@@ -30,7 +30,7 @@ export class SettingsFormRenderer extends FormRenderer {
     search(kind, value) {
         const labelsTmp = labels[this.props.archInfo.arch]
             .filter((x) => x[kind] === value)
-            .map((x) => [x.label, x.groupName]);
+            .map((x) => [x.label, x.groupTitle, x.groupTip]);
         return labelsTmp
             .join()
             .match(new RegExp(`(${escapeRegExp(this.searchValue.value)})`, "ig"));

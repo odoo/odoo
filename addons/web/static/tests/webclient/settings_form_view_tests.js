@@ -230,45 +230,53 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("hide / show setting tips properly", async function (assert) {
-        // assert.expect(3);
-        // const form = await createView({
-        //     View: BaseSettingsView,
-        //     model: "res.config.settings",
-        //     data: this.data,
-        //     arch: `
-        //         <form string="Settings" class="oe_form_configuration o_base_settings">
-        //             <div class="o_panel">
-        //                 <div class="setting_search">
-        //                     <input type="text" class="searchInput" placeholder="Search..." />
-        //                 </div>
-        //             </div>
-        //             <div class="o_setting_container">
-        //                 <div class="settings_tab" />
-        //                 <div class="settings">
-        //                     <div class="notFound o_hidden">No Record Found</div>
-        //                     <div class="app_settings_block" string="Settings" data-key="settings">
-        //                         <h2>Setting Header</h2>
-        //                         <h3 class="o_setting_tip">Settings will appear below</h3>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </form>`,
-        // });
-        // assert.containsOnce(
-        //     form,
-        //     ".o_setting_tip:not(.o_hidden)",
-        //     "Tip should not be hidden initially"
-        // );
-        // await testUtils.fields.editAndTrigger(form.$(".searchInput"), "Setting", "keyup");
-        // assert.containsOnce(
-        //     form,
-        //     ".o_setting_tip.o_hidden",
-        //     "Tip should be hidden when user searches in settings"
-        // );
-        // await testUtils.fields.editAndTrigger(form.$(".searchInput"), "", "keyup");
-        // assert.containsOnce(form, ".o_setting_tip:not(.o_hidden)", "Tip should be displayed again");
-        // form.destroy();
+    QUnit.test("hide / show setting tips properly", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <div class="app_settings_block" string="Settings" data-key="settings">
+                                <h2>Setting Header</h2>
+                                <h3 class="o_setting_tip">Settings will appear below</h3>
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="bar"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <label for="bar"/>
+                                            <div class="text-muted">this is bar</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h2>Title of group Foo</h2>
+                                <div class="row mt16 o_settings_container">
+                                    <div class="col-12 col-lg-6 o_setting_box">
+                                        <div class="o_setting_left_pane">
+                                            <field name="foo"/>
+                                        </div>
+                                        <div class="o_setting_right_pane">
+                                            <span class="o_form_label">Foo</span>
+                                            <div class="text-muted">this is foo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>`,
+        });
+        assert.containsOnce(target, ".o_setting_tip", "Tip should not be hidden initially");
+        await editSearch(target, "below");
+        assert.containsOnce(target, ".o_setting_tip", "Tip should not be hidden");
+        await editSearch(target, "Foo");
+        assert.containsNone(target, ".o_setting_tip", "Tip should not be displayed");
+        await editSearch(target, "");
+        assert.containsOnce(target, ".o_setting_tip", "Tip should not be hidden");
     });
 
     QUnit.test(

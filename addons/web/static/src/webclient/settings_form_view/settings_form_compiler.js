@@ -44,8 +44,10 @@ function compileSettingsApp(el, params) {
     settingsBlock.setAttribute("selectedTab", "settings.selectedTab");
 
     params.config.app = el.getAttribute("data-key");
-    params.config.groupName = undefined;
-    params.config.groupTitle = undefined;
+    params.config.groupTitleId = undefined;
+    params.config.groupTitle = "";
+    params.config.groupTipId = undefined;
+    params.config.groupTip = "";
     params.config.container = undefined;
     params.config.settingBox = undefined;
 
@@ -66,24 +68,52 @@ let groupTitleId = 0;
 function compileSettingsGroupTitle(el, params) {
     groupTitleId++;
     const res = this.compileGenericNode(el, params);
-    const groupName = res.textContent;
+    const groupTitle = res.textContent;
 
-    params.config.groupTitle = groupTitleId;
-    params.config.groupName = groupName;
+    params.config.groupTitleId = groupTitleId;
+    params.config.groupTitle = groupTitle;
+    params.config.groupTipId = undefined;
+    params.config.groupTip = undefined;
     params.config.container = undefined;
     params.config.settingBox = undefined;
     //HighlightText
     const highlight = createElement("HighlightText");
-    highlight.setAttribute("originalText", `\`${groupName}\``);
+    highlight.setAttribute("originalText", `\`${groupTitle}\``);
     append(res, highlight);
     res.firstChild.remove();
 
     params.labels.push({
-        label: groupName.trim(),
+        label: groupTitle.trim(),
         ...params.config,
     });
 
-    res.setAttribute("t-if", `!searchValue.value or search("groupTitle", ${groupTitleId})`);
+    res.setAttribute("t-if", `!searchValue.value or search("groupTitleId", ${groupTitleId})`);
+    return res;
+}
+
+let groupTipId = 0;
+
+function compileSettingsGroupTip(el, params) {
+    groupTipId++;
+    const res = this.compileGenericNode(el, params);
+    const tip = res.textContent;
+
+    params.config.groupTipId = groupTipId;
+    params.config.groupTip = tip;
+    params.config.container = undefined;
+    params.config.settingBox = undefined;
+    //HighlightText
+    const highlight = createElement("HighlightText");
+    highlight.setAttribute("originalText", `\`${tip}\``);
+    append(res, highlight);
+    res.firstChild.remove();
+
+    params.labels.push({
+        label: tip.trim(),
+        ...params.config,
+    });
+
+    res.setAttribute("t-if", `!searchValue.value or search("groupTipId", ${groupTipId})`);
     return res;
 }
 
@@ -198,6 +228,11 @@ export class SettingsFormCompiler extends FormCompiler {
             {
                 tag: "h2",
                 fn: compileSettingsGroupTitle,
+            },
+            {
+                tag: "h3",
+                class: "o_setting_tip",
+                fn: compileSettingsGroupTip,
             },
             // search terms and highlight :
             {
