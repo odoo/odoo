@@ -1948,7 +1948,7 @@ class PosSession(models.Model):
         params = self._loader_params_product_product()
         # custom_search_params will take priority
         params['search_params'] = {**params['search_params'], **custom_search_params}
-        products = self.env['product.product'].search_read(**params['search_params'])
+        products = self.env['product.product'].with_context(active_test=False).search_read(**params['search_params'])
         if len(products) > 0:
             self._process_pos_ui_product_product(products)
         return products
