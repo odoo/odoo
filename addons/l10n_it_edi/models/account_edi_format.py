@@ -375,7 +375,7 @@ class AccountEdiFormat(models.Model):
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
 
-    def get_partner_invoice(self, tree, company):
+    def _l10n_it_get_partner_invoice(self, tree, company):
         # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
         elements = tree.xpath('//CedentePrestatore//IdCodice')
         partner = elements and self.env['res.partner'].search(
@@ -458,7 +458,7 @@ class AccountEdiFormat(models.Model):
             with invoice_ctx._get_edi_creation() as invoice_form:
                 message_to_log = []
 
-                partner = self.get_partner_invoice(tree, company)
+                partner = self._l10n_it_get_partner_invoice(tree, company)
 
                 if partner:
                     invoice_form.partner_id = partner
