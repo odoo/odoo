@@ -945,7 +945,7 @@
                             <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
+                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}" groups="project.group_project_recurring_tasks"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
