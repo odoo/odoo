@@ -5,31 +5,16 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 const { Component } = owl;
 
 export class Follower extends Component {
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * @returns {Follower}
+     * @returns {FollowerView}
      */
-    get follower() {
-        return this.props.follower;
+    get followerView() {
+        return this.props.record;
     }
-
 }
 
 Object.assign(Follower, {
-    defaultProps: {
-        onClick: () => {},
-    },
-    props: {
-        follower: Object,
-        onClick: {
-            type: Function,
-            optional: true,
-        },
-    },
+    props: { record: Object },
     template: 'mail.Follower',
 });
 

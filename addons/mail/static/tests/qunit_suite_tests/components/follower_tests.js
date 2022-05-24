@@ -1,11 +1,7 @@
 /** @odoo-module **/
 
-import { insert, replace } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
-import {
-    start,
-    startServer,
-} from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -16,23 +12,30 @@ QUnit.module('follower_tests.js');
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    const { createRootMessagingComponent, messaging } = await start();
-
-    const thread = messaging.models['Thread'].create({
-        hasWriteAccess: false,
-        id: 100,
-        model: 'res.partner',
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
+    pyEnv['mail.followers'].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: threadId,
+        res_model: 'res.partner',
     });
-    const follower = await messaging.models['Follower'].create({
-        partner: insert({
-            id: 1,
-            name: "François Perusse",
-        }),
-        followedThread: replace(thread),
-        id: 2,
-        isActive: true,
+    const { click, createChatterContainerComponent } = await start({
+        async mockRPC(route, args) {
+            if (route === '/mail/thread/data') {
+                // mimic user without write access
+                const res = await this._super(...arguments);
+                res['hasWriteAccess'] = false;
+                return res;
+            }
+            return this._super(...arguments);
+        },
     });
-    await createRootMessagingComponent('Follower', { follower });
+    await createChatterContainerComponent({
+        threadId,
+        threadModel: 'res.partner',
+    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -63,22 +66,20 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].create({
-        hasWriteAccess: true,
-        id: 100,
-        model: 'res.partner',
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
+    pyEnv['mail.followers'].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: threadId,
+        res_model: 'res.partner',
     });
-    const follower = await messaging.models['Follower'].create({
-        partner: insert({
-            id: 1,
-            name: "François Perusse",
-        }),
-        followedThread: replace(thread),
-        id: 2,
-        isActive: true,
+    const { click, createChatterContainerComponent } = await start();
+    await createChatterContainerComponent({
+        threadId,
+        threadModel: 'res.partner',
     });
-    await createRootMessagingComponent('Follower', { follower });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -114,14 +115,22 @@ QUnit.test('base rendering editable', async function (assert) {
 QUnit.test('click on partner follower details', async function (assert) {
     assert.expect(7);
 
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
+    pyEnv['mail.followers'].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: threadId,
+        res_model: 'res.partner',
+    });
     const openFormDef = makeDeferred();
     const bus = new Bus();
     bus.on('do-action', null, ({ action }) => {
             assert.step('do_action');
             assert.strictEqual(
                 action.res_id,
-                3,
-                "The redirect action should redirect to the right res id (3)"
+                partnerId,
+                "The redirect action should redirect to the right res id (partnerId)"
             );
             assert.strictEqual(
                 action.res_model,
@@ -135,24 +144,12 @@ QUnit.test('click on partner follower details', async function (assert) {
             );
             openFormDef.resolve();
     });
-    const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const { createRootMessagingComponent, messaging } = await start({ env: { bus } });
-    const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
-        model: 'res.partner',
+    const { click, createChatterContainerComponent } = await start({ env: { bus } });
+    await createChatterContainerComponent({
+        threadId,
+        threadModel: 'res.partner',
     });
-    const follower = await messaging.models['Follower'].create({
-        followedThread: replace(thread),
-        id: 2,
-        isActive: true,
-        partner: insert({
-            email: "bla@bla.bla",
-            id: messaging.currentPartner.id,
-            name: "François Perusse",
-        }),
-    });
-    await createRootMessagingComponent('Follower', { follower });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -176,14 +173,14 @@ QUnit.test('click on edit follower', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
     pyEnv['mail.followers'].create({
         is_active: true,
-        partner_id: pyEnv.currentPartnerId,
-        res_id: resPartnerId1,
+        partner_id: partnerId,
+        res_id: threadId,
         res_model: 'res.partner',
     });
-    const { click, createRootMessagingComponent, messaging } = await start({
+    const { click, createChatterContainerComponent, messaging } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -192,11 +189,15 @@ QUnit.test('click on edit follower', async function (assert) {
         },
     });
     const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
+        id: threadId,
         model: 'res.partner',
     });
     await thread.fetchData(['followers']);
-    await createRootMessagingComponent('Follower', { follower: thread.followers[0] });
+    await createChatterContainerComponent({
+        threadId,
+        threadModel: 'res.partner',
+    });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
@@ -224,8 +225,14 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const { click, createRootMessagingComponent, messaging } = await start({
+    const [threadId, partnerId] = pyEnv['res.partner'].create([{}, {}]);
+    pyEnv['mail.followers'].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: threadId,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await start({
         async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
@@ -241,21 +248,11 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = messaging.models['Thread'].create({
-        id: resPartnerId1,
-        model: 'res.partner',
+    await createChatterContainerComponent({
+        threadId,
+        threadModel: 'res.partner',
     });
-    const follower = await messaging.models['Follower'].create({
-        followedThread: replace(thread),
-        id: 2,
-        isActive: true,
-        partner: insert({
-            email: "bla@bla.bla",
-            id: messaging.currentPartner.id,
-            name: "François Perusse",
-        }),
-    });
-    await createRootMessagingComponent('Follower', { follower });
+    await click('.o_FollowerListMenu_buttonFollowers');
     assert.containsOnce(
         document.body,
         '.o_Follower',
