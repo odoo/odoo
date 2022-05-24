@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'FollowerListMenuView',
@@ -9,12 +10,6 @@ registerModel({
     recordMethods: {
         hide() {
             this.update({ isDropdownOpen: false });
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickFollower(ev) {
-            this.hide();
         },
         /**
          * @param {MouseEvent} ev
@@ -36,6 +31,15 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeFollowerViews() {
+            return insertAndReplace(this.chatterOwner.thread.followers.map(follower => {
+                return { follower: replace(follower) };
+            }));
+        },
+        /**
+         * @private
          * @returns {Boolean}
          */
         _computeIsDisabled() {
@@ -46,6 +50,11 @@ registerModel({
         chatterOwner: one('Chatter', {
             inverse: 'followerListMenuView',
             readonly: true,
+        }),
+        followerViews: many('FollowerView', {
+            compute: '_computeFollowerViews',
+            inverse: 'followerListMenuViewOwner',
+            isCausal: true,
         }),
         isDisabled: attr({
             compute: '_computeIsDisabled',

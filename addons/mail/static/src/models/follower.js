@@ -47,27 +47,6 @@ registerModel({
             this.update({ followerSubtypeListDialog: clear() });
         },
         /**
-         * @param {MouseEvent} ev
-         */
-        onClickDetails(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            this.openProfile();
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickEdit(ev) {
-            ev.preventDefault();
-            this.showSubtypes();
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickRemove(ev) {
-            this.remove();
-        },
-        /**
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {
@@ -198,6 +177,10 @@ registerModel({
         }),
         followerSubtypeListDialog: one('Dialog', {
             inverse: 'followerOwnerAsSubtypeList',
+            isCausal: true,
+        }),
+        followerViews: many('FollowerView', {
+            inverse: 'follower',
             isCausal: true,
         }),
         id: attr({
