@@ -41,6 +41,24 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
              'parent_id': wkspace_grandchildren[2].id,
             },
         ])
+        # add an additional member on 'article_workspace' for further checks
+        article_workspace.sudo().write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.customer.id,
+                'permission': 'read',
+            })]
+        })
+        # add an article which 'employee' does NOT have access to (as sudo)
+        # only "employee2" has access to that one in write mode
+        wkspace_child_no_access = self.env['knowledge.article'].sudo().create({
+            'name': 'Hidden Child',
+            'internal_permission': 'read',
+            'parent_id': article_workspace.id,
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.partner_employee2.id,
+                'permission': 'write',
+            })]
+        })
 
         # no read access -> cracboum
         with self.assertRaises(exceptions.AccessError,
@@ -54,6 +72,21 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             self.assertFalse(article.active, 'Archive: should propagate to children')
             self.assertEqual(article.root_article_id, article_workspace,
                              'Archive: does not change hierarchy when archiving without breaking hierarchy')
+
+        # verify that the child that was not accessible was moved as a root article...
+        self.assertTrue(wkspace_child_no_access.active)
+        self.assertEqual(wkspace_child_no_access.category, 'workspace')
+        self.assertEqual(wkspace_child_no_access.internal_permission, 'read')
+        self.assertFalse(bool(wkspace_child_no_access.parent_id))
+        # ... and kept his access rights
+        # meaning we still have the member for employee2
+        self.assertTrue(bool(wkspace_child_no_access.article_member_ids.filtered(
+            lambda member: member.partner_id == self.partner_employee2
+        )))
+        # and we copied the customer access from the archived parent
+        self.assertTrue(bool(wkspace_child_no_access.article_member_ids.filtered(
+            lambda member: member.partner_id == self.customer
+        )))
 
         # reset as active
         (article_workspace + wkspace_children + wkspace_grandchildren + wkspace_grandgrandchildren).toggle_active()
