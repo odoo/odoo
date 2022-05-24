@@ -18,7 +18,10 @@ QUnit.skip('notification_alert widget: display blocked notification alert', asyn
     assert.expect(1);
 
     patchWithCleanup(browser, {
-        Notification: 'denied',
+        Notification: {
+            ...browser.Notification,
+            permission: 'denied',
+        },
     });
     await start({
         arch: `
