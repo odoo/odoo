@@ -304,7 +304,11 @@ function addRow(editor, beforeOrAfter) {
     if (!row) return;
     const newRow = document.createElement('tr');
     const cells = row.querySelectorAll('td');
-    newRow.append(...Array.from(Array(cells.length)).map(() => document.createElement('td')));
+    newRow.append(...Array.from(Array(cells.length)).map(() => {
+        const td = document.createElement('td');
+        td.append(document.createElement('br'));
+        return td;
+    }));
     row[beforeOrAfter](newRow);
 }
 function deleteTable(editor, table) {
