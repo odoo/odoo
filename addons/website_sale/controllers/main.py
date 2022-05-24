@@ -216,6 +216,23 @@ class WebsiteSale(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def _get_search_options(
+        self, category=None, attrib_values=None, pricelist=None, min_price=0.0, max_price=0.0, conversion_rate=1, **post
+    ):
+        return {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'category': str(category.id) if category else None,
+            'min_price': min_price / conversion_rate,
+            'max_price': max_price / conversion_rate,
+            'attrib_values': attrib_values,
+            'display_currency': pricelist.currency_id,
+        }
+
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -276,19 +293,15 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'category': str(category.id) if category else None,
-            'min_price': min_price / conversion_rate,
-            'max_price': max_price / conversion_rate,
-            'attrib_values': attrib_values,
-            'display_currency': pricelist.currency_id,
-        }
+        options = self._get_search_options(
+            category=category,
+            attrib_values=attrib_values,
+            pricelist=pricelist,
+            min_price=min_price,
+            max_price=max_price,
+            conversion_rate=conversion_rate,
+            **post
+        )
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = request.website._search_with_fuzzy("products_only", search,
             limit=None, order=self._get_search_order(post), options=options)
