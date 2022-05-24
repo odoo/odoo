@@ -28,6 +28,19 @@ class SaleOrder(models.Model):
                                  help='Website through which this order was placed.')
     shop_warning = fields.Char('Warning')
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('website_id'):
+                website = self.env['website'].browse(vals['website_id'])
+                if 'company_id' in vals:
+                    company = self.env['res.company'].browse(vals['company_id'])
+                    if website.company_id.id != company.id:
+                        raise ValueError(_("The company of the website you are trying to sale from (%s) is different than the one you want to use (%s)") % (website.company_id.name, company.name))
+                else:
+                    vals['company_id'] = website.company_id.id
+        return super().create(vals_list)
+
     def _compute_user_id(self):
         """Do not assign self.env.user as salesman for e-commerce orders
         Leave salesman empty if no salesman is specified on partner or website
