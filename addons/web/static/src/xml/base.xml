@@ -184,7 +184,7 @@
     </xpath>
     <xpath expr="//div[1]" position="inside">
         <Dialog t-if="state.deletedFavorite"
-            title="'Warning'"
+            title="dialogTitle"
             size="'medium'"
             t-on-dialog-closed="state.deletedFavorite = false"
             >
