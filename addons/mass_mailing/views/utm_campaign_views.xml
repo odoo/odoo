@@ -111,20 +111,4 @@
         </field>
         <field name="domain">[('is_auto_campaign', '=', False)]</field>
     </record>
-
-    <menuitem name="Campaigns" id="menu_email_campaigns"
-        parent="mass_mailing_menu_root" sequence="5"
-        action="action_view_utm_campaigns"
-        groups="mass_mailing.group_mass_mailing_campaign"/>
-
-    <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
-        parent="mass_mailing_configuration" sequence="1"
-        groups="mass_mailing.group_mass_mailing_campaign"
-        action="utm.action_view_utm_stage"/>
-
-    <menuitem id="mass_mailing_tag_menu"
-        parent="mass_mailing_configuration"
-        action="utm.action_view_utm_tag"
-        sequence="2"
-        groups="mass_mailing.group_mass_mailing_campaign"/>
 </odoo>

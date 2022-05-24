@@ -10,6 +10,7 @@
     <!-- SMS Marketing / SMS Marketing -->
     <menuitem id="mass_mailing_sms_menu_mass_sms"
         name="SMS Marketing"
+        action="mailing_mailing_action_sms"
         parent="mass_mailing_sms_menu_root"
         sequence="1"
         groups="mass_mailing.group_mass_mailing_user"/>
@@ -23,19 +24,30 @@
     <!-- SMS Marketing / Contacts Lists / Contacts Lists -->
     <menuitem id="mailing_list_menu_sms"
         name="Mailing Lists"
+        action="mailing_list_action_sms"
         parent="mass_mailing_sms_menu_contacts"
         sequence="1"
         groups="mass_mailing.group_mass_mailing_user"/>
-        <!-- SMS Marketing / Contacts Lists / Contacts -->
+    <!-- SMS Marketing / Contacts Lists / Contacts -->
     <menuitem id="mailing_contact_menu_sms"
         name="Mailing List Contacts"
+        action="mailing_contact_action_sms"
         parent="mass_mailing_sms_menu_contacts"
         sequence="2"
         groups="mass_mailing.group_mass_mailing_user"/>
 
+    <!-- SMS Markrting / Campaigns -->
+    <menuitem id="menu_email_campaigns"
+        name="Campaigns"
+        parent="mass_mailing_sms_menu_root"
+        sequence="5"
+        action="mass_mailing.action_view_utm_campaigns"
+        groups="mass_mailing.group_mass_mailing_campaign"/>
+
     <!-- SMS Marketing / Reporting -->
     <menuitem id="mass_mailing_sms_menu_reporting"
         name="Reporting"
+        action="mailing_trace_report_action_sms"
         parent="mass_mailing_sms_menu_root"
         sequence="80"
         groups="mass_mailing.group_mass_mailing_user"/>
@@ -55,7 +67,7 @@
         groups="mass_mailing.group_mass_mailing_user"/>
     <!-- SMS Marketing / Configuration / Link Tracker -->
     <menuitem id="link_tracker_menu"
-        name="Link Tracker Blacklist"
+        name="Link Tracker"
         parent="mass_mailing_sms_menu_configuration"
         sequence="2"
         action="link_tracker.link_tracker_action"
