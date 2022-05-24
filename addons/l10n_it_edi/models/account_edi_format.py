@@ -173,6 +173,15 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_is_simplified_document_type(self, document_type):
         return document_type in ['TD07', 'TD08', 'TD09']
 
+    def _l10n_it_get_move_type(self, document_type):
+        move_type = 'in_invoice'
+        if document_type and document_type in ['TD04', 'TD08']:
+            move_type = 'in_refund'
+        elif document_type and document_type not in ['TD01', 'TD07']:
+            _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
+        simplified = self._l10n_it_is_simplified_document_type(document_type)
+        return move_type, simplified
+
     # -------------------------------------------------------------------------
     # Export
     # -------------------------------------------------------------------------
@@ -335,14 +344,8 @@ class AccountEdiFormat(models.Model):
             # TD09 == simplified debit note
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
-            move_type = 'in_invoice'
             document_type = elements[0].text if elements else ''
-            if document_type and document_type in ['TD04', 'TD08']:
-                move_type = 'in_refund'
-            elif document_type and document_type not in ['TD01', 'TD07']:
-                _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
-
-            simplified = self._l10n_it_is_simplified_document_type(document_type)
+            move_type, simplified = self._l10n_it_get_move_type(document_type)
 
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
