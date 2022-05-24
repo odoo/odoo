@@ -3147,13 +3147,13 @@ class AccountMove(models.Model):
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '!=', 'no'),
-        ])
-        for ids in self._cr.split_for_in_conditions(records.ids, size=1000):
-            records = self.browse(ids)
-            records._post()
-            records.filtered(lambda r: r.auto_post != 'at_date')._copy_recurring_entries()
-            if not self.env.registry.in_test_mode():
-                self._cr.commit()
+        ], limit=100)
+        records._post()
+        records.filtered(lambda r: r.auto_post != 'at_date')._copy_recurring_entries()
+        if not self.env.registry.in_test_mode():
+            self._cr.commit()
+        if len(records) == 100:  # assumes there are more whenever search hits limit
+            self.env.ref('account.ir_cron_auto_post_draft_entry')._trigger()
 
     def _copy_recurring_entries(self):
         ''' Creates a copy of a recurring (periodic) entry and adjusts its dates for the next period.
