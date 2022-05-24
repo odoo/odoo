@@ -109,6 +109,12 @@ QUnit.test('messaging becomes initialized', async function (assert) {
 QUnit.test('basic rendering', async function (assert) {
     assert.expect(21);
 
+    patchWithCleanup(browser, {
+        Notification: {
+            ...browser.Notification,
+            permission: 'denied',
+        },
+    });
     const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
     assert.strictEqual(
@@ -234,6 +240,12 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('counter is taking into account failure notification', async function (assert) {
     assert.expect(2);
 
+    patchWithCleanup(browser, {
+        Notification: {
+            ...browser.Notification,
+            permission: 'denied',
+        },
+    });
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
     const mailMessageId1 = pyEnv['mail.message'].create({
