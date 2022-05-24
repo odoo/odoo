@@ -78,28 +78,29 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids)
+        default=_get_default_project_ids,
+        help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
+            " you can share this stage among them and get consolidated information this way.")
     legend_blocked = fields.Char(
-        'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
-        help='Override the default value displayed for the blocked state for kanban selection when the task or issue is in that stage.')
+        'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True)
     legend_done = fields.Char(
-        'Green Kanban Label', default=lambda s: _('Ready'), translate=True, required=True,
-        help='Override the default value displayed for the done state for kanban selection when the task or issue is in that stage.')
+        'Green Kanban Label', default=lambda s: _('Ready'), translate=True, required=True)
     legend_normal = fields.Char(
-        'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, required=True,
-        help='Override the default value displayed for the normal state for kanban selection when the task or issue is in that stage.')
+        'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, required=True)
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',
         domain=[('model', '=', 'project.task')],
-        help="If set, an email will be sent to the customer when the task or issue reaches this step.")
+        help="If set, an email will be automatically sent to the customer when the task reaches this stage.")
     fold = fields.Boolean(string='Folded in Kanban',
-        help='This stage is folded in the kanban view when there are no records in that stage to display.')
+        help='If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed.')
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
         domain=[('model', '=', 'project.task')],
-        help="If set and if the project's rating configuration is 'Rating when changing stage', then an email will be sent to the customer when the task reaches this step.")
+        help="If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
+             "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
+             "To use this feature make sure that the 'Customer Ratings' option is enabled on your project.")
     auto_validation_kanban_state = fields.Boolean('Automatic Kanban Status', default=False,
         help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
             " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
@@ -283,11 +284,12 @@ class Project(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
 
-    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
-    description = fields.Html()
+    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True,
+        help="Name of your project. It can be anything you want e.g. the name of a customer or a service.")
+    description = fields.Html(help="Description to provide more information and context about this project")
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
-    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
+    sequence = fields.Integer(default=10)
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_email = fields.Char(
         compute='_compute_partner_email', inverse='_inverse_partner_email',
@@ -300,8 +302,10 @@ class Project(models.Model):
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
-        help="Analytic account to which this project is linked for financial management. "
-             "Use an analytic account to record cost and revenue on your project.")
+        help="Analytic account to which this project, its tasks and its timesheets are linked. \n"
+            "Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
+            "This analytic account can be changed on each task individually if necessary.\n"
+            "An analytic account is required in order to use timesheets.")
     analytic_account_balance = fields.Monetary(related="analytic_account_id.balance")
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
 
@@ -311,7 +315,8 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True,
         string='Show Project on Dashboard')
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for tasks in this project (e.g. Tasks, Features, Tickets, etc).", translate=True)
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
+        help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -350,7 +355,8 @@ class Project(models.Model):
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message')
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
-    date = fields.Date(string='Expiration Date', index=True, tracking=True)
+    date = fields.Date(string='Expiration Date', index=True, tracking=True,
+        help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
     allow_recurring_tasks = fields.Boolean('Recurring Tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
@@ -369,10 +375,9 @@ class Project(models.Model):
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodic rating')
         ], 'Customer Ratings Status', default="stage", required=True,
-        help="How to get customer feedback?\n"
-             "- Rating when changing stage: an email will be sent when a task is pulled to another stage.\n"
-             "- Periodic rating: an email will be sent periodically.\n\n"
-             "Don't forget to set up the email templates on the stages for which you want to get customer feedback.")
+        help="Collect feedback from your customers by sending them a rating request when a task enters a certain stage. To do so, define a rating email template on the corresponding stages.\n"
+             "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
+             "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set.")
     rating_status_period = fields.Selection([
         ('daily', 'Daily'),
         ('weekly', 'Weekly'),
@@ -383,7 +388,10 @@ class Project(models.Model):
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
-        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids')
+        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids',
+        help="The step, or stage, that your project is in. You can add, remove, and move stages around to adapt the pipeline to your own needs.\n"
+            "Via the stage configuration you can set up email templates and automate the sending of emails when a project moves into the stage.\n"
+            "Projects in a folded stage are considered as closed.")
 
     update_ids = fields.One2many('project.update', 'project_id')
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False)
@@ -1091,7 +1099,8 @@ class Task(models.Model):
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False, task_dependency_tracking=True)
-    tag_ids = fields.Many2many('project.tags', string='Tags')
+    tag_ids = fields.Many2many('project.tags', string='Tags',
+        help="You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates.")
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
         ('done', 'Ready'),
@@ -1101,13 +1110,16 @@ class Task(models.Model):
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
-    date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True, help="The deadline for the task, which appears in the calendar view.")
+    date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
+        help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True)
 
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
-        readonly=True)
+        readonly=True,
+        help="Date on which the stage of your task has last been modified.\n"
+            "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another.")
     project_id = fields.Many2one('project.project', string='Project', recursive=True,
         compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
@@ -1116,9 +1128,9 @@ class Task(models.Model):
     # A -> project_id=P, display_project_id=P
     # B -> project_id=P (to inherit from ACL/security rules), display_project_id=False
     display_project_id = fields.Many2one('project.project', index=True)
-    planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+    planned_hours = fields.Float("Initially Planned Hours", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
-        help="Sum of the time planned of all the sub-tasks linked to this task. Usually less than or equal to the initially planned time of this task.")
+        help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id', string='Assignees', context={'active_test': False}, tracking=True)
     # User names displayed in project sharing views
@@ -1151,6 +1163,7 @@ class Task(models.Model):
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Phone", readonly=False, store=True, copy=False)
     partner_city = fields.Char(related='partner_id.city', readonly=False)
+    email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
@@ -1192,9 +1205,7 @@ class Task(models.Model):
         readonly=False,
         store=True,
         tracking=True,
-        help="Track major progress points that must be reached to achieve success (e.g. Product Launch). "
-             "After all the tasks connected to this milestone are completed, you will be invited to mark it as reached if you wish. "
-             "You can deliver your services automatically when a milestone is reached by linking it to a sales order item."
+        help="Deliver your services automatically when a milestone is reached by linking it to a sales order item."
     )
     has_late_and_unreached_milestone = fields.Boolean(
         compute='_compute_has_late_and_unreached_milestone',
@@ -1302,9 +1313,9 @@ class Task(models.Model):
     # Account analytic
     analytic_account_id = fields.Many2one('account.analytic.account', ondelete='set null', compute='_compute_analytic_account_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
-        help="Analytic account to which this task is linked for financial management. "
-             "Use an analytic account to record cost and revenue on your task. "
-             "If empty, the analytic account of the project will be used.")
+        help="Analytic account to which this task and its timesheets are linked.\n"
+            "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
+            "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
     is_analytic_account_id_changed = fields.Boolean('Is Analytic Account Manually Changed', compute='_compute_is_analytic_account_id_changed', store=True)
     project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string="Analytic Tags",
@@ -2623,7 +2634,8 @@ class ProjectTags(models.Model):
         return randint(1, 11)
 
     name = fields.Char('Name', required=True, translate=True)
-    color = fields.Integer(string='Color', default=_get_default_color)
+    color = fields.Integer(string='Color', default=_get_default_color,
+        help="Transparent tags are not visible in the kanban view of your projects and tasks.")
     project_ids = fields.Many2many('project.project', 'project_project_project_tags_rel', string='Projects')
     task_ids = fields.Many2many('project.task', string='Tasks')
 

@@ -35,8 +35,9 @@ class Project(models.Model):
         search='_search_pricing_type',
         help='The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
     sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', "Sale line/Employee map", copy=False,
-        help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
-        "By extension, it defines the rate at which an employee's time on the project is billed.")
+        help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+             "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+             "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
     billable_percentage = fields.Integer(
         compute='_compute_billable_percentage', groups='hr_timesheet.group_hr_timesheet_approver',
         help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
@@ -48,7 +49,7 @@ class Project(models.Model):
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
-        help='Select a Service product with which you would like to bill your time spent on tasks.',
+        help='Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.',
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
