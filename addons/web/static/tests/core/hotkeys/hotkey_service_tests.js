@@ -241,18 +241,18 @@ QUnit.test("non-MacOS usability", async (assert) => {
 
     const hotkey = env.services.hotkey;
     const key = "q";
+    const commentEventAttrs = { key, bubbles: true };
 
     // On non-MacOS, ALT is NOT replaced by CONTROL key
     let removeHotkey = hotkey.add(`alt+${key}`, () => assert.step(`alt+${key}`));
     await nextTick();
-
-    let keydown = new KeyboardEvent("keydown", { key, altKey: true });
-    window.dispatchEvent(keydown);
+    let keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, altKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`alt+${key}`]);
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
@@ -262,13 +262,13 @@ QUnit.test("non-MacOS usability", async (assert) => {
     removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`));
     await nextTick();
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`control+${key}`]);
 
-    keydown = new KeyboardEvent("keydown", { key, metaKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, metaKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
@@ -406,18 +406,19 @@ QUnit.test("MacOS usability", async (assert) => {
 
     const hotkey = env.services.hotkey;
     const key = "q";
+    const commentEventAttrs = { key, bubbles: true };
 
     // On MacOS, ALT is replaced by CONTROL key
     let removeHotkey = hotkey.add(`alt+${key}`, () => assert.step(`alt+${key}`));
     await nextTick();
 
-    let keydown = new KeyboardEvent("keydown", { key, altKey: true });
-    window.dispatchEvent(keydown);
+    let keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, altKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`alt+${key}`]);
 
@@ -427,13 +428,13 @@ QUnit.test("MacOS usability", async (assert) => {
     removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`));
     await nextTick();
 
-    keydown = new KeyboardEvent("keydown", { key, ctrlKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, ctrlKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
-    keydown = new KeyboardEvent("keydown", { key, metaKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commentEventAttrs, metaKey: true });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([`control+${key}`]);
 
@@ -760,11 +761,12 @@ QUnit.test("protects editable elements", async (assert) => {
     const input = target.querySelector(".foo");
 
     assert.verifySteps([]);
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(["called"]);
 
-    input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    input.focus();
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(
         [],
@@ -784,11 +786,12 @@ QUnit.test("protects editable elements: can bypassEditableProtection", async (as
     const input = target.querySelector(".foo");
 
     assert.verifySteps([]);
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(["called"]);
 
-    input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    input.focus();
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(
         ["called"],
@@ -808,15 +811,17 @@ QUnit.test("protects editable elements: an editable can allow hotkeys", async (a
     const barInput = target.querySelector(".bar");
 
     assert.verifySteps([]);
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(["called"]);
 
-    fooInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    fooInput.focus();
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(["called"], "the callback gets called as the foo editable allows it");
 
-    barInput.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    barInput.focus();
+    triggerHotkey("arrowleft");
     await nextTick();
     assert.verifySteps(
         [],
@@ -828,17 +833,21 @@ QUnit.test("ignore numpad keys", async (assert) => {
     assert.expect(3);
 
     const key = "1";
+    const commonEventAttrs = {
+        altKey: true,
+        bubbles: true,
+    };
 
     env.services.hotkey.add(`alt+${key}`, () => assert.step(key));
     await nextTick();
 
-    let keydown = new KeyboardEvent("keydown", { key, code: "Numpad1", altKey: true });
-    window.dispatchEvent(keydown);
+    let keydown = new KeyboardEvent("keydown", { ...commonEventAttrs, key, code: "Numpad1" });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps([]);
 
-    keydown = new KeyboardEvent("keydown", { key: "&", code: "Digit1", altKey: true });
-    window.dispatchEvent(keydown);
+    keydown = new KeyboardEvent("keydown", { ...commonEventAttrs, key: "&", code: "Digit1" });
+    document.activeElement.dispatchEvent(keydown);
     await nextTick();
     assert.verifySteps(["1"]);
 });

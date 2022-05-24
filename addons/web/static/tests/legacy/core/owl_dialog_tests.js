@@ -333,11 +333,11 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
             assert.verifySteps([]);
             assert.containsN(document.body, ".modal", 3);
-            await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
+            await testUtils.dom.triggerEvent(document.activeElement, 'keydown', EscapeKey); // Press Escape
             assert.verifySteps(['dialog_3_closed']);
-            await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
+            await testUtils.dom.triggerEvent(document.activeElement, 'keydown', EscapeKey); // Press Escape
             assert.verifySteps(['dialog_2_closed']);
-            await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
+            await testUtils.dom.triggerEvent(document.activeElement, 'keydown', EscapeKey); // Press Escape
             assert.verifySteps(['dialog_1_closed']);
             await nextTick();
             assert.containsNone(document.body, ".modal");
