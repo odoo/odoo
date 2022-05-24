@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Marketing / Mailing -->
+    <menuitem name="Email Marketing"
+              id="mass_mailing_menu_root"
+              sequence="115"
+              web_icon="mass_mailing,static/description/icon.svg"
+              groups="mass_mailing.group_mass_mailing_user"/>
+
+    <!-- Mailings -->
+    <menuitem name="Mailings"
+              id="mass_mailing_menu"
+              parent="mass_mailing_menu_root"
+              sequence="1"
+              action="mailing_mailing_action_mail"/>
+
+    <!-- Mailing lists -->
+    <menuitem name="Mailing Lists"
+              id="mass_mailing_mailing_list_menu"
+              parent="mass_mailing_menu_root"
+              sequence="2"/>
+    <menuitem name="Mailing Lists"
+              id="menu_email_mass_mailing_lists"
+              parent="mass_mailing_mailing_list_menu"
+              sequence="1"
+              action="action_view_mass_mailing_lists"/>
+    <menuitem name="Mailing List Contacts"
+              id="menu_email_mass_mailing_contacts"
+              parent="mass_mailing_mailing_list_menu"
+              sequence="2"
+              action="action_view_mass_mailing_contacts"/>
+
+    <!-- Campaigns -->
+    <menuitem name="Campaigns"
+              id="menu_email_campaigns"
+              parent="mass_mailing_menu_root"
+              sequence="3"
+              action="action_view_utm_campaigns"
+              groups="mass_mailing.group_mass_mailing_campaign"/>
+
+    <!-- Reporting -->
+    <menuitem name="Reporting"
+              id="menu_mass_mailing_report"
+              sequence="90"
+              parent="mass_mailing_menu_root"
+              action="mailing_trace_report_action_mail"/>
+
+    <!-- Configuration -->
+    <menuitem name="Configuration"
+              id="mass_mailing_configuration"
+              parent="mass_mailing_menu_root"
+              sequence="100"/>
+    <!-- Configuration / Settings -->
+    <menuitem name="Settings"
+              id="menu_mass_mailing_global_settings"
+              parent="mass_mailing_configuration"
+              sequence="0"
+              action="action_mass_mailing_configuration"
+              groups="base.group_system"/>
+    <!-- Configuration / Campaign stages -->
+    <menuitem name="Campaign Stages"
+              id="menu_view_mass_mailing_stages"
+              parent="mass_mailing_configuration"
+              sequence="1"
+              groups="mass_mailing.group_mass_mailing_campaign"
+              action="utm.action_view_utm_stage"/>
+    <!-- Configuration / Utm Tags -->
+    <menuitem id="mass_mailing_tag_menu"
+              parent="mass_mailing_configuration"
+              action="utm.action_view_utm_tag"
+              sequence="2"
+              groups="mass_mailing.group_mass_mailing_campaign"/>
+    <!-- Configuration / Link trackers -->
+    <menuitem id="link_tracker_menu_mass_mailing"
+              name="Link Tracker"
+              parent="mass_mailing_configuration"
+              sequence="10"
+              action="link_tracker.link_tracker_action"/>
+    <!-- Configuration / Blacklist -->
+    <menuitem id="mail_blacklist_mm_menu"
+              name="Blacklisted Email Addresses"
+              action="mail.mail_blacklist_action"
+              parent="mass_mailing_configuration"
+              sequence="20"/>
+    <!-- Configuration / Favorite Filters -->
+    <menuitem id="mailing_filter_menu_action"
+              action="mailing_filter_action"
+              parent="mass_mailing_configuration"
+              sequence="30"/>
+
+    <!-- Technical / Mass Mailing -->
+    <menuitem id="mailing_mailing_menu_technical"
+              name="Mass Mailing"
+              sequence="4"
+              parent="base.menu_custom"/>
+    <menuitem id="menu_email_statistics"
+              name="Mailing Traces"
+              parent="mass_mailing.mailing_mailing_menu_technical"
+              sequence="2"
+              action="mailing_trace_action"/>
+
+        
+</odoo>
