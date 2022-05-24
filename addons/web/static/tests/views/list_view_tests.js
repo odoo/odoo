@@ -2898,7 +2898,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("column width should not change when switching mode", async function (assert) {
+    QUnit.test("column width should not change when switching mode", async function (assert) {
         assert.expect(4);
 
         // Warning: this test is css dependant
@@ -2915,20 +2915,20 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
 
-        var startWidths = _.pluck($(target).find("thead th"), "offsetWidth");
-        var startWidth = $(target).find("table").addBack("table").width();
+        var startWidths = [...target.querySelectorAll("thead th")].map((el) => el.offsetWidth);
+        var startWidth = window.getComputedStyle(target.querySelector("table")).width;
 
         // start edition of first row
-        await click($(target).find("td:not(.o_list_record_selector)").first());
+        await click(target.querySelector("td:not(.o_list_record_selector)"));
 
-        var editionWidths = _.pluck($(target).find("thead th"), "offsetWidth");
-        var editionWidth = $(target).find("table").addBack("table").width();
+        var editionWidths = [...target.querySelectorAll("thead th")].map((el) => el.offsetWidth);
+        var editionWidth = window.getComputedStyle(target.querySelector("table")).width;
 
         // leave edition
         await click(target.querySelector(".o_list_button_save"));
 
-        var readonlyWidths = _.pluck($(target).find("thead th"), "offsetWidth");
-        var readonlyWidth = $(target).find("table").addBack("table").width();
+        var readonlyWidths = [...target.querySelectorAll("thead th")].map((el) => el.offsetWidth);
+        var readonlyWidth = window.getComputedStyle(target.querySelector("table")).width;
 
         assert.strictEqual(
             editionWidth,
@@ -2952,7 +2952,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "column widths should depend on the content when there is data",
         async function (assert) {
             assert.expect(1);
@@ -2972,15 +2972,13 @@ QUnit.module("Views", (hooks) => {
                     '<field name="date"/>' +
                     '<field name="datetime"/>' +
                     "</tree>",
-                viewOptions: {
-                    limit: 2,
-                },
+                limit: 2,
             });
-            var widthPage1 = $(target).find(`th[data-name=foo]`)[0].offsetWidth;
+            var widthPage1 = target.querySelector(`th[data-name=foo]`).offsetWidth;
 
-            await testUtils.controlPanel.pagerNext(target);
+            await pagerNext(target);
 
-            var widthPage2 = $(target).find(`th[data-name=foo]`)[0].offsetWidth;
+            var widthPage2 = target.querySelector(`th[data-name=foo]`).offsetWidth;
             assert.ok(
                 widthPage1 > widthPage2,
                 "column widths should be computed dynamically according to the content"
@@ -2988,7 +2986,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "width of some of the fields should be hardcoded if no data",
         async function (assert) {
             const assertions = [
@@ -3026,25 +3024,25 @@ QUnit.module("Views", (hooks) => {
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    $(target).find(`th[data-name="${a.field}"]`)[0].offsetWidth,
+                    target.querySelector(`th[data-name="${a.field}"]`).offsetWidth,
                     a.expected,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
             assert.strictEqual(
-                $(target).find('th[data-name="foo"]')[0].style.width,
+                target.querySelector('th[data-name="foo"]').style.width,
                 "100%",
                 "Char field should occupy the remaining space"
             );
             assert.strictEqual(
-                $(target).find('th[data-name="currency_id"]')[0].offsetWidth,
+                target.querySelector('th[data-name="currency_id"]').offsetWidth,
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "width of some fields should be hardcoded if no data, and list initially invisible",
         async function (assert) {
             const assertions = [
@@ -3062,12 +3060,12 @@ QUnit.module("Views", (hooks) => {
                 type: "one2many",
                 relation: "foo",
             };
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "foo",
                 serverData,
                 resId: 1,
-                viewOptions: { mode: "edit" },
+                mode: "edit",
                 arch: `<form>
                     <sheet>
                         <notebook>
@@ -3091,31 +3089,32 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             });
 
-            assert.isNotVisible(form.$(".o_field_one2many"));
+            assert.isNotVisible(target.querySelector(".o_field_one2many"));
 
-            await click(form.$(".nav-item:last-child .nav-link"));
+            await click(target.querySelector(".nav-item:last-child .nav-link"));
 
-            assert.isVisible(form.$(".o_field_one2many"));
+            assert.isVisible(target.querySelector(".o_field_one2many"));
 
             assert.containsNone(
-                form,
+                target,
                 ".o_field_one2many .o_resize",
                 "There shouldn't be any resize handle if no data"
             );
             assertions.forEach((a) => {
                 assert.strictEqual(
-                    form.$(`.o_field_one2many th[data-name="${a.field}"]`)[0].offsetWidth,
+                    target.querySelector(`.o_field_one2many th[data-name="${a.field}"]`)
+                        .offsetWidth,
                     a.expected,
                     `Field ${a.type} should have a fixed width of ${a.expected} pixels`
                 );
             });
             assert.strictEqual(
-                form.$('.o_field_one2many th[data-name="foo"]')[0].style.width,
+                target.querySelector('.o_field_one2many th[data-name="foo"]').style.width,
                 "100%",
                 "Char field should occupy the remaining space"
             );
             assert.strictEqual(
-                form.$('th[data-name="currency_id"]')[0].offsetWidth,
+                target.querySelector('th[data-name="currency_id"]').offsetWidth,
                 25,
                 "Currency field should have a fixed width of 25px (see arch)"
             );
@@ -3123,12 +3122,10 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_list_record_remove_header").style.width,
                 "32px"
             );
-
-            form.destroy();
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "empty editable list with the handle widget and no content help",
         async function (assert) {
             assert.expect(4);
@@ -3158,9 +3155,10 @@ QUnit.module("Views", (hooks) => {
             // click on create button
             await click(target.querySelector(".o_list_button_add"));
             const handleWidgetMinWidth = "33px";
-            const handleWidgetHeader = $(target).find("thead > tr > th.o_handle_cell");
+            const handleWidgetHeader = target.querySelector("thead > tr > th.o_handle_cell");
+
             assert.strictEqual(
-                handleWidgetHeader.css("min-width"),
+                window.getComputedStyle(handleWidgetHeader).minWidth,
                 handleWidgetMinWidth,
                 "While creating first record, min-width should be applied to handle widget."
             );
@@ -3169,14 +3167,14 @@ QUnit.module("Views", (hooks) => {
             await editInput(target, ".o_selected_row [name='foo'] input", "test_foo");
             await clickSave(target);
             assert.strictEqual(
-                handleWidgetHeader.css("min-width"),
+                window.getComputedStyle(handleWidgetHeader).minWidth,
                 handleWidgetMinWidth,
                 "After creation of the first record, min-width of the handle widget should remain as it is"
             );
         }
     );
 
-    QUnit.skipWOWL("editable list: overflowing table", async function (assert) {
+    QUnit.test("editable list: overflowing table", async function (assert) {
         serverData.models.bar = {
             fields: {
                 titi: { string: "Small char", type: "char", sortable: true },
@@ -3219,7 +3217,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("editable list: overflowing table (3 columns)", async function (assert) {
+    QUnit.test("editable list: overflowing table (3 columns)", async function (assert) {
         assert.expect(4);
 
         const longText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -3259,16 +3257,19 @@ QUnit.module("Views", (hooks) => {
                     <field name="grosminet2" class="large"/>
                 </tree>`,
             serverData,
-            model: "bar",
+            resModel: "bar",
             type: "list",
         });
 
-        assert.strictEqual($(target).find("table").width(), $(target).find(".o_list_view").width());
-        const largeCells = $(target).find(".o_data_cell.large");
+        assert.strictEqual(
+            target.querySelector("table").offsetWidth,
+            target.querySelector(".o_list_view").offsetWidth
+        );
+        const largeCells = target.querySelectorAll(".o_data_cell.large");
         assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
         assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
         assert.ok(
-            $(target).find(".o_data_cell:not(.large)")[0].offsetWidth < largeCells[0].offsetWidth
+            target.querySelector(".o_data_cell:not(.large)").offsetWidth < largeCells[0].offsetWidth
         );
     });
 
@@ -3737,6 +3738,7 @@ QUnit.module("Views", (hooks) => {
 
         // simulate a window resize
         target.style.width = target.getBoundingClientRect().width / 2 + "px";
+        window.dispatchEvent(new Event("resize"));
 
         const postResizeTextWidth = target.querySelectorAll('th[data-name="text"]')[0].offsetWidth;
         const postResizeSelectorWidth = target.querySelectorAll("th.o_list_record_selector")[0]

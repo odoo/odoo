@@ -47,6 +47,7 @@ const FIXED_FIELD_COLUMN_WIDTHS = {
     float: "92px",
     integer: "74px",
     monetary: "104px",
+    handle: "33px",
 };
 
 export class ListRenderer extends Component {
@@ -128,47 +129,141 @@ export class ListRenderer extends Component {
         useBounceButton(rootRef, () => {
             return this.showNoContentHelper;
         });
-
         useEffect(
-            (columns, isEmpty) => {
-                if (!this.tableRef.el) return;
-
-                const widths = [];
-                for (const column of columns) {
-                    widths.push(this.calculateColumnWidth(column));
-                }
-
-                if (!this.props.editable) {
-                    this.tableRef.el.style.tableLayout = "auto";
-                    for (const column of columns) {
-                        const width = this.calculateColumnWidth(column);
-                        if (width.type === "absolute") {
-                            column.widthStyle = "min-width:" + width.value + ";";
-                        }
-                    }
-                } else {
-                    this.tableRef.el.style.tableLayout = "fixed";
-                    const widths = [];
-                    for (const column of columns) {
-                        widths.push(this.calculateColumnWidth(column));
-                    }
-                    const relativeWidths = widths.filter((w) => w.type === "relative");
-                    let totalOfRelativeWidths = relativeWidths.reduce((acc, w) => acc + w.value, 0);
-
-                    for (const column of columns) {
-                        const width = widths.shift();
-                        if (width.type === "absolute") {
-                            column.widthStyle = "width:" + width.value + ";";
-                        } else {
-                            const value =
-                                ((width.value / totalOfRelativeWidths) * 100).toFixed(2) + "%";
-                            column.widthStyle = "width:" + value + ";";
-                        }
-                    }
+            (editedRecord) => {
+                if (editedRecord) {
+                    this.keepColumnWidths = true;
                 }
             },
-            () => [this.state.columns, this.isEmpty]
+            () => [this.props.list.editedRecord]
         );
+        useEffect(
+            () => {
+                this.freezeColumnWidths();
+            },
+            () => [this.state.columns, this.isEmpty, this.showTable]
+        );
+        useExternalListener(window, "resize", this.freezeColumnWidths);
+    }
+
+    // The following code manipulates the DOM directly to avoid having to wait for a
+    // render + patch which would occur on the next frame and cause flickering.
+    freezeColumnWidths() {
+        if (!this.showTable) {
+            return;
+        }
+        if (!this.keepColumnWidths) {
+            this.columnWidths = null;
+        }
+
+        const table = this.tableRef.el;
+        const headers = [...table.querySelectorAll("thead th")];
+
+        if (!this.columnWidths || !this.columnWidths.length) {
+            // no column widths to restore
+            // Set table layout auto and remove inline style to make sure that css
+            // rules apply (e.g. fixed width of record selector)
+            table.style.tableLayout = "auto";
+            headers.forEach((th) => {
+                th.style.width = null;
+                th.style.maxWidth = null;
+            });
+
+            this.setDefaultColumnWidths();
+
+            // Squeeze the table by applying a max-width on largest columns to
+            // ensure that it doesn't overflow
+            this.columnWidths = this.computeColumnWidthsFromContent();
+            table.style.tableLayout = "fixed";
+        }
+        headers.forEach((th, index) => {
+            if (!th.style.width) {
+                th.style.width = `${this.columnWidths[index]}px`;
+            }
+        });
+    }
+
+    setDefaultColumnWidths() {
+        const widths = this.state.columns.map((col) => this.calculateColumnWidth(col));
+        const sumOfRelativeWidths = widths
+            .filter(({ type }) => type === "relative")
+            .reduce((sum, { value }) => sum + value, 0);
+
+        // 1 because nth-child selectors are 1-indexed, 2 when the first column contains
+        // the checkboxes to select records.
+        const columnOffset = this.props.hasSelectors ? 2 : 1;
+        widths.forEach(({ type, value }, i) => {
+            const headerEl = this.tableRef.el.querySelector(`th:nth-child(${i + columnOffset})`);
+            if (type === "absolute") {
+                if (this.isEmpty) {
+                    headerEl.style.width = value;
+                } else {
+                    headerEl.style.minWidth = value;
+                }
+            } else if (type === "relative" && this.isEmpty) {
+                headerEl.style.width = `${((value / sumOfRelativeWidths) * 100).toFixed(2)}%`;
+            }
+        });
+    }
+
+    computeColumnWidthsFromContent() {
+        const table = this.tableRef.el;
+
+        // Toggle a className used to remove style that could interfer with the ideal width
+        // computation algorithm (e.g. prevent text fields from being wrapped during the
+        // computation, to prevent them from being completely crushed)
+        table.classList.add("o_list_computing_widths");
+
+        const headers = [...table.querySelectorAll("thead th")];
+        const columnWidths = headers.map((th) => th.offsetWidth);
+        const getWidth = (th) => columnWidths[headers.indexOf(th)] || 0;
+        const getTotalWidth = () => columnWidths.reduce((tot, width) => tot + width, 0);
+        const shrinkColumns = (thsToShrink, shrinkAmount) => {
+            let canKeepShrinking = true;
+            for (const th of thsToShrink) {
+                const index = headers.indexOf(th);
+                let maxWidth = columnWidths[index] - shrinkAmount;
+                // prevent the columns from shrinking under 92px (~ date field)
+                if (maxWidth < 92) {
+                    maxWidth = 92;
+                    canKeepShrinking = false;
+                }
+                columnWidths[index] = maxWidth;
+            }
+            return canKeepShrinking;
+        };
+        // Sort columns, largest first
+        const sortedThs = [...table.querySelectorAll("thead th:not(.o_list_button)")].sort(
+            (a, b) => getWidth(b) - getWidth(a)
+        );
+        const allowedWidth = table.parentNode.offsetWidth;
+
+        let totalWidth = getTotalWidth();
+        for (let index = 1; totalWidth > allowedWidth; index++) {
+            // Find the largest columns
+            const largestCols = sortedThs.slice(0, index);
+            const currentWidth = getWidth(largestCols[0]);
+            for (; currentWidth === getWidth(sortedThs[index]); index++) {
+                largestCols.push(sortedThs[index]);
+            }
+
+            // Compute the number of px to remove from the largest columns
+            const nextLargest = sortedThs[index];
+            const toRemove = Math.ceil((totalWidth - allowedWidth) / largestCols.length);
+            const shrinkAmount = Math.min(toRemove, currentWidth - getWidth(nextLargest));
+
+            // Shrink the largest columns
+            const canKeepShrinking = shrinkColumns(largestCols, shrinkAmount);
+            if (!canKeepShrinking) {
+                break;
+            }
+
+            totalWidth = getTotalWidth();
+        }
+
+        // We are no longer computing widths, so restore the normal style
+        table.classList.remove("o_list_computing_widths");
+        return columnWidths;
     }
 
     get canResequenceRows() {
@@ -181,7 +276,7 @@ export class ListRenderer extends Component {
      * No records, no groups.
      */
     get isEmpty() {
-        return !this.props.list.records.length && !this.props.list.groups;
+        return !this.props.list.records.length;
     }
 
     get fields() {
@@ -298,7 +393,7 @@ export class ListRenderer extends Component {
     }
     get selectAll() {
         const list = this.props.list;
-        let nbDisplayedRecords = list.records.length;
+        const nbDisplayedRecords = list.records.length;
         if (list.isDomainSelected) {
             return true;
         } else {
@@ -388,6 +483,10 @@ export class ListRenderer extends Component {
         } else if (/\boe_read_only\b/.test(column.className)) {
             classNames.push("oe_read_only");
         }
+        if (column.widget) {
+            classNames.push(`o_${column.widget}_cell`);
+        }
+
         return classNames.join(" ");
     }
 
@@ -429,7 +528,7 @@ export class ListRenderer extends Component {
                     classNames.push(typeClass);
                 }
                 if (column.widget) {
-                    classNames.push("o_" + column.widget + "_cell");
+                    classNames.push(`o_${column.widget}_cell`);
                 }
             }
             this.cellClassByColumn[column.id] = classNames;
@@ -713,7 +812,7 @@ export class ListRenderer extends Component {
             return { type: "absolute", value: column.attrs.width };
         }
 
-        if (column.type != "field") {
+        if (column.type !== "field") {
             return { type: "relative", value: 1 };
         }
 
