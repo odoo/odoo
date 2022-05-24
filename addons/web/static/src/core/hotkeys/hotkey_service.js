@@ -33,10 +33,10 @@ export const hotkeyService = {
         let nextToken = 0;
         let overlaysVisible = false;
 
-        browser.addEventListener("keydown", onKeydown);
-        browser.addEventListener("keyup", removeHotkeyOverlays);
-        browser.addEventListener("blur", removeHotkeyOverlays);
-        browser.addEventListener("click", removeHotkeyOverlays);
+        browser.addEventListener("keydown", onKeydown, { capture: true });
+        browser.addEventListener("keyup", removeHotkeyOverlays, { capture: true });
+        browser.addEventListener("blur", removeHotkeyOverlays, { capture: true });
+        browser.addEventListener("click", removeHotkeyOverlays, { capture: true });
 
         /**
          * Handler for keydown events.
@@ -107,6 +107,7 @@ export const hotkeyService = {
                 activeElement,
                 hotkey,
                 isRepeated: event.repeat,
+                target: event.target,
                 shouldProtectEditable,
             };
             const dispatched = dispatch(infos);
@@ -136,28 +137,55 @@ export const hotkeyService = {
          *  activeElement: HTMLElement,
          *  hotkey: string,
          *  isRepeated: boolean,
+         *  target: EventTarget,
          *  shouldProtectEditable: boolean,
          * }} infos
          * @returns {boolean} true if has been dispatched
          */
         function dispatch(infos) {
-            const { activeElement, hotkey, isRepeated, shouldProtectEditable } = infos;
+            const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
 
             // Prepare registrations and the common filter
             const reversedRegistrations = Array.from(registrations.values()).reverse();
             const domRegistrations = getDomRegistrations(hotkey, activeElement);
             const allRegistrations = reversedRegistrations.concat(domRegistrations);
 
-            // Dispatch actual hotkey to first matching registration
-            const match = allRegistrations.find(
+            // Find all candidates
+            const candidates = allRegistrations.filter(
                 (reg) =>
                     reg.hotkey === hotkey &&
                     (reg.allowRepeat || !isRepeated) &&
                     (reg.bypassEditableProtection || !shouldProtectEditable) &&
-                    (reg.global || reg.activeElement === activeElement)
+                    (reg.global || reg.activeElement === activeElement) &&
+                    (!reg.area || reg.area().contains(target))
             );
+
+            // Search the closest from target
+            let closest;
+            for (const candidate of candidates) {
+                // First candidate
+                if (!closest) {
+                    closest = candidate;
+                    continue;
+                }
+
+                // Ignore all other candidates not having an area
+                // (= prioritize candidates having an area)
+                if (candidate.area) {
+                    if (!closest.area || closest.area().contains(candidate.area())) {
+                        closest = candidate;
+                        continue;
+                    }
+                }
+            }
+
+            // Dispatch actual hotkey to the matching registration
+            const match = closest;
             if (match) {
-                match.callback();
+                match.callback({
+                    area: match.area && match.area(),
+                    target,
+                });
                 return true;
             }
             return false;
@@ -285,7 +313,7 @@ export const hotkeyService = {
          * Registers a new hotkey.
          *
          * @param {string} hotkey
-         * @param {()=>void} callback
+         * @param {(context: { area: HTMLElement, target: HTMLElement })=>void} callback
          * @param {Object} options additional options
          * @param {boolean} [options.allowRepeat=false]
          *  allow registration to perform multiple times when hotkey is held down
@@ -294,6 +322,8 @@ export const hotkeyService = {
          *  even if an editable element is focused
          * @param {boolean} [options.global=false]
          *  allow registration to perform no matter the UI active element
+         * @param {() => HTMLElement} [options.area]
+         *  add a restricted operating area for this hotkey
          * @returns {number} registration token
          */
         function registerHotkey(hotkey, callback, options = {}) {
@@ -339,8 +369,8 @@ export const hotkeyService = {
                 allowRepeat: options && options.allowRepeat,
                 bypassEditableProtection: options && options.bypassEditableProtection,
                 global: options && options.global,
+                area: options && options.area,
             };
-            registrations.set(token, registration);
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
             // we need to wait the next micro task tick to set the context owner of the registration.
@@ -348,6 +378,7 @@ export const hotkeyService = {
                 registration.activeElement = ui.activeElement;
             });
 
+            registrations.set(token, registration);
             return token;
         }
 
@@ -363,11 +394,12 @@ export const hotkeyService = {
         return {
             /**
              * @param {string} hotkey
-             * @param {() => void} callback
+             * @param {(context: { area: HTMLElement, target: HTMLElement}) => void} callback
              * @param {Object} options
              * @param {boolean} [options.allowRepeat=false]
              * @param {boolean} [options.bypassEditableProtection=false]
              * @param {boolean} [options.global=false]
+             * @param {() => HTMLElement} [options.area]
              * @returns {() => void}
              */
             add(hotkey, callback, options = {}) {
