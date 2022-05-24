@@ -5,6 +5,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -844,9 +845,8 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
             'scroll'
         );
     });
-    assert.strictEqual(
-        controllerContentEl.scrollTop,
-        controllerContentEl.scrollHeight - controllerContentEl.clientHeight,
+    assert.ok(
+        isScrolledToBottom(controllerContentEl),
         "The controller container should be scrolled to its bottom"
     );
 
