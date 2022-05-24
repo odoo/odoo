@@ -637,15 +637,17 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         "settings view shows a message if there are changes even if the save failed",
         async function (assert) {
+            const self = this;
+            self.alreadySavedOnce = false;
             await makeView({
                 type: "form",
                 resModel: "res.config.settings",
                 serverData,
                 mockRPC: function (route, args) {
-                    if (route === "/web/dataset/call_button") {
-                        if (args.method === "execute") {
-                            return Promise.reject({});
-                        }
+                    if (args.method === "create" && !self.alreadySavedOnce) {
+                        self.alreadySavedOnce = true;
+                        //fail on first create
+                        return Promise.reject({});
                     }
                 },
                 arch: `
@@ -774,7 +776,7 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         'call "call_button/execute" when clicking on a button in dirty settings',
         async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
             serverData.actions = {
                 1: {
@@ -849,6 +851,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
             await click(target.querySelector(".modal-footer .btn-primary"));
             assert.verifySteps([
+                "create", // saveRecord from modal
                 "execute", // execute_action
             ]);
         }

@@ -21,6 +21,7 @@ export class SettingsFormController extends formView.Controller {
                         {
                             body: message,
                             confirm: async () => {
+                                await this.model.root.save({ stayInEdition: true });
                                 await this.save();
                             },
                             cancel: () => {},
@@ -31,6 +32,10 @@ export class SettingsFormController extends formView.Controller {
                         { onClose: resolve }
                     );
                 });
+            } else {
+                if (clickParams.name === "execute") {
+                    _continue = await this.model.root.save({ stayInEdition: true });
+                }
             }
             return _continue;
         };
