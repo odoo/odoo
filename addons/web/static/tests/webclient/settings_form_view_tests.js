@@ -107,6 +107,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             [...target.querySelectorAll(".settings h2")].map((x) => x.textContent),
             ["Title of group Bar", "Title of group Foo"]
         );
+        assert.doesNotHaveClass(target.querySelector(".o_form_editable"), "o_form_nosheet");
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_searchview input"),

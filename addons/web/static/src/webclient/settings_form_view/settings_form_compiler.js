@@ -159,10 +159,20 @@ function compileGenericLabel(el, params) {
     return res;
 }
 
+function compileForm() {
+    const res = this.compileForm(...arguments);
+    res.classList.remove("o_form_nosheet");
+    return res;
+}
+
 export class SettingsFormCompiler extends FormCompiler {
     setup() {
         super.setup();
         this.compilers.push(
+            {
+                tag: "form",
+                fn: compileForm,
+            },
             {
                 tag: "div",
                 class: "settings",
