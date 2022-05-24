@@ -330,16 +330,8 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         }
     }
 
-    // get the list of orders associated to a table. FIXME: should be O(1)
     get_table_orders(table) {
-        var orders   = this.get_order_list();
-        var t_orders = [];
-        for (var i = 0; i < orders.length; i++) {
-            if (orders[i].table === table) {
-                t_orders.push(orders[i]);
-            }
-        }
-        return t_orders;
+        return this.orders.filter(o => o.table.id === table.id);
     }
 
     // get customer count at table
