@@ -14,7 +14,7 @@
 </template>
 
 <template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
             <i class="fa fa-download mr-1"/>
             <t t-call="website_sale_slides.course_buy_course_link">
@@ -25,7 +25,7 @@
 </template>
 
 <template name="Buy Course To Download Resource Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted mr-auto border-left pl-3">
             <t t-call="website_sale_slides.course_buy_course_link"/>
         </span>
@@ -59,7 +59,7 @@
 </template>
 
 <template name="Buy Course To Download Resource Fullscreen" id="slide_fullscreen_sidebar_category_buy_course" inherit_id="website_slides.slide_fullscreen_sidebar_category">
-    <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
+    <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
             <i class="fa fa-download mr-1"/>
             <t t-call="website_sale_slides.course_buy_course_link"/>
@@ -79,10 +79,8 @@
 
 <!-- TOOLS -->
 <template name="Buy Course Link" id="course_buy_course_link">
-    <a t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
-        Buy Course
-    </a>
-     to download resources
+    <a class="post_link" t-att-href="'/shop/cart/update?product_id=%s' % slide.channel_id.product_id.id">
+        Buy Course</a> to access resources
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
