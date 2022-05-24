@@ -31,6 +31,18 @@ odoo.define('web.FavoriteMenu', function (require) {
         /**
          * @override
          */
+<<<<<<< HEAD:addons/web/static/src/legacy/js/control_panel/favorite_menu.js
+=======
+        get icon() {
+            return FACET_ICONS.favorite;
+        }
+        get dialogTitle() {
+            return this.env._t("Warning");
+        }
+        /**
+         * @override
+         */
+>>>>>>> c72a25235fe... temp:addons/web/static/src/js/control_panel/favorite_menu.js
         get items() {
             const favorites = this.model.get('filters', f => f.type === 'favorite');
             const registryMenus = this.constructor.registry.values().reduce(

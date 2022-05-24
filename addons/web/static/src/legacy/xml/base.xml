@@ -182,6 +182,49 @@
     </div>
 </t>
 
+<<<<<<< HEAD:addons/web/static/src/legacy/xml/base.xml
+=======
+<t t-name="web.FavoriteMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+    <xpath expr="//DropdownMenuItem" position="attributes">
+        <attribute name="t-on-remove-item.stop">_onItemRemoved</attribute>
+    </xpath>
+    <xpath expr="//div[1]" position="inside">
+        <Dialog t-if="state.deletedFavorite"
+            title="dialogTitle"
+            size="'medium'"
+            t-on-dialog-closed="state.deletedFavorite = false"
+            >
+            <t t-if="state.deletedFavorite.userId">Are you sure that you want to remove this filter?</t>
+            <t t-else="">This filter is global and will be removed for everybody if you continue.</t>
+            <t t-set="buttons">
+                <button type="button" class="btn btn-primary" t-on-click="_onRemoveFavorite">
+                    <t>Ok</t>
+                </button>
+                <button type="button" class="btn btn-secondary" t-on-click.stop="state.deletedFavorite = false">
+                    <t>Cancel</t>
+                </button>
+            </t>
+        </Dialog>
+    </xpath>
+</t>
+
+<t t-name="web.FilterMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+    <xpath expr="//ul[@role='menu']" position="inside">
+        <li t-if="items.length" class="dropdown-divider" role="separator"/>
+        <CustomFilterItem fields="props.fields"/>
+    </xpath>
+</t>
+
+<t t-name="web.GroupByMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+    <xpath expr="//ul[@role='menu']" position="inside">
+        <t t-if="fields.length">
+            <li t-if="items.length" class="dropdown-divider" role="separator"/>
+            <CustomGroupByItem fields="fields"/>
+        </t>
+    </xpath>
+</t>
+
+>>>>>>> c72a25235fe... temp:addons/web/static/src/xml/base.xml
 <t t-name="web.DropdownMenuItem" owl="1">
     <li class="o_menu_item" role="menuitem" t-on-keydown="_onKeydown">
         <t t-if="canBeOpened">
