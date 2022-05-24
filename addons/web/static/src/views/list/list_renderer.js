@@ -730,7 +730,7 @@ export class ListRenderer extends Component {
     /**
      * @param {KeyboardEvent} event
      */
-    onKeydown(event) {
+    async onKeydown(event) {
         const { classList } = event.target;
         switch (event.key) {
             case "Escape":
@@ -743,7 +743,12 @@ export class ListRenderer extends Component {
                 }
                 // TODO: we need to refactor switchMode and unselectRecord!!!
                 if (this.props.list.editedRecord && this.props.list.editedRecord.checkValidity()) {
-                    this.props.list.unselectRecord();
+                    await this.props.list.unselectRecord();
+                    if (this.props.list.records.length === 1) {
+                        // TODO put more logic here see _moveToSideLine in list_editable_renderer
+                        // we are sure there is no other records --> add a line
+                        this.props.onAdd();
+                    }
                 }
                 break;
             default:

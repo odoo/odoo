@@ -1555,7 +1555,7 @@ class DynamicList extends DataPoint {
         return list;
     }
 
-    unselectRecord() {
+    async unselectRecord() {
         const editedRecord = this.editedRecord;
         if (editedRecord) {
             const canBeAbandoned = editedRecord.canBeAbandoned;
@@ -2980,7 +2980,7 @@ export class StaticList extends DataPoint {
     }
 
     // FIXME WOWL: factorize this (needed in both DynamicList and StaticList)
-    unselectRecord() {
+    async unselectRecord() {
         const editedRecord = this.editedRecord;
         if (editedRecord) {
             const canBeAbandoned = editedRecord.canBeAbandoned;
