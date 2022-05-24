@@ -2224,7 +2224,7 @@ export class OdooEditor extends EventTarget {
         container.innerHTML = clipboardData;
 
         for (const tableElement of container.querySelectorAll('table')) {
-            tableElement.classList.add('table', 'table-bordered');
+            tableElement.classList.add('table', 'table-bordered', 'o_table');
         }
 
         for (const child of [...container.childNodes]) {
