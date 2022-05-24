@@ -79,11 +79,10 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         wkspace_grandchildren = self.wkspace_grandchildren.with_env(self.env)
         wkspace_grandgrandchildren = self.wkspace_grandgrandchildren.with_env(self.env)
 
-        # TDE FIXME: currently failing
         # no write access -> cracboum
-        # with self.assertRaises(exceptions.AccessError,
-        #                        msg='Employee can read thus not archive'):
-        #     article_shared.action_archive()
+        with self.assertRaises(exceptions.AccessError,
+                               msg='Employee can read thus not archive'):
+            article_shared.action_archive()
 
         # set the root + children inactive
         article_workspace.action_archive()
@@ -109,6 +108,13 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
     def test_article_archive_mixed_rights(self):
         """ Test archive in case of mixed rights """
         # give write access to shared section, but have children in read or none
+        # and add a customer on top of shared articles to check propagation
+        self.article_shared.write({
+            'article_member_ids': [(0, 0, {
+                'partner_id': self.customer.id,
+                'permission': 'read',
+            })]
+        })
         self.article_shared.article_member_ids.sudo().filtered(
             lambda article: article.partner_id == self.partner_employee
         ).write({'permission': 'write'})
@@ -132,7 +138,6 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertTrue(writable_child.user_has_write_access)
         self.assertEqual(shared_children, writable_child + readonly_child, 'Should see only two first children')
 
-        # TDE FIXME: currently failing
         article_shared.action_archive()
         # check writable articles have been archived, readonly or hidden not
         self.assertFalse(article_shared.active)
@@ -146,6 +151,23 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         self.assertEqual(readonly_child.root_article_id, readonly_child)
         self.assertFalse(hidden_child_su.parent_id, 'Archive: article should be extracted in archive process as non writable')
         self.assertEqual(hidden_child_su.root_article_id, hidden_child_su)
+
+        # verify that the child that was not accessible was moved as a root article...
+        self.assertTrue(hidden_child_su.active)
+        self.assertEqual(hidden_child_su.category, 'shared')
+        self.assertEqual(hidden_child_su.internal_permission, 'none')
+        self.assertFalse(hidden_child_su.parent_id)
+        # ... and kept his access rights: still member for employee / admin and
+        # copied customer access from the archived parent
+        self.assertMembers(
+            hidden_child_su,
+            'none',
+            {self.user_admin.partner_id: 'write',
+             self.partner_employee_manager: 'read',
+             self.partner_employee: 'none',
+             self.customer: 'read',
+            }
+        )
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee')

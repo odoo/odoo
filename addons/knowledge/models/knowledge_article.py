@@ -1102,7 +1102,7 @@ class Article(models.Model):
         """
         self.ensure_one()
         new_internal_permission = force_internal_permission or self.inherited_permission
-        members_commands = self._copy_access_from_parents(
+        members_commands = self._copy_access_from_parents_commands(
             force_partners=force_partners,
             force_member_permission=force_member_permission
         )
@@ -1113,17 +1113,20 @@ class Article(models.Model):
             'is_desynchronized': True,
         })
 
-    def _copy_access_from_parents(self, force_partners=False, force_member_permission=False):
-        """ Copies copy all inherited accesses from parents on the article and
-        de-synchronize the article from its parent, allowing custom access management.
+    def _copy_access_from_parents_commands(self, force_partners=False, force_member_permission=False):
+        """ Prepares commands for all inherited accesses from parents on the given
+        article. It allows to de-synchronize the article from its parent and
+        allows custom access management. We allow to force permission of given
+        partners, bypassing inherited ones.
 
-        We allow to force permission of given partners.
-
-        :param string force_internal_permission: force a new internal permission
-          for the article. Otherwise fallback on inherited computed internal
-          permission;
         :param <res.partner> force_partners: force permission of new members
           related to those partners;
+        :param str force_member_permission: force a new permission to partners
+          given by force_partners. Otherwise fallback on inherited computed
+          internal permission;
+
+        :return list member_commands: commands to be applied on 'article_member_ids'
+          field;
         """
         self.ensure_one()
         members_permission = self._get_article_member_permissions()[self.id]
@@ -1165,7 +1168,9 @@ class Article(models.Model):
 
         # copy rights to allow breaking the hierarchy while keeping access for members
         for article_sudo in other_descendants_sudo:
-            article_sudo._copy_access_from_parents()
+            article_sudo.write({
+                'article_member_ids': article_sudo._copy_access_from_parents_commands()
+            })
 
         # create new root articles: direct children of these articles
         new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
