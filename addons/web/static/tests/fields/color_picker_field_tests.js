@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "../helpers/utils";
+import { click, getFixture } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -42,40 +42,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.module("ColorPickerField");
-
-    QUnit.skipWOWL("can navigate away with TAB", async function (assert) {
-        assert.expect(1);
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
-                <form string="Partners">
-                    <group>
-                        <field name="int_field" widget="color_picker"/>
-                        <field name="foo" />
-                    </group>
-                </form>`,
-        });
-
-        // switch to edit mode
-        await click(target, ".o_form_button_edit");
-
-        // click on the only element (because it's closed) to open the field component
-        await click(target, ".o_field_color_picker button");
-
-        await triggerEvent(document.activeElement, null, "keydown", {
-            which: 13, // tab
-        });
-
-        assert.strictEqual(
-            document.activeElement,
-            target.querySelector('.o_field_widget[name="foo"] input'),
-            "foo field should be focused"
-        );
-    });
 
     QUnit.test(
         "No chosen color is a red line with a white background (color 0)",
