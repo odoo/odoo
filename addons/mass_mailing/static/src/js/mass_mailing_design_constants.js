@@ -28,7 +28,7 @@ export const PRIORITY_STYLES = {
     'a:not(.btn)': [],
     'a.btn.btn-primary': [],
     'a.btn.btn-secondary': [],
-    'hr': [],
+    'hr': ['border-top-color'],
 };
 export const RE_CSS_TEXT_MATCH = /([^{]+)([^}]+)/;
 export const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
@@ -75,7 +75,7 @@ export const splitCss = css => {
                     if (!stylesToWrite[selectorToWriteTo]) {
                         stylesToWrite[selectorToWriteTo] = [];
                     }
-                    stylesToWrite[selectorToWriteTo].push([style, styles[style]]);
+                    stylesToWrite[selectorToWriteTo].push([style, styles[style] + (styles.getPropertyPriority(style) === 'important' ? ' !important' : '')]);
                 }
             }
         }
