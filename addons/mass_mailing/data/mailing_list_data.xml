@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mailing_list_data" model="mailing.list">
+            <field name="name">Newsletter</field>
+        </record>
+        <record id="mass_mailing_contact_0" model="mailing.contact">
+            <field name="name" model="res.users" eval="obj().env.ref('base.user_admin').name"/>
+            <field name="email" model="res.users" eval="obj().env.ref('base.user_admin').email"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+        </record>
+    </data>
+</odoo>
