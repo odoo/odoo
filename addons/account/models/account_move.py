@@ -198,6 +198,7 @@ class AccountMove(models.Model):
         help="It indicates that the invoice/payment has been sent.",
     )
     partner_bank_id = fields.Many2one('res.partner.bank', string='Recipient Bank',
+        compute="_compute_partner_bank_id", store=True, readonly=False,
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)
     payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
@@ -473,8 +474,6 @@ class AccountMove(models.Model):
                 line.account_id = new_term_account
 
         self._compute_bank_partner_id()
-        bank_ids = self.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id is False or bank.company_id == self.company_id)
-        self.partner_bank_id = bank_ids and bank_ids[0]
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
@@ -1347,7 +1346,13 @@ class AccountMove(models.Model):
         for move in self:
             move.commercial_partner_id = move.partner_id.commercial_partner_id
 
-    @api.depends('commercial_partner_id')
+    @api.depends('bank_partner_id')
+    def _compute_partner_bank_id(self):
+        for move in self:
+            bank_ids = move.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id is False or bank.company_id == move.company_id)
+            move.partner_bank_id = bank_ids and bank_ids[0]
+
+    @api.depends('commercial_partner_id', 'move_type')
     def _compute_bank_partner_id(self):
         for move in self:
             if move.is_outbound():
@@ -2386,7 +2391,9 @@ class AccountMove(models.Model):
             return tags
 
         move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
-
+        # partner_bank_id field will be set by _compute_partner_bank_id
+        if 'partner_bank_id' in move_vals:
+            del move_vals['partner_bank_id']
         is_refund = False
         if move_vals['move_type'] in ('out_refund', 'in_refund'):
             is_refund = True
@@ -2931,7 +2938,6 @@ class AccountMove(models.Model):
             move.write({
                 'move_type': move.move_type.replace('invoice', 'refund'),
                 'invoice_line_ids' : [(5, 0, 0)],
-                'partner_bank_id': False,
             })
             move.write({'invoice_line_ids' : new_invoice_line_ids})
 
