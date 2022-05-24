@@ -121,8 +121,8 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
         }
 
-    def _create_so(self, partner_id=None):
-        return self.env['sale.order'].create({
+    def _create_so(self, partner_id=None, company_id=None):
+        values = {
             'partner_id': partner_id,
             'website_id': self.website.id,
             'order_line': [(0, 0, {
@@ -133,7 +133,10 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
                     'sale_ok': True}).id,
                 'name': 'Product A',
             })]
-        })
+        }
+        if company_id:
+            values['company_id'] = company_id
+        return self.env['sale.order'].create(values)
 
     def _get_last_address(self, partner):
         ''' Useful to retrieve the last created shipping address '''
@@ -241,3 +244,26 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
             self.WebsiteSaleController.pricelist('')
             self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
+
+    # TEST WEBSITE & MULTI COMPANY
+
+    def test_05_create_so_with_website_and_multi_company(self):
+        ''' This test ensure that the company_id of the website set on the order
+            is the same as the env company or the one set on the order.
+        '''
+        self._setUp_multicompany_env()
+        # No company on the SO
+        so = self._create_so(self.demo_partner.id)
+        self.assertEqual(so.company_id, self.website.company_id)
+
+        # Same company on the SO and the env user company but no website
+        with self.assertRaises(ValueError, msg="Should not be able to create SO with company different than the website company"):
+            self._create_so(self.demo_partner.id, self.company_a.id)
+
+        # Same company on the SO and the website company
+        so = self._create_so(self.demo_partner.id, self.company_b.id)
+        self.assertEqual(so.company_id, self.website.company_id)
+
+        # Different company on the SO and the env user company
+        with self.assertRaises(ValueError, msg="Should not be able to create SO with company different than the website company"):
+            self._create_so(self.demo_partner.id, self.company_c.id)
