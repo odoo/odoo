@@ -666,25 +666,7 @@ class Article(models.Model):
           * unreachable descendants (none, read) are set as free articles without
             root;
         """
-        all_descendants_sudo = self.sudo()._get_descendants()
-        writable_descendants = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
-        other_descendants_sudo = all_descendants_sudo - writable_descendants
-
-        # copy rights to allow breaking the hierarchy while keeping access for members
-        for article_sudo in other_descendants_sudo:
-            article_sudo._copy_access_from_parents()
-
-        # create new root articles: direct children of archived articles that are not archived
-        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
-        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
-        if new_roots_wperm:
-            new_roots_wperm.write({'parent_id': False})
-        for new_root in new_roots_woperm:
-            new_root.write({
-                'internal_permission': new_root.inherited_permission,
-                'parent_id': False,
-            })
-
+        writable_descendants = self._detach_unwritable_descendants()
         return super(Article, self + writable_descendants).action_archive()
 
     # ------------------------------------------------------------
@@ -939,7 +921,7 @@ class Article(models.Model):
                                      'favorite_count', 'root_article_id', 'icon'])
 
     # ------------------------------------------------------------
-    # PERMISSIONS / MEMBERS
+    # PERMISSIONS / MEMBERS MANAGEMENT
     # ------------------------------------------------------------
 
     def restore_article_access(self):
@@ -1154,6 +1136,7 @@ class Article(models.Model):
     def _copy_access_from_parents(self, force_partners=False, force_member_permission=False):
         """ Copies copy all inherited accesses from parents on the article and
         de-synchronize the article from its parent, allowing custom access management.
+
         We allow to force permission of given partners.
 
         :param string force_internal_permission: force a new internal permission
@@ -1180,6 +1163,46 @@ class Article(models.Model):
                         'permission': new_member_permission,
                        }))
         return members_commands
+
+    def _detach_unwritable_descendants(self):
+        """ When taking specific actions on an article like archiving or making
+        it private, we want to be able to 'detach' the unaccessible children and
+        set them as free (root) articles. Indeed in those business flows you
+        should not change the current access level of children articles.
+
+        This method takes care of correctly detaching those children and returns
+        a subset of children to which the user effectively has write access to.
+
+        Note: this might produce funny results when involving a hierarchy with
+        invisible nodes in it (A-B-C where B is not achievable). You might
+        archive / privatize articles and break hierarchy without knowing it.
+
+        :return <knowledge.article> children: the children articles which were
+          not detached, meaning that current user has write access on them """
+        all_descendants_sudo = self.sudo()._get_descendants()
+        writable_descendants = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
+        other_descendants_sudo = all_descendants_sudo - writable_descendants
+
+        # copy rights to allow breaking the hierarchy while keeping access for members
+        for article_sudo in other_descendants_sudo:
+            article_sudo._copy_access_from_parents()
+
+        # create new root articles: direct children of these articles
+        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
+        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
+        if new_roots_wperm:
+            new_roots_wperm.write({'parent_id': False})
+        for new_root in new_roots_woperm:
+            new_root.write({
+                'internal_permission': new_root.inherited_permission,
+                'parent_id': False,
+            })
+
+        return writable_descendants
+
+    # ------------------------------------------------------------
+    # PERMISSIONS BATCH COMPUTATION
+    # ------------------------------------------------------------
 
     @api.model
     def _get_internal_permission(self, filter_domain=None):
