@@ -121,6 +121,7 @@ const ReplenishReport = clientAction.extend({
             modelName: model,
             noContentHelp: _t("Try to add some incoming or outgoing transfers."),
             withControlPanel: false,
+            context: {fill_temporal: false},
         };
         const GraphView = viewRegistry.get("graph");
         const graphView = new GraphView(viewInfo, params);
