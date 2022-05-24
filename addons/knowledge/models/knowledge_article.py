@@ -645,26 +645,7 @@ class Article(models.Model):
           * unreachable descendants (none, read) are set as free articles without
             root;
         """
-        all_descendants_sudo = self.sudo()._get_descendants()
-        writable_descendants = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
-        other_descendants_sudo = all_descendants_sudo - writable_descendants
-
-        # copy rights to allow breaking the hierarchy while keeping access for members
-        for article_sudo in other_descendants_sudo:
-            member_commands = article_sudo._copy_access_from_parents_commands()
-            article_sudo.write({'article_member_ids': member_commands})
-
-        # create new root articles: direct children of archived articles that are not archived
-        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
-        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
-        if new_roots_wperm:
-            new_roots_wperm.write({'parent_id': False})
-        for new_root in new_roots_woperm:
-            new_root.write({
-                'internal_permission': new_root.inherited_permission,
-                'parent_id': False,
-            })
-
+        writable_descendants = self._detach_unwritable_descendants()
         return super(Article, self + writable_descendants).action_archive()
 
     # ------------------------------------------------------------
@@ -1163,6 +1144,41 @@ class Article(models.Model):
             'internal_permission': new_internal_permission,
             'is_desynchronized': True,
         })
+
+    def _detach_unwritable_descendants(self):
+        """ When taking specific actions on an article, notably archiving or making it private, we
+        want to be able to 'detach' the unaccessible children and set them as free (root) articles.
+
+        Indeed, when making private / archiving , you should not change the current access level
+        of children articles.
+
+        This method takes care of correctly detaching those children and returns a subset of children
+        to which the user effectively has write access to.
+
+        :return <knowledge.article> children: the children articles which were not detached, meaning
+          that the current user has a write access level to them. """
+
+        all_descendants_sudo = self.sudo()._get_descendants()
+        writable_descendants = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
+        other_descendants_sudo = all_descendants_sudo - writable_descendants
+
+        # copy rights to allow breaking the hierarchy while keeping access for members
+        for article_sudo in other_descendants_sudo:
+            member_commands = article_sudo._copy_access_from_parents_commands()
+            article_sudo.write({'article_member_ids': member_commands})
+
+        # create new root articles: direct children of these articles
+        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
+        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
+        if new_roots_wperm:
+            new_roots_wperm.write({'parent_id': False})
+        for new_root in new_roots_woperm:
+            new_root.write({
+                'internal_permission': new_root.inherited_permission,
+                'parent_id': False,
+            })
+
+        return writable_descendants
 
     def _copy_access_from_parents_commands(self, force_partners=False, force_member_permission=False):
         """ Prepare commands for all inherited accesses from parents on the article in order
