@@ -359,7 +359,8 @@
                                     <button type="object" name="button_remove_theme" class="btn btn-secondary">Remove theme</button>
                                 </div>
                                 <div t-else="" class="o_button_area">
-                                    <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
+                                    <button type="object" name="button_choose_theme" class="btn btn-primary"
+                                            t-if="record.state.raw_value !== 'uninstallable'">Use this theme</button>
                                     <hr t-if="record.url.value"/>
                                     <button role="button" type="edit" t-if="record.url.value" class="btn btn-secondary">Live Preview</button>
                                 </div>
