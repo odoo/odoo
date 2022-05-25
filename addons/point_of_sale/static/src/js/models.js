@@ -1403,6 +1403,8 @@ exports.PosModel = Backbone.Model.extend({
         if(base < 0){
             base = -base;
             sign = -1;
+        } else if(utils.float_is_zero(base, this.currency.decimals) && quantity < 0){
+            sign = -1
         }
 
         var total_included_checkpoints = {};
