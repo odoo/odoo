@@ -608,6 +608,78 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         wkspace_child_no_access.with_user(self.user_employee2).body
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models.unlink')
+    @users('employee')
+    def test_article_make_private_w_desynchronized(self):
+        """ Test a special case when making private: we have desynchronized children.
+        Children that are de-synchronized should NOT have members from their parent(s)
+        copied onto them when they are detached.
+
+        Specific setup for this test
+        # - Playground                workspace    w+    (customer-r+,employee-w+)
+        #   - Child1                  "            w+DES (customer-r+,employee-r+)
+        #     - Gd Child1             "            "
+        #     - Gd Child2             "            "
+        #       - GdGd Child1         "            "
+        #   - Child2                  "            "
+        #     - Gd Child1             "            "
+        #       - GdGd Child          "            "
+        """
+        # add employee on playground and desynchronize its child
+        self.article_workspace._add_members(self.partner_employee, 'write')
+        self.workspace_children[0]._set_member_permission(
+            self.article_workspace.article_member_ids.filtered(
+                lambda member: member.partner_id == self.partner_employee
+            ),
+            'read',
+            is_based_on=True,
+        )
+        # check updated data
+        self.assertTrue(self.workspace_children[0].is_desynchronized)
+        self.assertMembers(
+            self.article_workspace,
+            'write',
+            {self.partner_employee: 'write'}
+        )
+        self.assertMembers(
+            self.workspace_children[0],
+            'write',
+            {self.partner_employee: 'read'}
+        )
+
+        article_workspace = self.article_workspace.with_env(self.env)
+        [workspace_child_desync, workspace_child_tosync] = self.workspace_children.with_env(self.env)
+
+        # add a member on the parent, it will NOT be propagated to the desync child
+        article_workspace._add_members(self.customer, 'read')
+        self.assertMembers(
+            article_workspace,
+            'write',
+            {self.customer: 'read', self.partner_employee: 'write'}
+        )
+
+        # now move the article to private and check the post-processing
+        article_workspace._move_and_make_private()
+
+        # 1. desync article: moved to root (as employee does not have write access)
+        # and is not desynchronized (root articles are never desynchornized)
+        # should be moved to root (as employee does not have write access)
+        self.assertEqual(workspace_child_desync.category, "workspace")
+        self.assertFalse(workspace_child_desync.is_desynchronized)
+        self.assertFalse(workspace_child_desync.parent_id)
+        # it should NOT have had customer access copied onto it as it was desync when we moved it
+        self.assertMembers(
+            workspace_child_desync,
+            "write",
+            {self.partner_employee: 'read'}
+        )
+
+        # 2. sync article: NOT moved to root (as employee has write access) and is
+        # still sunchronized
+        self.assertEqual(workspace_child_tosync.category, "private")
+        self.assertFalse(workspace_child_desync.is_desynchronized)
+        self.assertEqual(workspace_child_tosync.parent_id, article_workspace)
+
+    @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models.unlink')
     @users('employee_manager')
     def test_article_make_private_w_parent(self):
         """ Test a special case when making private: moving under an existing private parent. """
