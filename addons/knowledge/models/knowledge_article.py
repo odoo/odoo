@@ -1156,6 +1156,10 @@ class Article(models.Model):
         This method takes care of correctly detaching those children and returns
         a subset of children to which the user effectively has write access to.
 
+        As the children are moved to "root" articles we also reset their desync
+        status. Indeed, a root article cannot be desyncronized as stated by SQL
+        constraints.
+
         Note: this might produce funny results when involving a hierarchy with
         invisible nodes in it (A-B-C where B is not achievable). You might
         archive / privatize articles and break hierarchy without knowing it.
@@ -1167,18 +1171,23 @@ class Article(models.Model):
         other_descendants_sudo = all_descendants_sudo - writable_descendants
 
         # copy rights to allow breaking the hierarchy while keeping access for members
-        for article_sudo in other_descendants_sudo:
+        # do this on synchronized articles as desynchronized one do not inherit from parent
+        for article_sudo in other_descendants_sudo.filtered(lambda article: not article.is_desynchronized):
             article_sudo.write({
                 'article_member_ids': article_sudo._copy_access_from_parents_commands()
             })
 
-        # create new root articles: direct children of these articles
+        # create new root articles: direct children of these articles, reset desync
         new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
         new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
         if new_roots_wperm:
-            new_roots_wperm.write({'parent_id': False})
+            new_roots_wperm.write({
+                'is_desynchronized': False,
+                'parent_id': False
+            })
         for new_root in new_roots_woperm:
             new_root.write({
+                'is_desynchronized': False,
                 'internal_permission': new_root.inherited_permission,
                 'parent_id': False,
             })
