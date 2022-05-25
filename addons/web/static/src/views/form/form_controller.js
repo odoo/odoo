@@ -304,8 +304,8 @@ export class FormController extends Component {
         }
     }
 
-    edit() {
-        this.model.root.switchMode("edit");
+    async edit() {
+        await this.model.root.switchMode("edit");
     }
 
     async create() {

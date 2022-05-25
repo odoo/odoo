@@ -9584,45 +9584,42 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "edit a record in readonly and switch to edit before it is actually saved",
         async function (assert) {
             assert.expect(3);
 
-            const prom = makeDeferred();
+            const def = makeDeferred();
             await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
                 arch: `<form>
-                    <field name="foo"/>
-                    <field name="bar" widget="toggle_button"/>
-                </form>`,
-                mockRPC(route, args) {
-                    const result = this._super.apply(this, arguments);
+                            <field name="foo"/>
+                            <field name="bar" widget="toggle_button"/>
+                        </form>`,
+                async mockRPC(route, args) {
                     if (args.method === "write") {
-                        // delay the write RPC
                         assert.deepEqual(args.args[1], { bar: false });
-                        return prom.then(_.constant(result));
+                        await def;
                     }
-                    return result;
                 },
                 resId: 1,
             });
 
             // edit the record (in readonly) with toogle_button widget (and delay the write RPC)
-            await click(target.querySelector(".o_field_widget[name=bar]"));
+            await click(target.querySelector(".o_field_widget[name=bar] button"));
 
             // switch to edit mode
             await click(target.querySelector(".o_form_button_edit"));
 
-            assert.hasClass(target.querySelector(".o_form_view"), "o_form_readonly"); // should wait for the RPC to return
+            assert.containsOnce(target, ".o_form_readonly"); // should wait for the RPC to return
 
             // make write RPC return
-            prom.resolve();
-            await testUtils.nextTick();
+            def.resolve();
+            await nextTick();
 
-            assert.hasClass(target.querySelector(".o_form_view"), "o_form_editable");
+            assert.containsOnce(target, ".o_form_editable");
         }
     );
 
