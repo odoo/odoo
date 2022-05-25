@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class RtcVideo extends Component {
+export class CallParticipantVideo extends Component {
 
     /**
      * @override
@@ -20,9 +20,9 @@ export class RtcVideo extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {RtcVideoView}
+     * @returns {CallParticipantVideoView}
      */
-     get rtcVideoView() {
+     get callParticipantVideoView() {
         return this.props.record;
     }
 
@@ -44,19 +44,19 @@ export class RtcVideo extends Component {
         if (!this.root.el) {
             return;
         }
-        if (!this.rtcVideoView.rtcSession || !this.rtcVideoView.rtcSession.videoStream) {
+        if (!this.callParticipantVideoView.rtcSession || !this.callParticipantVideoView.rtcSession.videoStream) {
             this.root.el.srcObject = undefined;
         } else {
-            this.root.el.srcObject = this.rtcVideoView.rtcSession.videoStream;
+            this.root.el.srcObject = this.callParticipantVideoView.rtcSession.videoStream;
         }
         this.root.el.load();
     }
 
 }
 
-Object.assign(RtcVideo, {
+Object.assign(CallParticipantVideo, {
     props: { record: Object },
-    template: 'mail.RtcVideo',
+    template: 'mail.CallParticipantVideo',
 });
 
-registerMessagingComponent(RtcVideo);
+registerMessagingComponent(CallParticipantVideo);
