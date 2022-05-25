@@ -1729,7 +1729,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("name_create in form dialog", async function (assert) {
+    QUnit.test("name_create in form dialog", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -1744,25 +1744,23 @@ QUnit.module("Fields", (hooks) => {
                                 <field name="bar"/>
                             </tree>
                             <form>
-                            <field name="product_id"/>
+                                <field name="product_id"/>
                             </form>
                         </field>
                     </group>
                 </form>
                 `,
-            mockRPC(route, args) {
-                if (args.method === "name_create") {
+            mockRPC(route, { method }) {
+                if (method === "name_create") {
                     assert.step("name_create");
                 }
             },
         });
 
-        await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        await testUtils.owlCompatibilityExtraNextTick();
-        await testUtils.fields.many2one.searchAndClickItem("product_id", {
-            selector: ".modal",
-            search: "new record",
-        });
+        await click(target, ".o_field_x2many_list_row_add a");
+
+        await editInput(target, ".modal .o_field_widget[name=product_id] input", "new record");
+        await click(target.querySelector(".modal .o_field_widget[name=product_id] .ui-menu-item"));
 
         assert.verifySteps(["name_create"]);
     });
