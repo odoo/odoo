@@ -30,7 +30,7 @@
                                 <t t-if="messaging.device.isSmall">
                                     <t t-call="mail.MessagingMenu.newMessageButton"/>
                                 </t>
-                                <div class="o-autogrow"/>
+                                <div class="flex-grow-1"/>
                                 <t t-if="!messaging.device.isSmall and !messaging.discuss.discussView">
                                     <t t-call="mail.MessagingMenu.newMessageButton"/>
                                 </t>
