@@ -132,23 +132,21 @@ class PosOrder(models.Model):
             next(order for order in orders if order['id'] == order_id[0])['statement_ids'] = list(payment_lines)
 
     def _get_fields_for_draft_order(self):
-        fields = super(PosOrder, self)._get_fields_for_draft_order()
-        fields.extend([
-                    'id',
-                    'pricelist_id',
-                    'partner_id',
-                    'sequence_number',
-                    'session_id',
-                    'pos_reference',
-                    'create_uid',
-                    'create_date',
-                    'customer_count',
-                    'fiscal_position_id',
-                    'table_id',
-                    'to_invoice',
-                    'multiprint_resume',
-                    ])
-        return fields
+        return [
+            'id',
+            'pricelist_id',
+            'partner_id',
+            'sequence_number',
+            'session_id',
+            'pos_reference',
+            'create_uid',
+            'create_date',
+            'customer_count',
+            'fiscal_position_id',
+            'table_id',
+            'to_invoice',
+            'multiprint_resume',
+        ]
 
     @api.model
     def get_table_draft_orders(self, table_id):
@@ -182,8 +180,6 @@ class PosOrder(models.Model):
                 order['partner_id'] = order['partner_id'][0]
             if order['table_id']:
                 order['table_id'] = order['table_id'][0]
-            if 'employee_id' in order:
-                order['employee_id'] = order['employee_id'][0] if order['employee_id'] else False
 
             if not 'lines' in order:
                 order['lines'] = []

@@ -546,9 +546,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 console.error('Unknown error. Unable to show information about this error.', errorToHandle);
             }
         }
-        _shouldResetIdleTimer() {
-            return true;
-        }
     }
     Chrome.template = 'Chrome';
     Object.defineProperty(Chrome, "components", {
