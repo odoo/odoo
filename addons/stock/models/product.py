@@ -824,19 +824,19 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         # Return a warning when trying to change the product type
+        res = super(ProductTemplate, self)._onchange_type()
         if self.ids and self.product_variant_ids.ids and self.env['stock.move.line'].sudo().search_count([
             ('product_id', 'in', self.product_variant_ids.ids), ('state', '!=', 'cancel')
         ]):
-            return {
-                'warning': {
-                    'title': _('Warning!'),
-                    'message': _(
-                        'This product has been used in at least one inventory movement. '
-                        'It is not advised to change the Product Type since it can lead to inconsistencies. '
-                        'A better solution could be to archive the product and create a new one instead.'
-                    )
-                }
+            res['warning'] = {
+                'title': _('Warning!'),
+                'message': _(
+                    'This product has been used in at least one inventory movement. '
+                    'It is not advised to change the Product Type since it can lead to inconsistencies. '
+                    'A better solution could be to archive the product and create a new one instead.'
+                )
             }
+        return res
 
     def write(self, vals):
         self._sanitize_vals(vals)
