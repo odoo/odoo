@@ -4,6 +4,7 @@
 from datetime import date, timedelta
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 
 
@@ -208,3 +209,144 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyValidity2",
             login="accountman",
         )
+
+    def test_loyalty_free_product_rewards(self):
+        free_product = self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1 desk_organizer',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.desk_organizer,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.desk_organizer.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+        })
+        free_other_product = self.env['loyalty.program'].create({
+            'name': 'Buy 3 magnetic_board, Take 1 whiteboard_pen',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.magnetic_board,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_qty': 1,
+                'required_points': 3,
+            })],
+        })
+        free_multi_product = self.env['loyalty.program'].create({
+            'name': '2 items of shelves, get desk_pad/monitor_stand free',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': (self.wall_shelf | self.small_shelf).ids,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': self.env['product.tag'].create({
+                    'name': 'reward_product_tag',
+                    'product_product_ids': (self.desk_pad | self.monitor_stand).ids,
+                }).id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+        })
+        self.main_pos_config.write({
+            'promo_program_ids': [Command.set([free_product.id, free_other_product.id, free_multi_product.id])]
+        })
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyFreeProductTour",
+            login="accountman",
+        )
+
+        # Keep the tour to generate 4 orders for the free_product and free_other_product programs.
+        # 2 of them don't use a program.
+        # 1 uses free_product.
+        # 1 uses free_other_product.
+        # This is to take into account the fact that during tours, we can't test the "non-occurence" of something.
+        # It would be nice to have a check like: Validate that a reward is "not" there.
+        self.assertEqual(free_product.pos_order_count, 1)
+        self.assertEqual(free_other_product.pos_order_count, 2)
+
+        # There is the 5th order that tests multi_product reward.
+        # It attempted to add one reward product, removed it, then add the second.
+        # The second reward was synced with the order.
+        self.assertEqual(free_multi_product.pos_order_count, 1)
+
+    def test_loyalty_free_product_loyalty_program(self):
+        # In this program, each whiteboard pen gives 1 point.
+        # 4 points can be used to get a free whiteboard pen.
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Buy 4 whiteboard_pen, Take 1 whiteboard_pen',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.whiteboard_pen.ids,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_qty': 1,
+                'required_points': 4,
+            })],
+        })
+
+        partner_aaa = self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        partner_bbb = self.env['res.partner'].create({'name': 'Test Partner BBB'})
+        partner_ccc = self.env['res.partner'].create({'name': 'Test Partner CCC'})
+
+        self.main_pos_config.write({
+            'promo_program_ids': [Command.clear()],
+            'module_pos_loyalty': True,
+            'loyalty_program_id': loyalty_program.id,
+        })
+
+        # Part 1
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyLoyaltyProgram1",
+            login="accountman",
+        )
+
+        aaa_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
+
+        self.assertEqual(loyalty_program.pos_order_count, 1)
+        self.assertAlmostEqual(aaa_loyalty_card.points, 4)
+
+        # Part 2
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyLoyaltyProgram2",
+            login="accountman",
+        )
+
+        self.assertEqual(loyalty_program.pos_order_count, 2, msg='Only 2 orders should have reward lines.')
+        self.assertAlmostEqual(aaa_loyalty_card.points, 1)
+
+        bbb_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_bbb.id)
+        ccc_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_ccc.id)
+
+        self.assertAlmostEqual(bbb_loyalty_card.points, 3, msg='Reference: Order3_BBB')
+        self.assertAlmostEqual(ccc_loyalty_card.points, 4, msg='Reference: Order2_CCC')
+
+        reward_orderline = self.main_pos_config.current_session_id.order_ids[-1].lines.filtered(lambda line: line.is_reward_line)
+        self.assertEqual(len(reward_orderline.ids), 0, msg='Reference: Order4_no_reward. Last order should have no reward line.')
