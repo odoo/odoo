@@ -4,13 +4,13 @@
 from odoo import api, fields, models
 
 
-class MassMailingContactListRel(models.Model):
+class MailingSubscription(models.Model):
     """ Intermediate model between mass mailing list and mass mailing contact
         Indicates if a contact is opted out for a particular list
     """
-    _name = 'mailing.contact.subscription'
-    _description = 'Mass Mailing Subscription Information'
-    _table = 'mailing_contact_list_rel'
+    _name = 'mailing.subscription'
+    _description = 'Mailing List Subscription'
+    _table = 'mailing_subscription'
     _rec_name = 'contact_id'
     _order = 'list_id DESC, contact_id DESC'
 

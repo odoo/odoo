@@ -152,10 +152,10 @@ class MassMailController(http.Controller):
         # as there may be several contacts / email -> consider any opt-in overrides
         # opt-out
         contacts = self._fetch_contacts(email)
-        lists_optin = contacts.subscription_list_ids.filtered(
+        lists_optin = contacts.subscription_ids.filtered(
             lambda sub: not sub.opt_out
         ).list_id
-        lists_optout = contacts.subscription_list_ids.filtered(
+        lists_optout = contacts.subscription_ids.filtered(
             lambda sub: sub.opt_out and sub.list_id not in lists_optin
         ).list_id
         lists_public = request.env['mailing.list'].sudo().search(
@@ -188,7 +188,7 @@ class MassMailController(http.Controller):
             'is_blocklisted': mail_blocklist.active if mail_blocklist else False,
             # mailing lists
             'contacts': contacts,
-            'lists_contacts': contacts.subscription_list_ids.list_id,
+            'lists_contacts': contacts.subscription_ids.list_id,
             'lists_optin': lists_optin,
             'lists_optout': lists_optout,
             'lists_public': lists_public,
@@ -212,7 +212,7 @@ class MassMailController(http.Controller):
         contacts = self._fetch_contacts(email_found)
         lists_optin = request.env['mailing.list'].sudo().browse(lists_optin_ids or []).exists()
         # opt-out all not chosen lists
-        lists_to_optout = contacts.subscription_list_ids.filtered(
+        lists_to_optout = contacts.subscription_ids.filtered(
             lambda sub: not sub.opt_out and sub.list_id not in lists_optin
         ).list_id
         # opt-in in either already member, either public (to avoid trying to opt-in

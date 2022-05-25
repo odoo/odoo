@@ -749,7 +749,7 @@ class MassMailing(models.Model):
         if self.contact_list_ids:
             action['context'] = {
                 'default_mailing_list_ids': self.contact_list_ids[0].ids,
-                'default_subscription_list_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
+                'default_subscription_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
             }
         action['domain'] = [('list_ids', 'in', self.contact_list_ids.ids)]
         return action

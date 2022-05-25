@@ -565,7 +565,7 @@ class TestMassMailing(TestMassMailCommon):
         # contact_1 is optout but same email is not optout from the same list
         # contact 3 is optout in list 1 but not in list 2
         # contact 5 is optout
-        subs = self.env['mailing.contact.subscription'].search([
+        subs = self.env['mailing.subscription'].search([
             '|', '|',
             '&', ('contact_id', '=', mailing_contact_1.id), ('list_id', '=', mailing_list_1.id),
             '&', ('contact_id', '=', mailing_contact_3.id), ('list_id', '=', mailing_list_1.id),
