@@ -24,15 +24,14 @@ export class FormViewDialog extends Component {
             resModel: this.props.resModel,
             viewId: this.props.viewId || false,
 
-            discardRecord: () => {
+            discardRecord: async (record) => {
+                await this.props.onRecordDiscarded(record);
                 this.props.close();
             },
             saveRecord: async (record) => {
                 const saved = await record.save({ stayInEdition: true, noReload: true });
                 if (saved) {
-                    if (this.props.onRecordSaved) {
-                        await this.props.onRecordSaved(record);
-                    }
+                    await this.props.onRecordSaved(record);
                     this.props.close();
                 }
             },
@@ -59,9 +58,14 @@ FormViewDialog.props = {
         optional: true,
         validate: (m) => ["edit", "readonly"].includes(m),
     },
+    onRecordDiscarded: { type: Function, optional: true },
     onRecordSaved: { type: Function, optional: true },
     resId: { type: [Number, false], optional: true },
     title: { type: String, optional: true },
     viewId: { type: [Number, false], optional: true },
+};
+FormViewDialog.defaultProps = {
+    onRecordDiscarded: () => {},
+    onRecordSaved: () => {},
 };
 FormViewDialog.template = "web.FormViewDialog";

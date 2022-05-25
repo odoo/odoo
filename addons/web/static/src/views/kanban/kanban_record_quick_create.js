@@ -1,14 +1,18 @@
 /** @odoo-module */
+import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-const { Component, useExternalListener, useState, useRef } = owl;
+const { Component, onMounted, useExternalListener, useState, useRef } = owl;
 
 export class KanbanRecordQuickCreate extends Component {
     setup() {
-        this.root = useRef("root");
+        this.uiService = useService("ui");
+        this.rootRef = useRef("root");
         this.state = useState({ disabled: false });
-
+        onMounted(() => {
+            this.uiActiveElement = this.uiService.activeElement;
+        });
         // Close on outside click
         useExternalListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
             // This target is kept in order to impeach close on outside click behavior if the click
@@ -19,8 +23,12 @@ export class KanbanRecordQuickCreate extends Component {
             window,
             "click",
             (/** @type {MouseEvent} */ ev) => {
+                if (this.uiActiveElement !== this.uiService.activeElement) {
+                    // this component isn't in the current active element -> do nothing
+                    return;
+                }
                 const target = this.mousedownTarget || ev.target;
-                const gotClickedInside = this.root.el.contains(target);
+                const gotClickedInside = this.rootRef.el.contains(target);
                 if (!gotClickedInside) {
                     this.cancel(false);
                 }

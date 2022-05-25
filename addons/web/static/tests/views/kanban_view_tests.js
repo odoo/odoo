@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -10,7 +11,6 @@ import {
     nextTick,
     patchWithCleanup,
     triggerEvent,
-    triggerEvents,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import {
@@ -41,7 +41,7 @@ const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
 
 // WOWL remove after adapting tests
-let testUtils, FormRenderer;
+let FormRenderer;
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -1926,35 +1926,34 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("quick create record: cancel when modal is opened", async (assert) => {
-        assert.expect(3);
+    QUnit.test("quick create record: cancel when modal is opened", async (assert) => {
+        serverData.views["partner,some_view_ref,form"] = '<form><field name="product_id"/></form>';
 
-        serverData.views["partner,some_view_ref,form"] =
-            "<form>" + '<field name="product_id"/>' + "</form>";
+        // patch setTimeout s.t. the autocomplete dropdown opens directly
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
             groupBy: ["bar"],
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
         });
 
         // click to add an element
         await quickCreateRecord();
-        assert.containsOnce(
-            target,
-            ".o_kanban_quick_create",
-            "should have open the quick create widget"
-        );
+        assert.containsOnce(target, ".o_kanban_quick_create");
 
         await editInput(target, ".o_kanban_quick_create input", "test");
-        await triggerEvents(target, ".o_kanban_quick_create input", ["keyup", "blur"]);
+        await triggerEvent(target, ".o_kanban_quick_create input", "input");
+        await triggerEvent(target, ".o_kanban_quick_create input", "blur");
 
         // When focusing out of the many2one, a modal to add a 'product' will appear.
         // The following assertions ensures that a click on the body element that has 'modal-open'
@@ -2226,7 +2225,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record fail in grouped by many2one", async (assert) => {
+    QUnit.test("quick create record fail in grouped by many2one", async (assert) => {
         serverData.views["partner,false,form"] = `
             <form>
                 <field name="product_id"/>
@@ -2252,231 +2251,166 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
-        await createRecord(); // Click on 'Create'
+        await createRecord();
+        assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
 
-        assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
-
-        await editQuickCreateInput("foo", "test");
+        await editQuickCreateInput("display_name", "test");
         await validateRecord();
-
         assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
 
         // specify a name and save
-        await editInput(target, ".modal input[name=foo]", "test");
-        await click(target, ".modal .btn-primary");
-
+        await editInput(target, ".modal .o_field_widget[name=foo] input", "test");
+        await click(target, ".modal .o_form_button_save");
         assert.containsNone(target, ".modal");
-        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
         const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
         assert.strictEqual(firstRecord.innerText, "test");
         assert.containsOnce(target, ".o_kanban_quick_create:not(.o_disabled)");
     });
 
-    QUnit.skipWOWL("quick create record is re-enabled after discard on failure", async (assert) => {
-        assert.expect(4);
-
-        serverData.views["partner,false,form"] =
-            '<form string="Partner">' +
-            '<field name="product_id"/>' +
-            '<field name="foo"/>' +
-            "</form>";
+    QUnit.test("quick create record is re-enabled after discard on failure", async (assert) => {
+        serverData.views["partner,false,form"] = `
+            <form>
+                <field name="product_id"/>
+                <field name="foo"/>
+            </form>`;
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban on_create="quick_create">' +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    return Promise.reject({
-                        message: {
-                            code: 200,
-                            data: {},
-                            message: "Odoo server error",
-                        },
-                        event: $.Event(),
-                    });
+                    return Promise.reject({ message: "Odoo Server Error" });
                 }
             },
         });
+
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
         await createRecord();
-
-        assert.containsOnce(target, ".o_kanban_quick_create", "should have a quick create widget");
+        assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
 
         await editQuickCreateInput("display_name", "test");
+        await validateRecord();
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
 
-        assert.strictEqual(
-            $(".modal .o_form_view.o_form_editable").length,
-            1,
-            "a form view dialog should have been opened (in edit)"
-        );
-
-        await testUtils.modal.clickButton("Discard");
-
-        assert.strictEqual($(".modal").length, 0, "the modal should be closed");
-        assert.strictEqual(
-            target.querySelector(".o_kanban_quick_create:not(.o_disabled)").length,
-            1,
-            "quick create widget should have been re-enabled"
-        );
+        await click(target.querySelector(".modal .o_form_button_cancel"));
+        assert.containsNone(target, ".modal .o_form_view .o_form_editable");
+        assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
     });
 
-    QUnit.skipWOWL("quick create record fails in grouped by char", async (assert) => {
+    QUnit.test("quick create record fails in grouped by char", async (assert) => {
         assert.expect(7);
 
-        serverData.views["partner,false,form"] = "<form>" + '<field name="foo"/>' + "</form>";
+        serverData.views["partner,false,form"] = '<form><field name="foo"/></form>';
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban on_create="quick_create">' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
-            async mockRPC(route, args) {
-                if (args.method === "name_create") {
-                    return Promise.reject({
-                        message: {
-                            code: 200,
-                            data: {},
-                            message: "Odoo server error",
-                        },
-                        event: $.Event(),
-                    });
-                }
-                if (args.method === "create") {
-                    assert.deepEqual(
-                        args.args[0],
-                        { foo: "yop" },
-                        "should write the correct value for foo"
-                    );
-                    assert.deepEqual(
-                        args.kwargs.context,
-                        { default_foo: "yop", default_name: "test" },
-                        "should send the correct default value for foo"
-                    );
-                }
-            },
             groupBy: ["foo"],
+            arch: `
+                <kanban on_create="quick_create">
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
+            async mockRPC(route, args) {
+                if (args.method === "name_create") {
+                    return Promise.reject({ message: "Odoo Server Error" });
+                }
+                if (args.method === "create") {
+                    assert.deepEqual(args.args[0], { foo: "blip" });
+                    assert.deepEqual(args.kwargs.context, {
+                        default_foo: "blip",
+                        default_name: "test",
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
+                }
+            },
         });
 
-        assert.containsOnce(
-            target,
-            ".o_kanban_group:first-child .o_kanban_record",
-            "there should be 1 record in first column"
-        );
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
         await quickCreateRecord();
-        await editQuickCreateInput("foo", "test");
+        await editQuickCreateInput("display_name", "test");
         await validateRecord();
 
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(
-            $(".modal .o_form_view.o_form_editable").length,
-            1,
-            "a form view dialog should have been opened (in edit)"
+            target.querySelector(".modal .o_field_widget[name=foo] input").value,
+            "blip"
         );
-        assert.strictEqual(
-            $(".modal .o_field_widget[name=foo]").value,
-            "yop",
-            "the correct default value for foo should already be set"
-        );
-        await testUtils.modal.clickButton("Save");
+        await click(target, ".modal .o_form_button_save");
 
-        assert.strictEqual($(".modal").length, 0, "the modal should be closed");
-        assert.containsN(
-            target,
-            ".o_kanban_group:first-child .o_kanban_record",
-            2,
-            "there should be 2 records in first column"
-        );
+        assert.containsNone(target, ".modal .o_form_view .o_form_editable");
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 3);
     });
 
-    QUnit.skipWOWL("quick create record fails in grouped by selection", async (assert) => {
+    QUnit.test("quick create record fails in grouped by selection", async (assert) => {
         assert.expect(7);
 
-        serverData.views["partner,false,form"] = "<form>" + '<field name="state"/>' + "</form>";
+        serverData.views["partner,false,form"] = '<form><field name="state"/></form>';
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban on_create="quick_create">' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="state"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
+            groupBy: ["state"],
+            arch: `
+                <kanban on_create="quick_create">
+                    <templates><t t-name="kanban-box">
+                        <div><field name="state"/></div>
+                    </t></templates>
+                </kanban>`,
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    return Promise.reject({
-                        message: {
-                            code: 200,
-                            data: {},
-                            message: "Odoo server error",
-                        },
-                        event: $.Event(),
-                    });
+                    return Promise.reject({ message: "Odoo Server Error" });
                 }
                 if (args.method === "create") {
-                    assert.deepEqual(
-                        args.args[0],
-                        { state: "abc" },
-                        "should write the correct value for state"
-                    );
-                    assert.deepEqual(
-                        args.kwargs.context,
-                        { default_state: "abc", default_name: "test" },
-                        "should send the correct default value for state"
-                    );
+                    assert.deepEqual(args.args[0], { state: "abc" });
+                    assert.deepEqual(args.kwargs.context, {
+                        default_state: "abc",
+                        default_name: "test",
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
                 }
             },
-            groupBy: ["state"],
         });
 
-        assert.containsOnce(
-            target,
-            ".o_kanban_group:first-child .o_kanban_record",
-            "there should be 1 record in first column"
-        );
+        assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_record");
 
         await quickCreateRecord();
-        await editQuickCreateInput("foo", "test");
+        await editQuickCreateInput("display_name", "test");
         await validateRecord();
 
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(
-            $(".modal .o_form_view.o_form_editable").length,
-            1,
-            "a form view dialog should have been opened (in edit)"
-        );
-        assert.strictEqual(
-            $(".modal .o_field_widget[name=state]").value,
-            '"abc"',
-            "the correct default value for state should already be set"
+            target.querySelector(".modal .o_field_widget[name=state] select").value,
+            '"abc"'
         );
 
-        await testUtils.modal.clickButton("Save");
+        await click(target, ".modal .o_form_button_save");
 
-        assert.strictEqual($(".modal").length, 0, "the modal should be closed");
-        assert.containsN(
-            target,
-            ".o_kanban_group:first-child .o_kanban_record",
-            2,
-            "there should be 2 records in first column"
-        );
+        assert.containsNone(target, ".modal .o_form_view .o_form_editable");
+        assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
     });
 
     QUnit.test("quick create record in empty grouped kanban", async (assert) => {

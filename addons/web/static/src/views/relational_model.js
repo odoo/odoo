@@ -1158,21 +1158,37 @@ export class Record extends DataPoint {
 
         if (this.isVirtual) {
             if (keys.length === 1 && keys[0] === "display_name") {
-                const [resId] = await this.model.orm.call(
-                    this.resModel,
-                    "name_create",
-                    [changes.display_name],
-                    { context: this.context }
-                );
-                this.resId = resId;
+                try {
+                    const [resId] = await this.model.orm.call(
+                        this.resModel,
+                        "name_create",
+                        [changes.display_name],
+                        { context: this.context }
+                    );
+                    this.resId = resId;
+                } catch (_e) {
+                    return false;
+                }
             } else {
-                this.resId = await this.model.orm.create(this.resModel, changes, this.context);
+                try {
+                    this.resId = await this.model.orm.create(this.resModel, changes, this.context);
+                } catch (_e) {
+                    return false;
+                }
             }
             delete this.virtualId;
             this.data.id = this.resId;
             this.resIds.push(this.resId);
         } else if (keys.length > 0) {
-            await this.model.orm.write(this.resModel, [this.resId], changes, this.context);
+            try {
+                await this.model.orm.write(this.resModel, [this.resId], changes, this.context);
+            } catch (_e) {
+                if (!this.isInEdition) {
+                    await this.load();
+                    this.model.notify();
+                }
+                return false;
+            }
         }
         // Switch to the parent active fields
         if (this.parentActiveFields) {
@@ -2324,11 +2340,15 @@ export class Group extends DataPoint {
         if (!record) {
             return false;
         }
-        await record.save();
-        this.addRecord(this.removeRecord(record));
-        this.count++;
-        this.list.count++;
-        return record;
+        const saved = await record.save();
+        if (saved) {
+            this.addRecord(this.removeRecord(record));
+            this.count++;
+            this.list.count++;
+            return record;
+        } else {
+            this.removeRecord(record);
+        }
     }
 
     valueEquals(value) {

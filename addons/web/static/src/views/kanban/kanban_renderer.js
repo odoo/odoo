@@ -418,11 +418,32 @@ export class KanbanRenderer extends Component {
     }
 
     async validateQuickCreate(mode, group) {
+        const values = group.list.quickCreateRecord.data;
         const record = await group.validateQuickCreate();
-        if (mode === "edit") {
-            await this.props.openRecord(record, "edit");
+        if (record) {
+            if (mode === "edit") {
+                await this.props.openRecord(record, "edit");
+            } else {
+                await this.quickCreate(group);
+            }
         } else {
-            await this.quickCreate(group);
+            const context = { ...group.context };
+            context[`default_${group.groupByField.name}`] = group.value;
+            context.default_name = values.name || values.display_name;
+            this.dialogClose.push(
+                this.dialog.add(FormViewDialog, {
+                    resModel: this.props.list.resModel,
+                    context,
+                    title: this.env._t("Create"),
+                    onRecordSaved: (record) => {
+                        group.addRecord(record, 0);
+                        this.props.list.quickCreate(group);
+                    },
+                    onRecordDiscarded: (record) => {
+                        this.props.list.quickCreate(group);
+                    },
+                })
+            );
         }
     }
 
