@@ -6,7 +6,6 @@ var config = require('web.config');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
-var _t = core._t;
 
 /**
  * This widget allows the user to input his name and to draw his signature.
@@ -72,11 +71,13 @@ var NameAndSignature = Widget.extend({
         this.fontColor = options.fontColor || 'DarkBlue';
         this.displaySignatureRatio = options.displaySignatureRatio || 3.0;
         this.signatureType = options.signatureType || 'signature';
-        this.signMode = options.mode || 'draw';
+        // default mode should be auto except when noInputName is true and no default name
+        this.signMode = options.mode || (options.noInputName && !this.defaultName ? 'draw' : 'auto');
         this.noInputName = options.noInputName || false;
         this.currentFont = 0;
         this.drawTimeout = null;
         this.drawPreviewTimeout = null;
+        this.signatureAreaHidden = false;
     },
     /**
      * Loads the fonts.
@@ -143,6 +144,8 @@ var NameAndSignature = Widget.extend({
                 this.$autoButton.hide();
             }
             this.$nameInputGroup.hide();
+        } else if (this.defaultName === "") {
+            this._hideSignatureArea();
         }
 
         // Resize the signature area if it is resized
@@ -356,7 +359,7 @@ var NameAndSignature = Widget.extend({
      */
     _getCleanedName: function () {
         var text = this.getName();
-        if (this.signatureType === 'initial') {
+        if (this.signatureType === 'initial' && text) {
             return (text.split(' ').map(function (w) {
                 return w[0];
             }).join('.') + '.');
@@ -469,7 +472,7 @@ var NameAndSignature = Widget.extend({
             for (var i = 0; i < self.fonts.length; i++) {
                 var imgSrc = self._getSVGText(
                     self.fonts[i],
-                    self._getCleanedName() || _t("Your name"),
+                    self._getCleanedName(),
                     width,
                     height
                 );
@@ -499,6 +502,19 @@ var NameAndSignature = Widget.extend({
             setTimeout(this._waitForSignatureNotEmpty.bind(this, def), 10);
         }
         return def;
+    },
+
+    _hideSignatureArea: function () {
+        this.$signatureField.hide();
+        this.$signatureGroup.hide();
+        this.signatureAreaHidden = true;
+    },
+
+    _showSignatureArea: function () {
+        this.$signatureField.show();
+        this.$signatureGroup.show();
+        this.signatureAreaHidden = false;
+        this.resetSignature();
     },
 
     //----------------------------------------------------------------------
@@ -632,6 +648,9 @@ var NameAndSignature = Widget.extend({
      * @param {Event} ev
      */
     _onInputSignName: function (ev) {
+        if (this.signatureAreaHidden && this._getCleanedName()) {
+            this._showSignatureArea();
+        }
         if (this.signMode !== 'auto') {
             return;
         }
