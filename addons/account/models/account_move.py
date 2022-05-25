@@ -303,8 +303,8 @@ class AccountMove(models.Model):
     auto_post_until = fields.Date(
         string='Auto-post until',
         copy=False,
-        help='Determine an end date for recurring invoices.')
-    auto_post_origin = fields.Many2one(
+        help='This recurring move will be posted up to and including this date.')
+    auto_post_origin_id = fields.Many2one(
         comodel_name='account.move',
         string='First recurring entry',
         readonly=True, copy=False,
@@ -2136,9 +2136,12 @@ class AccountMove(models.Model):
                 default_move_type=self.move_type,
             )._get_default_journal().id
         copied_am = super().copy(default)
+        message_origin = '' if not copied_am.auto_post_origin_id else \
+            '<br/>' + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link())
         copied_am._message_log(body=_(
-            'This entry has been duplicated from %s',
-            self._get_html_link()
+            'This entry has been duplicated from %s%s',
+            self._get_html_link(),
+            message_origin,
         ))
 
         if copied_am.is_invoice(include_receipts=True):
@@ -3170,17 +3173,15 @@ class AccountMove(models.Model):
 
         deltas = {'monthly': 1, 'quarterly': 3, 'yearly': 12}
         for record in self:
-            record.auto_post_origin = record.auto_post_origin or record  # original entry references itself
-            next_date = apply_delta(record.date, record.auto_post_origin.date, deltas[record.auto_post])
+            record.auto_post_origin_id = record.auto_post_origin_id or record  # original entry references itself
+            next_date = apply_delta(record.date, record.auto_post_origin_id.date, deltas[record.auto_post])
 
             if not record.auto_post_until or next_date <= record.auto_post_until:  # recurrence continues
-                copy = record.copy()
-                copy.write({field: value for field, value in record.get_fields_to_copy_recurring_entries().items()})
+                copy = record.copy(default=record.get_fields_to_copy_recurring_entries())
                 copy.date = next_date
-                copy.invoice_date = apply_delta(record.invoice_date, record.auto_post_origin.invoice_date, deltas[record.auto_post])
+                copy.invoice_date = apply_delta(record.invoice_date, record.auto_post_origin_id.invoice_date, deltas[record.auto_post])
                 if not copy.invoice_payment_term_id:  # no payment terms: maintain timedelta between due date and accounting date
                     copy.invoice_date_due = copy.date + (record.invoice_date_due - record.date)
-                copy.message_post(body=f'This recurring entry originated from {copy.auto_post_origin._get_html_link()}')
 
     def get_fields_to_copy_recurring_entries(self):
         ''' Determines which extra fields to copy when copying a recurring entry.
@@ -3190,8 +3191,8 @@ class AccountMove(models.Model):
         return {
             'auto_post': self.auto_post,  # copy=False to avoid mistakes but should be the same in recurring copies
             'auto_post_until': self.auto_post_until,  # same as above
-            'auto_post_origin': self.auto_post_origin,  # same as above
-            'invoice_user_id': self.invoice_user_id,  # otherwise user would be OdooBot
+            'auto_post_origin_id': self.auto_post_origin_id.id,  # same as above
+            'invoice_user_id': self.invoice_user_id.id,  # otherwise user would be OdooBot
         }
 
     # offer the possibility to duplicate thanks to a button instead of a hidden menu, which is more visible
