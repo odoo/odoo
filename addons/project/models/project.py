@@ -142,6 +142,37 @@ class ProjectTaskType(models.Model):
             else:
                 stage.disabled_rating_warning = False
 
+    def remove_personal_stage(self):
+        """
+        Remove a personal stage, tasks using that stage will move to the first
+        stage with a lower priority if it exists higher if not.
+        This method will not allow to delete the last personal stage.
+        Having no personal_stage_type_id makes the task not appear when grouping by personal stage.
+        """
+        self.ensure_one()
+        assert self.user_id == self.env.user or self.env.su
+
+        users_personal_stages = self.env['project.task.type']\
+            .search([('user_id', '=', self.user_id.id)], order='sequence DESC')
+        if len(users_personal_stages) == 1:
+            raise ValidationError(_("You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."))
+
+        # Find the most suitable stage, they are already sorted by sequence
+        new_stage = self.env['project.task.type']
+        for stage in users_personal_stages:
+            if stage == self:
+                continue
+            if stage.sequence > self.sequence:
+                new_stage = stage
+            elif stage.sequence <= self.sequence:
+                new_stage = stage
+                break
+
+        self.env['project.task.stage.personal'].search([('stage_id', '=', self.id)]).write({
+            'stage_id': new_stage.id,
+        })
+        self.unlink()
+
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
