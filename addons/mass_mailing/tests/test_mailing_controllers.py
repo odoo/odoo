@@ -77,7 +77,7 @@ class TestMailingControllers(TestMailingControllersCommon):
     def test_assert_initial_values(self):
         """ Ensure test base data to ease test understanding. Globally test_email
         is member of 2 mailing public lists. """
-        memberships = self.env['mailing.contact.subscription'].search([
+        memberships = self.env['mailing.subscription'].search([
             ('contact_id.email_normalized', '=', self.test_email_normalized)]
         )
         self.assertEqual(memberships.list_id, self.mailing_list_1 + self.mailing_list_3)

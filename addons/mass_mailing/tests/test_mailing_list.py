@@ -87,7 +87,7 @@ class TestMailingListMerge(MassMailCommon):
         new = self.env['mailing.contact'].with_context(default_list_ids=default_list_ids).create([{
             'name': 'Contact_%d' % x,
             'email': 'contact_%d@test.example.com' % x,
-            'subscription_list_ids': [(0, 0, {
+            'subscription_ids': [(0, 0, {
                 'list_id': self.mailing_list_1.id,
                 'opt_out': True,
             }), (0, 0, {
@@ -109,15 +109,15 @@ class TestMailingListMerge(MassMailCommon):
              patch.object(self.env.cr, 'now', lambda: datetime(2022, 1, 1, 12, 0, 0)):
             contact_form = Form(self.env['mailing.contact'])
             contact_form.name = 'Contact_test'
-            with contact_form.subscription_list_ids.new() as subscription:
+            with contact_form.subscription_ids.new() as subscription:
                 subscription.list_id = self.mailing_list_1
                 subscription.opt_out = True
-            with contact_form.subscription_list_ids.new() as subscription:
+            with contact_form.subscription_ids.new() as subscription:
                 subscription.list_id = self.mailing_list_2
                 subscription.opt_out = False
             contact = contact_form.save()
-        self.assertEqual(contact.subscription_list_ids[0].unsubscription_date, datetime(2022, 1, 1, 12, 0, 0))
-        self.assertFalse(contact.subscription_list_ids[1].unsubscription_date)
+        self.assertEqual(contact.subscription_ids[0].unsubscription_date, datetime(2022, 1, 1, 12, 0, 0))
+        self.assertFalse(contact.subscription_ids[1].unsubscription_date)
 
     @users('user_marketing')
     def test_mailing_list_contact_copy_in_context_of_mailing_list(self):
@@ -125,7 +125,7 @@ class TestMailingListMerge(MassMailCommon):
         contact_1 = MailingContact.create({
             'name': 'Sam',
             'email': 'gamgee@shire.com',
-            'subscription_list_ids': [(0, 0, {'list_id': self.mailing_list_3.id})],
+            'subscription_ids': [(0, 0, {'list_id': self.mailing_list_3.id})],
         })
         # Copy the contact with default_list_ids in context, which should not raise anything
         contact_2 = contact_1.with_context(default_list_ids=self.mailing_list_3.ids).copy()
@@ -309,14 +309,14 @@ class TestSubscriptionManagement(MassMailCommon):
 
         # add new subscriptions (and ensure email_normalized is used)
         (ml_1 + ml_2)._update_subscription_from_email(_email_formatted_upd, opt_out=False)
-        subs = self.env['mailing.contact.subscription'].search(
+        subs = self.env['mailing.subscription'].search(
             [('contact_id', '=', contact.id)]
         )
         self.assertEqual(subs.list_id, ml_1 + ml_2)
 
         # opt-out from opted-in mailing list + 1 non opted-in mailing list
         (ml_2 + ml_3)._update_subscription_from_email(_email_formatted_upd, opt_out=True)
-        subs = self.env['mailing.contact.subscription'].search(
+        subs = self.env['mailing.subscription'].search(
             [('contact_id', '=', contact.id)]
         )
         self.assertEqual(subs.list_id, ml_1 + ml_2)

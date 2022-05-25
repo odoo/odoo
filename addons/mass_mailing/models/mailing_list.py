@@ -27,14 +27,14 @@ class MassMailingList(models.Model):
     contact_pct_blacklisted = fields.Float(compute="_compute_mailing_list_statistics", string="Percentage of Blacklisted")
     contact_pct_bounce = fields.Float(compute="_compute_mailing_list_statistics", string="Percentage of Bouncing")
     contact_ids = fields.Many2many(
-        'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
+        'mailing.contact', 'mailing_subscription', 'list_id', 'contact_id',
         string='Mailing Lists', copy=False)
     mailing_count = fields.Integer(compute="_compute_mailing_count", string="Number of Mailing")
     mailing_ids = fields.Many2many(
         'mailing.mailing', 'mail_mass_mailing_list_rel',
         string='Mass Mailings', copy=False)
     subscription_ids = fields.One2many(
-        'mailing.contact.subscription', 'list_id',
+        'mailing.subscription', 'list_id',
         string='Subscription Information',
         copy=True, depends=['contact_ids'])
     is_public = fields.Boolean(
@@ -78,13 +78,13 @@ class MassMailingList(models.Model):
         bounce_per_mailing = {}
         if self.ids:
             sql = '''
-                SELECT mclr.list_id, COUNT(DISTINCT mc.id)
+                SELECT list_sub.list_id, COUNT(DISTINCT mc.id)
                 FROM mailing_contact mc
-                LEFT OUTER JOIN mailing_contact_list_rel mclr
-                ON mc.id = mclr.contact_id
+                LEFT OUTER JOIN mailing_subscription list_sub
+                ON mc.id = list_sub.contact_id
                 WHERE mc.message_bounce > 0
-                AND mclr.list_id in %s
-                GROUP BY mclr.list_id
+                AND list_sub.list_id in %s
+                GROUP BY list_sub.list_id
             '''
             self.env.cr.execute(sql, (tuple(self.ids),))
             bounce_per_mailing = dict(self.env.cr.fetchall())
@@ -144,7 +144,7 @@ class MassMailingList(models.Model):
         action['context'] = {
             **self.env.context,
             'default_mailing_list_ids': self.ids,
-            'default_subscription_list_ids': [
+            'default_subscription_ids': [
                 Command.create({'list_id': mailing_list.id})
                 for mailing_list in self
             ],
@@ -232,7 +232,7 @@ class MassMailingList(models.Model):
         src_lists |= self
         self.env.flush_all()
         self.env.cr.execute("""
-            INSERT INTO mailing_contact_list_rel (contact_id, list_id)
+            INSERT INTO mailing_subscription (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
             FROM
                 (
@@ -243,7 +243,7 @@ class MassMailingList(models.Model):
                     row_number() OVER (PARTITION BY email ORDER BY email) AS rn
                 FROM
                     mailing_contact contact,
-                    mailing_contact_list_rel contact_list_rel,
+                    mailing_subscription contact_list_rel,
                     mailing_list list
                 WHERE contact.id=contact_list_rel.contact_id
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
@@ -255,7 +255,7 @@ class MassMailingList(models.Model):
                     SELECT 1
                     FROM
                         mailing_contact contact2,
-                        mailing_contact_list_rel contact_list_rel2
+                        mailing_subscription contact_list_rel2
                     WHERE contact2.email = contact.email
                     AND contact_list_rel2.contact_id = contact2.id
                     AND contact_list_rel2.list_id = %s
@@ -303,14 +303,14 @@ class MassMailingList(models.Model):
 
         # switch opted-in subscriptions
         if opt_out:
-            current_opt_in = contacts.subscription_list_ids.filtered(
+            current_opt_in = contacts.subscription_ids.filtered(
                 lambda sub: not sub.opt_out and sub.list_id in self
             )
             if current_opt_in:
                 current_opt_in.write({'opt_out': True})
         # switch opted-out subscription and create missing subscriptions
         else:
-            subscriptions = contacts.subscription_list_ids.filtered(lambda sub: sub.list_id in self)
+            subscriptions = contacts.subscription_ids.filtered(lambda sub: sub.list_id in self)
             current_opt_out = subscriptions.filtered('opt_out')
             if current_opt_out:
                 current_opt_out.write({'opt_out': False})
@@ -318,7 +318,7 @@ class MassMailingList(models.Model):
             # create a subscription (for a single contact) for missing lists
             missing_lists = self - subscriptions.list_id
             if missing_lists:
-                self.env['mailing.contact.subscription'].create([
+                self.env['mailing.subscription'].create([
                     {'contact_id': contacts[0].id,
                      'list_id': mailing_list.id}
                     for mailing_list in missing_lists
@@ -397,7 +397,7 @@ class MassMailingList(models.Model):
                 SELECT
                     {','.join(self._get_contact_statistics_fields().values())}
                 FROM
-                    mailing_contact_list_rel r
+                    mailing_subscription r
                     {self._get_contact_statistics_joins()}
                 WHERE list_id IN %s
                 GROUP BY
