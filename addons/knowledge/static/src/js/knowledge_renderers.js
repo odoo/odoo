@@ -22,7 +22,6 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         'click .o_knowledge_share_panel': '_preventDropdownClose',
         'click .o_knowledge_more_options_panel': '_preventDropdownClose',
     }),
-
     /**
      * @override
      */
@@ -30,7 +29,186 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         this._super(...arguments);
         this.breadcrumbs = params.breadcrumbs;
     },
-
+    /**
+     * @param {Event} event
+     */
+    _onBreadcrumbItemClick: function (event) {
+        const $target = $(event.target);
+        this.trigger_up('breadcrumb_clicked', {
+            controllerID: $target.data('controller-id'),
+        });
+    },
+    /**
+     * Callback function called when the user clicks on the '+' sign of an article
+     * list item. The callback function will create a new article under the target article.
+     * @param {Event} event
+     */
+    _onBtnArticleCreateClick: function (event) {
+        const $target = $(event.currentTarget);
+        const $li = $target.closest('li');
+        this.trigger_up('create', {
+            target_parent_id: $li.data('article-id')
+        });
+    },
+    /**
+     * @param {Event} event
+     */
+    _onBtnChatterClick: function (event) {
+        const $chatter = $('.o_knowledge_chatter');
+        $chatter.toggleClass('d-none');
+        $('.btn-chatter').toggleClass('active');
+    },
+    /**
+     * @param {Event} event
+     */
+    _onBtnCreateClick: function (event) {
+        this.trigger_up('create', {
+            category: 'private'
+        });
+    },
+    /**
+     * @param {Event} event
+     */
+    _onBtnDuplicateClick: function (event) {
+        event.preventDefault();
+        this.trigger_up('duplicate', {});
+    },
+    /**
+     * @param {Event} event
+     */
+    _onBtnMoveClick: function (event) {
+        event.preventDefault();
+        this.trigger_up('open_move_to_modal', {});
+    },
+    /**
+     * Callback function called when the user clicks on the '+' sign of a section
+     * (workspace, private, shared). The callback function will create a new article
+     * on the root of the target section.
+     * @param {Event} event
+     */
+    _onBtnSectionCreateClick: function (event) {
+        const $target = $(event.currentTarget);
+        const $section = $target.closest('.o_section');
+        this.trigger_up('create', {
+            category: $section.data('section')
+        });
+    },
+    /**
+     * Opens the selected record.
+     * @param {Event} event
+     */
+    _onOpen: async function (event) {
+        event.stopPropagation();
+        const $li = $(event.target).closest('li');
+        this.do_action('knowledge.ir_actions_server_knowledge_home_page', {
+            stackPosition: 'replaceCurrentAction',
+            additional_context: {
+                res_id: $li.data('article-id')
+            }
+        });
+    },
+    /**
+     * By default, Bootstrap closes automatically the dropdown menu when the user
+     * clicks inside it. To avoid that behavior, we will add a new event listener
+     * on the dropdown menu that will prevent the click event from bubbling up and
+     * triggering the listener closing the dropdown menu.
+     * @param {Event} event
+     */
+    _preventDropdownClose: function (event) {
+        event.stopPropagation();
+    },
+    _renderArticleEmoji: function () {
+        const { data } = this.state;
+        const $dropdown = this.$('.o_knowledge_icon > .o_article_emoji_dropdown');
+        $dropdown.attr('data-article-id', this.state.res_id);
+        $dropdown.find('.o_article_emoji').text(data.icon || '');
+    },
+    /**
+     * Renders the breadcrumb
+     */
+    _renderBreadcrumb: function () {
+        const items = this.breadcrumbs.map(payload => {
+            return QWeb.render('knowledge.knowledge_breadcrumb_item', { payload });
+        });
+        this.$('.breadcrumb').prepend(items);
+    },
+    /**
+     * Attaches an emoji picker widget to every emoji dropdown of the container.
+     * Note: The widget will be attached to the view when the user clicks on
+     * the dropdown menu for the first time.
+     * @param {JQuery} [$container]
+     */
+    _renderEmojiPicker: function ($container) {
+        $container = $container || this.$el;
+        $container.find('.o_article_emoji_dropdown').one('click', event => {
+            const $dropdown = $(event.currentTarget);
+            const picker = new EmojiPickerWidget(this, {
+                article_id: $dropdown.data('article-id')
+            });
+            picker.attachTo($dropdown);
+        });
+    },
+    /**
+     * Renders the permission panel
+     */
+    _renderPermissionPanel: function () {
+        this.$('.btn-share').one('click', event => {
+            const $container = this.$('.o_knowledge_permission_panel');
+            const panel = new PermissionPanelWidget(this, {
+                article_id: this.state.data.id,
+                user_permission: this.state.data.user_permission
+            });
+            panel.attachTo($container);
+        });
+    },
+    /**
+     * @override
+     * @returns {Promise}
+     */
+    _renderView: async function () {
+        const result = await this._super.apply(this, arguments);
+        this._renderBreadcrumb();
+        await this._renderTree(this.state.res_id, '/knowledge/tree_panel');
+        this._renderArticleEmoji();
+        this._renderPermissionPanel();
+        this._setResizeListener();
+        return result;
+    },
+    /**
+     * @param {integer} id - Article id
+     * @param {String} unicode
+     */
+    _setEmoji: function (id, emoji) {
+        const emojis = this.$(`.o_article_emoji_dropdown[data-article-id="${id}"] > .o_article_emoji`);
+        emojis.text(emoji || '');
+    },
+    /**
+     * Enables the user to resize the aside block.
+     * Note: When the user grabs the resizer, a new listener will be attached
+     * to the document. The listener will be removed as soon as the user releases
+     * the resizer to free some resources.
+     */
+    _setResizeListener: function () {
+        /**
+         * @param {PointerEvent} event
+         */
+        const onPointerMove = _.throttle(event => {
+            event.preventDefault();
+            this.el.style.setProperty('--default-sidebar-size', `${event.pageX}px`);
+        }, 100);
+        /**
+         * @param {PointerEvent} event
+         */
+        const onPointerUp = event => {
+            $(document).off('pointermove', onPointerMove);
+        };
+        const $resizer = this.$('.o_knowledge_article_form_resizer');
+        $resizer.on('pointerdown', event => {
+            event.preventDefault();
+            $(document).on('pointermove', onPointerMove);
+            $(document).one('pointerup', onPointerUp);
+        });
+    },
     /**
      * Initializes the drag-and-drop behavior of the tree listing all articles.
      * Once this function is called, the user will be able to move an article
@@ -121,6 +299,7 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         });
 
         // Allow drag and drop between sections:
+
         this.$('section[data-section="workspace"] .o_tree').nestedSortable(
             'option',
             'connectWith',
@@ -137,202 +316,6 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
             'connectWith',
             'section[data-section="workspace"] .o_tree, section[data-section="private"] .o_tree'
         );
-    },
-
-    /**
-     * Callback function called when the user clicks on the '+' sign of a section
-     * (workspace, private, shared). The callback function will create a new article
-     * on the root of the target section.
-     * @param {Event} event
-     */
-    _onBtnSectionCreateClick: function (event) {
-        const $target = $(event.currentTarget);
-        const $section = $target.closest('.o_section');
-        this.trigger_up('create', {
-            category: $section.data('section')
-        });
-    },
-
-    /**
-     * Callback function called when the user clicks on the '+' sign of an article
-     * list item. The callback function will create a new article under the target article.
-     * @param {Event} event
-     */
-    _onBtnArticleCreateClick: function (event) {
-        const $target = $(event.currentTarget);
-        const $li = $target.closest('li');
-        this.trigger_up('create', {
-            target_parent_id: $li.data('article-id')
-        });
-    },
-
-    /**
-     * Opens the selected record.
-     * @param {Event} event
-     */
-    _onOpen: async function (event) {
-        event.stopPropagation();
-        const $li = $(event.target).closest('li');
-        this.do_action('knowledge.ir_actions_server_knowledge_home_page', {
-            stackPosition: 'replaceCurrentAction',
-            additional_context: {
-                res_id: $li.data('article-id')
-            }
-        });
-    },
-
-    _renderArticleEmoji: function () {
-        const { data } = this.state;
-        const $dropdown = this.$('.o_knowledge_icon > .o_article_emoji_dropdown');
-        $dropdown.attr('data-article-id', this.state.res_id);
-        $dropdown.find('.o_article_emoji').text(data.icon || '');
-    },
-
-    /**
-     * @override
-     * @returns {Promise}
-     */
-    _renderView: async function () {
-        const result = await this._super.apply(this, arguments);
-        this._renderBreadcrumb();
-        await this._renderTree(this.state.res_id, '/knowledge/tree_panel');
-        this._renderArticleEmoji();
-        this._renderPermissionPanel();
-        this._setResizeListener();
-        return result;
-    },
-
-    /**
-     * Renders the breadcrumb
-     */
-    _renderBreadcrumb: function () {
-        const items = this.breadcrumbs.map(payload => {
-            return QWeb.render('knowledge.knowledge_breadcrumb_item', { payload });
-        });
-        this.$('.breadcrumb').prepend(items);
-    },
-
-    /**
-     * Attaches an emoji picker widget to every emoji dropdown of the container.
-     * Note: The widget will be attached to the view when the user clicks on
-     * the dropdown menu for the first time.
-     * @param {JQuery} [$container]
-     */
-    _renderEmojiPicker: function ($container) {
-        $container = $container || this.$el;
-        $container.find('.o_article_emoji_dropdown').one('click', event => {
-            const $dropdown = $(event.currentTarget);
-            const picker = new EmojiPickerWidget(this, {
-                article_id: $dropdown.data('article-id')
-            });
-            picker.attachTo($dropdown);
-        });
-    },
-
-    /**
-     * Renders the permission panel
-     */
-    _renderPermissionPanel: function () {
-        this.$('.btn-share').one('click', event => {
-            const $container = this.$('.o_knowledge_permission_panel');
-            const panel = new PermissionPanelWidget(this, {
-                article_id: this.state.data.id,
-                user_permission: this.state.data.user_permission
-            });
-            panel.attachTo($container);
-        });
-    },
-
-    /**
-     * Enables the user to resize the aside block.
-     * Note: When the user grabs the resizer, a new listener will be attached
-     * to the document. The listener will be removed as soon as the user releases
-     * the resizer to free some resources.
-     */
-    _setResizeListener: function () {
-        /**
-         * @param {PointerEvent} event
-         */
-        const onPointerMove = _.throttle(event => {
-            event.preventDefault();
-            this.el.style.setProperty('--default-sidebar-size', `${event.pageX}px`);
-        }, 100);
-        /**
-         * @param {PointerEvent} event
-         */
-        const onPointerUp = event => {
-            $(document).off('pointermove', onPointerMove);
-        };
-        const $resizer = this.$('.o_knowledge_article_form_resizer');
-        $resizer.on('pointerdown', event => {
-            event.preventDefault();
-            $(document).on('pointermove', onPointerMove);
-            $(document).one('pointerup', onPointerUp);
-        });
-    },
-
-    /**
-     * @param {integer} id - Article id
-     * @param {String} unicode
-     */
-    _setEmoji: function (id, emoji) {
-        const emojis = this.$(`.o_article_emoji_dropdown[data-article-id="${id}"] > .o_article_emoji`);
-        emojis.text(emoji || '');
-    },
-
-    /**
-     * @param {Event} event
-     */
-    _onBreadcrumbItemClick: function (event) {
-        const $target = $(event.target);
-        this.trigger_up('breadcrumb_clicked', {
-            controllerID: $target.data('controller-id'),
-        });
-    },
-
-    /**
-     * @param {Event} event
-     */
-    _onBtnChatterClick: function (event) {
-        const $chatter = $('.o_knowledge_chatter');
-        $chatter.toggleClass('d-none');
-        $('.btn-chatter').toggleClass('active');
-    },
-
-    /**
-     * @param {Event} event
-     */
-    _onBtnCreateClick: function (event) {
-        this.trigger_up('create', {
-            category: 'private'
-        });
-    },
-
-    /**
-     * @param {Event} event
-     */
-    _onBtnDuplicateClick: function (event) {
-        event.preventDefault();
-        this.trigger_up('duplicate', {});
-    },
-
-    /**
-     * @param {Event} event
-     */
-    _onBtnMoveClick: function (event) {
-        event.preventDefault();
-        this.trigger_up('open_move_to_modal', {});
-    },
-
-    /**
-     * By default, Bootstrap closes automatically the dropdown menu when the user
-     * clicks inside it. To avoid that behavior, we will add a new event listener
-     * on the dropdown menu that will prevent the click event from bubbling up and
-     * triggering the listener closing the dropdown menu.
-     * @param {Event} event
-     */
-    _preventDropdownClose: function (event) {
-        event.stopPropagation();
     },
 });
 
