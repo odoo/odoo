@@ -28,7 +28,7 @@ export const PRIORITY_STYLES = {
     'a:not(.btn)': [],
     'a.btn.btn-primary': [],
     'a.btn.btn-secondary': [],
-    'hr': ['border-top-color'],
+    'hr': ['border-top-width','border-top-style','border-top-color'],
 };
 export const RE_CSS_TEXT_MATCH = /([^{]+)([^}]+)/;
 export const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
