@@ -21,7 +21,10 @@ class Employee(models.Model):
 
     def _get_first_contracts(self):
         self.ensure_one()
-        return self.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
+        contracts = self.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
+        if self.env.context.get('before_date'):
+            contracts = contracts.filtered(lambda c: c.date_start <= self.env.context['before_date'])
+        return contracts
 
     def _get_first_contract_date(self, no_gap=True):
         self.ensure_one()
