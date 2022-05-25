@@ -3281,9 +3281,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skipWOWL("fetch reference in only one batch", async (assert) => {
-        assert.expect(9);
-
+    QUnit.test("fetch reference in only one batch", async (assert) => {
         serverData.models.partner.records[0].ref_product = "product,3";
         serverData.models.partner.records[1].ref_product = "product,5";
         serverData.models.partner.fields.ref_product = {
@@ -3295,23 +3293,24 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div class="oe_kanban_global_click">' +
-                '<field name="ref_product"/>' +
-                "</div>" +
-                "</t></templates>" +
-                "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
+            arch: `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="ref_product"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            mockRPC(route, args) {
                 assert.step(args.method || route);
             },
         });
 
         await reload(kanban, { groupBy: ["product_id"] });
         assert.verifySteps([
+            "get_views",
             "web_read_group",
             "web_search_read",
             "web_search_read",
