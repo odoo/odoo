@@ -1531,6 +1531,12 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 deletable: false,
                 read_only_mode: this.isReadonly,
             };
+            if (('action' in arch.attrs) && ('type' in arch.attrs)) {
+                record_options.openAction = {
+                    action: arch.attrs.action,
+                    type: arch.attrs.type
+                };
+            }
             _.extend(rendererParams, {
                 record_options: record_options,
                 readOnlyMode: this.isReadonly,

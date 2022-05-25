@@ -232,6 +232,14 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
      * @private
      */
     _openRecord: function () {
+        if (this.options.openAction) {
+            const {action, type} = this.options.openAction;
+            this.trigger_up("button_clicked", {
+                record: this.state,
+                attrs: { type, name: action }
+            });
+            return;
+        }
         if (this.$el.hasClass('o_currently_dragged')) {
             // this record is currently being dragged and dropped, so we do not
             // want to open it.
@@ -408,7 +416,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
         this.$el.attr('role', 'article');
         this.$el.data('record', this);
         // forcefully add class oe_kanban_global_click to have clickable record always to select it
-        if (this.selectionMode) {
+        if (this.selectionMode || ('openAction' in this.options)) {
             this.$el.addClass('oe_kanban_global_click');
         }
         if (this.$el.hasClass('oe_kanban_global_click') ||
