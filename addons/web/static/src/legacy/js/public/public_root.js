@@ -82,10 +82,8 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @override
      */
     start: function () {
-        var defs = [
-            this._super.apply(this, arguments),
-            this._startWidgets()
-        ];
+        var def = this._super.apply(this, arguments);
+        this._startWidgets();
 
         // Display image thumbnail
         this.$(".o_image[data-mimetype^='image']").each(function () {
@@ -107,7 +105,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 
         this.$el.children().on('error.datetimepicker', this._onDateTimePickerError.bind(this));
 
-        return Promise.all(defs);
+        return def;
     },
 
     //--------------------------------------------------------------------------
