@@ -66,6 +66,9 @@ class ProductTemplate(models.Model):
             self.service_policy = 'ordered_timesheet'
         elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
+
+        if self.type != 'service':
+            self.service_tracking = 'no'
         return res
 
     @api.model
@@ -100,6 +103,11 @@ class ProductTemplate(models.Model):
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
                 raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+        if 'type' in vals and vals['type'] != 'service':
+            vals.update({
+                'service_tracking': 'no',
+                'project_id': False
+            })
         return super(ProductTemplate, self).write(vals)
 
 
@@ -120,6 +128,13 @@ class ProductProduct(models.Model):
         if vals:
             self.update(vals)
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super(ProductProduct, self)._onchange_type()
+        if self.type != 'service':
+            self.service_tracking = 'no'
+        return res
+
     def unlink(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product in self:
@@ -133,4 +148,9 @@ class ProductProduct(models.Model):
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:
                 raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+        if 'type' in vals and vals['type'] != 'service':
+            vals.update({
+                'service_tracking': 'no',
+                'project_id': False
+            })
         return super(ProductProduct, self).write(vals)
