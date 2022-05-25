@@ -140,6 +140,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
 
             return { draftPackLotLines, quantity: weight, description, price_extra };
         }
+        async _addProduct(product, options) {
+            this.currentOrder.add_product(product, options);
+        }
         async _clickProduct(event) {
             if (!this.currentOrder) {
                 this.env.pos.add_new_order();
@@ -149,7 +152,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Do not add product if options is undefined.
             if (!options) return;
             // Add the product after having the extra information.
-            this.currentOrder.add_product(product, options);
+            await this._addProduct(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {

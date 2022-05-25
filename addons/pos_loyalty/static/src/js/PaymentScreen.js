@@ -84,7 +84,9 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
             const partner = order.get_partner();
             let partnerLoyaltyCardId = partner ? partner.loyalty_card_id : 0;
             let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
-                agg[pe.coupon_id] = Object.assign({}, pe);
+                agg[pe.coupon_id] = Object.assign({}, pe, {
+                    points: pe.points - order._getPointsCorrection(this.env.pos.program_by_id[pe.program_id]),
+                });
                 const program = this.env.pos.program_by_id[pe.program_id];
                 if (program.is_nominative && order.get_partner()) {
                     agg[pe.coupon_id].partner_id = partner.id;
