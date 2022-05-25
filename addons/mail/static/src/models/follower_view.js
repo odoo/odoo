@@ -10,16 +10,11 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
-        onClick(ev) {
-            this.followerListMenuViewOwner.hide();
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
         onClickDetails(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             this.follower.openProfile();
+            this.followerListMenuViewOwner.hide();
         },
         /**
          * @param {MouseEvent} ev
@@ -27,12 +22,18 @@ registerModel({
         onClickEdit(ev) {
             ev.preventDefault();
             this.follower.showSubtypes();
+            this.followerListMenuViewOwner.hide();
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickRemove(ev) {
+            const followerListMenuView = this.followerListMenuViewOwner;
             this.follower.remove();
+            if (followerListMenuView.chatterOwner) {
+                followerListMenuView.chatterOwner.reloadParentView({ fieldNames: ['message_follower_ids'] });
+            }
+            followerListMenuView.hide();
         },
     },
     fields: {
