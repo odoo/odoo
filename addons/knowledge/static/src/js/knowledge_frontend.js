@@ -11,6 +11,7 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
         'keyup .knowledge_search_bar': '_searchArticles',
         'click .o_article_caret': '_onFold',
         'click .o_favorites_toggle_button': '_toggleFavorite',
+        'click .o_toc_link': '_onTocLinkClick',
     },
 
     /**
@@ -85,5 +86,27 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
                 this._setTreeFavoriteListener();
             });
         });
+    },
+
+    /**
+     * Scroll through the view to display the matching heading.
+     * Adds a small highlight in/out animation using a class.
+     *
+     * @param {Event} event
+     */
+    _onTocLinkClick: function (event) {
+        event.preventDefault();
+        const headingIndex = parseInt(event.target.getAttribute('data-oe-nodeid'));
+        const targetHeading = Array.from(this.$el[0].querySelectorAll('h1, h2, h3, h4, h5, h6'))
+            .filter((heading) => heading.innerText.trim().length > 0)[headingIndex];
+        if (targetHeading){
+            targetHeading.scrollIntoView({
+                behavior: 'smooth',
+            });
+            targetHeading.setAttribute('highlight', true);
+            setTimeout(() => {
+                targetHeading.removeAttribute('highlight');
+            }, 2000);
+        }
     },
 });

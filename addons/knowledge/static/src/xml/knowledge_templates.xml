@@ -20,4 +20,12 @@
             </div>
         </form>
     </t>
+    <t t-name="knowledge.knowledge_table_of_content">
+        <i t-if="!headings or headings.length === 0">Add headings in this Article to create a Table of Content</i>
+        <t t-foreach="headings" t-as="heading">
+            <!-- Use 'data-oe-nodeid' as we need something that is not removed during sanitizing -->
+            <a t-out="heading.name" t-att-data-oe-nodeid="heading.index" href="#"
+                t-attf-class="oe_unremovable o_no_link_popover d-block o_toc_link #{'o_toc_link_depth_' + depth}"/>
+        </t>
+    </t>
 </templates>
