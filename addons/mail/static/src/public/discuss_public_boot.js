@@ -2,11 +2,9 @@
 
 import { data } from 'mail.discuss_public_channel_template';
 
-// ensure components are registered beforehand.
-import '@mail/components/dialog_manager/dialog_manager';
-import '@mail/components/discuss_public_view/discuss_public_view';
+import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
+import { DiscussPublicViewContainer } from '@mail/components/discuss_public_view_container/discuss_public_view_container';
 import { MessagingService } from '@mail/services/messaging/messaging';
-import { getMessagingComponent } from '@mail/utils/messaging_component';
 
 import { processTemplates } from '@web/core/assets';
 import { MainComponentsContainer } from '@web/core/main_components_container';
@@ -40,6 +38,12 @@ Component.env = legacyEnv;
     serviceRegistry.add('legacy_notification', makeLegacyNotificationService(Component.env));
     serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
     serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
+
+    const mainComponentsRegistry = registry.category('main_components');
+    mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer });
+    // needed by the attachment viewer
+    mainComponentsRegistry.add('DialogManagerContainer', { Component: DialogManagerContainer });
+
     await legacySession.is_bound;
     Object.assign(odoo, {
         info: {
@@ -63,18 +67,11 @@ Component.env = legacyEnv;
         },
     }));
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
-    createAndMountDiscussPublicView(templates);
+    createDiscussPublicView();
 })();
 
-async function createAndMountDiscussPublicView(templates) {
+async function createDiscussPublicView() {
     const messaging = await Component.env.services.messaging.get();
-    // needed by the attachment viewer
-    const DialogManager = getMessagingComponent('DialogManager');
-    await mount(DialogManager, document.body, {
-        templates,
-        env: Component.env,
-        dev: Component.env.isDebug(),
-    });
     messaging.models['Thread'].insert(messaging.models['Thread'].convertData(data.channelData));
     const discussPublicView = messaging.models['DiscussPublicView'].create(data.discussPublicViewData);
     if (discussPublicView.shouldDisplayWelcomeViewInitially) {
@@ -82,13 +79,4 @@ async function createAndMountDiscussPublicView(templates) {
     } else {
         discussPublicView.switchToThreadView();
     }
-    const DiscussPublicView = getMessagingComponent('DiscussPublicView');
-    await mount(DiscussPublicView, document.body, {
-        templates,
-        env: Component.env,
-        dev: Component.env.isDebug(),
-        props: {
-            record: discussPublicView,
-        },
-    });
 }

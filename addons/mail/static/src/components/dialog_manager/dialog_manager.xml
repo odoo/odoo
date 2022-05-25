@@ -3,13 +3,11 @@
 
     <t t-name="mail.DialogManager" owl="1">
         <div class="o_DialogManager" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="messaging and messaging.dialogManager">
-                <t t-foreach="messaging.dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
-                    <Dialog
-                        className="'o_DialogManager_dialog'"
-                        record="dialog"
-                    />
-                </t>
+            <t t-foreach="dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
+                <Dialog
+                    className="'o_DialogManager_dialog'"
+                    record="dialog"
+                />
             </t>
         </div>
     </t>

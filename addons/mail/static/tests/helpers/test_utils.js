@@ -2,12 +2,12 @@
 
 import BusService from 'bus.BusService';
 
+import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
+import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
-import { ChatWindowService } from '@mail/services/chat_window_service/chat_window_service';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { makeDeferred } from '@mail/utils/deferred';
-import { DialogService } from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { DiscussWidget } from '@mail/widgets/discuss/discuss';
@@ -32,11 +32,7 @@ import MockServer from 'web.MockServer';
 
 const { App, Component, EventBus } = owl;
 const { afterNextRender } = App;
-const {
-    addMockEnvironment,
-    patch: legacyPatch,
-    unpatch: legacyUnpatch,
-} = mock;
+const { addMockEnvironment } = mock;
 
 const modelDefinitionsPromise = new Promise(resolve => {
     QUnit.begin(() => resolve(getModelDefinitions()));
@@ -65,42 +61,40 @@ function _createFakeDataTransfer(files) {
 
 /**
  * @private
- * @param {Object} callbacks
- * @param {function[]} callbacks.init
- * @param {function[]} callbacks.mount
- * @param {function[]} callbacks.destroy
- * @param {function[]} callbacks.return
- * @param {Object) params
- * @param {function) params.afterNextRender
+ * @param {HTMLElement} target
  */
-function _useChatWindow(callbacks, { afterNextRender }) {
-    callbacks.mount.push(async () => {
-        // trigger mounting of chat window manager
-        await afterNextRender(() => Component.env.services['chat_window']._onWebClientReady());
+async function mountChatWindowManagerContainer(target) {
+    const app = new App(ChatWindowManagerContainer, {
+        templates: window.__OWL_TEMPLATES__,
+        env: owl.Component.env,
+        dev: owl.Component.env.isDebug(),
+        translateFn: owl.Component.env._t,
+        translatableAttributes: ["data-tooltip"],
     });
-    callbacks.destroy.push(() => {
-        Component.env.services['chat_window'].destroy();
+    await app.mount(target);
+
+    registerCleanup(() => {
+        app.destroy();
     });
 }
 
 /**
  * @private
- * @param {Object} callbacks
- * @param {function[]} callbacks.init
- * @param {function[]} callbacks.mount
- * @param {function[]} callbacks.destroy
- * @param {function[]} callbacks.return
- * @param {Object) params
- * @param {function) params.afterNextRender
+ * @param {HTMLElement} target
  */
-function _useDialog(callbacks, { afterNextRender }) {
-    callbacks.mount.push(async () => {
-        // trigger mounting of dialog manager
-        await afterNextRender(() => Component.env.services['dialog']._onWebClientReady());
+async function mountDialogManagerContainer(target) {
+    const app = new App(DialogManagerContainer, {
+        templates: window.__OWL_TEMPLATES__,
+        env: owl.Component.env,
+        dev: owl.Component.env.isDebug(),
+        translateFn: owl.Component.env._t,
+        translatableAttributes: ["data-tooltip"],
     });
-    callbacks.destroy.push(() => {
-        Component.env.services['dialog'].destroy();
-    })
+    await app.mount(target);
+
+    registerCleanup(() => {
+        app.destroy();
+    });
 }
 
 //------------------------------------------------------------------------------
@@ -648,12 +642,6 @@ async function start(param0 = {}) {
         debounce: func => func,
         throttle: func => func,
     });
-    let callbacks = {
-        init: [],
-        mount: [],
-        destroy: [],
-        return: [],
-    };
     const {
         autoOpenDiscuss = false,
         discuss = {},
@@ -676,17 +664,8 @@ async function start(param0 = {}) {
     delete param0.hasTimeControl;
     delete param0.hasView;
     delete param0.target;
-    _useChatWindow(callbacks, { afterNextRender });
-    _useDialog(callbacks, { afterNextRender });
     const messagingBus = new EventBus();
-    const {
-        init: initCallbacks,
-        mount: mountCallbacks,
-        destroy: destroyCallbacks,
-        return: returnCallbacks,
-    } = callbacks;
     const { debug = false } = param0;
-    initCallbacks.forEach(callback => callback(param0));
     const testSetupDoneDeferred = makeDeferred();
     let env = {
         ...providedEnv,
@@ -721,18 +700,6 @@ async function start(param0 = {}) {
                 return true;
             },
             updateOption() {},
-        }),
-        chat_window: ChatWindowService.extend({
-            _getParentNode() {
-                return document.querySelector(debug ? 'body' : '#qunit-fixture');
-            },
-            _listenHomeMenu: () => {},
-        }),
-        dialog: DialogService.extend({
-            _getParentNode() {
-                return document.querySelector(debug ? 'body' : '#qunit-fixture');
-            },
-            _listenHomeMenu: () => {},
         }),
         local_storage: AbstractStorageService.extend({ storage: new RamStorage() }),
         messaging: MessagingService.extend({
@@ -796,13 +763,6 @@ async function start(param0 = {}) {
     const selector = debug ? 'body' : '#qunit-fixture';
     if (hasView) {
         widget = await createView(kwargs);
-        legacyPatch(widget, {
-            destroy() {
-                destroyCallbacks.forEach(callback => callback({ widget }));
-                this._super(...arguments);
-                legacyUnpatch(widget);
-            }
-        });
     } else if (hasWebClient) {
         let serverData;
         if (!kwargs.serverData) {
@@ -843,13 +803,6 @@ async function start(param0 = {}) {
         legacyParams.env = env;
 
         widget = await createWebClient({ target: webclientTarget, serverData, mockRPC, legacyParams });
-
-        legacyPatch(widget, {
-            destroy() {
-                destroyCallbacks.forEach(callback => callback({ widget }));
-                legacyUnpatch(widget);
-            }
-        });
     } else {
         const Parent = Widget.extend({ do_push_state() {} });
         const parent = new Parent();
@@ -859,7 +812,6 @@ async function start(param0 = {}) {
         Object.assign(widget, {
             destroy() {
                 delete widget.destroy;
-                destroyCallbacks.forEach(callback => callback({ widget }));
                 parent.destroy();
             },
         });
@@ -895,7 +847,9 @@ async function start(param0 = {}) {
     }
     const { modelManager } = testEnv.services.messaging;
     registerCleanup(async() => {
-        widget.destroy();
+        if (!hasWebClient) {
+            widget.destroy();
+        }
         await modelManager.messagingInitializedPromise;
         modelManager.messaging.delete();
     });
@@ -906,17 +860,15 @@ async function start(param0 = {}) {
         await modelManager.messagingCreatedPromise;
         await modelManager.messagingInitializedPromise;
     }
-    if (mountCallbacks.length > 0) {
-        await Promise.all(mountCallbacks.map(callback => callback({ selector, widget })));
-    }
-    returnCallbacks.forEach(callback => callback(result));
     const openDiscuss = getOpenDiscuss({ afterNextRender, discuss, selector, widget });
     if (autoOpenDiscuss) {
         const discussWidget = await openDiscuss();
         result['discussWidget'] = discussWidget;
     }
-    await waitUntilEventPromise;
     const target = hasWebClient ? webclientTarget : widget.el;
+    await mountChatWindowManagerContainer(target);
+    await mountDialogManagerContainer(target);
+    await waitUntilEventPromise;
     return {
         ...result,
         afterNextRender,
