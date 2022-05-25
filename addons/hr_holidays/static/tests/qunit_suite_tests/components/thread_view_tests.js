@@ -1,10 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
-import {
-    start,
-    startServer,
-} from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
@@ -28,17 +24,14 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         ],
         channel_type: 'chat',
     });
-    const { createThreadViewComponent, messaging } = await start({ data: this.data });
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel'
+    const { openDiscuss, messaging } = await start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId1}`,
+            },
+        },
     });
-    const threadViewer = messaging.models['ThreadViewer'].create({
-        hasThreadView: true,
-        qunitTest: insertAndReplace(),
-        thread: replace(thread),
-    });
-    await createThreadViewComponent(threadViewer.threadView);
+    await openDiscuss();
     assert.containsOnce(
         document.body,
         '.o_ThreadView_outOfOffice',
