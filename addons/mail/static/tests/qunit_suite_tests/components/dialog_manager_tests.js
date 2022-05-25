@@ -1,10 +1,7 @@
 /** @odoo-module **/
 
 import { makeDeferred } from '@mail/utils/deferred';
-import {
-    nextAnimationFrame,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -19,27 +16,21 @@ QUnit.test('[technical] messaging not created', async function (assert) {
      * Time of having no messaging is very short, almost imperceptible by user
      * on UI, but the display should not crash during this critical time period.
      */
-    assert.expect(2);
+    assert.expect(1);
 
     const messagingBeforeCreationDeferred = makeDeferred();
-    await start({
+    const { afterNextRender } = await start({
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none',
     });
-    assert.containsOnce(
-        document.body,
-        '.o_DialogManager',
-        "should have dialog manager even when messaging is not yet created"
-    );
 
     // simulate messaging being created
-    messagingBeforeCreationDeferred.resolve();
-    await nextAnimationFrame();
+    await afterNextRender(messagingBeforeCreationDeferred.resolve);
 
     assert.containsOnce(
         document.body,
         '.o_DialogManager',
-        "should still contain dialog manager after messaging has been created"
+        "should contain dialog manager after messaging has been created"
     );
 });
 

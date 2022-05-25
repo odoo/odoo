@@ -24,6 +24,14 @@ export class DialogManager extends Component {
     }
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    get dialogManager() {
+        return this.props.record;
+    }
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -44,7 +52,7 @@ export class DialogManager extends Component {
 }
 
 Object.assign(DialogManager, {
-    props: {},
+    props: { record: Object },
     template: 'mail.DialogManager',
 });
 
