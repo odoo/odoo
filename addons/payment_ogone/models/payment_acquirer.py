@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from hashlib import sha1
+from hashlib import new as hashnew
 
 import requests
 
@@ -30,6 +30,10 @@ class PaymentAcquirer(models.Model):
         string="SHA Key IN", required_if_provider='ogone', groups='base.group_system')
     ogone_shakey_out = fields.Char(
         string="SHA Key OUT", required_if_provider='ogone', groups='base.group_system')
+    ogone_hash_function = fields.Selection(
+        [('sha1', 'SHA1'), ('sha256', 'SHA256'), ('sha512', 'SHA512')], default='sha512',
+        string="Hash function", required_if_provider='ogone',
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -99,7 +103,9 @@ class PaymentAcquirer(models.Model):
             formatted_items = [(k.upper(), v) for k, v in values.items()]
         sorted_items = sorted(formatted_items)
         signing_string = ''.join(f'{k}={v}{key}' for k, v in sorted_items if _filter_key(k) and v)
-        return sha1(signing_string.encode()).hexdigest()
+        shasign = hashnew(self.ogone_hash_function)
+        shasign.update(signing_string.encode())
+        return shasign.hexdigest()
 
     def _ogone_make_request(self, payload=None, method='POST'):
         """ Make a request to one of Ogone APIs.
