@@ -15,6 +15,7 @@ class OgoneCommon(PaymentCommon):
             'ogone_password': 'dummy',
             'ogone_shakey_in': 'dummy',
             'ogone_shakey_out': 'dummy',
+            'ogone_hash_function': 'sha1',
         })
 
         cls.acquirer = cls.ogone
