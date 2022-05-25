@@ -302,7 +302,8 @@ class AccountMove(models.Model):
         help='Specify whether this entry is posted automatically on its accounting date, and any similar recurring invoices.')
     auto_post_until = fields.Date(
         string='Auto-post until',
-        copy=False,
+        copy=False, store=True,
+        compute='_compute_auto_post_until',
         help='This recurring move will be posted up to and including this date.')
     auto_post_origin_id = fields.Many2one(
         comodel_name='account.move',
@@ -515,8 +516,8 @@ class AccountMove(models.Model):
             else:
                 self._onchange_recompute_dynamic_lines()
 
-    @api.onchange('auto_post', 'auto_post_until')
-    def _onchange_auto_post_until(self):
+    @api.depends('auto_post')
+    def _compute_auto_post_until(self):
         if self.auto_post in ('no', 'at_date'):
             self.auto_post_until = False
 
