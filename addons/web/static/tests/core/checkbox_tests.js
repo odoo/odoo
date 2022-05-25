@@ -61,31 +61,4 @@ QUnit.module("Components", (hooks) => {
         await click(target.querySelector("input"));
         assert.strictEqual(value, false);
     });
-
-    QUnit.test("triggering a click event on a disabled checkbox", async (assert) => {
-        const env = await makeTestEnv();
-        class Parent extends Component {
-            onChange() {
-                assert.step("a click triggered on the disabled checkbox changed its value");
-            }
-        }
-        Parent.template = xml`<CheckBox onChange="onChange" disabled="true" />`;
-        Parent.components = { CheckBox };
-
-        await mount(Parent, target, { env });
-        assert.containsOnce(target, "div.custom-checkbox");
-        assert.ok(
-            !target.querySelector(".custom-checkbox input").checked,
-            "the input is not checked"
-        );
-
-        // the CheckBox component should prevent the input to be checked by a click
-        // event triggered in JS as the input is not supposed to be interactive
-        await click(target.querySelector(".custom-checkbox input"));
-        assert.ok(
-            !target.querySelector(".custom-checkbox input").checked,
-            "the input is still not checked"
-        );
-        assert.verifySteps([]);
-    });
 });
