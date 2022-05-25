@@ -6,6 +6,7 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
+import { ListController } from "@web/views/list/list_controller";
 import { tooltipService } from "../../src/core/tooltip/tooltip_service";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import {
@@ -69,8 +70,7 @@ let testUtils,
     loadState,
     patch,
     unpatch,
-    ControlPanel,
-    ListController;
+    ControlPanel;
 
 async function reloadListView(target) {
     await validateSearch(target);
@@ -10761,35 +10761,37 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("list should ask to scroll to top on page changes", async function (assert) {
-        assert.expect(10);
+    QUnit.test("list should ask to scroll to top on page changes", async function (assert) {
+        assert.expect(7);
+
+        patchWithCleanup(ListController.prototype, {
+            onPageChangeScroll() {
+                this._super(...arguments);
+                assert.step("scroll");
+            },
+        });
 
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree limit="3">' + '<field name="display_name"/>' + "</tree>",
-            intercepts: {
-                scrollTo: function (ev) {
-                    assert.strictEqual(ev.data.top, 0, "should ask to scroll to top");
-                    assert.step("scroll");
-                },
-            },
+            arch: `<tree limit="3"><field name="display_name"/></tree>`,
         });
 
         // switch pages (should ask to scroll)
-        await testUtils.controlPanel.pagerNext(target);
-        await testUtils.controlPanel.pagerPrevious(target);
+        await click(target, ".o_pager_next");
+        await click(target, ".o_pager_previous");
         assert.verifySteps(["scroll", "scroll"], "should ask to scroll when switching pages");
 
         // change the limit (should not ask to scroll)
-        await testUtils.controlPanel.setPagerValue(target, "1-2");
-        await testUtils.nextTick();
-        assert.strictEqual(testUtils.controlPanel.getPagerValue(target), "1-2");
+        await click(target.querySelector(".o_pager_value"));
+        await editInput(target, ".o_pager_value", "1-2");
+        await nextTick();
+        assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1-2");
         assert.verifySteps([], "should not ask to scroll when changing the limit");
 
         // switch pages again (should still ask to scroll)
-        await testUtils.controlPanel.pagerNext(target);
+        await click(target, ".o_pager_next");
 
         assert.verifySteps(["scroll"], "this is still working after a limit change");
     });

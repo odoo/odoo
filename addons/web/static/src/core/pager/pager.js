@@ -70,6 +70,7 @@ export class Pager extends Component {
         }
 
         this.update(minimum, this.props.limit);
+        this.props.onPageChangeScroll();
     }
     /**
      * @param {string} value
@@ -155,6 +156,7 @@ Pager.template = "web.Pager";
 Pager.defaultProps = {
     isEditable: true,
     withAccessKey: true,
+    onPageChangeScroll: () => {},
 };
 Pager.props = {
     offset: Number,
@@ -162,5 +164,6 @@ Pager.props = {
     total: Number,
     onUpdate: Function,
     isEditable: { type: Boolean, optional: true },
+    onPageChangeScroll: { type: Function, optional: true },
     withAccessKey: { type: Boolean, optional: true },
 };

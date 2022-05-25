@@ -4,6 +4,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { download } from "@web/core/network/download";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { setScrollPosition } from "@web/core/utils/scrolling";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
@@ -46,6 +47,7 @@ export class ListController extends Component {
         this.notificationService = useService("notification");
         this.userService = useService("user");
         this.rpc = useService("rpc");
+        this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
         this.editable = this.props.editable ? this.archInfo.editable : false;
@@ -77,13 +79,9 @@ export class ListController extends Component {
                 ? !fields.x_active.readonly
                 : false;
         useSubEnv({ model: this.model }); // do this in useModel?
-
-        const rootRef = useRef("root");
-
-        useViewButtons(this.model, rootRef);
-
+        useViewButtons(this.model, this.rootRef);
         useSetupView({
-            rootRef,
+            rootRef: this.rootRef,
             /** TODO **/
             beforeLeave: async () => {
                 if (this.model.root.editedRecord) {
@@ -109,6 +107,7 @@ export class ListController extends Component {
                     await list.load({ limit, offset });
                     this.render(true); // FIXME WOWL reactivity
                 },
+                onPageChangeScroll: this.onPageChangeScroll,
             };
         });
 
@@ -167,6 +166,12 @@ export class ListController extends Component {
             },
             { capture: true, once: true }
         );
+    }
+
+    onPageChangeScroll() {
+        if (this.rootRef && this.rootRef.el) {
+            setScrollPosition(this.rootRef.el.querySelector(".o_content"), { top: 0 });
+        }
     }
 
     getSelectedResIds() {
