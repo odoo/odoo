@@ -1167,8 +1167,8 @@ class Article(models.Model):
         :return <knowledge.article> children: the children articles which were
           not detached, meaning that current user has write access on them """
         all_descendants_sudo = self.sudo()._get_descendants()
-        writable_descendants = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
-        other_descendants_sudo = all_descendants_sudo - writable_descendants
+        writable_descendants_sudo = all_descendants_sudo.with_env(self.env)._filter_access_rules_python('write')
+        other_descendants_sudo = all_descendants_sudo - writable_descendants_sudo
 
         # copy rights to allow breaking the hierarchy while keeping access for members
         # do this on synchronized articles as desynchronized one do not inherit from parent
@@ -1177,9 +1177,13 @@ class Article(models.Model):
                 'article_member_ids': article_sudo._copy_access_from_parents_commands()
             })
 
-        # create new root articles: direct children of these articles, reset desync
-        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
-        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
+        # create new root articles and reset desync: direct children of these articles +
+        # the writable descendants. Indeed they are going to be modified the same way
+        # as "self" (archived / moved to private) -> all their children should be detached
+        new_roots_woperm = other_descendants_sudo.filtered(
+            lambda article: article.parent_id in (self + writable_descendants_sudo) and not article.internal_permission)
+        new_roots_wperm = other_descendants_sudo.filtered(
+            lambda article: article.parent_id in (self + writable_descendants_sudo) and article.internal_permission)
         if new_roots_wperm:
             new_roots_wperm.write({
                 'is_desynchronized': False,
@@ -1192,7 +1196,7 @@ class Article(models.Model):
                 'parent_id': False,
             })
 
-        return writable_descendants
+        return writable_descendants_sudo
 
     def _move_and_make_private(self, parent=False, before_article=False):
         """ Set as private: remove members, ensure current user is the only member
@@ -1228,7 +1232,7 @@ class Article(models.Model):
             )
 
         # first detach unwritable children (see ``_detach_unwritable_descendants``)
-        writable_descendants = self._detach_unwritable_descendants()
+        writable_descendants_sudo = self._detach_unwritable_descendants()
 
         article_values = {
             # reset internal permission if parent is set (will inherit) or force private (aka 'none')
@@ -1269,7 +1273,7 @@ class Article(models.Model):
 
         # remove all specific memberships configurations on children. They now inherit
         # the only 'write' member from their parent now, making them private.
-        writable_descendants.with_context(knowledge_member_skip_writable_check=True).write({
+        writable_descendants_sudo.with_context(knowledge_member_skip_writable_check=True).write({
             'internal_permission': False,
             'article_member_ids': [(5, 0)],
         })
