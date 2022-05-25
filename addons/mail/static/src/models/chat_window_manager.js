@@ -337,7 +337,7 @@ registerModel({
             isCausal: true,
         }),
         chatWindowWidth: attr({
-            default: 325,
+            default: 340,
         }),
         endGapWidth: attr({
             compute: '_computeEndGapWidth',
@@ -349,7 +349,7 @@ registerModel({
             compute: '_computeHiddenChatWindowHeaderViews',
         }),
         hiddenMenuWidth: attr({
-            default: 200, // max width, including width of dropup list items
+            default: 170, // max width, including width of dropup list items
         }),
         isHiddenMenuOpen: attr({
             default: false,
