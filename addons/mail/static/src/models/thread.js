@@ -1531,7 +1531,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeRtcInvitationCard() {
+        _computeCallInviteRequestPopup() {
             if (this.rtcInvitingSession) {
                 return insertAndReplace();
             }
@@ -2308,8 +2308,8 @@ registerModel({
         rtc: one('Rtc', {
             inverse: 'channel',
         }),
-        rtcInvitationCard: one('RtcInvitationCard', {
-            compute: '_computeRtcInvitationCard',
+        callInviteRequestPopup: one('CallInviteRequestPopup', {
+            compute: '_computeCallInviteRequestPopup',
             inverse: 'thread',
             isCausal: true,
         }),
