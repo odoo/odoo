@@ -392,6 +392,11 @@ class ProductTemplate(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        # Do nothing but needed for inheritance
+        return {}
+
     def _sanitize_vals(self, vals):
         """Sanitize vales for writing/creating product templates and variants.
 
