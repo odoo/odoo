@@ -15,3 +15,15 @@ class HrEmployeePublic(models.Model):
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
     total_overtime = fields.Float(related='employee_id.total_overtime', readonly=True,
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")
+
+    def action_employee_kiosk_confirm(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'name': 'Confirm',
+            'tag': 'hr_attendance_kiosk_confirm',
+            'employee_id': self.id,
+            'employee_name': self.name,
+            'employee_state': self.attendance_state,
+            'employee_hours_today': self.hours_today,
+        }

@@ -197,7 +197,7 @@
         <field name="name">fleet.vehicle.model.brandkanban</field>
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
-            <kanban default_order="name">
+            <kanban default_order="name" action="action_brand_model" type="object">
                 <field name="id"/>
                 <field name="name" />
                 <templates>
@@ -221,7 +221,6 @@
                                     </a>
                                 </h4>
                                 <div>
-                                    <a type="object" name="action_brand_model" class="oe_kanban_fleet_model"/>
                                     <field name="model_count"/> MODELS
                                 </div>
                             </div>
