@@ -134,6 +134,11 @@ class ProductTemplate(models.Model):
             if not self.invoice_policy:
                 self.invoice_policy = 'order'
             self.service_type = 'manual'
+        if self._origin and self.sales_count > 0:
+            res['warning'] = {
+                'title': _("Warning"),
+                'message': _("You cannot change the product's type because it is already used in sales orders.")
+            }
         return res
 
     @api.model
