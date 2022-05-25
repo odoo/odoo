@@ -1,6 +1,4 @@
 /** @odoo-module **/
-import KanbanRecord from 'web.KanbanRecord';
-
 import fieldRegistry from 'web.field_registry';
 import { FieldChar, StateSelectionWidget } from 'web.basic_fields';
 
@@ -41,16 +39,3 @@ fieldRegistry
     .add('recruitment_state_selection', RecruitmentStateSelectionWidget)
     .add('applicant_char', ApplicantChar);
 
-KanbanRecord.include({
-    /**
-     * @override
-     * @private
-     */
-    _openRecord: function () {
-        if (this.modelName === 'hr.job' && this.$(".o_hr_job_boxes a").length) {
-            this.$(".o_hr_job_boxes a").first().click();
-        } else {
-            this._super.apply(this, arguments);
-        }
-    }
-});
