@@ -454,6 +454,33 @@ export class Record extends DataPoint {
     // Public
     // -------------------------------------------------------------------------
 
+    /**
+     * To be called **only** when Odoo is about to be closed, and we want to
+     * save potential changes on a given record.
+     *
+     * We can't follow the normal flow (onchange(s) + save, mutexified),
+     * because the 'beforeunload' handler must be *almost* sync (< 10 ms
+     * setTimeout seems fine, but an rpc roundtrip is definitely too long),
+     * so here we bypass the standard mechanism of notifying changes and
+     * saving them:
+     *  - we ask the model to bypass its mutex for upcoming 'notifyChanges' and
+     *   'save' requests
+     *  - we ask all fields to commit their changes (in case there would
+     *    be a focused field with a fresh value)
+     *  - we take all changes that have been reported to the
+     *    controller, but not yet sent to the model because of the mutex,
+     *    and directly notify the model about them, see update.
+     *  - we reset the widgets with all those changes, s.t. a further call
+     *    to 'canBeRemoved' uses the correct data (it asks the widgets if
+     *    they are set/valid, based on their internal state)
+     *  - if the record is dirty, we save directly
+     */
+    async urgentSave() {
+        this._urgentSave = true;
+        this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
+        this._save();
+    }
+
     async archive() {
         await toggleArchive(this.model, this.resModel, [this.resId], true);
         await this.load();
@@ -781,43 +808,11 @@ export class Record extends DataPoint {
     }
 
     async update(changes) {
+        if (this._urgentSave) {
+            return this._update(changes);
+        }
         return this.model.mutex.exec(async () => {
-            await this._applyChanges(changes);
-            if (this.selected && this.model.multiEdit) {
-                await this.model.root._multiSave(this);
-            } else {
-                const proms = [];
-                const fieldNames = Object.keys(changes);
-                if (fieldNames.length) {
-                    this.onChanges();
-                }
-                this._removeInvalidFields(fieldNames);
-                if (
-                    fieldNames.some(
-                        (fieldName) =>
-                            this.activeFields[fieldName] && this.activeFields[fieldName].onChange
-                    )
-                ) {
-                    const changes = await this._onChange(fieldNames);
-                    for (const [fieldName, value] of Object.entries(changes)) {
-                        const field = this.fields[fieldName];
-                        // for x2many fields, the onchange returns commands, not ids, so we need to process them
-                        // for now, we simply return an empty list
-                        if (isX2Many(field)) {
-                            this._changes[fieldName] = value;
-                            this.data[fieldName].applyCommands(value);
-                            proms.push(this.data[fieldName].load());
-                        } else {
-                            this._changes[fieldName] = value;
-                            this.data[fieldName] = this._changes[fieldName];
-                        }
-                    }
-                }
-                proms.push(this.loadPreloadedData());
-                await Promise.all(proms);
-                this.canBeAbandoned = false;
-                this.model.notify();
-            }
+            await this._update(changes);
         });
     }
 
@@ -1213,6 +1208,45 @@ export class Record extends DataPoint {
             if (modifiers && modifiers.required) {
                 this._requiredFields[fieldName] = modifiers.required;
             }
+        }
+    }
+
+    async _update(changes) {
+        await this._applyChanges(changes);
+        if (this.selected && this.model.multiEdit) {
+            await this.model.root._multiSave(this);
+        } else {
+            const proms = [];
+            const fieldNames = Object.keys(changes);
+            if (fieldNames.length) {
+                this.onChanges();
+            }
+            this._removeInvalidFields(fieldNames);
+            if (
+                fieldNames.some(
+                    (fieldName) =>
+                        this.activeFields[fieldName] && this.activeFields[fieldName].onChange
+                )
+            ) {
+                const changes = await this._onChange(fieldNames);
+                for (const [fieldName, value] of Object.entries(changes)) {
+                    const field = this.fields[fieldName];
+                    // for x2many fields, the onchange returns commands, not ids, so we need to process them
+                    // for now, we simply return an empty list
+                    if (isX2Many(field)) {
+                        this._changes[fieldName] = value;
+                        this.data[fieldName].applyCommands(value);
+                        proms.push(this.data[fieldName].load());
+                    } else {
+                        this._changes[fieldName] = value;
+                        this.data[fieldName] = this._changes[fieldName];
+                    }
+                }
+            }
+            proms.push(this.loadPreloadedData());
+            await Promise.all(proms);
+            this.canBeAbandoned = false;
+            this.model.notify();
         }
     }
 }

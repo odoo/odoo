@@ -84,10 +84,17 @@ export class ListController extends Component {
             rootRef: this.rootRef,
             /** TODO **/
             beforeLeave: async () => {
-                if (this.model.root.editedRecord) {
-                    if (!(await this.model.root.editedRecord.save())) {
+                const editedRecord = this.model.root.editedRecord;
+                if (editedRecord) {
+                    if (!(await editedRecord.save())) {
                         throw new Error("View can't be saved");
                     }
+                }
+            },
+            beforeUnload: () => {
+                const editedRecord = this.model.root.editedRecord;
+                if (editedRecord) {
+                    return editedRecord.urgentSave();
                 }
             },
         });

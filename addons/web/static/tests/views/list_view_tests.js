@@ -6826,7 +6826,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL("display toolbar", async function (assert) {
+    QUnit.test("display toolbar", async function (assert) {
         await makeView({
             type: "list",
             resModel: "event",
@@ -6850,7 +6850,7 @@ QUnit.module("Views", (hooks) => {
         await toggleActionMenu(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
-            ["Delete", "Action event"]
+            ["Export", "Delete", "Action event"]
         );
     });
 
@@ -12941,49 +12941,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_optional_columns_dropdown input:checked");
     });
 
-    // Remove ?
-    QUnit.skipWOWL(
-        "open list optional fields dropdown position to right place",
-        async function (assert) {
-            assert.expect(1);
-
-            serverData.models.bar.fields.name = { string: "Name", type: "char", sortable: true };
-            serverData.models.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
-            serverData.models.foo.records[0].o2m = [1, 2];
-
-            await makeView({
-                type: "form",
-                resModel: "foo",
-                serverData,
-                arch: `
-                <form>
-                    <sheet>
-                        <notebook>
-                            <page string="Page 1">
-                                <field name="o2m">
-                                    <tree editable="bottom">
-                                        <field name="display_name"/>
-                                        <field name="foo"/>
-                                        <field name="name" optional="hide"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>`,
-                resId: 1,
-            });
-            const listWidth = target.querySelector(".o_list_renderer").offsetWidth;
-
-            await click(target, ".o_optional_columns_dropdown .dropdown-toggle");
-            assert.strictEqual(
-                target.querySelector(".o_optional_columns").offsetLeft,
-                listWidth,
-                "optional fields dropdown should opened at right place"
-            );
-        }
-    );
-
     QUnit.skipWOWL("change the viewType of the current action", async function (assert) {
         assert.expect(25);
 
@@ -13824,7 +13781,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("Auto save: save on closing tab/browser", async function (assert) {
+    QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
         assert.expect(1);
 
         await makeView({
@@ -13839,49 +13796,107 @@ QUnit.module("Views", (hooks) => {
                 if (model === "foo" && method === "write") {
                     assert.deepEqual(args, [[1], { foo: "test" }]);
                 }
-                return this._super(...arguments);
+            },
+        });
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, '.o_data_cell [name="foo"] input', "test");
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await nextTick();
+    });
+
+    QUnit.test("Auto save: save on closing tab/browser (pending changes)", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                </tree>`,
+            mockRPC(route, { args, method, model }) {
+                if (model === "foo" && method === "write") {
+                    assert.deepEqual(args, [[1], { foo: "test" }]);
+                }
+            },
+        });
+        await click(target.querySelector(".o_data_cell"));
+        const input = target.querySelector('.o_data_cell [name="foo"] input');
+        input.value = "test";
+        await triggerEvent(input, null, "input");
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await nextTick();
+    });
+
+    QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" required="1"/>
+                </tree>`,
+            mockRPC(route, { args, method, model }) {
+                if (model === "foo" && method === "write") {
+                    assert.step("save"); // should not be called
+                }
             },
         });
 
-        await click($(target).find('.o_field_cell[name="foo"]:first'));
-        await editInput($(target).find('.o_field_widget[name="foo"]'), "test");
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, '.o_data_cell [name="foo"] input', "");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await testUtils.nextTick();
+        await nextTick();
+
+        assert.verifySteps([], "should not save because of invalid field");
     });
 
-    QUnit.skipWOWL(
-        "Auto save: save on closing tab/browser (invalid field)",
+    QUnit.test(
+        "Auto save: save on closing tab/browser (onchanges + pending changes)",
         async function (assert) {
             assert.expect(1);
 
+            serverData.models.foo.onchanges = {
+                int_field: function (obj) {
+                    obj.foo = `${obj.int_field}`;
+                },
+            };
+
+            const def = makeDeferred();
             await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
                 arch: `
                 <tree editable="top">
-                    <field name="foo" required="1"/>
+                    <field name="foo"/>
+                    <field name="int_field"/>
                 </tree>`,
                 mockRPC(route, { args, method, model }) {
-                    if (model === "foo" && method === "write") {
-                        assert.step("save"); // should not be called
+                    if (model === "foo" && method === "onchange") {
+                        return def;
                     }
-                    return this._super(...arguments);
+                    if (model === "foo" && method === "write") {
+                        assert.deepEqual(args, [[1], { int_field: 2021 }]);
+                    }
                 },
             });
-
-            await click($(target).find('.o_field_cell[name="foo"]:first'));
-            await editInput($(target).find('.o_field_widget[name="foo"]'), "");
+            await click(target.querySelector(".o_data_cell"));
+            await editInput(target, '.o_data_cell [name="int_field"] input', "2021");
 
             window.dispatchEvent(new Event("beforeunload"));
-            await testUtils.nextTick();
-
-            assert.verifySteps([], "should not save because of invalid field");
+            await nextTick();
         }
     );
 
-    QUnit.skipWOWL("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
+    QUnit.test("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
         assert.expect(1);
 
         serverData.models.foo.onchanges = {
@@ -13890,7 +13905,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
 
-        const def = testUtils.makeTestPromise();
+        const def = makeDeferred();
         await makeView({
             type: "list",
             resModel: "foo",
@@ -13905,17 +13920,18 @@ QUnit.module("Views", (hooks) => {
                     return def;
                 }
                 if (model === "foo" && method === "write") {
-                    assert.deepEqual(args, [[1], { int_field: 2021 }]);
+                    assert.deepEqual(args, [[1], { foo: "test", int_field: 2021 }]);
                 }
-                return this._super(...arguments);
             },
         });
-
-        await click($(target).find('.o_field_cell[name="int_field"]:first'));
-        await editInput($(target).find('.o_field_widget[name="int_field"]'), "2021");
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, '.o_data_cell [name="int_field"] input', "2021");
+        const input = target.querySelector('.o_data_cell [name="foo"] input');
+        input.value = "test";
+        await triggerEvent(input, null, "input");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await testUtils.nextTick();
+        await nextTick();
     });
 
     QUnit.skipWOWL(
@@ -14007,11 +14023,9 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "selecting a row after another one containing a table within an html field should be the correct one",
         async function (assert) {
-            assert.expect(1);
-
             serverData.models.foo.fields.html = { string: "HTML field", type: "html" };
             serverData.models.foo.records[0].html = `
             <table class="table table-bordered">
@@ -14034,7 +14048,7 @@ QUnit.module("Views", (hooks) => {
                 arch: '<tree editable="top" multi_edit="1">' + '<field name="html"/>' + "</tree>",
             });
 
-            await click($(target).find(".o_data_cell:eq(1)"));
+            await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
             assert.ok(
                 $("table.o_list_table > tbody > tr:eq(1)")[0].classList.contains("o_selected_row"),
                 "The second row should be selected"
