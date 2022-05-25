@@ -193,13 +193,13 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1920px
      *
      * Enough space for 3 visible chat windows:
-     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
+     *  10 + 340 + 5 + 340 + 5 + 340 + 10 = 1050 < 1920
      */
     assert.expect(12);
 
@@ -795,13 +795,13 @@ QUnit.test('focus next visible chat window when closing current chat window with
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1920px
      *
      * Enough space for 2 visible chat windows:
-     *  10 + 325 + 5 + 325 + 10 = 670 < 1920
+     *  10 + 340 + 5 + 340 + 10 = 705 < 1920
      */
     assert.expect(4);
 
@@ -1001,13 +1001,13 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1920px
      *
      * Enough space for 2 visible chat windows:
-     *  10 + 325 + 5 + 325 + 10 = 670 < 1920
+     *  10 + 340 + 5 + 340 + 10 = 705 < 1920
      */
     assert.expect(8);
 
@@ -1123,16 +1123,16 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
      * ([mocked] global window width: 900px)
      * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1080px
      *
      * Enough space for 2 visible chat windows, and one hidden chat window:
      * 3 visible chat windows:
-     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 900
+     *  10 + 340 + 5 + 340 + 5 + 340 + 10 = 1050 < 900
      * 2 visible chat windows + hidden menu:
-     *  10 + 325 + 5 + 325 + 10 + 200 + 5 = 875 < 900
+     *  10 + 340 + 5 + 340 + 10 + 170 + 5 = 880 < 900
      */
     assert.expect(12);
 
@@ -1354,13 +1354,13 @@ QUnit.test('chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]', as
      * ([mocked] global window width: @see `mail/static/tests/helpers/test_utils.js:start()` method)
      * (others: @see mail/static/src/models/chat_window_manager.js:visual)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1920px
      *
      * Enough space for 3 visible chat windows:
-     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
+     *  10 + 340 + 5 + 340 + 5 + 340 + 10 = 1050 < 1920
      */
     assert.expect(6);
 
@@ -1684,16 +1684,16 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
      * ([mocked] global window width: 900px)
      * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1080px
      *
      * Enough space for 2 visible chat windows, and one hidden chat window:
      * 3 visible chat windows:
-     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 > 900
+     *  10 + 340 + 5 + 340 + 5 + 340 + 10 = 1050 > 900
      * 2 visible chat windows + hidden menu:
-     *  10 + 325 + 5 + 325 + 10 + 200 + 5 = 875 < 900
+     *  10 + 340 + 5 + 340 + 10 + 170 + 5 = 880 < 900
      */
     assert.expect(11);
 
@@ -2028,15 +2028,15 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
      * ([mocked] global window width: 900px)
      * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
      *
-     * - chat window width: 325px
+     * - chat window width: 340px
      * - start/end/between gap width: 10px/10px/5px
-     * - hidden menu width: 200px
+     * - hidden menu width: 170px
      * - global width: 1080px
      *
      * Not enough space for 2 visible chat windows:
-     *  10 + 325 + 5 + 325 + 10 = 675 > 600
+     *  10 + 340 + 5 + 340 + 10 = 705 > 600
      * Enough space for 1 visible chat window + hidden menu:
-     *  10 + 325 + 5 + 200 + 10 = 550 < 600
+     *  10 + 340 + 5 + 170 + 10 = 535 < 600
      */
     assert.expect(1);
 
