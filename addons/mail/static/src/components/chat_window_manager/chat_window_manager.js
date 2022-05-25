@@ -7,7 +7,7 @@ const { Component } = owl;
 export class ChatWindowManager extends Component {}
 
 Object.assign(ChatWindowManager, {
-    props: {},
+    props: { record: Object },
     template: 'mail.ChatWindowManager',
 });
 
