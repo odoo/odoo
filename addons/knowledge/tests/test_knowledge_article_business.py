@@ -480,17 +480,18 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             })]
         })
 
-        # add 2 extra articles for further checks
-        # - one to which 'employee' only has 'read' access to (as sudo)
-        # - one to which 'employee' does NOT have access to (as sudo)
+        # add 2 extra articles (as sudo) for further checks
+        # - one to which 'employee' only has 'read' access to
+        #   grandchild to article_workspace
+        # - one to which 'employee' does NOT have access to
         #   only "employee2" has access to that one in write mode
         [
-            wkspace_child_read_access,
+            wkspace_grandchild_read_access,
             wkspace_child_no_access,
         ] = self.env['knowledge.article'].sudo().create([{
-            'name': 'Read Child',
+            'name': 'Read Grand Child',
             'internal_permission': 'write',
-            'parent_id': article_workspace.id,
+            'parent_id': workspace_children[0].id,
             'article_member_ids': [(0, 0, {
                 'partner_id': self.partner_employee.id,
                 'permission': 'read',
@@ -524,7 +525,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             self.assertFalse(bool(workspace_child.article_member_ids))
 
         # 3.children that were not accessible were moved as a root articles...
-        for unreachable_article in wkspace_child_read_access | wkspace_child_no_access:
+        for unreachable_article in wkspace_grandchild_read_access | wkspace_child_no_access:
             self.assertEqual(unreachable_article.category, 'workspace')
             self.assertFalse(bool(unreachable_article.parent_id))
             # ... and kept their access rights for the customer
@@ -533,7 +534,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             )))
 
         # internal permission should stay untouched for unaccessible children
-        self.assertEqual(wkspace_child_read_access.internal_permission, 'write')
+        self.assertEqual(wkspace_grandchild_read_access.internal_permission, 'write')
         self.assertEqual(wkspace_child_no_access.internal_permission, 'read')
 
         # and that 'Hidden Child' is still accessible for employee2
