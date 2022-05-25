@@ -4,7 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-class SnailmailNotificationPopover extends Component {
+class SnailmailNotificationPopoverContent extends Component {
 
     /**
      * @returns {string}
@@ -39,10 +39,17 @@ class SnailmailNotificationPopover extends Component {
     }
 
     /**
+     * @returns {SnailmailNotificationPopoverContentView}
+     */
+    get snailmailNotificationPopoverContentView() {
+        return this.props.record;
+    }
+
+    /**
      * @returns {Message}
      */
     get message() {
-        return this.props.message;
+        return this.snailmailNotificationPopoverContentView.popoverViewOwner.messageViewOwnerAsMessageNotification.message;
     }
 
     /**
@@ -55,11 +62,11 @@ class SnailmailNotificationPopover extends Component {
 
 }
 
-Object.assign(SnailmailNotificationPopover, {
-    props: { message: Object },
-    template: 'snailmail.SnailmailNotificationPopover',
+Object.assign(SnailmailNotificationPopoverContent, {
+    props: { record: Object },
+    template: 'snailmail.SnailmailNotificationPopoverContent',
 });
 
-registerMessagingComponent(SnailmailNotificationPopover);
+registerMessagingComponent(SnailmailNotificationPopoverContent);
 
-export default SnailmailNotificationPopover;
+export default SnailmailNotificationPopoverContent;

@@ -117,14 +117,10 @@
                                         </span>
                                     </t>
                                     <t t-else="">
-                                        <Popover>
-                                            <span class="o_Message_notificationIconClickable o_cursor_pointer text-600">
-                                                <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
-                                            </span>
-                                            <t t-set-slot="opened">
-                                                <MessageNotificationPopoverContent record="messageView"/>
-                                            </t>
-                                        </Popover>
+                                        <span class="o_Message_notificationIconClickable o_cursor_pointer text-600" t-on-click="messageView.onClickNonFailureNotificationIcon" t-ref="nonFailureNotificationIconClickable">
+                                            <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
+                                        </span>
+                                        <PopoverView t-if="messageView.messageNotificationPopoverView" record="messageView.messageNotificationPopoverView"/>
                                     </t>
                                 </t>
                             </div>

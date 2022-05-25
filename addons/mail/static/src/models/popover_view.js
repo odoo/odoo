@@ -6,7 +6,13 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: [['activityViewOwnerAsMarkDone', 'composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
+    identifyingFields: [[
+        'activityViewOwnerAsMarkDone',
+        'composerViewOwnerAsEmoji',
+        'messageActionListOwnerAsReaction',
+        'messageViewOwnerAsMessageNotification',
+        'threadViewTopbarOwnerAsInvite',
+    ]],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -53,6 +59,9 @@ registerModel({
             if (this.messageActionListOwnerAsReaction) {
                 return this.messageActionListOwnerAsReaction.actionReactionRef;
             }
+            if (this.messageViewOwnerAsMessageNotification) {
+                return this.messageViewOwnerAsMessageNotification.nonFailureNotificationIconClickableRef;
+            }
             return clear();
         },
         /**
@@ -78,6 +87,9 @@ registerModel({
             }
             if (this.emojiListView) {
                 return replace(this.emojiListView);
+            }
+            if (this.messageNotificationPopoverContentView) {
+                return replace(this.messageNotificationPopoverContentView);   
             }
             return clear();
         },
@@ -108,6 +120,9 @@ registerModel({
             if (this.emojiListView) {
                 return 'EmojiList';
             }
+            if (this.messageNotificationPopoverContentView) {
+                return 'MessageNotificationPopoverContent';
+            }
             return clear();
         },
         /**
@@ -135,6 +150,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeMessageNotificationPopoverContentView() {
+            if (this.messageViewOwnerAsMessageNotification) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computePosition() {
@@ -149,6 +174,9 @@ registerModel({
             }
             if (this.messageActionListOwnerAsReaction) {
                 return 'top';
+            }
+            if (this.messageViewOwnerAsMessageNotification) {
+                return 'top-start';
             }
             return clear();
         },
@@ -251,6 +279,16 @@ registerModel({
          */
         messageActionListOwnerAsReaction: one('MessageActionList', {
             inverse: 'reactionPopoverView',
+            readonly: true,
+        }),
+        messageNotificationPopoverContentView: one('MessageNotificationPopoverContentView', {
+            compute: '_computeMessageNotificationPopoverContentView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
+            readonly: true,
+        }),
+        messageViewOwnerAsMessageNotification: one('MessageView', {
+            inverse: 'messageNotificationPopoverView',
             readonly: true,
         }),
         /**

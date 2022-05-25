@@ -92,6 +92,13 @@ registerModel({
             ev.preventDefault();
             this.message.originThread.open();
         },
+        onClickNonFailureNotificationIcon() {
+            if (this.messageNotificationPopoverView) {
+                this.update({ messageNotificationPopoverView: clear() });
+            } else {
+                this.update({ messageNotificationPopoverView: insertAndReplace() });
+            }
+        },
         onComponentUpdate() {
             if (!this.exists()) {
                 return;
@@ -438,6 +445,10 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        messageNotificationPopoverView: one('PopoverView', {
+            inverse: 'messageViewOwnerAsMessageNotification',
+            isCausal: true,
+        }),
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
             compute: '_computeMessageSeenIndicatorView',
             inverse: 'messageViewOwner',
@@ -446,6 +457,7 @@ registerModel({
         messagingAsClickedMessageView: one('Messaging', {
             inverse: 'clickedMessageView',
         }),
+        nonFailureNotificationIconClickableRef: attr(),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
             inverse: 'messageViewOwner',
