@@ -3452,17 +3452,15 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("editable list: unnamed columns cannot be resized", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("editable list: unnamed columns cannot be resized", async function (assert) {
         serverData.models.foo.records = [{ id: 1, o2m: [1] }];
         serverData.models.bar.records = [{ id: 1, display_name: "Oui" }];
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "foo",
             serverData,
             resId: 1,
-            viewOptions: { mode: "edit" },
+            mode: "edit",
             arch:
                 "<form>" +
                 "<sheet>" +
@@ -3476,9 +3474,9 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
         });
 
-        const [charTh, buttonTh] = form.$(".o_field_one2many th");
+        const [charTh, buttonTh] = target.querySelectorAll(".o_field_one2many th");
         const thRect = charTh.getBoundingClientRect();
-        const resizeRect = charTh.getElementsByClassName("o_resize")[0].getBoundingClientRect();
+        const resizeRect = charTh.querySelector(".o_resize").getBoundingClientRect();
 
         assert.strictEqual(
             thRect.x + thRect.width,
@@ -3490,8 +3488,6 @@ QUnit.module("Views", (hooks) => {
             ".o_resize",
             "Columns without name should not have a resize handle"
         );
-
-        form.destroy();
     });
 
     QUnit.test(

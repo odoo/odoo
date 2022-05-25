@@ -14,12 +14,12 @@
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <th t-if="column.type === 'field'" t-att-data-name="column.name" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)" t-att="{'data-tooltip-template': isDebugMode ? 'web.FieldTooltip' : false, 'data-tooltip-info': isDebugMode ? makeTooltip(column) : false}">
-                                <t t-if="column.hasLabel  and column.widget !== 'handle'" t-esc="column.label"/>
-                                <t t-call="web.ListRenderer.ResizeHandle"/>
+                                <t t-if="column.hasLabel and column.widget !== 'handle'">
+                                    <t t-esc="column.label"/>
+                                    <span t-if="!isEmpty" class="o_resize" t-on-click.stop.prevent="" t-on-mousedown.stop.prevent="onStartResize"/>
+                                </t>
                             </th>
-                            <th t-else="" t-att-class="{o_list_button: column.type === 'button_group'}">
-                                <t t-call="web.ListRenderer.ResizeHandle"/>
-                            </th>
+                            <th t-else="" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
                         <th t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove_header" style="width: 32px; min-width: 32px"/>
                     </tr>
@@ -197,7 +197,4 @@
         </tr>
     </t>
 
-    <t t-name="web.ListRenderer.ResizeHandle" owl="1">
-        <span t-if="!isEmpty" class="o_resize" t-on-click.stop.prevent="" t-on-mousedown.stop.prevent="onStartResize"/>
-    </t>
 </templates>
