@@ -490,6 +490,7 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         Specific setup for this test
         # - Playground                workspace    w+    (customer-r+)
         #   - Child1                  "            "     (customer-r+)
+        #     - ReadMemb GrandChild   "            w+    (employee-r+)
         #     - Gd Child1             "            "
         #     - Gd Child2             "            "
         #       - GdGd Child1         "            "
@@ -513,13 +514,15 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             })]
         })
 
-        # add 3 extra articles for further checks
+        # add 4 extra articles for further checks
         # - one to which 'employee' only has 'read' access (as member)
         # - one to which 'employee' only has 'read' access (internal)
         # - one invisible, "employee2" has access to that one in write mode
+        # - one to which 'employee' only has 'read' access (as member) as grandchild (descendants testing)
         [wkspace_child_read_member_access,
          wkspace_child_read_internal_access,
-         wkspace_child_no_access] = self.env['knowledge.article'].sudo().create([
+         wkspace_child_no_access,
+         wkspace_grandchild_read_member_access] = self.env['knowledge.article'].sudo().create([
             {
                 'article_member_ids': [(0, 0, {
                     'partner_id': self.partner_employee.id,
@@ -544,6 +547,14 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
                 'internal_permission': 'write',
                 'name': 'Hidden Child',
                 'parent_id': article_workspace.id,
+            }, {
+                'article_member_ids': [(0, 0, {
+                    'partner_id': self.partner_employee.id,
+                    'permission': 'read',
+                })],
+                'internal_permission': 'write',
+                'name': 'Read Member GrandChild',
+                'parent_id': workspace_children[0].id,
             }
         ])
         with self.assertRaises(exceptions.AccessError):
@@ -599,6 +610,14 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
             wkspace_child_no_access,
             'write',
             {self.partner_employee: 'none',
+             self.customer: 'read'}
+        )
+        self.assertEqual(wkspace_grandchild_read_member_access.category, 'workspace')
+        self.assertFalse(wkspace_grandchild_read_member_access.parent_id)
+        self.assertMembers(
+            wkspace_grandchild_read_member_access,
+            'write',
+            {self.partner_employee: 'read',
              self.customer: 'read'}
         )
 
