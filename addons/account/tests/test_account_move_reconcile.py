@@ -2655,3 +2655,81 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
 
         self.assertEqual(caba_move.fiscal_position_id, foreign_vat_fpos, "The foreign VAT fiscal position should be kept in the the cash basis move.")
+
+    def test_caba_tax_group(self):
+        """ Test the CABA entries generated from an invoice with
+        a tax group
+        """
+        # Make the tax account reconcilable
+        self.tax_account_1.reconcile = True
+
+        # Create an invoice with a CABA tax using 'Include in analytic cost'
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.partner_id = self.partner_a
+
+        tax_a = self.cash_basis_tax_a_third_amount
+        tax_b = self.cash_basis_tax_tiny_amount
+
+        tax_group = self.env['account.tax'].create({
+            'name': 'tax group',
+            'amount_type': 'group',
+            'company_id': self.company_data['company'].id,
+            'children_tax_ids': [Command.set([tax_a.id, tax_b.id])],
+        })
+
+        # line with analytic account, will generate 2 lines in CABA move
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'move_type': 'entry',
+            'line_ids': [
+                # Base Tax line
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 3000.0,
+                    'amount_currency': 3000.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [Command.set(tax_group.ids)],
+                }),
+
+                # Tax line A
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                    'account_id': self.cash_basis_transfer_account.id,
+                    'tax_repartition_line_id': tax_a.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
+                }),
+
+                # Tax line B
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 1.0,
+                    'account_id': self.cash_basis_transfer_account.id,
+                    'tax_repartition_line_id': tax_b.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
+                }),
+
+                # Receivable lines
+                Command.create({
+                    'debit': 4001.0,
+                    'credit': 0.0,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+            ]
+        })
+
+        invoice.action_post()
+
+        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
+        pmt_wizard._create_payments()
+
+        caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+        self.assertEqual(len(caba_move.line_ids), 6, "All lines should be there")
+        self.assertRecordValues(caba_move.line_ids, [
+            {'balance':  3000.0, 'tax_line_id':    False},
+            {'balance': -3000.0, 'tax_line_id':    False},
+            {'balance':  1000.0, 'tax_line_id':    False},
+            {'balance': -1000.0, 'tax_line_id': tax_a.id},
+            {'balance':     1.0, 'tax_line_id':    False},
+            {'balance':    -1.0, 'tax_line_id': tax_b.id},
+        ])
