@@ -340,7 +340,7 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: /* xml */ `
+            arch: `
                 <kanban class="o_kanban_test">
                     <field name="bar" />
                     <templates>
@@ -417,7 +417,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test">' +
+                    "<kanban>" +
                     '<field name="active"/>' +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
@@ -473,7 +473,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test" archivable="true">' +
+                    '<kanban archivable="true">' +
                     '<field name="active"/>' +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
@@ -524,7 +524,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test" archivable="false">' +
+                    '<kanban archivable="false">' +
                     '<field name="active"/>' +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
@@ -569,7 +569,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch: `
-                <kanban class="o_kanban_test" archivable="true">
+                <kanban archivable="true">
                     <field name="bar"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -647,7 +647,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="bar"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -666,7 +666,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
@@ -689,7 +689,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
@@ -714,7 +714,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" limit="3">' +
+                '<kanban limit="3">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
@@ -744,7 +744,7 @@ QUnit.module("Views", (hooks) => {
                 type: "kanban",
                 resModel: "partner",
                 serverData,
-                arch: `<kanban class="o_kanban_test" limit="3">
+                arch: `<kanban limit="3">
                     <templates>
                         <t t-name="kanban-box">
                             <div>
@@ -781,7 +781,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -808,7 +808,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates>" +
@@ -833,7 +833,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-                <kanban class="o_kanban_test">
+                <kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -1240,8 +1240,8 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: /* xml */ `
-                <kanban class="o_kanban_test" on_create="quick_create">
+            arch: `
+                <kanban on_create="quick_create">
                     <templates>
                         <div t-name="kanban-box">
                             <field name="foo"/>
@@ -2058,7 +2058,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="bar"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -2111,7 +2111,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="bar"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -2172,7 +2172,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="bar"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -2226,47 +2226,33 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("quick create record fail in grouped by many2one", async (assert) => {
-        assert.expect(8);
-
-        serverData.views["partner,false,form"] =
-            '<form string="Partner">' +
-            '<field name="product_id"/>' +
-            '<field name="foo"/>' +
-            "</form>";
+    QUnit.skip("quick create record fail in grouped by many2one", async (assert) => {
+        serverData.views["partner,false,form"] = `
+            <form>
+                <field name="product_id"/>
+                <field name="foo"/>
+            </form>`;
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    return Promise.reject({
-                        message: {
-                            code: 200,
-                            data: {},
-                            message: "Odoo server error",
-                        },
-                        event: $.Event(),
-                    });
+                    return Promise.reject({ message: "Odoo Server Error" });
                 }
             },
         });
 
-        assert.containsN(
-            target,
-            ".o_kanban_group:first-child .o_kanban_record",
-            2,
-            "there should be 2 records in first column"
-        );
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
 
         await createRecord(); // Click on 'Create'
 
@@ -2275,41 +2261,18 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("foo", "test");
         await validateRecord();
 
-        assert.strictEqual(
-            $(".modal .o_form_view.o_form_editable").length,
-            1,
-            "a form view dialog should have been opened (in edit)"
-        );
-        assert.strictEqual(
-            $(".modal .o_field_many2one input").value,
-            "hello",
-            "the correct product_id should already be set"
-        );
+        assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
+        assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
 
         // specify a name and save
         await editInput(target, ".modal input[name=foo]", "test");
         await click(target, ".modal .btn-primary");
 
-        assert.containsNone(target, ".modal", "the modal should be closed");
-        assert.containsN(
-            target,
-            ".o_kanban_group:first-child .o_kanban_record",
-            3,
-            "there should be 3 records in first column"
-        );
-        const firstRecord = target.querySelector(
-            ".o_kanban_group:first-child .o_kanban_record:first-child"
-        );
-        assert.strictEqual(
-            firstRecord.innerText,
-            "test",
-            "the first record of the first column should be the new one"
-        );
-        assert.containsOnce(
-            target,
-            ".o_kanban_quick_create:not(.o_disabled)",
-            "quick create should be enabled"
-        );
+        assert.containsNone(target, ".modal");
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
+        const firstRecord = target.querySelector(".o_kanban_group .o_kanban_record");
+        assert.strictEqual(firstRecord.innerText, "test");
+        assert.containsOnce(target, ".o_kanban_quick_create:not(.o_disabled)");
     });
 
     QUnit.skipWOWL("quick create record is re-enabled after discard on failure", async (assert) => {
@@ -2326,7 +2289,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -2379,7 +2342,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates>" +
@@ -2452,7 +2415,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="state"/></div>' +
                 "</t></templates>" +
@@ -2567,7 +2530,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="display_name"/></div>' +
                 "</t></templates>" +
@@ -2697,7 +2660,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test" on_create="quick_create">' +
+                    '<kanban on_create="quick_create">' +
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="display_name"/></div>' +
                     "</t></templates>" +
@@ -2739,7 +2702,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="display_name"/></div>' +
                 "</t></templates>" +
@@ -2770,7 +2733,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="display_name"/></div>' +
                 "</t></templates>" +
@@ -2801,7 +2764,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="display_name"/></div>' +
                 "</t></templates>" +
@@ -3148,7 +3111,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<templates><t t-name="kanban-box">' +
                 '<div class="oe_kanban_global_click">' +
                 '<field name="category_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
@@ -3224,7 +3187,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 "<templates>" +
                 '<t t-name="kanban-box">' +
                 '<div class="oe_kanban_global_click">' +
@@ -3330,7 +3293,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 "<div>" +
@@ -3366,7 +3329,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 "<div>" +
@@ -3409,7 +3372,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div class="oe_kanban_global_click">' +
@@ -3445,7 +3408,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 "<div>" +
@@ -3497,7 +3460,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div class="oe_kanban_global_click"><field name="foo"/>' +
@@ -3539,7 +3502,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 "<templates>" +
                 '<t t-name="kanban-box">' +
                 '<div><field name="state"/></div>' +
@@ -3660,7 +3623,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="date"/>' +
                 '<field name="datetime"/>' +
                 '<templates><t t-name="kanban-box">' +
@@ -3751,7 +3714,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-                <kanban class="o_kanban_test">
+                <kanban>
                     <field name="bar"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -3948,7 +3911,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test" records_draggable="false">' +
+                    '<kanban records_draggable="false">' +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/></div>' +
@@ -4056,7 +4019,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" default_group_by="bar">' +
+                '<kanban default_group_by="bar">' +
                 '<field name="bar"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4093,7 +4056,7 @@ QUnit.module("Views", (hooks) => {
 
         patchWithCleanup(kanbanView, { searchMenuTypes: ["filter", "favorite"] });
 
-        serverData.views["partner,false,search"] = /* xml */ `
+        serverData.views["partner,false,search"] = `
             <search>
                 <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
             </search>
@@ -4103,8 +4066,8 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: /* xml */ `
-                <kanban class="o_kanban_test" default_group_by="bar">
+            arch: `
+                <kanban default_group_by="bar">
                     <field name="bar"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -4134,7 +4097,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" create="0">' +
+                '<kanban create="0">' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
@@ -4149,7 +4112,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 '<div><a type="edit">Edit</a></div>' +
                 "</t></templates></kanban>",
             selectRecord: (resId, { mode }) => {
@@ -4201,7 +4164,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4300,7 +4263,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4384,7 +4347,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4609,7 +4572,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4698,7 +4661,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test" on_create="quick_create">' +
+                '<kanban on_create="quick_create">' +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4734,7 +4697,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -4764,7 +4727,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch: `
-                <kanban class="o_kanban_test">
+                <kanban>
                     <field name="product_id"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -5184,7 +5147,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test" on_create="quick_create">' +
+                    '<kanban on_create="quick_create">' +
                     '<field name="product_id"/>' +
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/></div>' +
@@ -5224,7 +5187,7 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: `<kanban class="o_kanban_test">
+            arch: `<kanban>
                         <field name="active"/>
                         <field name="bar"/>
                         <templates>
@@ -5261,7 +5224,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 "<div>" +
                 '<t t-esc="record.foo.value"/>' +
                 '<field name="foo"/>' +
@@ -6269,7 +6232,7 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch: `<kanban class="o_kanban_test"><templates><t t-name="kanban-box">
+            arch: `<kanban><templates><t t-name="kanban-box">
                     <div>
                         <t t-esc="record.foo.value"/>
                         <field name="foo"/>
@@ -6451,7 +6414,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="date"/>' +
                 '<field name="datetime"/>' +
                 '<templates><t t-name="kanban-box">' +
@@ -6479,7 +6442,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="product_id"/>' +
                 '<field name="category_ids"/>' +
                 '<templates><t t-name="kanban-box">' +
@@ -6995,7 +6958,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 "<div>" +
                 '<t t-esc="record.foo.value"/>' +
                 '<field name="foo" blip="1"/>' +
@@ -7026,7 +6989,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-            <kanban class="o_kanban_test">
+            <kanban>
                 <field name="foo"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -7064,7 +7027,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "category",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="color"/>' +
                 "<templates>" +
                 '<t t-name="kanban-box">' +
@@ -7790,7 +7753,7 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(7);
 
-            serverData.views["partner,some_view_ref,form"] = /* xml */ `
+            serverData.views["partner,some_view_ref,form"] = `
                 <form>
                     <field name="int_field"/>
                     <field name="foo"/>
@@ -7890,7 +7853,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="id"/>' +
                 '<templates><t t-name="kanban-box"><div>' +
                 "<img t-att-src=\"kanban_image('partner', 'image', record.id.raw_value)\"/>" +
@@ -7914,7 +7877,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: `
-                <kanban class="o_kanban_test">
+                <kanban>
                     <field name="id"/>
                     <templates><t t-name="kanban-box"><div>
                         <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
@@ -7936,7 +7899,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="id"/>' +
                 '<field name="image"/>' +
                 '<templates><t t-name="kanban-box"><div>' +
@@ -7973,7 +7936,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="id"/>' +
                 '<field name="image"/>' +
                 '<templates><t t-name="kanban-box"><div>' +
@@ -8055,7 +8018,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test">' +
+                    "<kanban>" +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/></div>' +
@@ -8116,7 +8079,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             // force group_create to false, otherwise the CREATE button in control panel is hidden
             arch:
-                '<kanban class="o_kanban_test" group_create="0" on_create="quick_create"><templates><t t-name="kanban-box">' +
+                '<kanban group_create="0" on_create="quick_create"><templates><t t-name="kanban-box">' +
                 "<div>" +
                 '<field name="name"/>' +
                 "</div>" +
@@ -8139,7 +8102,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 "<div>" +
                 '<t t-esc="record.foo.value"/>' +
                 '<field name="foo"/>' +
@@ -8171,7 +8134,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<field name="bar"/>' +
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
@@ -8227,7 +8190,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test">' +
+                    "<kanban>" +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/></div>' +
@@ -8311,7 +8274,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                    '<kanban><templates><t t-name="kanban-box">' +
                     '<div><a type="edit">Edit</a></div>' +
                     "</t></templates></kanban>",
                 selectRecord: (resId) => {
@@ -8350,7 +8313,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 '<div><field name="foo" widget="asyncwidget"/></div>' +
                 "</t></templates></kanban>",
         });
@@ -8397,7 +8360,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 '<div><field name="foo" widget="asyncwidget"/></div>' +
                 "</t></templates></kanban>",
             groupBy: ["foo"],
@@ -8445,7 +8408,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 '<div><field name="foo" display="right" widget="asyncwidget"/></div>' +
                 "</t></templates></kanban>",
         });
@@ -8482,7 +8445,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 '<div><widget name="asyncwidget"/></div>' +
                 "</t></templates></kanban>",
         });
@@ -8518,7 +8481,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<kanban><templates><t t-name="kanban-box">' +
                 '<div><field name="foo" widget="asyncwidget"/></div>' +
                 "</t></templates></kanban>",
             domain: [["id", "=", "0"]], // no record matches this domain
@@ -8545,7 +8508,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 "<templates>" +
                 '<t t-name="kanban-box">' +
                 '<div class="oe_kanban_global_click">' +
@@ -8679,7 +8642,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban class="o_kanban_test">' +
+                "<kanban>" +
                 '<templates><t t-name="kanban-box">' +
                 '<div class="oe_kanban_global_click">' +
                 '<field name="image" widget="image"/>' +
