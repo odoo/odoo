@@ -22,7 +22,7 @@
                 <span class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_name ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread font-weight-bolder': categoryItem.isUnread }">
                     <t t-esc="categoryItem.channel.displayName"/>
                 </span>
-                <div class="o-autogrow o_DiscussSidebarCategoryItem_item"/>
+                <div class="o_DiscussSidebarCategoryItem_item flex-grow-1"/>
                 <div t-attf-class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands ms-1 {{ categoryItem.channel and categoryItem.channel.rtcSessions.length ? 'me-1' : 'me-3' }}">
                     <t t-if="categoryItem.hasSettingsCommand">
                         <div t-attf-class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandSettings fa fa-cog {{ o_DiscussSidebarCategoryItem_hoverItem }}" t-on-click="categoryItem.onClickCommandSettings" title="Channel settings" role="img"/>

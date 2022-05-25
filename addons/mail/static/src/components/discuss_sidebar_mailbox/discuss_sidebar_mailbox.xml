@@ -13,7 +13,7 @@
             <div class="o_DiscussSidebarMailbox_item o_DiscussSidebarMailbox_name me-2 text-truncate">
                 <t t-esc="discussSidebarMailboxView.mailbox.displayName"/>
             </div>
-            <div t-attf-class="o-autogrow o_DiscussSidebarMailbox_item {{ discussSidebarMailboxView.mailbox.counter === 0 ? 'me-3': '' }}"/>
+            <div t-attf-class="o_DiscussSidebarMailbox_item flex-grow-1 {{ discussSidebarMailboxView.mailbox.counter === 0 ? 'me-3': '' }}"/>
             <t t-if="discussSidebarMailboxView.mailbox.counter > 0">
                 <div t-attf-class="o_DiscussSidebarMailbox_counter o_DiscussSidebarMailbox_item badge badge-pill {{ discussSidebarMailboxView.mailbox === messaging.starred ? 'bg-400 text-light' : 'badge-primary' }} ms-1 me-3 border-0">
                     <t t-esc="discussSidebarMailboxView.mailbox.counter"/>
