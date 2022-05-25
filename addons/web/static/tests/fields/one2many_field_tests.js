@@ -39,7 +39,7 @@ let serverData;
 let target;
 
 // WOWL remove after adapting tests
-let testUtils, relationalFields, makeLegacyDialogMappingTestEnv, AbstractStorageService, RamStorage;
+let testUtils, relationalFields, makeLegacyDialogMappingTestEnv;
 
 function patchSetTimeout() {
     patchWithCleanup(browser, {
@@ -1239,7 +1239,7 @@ QUnit.module("Fields", (hooks) => {
                     const turtles = [[5]];
                     // create UPDATE commands for each records (this is the server
                     // usual answer for onchange)
-                    for (let k in obj.turtles) {
+                    for (const k in obj.turtles) {
                         const change = obj.turtles[k];
                         const record = serverData.models.turtle.records.find(
                             (r) => r.id === change[1]
@@ -10065,16 +10065,14 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "column widths are kept when adding first record in o2m",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("column widths are kept when adding first record in o2m", async function (assert) {
+        assert.expect(2);
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="p">
                             <tree editable="top">
@@ -10083,23 +10081,22 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-            });
+        });
 
-            var width = form.$('th[data-name="date"]')[0].offsetWidth;
+        var width = target.querySelector('th[data-name="date"]').offsetWidth;
 
-            await addRow(target);
+        await addRow(target);
 
-            assert.containsOnce(form, ".o_data_row");
-            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
-        }
-    );
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
+    });
 
-    QUnit.skipWOWL("column widths are kept when editing a record in o2m", async function (assert) {
+    QUnit.test("column widths are kept when editing a record in o2m", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[0].p = [2];
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -10113,38 +10110,34 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            viewOptions: {
-                mode: "edit",
-            },
+            mode: "edit",
         });
 
-        var width = form.$('th[data-name="date"]')[0].offsetWidth;
+        const width = target.querySelector('th[data-name="date"]').offsetWidth;
 
-        await click(form.$(".o_data_row .o_data_cell:first"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
 
-        assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+        assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
 
-        var longVal =
+        const longVal =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
             "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum " +
             "purus bibendum est.";
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), longVal);
+        await editInput(target, ".o_field_widget[name=foo] input", longVal);
 
-        assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+        assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
     });
 
-    QUnit.skipWOWL(
-        "column widths are kept when remove last record in o2m",
-        async function (assert) {
-            assert.expect(1);
+    QUnit.test("column widths are kept when remove last record in o2m", async function (assert) {
+        assert.expect(1);
 
-            serverData.models.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="p">
                             <tree editable="top">
@@ -10153,36 +10146,27 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
-            });
+            resId: 1,
+            mode: "edit",
+        });
 
-            var width = form.$('th[data-name="date"]')[0].offsetWidth;
+        const width = target.querySelector('th[data-name="date"]').offsetWidth;
 
-            await click(form.$(".o_data_row .o_list_record_remove"));
+        await click(target, ".o_data_row .o_list_record_remove");
 
-            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
-        }
-    );
+        assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
+    });
 
-    QUnit.skipWOWL(
-        "column widths are correct after toggling optional fields",
-        async function (assert) {
-            assert.expect(2);
+    QUnit.test("column widths are correct after toggling optional fields", async function (assert) {
+        assert.expect(2);
 
-            var RamStorageService = AbstractStorageService.extend({
-                storage: new RamStorage(),
-            });
+        serverData.models.partner.records[0].p = [2];
 
-            serverData.models.partner.records[0].p = [2];
-
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <form>
                         <field name="p">
                             <tree editable="top">
@@ -10192,27 +10176,23 @@ QUnit.module("Fields", (hooks) => {
                             </tree>
                         </field>
                     </form>`,
-                services: {
-                    local_storage: RamStorageService,
-                },
-            });
+        });
 
-            // date fields have an hardcoded width, which apply when there is no
-            // record, and should be kept afterwards
-            let width = form.$('th[data-name="date"]')[0].offsetWidth;
+        // date fields have an hardcoded width, which apply when there is no
+        // record, and should be kept afterwards
+        const width = target.querySelector('th[data-name="date"]').offsetWidth;
 
-            // create a record to store the current widths, but discard it directly to keep
-            // the list empty (otherwise, the browser automatically computes the optimal widths)
-            await addRow(target);
+        // create a record to store the current widths, but discard it directly to keep
+        // the list empty (otherwise, the browser automatically computes the optimal widths)
+        await addRow(target);
 
-            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+        assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
 
-            await click(form.$(".o_optional_columns_dropdown_toggle"));
-            await click(form.$("div.o_optional_columns div.dropdown-item input"));
+        await click(target, ".o_optional_columns_dropdown_toggle");
+        await click(target, ".o_optional_columns_dropdown .dropdown-item input");
 
-            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
-        }
-    );
+        assert.strictEqual(target.querySelector('th[data-name="date"]').offsetWidth, width);
+    });
 
     QUnit.skipWOWL("editable one2many list with oe_read_only button", async function (assert) {
         await makeView({
