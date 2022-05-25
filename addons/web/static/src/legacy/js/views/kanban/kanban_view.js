@@ -71,6 +71,12 @@ var KanbanView = BasicView.extend({
             read_only_mode: params.readOnlyMode,
             selectionMode: params.selectionMode,
         };
+        if (('action' in archAttrs) && ('type' in archAttrs)) {
+            this.rendererParams.record_options.openAction = {
+                action: archAttrs.action,
+                type: archAttrs.type
+            };
+        }
         this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled();
         this.rendererParams.readOnlyMode = params.readOnlyMode;
         var examples = archAttrs.examples;
