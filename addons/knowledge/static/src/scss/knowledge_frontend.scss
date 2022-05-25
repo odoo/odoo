@@ -5,6 +5,14 @@
         cursor: default;
     }
 
+    @include o-position-absolute(0, 0, 0, 0);
+    h1, h2, h3, h4, h5, h6 {
+        &[highlight="true"] {
+            background-color: $o-gray-300;
+            transition: background-color 0.5s ease;
+        }
+    }
+
     .o_favorites_toggle_button {
         i.fa-star, i:hover {
             color: #f3cc00;

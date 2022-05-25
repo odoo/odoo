@@ -11,6 +11,7 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
         'keyup .knowledge_search_bar': '_searchArticles',
         'click .o_article_caret': '_onFold',
         'click .o_favorites_toggle_button': '_toggleFavorite',
+        'click .o_toc_link': '_onTocLinkClick',
     },
 
     /**
@@ -85,5 +86,21 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
                 this._setTreeFavoriteListener();
             });
         });
+    },
+
+    /**
+     * @param {Event} event
+     */
+    _onTocLinkClick: function (event) {
+        event.preventDefault();
+        const id = event.target.id;
+        const el = this.$('h1, h2, h3, h4, h5, h6')[id];
+        el.scrollIntoView({
+            behavior: 'smooth',
+        });
+        el.setAttribute('highlight', true);
+        setTimeout(() => {
+            el.removeAttribute('highlight');
+        }, 2000);
     },
 });

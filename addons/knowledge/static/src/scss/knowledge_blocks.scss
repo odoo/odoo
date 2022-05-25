@@ -37,6 +37,34 @@
     }
 }
 
+.o_knowledge_toc {
+    box-shadow: 0 2px 4px 4px $o-gray-200;
+    padding: 10px;
+    margin: 15px 0 15px 0;
+    & > .o_knowledge_toc_content {
+        ol {
+            list-style-type: none;
+            margin: 0;
+            width: 100%;
+            padding-left: Min(30px, 10%);
+            li {
+                display: flex;
+                a {
+                    padding-left: 5px;
+                    width: 100%;
+                    font-family: $font-family-base !important;
+                    font-weight: $font-weight-bolder !important;
+                    border-radius: 5px;
+                    min-height: $line-height-base * $font-size-base;
+                }
+                a:hover {
+                    background-color: $o-gray-300;
+                }
+            }
+        }
+    }
+}
+
 .o_knowledge_behavior_type_article {
     border-color: $o-gray-200;
 }

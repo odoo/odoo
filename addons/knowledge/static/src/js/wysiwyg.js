@@ -142,6 +142,14 @@ Wysiwyg.include({
                 callback: () => {
                     this._insertTemplate();
                 },
+            }, {
+                groupName: 'Knowledge',
+                title: 'Table Of Content',
+                description: 'Add a table of content.',
+                fontawesome: 'fa-bookmark',
+                callback: () => {
+                    this._insertTableOfContent();
+                }
             });
         }
         return commands;
@@ -182,6 +190,17 @@ Wysiwyg.include({
             });
         }
         this.$editable.trigger('refresh_behaviors', { behaviorsData: behaviorsData});
+    },
+    /**
+     * Insert a /toc block (table of content)
+     */
+    _insertTableOfContent: function () {
+        const tocFragment = new DocumentFragment();
+        const tocBlock = $(QWeb.render('knowledge.toc_block', {}))[0];
+        tocFragment.append(tocBlock);
+        const [container] = this.odooEditor.execCommand('insertFragment', tocFragment);
+        this._notifyNewToolbars(container);
+        this._notifyNewBehaviors(container);
     },
     /**
      * Insert a /template block

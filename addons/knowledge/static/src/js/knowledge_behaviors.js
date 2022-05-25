@@ -82,6 +82,164 @@ const ContentsContainerBehavior = KnowledgeBehavior.extend({
             });
             this.anchor.setAttribute('contenteditable', 'false');
         }
+    }
+});
+
+const HEADINGS = new Set([
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+]);
+/**
+ * A behavior for the /toc command @see Wysiwyg . This behavior use a
+ * mutatiionObserver to listen to changes on <h1> -> <h6> nodes, and create
+ * a table of contents. It is an extension of @see ContentsContainerBehavior
+ */
+const TableOfContentsBehavior = ContentsContainerBehavior.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this.observer = new MutationObserver((mutationList) => {
+            this.observer.disconnect();
+            const update = mutationList.find(mutation => {
+                let target = mutation.target;
+                if (target) {
+                    if (target.nodeType === Node.TEXT_NODE && target.parentElement) {
+                        /**
+                         * stop updating the TOC if the user is potentially
+                         * in the process of typing a command for the
+                         * @see PowerBox
+                         */
+                        if (target.data.includes('/')) {
+                            return false;
+                        }
+                        target = target.parentElement;
+                    }
+                    return target.parentElement === this.handler.field && target.nodeType === Node.ELEMENT_NODE && HEADINGS.has(target.tagName);
+                }
+                return false;
+            });
+            setTimeout(() => {
+                this._observeTableOfContents(!!update);
+            }, 50);
+        });
+        this.tocLinkClickHandler = this._onTocLinkClick.bind(this);
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    applyAttributes: function () {
+        this._super.apply(this, arguments);
+        if (this.mode === 'edit') {
+            this.anchor.querySelectorAll('a').forEach(element => {
+                element.setAttribute('contenteditable', 'false');
+            });
+        }
+    },
+    /**
+     * @override
+     */
+    applyListeners: function () {
+        this._super.apply(this, arguments);
+        $(this.anchor).on('click', '.o_toc_link', this.tocLinkClickHandler);
+        if (this.mode === 'edit') {
+            this._observeTableOfContents();
+        }
+    },
+    /**
+     * @override
+     */
+    disableListeners: function () {
+        $(this.anchor).off('click', '.o_toc_link', this.tocLinkClickHandler);
+        if (this.mode === 'edit') {
+            this.observer.disconnect();
+        }
+    },
+    /**
+     * @param {boolean} update whether the toc needs to be updated
+     */
+    _observeTableOfContents: function (update=true) {
+        if (update) {
+            this._updateTableOfContents();
+        }
+        this.observer.observe(this.handler.field, {
+            childList: true,
+            attributes: false,
+            subtree: true,
+            characterData: true,
+        });
+    },
+    /**
+     * Construct the TOC
+     */
+    _updateTableOfContents: function () {
+        var doc = $(this.handler.field);
+        const $toc = doc.find('.o_knowledge_toc_content');
+        this.handler.editor.observerUnactive('knowledge_toc_update');
+        if ($toc.length) {
+            $toc.empty();
+            const stack = [];
+            const $titles = doc.find('h1,h2,h3,h4,h5,h6').filter(function () {
+                return $(this).text().trim().length > 0;
+            });
+            let prevLevel = 0;
+            $titles.each((_index, title) => {
+                const level = ~~title.tagName.substring(1);
+                if (level > stack.length && level > prevLevel) {
+                    const $ol = $('<ol/>');
+                    if (stack.length > 0) {
+                        const $li = $('<li/>');
+                        $li.append($ol);
+                        stack[stack.length - 1].append($li);
+                    }
+                    stack.push($ol);
+                }
+                while (level < stack.length) {
+                    stack.pop();
+                }
+                prevLevel = level;
+                const $title = $(title);
+                const $a = $('<a contenteditable="false" class="oe_unremovable o_no_link_popover o_toc_link" href="#" id="' + _index + '"/>');
+                $a.text($title.text());
+                const $li = $('<li/>');
+                $li.append($a);
+                stack[stack.length - 1].append($li);
+            });
+            if (stack.length > 0) {
+                $toc.append(stack[0].get(0));
+            }
+            else {
+                $toc.append($('<i/>').text(_t('No heading found in this document.')));
+            }
+        }
+        this.handler.editor.observerActive('knowledge_toc_update');
+    },
+    /**
+     * Scroll through the view to display the matching heading
+     *
+     * @param {Event} event
+     */
+    _onTocLinkClick: function (event) {
+        event.preventDefault();
+        const id = event.target.id;
+        const el = $(this.handler.field).find('h1, h2, h3, h4, h5, h6')[id];
+        if (el){
+            el.scrollIntoView({
+                behavior: 'smooth',
+            });
+            el.setAttribute('highlight', true);
+            setTimeout(() => {
+                el.removeAttribute('highlight');
+            }, 2000);
+        }
+        else{
+            this._updateTableOfContents();
+        }
     },
 });
 /**
@@ -163,4 +321,5 @@ export {
     KnowledgeBehavior,
     ContentsContainerBehavior,
     ArticleBehavior,
+    TableOfContentsBehavior,
 };
