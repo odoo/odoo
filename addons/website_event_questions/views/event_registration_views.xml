@@ -31,7 +31,7 @@
         <field name="inherit_id" ref="event.view_event_registration_tree"/>
         <field name="arch" type="xml">
             <field name="state" position="before">
-                <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide"/>
+                <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide" readonly="1"/>
             </field>
         </field>
     </record>
