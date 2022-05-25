@@ -1126,6 +1126,10 @@ class Article(models.Model):
         This method takes care of correctly detaching those children and returns a subset of children
         to which the user effectively has write access to.
 
+        As the children are moved to "root" articles, we also reset their potential "desynchronized"
+        status.
+        Indeed, a root article cannot be desyncronized (see SQL constraints).
+
         :return <knowledge.article> children: the children articles which were not detached, meaning
           that the current user has a write access level to them. """
 
@@ -1134,7 +1138,8 @@ class Article(models.Model):
         other_descendants_sudo = all_descendants_sudo - writable_descendants
 
         # copy rights to allow breaking the hierarchy while keeping access for members
-        for article_sudo in other_descendants_sudo:
+        # we only do this on synchronized articles as desynchronized one do not inherit from parent
+        for article_sudo in other_descendants_sudo.filtered(lambda article: not article.is_desynchronized):
             member_commands = article_sudo._copy_access_from_parents_commands()
             article_sudo.write({'article_member_ids': member_commands})
 
@@ -1142,9 +1147,13 @@ class Article(models.Model):
         new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
         new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
         if new_roots_wperm:
-            new_roots_wperm.write({'parent_id': False})
+            new_roots_wperm.write({
+                'is_desynchronized': False,
+                'parent_id': False
+            })
         for new_root in new_roots_woperm:
             new_root.write({
+                'is_desynchronized': False,
                 'internal_permission': new_root.inherited_permission,
                 'parent_id': False,
             })

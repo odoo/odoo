@@ -542,6 +542,59 @@ class TestKnowledgeArticleBusiness(KnowledgeCommonWData):
         )))
 
     @mute_logger('odoo.addons.base.models.ir_rule')
+    @users('employee')
+    def test_article_make_private_w_desynchronized(self):
+        """ Test a special case when making private: we have desynchronized children.
+        Children that are de-synchronized should NOT have members from their parent(s)
+        copied onto them when they are detached. """
+
+        article_workspace = self.article_workspace.with_env(self.env)
+        workspace_children = self.workspace_children.with_env(self.env)
+        workspace_child_desync = workspace_children[0]
+        workspace_child_sync = workspace_children[1]
+
+        # add "employee" specifically as a 'write' permission on the workspace article
+        article_workspace.sudo()._add_members(self.partner_employee, 'write')
+        partner_employee_membership = article_workspace.sudo().article_member_ids.filtered(
+            lambda member: member.partner_id == self.partner_employee
+        )
+        self.assertTrue(bool(partner_employee_membership))
+
+        # now add set "employee" permission as "read" on the child
+        # -> this will desync this article from its parent
+        workspace_child_desync.sudo()._set_member_permission(
+            partner_employee_membership,
+            'read',
+            is_based_on=True,
+        )
+        self.assertTrue(workspace_child_desync.is_desynchronized, True)
+
+        # add a member on the parent, it will NOT be propagated to the desync child
+        article_workspace._add_members(self.customer, 'read')
+
+        # now move the article to private and check the post-processing
+        article_workspace._make_private()
+
+        # 1. desync article
+        # should be moved to root (as employee does not have write access)
+        self.assertFalse(bool(workspace_child_desync.parent_id))
+        self.assertEqual(workspace_child_desync.category, "workspace")
+        # it's now synchronized again since we moved it to root
+        self.assertFalse(workspace_child_desync.is_desynchronized)
+        # it should NOT have had customer access copied onto it as it was desync when we moved it
+        customer_membership = workspace_child_desync.sudo().article_member_ids.filtered(
+            lambda member: member.partner_id == self.customer
+        )
+        self.assertFalse(bool(customer_membership))
+
+        # 2. sync article
+        # should NOT be moved to root (as employee has write access)
+        self.assertEqual(workspace_child_sync.parent_id, article_workspace)
+        self.assertEqual(workspace_child_sync.category, "private")
+        # it's still synchronized
+        self.assertFalse(workspace_child_desync.is_desynchronized)
+
+    @mute_logger('odoo.addons.base.models.ir_rule')
     @users('employee_manager')
     def test_article_make_private_w_parent(self):
         """ Test a special case when making private: moving under an existing private parent. """
