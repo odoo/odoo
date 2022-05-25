@@ -923,7 +923,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_list_record_selector input:enabled", 5);
     });
 
-    QUnit.skipWOWL("editable rendering with handle and no data", async function (assert) {
+    QUnit.test("editable rendering with handle and no data", async function (assert) {
         serverData.models.foo.records = [];
         await makeView({
             type: "list",
@@ -3272,11 +3272,9 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "editable list: list view in an initially unselected notebook page",
         async function (assert) {
-            assert.expect(5);
-
             serverData.models.foo.records = [{ id: 1, o2m: [1] }];
             serverData.models.bar = {
                 fields: {
@@ -3317,21 +3315,12 @@ QUnit.module("Views", (hooks) => {
                     "</form>",
             });
             await clickEdit(target);
-
-            const [titi, grosminet] = target.querySelectorAll(".tab-pane:last-child th");
-            const one2many = target.querySelector(".o_field_one2many");
-
-            assert.isNotVisible(one2many, "One2many field should be hidden");
-            assert.strictEqual(titi.style.width, "", "width of small char should not be set yet");
-            assert.strictEqual(
-                grosminet.style.width,
-                "",
-                "width of large char should also not be set"
-            );
+            assert.containsNone(target, ".o_field_one2many");
 
             await click(target.querySelector(".nav-item:last-child .nav-link"));
+            assert.containsOnce(target, ".o_field_one2many");
 
-            assert.isVisible(one2many, "One2many field should be visible");
+            const [titi, grosminet] = target.querySelectorAll(".tab-pane:last-child th");
             assert.ok(
                 titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 700,
                 "list has been correctly frozen after being visible"
@@ -3339,85 +3328,66 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "editable list: list view hidden by an invisible modifier",
-        async function (assert) {
-            assert.expect(5);
-
-            serverData.models.foo.records = [{ id: 1, bar: true, o2m: [1] }];
-            serverData.models.bar = {
-                fields: {
-                    titi: { string: "Small char", type: "char", sortable: true },
-                    grosminet: { string: "Beeg char", type: "char", sortable: true },
+    QUnit.test("editable list: list view hidden by an invisible modifier", async function (assert) {
+        serverData.models.foo.records = [{ id: 1, bar: true, o2m: [1] }];
+        serverData.models.bar = {
+            fields: {
+                titi: { string: "Small char", type: "char", sortable: true },
+                grosminet: { string: "Beeg char", type: "char", sortable: true },
+            },
+            records: [
+                {
+                    id: 1,
+                    titi: "Tiny text",
+                    grosminet:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                        "Ut at nisi congue, facilisis neque nec, pulvinar nunc. " +
+                        "Vivamus ac lectus velit.",
                 },
-                records: [
-                    {
-                        id: 1,
-                        titi: "Tiny text",
-                        grosminet:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                            "Ut at nisi congue, facilisis neque nec, pulvinar nunc. " +
-                            "Vivamus ac lectus velit.",
-                    },
-                ],
-            };
-            var form = await makeView({
-                type: "form",
-                resModel: "foo",
-                serverData,
-                resId: 1,
-                viewOptions: { mode: "edit" },
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="bar"/>' +
-                    "<field name=\"o2m\" attrs=\"{'invisible': [('bar', '=', True)]}\">" +
-                    '<tree editable="bottom">' +
-                    '<field name="titi"/>' +
-                    '<field name="grosminet"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</sheet>" +
-                    "</form>",
-            });
+            ],
+        };
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            arch:
+                "<form>" +
+                "<sheet>" +
+                '<field name="bar"/>' +
+                "<field name=\"o2m\" attrs=\"{'invisible': [('bar', '=', True)]}\">" +
+                '<tree editable="bottom">' +
+                '<field name="titi"/>' +
+                '<field name="grosminet"/>' +
+                "</tree>" +
+                "</field>" +
+                "</sheet>" +
+                "</form>",
+        });
+        await clickEdit(target);
+        assert.containsNone(target, ".o_field_one2many");
 
-            const [titi, grosminet] = target.querySelectorAll("th");
-            const one2many = target.querySelector(".o_field_one2many");
+        await click(target.querySelector(".o_field_boolean input"));
+        assert.containsOnce(target, ".o_field_one2many");
 
-            assert.isNotVisible(one2many, "One2many field should be hidden");
-            assert.strictEqual(titi.style.width, "", "width of small char should not be set yet");
-            assert.strictEqual(
-                grosminet.style.width,
-                "",
-                "width of large char should also not be set"
-            );
+        const [titi, grosminet] = target.querySelectorAll("th");
+        assert.ok(
+            titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 700,
+            "list has been correctly frozen after being visible"
+        );
+    });
 
-            await click(target.querySelector(".o_field_boolean input"));
-
-            assert.isVisible(one2many, "One2many field should be visible");
-            assert.ok(
-                titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 700,
-                "list has been correctly frozen after being visible"
-            );
-
-            form.destroy();
-        }
-    );
-
-    QUnit.skipWOWL("editable list: updating list state while invisible", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("editable list: updating list state while invisible", async function (assert) {
         serverData.models.foo.onchanges = {
             bar: function (obj) {
                 obj.o2m = [[5], [0, null, { display_name: "Whatever" }]];
             },
         };
-        var form = await makeView({
+        await makeView({
             type: "form",
             resModel: "foo",
             serverData,
             resId: 1,
-            viewOptions: { mode: "edit" },
             arch:
                 "<form>" +
                 "<sheet>" +
@@ -3435,24 +3405,23 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
         });
+        await clickEdit(target);
+        assert.containsNone(target, ".o_field_one2many");
 
-        await click(form.$(".o_field_boolean input"));
+        await click(target.querySelector(".o_field_boolean input"));
+        assert.containsNone(target, ".o_field_one2many");
 
+        await click(target.querySelector(".nav-item:last-child .nav-link"));
+        assert.containsOnce(target, ".o_field_one2many");
         assert.strictEqual(
-            target.querySelector("th").style.width,
-            "",
-            "Column header should be initially unfrozen"
+            target.querySelector(".o_field_one2many .o_data_row").textContent,
+            "Whatever"
         );
-
-        await click(form.$(".nav-item:last() .nav-link"));
-
         assert.notEqual(
             target.querySelector("th").style.width,
             "",
             "Column header should have been frozen"
         );
-
-        form.destroy();
     });
 
     QUnit.test("empty list: state with nameless and stringless buttons", async function (assert) {

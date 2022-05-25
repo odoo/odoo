@@ -14,7 +14,7 @@
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <th t-if="column.type === 'field'" t-att-data-name="column.name" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)" t-att="{'data-tooltip-template': isDebugMode ? 'web.FieldTooltip' : false, 'data-tooltip-info': isDebugMode ? makeTooltip(column) : false}">
-                                <t t-if="column.hasLabel" t-esc="column.label"/>
+                                <t t-if="column.hasLabel  and column.widget !== 'handle'" t-esc="column.label"/>
                                 <t t-call="web.ListRenderer.ResizeHandle"/>
                             </th>
                             <th t-else="" t-att-class="{o_list_button: column.type === 'button_group'}">
