@@ -143,7 +143,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     });
 
-    QUnit.skipWOWL("formviewdialog buttons in footer are not duplicated", async function (assert) {
+    QUnit.test("formviewdialog buttons in footer are not duplicated", async function (assert) {
         serverData.models.partner.fields.poney_ids = {
             string: "Poneys",
             type: "one2many",
