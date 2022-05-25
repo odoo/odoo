@@ -12,6 +12,7 @@ QUnit.module('Sales Team Dashboard', {
             'crm.team': {
                 fields: {
                     foo: {string: "Foo", type: 'char'},
+                    invoiced: {string: "Invoiced", type: 'integer'},
                     invoiced_target: {string: "Invoiced_target", type: 'integer'},
                 },
                 records: [
@@ -23,19 +24,18 @@ QUnit.module('Sales Team Dashboard', {
 });
 
 QUnit.test('edit target with several o_kanban_primary_bottom divs [REQUIRE FOCUS]', async function (assert) {
-    assert.expect(6);
+    assert.expect(7);
 
     var kanban = await createView({
         View: KanbanView,
         model: 'crm.team',
         data: this.data,
         arch: '<kanban>' +
+                '<field name="invoiced_target"/>' +
                 '<templates>' +
                     '<t t-name="kanban-box">' +
                         '<div class="container o_kanban_card_content">' +
-                            '<field name="invoiced_target" />' +
-                            '<a href="#" class="sales_team_target_definition o_inline_link">' +
-                                'Click to define a target</a>' +
+                            `<field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/> ` +
                             '<div class="col-12 o_kanban_primary_bottom"/>' +
                             '<div class="col-12 o_kanban_primary_bottom bottom_block"/>' +
                         '</div>' +
@@ -48,28 +48,26 @@ QUnit.test('edit target with several o_kanban_primary_bottom divs [REQUIRE FOCUS
                     "new value is correctly saved");
             }
             if (args.method === 'read') { // Read happens after the write
-                assert.deepEqual(args.args[1], ['invoiced_target', 'display_name'],
+                assert.deepEqual(args.args[1], ['invoiced_target', 'invoiced', 'display_name'],
                     'the read (after write) should ask for invoiced_target');
             }
             return this._super.apply(this, arguments);
         },
     });
 
-    assert.containsOnce(kanban, '.o_kanban_view .sales_team_target_definition',
-        "should have classname 'sales_team_target_definition'");
+    assert.containsOnce(kanban, '.o_kanban_view .o_progressbar:contains(Click to define an invoicing target)')
     assert.containsN(kanban, '.o_kanban_primary_bottom', 2,
         "should have two divs with classname 'o_kanban_primary_bottom'");
 
-    await testUtils.dom.click(kanban.$('a.sales_team_target_definition'));
-    assert.containsOnce(kanban, '.o_kanban_primary_bottom:last input',
-        "should have rendered an input in the last o_kanban_primary_bottom div");
+    assert.containsNone(kanban, '.o_progressbar input')
+    await testUtils.dom.click(kanban.$('.o_progressbar a'));
+    assert.containsOnce(kanban, '.o_progressbar input')
 
-    kanban.$('.o_kanban_primary_bottom:last input').focus();
-    kanban.$('.o_kanban_primary_bottom:last input').val('123');
-    kanban.$('.o_kanban_primary_bottom:last input').trigger('blur');
+    kanban.$('.o_progressbar input').focus();
+    kanban.$('.o_progressbar input').val('123');
+    kanban.$('.o_progressbar input').trigger('blur');
     await testUtils.nextTick();
-    assert.strictEqual(kanban.$('.o_kanban_record').text(), "123Click to define a target",
-        'The kanban record should display the updated target value');
+    assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), "0 / 123");
 
     kanban.destroy();
 });
@@ -82,12 +80,11 @@ QUnit.test('edit target supports push Enter', async function (assert) {
         model: 'crm.team',
         data: this.data,
         arch: '<kanban>' +
+                '<field name="invoiced_target"/>' +
                 '<templates>' +
                     '<t t-name="kanban-box">' +
                         '<div class="container o_kanban_card_content">' +
-                            '<field name="invoiced_target" />' +
-                            '<a href="#" class="sales_team_target_definition o_inline_link">' +
-                                'Click to define a target</a>' +
+                            `<field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/> ` +
                             '<div class="col-12 o_kanban_primary_bottom"/>' +
                             '<div class="col-12 o_kanban_primary_bottom bottom_block"/>' +
                         '</div>' +
@@ -100,22 +97,20 @@ QUnit.test('edit target supports push Enter', async function (assert) {
                     "new value is correctly saved");
             }
             if (args.method === 'read') { // Read happens after the write
-                assert.deepEqual(args.args[1], ['invoiced_target', 'display_name'],
+                assert.deepEqual(args.args[1], ['invoiced_target', 'invoiced', 'display_name'],
                     'the read (after write) should ask for invoiced_target');
             }
             return this._super.apply(this, arguments);
         },
     });
 
-    await testUtils.dom.click(kanban.$('a.sales_team_target_definition'));
-
-    kanban.$('.o_kanban_primary_bottom:last input').focus();
-    kanban.$('.o_kanban_primary_bottom:last input').val('123');
-    kanban.$('.o_kanban_primary_bottom:last input').trigger($.Event('keydown', {which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER}));
+    await testUtils.dom.click(kanban.$('.o_progressbar a'));
+    kanban.$('.o_progressbar input').focus();
+    kanban.$('.o_progressbar input').val('123');
+    kanban.$('.o_progressbar input').trigger($.Event('keyup', {which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER}));
     await testUtils.nextTick();
-    assert.strictEqual(kanban.$('.o_kanban_record').text(), "123Click to define a target",
-        'The kanban record should display the updated target value');
-
+    assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), "0 / 123");
+    
     kanban.destroy();
 });
 
