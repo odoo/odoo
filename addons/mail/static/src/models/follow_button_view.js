@@ -41,6 +41,7 @@ registerModel({
                 return;
             }
             this.chatterOwner.thread.unfollow();
+            this.chatterOwner.reloadParentView({ fieldNames: ['message_follower_ids'] });
         },
         /**
          * @param {MouseEvent} ev
