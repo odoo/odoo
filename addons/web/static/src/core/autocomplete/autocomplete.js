@@ -271,6 +271,7 @@ Object.assign(AutoComplete, {
     template: "web.AutoComplete",
     props: {
         value: { type: String },
+        id: { type: String, optional: true },
         onSelect: { type: Function },
         sources: {
             type: Array,
