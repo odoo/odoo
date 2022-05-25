@@ -168,7 +168,7 @@ registerModel({
         microphoneButtonTitle: attr({
             compute: '_computeMicrophoneButtonTitle',
         }),
-        rtcOptionList: one('RtcOptionList', {
+        callOptionMenu: one('CallOptionMenu', {
             default: insertAndReplace(),
             inverse: 'rtcController',
             isCausal: true,

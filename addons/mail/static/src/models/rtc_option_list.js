@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'RtcOptionList',
+    name: 'CallOptionMenu',
     identifyingFields: ['rtcController'],
     recordMethods: {
         /**
@@ -62,7 +62,7 @@ registerModel({
          */
         component: attr(),
         rtcController: one('RtcController', {
-            inverse: 'rtcOptionList',
+            inverse: 'callOptionMenu',
             readonly: true,
             required: true,
         }),
