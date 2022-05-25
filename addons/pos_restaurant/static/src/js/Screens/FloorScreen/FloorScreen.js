@@ -152,7 +152,6 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                         ).length;
                     table_obj.order_count = table.orders + unsynced_orders;
                 });
-                this.render();
             } catch (error) {
                 if (isConnectionError(error)) {
                     await this.showPopup('OfflineErrorPopup', {
