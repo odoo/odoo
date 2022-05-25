@@ -40,9 +40,6 @@ const { Component, markup } = owl;
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
 
-// WOWL remove after adapting tests
-let FormRenderer;
-
 // ----------------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------------
@@ -1271,39 +1268,32 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("window resize should not change quick create form size", async (assert) => {
-        assert.expect(2);
-
-        patchWithCleanup(FormRenderer, {
-            start: function () {
-                this._super(...arguments);
-
-                window.addEventListener("resize", () => this._applyFormSizeClass());
-            },
-        });
+    QUnit.test("window resize should not change quick create form size", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                '<kanban on_create="quick_create">' +
-                '<field name="bar"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates></kanban>",
             groupBy: ["bar"],
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="bar"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>`,
         });
 
-        // click to add an element and cancel the quick creation by pressing ESC
         await quickCreateRecord();
+        assert.hasClass(
+            target.querySelector(".o_kanban_quick_create .o_form_view"),
+            "o_xxs_form_view"
+        );
 
-        const quickCreate = target.querySelector(".o_kanban_quick_create");
-        assert.hasClass(quickCreate.querySelector(".o_form_view"), "o_xxs_form_view");
-
-        // trigger window resize explicitly to call _applyFormSizeClass
         await triggerEvent(window, "", "resize");
-
-        assert.hasClass(quickCreate.querySelector(".o_form_view"), "o_xxs_form_view");
+        assert.hasClass(
+            target.querySelector(".o_kanban_quick_create .o_form_view"),
+            "o_xxs_form_view"
+        );
     });
 
     QUnit.test(
