@@ -59,7 +59,7 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 },
             ];
         }
-        claimSingleReward() {
+        clickRewardButton() {
             return [
                 {
                     content: 'open reward dialog',
@@ -79,11 +79,14 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 }
             ];
         }
+        unselectPartner() {
+            return [{ trigger: '.unselect-tag' }];
+        }
     }
 
     class Check {
-        hasRewardLine(rewardName, amount) {
-            return [
+        hasRewardLine(rewardName, amount, qty) {
+            const steps = [
                 {
                     content: 'check if reward line is there',
                     trigger: `.orderline.program-reward span.product-name:contains("${rewardName}")`,
@@ -95,6 +98,14 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                     run: function () {},
                 },
             ];
+            if (qty) {
+                steps.push({
+                    content: 'check if the reward qty is correct',
+                    trigger: `.order .orderline.program-reward .product-name:contains("${rewardName}") ~ .info-list em:contains("${qty}")`,
+                    run: function () {},
+                });
+            }
+            return steps;
         }
         orderTotalIs(total_str) {
             return [
@@ -111,6 +122,24 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                     content: 'check that no reward can be claimed',
                     trigger: ".control-button:contains('Reward'):not(.highlight)",
                     run: function () {}, // it's a check
+                }
+            ]
+        }
+        isRewardButtonHighlighted(isHighlighted) {
+            return [
+                {
+                    trigger: isHighlighted
+                        ? '.control-button.highlight:contains("Reward")'
+                        : '.control-button:contains("Reward"):not(:has(.highlight))',
+                    run: function () {}, // it's a check
+                },
+            ];
+        }
+        customerIs(name) {
+            return [
+                {
+                    trigger: `.actionpad button.set-partner:contains("${name}")`,
+                    run: function () {},
                 }
             ]
         }
