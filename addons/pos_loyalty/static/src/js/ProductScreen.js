@@ -13,6 +13,29 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
             });
         }
 
+        /**
+         * If the product is a potential reward, also apply the reward.
+         * @override
+         */
+        async _addProduct(product, options) {
+            const order = this.env.pos.get_order();
+            const potentialRewards = order.getPotentialFreeProductRewards();
+            let rewardsToApply = [];
+            for (const reward of potentialRewards) {
+                for (const reward_product_id of reward.reward.reward_product_ids) {
+                    if (reward_product_id == product.id) {
+                        rewardsToApply.push(reward);
+                    }
+                }
+            }
+            await super._addProduct(product, options);
+            await order._updatePrograms();
+            if (rewardsToApply.length == 1) {
+                const reward = rewardsToApply[0];
+                order._applyReward(reward.reward, reward.coupon_id, { product: product.id });
+            }
+        }
+
         _onCouponScan(code) {
             this.currentOrder.activateCode(code.base_code);
         }
@@ -64,7 +87,7 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
             }
             if (!selectedLine) return;
             if (selectedLine.is_reward_line && val === 'remove') {
-                this.currentOrder.disabledRewards.push(selectedLine.reward_id);
+                this.currentOrder.disabledRewards.add(selectedLine.reward_id);
                 const coupon = this.env.pos.couponCache[selectedLine.coupon_id];
                 if (coupon && coupon.id > 0 && this.currentOrder.codeActivatedCoupons.find((c) => c.code === coupon.code)) {
                     delete this.env.pos.couponCache[selectedLine.coupon_id];
