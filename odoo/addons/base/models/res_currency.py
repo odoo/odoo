@@ -330,7 +330,7 @@ class CurrencyRate(models.Model):
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         group_operator="avg",
-        help="The currency of rate 1 to the rate of the currency.",
+        help="The rate of the current currency against a currency with an exchange rate of 1.",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
