@@ -10,7 +10,7 @@
                         <i class="o_DiscussSidebarCategory_titleIcon small" t-att-class="category.isOpen ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"/>
                         <span class="o_DiscussSidebarCategory_titleText btn-sm p-0 text-uppercase font-weight-bolder"><t t-esc="category.name"/></span>
                     </div>
-                    <div class="o-autogrow o_DiscussSidebarCategory_headerItem"/>
+                    <div class="o_DiscussSidebarCategory_headerItem flex-grow-1"/>
                     <div class="o_DiscussSidebarCategory_commands o_DiscussSidebarCategory_headerItem d-flex mr-3">
                         <t t-if="category.hasViewCommand">
                             <i t-attf-class="o_DiscussSidebarCategory_command o_DiscussSidebarCategory_commandView fa fa-cog {{ o_DiscussSidebarCategory_hoverItem }}" title="View or join channels" t-on-click="category.onClickCommandView" role="img"/>

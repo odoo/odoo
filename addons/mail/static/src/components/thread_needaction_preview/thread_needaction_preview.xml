@@ -33,7 +33,7 @@
                                 (<t t-esc="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length"/>)
                             </span>
                         </t>
-                        <span class="o-autogrow"/>
+                        <span class="flex-grow-1"/>
                         <t t-if="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread and threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date">
                             <small class="o_NotificationListItem_date o_ThreadNeedactionPreview_date flex-shrink-0 text-500">
                                 <t t-esc="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
@@ -47,7 +47,7 @@
                             </t>
                             <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
                         </span>
-                        <span class="o-autogrow"/>
+                        <span class="flex-grow-1"/>
                         <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Mark as Read" t-on-click="threadNeedactionPreviewView.onClickMarkAsRead" t-ref="markAsRead"/>
                     </div>
                 </div>

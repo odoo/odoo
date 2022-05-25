@@ -19,7 +19,7 @@
                                 (<t t-esc="notificationGroupView.notificationGroup.notifications.length"/>)
                             </span>
                         </t>
-                        <span class="o-autogrow"/>
+                        <span class="flex-grow-1"/>
                         <t t-if="notificationGroupView.notificationGroup.date">
                             <small class="o_NotificationListItem_date o_NotificationGroup_date flex-shrink-0 text-500">
                                 <t t-esc="notificationGroupView.notificationGroup.date.fromNow()"/>
@@ -32,7 +32,7 @@
                                 An error occurred when sending an email.
                             </t>
                         </span>
-                        <span class="o-autogrow"/>
+                        <span class="flex-grow-1"/>
                         <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_NotificationGroup_coreItem o_NotificationGroup_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Discard message delivery failures" t-on-click="notificationGroupView.onClickMarkAsRead" t-ref="markAsRead"/>
                     </div>
                 </div>
