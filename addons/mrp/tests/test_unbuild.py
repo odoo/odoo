@@ -671,3 +671,38 @@ class TestUnbuild(TestMrpCommon):
         uo = uo_form.save()
         uo.action_unbuild()
         self.assertEqual(uo.state, 'done')
+
+    def test_unbuild_from_partially_done_mo(self):
+        """
+        Have a MO, produce a partial qty, post the inventory and then cancel the
+        MO (it will mark the MO as done). Then, unbuild some finished products
+        from this MO
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.stock_location, 20)
+
+        mo, _bom, p_final, p1, p2 = self.generate_mo(qty_final=10, qty_base_1=1, qty_base_2=1)
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.qty_producing = 8
+        produce_wizard = produce_form.save()
+        produce_wizard.do_produce()
+
+        mo.post_inventory()
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'done')
+
+        uo_form = Form(self.env['mrp.unbuild'])
+        uo_form.mo_id = mo
+        uo_form.product_qty = 2
+        uo = uo_form.save()
+        uo.action_unbuild()
+
+        self.assertEqual(uo.state, 'done')
+        self.assertRecordValues(uo.produce_line_ids, [
+            {'product_id': p_final.id, 'quantity_done': 2.0},
+            {'product_id': p2.id, 'quantity_done': 2.0},
+            {'product_id': p1.id, 'quantity_done': 2.0},
+        ])
