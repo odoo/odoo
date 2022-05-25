@@ -14,6 +14,8 @@ import {
     click,
     clickDiscard,
     clickEdit,
+    clickOpenedDropdownItem,
+    clickOpenM2ODropdown,
     clickSave,
     dragAndDrop,
     editInput,
@@ -64,7 +66,6 @@ let testUtils,
     ListView,
     ListRenderer,
     core,
-    clickFirst,
     BasicModel,
     AbstractStorageService,
     loadState,
@@ -74,6 +75,10 @@ let testUtils,
 
 async function reloadListView(target) {
     await validateSearch(target);
+}
+
+function getGroup(target, index) {
+    return target.querySelectorAll(".o_group_header")[index];
 }
 
 QUnit.module("Views", (hooks) => {
@@ -1064,7 +1069,7 @@ QUnit.module("Views", (hooks) => {
         "editable list datetimepicker destroy widget (edition)",
         async function (assert) {
             assert.expect(7);
-            var eventPromise = testUtils.makeTestPromise();
+            var eventPromise = makeDeferred();
 
             await makeView({
                 type: "list",
@@ -1096,7 +1101,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_data_row", 4);
             assert.containsNone(target, ".o_selected_row");
 
-            await click($(target).find(".o_data_cell:first"));
+            await click(target.querySelector(".o_data_cell"));
             await testUtils.dom.openDatepicker($(target).find(".o_datepicker"));
 
             await eventPromise;
@@ -2598,7 +2603,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
     });
 
-    QUnit.skipWOWL("aggregates are computed correctly", async function (assert) {
+    QUnit.test("aggregates are computed correctly", async function (assert) {
         assert.expect(4);
 
         await makeView({
@@ -3707,7 +3712,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(selectorWidth, postResizeSelectorWidth);
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "columns with an absolute width are never narrower than that width",
         async function (assert) {
             assert.expect(2);
@@ -6058,14 +6063,15 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    // Need better Domain Normalisation (remove duplicate domain)
     QUnit.skipWOWL("list view with nested groups", async function (assert) {
         assert.expect(42);
 
         serverData.models.foo.records.push({ id: 5, foo: "blip", int_field: -7, m2o: 1 });
         serverData.models.foo.records.push({ id: 6, foo: "blip", int_field: 5, m2o: 2 });
 
-        var nbRPCs = { readGroup: 0, searchRead: 0 };
-        var envIDs = []; // the ids that should be in the environment during this test
+        let nbRPCs = { readGroup: 0, webSearchRead: 0 };
+        let envIDs = []; // the ids that should be in the environment during this test
 
         const list = await makeView({
             type: "list",
@@ -6085,39 +6091,36 @@ QUnit.module("Views", (hooks) => {
                         );
                     }
                     nbRPCs.readGroup++;
-                } else if (route === "/web/dataset/search_read") {
+                } else if (args.method === "web_search_read") {
                     // called twice (once when opening the group, once when sorting)
                     assert.deepEqual(
-                        args.domain,
+                        args.kwargs.domain,
                         [
                             ["foo", "=", "blip"],
                             ["m2o", "=", 1],
                         ],
-                        "nested search_read should be called with correct domain"
+                        "nested web_search_read should be called with correct domain"
                     );
-                    nbRPCs.searchRead++;
+                    nbRPCs.webSearchRead++;
                 }
             },
-            intercepts: {
-                switch_view: function (event) {
-                    assert.strictEqual(
-                        event.data.res_id,
-                        4,
-                        "'switch_view' event has been triggered"
-                    );
-                },
+            selectRecord: (resId, options) => {
+                assert.step(`switch to form - resId: ${resId}`);
             },
         });
 
         assert.strictEqual(nbRPCs.readGroup, 1, "should have done one read_group");
-        assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
-        assert.deepEqual(list.exportState().resIds, envIDs);
+        assert.strictEqual(nbRPCs.webSearchRead, 0, "should have done no web_search_read");
+        assert.deepEqual(
+            list.model.root.records.map((r) => r.resId),
+            envIDs
+        );
 
         // basic rendering tests
-        assert.containsOnce(target, "tbody", "there should be 1 tbody");
         assert.containsN(target, ".o_group_header", 2, "should contain 2 groups at first level");
+        const value1Group = getGroup(target, 0);
         assert.strictEqual(
-            $(target).find(".o_group_name:first").text(),
+            value1Group.querySelector(".o_group_name").textContent.trim(),
             "Value 1 (4)",
             "group should have correct name and count"
         );
@@ -6128,110 +6131,127 @@ QUnit.module("Views", (hooks) => {
             "the carret of closed groups should be right"
         );
         assert.strictEqual(
-            $(target).find(".o_group_name:first span").css("padding-left"),
+            value1Group.querySelector("span").style["padding-left"],
             "2px",
             "groups of level 1 should have a 2px padding-left"
         );
         assert.strictEqual(
-            $(target).find(".o_group_header:first td:last").text(),
+            [...value1Group.querySelectorAll("td")].pop().textContent,
             "16",
             "group aggregates are correctly displayed"
         );
 
         // open the first group
-        nbRPCs = { readGroup: 0, searchRead: 0 };
-        await click($(target).find(".o_group_header:first"));
+        nbRPCs = { readGroup: 0, webSearchRead: 0 };
+        await click(value1Group);
         assert.strictEqual(nbRPCs.readGroup, 1, "should have done one read_group");
-        assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
-        assert.deepEqual(list.exportState().resIds, envIDs);
+        assert.strictEqual(nbRPCs.webSearchRead, 0, "should have done no web_search_read");
+        assert.deepEqual(
+            list.model.root.records.map((r) => r.resId),
+            envIDs
+        );
 
-        var $openGroup = $(target).find("tbody:nth(1)");
         assert.strictEqual(
-            $(target).find(".o_group_name:first").text(),
+            getGroup(target, 0).querySelector(".o_group_name").textContent.trim(),
             "Value 1 (4)",
             "group should have correct name and count (of records, not inner subgroups)"
         );
-        assert.containsN(target, "tbody", 3, "there should be 3 tbodys");
         assert.containsOnce(
             target,
             ".o_group_name:first .fa-caret-down",
             "the carret of open groups should be down"
         );
         assert.strictEqual(
-            $openGroup.find(".o_group_header").length,
-            3,
-            "open group should contain 3 groups"
+            target.querySelectorAll(".o_group_header").length,
+            5,
+            "open group should contain 5 groups (2 groups and 3 subGroup)"
         );
+        const blipGroup = getGroup(target, 1);
         assert.strictEqual(
-            $openGroup.find(".o_group_name:nth(2)").text(),
+            blipGroup.querySelector(".o_group_name").textContent.trim(),
             "blip (2)",
             "group should have correct name and count"
         );
         assert.strictEqual(
-            $openGroup.find(".o_group_name:nth(2) span").css("padding-left"),
+            blipGroup.querySelector("span").style["padding-left"],
             "22px",
             "groups of level 2 should have a 22px padding-left"
         );
         assert.strictEqual(
-            $openGroup.find(".o_group_header:nth(2) td:last").text(),
+            [...blipGroup.querySelectorAll("td")].pop().textContent,
             "-11",
             "inner group aggregates are correctly displayed"
         );
 
         // open subgroup
-        nbRPCs = { readGroup: 0, searchRead: 0 };
+        nbRPCs = { readGroup: 0, webSearchRead: 0 };
         envIDs = [4, 5]; // the opened subgroup contains these two records
-        await click($openGroup.find(".o_group_header:nth(2)"));
+        await click(blipGroup);
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
-        assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
-        assert.deepEqual(list.exportState().resIds, envIDs);
-
-        var $openSubGroup = $(target).find("tbody:nth(2)");
-        assert.containsN(target, "tbody", 4, "there should be 4 tbodys");
+        assert.strictEqual(nbRPCs.webSearchRead, 1, "should have done one web_search_read");
+        assert.deepEqual(
+            list.model.root.records.map((r) => r.resId),
+            envIDs
+        );
         assert.strictEqual(
-            $openSubGroup.find(".o_data_row").length,
+            target.querySelectorAll(".o_group_header").length,
+            5,
+            "open group should contain 5 groups (2 groups and 3 subGroup)"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
             2,
             "open subgroup should contain 2 data rows"
         );
         assert.strictEqual(
-            $openSubGroup.find(".o_data_row:first td:last").text(),
+            [...target.querySelector(".o_data_row").querySelectorAll(".o_data_cell")].pop()
+                .textContent,
             "-4",
             "first record in open subgroup should be res_id 4 (with int_field -4)"
         );
 
         // open a record (should trigger event 'open_record')
-        await click($openSubGroup.find(".o_data_row:first"));
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.verifySteps([`switch to form - resId: 4`]);
 
         // sort by int_field (ASC) and check that open groups are still open
-        nbRPCs = { readGroup: 0, searchRead: 0 };
+        nbRPCs = { readGroup: 0, webSearchRead: 0 };
         envIDs = [5, 4]; // order of the records changed
-        await click($(target).find("thead th:last"));
+        await click(target.querySelector(".o_list_view thead [data-name='int_field']"));
         assert.strictEqual(nbRPCs.readGroup, 2, "should have done two read_groups");
-        assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
-        assert.deepEqual(list.exportState().resIds, envIDs);
-
-        $openSubGroup = $(target).find("tbody:nth(2)");
-        assert.containsN(target, "tbody", 4, "there should be 4 tbodys");
+        assert.strictEqual(nbRPCs.webSearchRead, 1, "should have done one web_search_read");
+        assert.deepEqual(
+            list.model.root.records.map((r) => r.resId),
+            envIDs
+        );
         assert.strictEqual(
-            $openSubGroup.find(".o_data_row").length,
+            target.querySelectorAll(".o_group_header").length,
+            5,
+            "open group should contain 5 groups (2 groups and 3 subGroup)"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
             2,
             "open subgroup should contain 2 data rows"
         );
         assert.strictEqual(
-            $openSubGroup.find(".o_data_row:first td:last").text(),
+            [...target.querySelector(".o_data_row").querySelectorAll(".o_data_cell")].pop()
+                .textContent,
             "-7",
             "first record in open subgroup should be res_id 5 (with int_field -7)"
         );
 
         // close first level group
-        nbRPCs = { readGroup: 0, searchRead: 0 };
+        nbRPCs = { readGroup: 0, webSearchRead: 0 };
         envIDs = []; // the group being closed, there is no more record in the environment
-        await click($(target).find(".o_group_header:nth(1)"));
+        await click(getGroup(target, 1));
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
-        assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
-        assert.deepEqual(list.exportState().resIds, envIDs);
+        assert.strictEqual(nbRPCs.webSearchRead, 0, "should have done no web_search_read");
+        assert.deepEqual(
+            list.model.root.records.map((r) => r.resId),
+            envIDs
+        );
 
-        assert.containsOnce(target, "tbody", "there should be 1 tbody");
         assert.containsN(target, ".o_group_header", 2, "should contain 2 groups at first level");
         assert.containsN(
             target,
@@ -6628,30 +6648,18 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(warnings, 1, "a warning should have been displayed");
     });
 
-    QUnit.skipWOWL("open a virtual id", async function (assert) {
-        assert.expect(1);
-
-        const list = await makeView({
+    QUnit.test("open a virtual id", async function (assert) {
+        await makeView({
             type: "list",
             resModel: "event",
             serverData,
             arch: '<tree><field name="name"/></tree>',
-        });
-        patchWithCleanup(list.env.services.action, {
-            switchView: async (event) => {
-                assert.deepEqual(
-                    _.pick(event.data, "mode", "model", "res_id", "view_type"),
-                    {
-                        mode: "readonly",
-                        model: "event",
-                        res_id: "2-20170808020000",
-                        view_type: "form",
-                    },
-                    "should trigger a switch_view event to the form view for the record virtual id"
-                );
+            selectRecord: (resId, options) => {
+                assert.step(`switch to form - resId: ${resId}`);
             },
         });
         await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.verifySteps([`switch to form - resId: 2-20170808020000`]);
     });
 
     QUnit.skipWOWL("pressing enter on last line of editable list view", async function (assert) {
@@ -7826,7 +7834,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbInputRight, 2, "there should be two right-aligned input");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "grouped list with another grouped list parent, click unfold",
         async function (assert) {
             assert.expect(3);
@@ -7844,41 +7852,40 @@ QUnit.module("Views", (hooks) => {
                 newRecs.push(newRec);
             }
             serverData.models.bar.records = newRecs;
-
-            const list = await makeView({
+            serverData.views = {
+                "bar,false,list": '<tree><field name="cornichon"/></tree>',
+                "bar,false,search":
+                    "<search><filter context=\"{'group_by': 'cornichon'}\" string=\"cornichon\"/></search>",
+            };
+            await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
                 arch: '<tree editable="top"><field name="foo"/><field name="m2o"/></tree>',
-                groupBy: ["bar"],
-                archs: {
-                    "bar,false,list": '<tree><field name="cornichon"/></tree>',
-                    "bar,false,search":
-                        "<search><filter context=\"{'group_by': 'cornichon'}\" string=\"cornichon\"/></search>",
-                },
+                searchViewArch: `
+                    <search>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                    </search>`,
             });
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "bar");
+            await toggleMenuItem(target, "bar");
 
-            await list.update({ groupBy: [] });
-
-            await clickFirst($(target).find(".o_data_cell"));
-
-            await testUtils.fields.many2one.searchAndClickItem("m2o", { item: "Search More" });
-
-            assert.containsOnce($("body"), ".modal-content");
-
+            await click(target.querySelector(".o_data_cell"));
+            await clickOpenM2ODropdown(target, "m2o");
+            await clickOpenedDropdownItem(target, "m2o", "Search More...");
+            assert.containsOnce(target, ".modal-content");
             assert.containsNone(
-                $("body"),
+                target,
                 ".modal-content .o_group_name",
                 "list in modal not grouped"
             );
 
-            await click($("body .modal-content button:contains(Group By)"));
-
-            await click($("body .modal-content .o_menu_item:contains(cornichon)"));
-
-            await click($("body .modal-content .o_group_header"));
-
-            assert.containsOnce($("body"), ".modal-content .o_group_open");
+            const modal = target.querySelector(".modal");
+            await toggleGroupByMenu(modal);
+            await toggleMenuItem(modal, "cornichon");
+            await click(target.querySelector(".o_group_header"));
+            assert.containsOnce(target, ".modal-content .o_group_open");
         }
     );
 
@@ -8335,7 +8342,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.records[2].int_field = 2;
         serverData.models.foo.records[3].int_field = 3;
 
-        var prom = makeDeferred();
+        const prom = makeDeferred();
 
         await makeView({
             type: "list",
@@ -8346,9 +8353,8 @@ QUnit.module("Views", (hooks) => {
                 '<field name="int_field" widget="handle"/>' +
                 '<field name="amount" widget="float" digits="[5,0]"/>' +
                 "</tree>",
-            mockRPC: function (route, args, performRPC) {
+            mockRPC: async function (route, args, performRPC) {
                 if (route === "/web/dataset/resequence") {
-                    // var _super = this._super.bind(this);
                     assert.strictEqual(
                         args.offset,
                         1,
@@ -8364,9 +8370,8 @@ QUnit.module("Views", (hooks) => {
                         [4, 2, 3],
                         "should write the sequence in correct order"
                     );
-                    return prom.then(function () {
-                        return performRPC(route, args);
-                    });
+                    await prom;
+                    return performRPC(route, args);
                 }
             },
         });
