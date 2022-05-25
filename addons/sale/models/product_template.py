@@ -126,6 +126,16 @@ class ProductTemplate(models.Model):
 
         return self._create_product_variant(combination, log_warning=True).id or 0
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super(ProductTemplate, self)._onchange_type()
+        if self._origin and self.sales_count > 0:
+            res['warning'] = {
+                'title': _("Warning"),
+                'message': _("You cannot change the product's type because it is already used in sales orders.")
+            }
+        return res
+
     @api.depends('type')
     def _compute_service_type(self):
         self.filtered(lambda t: t.type == 'consu' or not t.service_type).service_type = 'manual'
