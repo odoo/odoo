@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
 
-    <t t-name="crm_iap_mine.GenerateLeadsButton" owl="1">
-        <t t-if="isSaleManager">
-            <button type="button" class="btn btn-secondary o_button_generate_leads" t-on-click="onGenerateLeads">
-                Generate Leads
-            </button>
+<templates>
+    <t t-name="LeadMiningRequest.generate_leads_button">
+        <button type="button" class="btn btn-secondary o_button_generate_leads">
+            Generate Leads
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="LeadMiningRequestListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-call="LeadMiningRequest.generate_leads_button"/>
         </t>
     </t>
 
-    <t t-name="crm_iap_mine.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
-        <xpath expr="//*[@class='btn btn-primary o_list_button_add']" position="after">
-            <t t-call="crm_iap_mine.GenerateLeadsButton"/>
-        </xpath>
+    <t t-extend="KanbanView.buttons" t-name="LeadMiningRequestKanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <t t-call="LeadMiningRequest.generate_leads_button"/>
+        </t>
     </t>
-
-    <t t-name="crm_iap_mine.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
-        <xpath expr="//button" position="after">
-            <t t-call="crm_iap_mine.GenerateLeadsButton"/>
-        </xpath>
-    </t>
-
 </templates>
