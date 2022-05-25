@@ -2426,6 +2426,8 @@ class AccountMove(models.Model):
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
 
+        rec_partial_reconcile = self.mapped('line_ids').matched_credit_ids + self.mapped('line_ids').matched_debit_ids
+        (rec_partial_reconcile.credit_move_id + rec_partial_reconcile.debit_move_id).mapped('statement_line_id').button_cancel_reconciliation()
         self.mapped('line_ids').remove_move_reconcile()
         self.write({'state': 'draft'})
 

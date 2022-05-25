@@ -120,3 +120,24 @@ class TestBankStatementReconciliation(AccountingTestCase):
         })
         statement.button_open()
         statement.button_confirm_bank()
+
+    def test_undo_reconciliation_when_reset_invoice_to_draft(self):
+        """
+        Test if a statement line is reconciled after reseting to draft its related invoice
+        """
+        invoice_lines = self.create_invoice(100), self.create_invoice(200)
+        st_lines = self.create_statement_line(100), self.create_statement_line(200)
+
+        for st_line, inv_line in zip(st_lines, invoice_lines):
+            st_line.process_reconciliation(counterpart_aml_dicts=[{
+                'move_line': inv_line,
+                'credit': 100,
+                'debit': 0,
+                'name': inv_line.name,
+            }])
+
+        self.assertTrue(st_lines[0].statement_id.all_lines_reconciled)
+
+        invoice_lines[0].move_id.button_draft()
+
+        self.assertTrue(not st_lines[0].statement_id.all_lines_reconciled)
