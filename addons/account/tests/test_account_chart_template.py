@@ -95,6 +95,6 @@ class AccountChartTemplateTest(TransactionCase):
             'property_account_payable_id',
             'property_account_expense_categ_id',
             'property_account_income_categ_id',
-            'property_tax_payable_account_id',
-            'property_tax_receivable_account_id',
+            # 'property_tax_payable_account_id',
+            # 'property_tax_receivable_account_id',
         ])

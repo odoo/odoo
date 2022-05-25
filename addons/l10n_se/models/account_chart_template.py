@@ -40,6 +40,31 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
         }
 
+    def _get_se_account_tax_group(self, template_code, company):
+        cid = (company or self.env.company).id
+        country_id = self.env.ref('base.se').id
+        return {
+            f'{cid}_tax_group_25': {
+                'name': 'VAT 25%',
+                'country_id': country_id,
+                'property_tax_payable_account_id': f'account.{cid}_a2610',
+                'property_tax_receivable_account_id': f'account.{cid}_a2640',
+            }, f'{cid}_tax_group_12': {
+                'name': 'VAT 12%',
+                'country_id': country_id,
+                'property_tax_payable_account_id': f'account.{cid}_a2620',
+                'property_tax_receivable_account_id': f'account.{cid}_a2640',
+            }, f'{cid}_tax_group_6': {
+                'name': 'VAT 6%',
+                'country_id': country_id,
+                'property_tax_payable_account_id': f'account.{cid}_a2630',
+                'property_tax_receivable_account_id': f'account.{cid}_a2640',
+            }, f'{cid}_tax_group_0': {
+                'name': 'VAT 0%',
+                'country_id': country_id
+            }
+        }
+
     def _get_se_account_tax(self, template_code, company):
         cid = (company or self.env.company).id
         return {
