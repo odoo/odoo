@@ -1143,9 +1143,14 @@ class Article(models.Model):
             member_commands = article_sudo._copy_access_from_parents_commands()
             article_sudo.write({'article_member_ids': member_commands})
 
-        # create new root articles: direct children of these articles
-        new_roots_woperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and not article.internal_permission)
-        new_roots_wperm = other_descendants_sudo.filtered(lambda article: article.parent_id in self and article.internal_permission)
+        # create new root articles: direct children of these articles + the writable_descendants
+        # indeed, those writable descendants are going to be altered the same way as "self"
+        # (archived / moved to private)
+        # -> all their children should be detached
+        new_roots_woperm = other_descendants_sudo.filtered(
+            lambda article: article.parent_id in (self + writable_descendants) and not article.internal_permission)
+        new_roots_wperm = other_descendants_sudo.filtered(
+            lambda article: article.parent_id in (self + writable_descendants) and article.internal_permission)
         if new_roots_wperm:
             new_roots_wperm.write({
                 'is_desynchronized': False,
