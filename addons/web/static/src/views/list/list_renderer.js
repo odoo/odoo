@@ -98,11 +98,11 @@ export class ListRenderer extends Component {
             this.cellToFocus = null;
         });
         let dataRowId;
-        const rootRef = useRef("root");
+        this.rootRef = useRef("root");
         useSortable({
             isActive: () => this.canResequenceRows,
             // Params
-            ref: rootRef,
+            ref: this.rootRef,
             elements: ".o_row_draggable",
             handle: ".o_handle_cell",
             cursor: "grabbing",
@@ -126,7 +126,7 @@ export class ListRenderer extends Component {
                 element.classList.add("o_row_draggable");
             },
         });
-        useBounceButton(rootRef, () => {
+        useBounceButton(this.rootRef, () => {
             return this.showNoContentHelper;
         });
         useEffect(
@@ -322,10 +322,6 @@ export class ListRenderer extends Component {
                 }
             }
         }
-    }
-
-    getColumnKey(column, columnIndex) {
-        return column.type === "field" ? column.name : `button_group_${columnIndex}`;
     }
 
     editGroupRecord(group) {
@@ -860,6 +856,86 @@ export class ListRenderer extends Component {
             field: this.props.list.fields[column.name],
             fieldInfo: this.props.list.activeFields[column.name],
         });
+    }
+
+    /**
+     * Handles the resize feature on the column headers
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    onStartResize(ev) {
+        const table = this.tableRef.el;
+        const th = ev.target.closest("th");
+        table.style.width = `${table.offsetWidth}px`;
+        const thPosition = [...th.parentNode.children].indexOf(th);
+        const resizingColumnElements = [...table.getElementsByTagName("tr")]
+            .filter((tr) => tr.children.length === th.parentNode.children.length)
+            .map((tr) => tr.children[thPosition]);
+        const optionalDropdown = table.querySelector("o_optional_columns");
+        const initialX = ev.clientX;
+        const initialWidth = th.offsetWidth;
+        const initialTableWidth = table.offsetWidth;
+        const initialDropdownX = optionalDropdown ? optionalDropdown.offsetLeft : null;
+        const resizeStoppingEvents = ["keydown", "mousedown", "mouseup"];
+
+        // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
+        if (!this.rootRef.el.style.width) {
+            this.rootRef.el.style.width = `${this.rootRef.el.offsetWidth}px`;
+        }
+
+        // Apply classes to table and selected column
+        table.classList.add("o_resizing");
+        for (const el of resizingColumnElements) {
+            el.classList.add("o_column_resizing");
+        }
+        // Mousemove event : resize header
+        const resizeHeader = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const delta = ev.clientX - initialX;
+            const newWidth = Math.max(10, initialWidth + delta);
+            const tableDelta = newWidth - initialWidth;
+            th.style.width = `${newWidth}px`;
+            th.style.maxWidth = `${newWidth}px`;
+            table.style.width = `${initialTableWidth + tableDelta}px`;
+            if (optionalDropdown) {
+                optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
+            }
+        };
+        window.addEventListener("mousemove", resizeHeader);
+
+        // Mouse or keyboard events : stop resize
+        const stopResize = (ev) => {
+            // Ignores the 'left mouse button down' event as it used to start resizing
+            if (ev.type === "mousedown" && ev.which === 1) {
+                return;
+            }
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            table.classList.remove("o_resizing");
+            for (const el of resizingColumnElements) {
+                el.classList.remove("o_column_resizing");
+            }
+
+            window.removeEventListener("mousemove", resizeHeader);
+            for (const eventType of resizeStoppingEvents) {
+                window.removeEventListener(eventType, stopResize);
+            }
+
+            // we remove the focus to make sure that the there is no focus inside
+            // the tr.  If that is the case, there is some css to darken the whole
+            // thead, and it looks quite weird with the small css hover effect.
+            document.activeElement.blur();
+        };
+        // We have to listen to several events to properly stop the resizing function. Those are:
+        // - mousedown (e.g. pressing right click)
+        // - mouseup : logical flow of the resizing feature (drag & drop)
+        // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
+        for (const eventType of resizeStoppingEvents) {
+            window.addEventListener(eventType, stopResize);
+        }
     }
 }
 

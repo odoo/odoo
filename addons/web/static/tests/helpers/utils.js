@@ -697,18 +697,19 @@ const getDifferentParents = (n1, n2) => {
  * Note that only the last event is awaited, since all the others are
  * considered to be synchronous.
  *
- * @param {string} fromSelector
- * @param {string} toSelector
+ * @param {Element|string} from
+ * @param {Element|string} to
  * @param {string} [position] "top" | "bottom" | "left" | "right"
  * @returns {Promise<void>}
  */
-export const dragAndDrop = async (fromSelector, toSelector, position) => {
+export const dragAndDrop = async (from, to, position) => {
     const fixture = getFixture();
-    const from = fixture.querySelector(fromSelector);
-    const to = fixture.querySelector(toSelector);
+    from = from instanceof Element ? from : fixture.querySelector(from);
+    to = to instanceof Element ? to : fixture.querySelector(to);
 
     // Mouse down on main target then move to a far away position to initiate the drag
     const fromRect = from.getBoundingClientRect();
+    const toRect = to.getBoundingClientRect();
     triggerEvent(from, null, "mousedown", {
         clientX: fromRect.x + fromRect.width / 2,
         clientY: fromRect.y + fromRect.height / 2,
@@ -716,26 +717,25 @@ export const dragAndDrop = async (fromSelector, toSelector, position) => {
     triggerEvent(window, null, "mousemove", { clientX: -999, clientY: -999 });
 
     // Find target position
-    const toRect = to.getBoundingClientRect();
     const toPos = {
-        clientX: toRect.x + toRect.width - 1,
-        clientY: toRect.y + toRect.height - 1,
+        clientX: toRect.x + toRect.width / 2,
+        clientY: toRect.y + toRect.height / 2,
     };
     switch (position) {
         case "top": {
-            toPos.clientY -= toRect.height;
+            toPos.clientY = toRect.y - 1;
             break;
         }
         case "bottom": {
-            toPos.clientY += 2;
+            toPos.clientY = toRect.y + toRect.height + 1;
             break;
         }
         case "left": {
-            toPos.clientX -= toRect.width;
+            toPos.clientX = toRect.x - 1;
             break;
         }
         case "right": {
-            toPos.clientX += 2;
+            toPos.clientX = toRect.x + toRect.width + 1;
             break;
         }
     }

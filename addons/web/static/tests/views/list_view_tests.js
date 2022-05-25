@@ -13297,7 +13297,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("editable list: resize column headers", async function (assert) {
+    QUnit.test("editable list: resize column headers", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -13312,18 +13312,15 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Target handle
-        const th = target.getElementsByTagName("th")[1];
-        const optionalDropdown = target.getElementsByClassName("o_optional_columns")[0];
+        const th = target.querySelector("th:nth-child(2)");
+        const optionalDropdown = target.querySelector(".o_optional_columns_dropdown");
         const optionalInitialX = optionalDropdown.getBoundingClientRect().x;
-        const resizeHandle = th.getElementsByClassName("o_resize")[0];
+        const resizeHandle = th.querySelector(".o_resize");
         const originalWidth = th.offsetWidth;
         const expectedWidth = Math.floor(originalWidth / 2 + resizeHandle.offsetWidth / 2);
         const delta = originalWidth - expectedWidth;
 
-        await testUtils.dom.dragAndDrop(resizeHandle, th, {
-            mousemoveTarget: window,
-            mouseupTarget: window,
-        });
+        await dragAndDrop(resizeHandle, th);
         const optionalFinalX = Math.floor(optionalDropdown.getBoundingClientRect().x);
 
         assert.strictEqual(
@@ -13339,7 +13336,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("editable list: resize column headers with max-width", async function (assert) {
+    QUnit.test("editable list: resize column headers with max-width", async function (assert) {
         // This test will ensure that, on resize list header,
         // the resized element have the correct size and other elements are not resized
         assert.expect(2);
@@ -13358,18 +13355,15 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Target handle
-        const th = target.getElementsByTagName("th")[1];
-        const thNext = target.getElementsByTagName("th")[2];
-        const resizeHandle = th.getElementsByClassName("o_resize")[0];
-        const nextResizeHandle = thNext.getElementsByClassName("o_resize")[0];
+        const th = target.querySelector("th:nth-child(2)");
+        const thNext = target.querySelector("th:nth-child(3)");
+        const resizeHandle = th.querySelector(".o_resize");
+        const nextResizeHandle = thNext.querySelector(".o_resize");
         const thOriginalWidth = th.offsetWidth;
         const thNextOriginalWidth = thNext.offsetWidth;
         const thExpectedWidth = Math.floor(thOriginalWidth + thNextOriginalWidth);
 
-        await testUtils.dom.dragAndDrop(resizeHandle, nextResizeHandle, {
-            mousemoveTarget: window,
-            mouseupTarget: window,
-        });
+        await dragAndDrop(resizeHandle, nextResizeHandle);
 
         const thFinalWidth = th.offsetWidth;
         const thNextFinalWidth = thNext.offsetWidth;
@@ -13379,19 +13373,17 @@ QUnit.module("Views", (hooks) => {
         assert.ok(thNextOriginalWidth === thNextFinalWidth, "Width must not have been changed");
     });
 
-    QUnit.skipWOWL(
-        "resize column with several x2many lists in form group",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("resize column with several x2many lists in form group", async function (assert) {
+        assert.expect(3);
 
-            serverData.models.bar.fields.text = { string: "Text field", type: "char" };
-            serverData.models.foo.records[0].o2m = [1, 2];
+        serverData.models.bar.fields.text = { string: "Text field", type: "char" };
+        serverData.models.foo.records[0].o2m = [1, 2];
 
-            const form = await makeView({
-                type: "form",
-                resModel: "foo",
-                serverData,
-                arch: `
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            arch: `
                 <form>
                     <group>
                         <field name="o2m">
@@ -13408,50 +13400,46 @@ QUnit.module("Views", (hooks) => {
                         </field>
                     </group>
                 </form>`,
-                resId: 1,
-            });
+            resId: 1,
+        });
 
-            const th = target.getElementsByTagName("th")[0];
-            const resizeHandle = th.getElementsByClassName("o_resize")[0];
-            const firstTableInitialWidth = target.querySelectorAll(".o_field_x2many_list table")[0]
-                .offsetWidth;
-            const secondTableInititalWidth = target.querySelectorAll(
-                ".o_field_x2many_list table"
-            )[1].offsetWidth;
+        const th = target.querySelector("th");
+        const resizeHandle = th.querySelector(".o_resize");
+        const firstTableInitialWidth = target.querySelectorAll(".o_field_x2many_list table")[0]
+            .offsetWidth;
+        const secondTableInititalWidth = target.querySelectorAll(".o_field_x2many_list table")[1]
+            .offsetWidth;
 
-            assert.strictEqual(
-                firstTableInitialWidth,
-                secondTableInititalWidth,
-                "both table columns have same width"
-            );
+        assert.strictEqual(
+            firstTableInitialWidth,
+            secondTableInititalWidth,
+            "both table columns have same width"
+        );
 
-            await testUtils.dom.dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
-                position: "right",
-            });
+        await dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
+            position: "right",
+        });
 
-            assert.notEqual(
-                firstTableInitialWidth,
-                target.querySelectorAll("thead")[0].offsetWidth,
-                "first o2m table is resized and width of table has changed"
-            );
-            assert.strictEqual(
-                secondTableInititalWidth,
-                target.querySelectorAll("thead")[1].offsetWidth,
-                "second o2m table should not be impacted on first o2m in group resized"
-            );
+        assert.notEqual(
+            firstTableInitialWidth,
+            target.querySelectorAll("thead")[0].offsetWidth,
+            "first o2m table is resized and width of table has changed"
+        );
+        assert.strictEqual(
+            secondTableInititalWidth,
+            target.querySelectorAll("thead")[1].offsetWidth,
+            "second o2m table should not be impacted on first o2m in group resized"
+        );
+    });
 
-            form.destroy();
-        }
-    );
-
-    QUnit.skipWOWL(
+    QUnit.test(
         "resize column with x2many list with several fields in form notebook",
         async function (assert) {
             assert.expect(1);
 
             serverData.models.foo.records[0].o2m = [1, 2];
 
-            const form = await makeView({
+            await makeView({
                 type: "form",
                 resModel: "foo",
                 serverData,
@@ -13475,21 +13463,19 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            const th = target.getElementsByTagName("th")[0];
-            const resizeHandle = th.getElementsByClassName("o_resize")[0];
-            const listInitialWidth = target.querySelector(".o_list_view").offsetWidth;
+            const th = target.querySelector("th");
+            const resizeHandle = th.querySelector(".o_resize");
+            const listInitialWidth = target.querySelector(".o_list_renderer").offsetWidth;
 
-            await testUtils.dom.dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
+            await dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
                 position: "right",
             });
 
             assert.strictEqual(
-                target.querySelector(".o_list_view").offsetWidth,
+                target.querySelector(".o_list_renderer").offsetWidth,
                 listInitialWidth,
                 "resizing the column should not impact the width of list"
             );
-
-            form.destroy();
         }
     );
 

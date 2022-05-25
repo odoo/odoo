@@ -12,11 +12,14 @@
                         <th t-if="props.hasSelectors" class="o_list_record_selector" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" t-on-click.stop="toggleSelection">
                             <CheckBox disabled="!!props.list.editedRecord" value="selectAll" onChange.bind="toggleSelection"/>
                         </th>
-                        <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <th t-if="column.type === 'field'" t-att-data-name="column.name" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)" t-att="{'data-tooltip-template': isDebugMode ? 'web.FieldTooltip' : false, 'data-tooltip-info': isDebugMode ? makeTooltip(column) : false}">
                                 <t t-if="column.hasLabel" t-esc="column.label"/>
+                                <t t-call="web.ListRenderer.ResizeHandle"/>
                             </th>
-                            <th t-else="" t-att-class="{o_list_button: column.type === 'button_group'}"></th>
+                            <th t-else="" t-att-class="{o_list_button: column.type === 'button_group'}">
+                                <t t-call="web.ListRenderer.ResizeHandle"/>
+                            </th>
                         </t>
                         <th t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove_header" style="width: 32px; min-width: 32px"/>
                     </tr>
@@ -48,7 +51,7 @@
                 <tfoot t-on-click="() => props.list.unselectRecord()" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
                         <td t-if="props.hasSelectors"/>
-                        <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
+                        <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <t t-set="aggregate" t-value="aggregates[column.name]"/>
                             <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
                                 <t t-esc="aggregate.value"/>
@@ -141,7 +144,7 @@
             <th t-if="showGroupPager(group)">
                 <Pager t-props="getGroupPagerProps(group)"/>
             </th>
-            <td t-foreach="getAggregateColumns(group)" t-as="column" t-key="getColumnKey(column, column_index)" class="o_list_number">
+            <td t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" class="o_list_number">
                 <t t-esc="group.aggregates[column.name]"/>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
@@ -154,7 +157,7 @@
             <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)">
                 <CheckBox disabled="!!props.list.editedRecord" value="record.selected" onChange.bind="() => this.toggleRecordSelection(record)" />
             </td>
-            <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
+            <t t-foreach="state.columns" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
                     <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="() => this.onCellClicked(record, column)">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
@@ -192,5 +195,9 @@
                 </td>
             </t>
         </tr>
+    </t>
+
+    <t t-name="web.ListRenderer.ResizeHandle" owl="1">
+        <span t-if="!isEmpty" class="o_resize" t-on-click.stop.prevent="" t-on-mousedown.stop.prevent="onStartResize"/>
     </t>
 </templates>
