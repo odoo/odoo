@@ -1020,12 +1020,12 @@ export class StaticList extends DataPoint {
         this.model.notify();
     }
 
-    async unselectRecord() {
+    async unselectRecord(canDiscard = false) {
         // something seems wrong with switchMode --> review system?
         const editedRecord = this.editedRecord;
         if (editedRecord) {
             const handle = editedRecord.__bm_handle__;
-            if (editedRecord.isNew && !editedRecord.isDirty) {
+            if (canDiscard && editedRecord.isNew && !editedRecord.isDirty) {
                 this.model.__bm__.discardChanges(handle);
                 if (editedRecord.canBeAbandoned) {
                     this.model.__bm__.removeLine(handle);

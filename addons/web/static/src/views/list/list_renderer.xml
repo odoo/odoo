@@ -24,7 +24,7 @@
                         <th t-if="props.activeActions and props.activeActions.onDelete" class="o_list_record_remove_header" style="width: 32px; min-width: 32px"/>
                     </tr>
                 </thead>
-                <tbody class="ui-sortable" t-on-keydown="onKeydown">
+                <tbody class="ui-sortable">
                     <t t-call="web.ListRenderer.Rows">
                         <t t-set="list" t-value="props.list"/>
                     </t>
@@ -48,7 +48,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <tfoot t-on-click="() => props.list.unselectRecord()" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                <tfoot t-on-click="() => props.list.unselectRecord(true)" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
                         <td t-if="props.hasSelectors"/>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">

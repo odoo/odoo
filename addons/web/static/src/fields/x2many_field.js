@@ -162,7 +162,7 @@ export class X2ManyField extends Component {
             total: list.count,
             onUpdate: async ({ offset, limit }) => {
                 const initialLimit = this.list.limit;
-                const unselected = await list.unselectRecord();
+                const unselected = await list.unselectRecord(true);
                 if (unselected) {
                     if (initialLimit === limit && initialLimit === this.list.limit + 1) {
                         // Unselecting the edited record might have abandonned it. If the page

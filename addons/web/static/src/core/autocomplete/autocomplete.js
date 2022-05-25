@@ -3,6 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { usePosition } from "@web/core/position_hook";
+import { useHotkey } from "../hotkeys/hotkey_hook";
 
 const { Component, onWillUnmount, useExternalListener, useRef, useState, useEffect } = owl;
 
@@ -42,6 +43,16 @@ export class AutoComplete extends Component {
         usePosition(() => this.inputRef.el, {
             popper: "sourcesList",
         });
+        useHotkey("ArrowUp", this.onArrowUpPress.bind(this), {
+            area: () => this.inputRef.el,
+            allowRepeat: true,
+            bypassEditableProtection: true,
+        });
+        useHotkey("ArrowDown", this.onArrowDownPress.bind(this), {
+            area: () => this.inputRef.el,
+            allowRepeat: true,
+            bypassEditableProtection: true,
+        });
     }
 
     get isOpened() {
@@ -51,10 +62,13 @@ export class AutoComplete extends Component {
     open(useInput = false) {
         this.state.open = true;
         this.loadSources(useInput);
+        this.registerOtherHotkeys();
     }
+
     close() {
         this.state.open = false;
         this.state.activeSourceOption = null;
+        this.unregisterOtherHotkeys();
     }
 
     loadSources(useInput) {
@@ -173,33 +187,29 @@ export class AutoComplete extends Component {
         }
     }
 
-    registerHotkeys() {
+    registerOtherHotkeys() {
+        // These other hotkeys should only get registered when the autocomplete is opened.
         const hotkeys = {
             escape: this.onEscapePress.bind(this),
             enter: this.onEnterPress.bind(this),
-            arrowdown: this.onArrowDownPress.bind(this),
-            arrowup: this.onArrowUpPress.bind(this),
         };
         for (const [hotkey, callback] of Object.entries(hotkeys)) {
             const remove = this.hotkey.add(hotkey, callback, {
-                allowRepeat: true,
+                area: () => this.inputRef.el,
                 bypassEditableProtection: true,
             });
             this.hotkeysToRemove.push(remove);
         }
     }
-    unregisterHotkeys() {
+
+    unregisterOtherHotkeys() {
         for (const removeHotkey of this.hotkeysToRemove) {
             removeHotkey();
         }
         this.hotkeysToRemove = [];
     }
 
-    onInputFocus() {
-        this.registerHotkeys();
-    }
     onInputBlur() {
-        this.unregisterHotkeys();
         const value = this.inputRef.el.value;
 
         if (this.props.autoSelect && this.state.activeSourceOption && value.length > 0) {

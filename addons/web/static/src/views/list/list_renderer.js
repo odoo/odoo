@@ -8,6 +8,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/ui";
 import { Field } from "@web/fields/field";
@@ -147,6 +148,30 @@ export class ListRenderer extends Component {
             this.columnWidths = null;
             this.freezeColumnWidths();
         });
+        useHotkey("Escape", () => this.props.list.unselectRecord(true), {
+            area: () => this.rootRef.el,
+        });
+        useHotkey(
+            "Enter",
+            async ({ target }) => {
+                if (target.tagName === "TEXTAREA") {
+                    return;
+                }
+                // TODO: we need to refactor switchMode and unselectRecord!!!
+                if (this.props.list.editedRecord && this.props.list.editedRecord.checkValidity()) {
+                    await this.props.list.unselectRecord();
+                    if (this.props.list.records.length === 1) {
+                        // TODO put more logic here see _moveToSideLine in list_editable_renderer
+                        // we are sure there is no other records --> add a line
+                        this.props.onAdd();
+                    }
+                }
+            },
+            {
+                bypassEditableProtection: true,
+                area: () => this.rootRef.el,
+            }
+        );
     }
 
     // The following code manipulates the DOM directly to avoid having to wait for a
@@ -720,41 +745,12 @@ export class ListRenderer extends Component {
         this.keepColumnWidths = true;
         const editedRecord = this.props.list.editedRecord;
         if (editedRecord && editedRecord !== record) {
-            const unselected = await this.props.list.unselectRecord();
+            const unselected = await this.props.list.unselectRecord(true);
             if (!unselected) {
                 return;
             }
         }
         this.props.activeActions.onDelete(record);
-    }
-
-    /**
-     * @param {KeyboardEvent} event
-     */
-    async onKeydown(event) {
-        const { classList } = event.target;
-        switch (event.key.toLowerCase()) {
-            case "escape":
-                event.stopPropagation();
-                this.props.list.unselectRecord();
-                break;
-            case "enter":
-                if ([...classList].includes("o-autocomplete--input")) {
-                    return;
-                }
-                // TODO: we need to refactor switchMode and unselectRecord!!!
-                if (this.props.list.editedRecord && this.props.list.editedRecord.checkValidity()) {
-                    await this.props.list.unselectRecord();
-                    if (this.props.list.records.length === 1) {
-                        // TODO put more logic here see _moveToSideLine in list_editable_renderer
-                        // we are sure there is no other records --> add a line
-                        this.props.onAdd();
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     saveOptionalActiveFields() {
@@ -801,7 +797,7 @@ export class ListRenderer extends Component {
     }
 
     async toggleOptionalField(fieldName) {
-        await this.props.list.unselectRecord();
+        await this.props.list.unselectRecord(true);
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
         this.state.columns = this.allColumns.filter(
             (col) => !col.optional || this.optionalActiveFields[col.name]
@@ -825,7 +821,7 @@ export class ListRenderer extends Component {
         if (ev.target.closest(".daterangepicker")) {
             return;
         }
-        this.props.list.unselectRecord();
+        this.props.list.unselectRecord(true);
     }
 
     calculateColumnWidth(column) {

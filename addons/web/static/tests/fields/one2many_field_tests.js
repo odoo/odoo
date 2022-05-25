@@ -9003,7 +9003,12 @@ QUnit.module("Fields", (hooks) => {
         const input = target.querySelector(
             '.o_field_widget[name="p"] .o_selected_row .o_field_widget[name="display_name"]'
         );
-        await input.dispatchEvent(new KeyboardEvent("keydown", { key: "enter" }));
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+            ["", "pizza"]
+        );
+
         // click add pasta
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[2]);
         await clickSave(target);
@@ -9051,7 +9056,7 @@ QUnit.module("Fields", (hooks) => {
         // click add food
         // check it's empty
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
-        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        await clickSave(target.querySelector(".modal"));
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             [""]
@@ -9061,7 +9066,7 @@ QUnit.module("Fields", (hooks) => {
         // save the modal
         // check it's pizza
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
-        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        await clickSave(target.querySelector(".modal"));
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "pizza"]
@@ -9071,7 +9076,7 @@ QUnit.module("Fields", (hooks) => {
         // save the whole record
         // check it's pizzapasta
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[2]);
-        await click(target.querySelector(".modal .modal-footer .btn-primary"));
+        await clickSave(target.querySelector(".modal"));
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
             ["", "pizza", "pasta"]
