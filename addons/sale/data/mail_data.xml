@@ -234,6 +234,7 @@
                     ${object.partner_invoice_id.country_id.name or ''}
                 </td>
             </tr>
+            % if transaction:
             <tr>
                 <td>
                     <strong>Payment Method:</strong>
@@ -245,6 +246,7 @@
                      (${format_amount(transaction.amount, object.currency_id)})
                 </td>
             </tr>
+            % endif
         </table>
     </div>
     % endif
@@ -263,16 +265,22 @@
                 </td>
             </tr>
         </table>
-        % if object.carrier_id:
+        % set delivery_line = object.order_line.filtered('is_delivery')
+        % if object.carrier_id and delivery_line:
+            % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
+                % set delivery_price = delivery_line.price_reduce_taxexcl
+            % else:
+                % set delivery_price = delivery_line.price_reduce_taxinc
+            % endif
         <table width="100%" style="color: #454748; font-size: 12px;">
             <tr>
                 <td>
                     <strong>Shipping Method:</strong>
                     ${object.carrier_id.name}
-                    % if object.carrier_id.fixed_price == 0.0:
+                    % if delivery_price == 0.0:
                         (Free)
                     % else:
-                        (${format_amount(object.carrier_id.fixed_price, object.currency_id)})
+                        (${format_amount(delivery_price, object.currency_id)})
                     % endif
                 </td>
             </tr>
