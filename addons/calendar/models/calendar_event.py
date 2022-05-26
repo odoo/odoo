@@ -771,8 +771,7 @@ class Meeting(models.Model):
         for event, vals in zip(recurring_events, recurring_vals):
             recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             if vals.get('recurrency'):
-                detached_events = event._apply_recurrence_values(recurrence_values)
-                detached_events.active = False
+                event._apply_recurrence_values(recurrence_values)
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
