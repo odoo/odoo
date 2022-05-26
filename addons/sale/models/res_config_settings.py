@@ -71,6 +71,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_bpost = fields.Boolean("bpost Connector")
     module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
+    module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
