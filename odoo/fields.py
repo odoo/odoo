@@ -20,7 +20,7 @@ except ImportError:
 
 import psycopg2
 
-from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
+from .tools import float_repr, float_round, float_compare, frozendict, html_sanitize, human_size, pg_varchar, \
     ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process, merge_sequences
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -2844,8 +2844,16 @@ class _RelationalMulti(_Relational):
             value = record.env[self.comodel_name].browse(value)
 
         if isinstance(value, BaseModel) and value._name == self.comodel_name:
-            def get_origin(val):
-                return val._origin if isinstance(val, BaseModel) else val
+            def compare_with_cache(record, origin, name):
+                if record._fields[name].type == 'float':
+                    return float_compare(record[name], origin[name],
+                                             precision_digits=record._fields[name].get_digits(record.env)[1])
+                elif record._fields[name].type == 'monetary':
+                    return record[record._fields[name].currency_field].compare_amounts(record[name], origin[name])
+                elif isinstance(record[name], BaseModel):
+                    return record[name]._origin != origin[name]
+                else:
+                    return record[name] != origin[name]
 
             # make result with new and existing records
             inv_names = {field.name for field in record._field_inverses[self]}
@@ -2865,7 +2873,7 @@ class _RelationalMulti(_Relational):
                         values = record._convert_to_write({
                             name: record[name]
                             for name in record._cache
-                            if name not in inv_names and get_origin(record[name]) != origin[name]
+                            if name not in inv_names and compare_with_cache(record, origin, name)
                         })
                         if values:
                             result.append((1, origin.id, values))
