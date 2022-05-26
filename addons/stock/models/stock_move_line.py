@@ -135,14 +135,14 @@ class StockMoveLine(models.Model):
 
             message = None
             if self.lot_name or self.lot_id:
-                move_lines_to_check = self._get_similar_move_lines() - self
+                move_lines_to_check = self._get_similar_move_lines() - self._origin
                 if self.lot_name:
                     counter = Counter([line.lot_name for line in move_lines_to_check])
-                    if counter.get(self.lot_name) and counter[self.lot_name] > 1:
+                    if counter.get(self.lot_name) and counter[self.lot_name] > 0:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                 elif self.lot_id:
                     counter = Counter([line.lot_id.id for line in move_lines_to_check])
-                    if counter.get(self.lot_id.id) and counter[self.lot_id.id] > 1:
+                    if counter.get(self.lot_id.id) and counter[self.lot_id.id] > 0:
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
 
             if message:
