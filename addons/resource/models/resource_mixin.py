@@ -171,7 +171,8 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
+        compute_leaves = self.env.context.get('compute_leaves', True)
+        intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resource, domain, compute_leaves=compute_leaves)[resource.id]
         result = defaultdict(float)
         for start, stop, meta in intervals:
             result[start.date()] += (stop - start).total_seconds() / 3600
