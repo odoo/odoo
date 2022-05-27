@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-import math
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -32,9 +31,8 @@ class SaleOrderLine(models.Model):
           is removed from the list.
         - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
-        global_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
-            precision = min(math.ceil(abs(math.log10(line.product_uom.rounding or 1))), global_precision)
             if line.state not in ('sale', 'done'):
                 line.invoice_status = 'no'
             elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:
@@ -87,10 +85,15 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             if line.order_id.state in ['sale', 'done']:
+                rounding = line.product_uom.rounding or 1
                 if line.product_id.invoice_policy == 'order':
-                    line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                    line.qty_to_invoice = float_round(
+                        line.product_uom_qty, precision_rounding=rounding, rounding_method='UP'
+                    ) - line.qty_invoiced
                 else:
-                    line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
+                    line.qty_to_invoice = float_round(
+                        line.qty_delivered, precision_rounding=rounding, rounding_method='UP'
+                    ) - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
 

@@ -4,7 +4,6 @@
 from datetime import datetime, timedelta
 from itertools import groupby
 import json
-import math
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -691,10 +690,9 @@ class SaleOrder(models.Model):
         down_payment_line_ids = []
         invoiceable_line_ids = []
         pending_section = None
-        global_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         for line in self.order_line:
-            precision = min(math.ceil(abs(math.log10(line.product_uom.rounding or 1))), global_precision)
             if line.display_type == 'line_section':
                 # Only invoice the section if one of its lines is invoiceable
                 pending_section = line
