@@ -619,11 +619,13 @@ export const getTabableElements = (container = document.body) => {
 export const getNextTabableElement = (container = document.body) => {
     const tabableElements = getTabableElements(container);
     const index = tabableElements.indexOf(document.activeElement);
-    return index === -1 ? null : tabableElements[index + 1] || null;
+    return index === -1 ? tabableElements[0] : tabableElements[index + 1] || null;
 };
 
 export const getPreviousTabableElement = (container = document.body) => {
     const tabableElements = getTabableElements(container);
     const index = tabableElements.indexOf(document.activeElement);
-    return index === -1 ? null : tabableElements[index - 1] || null;
+    return index === -1
+        ? tabableElements[tabableElements.length - 1]
+        : tabableElements[index - 1] || null;
 };
