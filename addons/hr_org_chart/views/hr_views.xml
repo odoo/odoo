@@ -6,9 +6,11 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <div id="o_work_employee_main" position="after">
-                <div id="o_employee_right">
-                    <h4 class="o_org_chart_title mb16 mt0">Organization Chart</h4>
-                    <field name="child_ids" widget="hr_org_chart" readonly="1"/>
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
+                    <group>
+                        <div class="o_horizontal_separator o_org_chart_title" colspan="2">Organization Chart</div>
+                        <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                    </group>
                 </div>
             </div>
         </field>
@@ -20,9 +22,11 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='o_work_employee_main']" position="after">
-                <div id="o_employee_right">
-                    <h4 class="o_org_chart_title mb16 mt0">Organization Chart</h4>
-                    <field name="child_ids" widget="hr_org_chart" readonly="1"/>
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <group>
+                        <div class="o_horizontal_separator o_org_chart_title" colspan="2">Organization Chart</div>
+                        <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                    </group>
                 </div>
             </xpath>
         </field>
@@ -34,10 +38,12 @@
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
             <div id="o_work_employee_main" position="after">
-                <div id="o_employee_right">
-                    <field name="employee_ids" invisible="1"/>
-                    <h4 class="o_org_chart_title mb16 mt0">Organization Chart</h4>
-                    <field name="child_ids" widget="hr_org_chart"/>
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <group>
+                        <field name="employee_ids" invisible="1"/>
+                        <div class="o_horizontal_separator o_org_chart_title">Organization Chart</div>
+                        <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                    </group>
                 </div>
             </div>
         </field>

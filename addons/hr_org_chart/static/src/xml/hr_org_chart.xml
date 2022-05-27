@@ -2,48 +2,58 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="hr_org_chart_employee">
-    <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} d-flex">
-        <t t-set="is_self" t-value="employee.id == view_employee_id"/>
+    <t t-set="is_self" t-value="employee.id == view_employee_id"/>
 
-        <div class="o_media_left">
-            <!-- NOTE: Since by the default on not squared images odoo add white borders,
-                use bg-images to get a clean and centred images -->
-            <a t-if="! is_self"
-                class="o_media_object rounded-circle o_employee_redirect"
-                t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"
-                t-att-alt="employee.name"
-                t-att-data-employee-id="employee.id"
-                t-att-href="employee.link"/>
-            <div t-if="is_self"
-                class="o_media_object rounded-circle"
-                t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
+    <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
+        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} d-flex position-relative py-2 overflow-visible #{managers.length &gt; 0 ? 'o_treeEntry' : ''}">
+            <t t-call="hr_org_chart_employee_content"/>
         </div>
+    </section>
 
-        <div class="flex-grow-1">
-            <span
-                    t-if="employee.indirect_sub_count &gt; 0"
-                    class="badge rounded-pill"
-                    tabindex="0"
-                    data-trigger="focus"
-                    t-att-data-emp-name="employee.name"
-                    t-att-data-emp-id="employee.id"
-                    t-att-data-emp-dir-subs="employee.direct_sub_count"
-                    t-att-data-emp-ind-subs="employee.indirect_sub_count"
-                    data-bs-toggle="popover">
-                <t t-esc="employee.indirect_sub_count"/>
-            </span>
+    <div t-else="" t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} o_treeEntry d-flex position-relative py-2 overflow-visible">
+        <t t-call="hr_org_chart_employee_content"/>
+    </div>
+</t>
 
-            <t t-if="!is_self">
-                <a t-att-href="employee.link" class="o_employee_redirect" t-att-data-employee-id="employee.id">
-                    <h5 class="o_media_heading"><b><t t-esc="employee.name"/></b></h5>
-                    <strong><t t-esc="employee.job_title"/></strong>
-                </a>
-            </t>
-            <t t-if="is_self">
-                <h5 class="o_media_heading"><b><t t-esc="employee.name"/></b></h5>
-                <strong><t t-esc="employee.job_title"/></strong>
-            </t>
+<t t-name="hr_org_chart_employee_content">
+    <div class="o_media_left position-relative">
+        <!-- NOTE: Since by the default on not squared images odoo add white borders,
+            use bg-images to get a clean and centred images -->
+        <a t-if="! is_self"
+            class="o_media_object d-block rounded-circle o_employee_redirect"
+            t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"
+            t-att-alt="employee.name"
+            t-att-data-employee-id="employee.id"
+            t-att-href="employee.link"/>
+        <div t-if="is_self"
+            class="o_media_object d-block rounded-circle border border-info"
+            t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
+    </div>
+
+    <div class="d-flex flex-grow-1 align-items-start justify-content-between position-relative px-3">
+        <a t-if="!is_self" t-att-href="employee.link" class="o_employee_redirect d-flex flex-column" t-att-data-employee-id="employee.id">
+            <b class="o_media_heading m-0 fs-6" t-esc="employee.name"/>
+            <small class="text-muted font-weight-bold" t-esc="employee.job_title"/>
+        </a>
+        <div t-if="is_self" class="d-flex flex-column">
+            <h5 class="o_media_heading m-0" t-esc="employee.name"/>
+            <small class="text-muted font-weight-bold" t-esc="employee.job_title"/>
         </div>
+        <button t-if="employee.indirect_sub_count &gt; 0"
+                class="btn p-0 fs-3"
+                tabindex="0"
+                t-att-data-emp-name="employee.name"
+                t-att-data-emp-id="employee.id"
+                t-att-data-emp-dir-subs="employee.direct_sub_count"
+                t-att-data-emp-ind-subs="employee.indirect_sub_count"
+                data-bs-trigger="focus"
+                data-bs-toggle="popover">
+            <a href="#"
+                t-attf-class="badge rounded-pill bg-white border {{employee.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }}"
+                t-esc="employee.indirect_sub_count"
+                />
+        </button>
+
     </div>
 </t>
 
@@ -56,17 +66,12 @@
         -->
     <t t-set="emp_count" t-value="0"/>
 
-    <div t-if='managers.length &gt; 0' class="o_org_chart_group_up">
-        <t t-if='managers_more'>
-            <div class="o_org_chart_entry o_org_chart_more d-flex">
-                <div class="o_media_left">
-                    <a class="text-center o_employee_more_managers"
-                            t-att-data-employee-id="managers[0].id">
-                        <i t-attf-class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
-                    </a>
-                </div>
-            </div>
-        </t>
+    <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
+        <div t-if='managers_more' class="o_org_chart_more pe-3">
+            <a href="#" t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-3">
+                <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
+            </a>
+        </div>
 
         <t t-foreach="managers" t-as="employee">
             <t t-set="emp_count" t-value="emp_count + 1"/>
@@ -89,7 +94,7 @@
         </div>
     </t>
 
-    <div t-if="children.length" class="o_org_chart_group_down">
+    <div t-if="children.length" t-attf-class="o_org_chart_group_down position-relative #{managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
         <t t-foreach="children" t-as="employee">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
@@ -100,12 +105,12 @@
         </t>
 
         <t t-if="(children.length + managers.length) &gt; 19">
-            <div class="o_org_chart_entry o_org_chart_more d-flex">
-                <div class="o_media_left">
+            <div class="o_org_chart_entry o_org_chart_more d-flex overflow-visible">
+                <div class="o_media_left position-relative">
                     <a href="#"
                         t-att-data-employee-id="self.id"
                         t-att-data-employee-name="self.name"
-                        class="o_org_chart_show_more text-center o_employee_sub_redirect">See All</a>
+                        class="o_org_chart_show_more o_employee_sub_redirect btn btn-link ps-2">See All</a>
                 </div>
             </div>
         </t>
@@ -117,19 +122,19 @@
 </t>
 
 <t t-name="hr_orgchart_emp_popover_content">
-    <table class="table table-sm">
-        <thead>
-            <td class="text-end"><t t-esc="employee.direct_sub_count"/></td>
-            <td>
-                <a href="#" class="o_employee_sub_redirect" data-type='direct'
-                        t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
-                    <b>Direct subordinates</b></a>
-            </td>
-        </thead>
+    <table class="table table-sm table-borderless mb-0">
         <tbody>
             <tr>
+                <td class="text-end"><b t-esc="employee.direct_sub_count"/></td>
+                <td>
+                    <a href="#" class="o_employee_sub_redirect" data-type='direct'
+                            t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">
+                        <b>Direct subordinates</b></a>
+                </td>
+            </tr>
+            <tr>
                 <td class="text-end">
-                    <t t-esc="employee.indirect_sub_count - employee.direct_sub_count"/>
+                    <b t-esc="employee.indirect_sub_count - employee.direct_sub_count"/>
                 </td>
                 <td>
                     <a href="#" class="o_employee_sub_redirect" data-type='indirect'
@@ -138,7 +143,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="text-end"><t t-esc="employee.indirect_sub_count"/></td>
+                <td class="text-end"><b t-esc="employee.indirect_sub_count"/></td>
                 <td>
                     <a href="#" class="o_employee_sub_redirect" data-type='total'
                             t-att-data-employee-name="employee.name" t-att-data-employee-id="employee.id">

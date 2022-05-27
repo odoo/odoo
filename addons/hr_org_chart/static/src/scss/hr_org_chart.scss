@@ -1,296 +1,56 @@
-// MOBILE LAYOUT CUSTOMIZATIONS
-@include media-breakpoint-down(md) {
-    #o_employee_right {
-        .o_org_chart_title {
-            font-size: 20px;
-            padding: 5px 0;
-            border-bottom: 1px solid $o-hr-org-chart-border-color;
-        }
-    }
-}
-
-// SMALL DESKTOP LAYOUT
-@include media-breakpoint-up(md) {
-    #o_work_employee_container {
-        display: flex;
-        width: 100%;
-    }
-    #o_work_employee_main {
-        flex: 1 1 60%;
-    }
-    #o_employee_right {
-        flex: 0 1 35%;
-        margin-left: 2%;
-        padding-left: 2%;
-        border-left: 1px solid $o-hr-org-chart-border-color;
-
-        .o_org_chart_title {
-            color: map-get($grays, '600')
-        }
-    }
-}
-
-// MEDIUM DESKTOP LAYOUT
-@include media-breakpoint-up(lg) {
-    #o_employee_right {
-        flex: 0 1 33%;
-    }
-}
-
-// LARGE DESKTOP LAYOUT
-@include media-breakpoint-up(xl) {
-    #o_employee_right {
-        flex: 0 1 30%;
-    }
-}
 
 #o_employee_right {
-    $tmp-gap-base: $o-hr-org-chart-entry-pic-size*0.7;
-
-    // ORGANIGRAM LINES
-    .o_field_widget, .o_org_chart_group_up, .o_org_chart_group_down {
-        position: relative;
-        width: 100%;
+    @include media-breakpoint-up(lg) {
+        border-left: $border-width solid $o-form-separator-color;
     }
 
-    .o_org_chart_group_up {
-        &:before {
-            @include o-hr-org-chart-line;
-            border-left-width: $o-hr-org-chart-entry-line-w;
-            height: calc(100% + #{$o-hr-org-chart-entry-pic-size*0.5}) ;
-            @include o-position-absolute(
-                $top: $o-hr-org-chart-entry-pic-size*0.1 + 5px,
-                $left: $o-hr-org-chart-entry-pic-size*0.5 - $o-hr-org-chart-entry-line-w*0.5
-            );
-        }
-        .o_org_chart_entry:last-of-type {
-            &:before {
-                @include o-hr-org-chart-line;
-                border-width: 0 0 $o-hr-org-chart-entry-line-w $o-hr-org-chart-entry-line-w;
-                width: ($o-hr-org-chart-entry-pic-size*0.5) - ($o-hr-org-chart-entry-v-gap*2);
-                height: $o-hr-org-chart-entry-pic-size*0.5 + $o-hr-org-chart-entry-v-gap*2 ;
-                @include o-position-absolute(
-                    $left: $o-hr-org-chart-entry-pic-size*0.5 - $o-hr-org-chart-entry-line-w*0.5,
-                    $top: 100%
-                );
-            }
-        }
-    }
-
-    .o_org_chart_group_up + .o_org_chart_entry_self {
-        margin-left: $tmp-gap-base;
-
-        & + .o_org_chart_group_down {
-            padding-left: $tmp-gap-base*2;
-
-            &:before {
-                margin-left: $tmp-gap-base;
-            }
-        }
-    }
-
-    .o_org_chart_group_down {
-        padding-left: $tmp-gap-base;
-
-        &:before {
-            @include o-hr-org-chart-line;
-            border-left-width: $o-hr-org-chart-entry-line-w;
-            height: 100%;
-            @include o-position-absolute(
-                $top: $o-hr-org-chart-entry-v-gap*-1,
-                $left: $tmp-gap-base*0.5 + $o-hr-org-chart-entry-pic-size*0.1 + $o-hr-org-chart-entry-line-w*0.5
-            );
-        }
-
-        .o_org_chart_entry {
-            &:before {
-                @include o-hr-org-chart-line;
-                border-top-width:  $o-hr-org-chart-entry-line-w;
-                width: $tmp-gap-base;
-                height: 0;
-                @include o-position-absolute(
-                    $left: $tmp-gap-base*-0.5 + $o-hr-org-chart-entry-pic-size*0.1 + $o-hr-org-chart-entry-line-w*0.5,
-                    $top: $o-hr-org-chart-entry-pic-size*0.5
-                );
-            }
-
-            &:last-of-type {
-                &:before {
-                    height: 50%;
-                }
-
-            }
-
-            &.o_org_chart_more {
-                margin-top: $o-hr-org-chart-entry-v-gap;
-
-                &:before {
-                    top: 15px;
-                }
-            }
-        }
-    }
-
-    // ORGANIGRAM DESIGN
     .o_org_chart_entry {
-        margin-bottom: $o-hr-org-chart-entry-v-gap;
-        overflow: visible;
-        margin-top: 0;
-
-        &, .o_media_left, .flex-grow-1 {
-            position: relative;
-        }
-
-        .o_media_left {
-            padding-right: 10px;
-        }
-
-        .flex-grow-1 {
-            vertical-align: middle;
-
-            .badge {
-                float: right;
-                cursor: pointer;
-                margin-right: 5px;
-                color: map-get($grays, '600');
-                background: $o-hr-org-chart-bg;
-                border: 1px solid map-get($grays, '600');
-                &:hover {
-                    color: $o-brand-primary;
-                    border-color: $o-brand-primary;
-                }
-                &:focus {
-                    outline: none;
-                }
-            }
-
-            strong {
-                display: block;
-                line-height: 1.2;
-                font-size: 11px;
-                color: lighten(map-get($grays, '600'), 15%);
-            }
-        }
-
         .o_media_object {
-            display: block;
-            width: $o-hr-org-chart-entry-pic-size*0.8;
-            height: $o-hr-org-chart-entry-pic-size*0.8;
-            margin: $o-hr-org-chart-entry-pic-size*0.1;
-            box-shadow: 0 0 0 $o-hr-org-chart-entry-line-w darken($o-hr-org-chart-bg, 20%);
+            width: $o-hr-org-chart-entry-pic-small-size;
+            height: $o-hr-org-chart-entry-pic-small-size;
             background-size: cover;
             background-position: center center;
-            background-color: $o-view-background-color;
-
-            &.card {
-                height: 20px;
-                box-shadow: none;
-                border-color: transparent;
-                padding: 0;
-                position: relative;
-                color: $body-color;
-
-                .o_org_chart_show_more {
-                    line-height: 13px;
-                }
-
-                &:hover {
-                    border-color: $o-hr-org-chart-entry-border-color;
-                    color:$o-brand-primary;
-                }
-            }
         }
 
-        &.o_org_chart_entry_manager, &.o_org_chart_entry_sub {
-            .o_media_left {
-                padding-right: 0;
-            }
-            .flex-grow-1 > a {
-                padding-left: 10px;
-                max-width: 100%;
-                display: block;
-
-                .o_media_heading {
-                    color: lighten(map-get($grays, '600'), 5%);
-                    font-size: 13px;
-                }
-            }
-
-            &:hover {
-                .o_media_object {
-                    box-shadow: 0 0 0 $o-hr-org-chart-entry-line-w*2 rgba($o-brand-primary, 0.6);
-                }
-                .flex-grow-1 > a {
-                    .o_media_heading {
-                        color: $o-brand-primary;
-                    }
-                    strong {
-                        color: lighten(map-get($grays, '600'), 5%);
-                    }
-                }
-            }
+        &.o_org_chart_entry_self .o_media_object {
+            width: $o-hr-org-chart-entry-pic-size;
+            height: $o-hr-org-chart-entry-pic-size;
         }
 
-        &.o_org_chart_entry_self {
-            &:not(:first-child) {
-                margin-top: $o-hr-org-chart-entry-v-gap*1.5;
-            }
-
-            strong {
-                color: $text-muted;
-            }
-
-            .o_media_object {
-                width: $o-hr-org-chart-entry-pic-size;
-                height: $o-hr-org-chart-entry-pic-size;
-                margin: 0;
-                border: $o-hr-org-chart-entry-line-w*2 solid $o-brand-primary;
-                box-shadow: inset 0 0 0 $o-hr-org-chart-entry-line-w*2 white;
-            }
-
-            .flex-grow-1 {
-                opacity: 1;
-            }
+        &:not(.o_org_chart_entry_self):hover .o_media_object {
+            box-shadow: 0 0 0 $border-width*2 $info;
         }
     }
-}
 
-// POP OVER
-.o_org_chart_popup.popover {
-    min-width: 200px;
-    max-width: 400px;
-    margin-right: 5px;
-
-    .popover-header {
-        height: 47px;
-
-        > a {
-            @include o-position-absolute($right: 14px);
-        }
-
-        span {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-            border-radius: 100%;
-            background-position: center;
-            background-size: cover;
-            float: left;
-            box-shadow: 0 1px 1px;
-        }
+    .o_org_chart_entry_self_container.o_org_chart_has_managers {
+        margin-left: $o-hr-org-chart-entry-pic-small-size * .25;
     }
-    .table {
-        margin-bottom: 0;
+
+    .o_org_chart_group_down.o_org_chart_has_managers {
+        padding-left: $o-hr-org-chart-entry-pic-size * .6;
+    }
+
+    // ORGANIGRAM LINES
+    .o_org_chart_group_up .o_treeEntry {
+        --treeEntry-padding-h: 0px;
+        --treeEntry--before-top: 50%;
+        --treeEntry--after-display: none;
+        --treeEntry--beforeAfter-left: #{$o-hr-org-chart-entry-pic-small-size * .5};
+    }
+
+    .o_org_chart_entry_self_container .o_treeEntry {
+        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-small-size * .5};
+        --treeEntry-padding-v: #{$o-hr-org-chart-entry-pic-size * .25};
+    }
+
+    .o_org_chart_group_down .o_treeEntry {
+        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-size};
+        --treeEntry-padding-v: #{$o-hr-org-chart-entry-pic-small-size * .5};
     }
 }
 
 // Right to Left specific style to flip the popover arrow
-.o_rtl {
-    .o_org_chart_popup.popover .arrow {
-        left: 100%;
-        -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
-        -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
-        -o-transform: matrix(-1, 0, 0, 1, 0, 0);
-        transform: matrix(-1, 0, 0, 1, 0, 0);
-    }
+.o_rtl .o_org_chart_popup.popover .arrow {
+    left: 100%;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
 }
