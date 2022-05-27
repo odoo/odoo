@@ -292,6 +292,10 @@ class SaleOrder(models.Model):
         string='Has Pricelist Changed',
         help="Technical Field, True if the pricelist was changed;\n"
              " this will then display a recomputation button")
+    show_update_fpos = fields.Boolean(
+        string="Has Fiscal Position Changed", store=False,
+        help="Technical Field, True if the fiscal position was changed;\n"
+             " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
@@ -584,6 +588,25 @@ class SaleOrder(models.Model):
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
         self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
+
+    @api.onchange('fiscal_position_id')
+    def _onchange_fpos_id_show_update_fpos(self):
+        if self.order_line and (
+            not self.fiscal_position_id
+            or (self.fiscal_position_id and self._origin.fiscal_position_id != self.fiscal_position_id)
+        ):
+            self.show_update_fpos = True
+
+    def action_update_taxes(self):
+        self.ensure_one()
+        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute._compute_tax_id()
+        self.show_update_fpos = False
+        if self.partner_id and self.id:
+            self.message_post(body=_(
+                "Product taxes have been recomputed according to fiscal position <b>%s<b>.",
+                self.fiscal_position_id.display_name,
+            ))
 
     @api.model_create_multi
     def create(self, vals_list):
