@@ -133,7 +133,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2'}"/>
+                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </page>
                     </notebook>
@@ -245,6 +245,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" string="Product Name"/>
@@ -287,7 +288,7 @@
                             </group>
                             <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1"
-                                    context="{'tree_view_ref':'product.product_packaging_tree_view2'}"/>
+                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </group>
                         <group>
