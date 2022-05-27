@@ -1548,6 +1548,10 @@ class AccountMove(models.Model):
         ''', [tuple(moves.ids)])
         duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
         if duplicated_moves:
+            posted_move = duplicated_moves.filtered(lambda r: r.name != '/')
+            amount_total = sum(posted_move.mapped('amount_total')) + self.amount_total
+            if amount_total <= duplicated_moves.reversed_entry_id.amount_total:
+                return
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
                 duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {'ref': m.ref, 'partner': m.partner_id.display_name, 'date': format_date(self.env, m.date)})
             ))
