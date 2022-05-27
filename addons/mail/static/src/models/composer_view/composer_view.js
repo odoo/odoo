@@ -34,6 +34,7 @@ function factory(dependencies) {
          */
          _created() {
             this.onClickCancelLink = this.onClickCancelLink.bind(this);
+            this.onClickReplyingToMessage = this.onClickReplyingToMessage.bind(this);
             this.onClickSaveLink = this.onClickSaveLink.bind(this);
             this.onClickStopReplying = this.onClickStopReplying.bind(this);
         }
@@ -184,6 +185,16 @@ function factory(dependencies) {
             this.discard();
         }
 
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+         onClickReplyingToMessage(ev) {
+            if (!this.threadView || !this.threadView.replyingToMessageView) {
+                return;
+            }
+            this.threadView.addComponentHint('highlight-reply', this.threadView.replyingToMessageView);
+        }
 
         /**
          * Handles click on the save link.
