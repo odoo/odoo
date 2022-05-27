@@ -383,6 +383,8 @@ class AccountReconcileModel(models.Model):
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
                     tax = tax[0].with_context(force_price_include=True)
+                    if self._context.get('show_force_tax_included'):
+                        writeoff_line['force_tax_included'] = True
                 tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
                 lines_vals_list += tax_vals_list
                 if not line.force_tax_included:
