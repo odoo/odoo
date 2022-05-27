@@ -32,7 +32,7 @@ class Mailing(models.Model):
     # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
     sms_subject = fields.Char('Title', help='For an email, the subject your recipients will see in their inbox.\n'
                               'For an SMS, the internal title of the message.',
-                              related='subject', translate=True, readonly=False)
+                              related='subject', translate=False, readonly=False)
     # sms options
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
