@@ -226,6 +226,13 @@ registerModel({
             this.openFullComposer();
         },
         /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        onClickReplyingToMessage(ev) {
+            this.threadView.replyingToMessageView.update({ doHighlight: true });
+        },
+        /**
          * Handles click on the save link.
          *
          * @param {MouseEvent} ev
