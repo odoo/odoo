@@ -192,6 +192,10 @@ class SaleOrder(models.Model):
         digits=(12, 6),
         store=True, precompute=True,
         help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+    show_update_fpos = fields.Boolean(
+        string="Has Fiscal Position Changed", store=False,
+        help="Technical Field, True if the fiscal position was changed;\n"
+             " this will then display a recomputation button")
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed",
         help="Technical Field, True if the pricelist was changed;\n"
@@ -624,6 +628,14 @@ class SaleOrder(models.Model):
                 updated_credit = order.partner_id.credit + (order.amount_total * order.currency_rate)
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(order, updated_credit)
 
+    @api.onchange('fiscal_position_id')
+    def _onchange_fpos_id_show_update_fpos(self):
+        if self.order_line and (
+            not self.fiscal_position_id
+            or (self.fiscal_position_id and self._origin.fiscal_position_id != self.fiscal_position_id)
+        ):
+            self.show_update_fpos = True
+
     @api.onchange('partner_id')
     def _onchange_partner_id_warning(self):
         if not self.partner_id:
@@ -855,6 +867,17 @@ class SaleOrder(models.Model):
         if self.env.context.get('disable_cancel_warning'):
             return False
         return any(so.state != 'draft' for so in self)
+
+    def action_update_taxes(self):
+        self.ensure_one()
+        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute._compute_tax_id()
+        self.show_update_fpos = False
+        if self.partner_id and self.id:
+            self.message_post(body=_(
+                "Product taxes have been recomputed according to fiscal position %s.",
+                self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
+            ))
 
     def update_prices(self):
         self.ensure_one()
