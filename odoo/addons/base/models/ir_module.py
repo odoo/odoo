@@ -909,7 +909,7 @@ class Module(models.Model):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
         self._cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
                          (list(auto_install_requirements or ()), self.id))
-        self.env['ir.module.module.dependency'].invalidate_model()
+        self.env['ir.module.module.dependency'].invalidate_model(['auto_install_required'])
         self.invalidate_recordset(['dependencies_id'])
 
     def _update_exclusions(self, excludes=None):
@@ -920,7 +920,6 @@ class Module(models.Model):
             self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
         for name in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
-        self.env['ir.module.module.exclusion'].invalidate_model()
         self.invalidate_recordset(['exclusion_ids'])
 
     def _update_category(self, category='Uncategorized'):
