@@ -446,6 +446,89 @@ class AccountReconcileModel(models.Model):
 
         return lines_vals_list
 
+<<<<<<< HEAD
+=======
+    def _prepare_reconciliation(self, st_line, aml_ids=[], partner=None):
+        ''' Prepare the reconciliation of the statement line with some counterpart line but
+        also with some auto-generated write-off lines.
+
+        The complexity of this method comes from the fact the reconciliation will be soft meaning
+        it will be done only if the reconciliation will not trigger an error.
+        For example, the reconciliation will be skipped if we need to create an open balance but we
+        don't have a partner to get the receivable/payable account.
+
+        This method works in two major steps. First, simulate the reconciliation of the account.move.line.
+        Then, add some write-off lines depending the rule's fields.
+
+        :param st_line: An account.bank.statement.line record.
+        :param aml_ids: The ids of some account.move.line to reconcile.
+        :param partner: An optional res.partner record. If not specified, fallback on the statement line's partner.
+        :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
+        '''
+        self.ensure_one()
+        liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
+
+        if st_line.to_check:
+            st_line_residual = -liquidity_lines.balance
+        elif suspense_lines.account_id.reconcile:
+            st_line_residual = sum(suspense_lines.mapped('amount_residual'))
+        else:
+            st_line_residual = sum(suspense_lines.mapped('balance'))
+
+        partner = partner or st_line.partner_id
+
+        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+
+        lines_vals_list = []
+        amls = self.env['account.move.line'].browse(aml_ids)
+        st_line_residual_before = st_line_residual
+        aml_total_residual = 0
+        for aml in amls:
+            aml_total_residual += aml.amount_residual
+
+            if aml.balance * st_line_residual > 0:
+                # Meaning they have the same signs, so they can't be reconciled together
+                assigned_balance = -aml.amount_residual
+            elif has_full_write_off:
+                assigned_balance = -aml.amount_residual
+                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
+            else:
+                assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                st_line_residual -= assigned_balance
+
+            lines_vals_list.append({
+                'id': aml.id,
+                'balance': assigned_balance,
+                'currency_id': st_line.move_id.company_id.currency_id.id,
+            })
+
+        write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
+
+        reconciliation_overview, open_balance_vals = st_line._prepare_reconciliation(lines_vals_list)
+
+        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, write_off_amount)
+
+        for line_vals in writeoff_vals_list:
+            st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
+
+        # Check we have enough information to create an open balance.
+        if open_balance_vals and not open_balance_vals.get('account_id'):
+            return []
+
+        return lines_vals_list + writeoff_vals_list
+
+    def _prepare_widget_writeoff_vals(self, st_line_id, write_off_vals):
+        counterpart_vals = st_line_id._prepare_counterpart_move_line_vals({
+                **write_off_vals,
+                'currency_id': st_line_id.company_id.currency_id.id,
+            })
+        return {
+            **counterpart_vals,
+            'balance': counterpart_vals['amount_currency'],
+            'reconcile_model_id': self.id,
+        }
+
+>>>>>>> 49dd3f63842... temp
     ####################################################
     # RECONCILIATION CRITERIA
     ####################################################
