@@ -18,15 +18,6 @@ tour.register('sale_signature', {
         trigger: 'a:contains("Sign")',
     },
     {
-        content: "check submit is disabled",
-        trigger: '.o_portal_sign_submit:disabled',
-        run: function () {},
-    },
-    {
-        content: "click Auto",
-        trigger: '.o_web_sign_auto_button',
-    },
-    {
         content: "check submit is enabled",
         trigger: '.o_portal_sign_submit:enabled',
         run: function () {},
