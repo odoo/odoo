@@ -37,6 +37,19 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
+        onMouseleave(ev) {
+            if (ev.relatedTarget && ev.relatedTarget.closest('.o_RtcController_popover')) {
+                // the overlay should not be hidden when the cursor leaves to enter the controller popover
+                return;
+            }
+            if (!this.exists()) {
+                return;
+            }
+            this.update({ showOverlay: false });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
         onMouseMove(ev) {
             if (!this.exists()) {
                 return;
