@@ -3,7 +3,7 @@
 
 <t t-name="mail.RtcCallViewer" owl="1">
     <t t-if="rtcCallViewer">
-        <div class="o_RtcCallViewer d-flex flex-column align-items-center justify-content-center bg-dark" t-att-class="{'o-fullScreen fixed-top vw-100 vh-100': rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer.isMinimized, 'h-50': !rtcCallViewer.isMinimized and !rtcCallViewer.isFullScreen, 'position-relative': !rtcCallViewer.isFullScreen }" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_RtcCallViewer d-flex flex-column align-items-center justify-content-center bg-dark" t-att-class="{'o-fullScreen fixed-top vw-100 vh-100': rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer.isMinimized, 'h-50': !rtcCallViewer.isMinimized and !rtcCallViewer.isFullScreen, 'position-relative': !rtcCallViewer.isFullScreen }" t-attf-class="{{ className }}" t-on-mouseleave="rtcCallViewer.onMouseleave" t-ref="root">
             <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
             <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
 
