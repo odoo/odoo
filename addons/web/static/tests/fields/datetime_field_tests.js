@@ -378,37 +378,6 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skipWOWL(
-        "DatetimeField not visible in form view should not capture the focus on keyboard navigation",
-        async function (assert) {
-            assert.expect(1);
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
-                    <form>
-                        <field name="txt" />
-                        <field name="datetime" invisible="1" />
-                    </form>
-                `,
-            });
-
-            await click(target, ".o_form_button_edit");
-
-            await triggerEvent(target, ".o_field_widget[name='txt'] textarea", "keydown", {
-                key: "Tab",
-            });
-            assert.strictEqual(
-                document.activeElement,
-                target.querySelector(".o_form_button_save"),
-                "the save button should be selected, because the datepicker did not capture the focus"
-            );
-        }
-    );
-
     QUnit.test("DatetimeField with datetime formatted without second", async function (assert) {
         assert.expect(2);
 
