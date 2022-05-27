@@ -1238,7 +1238,7 @@ var MockServer = Class.extend({
         }
         var records = this.data[model].records;
         var names = _.map(ids, function (id) {
-            return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, "False"];
+            return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, ""];
         });
         return names;
     },

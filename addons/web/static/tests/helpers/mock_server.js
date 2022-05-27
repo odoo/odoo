@@ -590,7 +590,7 @@ export class MockServer {
         }
         var records = this.models[model].records;
         var names = ids.map((id) =>
-            id ? [id, records.find((r) => r.id === id).display_name] : [null, "False"]
+            id ? [id, records.find((r) => r.id === id).display_name] : [null, ""]
         );
         return names;
     }

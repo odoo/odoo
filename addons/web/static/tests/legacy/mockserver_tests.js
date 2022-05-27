@@ -181,7 +181,31 @@ QUnit.module("MockServer", {
             args: [[undefined, 1]],
             kwargs: {},
         });
-        assert.deepEqual(result, [[null, "False"], [1, "Jean-Michel"]]);
+        assert.deepEqual(result, [[null, ""], [1, "Jean-Michel"]]);
+    });
+
+    QUnit.test("performRpc: name_get with single id 0", async function (assert) {
+        assert.expect(1);
+        const server = new MockServer(this.data, {});
+        const result = await server.performRpc("", {
+            model: "res.partner",
+            method: "name_get",
+            args: [0],
+            kwargs: {},
+        });
+        assert.deepEqual(result, []);
+    });
+
+    QUnit.test("performRpc: name_get with array of id 0", async function (assert) {
+        assert.expect(1);
+        const server = new MockServer(this.data, {});
+        const result = await server.performRpc("", {
+            model: "res.partner",
+            method: "name_get",
+            args: [[0]],
+            kwargs: {},
+        });
+        assert.deepEqual(result, [[null, ""]]);
     });
 
     QUnit.test("performRpc: search with active_test=false", async function (assert) {
