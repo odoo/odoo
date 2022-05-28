@@ -764,6 +764,7 @@ msgid "Add Milestone"
 msgstr "Voeg milestone toe"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Voeg een omschrijving toe..."
@@ -940,6 +941,7 @@ msgstr "Gearchiveerde projecten"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1884,6 +1886,13 @@ msgstr "Bijv.: Productlancering"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
 msgstr "Wijzigen"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_kanban.js:0
+#, python-format
+msgid "Edit Personal Stage"
+msgstr "Bewerk persoonlijke fase"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4597,6 +4606,7 @@ msgstr "Taak herhaling"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
+#: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
@@ -5432,6 +5442,16 @@ msgstr "Je bent toegewezen aan de"
 #, python-format
 msgid "You have not write access of %s field."
 msgstr "Je hebt geen schrijftoegang tot het veld %s."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"You should at least have one personal stage. Create a new stage to which the"
+" tasks can be transferred after this one is deleted."
+msgstr ""
+"Je moet op zijn minst één persoonlijke fase hebben. Maak een nieuwe fase aan"
+" waarnaar de taken kunnen worden overgedragen nadat deze is verwijderd."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

@@ -212,7 +212,7 @@ msgstr ""
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看<strong t-out=\"object.name or ''\">树木</strong></a>\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">视图<strong t-out=\"object.name or ''\">树木</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
 "                            <br/>\n"
@@ -262,7 +262,7 @@ msgstr ""
 "                        </div>\n"
 "                        </t>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
-"                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">查看内容</a>\n"
+"                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">视图内容</a>\n"
 "                        </div>\n"
 "                        享受这一独家内容吧!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -5305,7 +5305,7 @@ msgstr "视频"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "View"
-msgstr "查看"
+msgstr "视图"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5331,7 +5331,7 @@ msgstr "视图"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_card
 msgid "Views •"
-msgstr "查看 •"
+msgstr "视图 •"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
@@ -5616,7 +5616,7 @@ msgstr "如果您不是其成员，则无法将幻灯片标记为已完成。"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
-msgstr "如果您不是其成员之一，则无法将幻灯片标记为已查看。"
+msgstr "如果您不是其成员之一，则无法将幻灯片标记为已视图。"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0

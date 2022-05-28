@@ -17,6 +17,8 @@
 # Harcogourmet, 2022
 # Jonatan Gk, 2022
 # marcescu, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# eriiikgt, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: eriiikgt, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,14 +52,14 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
-"%(base)s amb un %(dis counts) %%%% descompte i %(surgators) extra\n"
-"Exemple: %(amount) s * %(dis count_ a carregar) s +%(Equate_ surcarry) s 2880%(total_ amount) ss"
+"%(base)s amb un %(discount)s %% descompte i %(surcharge)s tarifa extra\n"
+"Exemple: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr "%(Percentatge) %%% descompte i %( Price) subcarregacions surant"
+msgstr "%(percentage)s %% descompte i %(price)s recàrrec"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -180,7 +182,7 @@ msgstr "<span class=\"o_stat_text\"> Productes</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr "<span classe=\" o_stat_ text \"> ProductesReted </ span>"
+msgstr "<span class=\"o_stat_text\">Productes relacionats</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -190,9 +192,7 @@ msgstr "<span>%</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
-"<span> Tots els arranjaments generals sobre aquest producte s'han gestionat "
-"a </sppans>"
+msgstr "<span>Tota la configuració d'aquest producte es gestiona a</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -202,7 +202,8 @@ msgstr "<strong>Quantitat: </strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<strong>Sales Order Line Quantities (price per unit)</strong>"
-msgstr "< 4.>Sales Línia d' ordenació (valor per unitat) </ strong>"
+msgstr ""
+"<strong>Quantitats de línia de comanda de vendes (preu per unitat)</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -210,8 +211,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                    here to set up the feature."
 msgstr ""
-"< strong> desa </ strong> aquesta pàgina i torna\n"
-"                                    Aquí s' ha d' arranjar la característica."
+"<strong>GuardaS</strong> aquesta pàgina i torna\n"
+"                                    aquí per configurar la funció."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -797,7 +798,7 @@ msgstr "Creat el"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
 msgid "Cubic Feet"
-msgstr "Cúbic FeetCity name (optional, probably does not need a translation)"
+msgstr "Peus cúbics"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
@@ -850,7 +851,7 @@ msgstr "Precisió decimals"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %(currency)s pricelist"
-msgstr "Llista de preus per omissió %(curència)"
+msgstr "Llista de preus %(currency)s per defecte"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1016,7 +1017,7 @@ msgstr "Durada"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr "DymoCity name (optional, probably does not need a translation)"
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1056,7 +1057,7 @@ msgstr ""
 #: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr "ErgonomicCity name (optional, probably does not need a translation)"
+msgstr "Ergonòmic"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1077,7 +1078,7 @@ msgstr "Contingut extra"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Extra Fee"
-msgstr "Extra FeeCity name (optional, probably does not need a translation)"
+msgstr "Tarifa extra"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1154,9 +1155,7 @@ msgstr "Fórmula"
 #: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
-msgstr ""
-"Quatre persones DeskCity name (optional, probably does not need a "
-"translation)"
+msgstr "Escriptori per a quatre persones"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_03
@@ -1539,7 +1538,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Legs"
-msgstr "LeginsCity name (optional, probably does not need a translation)"
+msgstr "Cames"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
@@ -1838,7 +1837,7 @@ msgstr "Percentatge del preu"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "PilalsCity name (optional, probably does not need a translation)"
+msgstr "Pastilles"
 
 #. module: product
 #. openerp-web
@@ -2273,7 +2272,7 @@ msgstr "Cerca preu dels productes"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr "Productes:%(categories)"
+msgstr "Productes: %(category)s"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2315,7 +2314,7 @@ msgstr "Quantitat"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr "La quantitat ja està present (% d)."
+msgstr "Quantitat ja present (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2370,9 +2369,7 @@ msgstr "Usuari responsable"
 #: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr ""
-"Resaraurant ExpenesCity name (optional, probably does not need a "
-"translation)"
+msgstr "Despeses del restaurant"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2836,7 +2833,7 @@ msgstr "Tres Marter Sofa amb Lounger a Steel Grey Color"
 #: model:product.product,name:product.consu_delivery_01
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
-msgstr "3- marfaCity name (optional, probably does not need a translation)"
+msgstr "Sofà de tres places"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3028,17 +3025,17 @@ msgstr "Imatge Variat 1024Comment"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr "Imatge veiana 128Image/ info menu item (should be translated)"
+msgstr "Imatge variant 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr "Imatge infantil 256Image/ info menu item (should be translated)"
+msgstr "Imatge variant 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr "Imatge de Variat 512Image/ info menu item (should be translated)"
+msgstr "Imatge variant 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3054,7 +3051,7 @@ msgstr "Preu extra de les variants"
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr "Vendor de Veriatobject name (optional)"
+msgstr "Venedor de variants"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids

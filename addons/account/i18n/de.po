@@ -2090,6 +2090,8 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Für diese Rechnung wurden Berichtigungsbuchungen erstellt:<ul><li>%(link1)s Stornierung von {percent:f}%% des {amount}</li><li>%(link0)s durch Verschiebung auf {new_date}</li></ul>\n"
+"D"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2227,6 +2229,7 @@ msgid ""
 "All the account entries lines must be processed in order to validate the "
 "statement."
 msgstr ""
+"Alle Buchungszeilen müssen verarbeitet werden, um den Auszug zu validieren."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
@@ -3470,7 +3473,7 @@ msgstr "Übertragszeilen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Cash"
-msgstr "Kasse/Bank"
+msgstr "Bargeld"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4289,7 +4292,7 @@ msgstr "Eintrag erstellen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create Invoice"
-msgstr "Rechnung erzeugen"
+msgstr "Rechnung erstellen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4979,7 +4982,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
 msgid "Date Mode"
-msgstr ""
+msgstr "Datumsmodus"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -5398,7 +5401,7 @@ msgstr "Rabatt (%)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
-msgstr ""
+msgstr "Betrag anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -5521,7 +5524,7 @@ msgstr "Verteilung für Gutschriften"
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr ""
+msgstr "Verteilung von Rechnungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
@@ -7393,7 +7396,7 @@ msgstr "Vorschau Rechnung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
 msgid "Invoice Status"
-msgstr "Status Rechnung"
+msgstr "Rechnungsstatus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__invoice_tax_id
@@ -7806,6 +7809,9 @@ msgid ""
 "include one and only one receivable/payable account (with an exception of "
 "internal transfers)."
 msgstr ""
+"Die Journalbuchung %s ist nicht gültig. Um fortzufahren, dürfen die "
+"Journalposten nur ein einziges Forderungs-/Verbindlichkeitskonto enthalten "
+"(mit Ausnahme von internen Übertragungen)."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -9302,6 +9308,8 @@ msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
 msgstr ""
+"Anzahl der Monate in der Vergangenheit, die bei der Anwendung dieses Modells"
+" berücksichtigt werden sollen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_unread_counter
@@ -9501,12 +9509,12 @@ msgstr "Offener Saldo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
-msgstr "Startsaldo"
+msgstr "Anfangssaldo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_financial_year_op
 msgid "Opening Balance of Financial Year"
-msgstr "Startsaldo des Geschäftsjahrs"
+msgstr "Anfangssaldo des Geschäftsjahrs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
@@ -9555,12 +9563,12 @@ msgstr "Eröffnungsnummer"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Opening balance"
-msgstr "Startsaldo"
+msgstr "Anfangssaldo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__opening_balance
 msgid "Opening balance value for this account."
-msgstr "Wert des Eröffnungssaldos für dieses Konto."
+msgstr "Wert des Anfangssaldo für dieses Konto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__opening_credit
@@ -10145,7 +10153,7 @@ msgstr "Zahlungsreferenz"
 #: model:ir.model.fields,field_description:account.field_account_move__payment_state
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_state
 msgid "Payment Status"
-msgstr "Zahlung Status"
+msgstr "Zahlungsstatus"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -10332,7 +10340,7 @@ msgstr "Periode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__is_carryover_persistent
 msgid "Persistent"
-msgstr ""
+msgstr "Dauerhaft"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__copyvalue
@@ -11051,7 +11059,7 @@ msgstr "Rückerstattungen"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Register Payment"
-msgstr "Einzahlung erfassen"
+msgstr "Zahlung erfassen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -11626,7 +11634,7 @@ msgstr "Suche nach Steuerpositionen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
 msgid "Search Group"
-msgstr ""
+msgstr "Gruppe suchen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -14851,7 +14859,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "Dieser Umzug wird zum Buchungsdatum gebucht: %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -14998,7 +15006,7 @@ msgstr "Heutige Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -16785,6 +16793,8 @@ msgid ""
 "in its entirety and does not include any costs relating to the legislation "
 "of the country in which the client is located."
 msgstr ""
+"in ihrer Gesamtheit und umfasst keine Kosten, die sich auf die "
+"Rechtsvorschriften des Landes beziehen, in dem der Kunde ansässig ist."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
@@ -16978,3 +16988,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "-> Zähle"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""

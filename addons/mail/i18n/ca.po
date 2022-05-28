@@ -21,6 +21,8 @@
 # jabelchi, 2022
 # marcescu, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# eriiikgt, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2022\n"
+"Last-Translator: eriiikgt, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,7 +202,7 @@ msgstr "%s, %s, %s i %s altres persones han reaccionat amb %s"
 #: code:addons/mail/static/src/models/message_reaction_group/message_reaction_group.js:0
 #, python-format
 msgid "%s, %s, %s and 1 other person have reacted with %s"
-msgstr "%s, %s, %s i una altra persona han reaccionat amb %s"
+msgstr "%s, %s, %s i 1 persona més ha reaccionat %s"
 
 #. module: mail
 #. openerp-web
@@ -284,8 +286,8 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
-"< b atts=\"{ 'invisible': [(' no_record,\" '=', Fals)} classe=\" text- "
-"warning\"> No hi ha registre d' aquest model </ b>"
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">No hi ha registre per a aquest model</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -296,10 +298,10 @@ msgid ""
 "            Type <b>#channel</b> to mention a channel.<br>\n"
 "            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
-"<br> <br>\n"
-"            Escriviu < b>@ username </b> per esmentar algú, i agafar la seva atenció. <br>\n"
-"            Tipus < b>#canal </ b> per esmentar un canal. <br>\n"
-"            Tipus < b>/ command </ b> per executar una ordre. <br>"
+"<br><br>\n"
+"            Escriviu <b>@username</b> per mencionar a algú i cridar-li l'atenció.<br>\n"
+"            Escriviu <b>#channel</b> per mencionar un canal.<br>\n"
+"            Escriviu <b>/command</b> per executar una comanda.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -319,22 +321,22 @@ msgid ""
 "model=\"res.partner\" data-oe-"
 "id=\"%(new_partner_id)d\">%(new_partner_name)s</a> to the channel</div>"
 msgstr ""
-"< div class=\" i_ mail_ notification\">Invitiond <a href=\"#\" data- ie- "
-"model=\"re. partner\" data- iid=\"%(new_ partner_ id)>%(new_ part_ner_ "
-"names)s </ a> al canal </ div>"
+"<div class=\"o_mail_notification\">convidat <a href=\"#\" data-oe-"
+"model=\"res.partner\" data-oe-"
+"id=\"%(new_partner_id)d\">%(new_partner_name)s</a> al canal</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">joined the channel</div>"
-msgstr "< div class=\" i_ mail_ noificació\"> va unir el canal </ div>"
+msgstr "<div class=\"o_mail_notification\">s'ha unit al canal</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">left the channel</div>"
-msgstr "< div class=\" i_ mail_ noificació\"> deixa el canal </ div>"
+msgstr "<div class=\"o_mail_notification\">ha deixat el canal</div>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -404,11 +406,11 @@ msgid ""
 "Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />\n"
 "Kind Regards,</p>"
 msgstr ""
-"< path> Estimat remitent, <br /> <br />\n"
-"El missatge de sota no s' ha pogut acceptar per l' adreça%(àlias_ display_ name).\n"
-"Només es permet que %(contact_ descripció) contacti amb ell. <br /> <br />\n"
-"Si us plau, assegureu- vos que esteu usant l' adreça correcta o contacteu amb nosaltres a%(default_ emails). <br /> <br />\n"
-"Més semblant, </p>"
+"<p>Benvolgut remitent,<br /><br />\n"
+"El missatge següent no ha pogut ser acceptat per l'adreça %(alias_display_name)s.\n"
+"Només %(contact_description)s tenen permís per contactar-hi.<br /><br />\n"
+"Si us plau, assegureu-vos que esteu utilitzant l'adreça correcta o poseu-vos en contacte amb nosaltres a %(default_email)s en canvi.<br /><br />\n"
+"Salutacions cordials,</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -420,12 +422,12 @@ msgid ""
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
-"<span atts=\"{ 'invisible': [('composició_ mode,\" '!=','massa_ mail']} \">\n"
-"                                < strong>Email massa mail >\n"
-"                                < span atts=\"{ 'invisible': [(' use_ Xic_ domini,\" '=', true)} \"> els registres seleccionats </ span>\n"
-"                                < span atts=\" {' invisible \": [(' use_ Xic_ domini,\" '=', Fals)} \"> el filtre de cerca actual </ span>.\n"
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                <strong>L'enviament massiu de correu electrònic</strong> als\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">registres seleccionats</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">rel filtre de cerca actual</span>.\n"
 "                            </span>\n"
-"                            < span nom=\" document_ staffs_ text \" atttr=\" {visible \": [' user,\"'model', '=', Fals), ('composició_ mode,\" '=','mas_ mail']} \"> Generadors del document i </ span>"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Seguidors del document i</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -467,7 +469,7 @@ msgstr "<span class=\"o_form_label\">Activitats</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
-msgstr "<span classe=\"o_form_ label\"> A mida ICE server list </ span>"
+msgstr "<span class=\"o_form_label\">Llista a mida de servidors ICE</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -524,8 +526,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
-"< strong> Tan sols s' utilitzarà en la vista de llista. </ strong> <br/>\n"
-"                                S' enviarà el correu electrònic per a tots els registres seleccionats de la llista."
+"<strong>Només s'utilitzaran els registres marcats a la vista de llista.</strong><br/>\n"
+"                                S'enviarà el correu electrònic per a tots els registres seleccionats a la llista."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -989,7 +991,7 @@ msgstr "And"
 #: code:addons/mail/static/src/components/channel_member_list/channel_member_list.xml:0
 #, python-format
 msgid "And 1 other member."
-msgstr "I un altre membre."
+msgstr "I 1 membre més."
 
 #. module: mail
 #. openerp-web
@@ -1034,8 +1036,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Esteu segur que voleu descartar els errors de lliurament de correu? No "
-"podràs tornar a enviar aquests correus més tard!"
+"Esteu segur que voleu descartar %s errors de lliurament del correu? No "
+"podreu tornar a enviar aquests correus més tard!"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
@@ -1309,7 +1311,7 @@ msgstr "Missatge"
 #: code:addons/mail/static/src/widgets/common.xml:0
 #, python-format
 msgid "Bot"
-msgstr "BotCity name (optional, probably does not need a translation)"
+msgstr "Bot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
@@ -1517,8 +1519,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(partner_names)s"
 msgstr ""
-"Canal \"%(canal_ names) només accepta membres del grup \"%(group_ names). "
-"Prohibit per a:%(partner_ names)"
+"Canal \"%(channel_name)s\" només accepta membres del grup\"%(group_name)s\"."
+" Prohibit per: %(partner_names)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__channel_partner_id
@@ -1577,9 +1579,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"El xat és privat i únic entre dues persones. El grup és privat entre "
-"persones convidades. El canal es pot afegir lliurement (segons la seva "
-"configuració)."
+"El xat és privat i únic entre 2 persones. El grup és privat entre persones "
+"convidades. El canal es pot afegir lliurement (segons la seva configuració)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -1867,13 +1868,13 @@ msgstr "Crea un xat de grup"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr "Crea nous %(documents"
+msgstr "Crear nou %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr "Crea nous%(documents enviant un correu electrònic a%(Mail_ links)"
+msgstr "Crear nou %(document)s enviant un correu electrònic a %(email_link)s"
 
 #. module: mail
 #. openerp-web
@@ -1964,7 +1965,7 @@ msgstr "Data de creació"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__credential
 msgid "Credential"
-msgstr "CedentialCity name (optional, probably does not need a translation)"
+msgstr "Credencial"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__currency_id
@@ -2021,7 +2022,7 @@ msgstr "Data limit"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Deafen"
-msgstr "DeafenCity name (optional, probably does not need a translation)"
+msgstr "Ensordir"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -2150,7 +2151,7 @@ msgstr "Entrega fallida"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr ""
+msgstr "Error de lliurament"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2636,7 +2637,7 @@ msgid ""
 "Email alias %(alias_name)s cannot be used on %(count)d records at the same "
 "time. Please update records one by one."
 msgstr ""
-"L' àlies de correu%(àlias_ name) no es pot usar en%( count) registre al "
+"L' àlies de correu %(alias_name)s no es pot usar en %(count)d registre al "
 "mateix temps. Si us plau, actualitzeu els registres un a un."
 
 #. module: mail
@@ -2807,7 +2808,7 @@ msgstr "Ha fallat en representar la plantilla en línia_template: %s)"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %(xml_id)s (%(view_id)d)"
-msgstr "Ha fallat en representar la plantilla:%(xml_ id) (%(view_ id)"
+msgstr "No s'ha pogut representar la plantilla : %(xml_id)s (%(view_id)d)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -3152,8 +3153,7 @@ msgstr "Gestiona per correus"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "Handle in Odoo"
-msgstr ""
-"Gestionar a OdooCity name (optional, probably does not need a translation)"
+msgstr "Gestionar a Odoo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
@@ -3640,7 +3640,7 @@ msgstr "Enllaç d' invitació"
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 #, python-format
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
-msgstr "Invitació per a seguir %(document_ model): %(document_ nom)"
+msgstr "Invitació a seguir %(document_model)s: %(document_name)s"
 
 #. module: mail
 #. openerp-web
@@ -5187,7 +5187,7 @@ msgstr "Obre un perfil"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
 msgid "Opted Out"
-msgstr "Opted OutCity name (optional, probably does not need a translation)"
+msgstr "Optat per sortir"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
@@ -5235,7 +5235,7 @@ msgstr ""
 "Idioma opcional de traducció (ISO codi) per a seleccionar en enviar un "
 "correu electrònic. Si no està establerta, s' usarà la versió anglesa. Això "
 "normalment hauria de ser una expressió de substitució que proveeix el "
-"llenguatge apropiat, p. ex. {{ objecte. partner_ id. Lang}."
+"llenguatge apropiat, p. ex. {{ objecte. partner_ id. Lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -5521,7 +5521,7 @@ msgstr "Accés portal Revocat"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_post
 msgid "Post on Multiple Documents"
-msgstr "Article en múltiples documents"
+msgstr "Publica en diversos documents"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -5705,8 +5705,7 @@ msgstr "Sessions RTC"
 msgid ""
 "Ranges between 0.0 and 1.0, scale depends on the browser implementation"
 msgstr ""
-"Intervals entre 0, 0 i 1. 0, L' escala depèn de la implementació del "
-"navegador"
+"Intervals entre 0.0 i 1.0, L' escala depèn de la implementació del navegador"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:0
@@ -6920,8 +6919,8 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already linked with "
 "%(alias_model_name)s. Choose another alias or change it on the linked model."
 msgstr ""
-"L' àlies de correu electrònic%(coining_lias_ nom) ja està connectat "
-"amb%(àlias_ model_ nom). Escolliu un altre àlies o canvieu- lo en el model "
+"L' àlies de correu electrònic %(matching_alias_name)s ja està connectat amb "
+"%(alias_model_name)s. Escolliu un altre àlies o canvieu- lo en el model "
 "enllaçat."
 
 #. module: mail
@@ -6931,7 +6930,7 @@ msgid ""
 "The e-mail alias %(matching_alias_name)s is already used as "
 "%(alias_duplicate)s alias. Please choose another alias."
 msgstr ""
-"L' àlies de correu%(coining_ alias_ nom) ja s' usa com a%(àlias_ duplica) "
+"L' àlies de correu %(matching_alias_name)s a s' usa com %(alias_duplicate)s "
 "àlies. Si us plau, escolliu un altre àlies."
 
 #. module: mail
@@ -6942,8 +6941,9 @@ msgid ""
 "%(document_name)s %(model_name)s. Choose another alias or change it on the "
 "other document."
 msgstr ""
-"L' àlies de correu%(coining_ alias_ nom) ja s' usa per les %(document_ nom) "
-"%(model_ names. Escolliu un altre àlies o canvieu- lo a l' altre document."
+"L' àlies de correu %(matching_alias_name)s ja s' usa per les "
+"%(document_name)s %(model_name)s. Escolliu un altre àlies o canvieu- lo a l'"
+" altre document."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -7068,8 +7068,8 @@ msgstr "Aquesta acció enviarà un correu electrònic."
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Aquest correu és la llista negra per a les llistes de correu en massa. "
-"Cliqueu per a una llista negra."
+"Aquest correu electrònic està a la llista negra per a enviaments massius. "
+"Feu clic per desactivar la llista negra."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -7430,7 +7430,7 @@ msgstr "Error desconegut"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Unmute"
-msgstr "UnmouteCity name (optional, probably does not need a translation)"
+msgstr "Activa el so"
 
 #. module: mail
 #. openerp-web
@@ -7658,7 +7658,7 @@ msgstr "Usuaris"
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Users in this channel: %(members)s %(dots)s and you."
-msgstr "Usuaris en aquest canal:%(records) s %(dots) i vostè."
+msgstr "Usuaris d'aquest canal: %(members)s %(dots)s i tu."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
@@ -7717,7 +7717,7 @@ msgstr "Tipus de vista"
 #: code:addons/mail/static/src/components/attachment_image/attachment_image.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "Veure imatge"
 
 #. module: mail
 #. openerp-web
@@ -7909,7 +7909,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel_partner.py:0
 #, python-format
 msgid "You can not write on %(field_name)s."
-msgstr "No podeu escriure en%(field_ names)."
+msgstr "No podeu escriure en %(field_name)s."
 
 #. module: mail
 #. openerp-web
@@ -8137,7 +8137,7 @@ msgstr "després del termini de l' activitat anterior"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "alias %(name)s: %(error)s"
-msgstr "àlies%(names: %(Errors) s"
+msgstr "àlies %(name)s: %(error)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -8181,7 +8181,7 @@ msgstr ""
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "catchall"
-msgstr "▁catchallCity name (optional, probably does not need a translation)"
+msgstr "catchall"
 
 #. module: mail
 #. openerp-web
@@ -8224,7 +8224,7 @@ msgstr "p.g. La meva empresa.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. 65ea4f9e948b693N5156F350256bd152"
-msgstr "p.g. 65ea4f9e948b693N556F350256bd152"
+msgstr "per exemple. 65ea4f9e948b693N5156F350256bd152"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8439,8 +8439,8 @@ msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
 msgstr ""
-"Resposta a falta del document (%(model),%(threads), torna a la creació del "
-"document"
+"resposta al document que falta (%(model)s,%(thread)s), recórrer a la creació"
+" de documents"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -8568,4 +8568,4 @@ msgstr "Setmanes"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
-msgstr "{{ objecte. partner_ id. Lang}"
+msgstr "{{ objecte. partner_ id. Lang }}"
