@@ -528,6 +528,34 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     );
 });
 
+QUnit.test('cannot be uploaded attachment in chatter with option hasAttachmentUpload false' , async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv['res.partner'].create();
+    pyEnv['ir.attachment'].create([
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: resPartnerId1,
+            res_model: 'res.partner',
+        },
+    ]);
+    const { click, createChatterContainerComponent } = await start({});
+    await createChatterContainerComponent({
+        threadId: resPartnerId1,
+        threadModel: 'res.partner',
+        hasAttachmentUpload: false,
+    });
+    await click(`.o_ChatterTopbar_buttonAttachments`);
+    assert.strictEqual(
+        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
+        0,
+        "should not have an attach files button in the chatter"
+    );
+});
+
+
 });
 });
 });

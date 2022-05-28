@@ -121,6 +121,10 @@ Object.assign(ChatterContainer, {
             type: Boolean,
             optional: true,
         },
+        hasAttachmentUpload: {
+            type: Boolean,
+            optional: true,
+        },
         isAttachmentBoxVisibleInitially: {
             type: Boolean,
             optional: true,

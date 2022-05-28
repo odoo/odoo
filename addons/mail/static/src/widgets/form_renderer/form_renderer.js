@@ -4,6 +4,7 @@ import { ChatterContainer } from '@mail/components/chatter_container/chatter_con
 
 import FormRenderer from 'web.FormRenderer';
 import { ComponentWrapper } from 'web.OwlCompatibility';
+import Domain from 'web.Domain';
 
 const { Component } = owl;
 
@@ -92,6 +93,7 @@ FormRenderer.include({
      * @returns {Object}
      */
     _makeChatterContainerProps() {
+        const hasAttachmentUpload = new Domain(this.chatterFields.hasAttachmentUpload).compute(this.state.evalContext);
         return {
             hasActivities: this.chatterFields.hasActivityIds,
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
@@ -100,6 +102,7 @@ FormRenderer.include({
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
             threadId: this.state.res_id,
             threadModel: this.state.model,
+            hasAttachmentUpload: hasAttachmentUpload,
         };
     },
     /**

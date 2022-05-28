@@ -22,6 +22,10 @@ BasicView.include({
                 this._getFieldOption('message_ids', 'open_attachments', false) ||
                 this._getFieldOption('message_follower_ids', 'open_attachments', false)
             ),
+            hasAttachmentUpload: (
+                this._getFieldOption('message_ids', 'has_attachment_upload', true) ||
+                this._getFieldOption('message_follower_ids', 'has_attachment_upload', true)
+            ),
         };
         const fieldsInfo = this.fieldsInfo[this.viewType];
         this.rendererParams.chatterFields = this.chatterFields;

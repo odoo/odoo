@@ -41,7 +41,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickButtonAttachments(ev) {
-            if (this.thread && this.thread.allAttachments.length === 0) {
+            if (this.thread && this.thread.allAttachments.length === 0 && this.hasAttachmentUpload) {
                 this.fileUploader.openBrowserFileUploader();
             } else {
                 this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
@@ -164,7 +164,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeDropZoneView() {
-            if (this.useDragVisibleDropZone.isVisible) {
+            if (this.useDragVisibleDropZone.isVisible && this.hasAttachmentUpload) {
                 return insertAndReplace();
             }
             return clear();
@@ -422,6 +422,9 @@ registerModel({
         }),
         isShowingAttachmentsLoading: attr({
             default: false,
+        }),
+        hasAttachmentUpload: attr({
+            default: true,
         }),
         scrollPanelRef: attr(),
         /**
