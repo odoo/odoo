@@ -79,8 +79,9 @@ class MigrationManager(object):
             }
 
         for pkg in self.graph:
-            if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade' or
-                    getattr(pkg, 'load_state', None) == 'to upgrade'):
+            if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade'
+                    or getattr(pkg, 'load_state', None) == 'to upgrade'
+                    or pkg.state == 'to install'):
                 continue
 
             self.migrations[pkg.name] = {
@@ -98,7 +99,7 @@ class MigrationManager(object):
         }
         state = pkg.state if stage in ('pre', 'post') else getattr(pkg, 'load_state', None)
 
-        if not (hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
+        if not (hasattr(pkg, 'update') or state == 'to upgrade' or state == 'to install'):
             return
 
         def convert_version(version):
@@ -177,7 +178,7 @@ class MigrationManager(object):
                     except AttributeError:
                         _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
                     else:
-                        migrate(self.cr, installed_version)
+                        migrate(self.cr, parsed_installed_version)
                     finally:
                         if mod:
                             del mod
