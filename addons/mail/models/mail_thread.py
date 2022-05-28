@@ -3133,11 +3133,11 @@ class MailThread(models.AbstractModel):
             return self.company_id
         return False
 
-    def _get_mail_thread_data_attachments(self):
+    def _get_mail_thread_data_attachments(self, data):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
-    def _get_mail_thread_data(self, request_list):
+    def _get_mail_thread_data(self, request_list, data):
         self.ensure_one()
         res = {'hasWriteAccess': False}
         try:
@@ -3149,7 +3149,7 @@ class MailThread(models.AbstractModel):
         if 'activities' in request_list:
             res['activities'] = self.activity_ids.activity_format()
         if 'attachments' in request_list:
-            res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format(commands=True)
+            res['attachments'] = self._get_mail_thread_data_attachments(data)._attachment_format(commands=True)
         if 'followers' in request_list:
             res['followers'] = [{
                 'id': follower.id,

@@ -239,6 +239,20 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Object}
+         */
+        _setThreadValue() {
+            return {
+                // If the thread was considered to have the activity
+                // mixin once, it will have it forever.
+                hasActivities: this.hasActivities ? true : undefined,
+                id: this.threadId,
+                model: this.threadModel,
+            }
+        },
+
+        /**
+         * @private
          */
         _onThreadIdOrThreadModelChanged() {
             if (this.threadId) {
@@ -247,13 +261,9 @@ registerModel({
                 }
                 this.update({
                     attachmentBoxView: this.isAttachmentBoxVisibleInitially ? insertAndReplace() : clear(),
-                    thread: insert({
-                        // If the thread was considered to have the activity
-                        // mixin once, it will have it forever.
-                        hasActivities: this.hasActivities ? true : undefined,
-                        id: this.threadId,
-                        model: this.threadModel,
-                    }),
+                    thread: insert(
+                        this._setThreadValue()
+                    ),
                 });
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;

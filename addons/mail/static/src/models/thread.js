@@ -502,6 +502,18 @@ registerModel({
             });
         },
         /**
+         * Requests the given Attachments data.
+         *
+         * @param {string[]} requestList
+         */
+        _getThreadParam(requestSet) {
+            return {
+                request_list: [...requestSet],
+                thread_id: this.id,
+                thread_model: this.model,
+            }
+        },
+        /**
          * Requests the given `requestList` data from the server.
          *
          * @param {string[]} requestList
@@ -528,11 +540,7 @@ registerModel({
                 suggestedRecipients: suggestedRecipientsData,
             } = await this.messaging.rpc({
                 route: '/mail/thread/data',
-                params: {
-                    request_list: [...requestSet],
-                    thread_id: this.id,
-                    thread_model: this.model,
-                },
+                params: this._getThreadParam(requestSet),
             }, { shadow: true });
             if (!this.exists()) {
                 return;
