@@ -24,8 +24,9 @@
 # ericrolo, 2022
 # Jonatan Gk, 2022
 # Anh Thao PHAM <pta@odoo.com>, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # marcescu, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# eriiikgt, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: eriiikgt, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -292,33 +293,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"< div style=\"margin: 0px; farciment: 0px; \">\n"
-"    < p style=\"margin: 0px; farciment: 0px; mida de tipus de lletra: 13px; \">\"\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimat\n"
-"        < tt t- if=\"object. partner_ id. sparent_ id\">\n"
-"            < t- out=\". attribute_ id. name o '>Brandon Free </ t> (<t t- out=\"objecte. partner_ id. sphip_ id. name o '> ciare Interior </ t>),\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
-"        < t- else=\" \">\n"
-"            < t- out=\"object. partner_ id. name o '\">Brandon Freeman </ tt>,\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/> <br/>\n"
-"        Aquest és el teu.\n"
-"        < t- tif=\"object.\" name \">\n"
-"            Nota de crèdit < strong t- out=\" object. name o '>RINV/ 2021/ 05/ 0001 </ strong>\n"
+"        <br/><br/>\n"
+"        Aquí teniu la vostra\n"
+"        <t t-if=\"object.name\">\n"
+"            nota de crèdit <strong t-out=\"object.name or ''\">RINV/2021/05/0001</strong>\n"
 "        </t>\n"
-"        < t- else=\" \">\n"
-"            Nota de crèdit\n"
+"        <t t-else=\"\">\n"
+"            nota de crèdit\n"
 "        </t>\n"
-"        < t- f=\"object. invoice_origin\">\n"
-"            (amb referència: < t- out=\" objecte. invoice_origin o '> SUB003 </ t>)\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        quantitat en < strong t- out=\" format_ amount(object. amount_total, objecte.currència_ id) o '>$ 143, 750.00 </ strong>\n"
-"        des de < t- out=\" object. attribute_ id. name o '> La vostra empresa </ t>.\n"
-"        <br/> <br/>\n"
-"        No dubtis en contactar amb nosaltres si tens cap pregunta.\n"
-"        < tt t- if=\"object. invoice_ usuari_ id.signatura\">\n"
+"        ascendint en <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        des de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu qualsevol dubte.\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
 "            <br/>\n"
-"            < t- out=\"object. invoice_ usuari_ id.signatura o '' > - <br/>Matchell Admin </ tt>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -369,43 +370,43 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"< div style=\"margin: 0px; farciment: 0px; \">\n"
-"    < p style=\"margin: 0px; farciment: 0px; mida de tipus de lletra: 13px; \">\"\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimat\n"
-"        < tt t- if=\"object. partner_ id. sparent_ id\">\n"
-"            < t- out=\". attribute_ id. name o '>Brandon Free </ t> (<t t- out=\"objecte. partner_ id. sphip_ id. name o '> ciare Interior </ t>),\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
-"        < t- else=\" \">\n"
-"            < t- out=\"object. partner_ id. name o '\">Brandon Freeman </ tt>,\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/> <br/>\n"
-"        Aquest és el teu.\n"
-"        < t- tif=\"object.\" name \">\n"
-"            invoice < strong t- out=\"object. name o '>INV/2021/ 05/ 000005 </ strong>\n"
+"        <br/><br/>\n"
+"        Aquí teniu la vostra\n"
+"        <t t-if=\"object.name\">\n"
+"            factura <strong t-out=\"object.name or ''\">INV/2021/05/0005</strong>\n"
 "        </t>\n"
-"        < t- else=\" \">\n"
-"            invoiceCity name (optional, probably does not need a translation)\n"
+"        <t t-else=\"\">\n"
+"            factura\n"
 "        </t>\n"
-"        < t- f=\"object. invoice_origin\">\n"
-"            (amb referència: < t- out=\" objecte. invoice_origin o '> SUB003 </ t>)\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        quantitat en < strong t- out=\" format_ amount(object. amount_total, objecte.currència_ id) o '>$ 143, 750.00 </ strong>\n"
-"        des de < t- out=\" object. attribute_ id. name o '> La vostra empresa </ t>.\n"
-"        < t- if=\". objectyment_ estat en ('pagament', 'en_pay')>\n"
+"        ascendint en <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        des de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Aquesta factura ja està pagada.\n"
 "        </t>\n"
-"        < t- else=\" \">\n"
-"            Si us plau, torneu a pagar per la vostra conveniència.\n"
-"            < tt t- if=\".objectyment_reference\">\n"
-"                <br/> <br/>\n"
-"                Si us plau, useu la següent comunicació per al vostre pagament: < strong t- out=\"objecte. payment_reference o '\">INV/2021/ 05/ 0005 </ strong>.\n"
+"        <t t-else=\"\">\n"
+"            Si us plau, envieu el pagament el més aviat possible.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Utilitzeu la comunicació següent per al vostre pagament:<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br/> <br/>\n"
-"        No dubtis en contactar amb nosaltres si tens cap pregunta.\n"
-"        < tt t- if=\"object. invoice_ usuari_ id.signatura\">\n"
+"        <br/><br/>\n"
+"        No dubteu a contactar amb nosaltres si teniu qualsevol dubte.\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
 "            <br/>\n"
-"            < t- out=\"object. invoice_ usuari_ id.signatura o '' > - <br/>Matchell Admin </ tt>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -9112,7 +9113,7 @@ msgid ""
 "this date."
 msgstr ""
 "Cap usuari pot editar entrades de diari relacionades amb un impost previ i "
-"inclusiu d' aquesta data."
+"incloent aquesta data."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -9366,8 +9367,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoice(s)."
 msgstr ""
-"Odoo us permet reconciliar directament una línia de declaracions amb\n"
-"                La venda o la compra d'en Bills de veu relacionada."
+"Odoo us permet conciliar una línia d'extracte directament\n"
+"                amb les factures de venda o compra relacionade(s)."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -9433,8 +9434,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"Quan tot estigui arreglat, ets bo per continuar. Podreu editar això més "
-"endavant en el menú < b> A midaers </b>."
+"Un cop tot estigui preparat, estàs bé per continuar. Podreu editar-ho més "
+"endavant al menú<b>Clients</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9541,7 +9542,7 @@ msgstr "Saldos d' obertura de l' any financer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr "S' està obrint el crèdit"
+msgstr "Crèdit d'obertura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -9551,7 +9552,7 @@ msgstr "Data d'obertura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
 msgid "Opening Debit"
-msgstr "S' està obrint el debitThe role of the transaction, in present tense"
+msgstr "Dèbit d'obertura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_date
@@ -9568,7 +9569,7 @@ msgstr "S' està obrint el diari"
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr "S' està obrint l' entrada de diari"
+msgstr "Seient de diari d'obertura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
@@ -9640,7 +9641,7 @@ msgstr ""
 "Idioma opcional de traducció (ISO codi) per a seleccionar en enviar un "
 "correu electrònic. Si no està establerta, s' usarà la versió anglesa. Això "
 "normalment hauria de ser una expressió de substitució que proveeix el "
-"llenguatge apropiat, p. ex. {{ objecte. partner_ id. Lang}."
+"llenguatge apropiat, p. ex. {{ objecte. partner_ id. Lang }}."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -10739,8 +10740,8 @@ msgid ""
 "Programmation Error: Can't call _get_invoice_matching_query() for different "
 "rules than 'invoice_matching'"
 msgstr ""
-"Error de programació: no es pot cridar _get_ invoice_ coincideix amb "
-"laquerència (() per a diferents regles que \"invoice_ coincideix amb \""
+"Error de programació: Can't call _get_invoice_matching_query() for different"
+" rules than 'invoice_matching'"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -11214,7 +11215,9 @@ msgstr "Informes"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
 msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-msgstr "Representació del valor no nul (per exemple, 0. 05)."
+msgstr ""
+"Representa la moneda més petita de valor diferent de zero (per exemple, "
+"0.05)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -11225,8 +11228,7 @@ msgstr "Requereix compte de banc de parella"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr ""
-"Res Company BankCity name (optional, probably does not need a translation)"
+msgstr "Compte bancari de l'empresa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
@@ -11367,7 +11369,7 @@ msgstr "Reversal de"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr "Reversal de:%(move_ names), %(raó)"
+msgstr "Reversió de: %(move_name)s, %(reason)s"
 
 #. module: account
 #: code:addons/account/models/account_full_reconcile.py:0
@@ -11508,9 +11510,7 @@ msgstr "Error de lliurament SMS"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
-"ELS SES DE SENARDA I CONTELLES DEL SANA DE SEGATConstellation name "
-"(optional)"
+msgstr "TERMES I CONDICIONS ESTÀNDAR DE VENDA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -11912,7 +11912,7 @@ msgstr "Enviar diners"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Send invoices and payment follow-ups by post"
-msgstr "Envia \" invoices \" i \" característiques del pagament \" per post"
+msgstr "Enviar factures i seguiments de pagament per correu postal"
 
 #. module: account
 #. openerp-web
@@ -11921,7 +11921,8 @@ msgstr "Envia \" invoices \" i \" característiques del pagament \" per post"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Envieu invoices als vostres clients en cap moment amb l'aplicació </b>."
+"Envieu factures als vostres clients en molt poc temps amb <b>l'aplicació de "
+"facturació</b>."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -12241,7 +12242,7 @@ msgstr "Mostra les entrades sense publicar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
-msgstr "SungmailCity name (optional, probably does not need a translation)"
+msgstr "Snailmail"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13093,9 +13094,9 @@ msgid ""
 "tax-related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
-"El camp tècnic que conté els països pels quals aquesta empresa utilitza "
-"característiques relacionades amb els impostos, com ara les que cal per als "
-"mòduls l10n per mostrar camps relacionats amb els impostos)."
+"Camp tècnic que conté els països per als quals aquesta empresa utilitza "
+"funcions relacionades amb els impostos (d'aquí aquells per als quals els "
+"mòduls l10n han de mostrar camps relacionats amb els impostos)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__display_type
@@ -13273,10 +13274,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
-"Camp tècnica usat per imposar la composició de seqüència complexa que normalment podria malinterpretar el sistema.\n"
-"Aquest és un regex que pot incloure tots els següents grups de captura: prefix1, any, prefix2, prefix2, mes, prefix3, seq, sufix.\n"
-"Els grups prefix * són els separadors entre l' any, mes i el número creixent de seqüència (sq).\n"
-"e.g: ^? ^? P < prefix1>. *?)(? P < year>\\ dv{4})(? P < prefix2 > *?)(? P < mesos >\\ d{ 2})?(P < prefix3> +?(P < eqs\\?)?(P\\ @ d\\?)(P\\? <suffix>D *?)$"
+"Camp tècnic utilitzat per fer complir la composició de seqüències complexes que el sistema normalment no entendria.\n"
+"Aquesta és una expressió regular que pot incloure tots els grups de captura següents: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
+"Els grups de prefix* són els separadors entre l'any, el mes i el número de seqüència creixent real (seq).\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab
@@ -13349,9 +13350,9 @@ msgid ""
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"Un camp tècnic que manté la reconciliació dels diners en efectiu. Això és "
-"necessari quan es cancel· la la l' origen: es publicarà l' entrada del diari"
-" inversa per cancel· lar aquesta part també."
+"Camp tècnic utilitzat per fer un seguiment de la conciliació de la base de "
+"caixa fiscal. Això és necessari quan cancel·leu la font: publicarà l'entrada"
+" de diari inversa per cancel·lar també aquesta part."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -13532,9 +13533,9 @@ msgid ""
 "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
 "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence."
 msgstr ""
-"El %(data_field)s (%(data) no coincideix amb el número de seqüència del número de%(model) (%(seqüència)\n"
-"Haureu d'aclarir els %(model) %(seqünce_field) per continuar.\n"
-"En fer-ho, potser voldreu recompondre les vostres entrades per tal de mantenir una seqüència basada en dates contínua."
+"El %(date_field)s (%(date)s) no coincideix amb el número de seqüència del relacionat %(model)s (%(sequence)s)\n"
+"Haureu d'esborrar el %(model)s's %(sequence_field)s per a procedir.\n"
+"En fer-ho, és possible que vulgueu tornar a ordenar les vostres entrades per mantenir una seqüència contínua basada en dates."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
@@ -13627,8 +13628,8 @@ msgid ""
 "The accounting date being set prior to the %(lock_type)s lock date "
 "%(lock_date)s, it will be changed to %(accounting_date)s upon posting."
 msgstr ""
-"La data de comptabilitat que s' està establert abans del%(lock_ type) tanca "
-"la data%(lock_ data), es canviarà a%(S' informa_ data) en publicar."
+"La data comptable que s'estableix abans de la%(lock_type)s data de bloqueig "
+"%(lock_date)s, es canviarà per %(accounting_date)s un cop publicat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13910,8 +13911,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
-"El balanç de final no és correcte!\n"
-"L'equilibri esperat (%(real_ balanç) és diferent de les calculades (%(comput_ balanç)."
+"El balanç final és incorrecte!\n"
+"El balanç esperat (%(real_balance)s) és diferent de la calculada (%(computed_balance)s)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13927,9 +13928,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"La despesa s'evoqui quan es valida un projecte de llei del venedor, excepte "
-"en una comptabilitat d'ablolo-saxon amb l'inventari perpetual en el qual cas"
-" es reconeix a la validació dels clients."
+"La despesa es comptabilitza quan es valida una factura de proveïdor, excepte"
+" en la comptabilitat anglosaxona amb valoració d'inventari perpètua, en "
+"aquest cas la despesa (compte de Cost de la mercaderia venuda) es reconeix a"
+" la validació de la factura del client."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14017,8 +14019,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"La moneda estrangera s'ha de posar al diari '%(days' i el compte '%(Stat) ha"
-" de ser el mateix."
+"La moneda estrangera establerta a la revista  '%(journal)s' i al compte "
+"'%(account)s' han de ser la mateixa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__foreign_vat_fiscal_position_id
@@ -14184,9 +14186,9 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
-"L'operació s'ha rebutjat ja com podria afectar una declaració d'impostos. Si"
-" us plau, canvieu la data d'entrada del diari o la data de bloqueig "
-"d'impostos establerta als arranjaments (%s) per a continuar."
+"Es denega l'operació, ja que afectaria una declaració d'impostos ja emesa. "
+"Si us plau, canvieu la data d'entrada del diari o la data de bloqueig "
+"d'impostos establerta a la configuració (%s) per a continuar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_action_id
@@ -14332,8 +14334,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"El model de reconciliació només s' aplicarà quan la quantitat sigui "
-"inferior, més gran o entre les quantitats especificades ((s)."
+"El model de conciliació només s'aplicarà quan l'import sigui inferior, "
+"superior o entre els import(s) especificats."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -14468,8 +14470,8 @@ msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
-"La seqüència regex hauria de contenir com a mínim les claus d' agrupament de l' Sq. Per exemple:\n"
-"^(?P < prefix1>. *?)(? P <sq>\\ d *)(? P <suffix>\\ D*?)$"
+"L'expressió regular de la seqüència hauria de contenir almenys les claus d'agrupació seq. Per exemple:\n"
+"^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14478,8 +14480,8 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"La seqüència mai reiniciarà.\n"
-"L'increment del nombre en aquest cas és '%(format_sq)."
+"La seqüència no es reiniciarà mai.\n"
+"El nombre que augmenta en aquest cas és '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14489,9 +14491,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"La seqüència es reiniciarà a la 1 a l' inici de cada mes.\n"
-"L'any que es va detectar aquí és '%( years' i el mes és '%( mesos).\n"
-"L'increment del nombre en aquest cas és '%(format_sq)."
+"La seqüència es reiniciarà a l'1 a l'inici de cada mes.\n"
+"L'any detectat aquí és '%(year)s' i el mes és '%(month)s'.\n"
+"El nombre que augmenta en aquest cas és '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14501,9 +14503,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
-"La seqüència es reiniciarà a 1 al començament de cada any.\n"
-"L'any que es va detectar aquí és '%( years'.\n"
-"L'increment del nombre en aquest cas és '%(format_sq)."
+"La seqüència es reiniciarà a l'1 al començament de cada any.\n"
+"L'any detectat aquí és '%(year)s'.\n"
+"El nombre que augmenta en aquest cas és '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -14521,8 +14523,8 @@ msgid ""
 "The starting balance <b>doesn't match</b> with the ending balance of the "
 "previous bank statement."
 msgstr ""
-"L'equilibri d' inici < b> no coincideix amb </b> amb el final de l' anterior"
-" extracte del banc."
+"El saldo inicial <b>no coincideix</b> amb el saldo final de l'extracte "
+"bancari anterior."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14725,9 +14727,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Aquest compte està configurat en%(jory_ names), el diari(s) (ids%(Poul_ ids)"
-" com a compte de pagament o de compte de crèdit. Això vol dir que aquest "
-"tipus de compte hauria de ser modificable."
+"Aquest compte es configurat en %(journal_names)s dia(s) (ids "
+"%(journal_ids)s) com a compte de crèdit o dèbit de pagament. Això vol dir "
+"que el tipus d'aquest compte hauria de ser conciliable."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -14824,8 +14826,8 @@ msgid ""
 "This entry has been duplicated from <a href=# data-oe-model=account.move "
 "data-oe-id=%(id)d>%(title)s</a>"
 msgstr ""
-"Aquesta entrada s' ha duplicat de <a href=# data- model=Projecte.move data- "
-"ie=%(id) d>%(title) s </ a>"
+"Aquesta entrada s'ha duplicat des de <a href=# data-oe-model=account.move "
+"data-oe-id=%(id)d>%(title)s</a>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14834,8 +14836,8 @@ msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
 msgstr ""
-"Aquesta entrada transfereix les següents quantitats a < "
-"strong>%(destination) s' inclouen </ strong> <ul>"
+"Aquesta entrada transfereix les quantitats següents a "
+"<strong>%(destination)s</strong> <ul>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
@@ -14910,7 +14912,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr "Aquest moviment serà publicat a la data de comptabilitat:%(data)"
+msgstr "Aquest moviment es publicarà en la data comptable: %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -14946,8 +14948,8 @@ msgid ""
 "This payment has been created from <a href=# data-oe-model=account.payment "
 "data-oe-id=%d>%s</a>"
 msgstr ""
-"Aquest pagament s' ha creat des de <a href=# data- model=Projecte. payment "
-"data- ie- iid=%d>%s </a>"
+"Aquest pagament s'ha creat a partir de <a href=# data-oe-"
+"model=account.payment data-oe-id=%d>%s</a>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15508,11 +15510,11 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"Useu l' opció <i>Send per l' opció Post </i> DOCTYPE per publicar invoices "
-"automàticament. Per al cost d'un segell local, fem tot el treball manual: la"
-" teva invoice s' imprimirà al país correcte, posa't en un equip i enviat per"
-" mail cargols. Useu aquesta característica des de la vista de llista per "
-"publicar centenars d' invoices a gran volum."
+"Utilitzeu “<i>Envia per correu</i>” l'opció er publicar les factures "
+"automàticament. Pel cost d'un segell local, fem tot el treball manual: la "
+"teva factura s'imprimirà al país adequat, s'enviarà en un sobre i s'enviarà "
+"per correu postal. Utilitzeu aquesta funció des de la vista de llista per "
+"publicar centenars de factures a granel."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -15648,13 +15650,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
-"Valor per a la quantitat de la línia d' escriptura\n"
-"    * Percentatge: Percentatge de l' equilibri, entre 0 i 100.\n"
-"    * fix: el valor fix de l' escriptura. La quantitat comptarà com a debit si és negatiu, com a crèdit si és positiu.\n"
-"    * De l' etiqueta: no hi ha necessitat de delimitador regex, només cal el regex. Per exemple, si voleu extreure la quantitat de\n"
-"R: 96729338 10/07 AX 9415126318 T: 5L: BRT: 3358, 07 C:\n"
-"Podries entrar.\n"
-"BRT: ([\\ d,] +)"
+"Valor de l'import de la línia de cancel·lació\n"
+"    * Percentatge: Percentatge del saldo, entre 0 i 100.\n"
+"    * Fixat: el valor fix de la cancel·lació. L'import comptarà com a dèbit si és negatiu, com a crèdit si és positiu.\n"
+"    * De l'etiqueta: no hi ha cap necessitat de delimitador d'expressió regular, només cal l'expressió regular. Per exemple, si voleu extreure la quantitat de\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Podries entrar\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -15917,8 +15919,8 @@ msgstr "Amb impostos"
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
-"Escriviu un nom d' empresa a < b> create a un </b> o </b> mostrarà "
-"suggeriments </b>."
+"Escriu el nom d'una empresa per <b>crear-ne una</b> o <b>vegeu "
+"suggeriments.</b>."
 
 #. module: account
 #. openerp-web
@@ -15926,8 +15928,8 @@ msgstr ""
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
 msgstr ""
-"Escriviu aquí < b> la vostra pròpia adreça de correu electrònic </b> per "
-"provar el flux."
+"Escriviu aquí <b>a vostra pròpia adreça de correu electrònic</b> per provar "
+"el flux."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16442,7 +16444,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr "No podeu publicar una entrada en un diari arxivat (%(periodista)"
+msgstr "No podeu publicar una entrada en un diari arxivat (%(journal)s)"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -16620,9 +16622,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Hauríeu de configurar el 'Gain Exchange Compte' en els arranjaments de la "
-"vostra empresa, per a gestionar automàticament el llibre d' entrades "
-"comptables relacionades amb les diferències entre les taxes de canvi."
+"Ha de configurar 'Ingressos per diferència de canvi' en la configuració de "
+"comptabilitat per gestionar automàticament els assentaments del llibre "
+"comptable associats a les diferències relacionades amb el canvi de moneda."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16663,12 +16665,12 @@ msgstr "Rang de codi postal fins a"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "[FURN_8220] Four Person Desk"
-msgstr "[FURN_ 220] Quatre Persona Desk"
+msgstr "[FURN_8220] Escriptori per a quatre persones"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "[FURN_8999] Three-Seat Sofa"
-msgstr "[FURN_ 899] 3-Seat Sofa"
+msgstr "[FURN_8999] Sofà de tres places"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16869,9 +16871,9 @@ msgid ""
 " to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
-"Cal que se'ls notifiqui de qualsevol petició per mitjà d'una lletra enviada "
-"per entrega gravada a la seva oficina registrada d'aquí a vuit dies de "
-"l'entrega dels béns o de la disposició dels serveis."
+"Qualsevol reclamació s'ha de notificar mitjançant una carta enviada per "
+"lliurament certificat al seu domicili social dins dels 8 dies següents a "
+"l'entrega de la mercaderia o la prestació dels serveis."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -17018,7 +17020,7 @@ msgstr "{{ (object.name or '').replace('/','-') }}"
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{ object. attribute_ id. nom} Nota de crèdit (Ref {- objecte. nom o 'n/ a'})"
+"{{ object.company_id.name }} Nota de crèdit (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -17038,3 +17040,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Compta"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+"Una anàlisi predeterminada requereix un compte analític o una etiqueta "
+"analítica utilitzada per a la distribució analítica."

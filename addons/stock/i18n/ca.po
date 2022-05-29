@@ -18,6 +18,8 @@
 # Jonatan Gk, 2022
 # Martin Trigaux, 2022
 # marcescu, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# eriiikgt, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: eriiikgt, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +81,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Les transferències %s: Heu de proporcionar un número de Lot/Serial per productes %s."
+"Transferències %s: Heu de proporcionar un número de lot/sèrie per als productes %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -136,7 +138,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr "%(warehouses): Producte de%(suppellers)"
+msgstr "%(warehouse)s: Subministrament de producte de %(supplier)s"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_type.py:0
@@ -292,7 +294,7 @@ msgid ""
 "                    <strong>Current Inventory: </strong>"
 msgstr ""
 "<br/>\n"
-"                    < strong>Inventori actual: </Plus>"
+"                    <strong>Inventori actual: </strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -351,35 +353,35 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-"< div style=\"margin: 0px; farciment: 0px; \">\n"
-"    < p style=\"margin: 0px; farciment: 0px; mida de tipus de lletra: 13px; \">\"\n"
-"        Hola < t- out=\"object. partner_ id. name o '\">Brandon Freeman </ t>, <br/> <br />\n"
-"        Estem contents d'informar-lo que el seu ordre ha estat enviat.\n"
-"        < t- if=\" hasattr(object, 'carer_ tracking_ arf') i objecte.carer_ track_ atf\">\n"
-"            La referència del seguiment és\n"
-"            < strong>\n"
-"            < t- if=\"object. carrier_ tracking_url\">\n"
-"                < t- set=\" multiple_ carrier_ t- valor=\" object.get_ multiple_ carrier_ tracking() \"/>\n"
-"                < t- f=\" multiple_ carrier_ tracking\">\n"
-"                    < t- t pereach=\" multiple_ carrier_ tracking\" t- com=\" line\">\n"
-"                        <br/> <a t- at- at- atteef=\" line[ 0\" objectiu=\"_ blanc\" t- out=\" line[ 0] o '>'\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Ens complau informar-vos que la vostra comanda ha estat enviada.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            La vostra referència de seguiment és\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
-"                < t- else=\" \">\n"
-"                    < at- t- atf-href=\"{ objecte. carrer_ atrack_url} \" end=\" }\" t- out=\" object.carer_ track_ apf o '/>.\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "                </t>\n"
 "            </t>\n"
-"            < t- else=\" \">\n"
-"                < t- out=\"object. carrier_ tracking_ ref o '>' />.\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "            </t>\n"
-"            </Plus>\n"
+"            </strong>\n"
 "        </t>\n"
-"        <br/> <br/>\n"
-"        Si us plau, trobeu l' ordre d' enviament adjuntada per a més detalls. <br/> <br/>\n"
-"        Grøcies.\n"
-"        < tt t- if=\" user.signatura\">\n"
+"        <br/><br/>\n"
+"        Trobeu la vostra comanda de lliurament adjunta per obtenir més detalls.<br/><br/>\n"
+"        Gràcies,\n"
+"        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
-"            < t- out=\" user.signatura o '>' - <br/>Mitchell Admin </ t>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -401,8 +403,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
 msgstr ""
-"<i class=\" ffa fa-exclation- triangle\" />\n"
-"                                No s' han pogut reservar tots els productes. Cliqueu al botó \"Componibilitat\" per intentar productes de reserva."
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                No s'han pogut reservar tots els productes. Feu clic al botó \"Comprovar disponibilitat\" per provar de reservar productes."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -419,8 +421,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '=', 'done'), "
 "('from_immediate_transfer', '=', True)]}\"> / </span>"
 msgstr ""
-"< span atts=\" {' invisible ': ['=' estat,\" '=', 'dun'), (' de_immediat_ "
-"transfer', '=', True]} \"> / </ span>"
+"<span attrs=\"{'invisible': ['|', ('state', '=', 'done'), "
+"('from_immediate_transfer', '=', True)]}\"> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -462,8 +464,8 @@ msgid ""
 "<span class=\"o_stat_text\">In:</span>\n"
 "                                <span class=\"o_stat_text\">Out:</span>"
 msgstr ""
-"<span classe=\" o_stat_ text \">In: </ span>\n"
-"                                <span classe=\" o_stat_ text \">Out: </ span>"
+"<span class=\"o_stat_text\">Entrades:</span>\n"
+"                                <span class=\"o_stat_text\">Sortides:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -489,7 +491,7 @@ msgstr "<span class=\"o_stat_text\">Operacions</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Transfers</span>"
-msgstr "<span classe=\" o_stat_ text \">Transfers </ span>"
+msgstr "<span class=\"o_stat_text\">Transferències</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -569,7 +571,7 @@ msgstr "<span>kg</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "<span>×</span>"
-msgstr "<span>× </ span>"
+msgstr "<span>×</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -585,7 +587,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Available Quantity</strong>"
-msgstr "< strong>Available quantitat </ strong>"
+msgstr "<strong>Quantitat disponible</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -595,7 +597,7 @@ msgstr "<strong>Quantat recomptada</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivered</strong>"
-msgstr "< strong>Delived </ strong>"
+msgstr "<strong>Lliurat</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -604,8 +606,9 @@ msgid ""
 "quantity and now, the difference of quantity is not consistent "
 "anymore.</strong>"
 msgstr ""
-"< strong>Due a alguna pila es mou entre l' actualització inicial de la "
-"quantitat i ara la diferència de quantitat ja no és consistent. </ strong>"
+"<strong>A causa d'alguns moviments d'estoc realitzats entre la vostra "
+"actualització inicial de la quantitat i ara, la diferència de quantitat ja "
+"no és consistent.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -636,7 +639,7 @@ msgstr "<strong>Quantiat mínima :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On hand Quantity</strong>"
-msgstr "< strong> A mà Quantitat </ strong>"
+msgstr "<strong>Quantitat a mà</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -647,7 +650,7 @@ msgstr "<strong>Comanda:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered</strong>"
-msgstr "< strong> Ordered </ strong>"
+msgstr "<strong>Ordenat</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -710,7 +713,7 @@ msgstr "<strong>A</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr "< strong>Tracked product(s): </Plus>"
+msgstr "<strong>Producte(s) amb seguiment:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1037,7 +1040,10 @@ msgid "As soon as possible"
 msgstr "Tan aviat com sigui possible"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Assigna"
 
@@ -2182,12 +2188,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Defineix el mètode per omissió usat per a suggerir la ubicació exacta (adulta) a on agafar els productes, el qual és molt, etc. per aquesta localització. Aquest mètode es pot forçar al nivell de categoria del producte, i es fa una alternativa a les localitzacions pare si no n' hi ha cap aquí establert.\n"
+"Defineix el mètode predeterminat utilitzat per suggerir la ubicació exacta (prestatges) d'on agafar els productes, quin lot, etc. per a aquesta ubicació. Aquest mètode es pot aplicar a nivell de categoria de producte i es fa una alternativa a les ubicacions principals si no n'hi ha cap.\n"
 "\n"
-"DHT: els productes/lots que van ser agafats primer es mouran fora.\n"
-"LIFO: els productes/lots que van ser agafats per última vegada es mouran fora.\n"
-"Ubicació del tancament: els productes/lots més propers a la ubicació de l' objectiu es mouran primer a fora.\n"
-"FEFO: els productes/lots amb la data d' eliminació més propera es mouran primer (la disponibilitat d' aquest mètode depèn de l' opció \"Estrupació de dates\" de \"Expiraració.\""
+"FIFO: els productes/lots que es van emmagatzemar primer es traslladaran primer.\n"
+"LIFO: els productes/lots que es van emmagatzemar els darrers es traslladaran primer.\n"
+"Ubicació de l'armari: els productes/lots més propers a la ubicació de destinació es mouran primer.\n"
+"FEFO: els productes/lots amb la data de retirada més propera es traslladaran primer (la disponibilitat d'aquest mètode depèn de la configuració \"Dates de caducitat\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2283,7 +2289,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__delivery_count
 msgid "Delivery order count"
-msgstr "Comptador d'ordres de lliurament"
+msgstr "Recompte de comandes de lliurament"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -2480,7 +2486,7 @@ msgstr "Mostra la finestra completa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
 msgid "Display Lots & Serial Numbers on Delivery Slips"
-msgstr "Mostra molts números & sèries en el lliurament de Slips"
+msgstr "Mostra lots i números de sèrie als albarans d'entrega"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
@@ -2708,8 +2714,7 @@ msgstr "Excepció(ns):"
 msgid ""
 "Existing Serial Numbers (%s). Please correct the serial numbers encoded."
 msgstr ""
-"Nombres sèries existents (%s). Si us plau corregiu els números de sèrie "
-"codificats."
+"Números de sèrie existents (%s). Corregiu els números de sèrie codificats."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -3214,10 +3219,10 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
-"Si un pagament encara és més de 60 dies després de la data de pagament, la "
-"meva empresa (Cheicago) reserves del dret a trucar als serveis d'una "
-"companyia de recuperació de deutes. Totes les despeses legals seran pagables"
-" pel client."
+"Si un pagament encara està pendent més de seixanta (60) dies després de la "
+"data de venciment del pagament, My Company (Chicago) es reserva el dret de "
+"demanar els serveis d'una empresa de recuperació de deutes. Totes les "
+"despeses legals seran a càrrec del client."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -3296,9 +3301,9 @@ msgid ""
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
 msgstr ""
-"Si aquesta caixa de selecció està marcada, Odoo posarà automàticament les "
-"operacions detallades amb els productes corresponents, localitzacions i "
-"molts números de preferència."
+"Si aquesta casella de selecció està marcada, Odoo preemplenarà "
+"automàticament les operacions detallades amb els productes, ubicacions i "
+"números de lot/sèrie corresponents."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3799,8 +3804,8 @@ msgstr "Mantén la diferència"
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
 msgstr ""
-"Mantén l' import < strong> valorat </ strong> (la diferència s' "
-"actualitzarà)"
+"Mantingueu la <strong>quantitat comptada</strong> (la diferència "
+"s'actualitzarà)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -3808,8 +3813,8 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr ""
-"Mantén l' opció < strong> Discrància </ strong> (l' import comptada s' "
-"actualitzarà per reflectir la mateixa diferència que quan comptis)"
+"Mantingueu la <strong>diferència</strong> (la quantitat comptada "
+"s'actualitzarà per reflectir la mateixa diferència que quan vau comptar)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4201,7 +4206,7 @@ msgstr "Lot/Nom número de sèrie"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Lot/Serial Numbers"
-msgstr "Nombres Lot/ Siderial"
+msgstr "Lot/Números de sèrie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
@@ -4238,8 +4243,8 @@ msgid ""
 "Lots/Serial numbers help you tracking the path followed by your products.\n"
 "            From their traceability report you will see the full history of their use, as well as their composition."
 msgstr ""
-"Molts números/Serials us ajuden a controlar el camí seguit dels vostres productes.\n"
-"            D'aquest informe de traça veureu la història completa del seu ús, així com de la seva composició."
+"Els lots/números de sèrie us ajuden a fer un seguiment del camí que segueixen els vostres productes.\n"
+"                   A partir del seu informe de traçabilitat veureu l'historial complet del seu ús, així com la seva composició."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -5822,7 +5827,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Products: %(location)s"
-msgstr "Productes:%(localització)"
+msgstr "Productes: %(location)s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__propagate
@@ -6675,9 +6680,7 @@ msgstr "Error de lliurament SMS"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
-"ELS SES DE SENARDA I CONTELLES DEL SANA DE SEGATConstellation name "
-"(optional)"
+msgstr "TERMES I CONDICIONS ESTÀNDAR DE VENDA"
 
 #. module: stock
 #. openerp-web
@@ -6896,7 +6899,7 @@ msgstr "Torna a la seqüència"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
-msgstr "Números sèries"
+msgstr "Números de sèrie"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -6958,12 +6961,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Estableix una estratègia d' eliminació específica que s' usarà independentment de la localització de la font per a aquesta categoria de producte.\n"
+"Establiu una estratègia d'eliminació específica que s'utilitzarà independentment de la ubicació d'origen d'aquesta categoria de producte.\n"
 "\n"
-"DHT: els productes/lots que van ser agafats primer es mouran fora.\n"
-"LIFO: els productes/lots que van ser agafats per última vegada es mouran fora.\n"
-"Ubicació del tancament: els productes/lots més propers a la ubicació de l' objectiu es mouran primer a fora.\n"
-"FEFO: els productes/lots amb la data d' eliminació més propera es mouran primer (la disponibilitat d' aquest mètode depèn de l' opció \"Estrupació de dates\" de \"Expiraració.\""
+"FIFO: els productes/lots que es van emmagatzemar primer es traslladaran primer.\n"
+"LIFO: els productes/lots que es van emmagatzemar els darrers es traslladaran primer.\n"
+"Ubicació de l'armari: els productes/lots més propers a la ubicació de destinació es mouran primer.\n"
+"FEFO: els productes/lots amb la data de retirada més propera es traslladaran primer (la disponibilitat d'aquest mètode depèn de la configuració \"Dates de caducitat\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7758,8 +7761,8 @@ msgid ""
 "The deadline has been automatically updated due to a delay on <a href='#' "
 "data-oe-model='%s' data-oe-id='%s'>%s</a>."
 msgstr ""
-"El termini s' ha actualitzat automàticament degut a un retard en el <a "
-"href='#' data- model='% de dades- ie- id='>% dels </a>."
+"La data límit s'ha actualitzat automàticament a causa d'un retard <a "
+"href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -8046,8 +8049,7 @@ msgstr ""
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
 msgstr ""
-"Aquesta quantitat %(lot_ nom) és incompatible amb aquest "
-"producte%(producció_ nom)"
+"Aquest lot %(lot_name)s és incompatible amb aquest producte %(product_name)s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -8458,7 +8460,10 @@ msgid "USPS Connector"
 msgstr "Connector USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Sense signe"
 
@@ -8541,7 +8546,7 @@ msgstr "Paquet desconegut"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Unknown stream."
-msgstr "S' ha produït un corrent desconegut."
+msgstr "Seqüència desconeguda."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9353,8 +9358,8 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
-"Tens ((s) producte en accions que no tenen gaire/serial. Podeu assignar "
-"molts nombres/serials fent un ajust d'inventari."
+"Teniu producte(s) en estoc que no tenen número de lot/sèrie. Podeu assignar "
+"números de lot/sèrie fent un ajust d'inventari."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9420,14 +9425,14 @@ msgid ""
 "You need to supply a Lot/Serial Number for product: \n"
 " - "
 msgstr ""
-"Heu de proporcionar un nombre Lot/Serial per al producte: \n"
+"Heu de proporcionar un número de lot/sèrie per al producte: \n"
 " - "
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
-msgstr "Heu de proporcionar un nombre de Lot/Serial per productes %s."
+msgstr "Heu de proporcionar un número de lot/sèrie per als productes %s."
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -9435,18 +9440,6 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Heu d'actualitzar aquest document per reflectir les vostres termes i "
 "condicions."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"No s'ha d'utilitzar una transferència interna prevista per moure alguns "
-"productes entre dos magatzems. En lloc d'això, utilitza una transferència "
-"interna immediata o la ruta de subministrament."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -9543,9 +9536,7 @@ msgstr "p.g. CWunit description in lists"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
-msgstr ""
-"p.g. Warehouse centralCity name (optional, probably does not need a "
-"translation)"
+msgstr "per exemple. Central Warehouse"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -9555,7 +9546,7 @@ msgstr "p. ex. LOT/0001/20121"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "e.g. PACK0000007"
-msgstr "p.g. PACK00007"
+msgstr "per exemple. PACK0000007"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9645,7 +9636,7 @@ msgstr "per arribar al màxim de"
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr "{{ (objecte. name o').replace(' /', '_')}"
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
