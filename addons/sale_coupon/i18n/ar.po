@@ -16,7 +16,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Mohamed Alansari <Mohammad.alansari@outlook.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
-# Malaz Abuidris <msea@odoo.com>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:02+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgstr "خصم %s%% على أرخص منتج"
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on products"
-msgstr ""
+msgstr " خصم %s%% على المنتجات "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_coupon_reward.py:0
@@ -65,18 +65,18 @@ msgstr "خصم %s%% على القيمة الإجمالية"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.report_coupon
 msgid "*Valid for following products:"
-msgstr ""
+msgstr "*صالح للمنتجات التالية: "
 
 #. module: sale_coupon
 #: model:sale.coupon.program,name:sale_coupon.10_percent_coupon
 msgid "10% Discount"
-msgstr ""
+msgstr "خصم %10 "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/wizard/sale_coupon_generate.py:35
 #, python-format
 msgid "%s, a coupon has been generated for you"
-msgstr ""
+msgstr "%s، تم إنشاء كوبون من أجلك "
 
 #. module: sale_coupon
 #: model:product.product,name:sale_coupon.product_product_10_percent_discount
@@ -649,7 +649,7 @@ msgstr "تاريخ الانتهاء"
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "أدخل رمز العرض أو رمز الكوبون "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__expiration_date
@@ -956,6 +956,9 @@ msgid ""
 "Cheapest product - Discount on cheapest product of the order\n"
 "Specific products - Discount on selected specific products"
 msgstr ""
+"على الطلب - يُطبَّق الخصم على الطلب بأكمله\n"
+"أرخص منتَج - يُطبَّق الخصم على أرخص منتج في الطلب\n"
+"منتجات محددة - يُطبَّق الخصم على منتجات محددة مختارة "
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_coupon_program__rule_products_domain
@@ -966,7 +969,7 @@ msgstr "عند شراء المنتج المختار، سيتم منح مكافأ
 #. module: sale_coupon
 #: model:ir.model.fields.selection,name:sale_coupon.selection__sale_coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "على منتجات محددة "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
@@ -1039,6 +1042,7 @@ msgid ""
 "Products that will be discounted if the discount is applied on specific "
 "products"
 msgstr ""
+"المنتجات التي سوف يتم تطبيق الخصم عليها إذا تم تطبيق الخصم على منتجات محددة "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon__program_id
@@ -1253,7 +1257,7 @@ msgstr "اختيار المنتج"
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
 msgid "Select products"
-msgstr ""
+msgstr "تحديد المنتجات "
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_form_common
