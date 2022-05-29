@@ -20,7 +20,6 @@
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2020
 # Yedigen, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Martin Trigaux, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2020
@@ -32,6 +31,7 @@
 # İmat Yahya Çataklı, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1085,6 +1085,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"pain.001 mesajları sayesinde SEPA normunun önerdiği şekilde ödeme emirleri oluşturun. Desteklenen ağrı versiyonu (ülkeler) pain.001.001.03 (genel), pain.001.001.03.ch.02 (İsviçre) ve pain.001.003.03 (Almanya)'dır. Oluşturulan XML dosyası daha sonra bankanıza yüklenebilir.\n"
+"\n"
+"Bu modül, Avrupa Ödeme Konseyi tarafından yayınlanan uygulama yönergelerini takip eder.\n"
+"        SEPA standartları hakkında daha fazla bilgi için: http://www.iso20022.org/ ve http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1586,6 +1592,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"Taxclouds hesaplamalarındaki teslimatlarla indirimleri yönetin.\n"
+"    Bu modül \"Account Taxcloud - Sale (kupon)\" ile aynı mantığı izler.\n"
+"    TaxCloud için indirim hesaplamalarının nasıl yapıldığı hakkında daha fazla bilgiyi burada bulabilirsiniz.\n"
+"\n"
+"Teslimatlarda indirim (ücretsiz kargo) için ek bir seçenek vardır.\n"
+"    Satış kuponu teslimatında, indirim hesaplaması teslimat satırlarında geçerli değildir.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -3192,6 +3206,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Venezüella Hesap Planı.\n"
+"===============================\n"
+"\n"
+"Venezüella'nın yasalara göre herhangi bir hesap planı yoktur, ancak varsayılan\n"
+"Odoo'da önerilen bazı Venezüella'daki bazı Kabul Edilmiş en iyi uygulamalara uymalıdır,\n"
+"bu plan bu uygulamalara uygundur.\n"
+"\n"
+"Bu modül 1000'den fazla şirket için temel olarak test edilmiştir, çünkü\n"
+"Venezüella'daki en yaygın yazılımların bir karışımına dayanmaktadır.\n"
+"Muhasebecilerin ilk adımlarını hissetmelerine kesinlikle izin verecek olan şeyi pazarlayın\n"
+"Odoo daha rahat.\n"
+"\n"
+"Bu modül Venezüella için toplam yerelleştirme gibi davranmaz,\n"
+"ama bu ülkede Odoo ile gerçekten hızlı bir şekilde başlamanıza yardımcı olacaktır.\n"
+"\n"
+"Bu modül size verir.\n"
+"---------------------\n"
+"\n"
+"- Venezüella için temel vergiler.\n"
+"- Topluluk yerelleştirme ile testleri çalıştırmak için temel verilere sahip olun.\n"
+"- İhtiyaçlarınız bir muhasebe PoV'undan temelse, 0'dan bir şirket başlatın.\n"
+"\n"
+"Değerli olmak istiyorsanız account_anglo_saxon kullanmanızı öneririz.\n"
+"Venezüella'nın faturalarla yaptığı gibi stoklar.\n"
+"\n"
+"Bu modülü yükler ve Özel grafik'i seçerseniz, temel bir grafik önerilecektir,\n"
+"ancak vergiler için manuel hesap varsayılanlarını ayarlamanız gerekir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3282,6 +3324,12 @@ msgid ""
 "Better plan your future schedules by considering time effectively spent on old plannings\n"
 "\n"
 msgstr ""
+"\n"
+"Çalışma çizelgelerini ve planlamaları karşılaştırma\n"
+"================================\n"
+"\n"
+"Eski planlamalara etkili bir şekilde harcanan zamanı göz önünde bulundurarak gelecekteki programlarınızı daha iyi planlayın\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -3645,6 +3693,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI Şili Yerelleştirmesi\n"
+"========================\n"
+"Bu kod, Şili faturalandırması için DTE belgesinin oluşturulmasını sağlar.\n"
+"- XML'de DTE (Elektronik Vergilendirilebilir Belge) formatı\n"
+"- Satışla ilgili faturaları ve diğer vergi belgelerini göndermek için SII (Servicio de Impuestos Internos) ile doğrudan iletişim.\n"
+"- Satış DTE'leri göndermek için Müşterilerle iletişim.\n"
+"- DTE'leri onlardan kabul etmek için Tedarikçilerle (satıcılarla) iletişim.\n"
+"- Satıcı faturalarının veya diğer DTE'lerin kabulünü veya reddini bildiren SII ile doğrudan iletişim.\n"
+"\n"
+"Faturadaki barkodu görmek için pdf417gen kütüphanesine ihtiyacınız vardır.\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5330,6 +5390,21 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Çok seviyeli geri çağırmalarla ödenmemiş faturalar için mektupları otomatikleştirme modülü.\n"
+"=========================================================================\n"
+"\n"
+"Birden fazla geri çağırma düzeyinizi menüden tanımlayabilirsiniz:\n"
+"---------------------------------------------------------------\n"
+"    Konfigürasyon / Takip / Takip Seviyeleri\n"
+"\n"
+"Tanımlandıktan sonra, sadece menüye tıklayarak her gün geri çağırmaları otomatik olarak yazdırabilirsiniz:\n"
+"------------------------------------------------------------------------------------------------------\n"
+"    Ödeme Takibi / E-posta ve mektup gönderme\n"
+"\n"
+"Bir PDF oluşturacak / e-posta gönderecek / farklı seviyelere göre manuel eylemler ayarlayacaktır.\n"
+"geri çağırma tanımlanmıştır. Farklı şirketler için farklı ilkeler tanımlayabilirsiniz.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -7469,6 +7544,23 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, ödemelerinizi önceden basılmış çek kağıdına yazdırmanızı sağlar.\n"
+"Şirket ayarlarında çıktıyı (düzen, saplama bilgileri vb.) yapılandırabilir ve\n"
+"dergi ayarlarında numaralandırmayı kontrol eder (sayılar olmadan önceden basılmış çekler kullanıyorsanız).\n"
+"\n"
+"Desteklenen formatlar\n"
+"-----------------\n"
+"Bu modül en yaygın üç denetim biçimini destekler ve checkdepot.net gelen bağlantılı denetimlerle kutudan çıkar çıkmaz çalışır.\n"
+"\n"
+"Tüm kontrolleri şuradan görüntüle: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"Aşağıdakiler arasından seçim yapabilirsiniz:\n"
+"\n"
+"- Üstte kontrol et: Quicken / QuickBooks standardı (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Ortada kontrol et: Peachtree standardı (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
+"- Altta kontrol edin: ADP standardı (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -10240,7 +10332,7 @@ msgstr "Add views and tweaks on event"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr ""
+msgstr "Addison Olson, Deco Addict'da güçlü bir satış temsilcisidir."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -10249,6 +10341,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Addison Olson <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"    özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"    IT bütçesi son 2 yılda neredeyse yarı yarıya."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -11316,6 +11411,9 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping"
 " customers deal with trees, flowers and fungi."
 msgstr ""
+"Azure Interior, ahşap sektörüne dürüstlük ve ciddiyet getirirken "
+"müşterilerin ağaçlar, çiçekler ve mantarlarla başa çıkmasına yardımcı "
+"oluyor."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -11849,6 +11947,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Brandon <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"                özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"                BT bütçesi son 2 yılda neredeyse yarı yarıya."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -12570,6 +12671,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Colleen Diaz, <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"                özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"                BT bütçesi son 2 yılda neredeyse yarı yarıya."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -14034,6 +14138,9 @@ msgid ""
 "Deco Addict brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Deco Addict, ahşap endüstrisine dürüstlük ve ciddiyet getirirken, "
+"müşterilerin ağaçlar, çiçekler ve mantarlarla başa çıkmasına yardımcı "
+"oluyor."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -14756,7 +14863,7 @@ msgstr "Done!"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
 msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr ""
+msgstr "Douglas Fletcher, Deco Addict'da güçlü bir fonksiyonel danışmandır"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -14765,6 +14872,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Douglas Fletcher, <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"    özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"    BT bütçesi son 2 yılda neredeyse yarı yarıya."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -16215,7 +16325,7 @@ msgstr "Kaydırma"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
 msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr ""
+msgstr "Floyd Steward, Deco Addict'da güçlü bir analisttir."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -16224,6 +16334,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Floyd Steward, <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"    özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"    BT bütçesi son 2 yılda neredeyse yarı yarıya."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -16536,6 +16649,9 @@ msgid ""
 "Gemini Furniture brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Gemini Mobilya, ahşap endüstrisine dürüstlük ve ciddiyet getirirken, "
+"müşterilerin ağaçlar, çiçekler ve mantarlarla başa çıkmasına yardımcı "
+"oluyor."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -16772,6 +16888,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"Gordon Owens, <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"                özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"                BT bütçesi son 2 yılda neredeyse yarı yarıya.\n"
+"                Ünlü Kıdemli Danışman."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -18362,7 +18482,7 @@ msgstr "Eylem tanımındaki geçersiz model adı %r"
 #: code:addons/base/models/ir_actions.py:611
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "many2many alanları başvuru ile değerlendirilemiyor"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -20993,6 +21113,8 @@ msgid ""
 "Nicole is <b>author of several books</b>, including Amazon best seller\n"
 "                \"How Azure and Odoo will change the business world!\"."
 msgstr ""
+"Nicole, Amazon'un en çok satanları da dahil olmak üzere <b>birçok kitabın yazarıdır</b>.\n"
+"                \"Azure ve Odoo iş dünyasını nasıl değiştirecek!\"."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -21003,6 +21125,11 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"Nicole <b>20 yıldan beri</b> bilişim sektöründe çalışmaktadır. O\n"
+"                web sitelerinin geliştirilmesine yardımcı olacak yazılımlar geliştirir.  Onu sattı\n"
+"                30 yaşında ilk şirket ve Azure İç Mekan'ı büyütmeyi başardı\n"
+"                1 ila 55 çalışan, çoğunlukla hizmetleri yeniden satarak\n"
+"                Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -24738,7 +24865,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospects"
-msgstr ""
+msgstr "Potansiyel"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
@@ -25145,6 +25272,8 @@ msgid ""
 "Ready Mat brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Ready Mat, ahşap endüstrisine dürüstlük ve ciddiyet getirirken, müşterilerin"
+" ağaçlar, çiçekler ve mantarlarla başa çıkmasına yardımcı olur."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -27662,6 +27791,9 @@ msgid ""
 "The Jackson Group brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Jackson Group, ahşap endüstrisine dürüstlük ve ciddiyet getirirken, "
+"müşterilerin ağaçlar, çiçekler ve mantarlarla başa çıkmalarına yardımcı "
+"oluyor."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -28395,6 +28527,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Bu modül posta ile ilgili testleri içerir. Bunlar\n"
+"yalnızca gerçekleştirmek için kullanılan modelleri içerdiği için ayrı bir modülde bulunur\n"
+"diğer modellerin işlevsel yönlerine bağımsız olarak test eder. Üstelik çoğu\n"
+"posta üzerine kurulu modüller (sms, snailmail, mail_enterprise) bağımlılıklar olarak ayarlanır\n"
+"Tüm posta kod tabanını test etmek için. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -28403,6 +28540,9 @@ msgid ""
 "are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"Bu modül toplu postalama ile ilgili testleri içerir. Bu\n"
+"içinde tanımlanan belirli test modellerini kullanmak için ayrı bir modülde bulunur\n"
+"test_mail. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
@@ -28411,6 +28551,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Bu modül, web ızgarası görünümüyle ilgili testleri içerir. Bunlar\n"
+"yalnızca gerçekleştirmek için kullanılan modelleri içerdiği için ayrı bir modülde bulunur\n"
+"diğer modellerin işlevsel yönlerine bağımsız olarak test eder. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -28419,6 +28562,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Bu modül zamanlayıcı ile ilgili testleri içerir. Bunlar\n"
+"yalnızca gerçekleştirmek için kullanılan modelleri içerdiği için ayrı bir modülde bulunur\n"
+"diğer modellerin işlevsel yönlerine bağımsız olarak test eder. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -28428,6 +28574,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"Bu modül çeşitli posta özellikleriyle ilgili testleri içerir\n"
+"ve postayla ilgili alt modüller. Bu testler ayrı bir modülde mevcuttur.\n"
+"yalnızca fonksiyonel yönlerine bağımsız olarak testleri gerçekleştirmek için kullanılan modelleri içerir.\n"
+"gerçek uygulamalar. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -28436,6 +28586,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Bu modül, web kohortu ile ilgili testleri içerir. Bunlar\n"
+"yalnızca gerçekleştirmek için kullanılan modelleri içerdiği için ayrı bir modülde bulunur\n"
+"diğer modellerin işlevsel yönlerine bağımsız olarak test eder. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -28446,6 +28599,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Bu modül web sitesi ile ilgili testleri içerir. Bunlar\n"
+"Modülü yükleme/kaldırma/yükseltme işlemlerini test ettiğimiz için ayrı bir modülde mevcut\n"
+"ve web sitesi modülünü her seferinde yeniden yüklemek istemiyoruz, mümkün olduğu da dahil olmak üzere\n"
+"Bağımlılık. Web sitesi modülüne bazı rotalar, görünümler ve\n"
+"tek amacı testleri çalıştırmak olan modeller."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
@@ -28453,6 +28611,9 @@ msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
 msgstr ""
+"Bu modül, çalışma çizelgesi uygulaması aracılığıyla satış siparişinde "
+"tanımlanan verilerin (analitik hesaplar gibi) aboneliklerde de doğru şekilde"
+" ayarlanmasını sağlar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -28479,6 +28640,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
+"Bu modül, etkinlik parçalarının analiz edilmesine ve düzenlenmesine yardımcı olur.\n"
+"Bu amaçla, olay izlerine bir gantt görünümü ekler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -28713,6 +28876,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
+"Toni Rhodes <b>10 yıldan beri</b> bilişim sektöründe çalışmaktadır. O bilinir\n"
+"                özellikle fare tuzakları satmak için. Bu numarayla kesti\n"
+"                BT bütçesi son 2 yılda neredeyse yarı yarıya.\n"
+"                Ünlü Yönetici Ortak."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -30037,6 +30204,9 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Dünya çapındaki müşterilerimiz için gelişmiş yazılımlar kullanarak değer "
+"artırıcı çözümler üreten bir teknoloji danışmanlığı ve stratejik danışmanlık"
+" firmasıyız. Lumber Inc'de operasyonel deneyimi bir araya getiriyoruz..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -30045,6 +30215,15 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Dünya çapındaki müşterilerimiz için gelişmiş yazılımlar kullanarak değer "
+"artırıcı çözümler üreten bir teknoloji danışmanlığı ve stratejik danışmanlık"
+" firmasıyız. <br> <br>Lumber Inc'de operasyonel deneyimi teknolojik zekayla "
+"birleştiriyoruz. İş operasyonlarını destekleyen herhangi bir yazılımın, "
+"kritik operasyonel süreçlerin yürütülmesini kolaylaştıracak ve kullanıcılara"
+" bir engel yerine bir araç olarak hizmet edecek şekilde tasarlanması "
+"gerektiğini anlıyoruz. Yaklaşımımız önce sürece odaklanır, şirketin "
+"hedeflerine katkıda bulunmasını sağlar, daha sonra optimize eder ve yazılım "
+"çözümlerini en iyi şekilde destekleyecek şekilde tasarlarız."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -30392,6 +30571,9 @@ msgid ""
 "Wood Corner brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Wood Corner, ahşap endüstrisine dürüstlük ve ciddiyet getirirken, "
+"müşterilerin ağaçlar, çiçekler ve mantarlarla başa çıkmasına yardımcı "
+"oluyor."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
