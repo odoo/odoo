@@ -47,7 +47,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "1 Meeting"
-msgstr ""
+msgstr "1 Toplantı"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -124,6 +124,11 @@ msgid ""
 "                            </span>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"text-danger\">Tüm başvurular işe alınma tarihlerini ve işe alınma durumlarını kaybeder.                            </span>\n"
+"                        </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -131,6 +136,8 @@ msgid ""
 "<span attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + "
 "</span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + "
+"</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -138,6 +145,8 @@ msgid ""
 "<span attrs=\"{'invisible':[('salary_proposed_extra','=',False)]}\"> + "
 "</span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('salary_proposed_extra','=',False)]}\"> + "
+"</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -151,7 +160,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<span class=\"bg-success\">Hired</span>"
-msgstr ""
+msgstr "<span class=\"bg-success\">Işe Alındı</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -250,6 +259,69 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"background-color: white; border-collapse: collapse; margin-left: "
+"20px;\"><tr><td valign=\"top\" style=\"padding: 0px 10px;\"><div "
+"style=\"font-size: 13px; margin: 0px; padding: 0px;\">Merhaba,<br/><br/> "
+"<strong t-out=\"object.company_id.name or ''\">YourCompany'deki</strong> \" "
+"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong "
+"t-out=\"object.job_id.name or ''\">Deneyimli Geliştirici</strong></a> \" işi"
+" için başvurunuzu başarıyla aldığımızı onaylıyoruz .<br/><br/> Kısa süre "
+"sonra size geri döneceğiz.<div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\"> <a t-att-"
+"href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-"
+"decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: "
+"5px;\">İş tanımı</a></div><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/><t"
+" t-if=\"object.user_id\"><h3 style=\"color:#9A6C8E;\"> "
+"<strong>Kişiniz:</strong></h3><table><tr><td width=\"75\"><img t-attf-"
+"src=\"/web/image/res.users/{{ object.user_id.id }}/avatar_128\" "
+"alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; "
+"object-fit: cover;\"/></td><td> <strong t-out=\"object.user_id.name or "
+"''\">Mitchell Admin</strong><br/> <span>E-posta:</span><t "
+"t-out=\"object.user_id.email or ''\"> "
+"<span>admin@sirketiniz.example.com</span></t><br/> <span>Telefon:</span><t "
+"t-out=\"object.user_id.phone or ''\"> <span>+1 "
+"650-123-4567</span></t></td></tr></table><hr width=\"97%\" "
+"style=\"background-color: rgb(204,204,204); border: medium none; clear: "
+"both; display: block; font-size: 0px; min-height: 1px; line-height: 0; "
+"margin: 16px 0px 16px 0px;\"/></t><h3 style=\"color:#9A6C8E;\"> "
+"<strong>Sonraki adım nedir?</strong></h3> <strong>Başvuruları genellikle "
+"birkaç gün içinde yanıtlıyoruz.</strong><br/><br/> Daha <strong>hızlı bir "
+"geri bildirim istiyorsanız veya bizden yeterince hızlı haber almazsanız "
+"bizimle iletişime</strong> geçmekten çekinmeyin (sadece bu e-postayı "
+"yanıtlayın).<hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/><t "
+"t-set=\"location\" t-value=\"''\"/><t "
+"t-if=\"object.job_id.address_id.name\"> <strong "
+"t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/></t><t "
+"t-if=\"object.job_id.address_id.street\"><t "
+"t-out=\"object.job_id.address_id.street or ''\"> Puerto Madero "
+"9710</t><br/><t t-set=\"location\" "
+"t-value=\"object.job_id.address_id.street\"/></t><t "
+"t-if=\"object.job_id.address_id.street2\"><t "
+"t-out=\"object.job_id.address_id.street2 or ''\"> A15, Santiago "
+"(RM)</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/></t><t "
+"t-if=\"object.job_id.address_id.city\"><t "
+"t-out=\"object.job_id.address_id.city or ''\"> Pudahuel</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/></t><t "
+"t-if=\"object.job_id.address_id.state_id.name\"><t "
+"t-out=\"object.job_id.address_id.state_id.name or ''\"> C1</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/></t><t "
+"t-if=\"object.job_id.address_id.zip\"><t "
+"t-out=\"object.job_id.address_id.zip or ''\"> 98450</t><t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/></t><br/><t "
+"t-if=\"object.job_id.address_id.country_id.name\"><t "
+"t-out=\"object.job_id.address_id.country_id.name or ''\"> "
+"Arjantin</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/></t><br/></div></td></tr></table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -344,6 +416,73 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"background-color: white; border-collapse: collapse; margin-left: "
+"20px;\"><tr><td valign=\"top\" style=\"padding: 0px 10px;\"><div "
+"style=\"text-align: center\"><h2>Tebrikler!</h2><div style=\"color:grey;\"> "
+"Özgeçmişiniz olumlu olarak incelendi.</div><img "
+"src=\"/hr_recruitment/static/src/img/congratulations.png\" "
+"alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/></div><div "
+"style=\"font-size: 13px; margin: 0px; padding: 0px;\"> Az önce özgeçmişinizi"
+" inceledik ve dikkatimizi çekti. Pozisyon için harika olabileceğinizi "
+"düşündüğümüzden, başvurunuz bir arama veya görüşme için kısa listeye "
+"alındı.<br/><br/><div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\"> <a t-att-"
+"href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-"
+"decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: "
+"5px;\">İş tanımı</a></div><t t-if=\"object.user_id\"> Yakında sizinle "
+"iletişime geçilecek:<table><tr><td width=\"75\"><img t-attf-"
+"src=\"/web/image/res.users/{{ object.user_id.id }}/avatar_128\" "
+"alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; "
+"object-fit: cover;\"/></td><td> <strong t-out=\"object.user_id.name or "
+"''\">Mitchell Yöneticisi</strong><br/> <span>E-posta:</span><t "
+"t-out=\"object.user_id.email or ''\"> "
+"<span>admin@sirketiniz.example.com</span></t><br/> <span>Telefon:</span><t "
+"t-out=\"object.user_id.phone or ''\"> <span>+1 "
+"650-123-4567</span></t></td></tr></table><br/><br/></t> Yakında "
+"görüşürüz,<div style=\"font-size: 11px; color: grey;\"> --<br/> İK Ekibi<t "
+"t-if=\"'website_url' in object.job_id and hasattr(object.job_id, "
+"'website_url') and object.job_id.website_url\"> <a href=\"/jobs\" "
+"style=\"text-decoration:none;color:#717188;\">Tüm işlerimizi</a> "
+"keşfedin.<br/></t></div><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px "
+"0px;\"/><h3 style=\"color:#9A6C8E;\"> <strong>Sonraki adım "
+"nedir?</strong></h3> <strong>Başvuruları genellikle birkaç gün içinde "
+"yanıtlıyoruz</strong> .<br/><br/> Bir sonraki adım ya bir telefon görüşmesi "
+"ya da ofislerimizde bir toplantı.<br/> Daha <strong>hızlı bir geri bildirim "
+"istiyorsanız veya bizden yeterince hızlı haber almazsanız bizimle "
+"iletişime</strong> geçmekten çekinmeyin (sadece bu e-postayı "
+"yanıtlayın).<br/><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/><t"
+" t-set=\"location\" t-value=\"''\"/><t "
+"t-if=\"object.job_id.address_id.name\"> <strong "
+"t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/></t><t "
+"t-if=\"object.job_id.address_id.street\"><t "
+"t-out=\"object.job_id.address_id.street or ''\"> Puerto Madero "
+"9710</t><br/><t t-set=\"location\" "
+"t-value=\"object.job_id.address_id.street\"/></t><t "
+"t-if=\"object.job_id.address_id.street2\"><t "
+"t-out=\"object.job_id.address_id.street2 or ''\"> A15, Santiago "
+"(RM)</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/></t><t "
+"t-if=\"object.job_id.address_id.city\"><t "
+"t-out=\"object.job_id.address_id.city or ''\"> Pudahuel</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/></t><t "
+"t-if=\"object.job_id.address_id.state_id.name\"><t "
+"t-out=\"object.job_id.address_id.state_id.name or ''\"> C1</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/></t><t "
+"t-if=\"object.job_id.address_id.zip\"><t "
+"t-out=\"object.job_id.address_id.zip or ''\"> 98450</t><t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/></t><br/><t "
+"t-if=\"object.job_id.address_id.country_id.name\"><t "
+"t-out=\"object.job_id.address_id.country_id.name or ''\"> "
+"Arjantin</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/></t><br/></div></td></tr></table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -376,6 +515,23 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">Sevgili<br/><br/>İlginiz ve zaman ayırdığınız için teşekkür ederiz.<br/>Gelecekteki çabalarınızda size en iyisini diliyoruz.                <br/><br/>En iyi<br/>\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">-- <br/>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>E-posta: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">-- <br/>\n"
+"                        <t t-out=\"object.company_id.name or ''\">Şirketiniz</t><br/>İK Ekibi<br/>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -424,6 +580,32 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">Merhaba<br/><br/>Toplantıya katıldığınız ilgi için teşekkür ederiz\n"
+"                <b><t t-out=\"object.company_id.name or ''\">Şirket</t></b> ekibiniz.  Biz\n"
+"                özgeçmişiniz olmasına rağmen bunu size bildirmek istedim\n"
+"                rekabetçi, işe alım ekibimiz başvurunuzu inceledi\n"
+"                ve <b>daha fazla düşünmek için seçmedi</b>.                <br/><br/>Lütfen işe alımın zor olduğunu ve yapabileceğimizi unutmayın.\n"
+"                Hata. Bu e-postaya cevap vermekten çekinmeyin.\n"
+"                Bir hata yaptığımızı düşünüyorsanız veya daha fazla bilgi istiyorsanız\n"
+"                kararımız hakkında.                <br/><br/>Bununla birlikte, özgeçmişinizi kayıtta tutacağız ve içeri gireceğiz.\n"
+"                Gelecekteki fırsatlar hakkında sizinle iletişime geçmek\n"
+"                becerileriniz ve deneyiminiz için daha uygun.                <br/><br/>İş aramanızda size en iyisini diliyoruz ve umarız\n"
+"                sizi başka bir rol için düşünme şansına sahip olacak\n"
+"                gelecekte.                <br/><br/>Teşekkürler                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">-- <br/>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>E-posta: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">-- <br/>\n"
+"                        <t t-out=\"object.company_id.name or ''\">Şirketiniz</t><br/>İK Ekibi                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -585,27 +767,27 @@ msgstr "Başvuranın Adı"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr ""
+msgstr "E-postası olmayan başvuru sahibi/leri"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Applicant: Acknowledgement"
-msgstr ""
+msgstr "Başvuru Sahibi: Teşekkür"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Applicant: Interest"
-msgstr ""
+msgstr "Başvuru Sahibi: İlgi Alanı"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Applicant: Not interested anymore"
-msgstr ""
+msgstr "Başvuran artık ilgilenmiyor"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Applicant: Refuse"
-msgstr ""
+msgstr "Başvuru Sahibi: Reddet"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -677,7 +859,7 @@ msgstr "Aynı e-postaya sahip uygulamalar"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications<br/>"
-msgstr ""
+msgstr "Uygulama<br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -772,6 +954,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
+"Bir iş pozisyonuna takma ad ayarlayarak, bu adrese gönderilen e-postalar "
+"otomatik olarak başvurular oluşturur. Uygulamanın kaynağına göre istatistik "
+"almak için birden fazla izleyici bile kullanabilirsiniz: LinkedIn, Monster, "
+"Indeed, vb."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -1122,7 +1308,7 @@ msgstr "Eposta cc"
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
-msgstr ""
+msgstr "Başvuru sahibinin e-postası ayarlanmamıştır, e-posta gönderilmez."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
@@ -1133,7 +1319,7 @@ msgstr "Email subject for applications sent via email"
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
-msgstr ""
+msgstr "Posta göndermek için e-posta şablonu seçilmelidir"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -1306,7 +1492,7 @@ msgstr "İşe Alınan"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__hired_stage
 msgid "Hired Stage"
-msgstr ""
+msgstr "İşe Alım Aşaması"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1354,6 +1540,8 @@ msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
+"Kontrol edilirse, bu aşama bir başvuru sahibinin işe alım tarihini "
+"belirlemek için kullanılır."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1426,7 +1614,7 @@ msgstr "Takipçi mi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
 msgid "Is Warning Visible"
-msgstr ""
+msgstr "Uyarı Görünür mü"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_job.py:0
@@ -1534,7 +1722,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Last Meeting"
-msgstr ""
+msgstr "Son Toplantı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason____last_update
@@ -1661,12 +1849,12 @@ msgstr "Orta"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Toplantı Görüntüleme Tarihi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
 msgid "Meeting Display Text"
-msgstr ""
+msgstr "Toplantı Metni Görüntüleme"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
@@ -1696,7 +1884,7 @@ msgstr "Mobil"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Motivations..."
-msgstr ""
+msgstr "Motivasyon..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -1801,13 +1989,13 @@ msgstr "Sonraki Faaliyet Türü"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Next Meeting"
-msgstr ""
+msgstr "Sonraki Toplantı"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Meeting"
-msgstr ""
+msgstr "Toplantı Yok"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1908,7 +2096,7 @@ msgstr "Memur"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
 msgid "Old Application"
-msgstr ""
+msgstr "Eski Uygulama"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1941,7 +2129,7 @@ msgstr "Or talk about this applicant privately with your colleagues."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other applications"
-msgstr ""
+msgstr "Diğer uygulamalar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
@@ -2221,7 +2409,7 @@ msgstr "E-posta Gönder"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr ""
+msgstr "Mülakat Anketi Gönder"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2229,6 +2417,8 @@ msgid ""
 "Send an Interview Survey to the applicant during\n"
 "                                        the recruitment process"
 msgstr ""
+"Başvuru sahibine bir Mülakat Anketi gönderin\n"
+"                                        işe alım süreci"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2411,6 +2601,8 @@ msgid ""
 "The email will not be sent to the following applicant(s) as they don't have "
 "email address."
 msgstr ""
+"E-posta adresleri olmadığı için aşağıdaki başvuru sahiplerine e-posta "
+"gönderilmeyecektir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -2628,7 +2820,7 @@ msgstr "Bu başvuru sahibi için bir Kişi Adı tanımlamanız gerekir."
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "İş Başvurunuz: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -2643,7 +2835,7 @@ msgstr "ör. Satış Müdürü"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Sales Manager 2 year experience"
-msgstr ""
+msgstr "ör. Satış Müdürü 2 yıllık deneyim"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

@@ -1,34 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-#
+# 
 # Translators:
-# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2021
-# Martin Trigaux, 2021
+# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2020
+# e2f FFE <e2f_de_FFE@outlook.com>, 2020
+# Leon Grill <leg@odoo.com>, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2021
-# e2f FFE <e2f_de_FFE@outlook.com>, 2021
-# Robert Förster <hello@suppliot.eu>, 2021
-# Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"PO-Revision-Date: 2020-02-13 10:47+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Create Invoice"
-msgstr "Rechnung erzeugen"
+msgstr "Rechnung erstellen"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -64,26 +64,44 @@ msgstr ""
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice as soon as this service is sold, and create a task in an existing project to track the time spent."
-msgstr "Stellen Sie eine Rechnung aus, sobald diese Dienstleistung verkauft ist, und erstellen Sie eine Aufgabe in einem bestehenden Projekt, um die aufgewendete Zeit zu erfassen."
+msgid ""
+"Invoice as soon as this service is sold, and create a task in an existing "
+"project to track the time spent."
+msgstr ""
+"Stellen Sie eine Rechnung aus, sobald diese Dienstleistung verkauft ist, und"
+" erstellen Sie eine Aufgabe in einem bestehenden Projekt, um die "
+"aufgewendete Zeit zu erfassen."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice ordered quantities as soon as this service is sold, and create a project for the order with a task for each sales order line to track the time spent."
-msgstr "Stellen Sie die bestellten Mengen in Rechnung, sobald eine Leistung verkauft wurde, und erstellen Sie ein Projekt für den Auftrag mit einer Aufgabe für jede Auftragszeile, um den Zeitaufwand zu verfolgen."
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create a "
+"project for the order with a task for each sales order line to track the "
+"time spent."
+msgstr ""
+"Stellen Sie die bestellten Mengen in Rechnung, sobald eine Leistung verkauft"
+" wurde, und erstellen Sie ein Projekt für den Auftrag mit einer Aufgabe für "
+"jede Auftragszeile, um den Zeitaufwand zu verfolgen."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "Invoice ordered quantities as soon as this service is sold, and create an empty project for the order to track the time spent."
-msgstr "Stellen Sie die bestellten Mengen in Rechnung, sobald eine Leistung verkauft wurde und erstellen Sie ein leeres Projekt für den Auftrag um den Zeitaufwand zu verfolgen."
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create an "
+"empty project for the order to track the time spent."
+msgstr ""
+"Stellen Sie die bestellten Mengen in Rechnung, sobald eine Leistung verkauft"
+" wurde und erstellen Sie ein leeres Projekt für den Auftrag um den "
+"Zeitaufwand zu verfolgen."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr "Stellen Sie die bestellten Mengen in Rechnung, sobald dieser Service verkauft ist."
+msgstr ""
+"Stellen Sie die bestellten Mengen in Rechnung, sobald dieser Service "
+"verkauft ist."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -226,8 +244,12 @@ msgstr "Auftragsposition"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
-msgid "Sales Order Item to which the time spent on this task will be added, in order to be invoiced to your customer."
-msgstr "Kundenauftragsposition, zu der die für diese Aufgabe aufgewendete Zeit hinzugefügt wird, um sie Ihrem Kunden in Rechnung zu stellen."
+msgid ""
+"Sales Order Item to which the time spent on this task will be added, in "
+"order to be invoiced to your customer."
+msgstr ""
+"Kundenauftragsposition, zu der die für diese Aufgabe aufgewendete Zeit "
+"hinzugefügt wird, um sie Ihrem Kunden in Rechnung zu stellen."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -236,8 +258,12 @@ msgstr "Auftragsposition"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
-msgid "Sales Order item should generate a task and/or a project, depending on the product settings."
-msgstr "Die Kundenauftragsposition sollte je nach den Produkteinstellungen eine Aufgabe und/oder ein Projekt erzeugen."
+msgid ""
+"Sales Order item should generate a task and/or a project, depending on the "
+"product settings."
+msgstr ""
+"Die Kundenauftragsposition sollte je nach den Produkteinstellungen eine "
+"Aufgabe und/oder ein Projekt erzeugen."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -246,8 +272,17 @@ msgstr "Verkaufsaufträge"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
-msgid "Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project."
-msgstr "Kundenauftragsposition, mit der das Projekt verknüpft ist. Verknüpft den Stundenzettel-Eintrag mit der im Projekt definierten Kundenauftragsposition. Gilt nur für Aufgaben, für die keine Kundenauftragsposition definiert ist, und wenn der Mitarbeiter nicht in der Zuordnung 'Mitarbeiter/Kundenauftragsposition' des Projekts enthalten ist."
+msgid ""
+"Sales order item to which the project is linked. Link the timesheet entry to"
+" the sales order item defined on the project. Only applies on tasks without "
+"sale order item defined, and if the employee is not in the 'Employee/Sales "
+"Order Item Mapping' of the project."
+msgstr ""
+"Kundenauftragsposition, mit der das Projekt verknüpft ist. Verknüpft den "
+"Stundenzettel-Eintrag mit der im Projekt definierten Kundenauftragsposition."
+" Gilt nur für Aufgaben, für die keine Kundenauftragsposition definiert ist, "
+"und wenn der Mitarbeiter nicht in der Zuordnung "
+"'Mitarbeiter/Kundenauftragsposition' des Projekts enthalten ist."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -281,19 +316,30 @@ msgstr "Suche in Kundenauftragspositionen"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
 #: model:ir.model.fields,help:sale_project.field_product_template__project_id
-msgid "Select a billable project on which tasks can be created. This setting must be set for each company."
-msgstr "Wählen Sie ein abrechenbares Projekt aus, für das Aufgaben erstellt werden können. Diese Einstellung muss für jedes Unternehmen festgelegt werden."
+msgid ""
+"Select a billable project on which tasks can be created. This setting must "
+"be set for each company."
+msgstr ""
+"Wählen Sie ein abrechenbares Projekt aus, für das Aufgaben erstellt werden "
+"können. Diese Einstellung muss für jedes Unternehmen festgelegt werden."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,help:sale_project.field_product_template__project_template_id
-msgid "Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated."
-msgstr "Wählen Sie ein abrechenbares Projekt aus, das als Grundgerüst für das neu erstellte Projekt beim Verkauf des aktuellen Produkts dienen soll. Phasen und Aufgaben werden dupliziert."
+msgid ""
+"Select a billable project to be the skeleton of the new created project when"
+" selling the current product. Its stages and tasks will be duplicated."
+msgstr ""
+"Wählen Sie ein abrechenbares Projekt aus, das als Grundgerüst für das neu "
+"erstellte Projekt beim Verkauf des aktuellen Produkts dienen soll. Phasen "
+"und Aufgaben werden dupliziert."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr "Wählen Sie ein nicht abrechenbares Projekt aus, um Aufgaben darin zu erstellen."
+msgstr ""
+"Wählen Sie ein nicht abrechenbares Projekt aus, um Aufgaben darin zu "
+"erstellen."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
@@ -304,8 +350,11 @@ msgstr "Aufgabe"
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
-msgid "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
-msgstr "Aufgabe erstellt (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Aufgabe erstellt (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -336,26 +385,42 @@ msgstr "Aufgaben für diesen Auftrag"
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "The product %s should not have a global project since it will generate a project."
-msgstr "Das Produkt %s sollte kein globales Projekt haben, da es ein Projekt erzeugen wird."
+msgid ""
+"The product %s should not have a global project since it will generate a "
+"project."
+msgstr ""
+"Das Produkt %s sollte kein globales Projekt haben, da es ein Projekt "
+"erzeugen wird."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "The product %s should not have a project nor a project template since it will not generate project."
-msgstr "Das Produkt %s sollte weder ein Projekt noch eine Projektvorlage haben, da es kein Projekt erzeugen wird."
+msgid ""
+"The product %s should not have a project nor a project template since it "
+"will not generate project."
+msgstr ""
+"Das Produkt %s sollte weder ein Projekt noch eine Projektvorlage haben, da "
+"es kein Projekt erzeugen wird."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
-msgid "The product %s should not have a project template since it will generate a task in a global project."
-msgstr "Das Produkt %s sollte keine Projektvorlage haben, da es eine Aufgabe in einem globalen Projekt erzeugen wird."
+msgid ""
+"The product %s should not have a project template since it will generate a "
+"task in a global project."
+msgstr ""
+"Das Produkt %s sollte keine Projektvorlage haben, da es eine Aufgabe in "
+"einem globalen Projekt erzeugen wird."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
-msgid "This task has been created from: <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> (%s)"
-msgstr "Diese Aufgabe wurde erstellt von: <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> (%s)"
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Diese Aufgabe wurde erstellt von: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
@@ -365,5 +430,10 @@ msgstr "Zu Berechnen"
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #, python-format
-msgid "You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense."
-msgstr "Sie können die Auftragsposition %(order_id)s - %(product_id)snicht mit dieser Aufgabe verknüpfen, da es sich um eine weiterberechnete Auslage handelt."
+msgid ""
+"You cannot link the order item %(order_id)s - %(product_id)s to this task "
+"because it is a re-invoiced expense."
+msgstr ""
+"Sie können die Auftragsposition %(order_id)s - %(product_id)snicht mit "
+"dieser Aufgabe verknüpfen, da es sich um eine weiterberechnete Auslage "
+"handelt."
