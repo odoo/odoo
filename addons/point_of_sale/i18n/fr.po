@@ -53,6 +53,7 @@
 # Pierrick Brun, 2021
 # Jerome Vanhaudenard <jev@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Véronique Urbán Lozano, 2022
 # 
 msgid ""
 msgstr ""
@@ -60,13 +61,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-09 16:49+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Véronique Urbán Lozano, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -4708,7 +4709,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Certains numéros de Lot/Série sont manquants"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5962,6 +5963,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"Vous essayez de vendre des produits avec des numéros de lots/série, mais "
+"certains ne sont pas indiqués. Voulez-vous tout de même continuer ?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

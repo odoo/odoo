@@ -41,7 +41,7 @@ msgstr "حساب"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "إضافة بقشيش من خلال جهاز الدفع بالبطاقة (Adyen) "
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -51,7 +51,7 @@ msgstr "العنوان"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ Adyen "
 
 #. module: pos_adyen
 #: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
@@ -68,17 +68,17 @@ msgstr ""
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "خطأ في Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "آخر تشخيص لـ Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "آخر استجابة لـ Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_payout_id
@@ -98,12 +98,12 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "معرف جهاز الدفع Adyen "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "وضع الاختبار لـ Adyen "
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
@@ -130,14 +130,14 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "اطلب البقشيش من العملاء "
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr ""
+msgstr "فشلت عملية المصادقة. يرجى التحقق من بيانات اعتماد Adyen. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -235,7 +235,7 @@ msgstr "آخر تحديث في"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "رسالة من Adyen: %s "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
@@ -262,7 +262,7 @@ msgstr "رقم الهاتف"
 #, python-format
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
-msgstr ""
+msgstr "يرجى تهيئة منتج بقشيش لنقطة البيع %s لدعم منح البقشيش مع Adyen. "
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
@@ -283,7 +283,7 @@ msgstr "طرق الدفع في نقطة البيع "
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Prompt the customer to tip."
-msgstr ""
+msgstr "حفز العميل على منح البقشيش. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
@@ -293,7 +293,7 @@ msgstr "رقم الإشارة"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "تشغيل المعاملات في بيئة الاختبار. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
@@ -328,12 +328,13 @@ msgstr "الشارع"
 msgid ""
 "Technical field used to buffer the latest asynchronous notification from "
 "Adyen."
-msgstr ""
+msgstr "حقل تقني يُستخدم لتخفيف آخر إشعار غير متزامن من Adyen. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Technical field used to determine if the terminal is still connected."
 msgstr ""
+"حقل تقني يستخدم لتحديد ما إذا كان جهاز الدفع بالبطاقة لا يزال متصلاً. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
@@ -344,7 +345,7 @@ msgstr ""
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
+msgstr "جهاز الدفع بالبطاقة %s مستخدم بالفعل في طريقة الدفع %s. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
@@ -368,6 +369,8 @@ msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
 msgstr ""
+"فشل الاتصال بجهاز الدفع بالبطاقة. يرجى التحقق مما إذا كان لا يزال متصلاً "
+"بالإنترنت. "
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
@@ -385,6 +388,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"يستخدم عند الاتصال بـ Adyen: https://docs.adyen.com/user-management/how-to-"
+"get-the-api-key/#description "
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
@@ -396,3 +401,4 @@ msgstr "الرمز البريدي"
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
 msgstr ""
+"[Terminal model]-[Serial number]، على سبيل المثال: P400Plus-123456789 "
