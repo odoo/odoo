@@ -372,6 +372,11 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        emojiRegistry: one('EmojiRegistry', {
+            default: insertAndReplace(),
+            isCausal: true,
+            readonly: true,
+        }),
         fetchImStatusTimer: one('Timer', {
             inverse: 'messagingOwnerAsFetchImStatusTimer',
             isCausal: true,
