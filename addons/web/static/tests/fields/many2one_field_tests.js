@@ -3369,7 +3369,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "pressing ENTER on a 'no_quick_create' many2one should open a M2ODialog",
         async function (assert) {
             assert.expect(2);
@@ -3394,26 +3394,18 @@ QUnit.module("Fields", (hooks) => {
                 `,
             });
 
-            var $input = target.querySelectorAll(".o_field_many2one input");
-            await testUtils.fields.editInput($input, "Something that does not exist");
-            $(".ui-autocomplete .ui-menu-item a:contains(Create and)").trigger("mouseenter");
-            await nextTick();
-            await testUtils.fields.triggerKey("down", $input, "enter");
-            await testUtils.fields.triggerKey("press", $input, "enter");
-            await testUtils.fields.triggerKey("up", $input, "enter");
-            $input.blur();
-            assert.strictEqual(
-                target.querySelector(".modal").length,
-                1,
-                "should have one modal in body"
-            );
+            const input = target.querySelector(".o_field_many2one input");
+            await editInput(input, null, "Something that does not exist");
+            target.querySelector(".o_field_many2one .dropdown-menu li").focus();
+            await triggerEvent(input, null, "keydown", { key: "Enter" });
+            assert.containsOnce(target, ".modal", "should have one modal in body");
             // Check that discarding clears $input
             await click(target.querySelector(".modal .o_form_button_cancel"));
-            assert.strictEqual($input.value, "", "the field should be empty");
+            assert.strictEqual(input.value, "", "the field should be empty");
         }
     );
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "select a value by pressing TAB on a many2one with onchange",
         async function (assert) {
             assert.expect(3);
@@ -3442,40 +3434,33 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_form_button_edit");
 
-            var $input = target.querySelectorAll(".o_field_many2one input");
-            await testUtils.fields.editAndTrigger($input, "first", ["keydown", "keyup"]);
-            await testUtils.fields.triggerKey("down", $input, "tab");
-            await testUtils.fields.triggerKey("press", $input, "tab");
-            await testUtils.fields.triggerKey("up", $input, "tab");
+            const input = target.querySelector(".o_field_many2one input");
+
+            await editInput(input, null, "first");
+            await triggerEvent(input, null, "keydown", { key: "tab" });
+            await triggerEvent(input, null, "keypress", { key: "tab" });
+            await triggerEvent(input, null, "keyup", { key: "tab" });
 
             // simulate a focusout (e.g. because the user clicks outside)
             // before the onchange returns
-            target.querySelectorAll(".o_field_char").focus();
+            target.querySelector(".o_field_char").focus();
 
-            assert.strictEqual(
-                target.querySelector(".modal").length,
-                0,
-                "there shouldn't be any modal in body"
-            );
+            assert.containsNone(target, ".modal", "there shouldn't be any modal in body");
 
             // unlock the onchange
             def.resolve();
             await nextTick();
 
             assert.strictEqual(
-                $input.value,
+                input.value,
                 "first record",
                 "first record should have been selected"
             );
-            assert.strictEqual(
-                target.querySelector(".modal").length,
-                0,
-                "there shouldn't be any modal in body"
-            );
+            assert.containsNone(target, ".modal", "there shouldn't be any modal in body");
         }
     );
 
-    QUnit.skipWOWL("leaving a many2one by pressing tab", async function (assert) {
+    QUnit.test("leaving a many2one by pressing tab", async function (assert) {
         assert.expect(3);
 
         await makeView({
@@ -3490,34 +3475,26 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        const $input = target.querySelectorAll(".o_field_many2one input");
-        await click($input);
-        await testUtils.fields.triggerKeydown($input, "tab");
-        assert.strictEqual($input.value, "", "no record should have been selected");
+        const input = target.querySelector(".o_field_many2one input");
+        await click(input);
+        await triggerEvent(input, null, "keydown", { key: "tab" });
+        assert.strictEqual(input.value, "", "no record should have been selected");
 
         // open autocomplete dropdown and manually select item by UP/DOWN key and press TAB
-        await click($input);
-        await testUtils.fields.triggerKeydown($input, "down");
-        await testUtils.fields.triggerKeydown($input, "tab");
-        assert.strictEqual(
-            $input.value,
-            "second record",
-            "second record should have been selected"
-        );
+        await click(input);
+        await triggerEvent(input, null, "keydown", { key: "arrowdown" });
+        await triggerEvent(input, null, "keydown", { key: "tab" });
+        assert.strictEqual(input.value, "second record", "second record should have been selected");
 
         // clear many2one and then open autocomplete, write something and press TAB
-        await testUtils.fields.editAndTrigger(
-            target.querySelectorAll(".o_field_many2one input"),
-            "",
-            ["keyup", "blur"]
-        );
-        await testUtils.dom.triggerEvent($input, "focus");
-        await testUtils.fields.editInput($input, "se");
-        await testUtils.fields.triggerKeydown($input, "tab");
-        assert.strictEqual($input.value, "second record", "first record should have been selected");
+        await editInput(input, null, "");
+        input.focus();
+        await editInput(input, null, "se");
+        await triggerEvent(input, null, "keydown", { key: "tab" });
+        assert.strictEqual(input.value, "second record", "first record should have been selected");
     });
 
-    QUnit.skipWOWL(
+    QUnit.test(
         "leaving an empty many2one by pressing tab (after backspace or delete)",
         async function (assert) {
             assert.expect(4);
@@ -3537,25 +3514,24 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_form_button_edit");
 
-            const $input = target.querySelectorAll(".o_field_many2one input");
-            assert.ok($input.value, "many2one should have value");
+            const input = target.querySelector(".o_field_many2one input");
+            assert.ok(input.value, "many2one should have value");
 
             // simulate backspace to remove values and press TAB
-            await testUtils.fields.editInput($input, "");
-            await testUtils.fields.triggerKeyup($input, "backspace");
-            await testUtils.fields.triggerKeydown($input, "tab");
-            assert.strictEqual($input.value, "", "no record should have been selected");
+            await editInput(input, null, "");
+            await triggerEvent(input, null, "keypress", { key: "backspace" });
+            await triggerEvent(input, null, "keydown", { key: "tab" });
+            assert.strictEqual(input.value, "", "no record should have been selected");
 
             // reset a value
-            await testUtils.fields.many2one.clickOpenDropdown("trululu");
-            await testUtils.fields.many2one.clickItem("trululu", "first record");
-            assert.ok($input.value, "many2one should have value");
+            await selectDropdownItem(target, "trululu", "first record");
+            assert.ok(input.value, "many2one should have value");
 
             // simulate delete to remove values and press TAB
-            await testUtils.fields.editInput($input, "");
-            await testUtils.fields.triggerKeyup($input, "delete");
-            await testUtils.fields.triggerKeydown($input, "tab");
-            assert.strictEqual($input.value, "", "no record should have been selected");
+            await editInput(input, null, "");
+            await triggerEvent(input, null, "keypress", { key: "delete" });
+            await triggerEvent(input, null, "keydown", { key: "tab" });
+            assert.strictEqual(input.value, "", "no record should have been selected");
         }
     );
 

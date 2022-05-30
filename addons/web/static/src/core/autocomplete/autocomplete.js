@@ -14,6 +14,7 @@ export class AutoComplete extends Component {
         this.sources = [];
 
         this.state = useState({
+            navigationRev: 0,
             optionsRev: 0,
             open: false,
             activeSourceOption: null,
@@ -149,6 +150,8 @@ export class AutoComplete extends Component {
         if (!step) {
             this.state.activeSourceOption = null;
             step = 1;
+        } else {
+            this.state.navigationRev++;
         }
 
         if (this.state.activeSourceOption) {
@@ -192,6 +195,7 @@ export class AutoComplete extends Component {
         const hotkeys = {
             escape: this.onEscapePress.bind(this),
             enter: this.onEnterPress.bind(this),
+            tab: this.onTabPress.bind(this),
         };
         for (const [hotkey, callback] of Object.entries(hotkeys)) {
             const remove = this.hotkey.add(hotkey, callback, {
@@ -257,6 +261,18 @@ export class AutoComplete extends Component {
         if (this.isOpened && this.state.activeSourceOption) {
             this.selectOption(this.state.activeSourceOption);
         }
+    }
+    onTabPress() {
+        const value = this.inputRef.el.value;
+
+        if (
+            this.props.autoSelect &&
+            this.state.activeSourceOption &&
+            (this.state.navigationRev > 0 || value.length > 0)
+        ) {
+            this.selectOption(this.state.activeSourceOption);
+        }
+        this.close();
     }
     onArrowUpPress() {
         this.navigate(-1);
