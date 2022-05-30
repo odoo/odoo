@@ -27,12 +27,18 @@ this event.
         'data/event_sale_data.xml',
         'data/mail_data.xml',
         'report/event_event_templates.xml',
+        'report/event_sale_report_views.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'security/event_security.xml',
         'wizard/event_edit_registration.xml',
         'wizard/event_configurator_views.xml',
     ],
-    'demo': ['data/event_demo.xml'],
+    'demo': [
+        'data/event_sale_demo.xml',
+        'data/event_demo.xml',  # needs event_sale_demo
+        'data/event_registration_demo.xml',  # needs event_sale_demo
+    ],
     'installable': True,
     'auto_install': True,
     'assets': {
