@@ -49,7 +49,7 @@ def __getattr__(attr):
 
     @lazy
     def only_one_warn():
-        warnings.warn(f"{__name__!r} has been split over multiple files, you'll find {attr!r} at {module.__name__!r}", DeprecationWarning)
+        warnings.warn(f"{__name__!r} has been split over multiple files, you'll find {attr!r} at {module.__name__!r}", DeprecationWarning, stacklevel=4)
         return getattr(module, attr)
 
     return only_one_warn
