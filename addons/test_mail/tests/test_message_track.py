@@ -203,6 +203,34 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.assertTrue(new_partner)
         self.assertEqual(new_partner.company_id, company1)
 
+    def test_track_invalid_selection(self):
+        # Test: Check that initial invalid selection values are allowed when tracking
+        # Create a record with an initially invalid selection value
+        invalid_value = 'I love writing tests!'
+        record = self.env['mail.test.track.selection'].create({
+            'name': 'Test Invalid Selection Values',})
+        
+        record.flush()
+        self.env.cr.execute(
+                """
+                UPDATE mail_test_track_selection
+                   SET type = %s
+                 WHERE id = %s
+                """, [invalid_value, record.id]
+                )
+        record.invalidate_cache()
+        
+        # Write a valid selection value
+        record.write({
+                'type': 'first',
+            })
+
+        tracking_value = self.env['mail.tracking.value'].search([
+            ('mail_message_id', 'in', record.message_ids.ids),
+            ('field', '=', 'type')])
+
+        self.assertEqual(tracking_value.old_value_char, invalid_value)
+
     def test_track_template(self):
         # Test: Check that default_* keys are not taken into account in _message_track_post_template
         magic_code = 'Up-Up-Down-Down-Left-Right-Left-Right-Square-Triangle'
