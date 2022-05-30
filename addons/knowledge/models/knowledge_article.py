@@ -20,6 +20,7 @@ class Article(models.Model):
     _description = "Knowledge Article"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "favorite_count, create_date desc, id desc"
+    _mail_post_access = 'read'
 
     active = fields.Boolean(default=True)
     name = fields.Char(string="Title", default=lambda self: _('New Article'), required=True, tracking=20)
