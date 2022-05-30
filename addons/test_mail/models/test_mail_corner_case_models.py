@@ -105,6 +105,16 @@ class MailTestTrackMonetary(models.Model):
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
 
 
+class MailTestSelectionTracking(models.Model):
+    """ Test tracking for selection fields """
+    _description = 'Test Selection Tracking'
+    _name = 'mail.test.track.selection'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    selection_type = fields.Selection([('first', 'First'), ('second', 'Second')], tracking=True)
+
+
 class MailTestTrackAll(models.Model):
     _name = 'mail.test.track.all'
     _description = 'Test tracking on all field types'
