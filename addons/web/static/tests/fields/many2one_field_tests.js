@@ -3153,7 +3153,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL("can_create and can_write option on a many2one", async function (assert) {
+    QUnit.test("can_create and can_write option on a many2one", async function (assert) {
         assert.expect(5);
 
         serverData.models.product.options = {

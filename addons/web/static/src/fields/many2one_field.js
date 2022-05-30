@@ -165,6 +165,8 @@ export class Many2OneField extends Component {
                 resId,
                 resModel: this.props.relation,
                 viewId,
+                preventCreate: !this.props.canCreate,
+                preventEdit: !this.props.canWrite,
                 title: sprintf(
                     this.env._t("Open: %s"),
                     this.props.record.activeFields[this.props.name].string

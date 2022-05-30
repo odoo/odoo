@@ -117,8 +117,8 @@ export class FormController extends Component {
         });
         const { create, edit } = this.archInfo.activeActions;
 
-        this.canCreate = create;
-        this.canEdit = edit;
+        this.canCreate = create && !this.props.preventCreate;
+        this.canEdit = edit && !this.props.preventEdit;
 
         this.cpButtonsRef = useRef("cpButtons");
 
@@ -350,4 +350,10 @@ FormController.props = {
     Compiler: Function,
     archInfo: Object,
     buttonTemplate: String,
+    preventCreate: { type: Boolean, optional: true },
+    preventEdit: { type: Boolean, optional: true },
+};
+FormController.defaultProps = {
+    preventCreate: false,
+    preventEdit: false,
 };
