@@ -139,6 +139,8 @@ class AccountChartTemplate(models.AbstractModel):
             }])
 
         data = with_company._get_chart_template_data(template_code, company)
+        data = self._pre_process_data(template_code, company, data)
+
         with_company._load_data(data)
         with_company._post_load_data(template_code, company)
 
@@ -155,6 +157,20 @@ class AccountChartTemplate(models.AbstractModel):
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         company.chart_template = template_code
+
+    def _pre_process_data(self, template_code, company, data):
+        """
+            Some of the data needs special pre_process before being fed to the database.
+            e.g. the account codes' width must be standardized to the code_digits applied.
+        """
+
+        # Normalize the code_digits of the accounts
+        template_data = self._get_data(template_code, company, 'template_data')
+        code_digits = int(template_data.get('code_digits', 6))
+        for key, account_data in data.get('account.account', {}).items():
+            data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
+
+        return data
 
     def _load_data(self, data):
         def deref(values, model):
