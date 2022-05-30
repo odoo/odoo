@@ -511,7 +511,7 @@ class Post(models.Model):
                 match = re.escape(match)  # replace parenthesis or special char in regex
                 content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
 
-        if self.env.user.karma <= forum.karma_editor:
+        if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
             content_match = re.search(filter_regexp, content, re.I)
             if content_match:
