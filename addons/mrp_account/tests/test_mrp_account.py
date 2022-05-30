@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMove
 from odoo.tests import Form, tagged
+
+_logger = logging.getLogger(__name__)
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -268,6 +271,11 @@ class TestMrpAccountMove(TestAccountMove):
         """
         # set accounts for production location
         production_location = self.product_A.property_stock_production
+        aka = self.env['account.account'].search([('code', '=', '000001')])
+        if aka:
+            _logger.info("000001's id: %s", aka.mapped("company_id").mapped("id"))
+            _logger.info("000001's company: %s", aka.mapped("company_id").mapped("name"))
+            _logger.info("000001's name: %s", aka.mapped("name"))
         wip_incoming_account = self.env['account.account'].create({
             'name': 'wip incoming',
             'code': '000001',
