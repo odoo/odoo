@@ -215,7 +215,7 @@ class ImageProcess():
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
             if asked_width != w or asked_height != h:
-                self.image.thumbnail((asked_width, asked_height), Image.LANCZOS)
+                self.image.thumbnail((asked_width, asked_height), Image.Resampling.LANCZOS)
                 if self.image.width != w or self.image.height != h:
                     self.operationsCount += 1
         return self
