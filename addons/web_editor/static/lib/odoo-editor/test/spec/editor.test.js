@@ -1,4 +1,3 @@
-import { applyInlineStyle } from '../../src/commands/commands.js';
 import { OdooEditor } from '../../src/OdooEditor.js';
 import { getTraversedNodes } from '../../src/utils/utils.js';
 import {
@@ -3467,12 +3466,8 @@ X[]
                     stepFunction: async editor => {
                         // simulate preview
                         editor.historyPauseSteps();
-                        try {
-                            applyInlineStyle(editor, (el) => el.style.color = 'lime');
-                            // a[bcd]e with bcd in lime
-                        } finally {
-                            editor.historyUnpauseSteps();
-                        }
+                        editor.execCommand('bold');
+                        editor.historyUnpauseSteps();
                         // simulate preview's reset
                         editor.historyRevertCurrentStep(); // back to initial state
                     },
