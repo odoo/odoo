@@ -112,11 +112,6 @@ class AutomaticEntryWizard(models.TransientModel):
             if wizard.move_line_ids.move_id._get_violated_lock_dates(wizard.date, False):
                 raise ValidationError(_("The date selected is protected by a lock date"))
 
-            if wizard.action == 'change_period':
-                for move in wizard.move_line_ids.move_id:
-                    if move._get_violated_lock_dates(move.date, False):
-                        raise ValidationError(_("The date of some related entries is protected by a lock date"))
-
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -208,6 +203,14 @@ class AutomaticEntryWizard(models.TransientModel):
         }]
 
     def _get_move_dict_vals_change_period(self):
+        reference_move = self.env['account.move'].new({
+            'journal_id': self.journal_id.id,
+            'date': self.date,
+        })
+        def get_lock_safe_date(aml):
+            reference_move.date = aml.date
+            return reference_move._get_accounting_date(aml.date, False)
+
         # set the change_period account on the selected journal items
         accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
 
@@ -220,7 +223,7 @@ class AutomaticEntryWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
         }}
         # complete the account.move data
-        for date, grouped_lines in groupby(self.move_line_ids, lambda m: m.move_id.date):
+        for date, grouped_lines in groupby(self.move_line_ids, get_lock_safe_date):
             grouped_lines = list(grouped_lines)
             amount = sum(l.balance for l in grouped_lines)
             move_data[date] = {
@@ -261,7 +264,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'analytic_distribution': aml.analytic_distribution,
                 }),
             ]
-            move_data[aml.move_id.date]['line_ids'] += [
+            move_data[get_lock_safe_date(aml)]['line_ids'] += [
                 (0, 0, {
                     'name': aml.name or '',
                     'debit': reported_credit,
@@ -284,6 +287,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 }),
             ]
 
+        reference_move.invalidate_recordset()
         move_vals = [m for m in move_data.values()]
         return move_vals
 
@@ -344,7 +348,7 @@ class AutomaticEntryWizard(models.TransientModel):
         accrual_move_offsets = defaultdict(int)
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
-            accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
+            accrual_move = created_moves[1:].filtered(lambda m: m.date == m._get_accounting_date(move.date, False))
 
             if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]

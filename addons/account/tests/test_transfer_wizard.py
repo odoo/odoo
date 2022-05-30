@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
+from odoo.tools import format_date
+from freezegun import freeze_time
 import time
+import json
+
 
 @tagged('post_install', '-at_install')
 class TestTransferWizard(AccountTestInvoicingCommon):
@@ -285,3 +290,127 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         self.assertEqual(len(destination_lines), 2, "Two lines should have been created on destination account: one for each currency (the lines with same partner and currency should have been aggregated)")
         self.assertAlmostEqual(destination_lines.filtered(lambda x: x.currency_id == self.test_currency_1).amount_currency, -10, self.test_currency_1.decimal_places)
         self.assertAlmostEqual(destination_lines.filtered(lambda x: x.currency_id == self.test_currency_2).amount_currency, -756, self.test_currency_2.decimal_places)
+
+    def test_cut_off_lock_period(self):
+        """
+        Tests that the cut-off lock period is respected.
+        When creating cut-off entries for a move in the lock period, the new moves should
+        respect the bill algo for the lock period.
+        """
+
+        # Setup
+        self.company.expense_accrual_account_id = self.env['account.account'].create({
+            'name': 'Expense Accrual Account',
+            'code': '113226',
+            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+            'reconcile': True,
+        })
+        self.company.revenue_accrual_account_id = self.env['account.account'].create({
+            'name': 'Accrual Revenue Account',
+            'code': '226113',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'reconcile': True,
+        })
+
+        misc_journal_id = self.company_data['default_journal_misc'].id
+        journal_id = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'code': 'TJ',
+            'type': 'general',
+        }).id
+
+        # move is in the lock period
+        move1 = self.env['account.move'].create({
+            'journal_id': journal_id,
+            'date': '2019-01-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[0].id, 'debit': 1000, }),
+                Command.create({'account_id': self.accounts[0].id, 'credit': 1000, }),
+            ]
+        })
+        # move not in locked period, will do cut-off in the first month following lock period
+        move2 = self.env['account.move'].create({
+            'journal_id': journal_id,
+            'date': '2019-03-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[0].id, 'debit': 2000, }),
+                Command.create({'account_id': self.accounts[0].id, 'credit': 2000, }),
+            ]
+        })
+        # move not in locked period, will do cut-off after the first month following lock period
+        move3 = self.env['account.move'].create({
+            'journal_id': journal_id,
+            'date': '2019-03-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[0].id, 'debit': 3000, }),
+                Command.create({'account_id': self.accounts[0].id, 'credit': 3000, }),
+            ]
+        })
+        # testing with an invoice, because invoice hase a yearly reset sequence
+        invoice_1 = self.init_invoice(move_type='out_invoice', invoice_date='2019-01-02', amounts=[100])
+
+        (move1 + move2 + move3 + invoice_1).action_post()
+
+        move1.company_id.period_lock_date = fields.Date.from_string('2019-02-28')
+        move1.company_id.fiscalyear_lock_date = fields.Date.from_string('2019-02-28')
+
+        for move, date, wizard_date, expected_date in [
+            (move1, '2019-04-01', '2019-03-01', '2019-03-31'),
+            (move2, '2019-03-02', '2019-03-02', '2019-03-02'),
+            (move3, '2019-04-03', '2019-04-02', '2019-03-31'),
+            (invoice_1, '2019-06-02', '2019-06-01', '2019-03-31'),
+        ]:
+            with self.subTest(move=move, date=date, wizard_date=wizard_date, expected_date=expected_date):
+                with freeze_time(date):
+                    wizard = self.env['account.automatic.entry.wizard'] \
+                        .with_context(active_model='account.move.line', active_ids=move.line_ids[0].ids) \
+                        .create({
+                            'action': 'change_period',
+                            'date': wizard_date,
+                            'journal_id': misc_journal_id,
+                        })
+                    wizard_res = wizard.do_action()
+
+                new_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+                self.assertRecordValues(new_moves, [{'date': fields.Date.from_string(wizard_date)},
+                                                    {'date': fields.Date.from_string(expected_date)},
+                                                    ])
+                preview_move_data = json.loads(wizard.preview_move_data)
+                self.assertRegex(preview_move_data['groups_vals'][1]['group_name'],
+                                 '%s, .*' % format_date(self.env, fields.Date.from_string(expected_date)))
+        # test having yearly reset sequence on misc journal
+
+        # make a dummy move to set a yearly reset pattern
+        self.env['account.move'].create({
+            'journal_id': misc_journal_id,
+            'date': '2119-06-01',
+            'name': 'MISC/2119/101',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[0].id, 'debit': 10000, }),
+                Command.create({'account_id': self.accounts[0].id, 'credit': 10000, }),
+            ]
+        }).action_post()
+
+        move4 = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'date': '2119-04-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[0].id, 'debit': 4000, }),
+                Command.create({'account_id': self.accounts[0].id, 'credit': 4000, }),
+            ]
+        })
+        move4.action_post()
+
+        with freeze_time('2120-02-02'):
+            wizard_res = self.env['account.automatic.entry.wizard'] \
+                .with_context(active_model='account.move.line', active_ids=move4.line_ids[0].ids) \
+                .create({
+                    'action': 'change_period',
+                    'date': '2119-05-02',
+                    'journal_id': misc_journal_id,
+                }).do_action()
+
+        new_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+
+        self.assertRecordValues(new_moves, [{'date': fields.Date.from_string('2119-05-02')},
+                                            {'date': fields.Date.from_string('2119-12-31')}])
