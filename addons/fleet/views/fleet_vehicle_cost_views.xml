@@ -8,7 +8,7 @@
                 <header>
                     <button name="action_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
                     <button name="action_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
-                    <button name="action_close" states="open,expired,futur" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="action_close" states="open,expired,futur" type="object" string="Close Contract" groups="fleet.fleet_group_manager"/>
                     <button name="action_draft" states="closed" type="object" string="Reset To Draft" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
@@ -68,11 +68,13 @@
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
             <tree string="Contract logs"
-                decoration-danger="days_left==0"
+                decoration-warning="expires_today"
+                decoration-danger="days_left==0 and not expires_today"
                 decoration-muted="state=='closed'"
                 default_order="expiration_date"
                 sample="1">
                 <field name="active" invisible="1"/>
+                <field name="expires_today" invisible="1"/>
                 <field name="name" class="font-weight-bold" />
                 <field name="start_date" />
                 <field name="expiration_date" widget="remaining_days"/>
@@ -257,7 +259,7 @@
         <field name="name">fleet.vehicle.log.services.tree</field>
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
-            <tree string="Services Logs" multi_edit="1">
+            <tree string="Services Logs" multi_edit="1" expand="1">
                 <field name="date" readonly="1" />
                 <field name="description" />
                 <field name="service_type_id" />
@@ -340,6 +342,25 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_log_services_view_activity" model="ir.ui.view">
+        <field name="model">fleet.vehicle.log.services</field>
+        <field name="arch" type="xml">
+            <activity string="Services">
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('fleet.vehicle', 'image_128', record.vehicle_id.raw_value)" role="img" t-att-title="record.vehicle_id.value" t-att-alt="record.vehicle_id.value"/>
+                        <div>
+                            <field name="vehicle_id"/>
+                            <t t-if="record.description.raw_value">
+                                : <field name="description"/>
+                            </t>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="fleet_vehicle_log_services_view_pivot" model="ir.ui.view">
        <field name="model">fleet.vehicle.log.services</field>
        <field name="arch" type="xml">
@@ -362,6 +383,10 @@
                 <field name="service_type_id"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Service Type" name="groupby_service_type_id" context="{'group_by': 'service_type_id'}"/>
+                    <filter string="Fleet Manager" name="groupby_manager_id" context="{'group_by': 'manager_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -369,7 +394,8 @@
     <record id='fleet_vehicle_log_services_action' model='ir.actions.act_window'>
         <field name="name">Services</field>
         <field name="res_model">fleet.vehicle.log.services</field>
-        <field name="view_mode">tree,kanban,form,graph,pivot</field>
+        <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
+        <field name="context">{'search_default_groupby_service_type_id': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new service entry

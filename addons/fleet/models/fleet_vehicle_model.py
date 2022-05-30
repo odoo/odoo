@@ -43,7 +43,6 @@ class FleetVehicleModel(models.Model):
     horsepower_tax = fields.Float('Horsepower Taxation')
     electric_assistance = fields.Boolean(default=False)
 
-    @api.depends('name', 'brand_id')
     def name_get(self):
         res = []
         for record in self:

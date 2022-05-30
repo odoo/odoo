@@ -112,6 +112,17 @@ class FleetVehicle(models.Model):
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], help="Frame type of the bike")
     electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
     frame_size = fields.Float()
+    service_activity = fields.Selection([
+        ('none', 'None'),
+        ('overdue', 'Overdue'),
+        ('today', 'Today'),
+    ], compute='_compute_service_activity')
+
+    @api.depends('log_services')
+    def _compute_service_activity(self):
+        for vehicle in self:
+            activities_state = set(state for state in vehicle.log_services.mapped('activity_state') if state and state != 'planned')
+            vehicle.service_activity = sorted(activities_state)[0] if activities_state else 'none'
 
     @api.depends('model_id')
     def _compute_model_fields(self):
