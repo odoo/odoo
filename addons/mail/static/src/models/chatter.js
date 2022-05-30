@@ -164,7 +164,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsDisabled() {
-            return Boolean(!this.thread || this.thread.isTemporary);
+            return Boolean(!this.thread || this.thread.isTemporary || !this.thread.hasReadAccess);
         },
         /**
          * @private
