@@ -70,11 +70,11 @@ export class ComposerSuggestedRecipient extends Component {
                 const adapterParent = standaloneAdapter({ Component });
                 const selectCreateDialog = new FormViewDialog(adapterParent, {
                     context: {
-                        active_id: this.suggestedRecipientInfo.thread.id,
+                        active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread.id,
                         active_model: 'mail.compose.message',
-                        default_email: this.suggestedRecipientInfo.email,
-                        default_name: this.suggestedRecipientInfo.name,
-                        default_lang: this.suggestedRecipientInfo.lang,
+                        default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo.email,
+                        default_name: this.composerSuggestedRecipientView.suggestedRecipientInfo.name,
+                        default_lang: this.composerSuggestedRecipientView.suggestedRecipientInfo.lang,
                         force_email: true,
                         ref: 'compound_context',
                     },
@@ -82,7 +82,7 @@ export class ComposerSuggestedRecipient extends Component {
                     on_saved: this._onDialogSaved.bind(this),
                     res_id: false,
                     res_model: 'res.partner',
-                    title: this.suggestedRecipientInfo.dialogText,
+                    title: this.composerSuggestedRecipientView.suggestedRecipientInfo.dialogText,
                 });
                 selectCreateDialog.open();
             }
