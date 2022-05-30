@@ -1,5 +1,4 @@
 import { BasicEditor, testEditor, setTestSelection, Direction } from '../utils.js';
-import { applyInlineStyle } from '../../src/commands/commands.js';
 
 const bold = async editor => {
     await editor.execCommand('bold');
@@ -13,177 +12,271 @@ const underline = async editor => {
 const strikeThrough = async editor => {
     await editor.execCommand('strikeThrough');
 };
+const setFontSize = size => editor => editor.execCommand('setFontSize', size);
 
 describe('Format', () => {
-    const b = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-weight: bolder;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
-    const notB = (content, weight, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-weight: ${weight || 'normal'};"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const getZwsTag = (tagName, {style} = {}) => {
+        const styleAttr = style ? ` style="${style}"` : '';
+        return (content, zws) => {
+            const zwsFirstAttr = zws === 'first' ? ' oe-zws-empty-inline=""' : '';
+            const zwsLastAttr = zws === 'last' ? ' oe-zws-empty-inline=""' : '';
+            return `<${tagName}${zwsFirstAttr}${styleAttr}${zwsLastAttr}>${content}</${tagName}>`
+        };
+    }
+
+    const span = getZwsTag('span');
+
+    const strong = getZwsTag('strong');
+    const notStrong = getZwsTag('span', {style: 'font-weight: normal;'});
+    const spanBold = getZwsTag('span', {style: 'font-weight: bolder;'});
+    const b = getZwsTag('b');
+    const repeatWithBoldTags = async (cb) => {
+        for (const fn of [spanBold, b, strong]) {
+            await cb(fn);
+        }
+    }
+
+    const em = getZwsTag('em');
+
+    const u = getZwsTag('u');
+
+    const s = getZwsTag('s');
+
+
     describe('bold', () => {
         it('should make a few characters bold', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>ab[cde]fg</p>',
                 stepFunction: bold,
-                contentAfter: `<p>ab${b(`[cde]`)}fg</p>`,
+                contentAfter: `<p>ab${strong(`[cde]`)}fg</p>`,
             });
         });
         it('should make a few characters not bold', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${b(`ab[cde]fg`)}</p>`,
+                contentBefore: `<p>${strong(`ab[cde]fg`)}</p>`,
                 stepFunction: bold,
-                contentAfter: `<p>${b(`ab${notB(`[cde]`)}fg`)}</p>`,
+                contentAfter: `<p>${strong(`ab`)}[cde]${strong(`fg`)}</p>`,
             });
         });
         it('should make two paragraphs bold', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[abc</p><p>def]</p>',
                 stepFunction: bold,
-                contentAfter: `<p>${b(`[abc`)}</p><p>${b(`def]`)}</p>`,
+                contentAfter: `<p>${strong(`[abc`)}</p><p>${strong(`def]`)}</p>`,
             });
         });
         it('should make two paragraphs not bold', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${b(`[abc`)}</p><p>${b(`def]`)}</p>`,
+                contentBefore: `<p>${strong(`[abc`)}</p><p>${strong(`def]`)}</p>`,
                 stepFunction: bold,
-                contentAfter: `<p>${notB(`[abc`)}</p><p>${notB(`def]`, 400)}</p>`,
+                contentAfter: `<p>[abc</p><p>def]</p>`,
             });
         });
         it('should make a whole heading bold after a triple click', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<h1>${notB(`[ab`)}</h1><p>]cd</p>`,
+                contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>]cd</p>`,
                 stepFunction: bold,
-                // TODO: ideally should restore regular h1 without span instead.
-                contentAfter: `<h1>${b(`[ab]`)}</h1><p>cd</p>`,
+                contentAfter: `<h1>[ab]</h1><p>cd</p>`,
             });
         });
         it('should make a whole heading not bold after a triple click (heading is considered bold)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<h1>[ab</h1><p>]cd</p>',
                 stepFunction: bold,
-                contentAfter: `<h1>${notB(`[ab]`)}</h1><p>cd</p>`,
+                contentAfter: `<h1>${notStrong(`[ab]`)}</h1><p>cd</p>`,
             });
         });
         it('should make a selection starting with bold text fully bold', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${b(`[ab`)}</p><p>c]d</p>`,
+                contentBefore: `<p>${strong(`[ab`)}</p><p>c]d</p>`,
                 stepFunction: bold,
-                contentAfter: `<p>${b(`[ab`)}</p><p>${b(`c]`)}d</p>`,
+                contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`c]`)}d</p>`,
             });
         });
         it('should make a selection with bold text in the middle fully bold', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>[a${b(`b`)}</p><p>${b(`c`)}d]e</p>`,
+                contentBefore: `<p>[a${strong(`b`)}</p><p>${strong(`c`)}d]e</p>`,
                 stepFunction: bold,
-                contentAfter: `<p>${b(`[ab`)}</p><p>${b(`cd]`)}e</p>`,
+                contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`cd]`)}e</p>`,
             });
         });
         it('should make a selection ending with bold text fully bold', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<h1>${notB(`[ab`)}</h1><p>${b(`c]d`)}</p>`,
+                contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>${strong(`c]d`)}</p>`,
                 stepFunction: bold,
-                contentAfter: `<h1>${b(`[ab`)}</h1><p>${b(`c]d`)}</p>`,
+                contentAfter: `<h1>[ab</h1><p>${strong(`c]d`)}</p>`,
             });
         });
         it('should get ready to type in bold', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>ab[]cd</p>',
                 stepFunction: bold,
-                contentAfterEdit: `<p>ab${b(`[]\u200B`, 'first')}cd</p>`,
+                contentAfterEdit: `<p>ab${strong(`[]\u200B`, 'first')}cd</p>`,
                 contentAfter: `<p>ab[]cd</p>`,
             });
         });
         it('should get ready to type in not bold', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${b(`ab[]cd`)}</p>`,
+                contentBefore: `<p>${strong(`ab[]cd`)}</p>`,
                 stepFunction: bold,
-                contentAfterEdit: `<p>${b(`ab${notB(`[]\u200B`, undefined, 'first')}cd`)}</p>`,
-                contentAfter: `<p>${b(`ab[]cd`)}</p>`,
+                contentAfterEdit: `<p>${strong(`ab`)}${span(`[]\u200B`, 'first')}${strong(`cd`)}</p>`,
+                contentAfter: `<p>${strong(`ab[]cd`)}</p>`,
+            });
+        });
+
+
+        it('should remove a bold tag that was redondant while performing the command', async () => {
+            await repeatWithBoldTags(async (tag) => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a${tag(`b${tag(`[c]`)}d`)}e</p>`,
+                    stepFunction: bold,
+                    contentAfter: `<p>a${tag('b')}[c]${tag('d')}e</p>`,
+                });
+            });
+        });
+        it('should remove a bold tag that was redondant with different tags while performing the command', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a${spanBold(`b${strong(`c${b(`[d]`)}e`)}f`)}g</p>`,
+                stepFunction: bold,
+                contentAfter: `<p>a${spanBold(`bc`)}[d]${spanBold(`ef`)}g</p>`,
+            });
+        });
+
+        describe('inside container or inline with class already bold', () => {
+            it('should force the font-weight to normal with an inline with class', async () => {
+                await testEditor(BasicEditor, {
+                    styleContent: `.boldClass { font-weight: bold; }`,
+                    contentBefore: `<div>a<span class="boldClass">[b]</span>c</div>`,
+                    stepFunction: bold,
+                    contentAfter: `<div>a<span class="boldClass"><span style="font-weight: normal;">[b]</span></span>c</div>`,
+                });
+            });
+
+            it('should force the font-weight to normal', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<h1>a[b]c</h1>`,
+                    stepFunction: bold,
+                    contentAfter: `<h1>a<span style="font-weight: normal;">[b]</span>c</h1>`,
+                });
+            });
+
+            it('should force the font-weight to normal while removing redundant tag', async () => {
+                await repeatWithBoldTags(async (tag) => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<h1>a${tag('[b]')}c</h1>`,
+                        stepFunction: bold,
+                        contentAfter: `<h1>a<span style="font-weight: normal;">[b]</span>c</h1>`,
+                    });
+                });
+            });
+        });
+        describe('inside container font-weight: 500 and strong being strong-weight: 500', () => {
+            it('should remove the redundant strong style and add span with a bolder font-weight', async () => {
+                await testEditor(BasicEditor, {
+                    styleContent: `h1, strong {font-weight: 500;}`,
+                    contentBefore: `<h1>a${strong(`[b]`)}c</h1>`,
+                    stepFunction: bold,
+                    contentAfter: `<h1>a<span style="font-weight: bolder;">[b]</span>c</h1>`,
+                });
             });
         });
     });
-    const i = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-style: italic;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
-    const notI = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-style: normal;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    describe('bold and italic inside container already bold', () => {
+        it('should remove the redundant strong style and add span with a bolder font-weight', async () => {
+            await testEditor(BasicEditor, {
+                styleContent: `h1 {font-weight: bold;}`,
+                contentBefore: `<h1>a[b]c</h1>`,
+                stepFunction: (editor) => {
+                    editor.execCommand('italic');
+                    editor.execCommand('bold');
+                    editor.execCommand('italic');
+                },
+                contentAfter: `<h1>a<span style="font-weight: normal;">[b]</span>c</h1>`,
+            });
+        });
+    });
+
     describe('italic', () => {
         it('should make a few characters italic', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[cde]fg</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>ab${i(`[cde]`)}fg</p>`,
+                contentAfter: `<p>ab${em(`[cde]`)}fg</p>`,
             });
         });
         it('should make a few characters not italic', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${i(`ab[cde]fg`)}</p>`,
+                contentBefore: `<p>${em(`ab[cde]fg`)}</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${i(`ab${notI(`[cde]`)}fg`)}</p>`,
+                contentAfter: `<p>${em(`ab`)}[cde]${em(`fg`)}</p>`,
             });
         });
         it('should make two paragraphs italic', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[abc</p><p>def]</p>',
                 stepFunction: italic,
-                contentAfter: `<p>${i(`[abc`)}</p><p>${i(`def]`)}</p>`,
+                contentAfter: `<p>${em(`[abc`)}</p><p>${em(`def]`)}</p>`,
             });
         });
         it('should make two paragraphs not italic', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${i(`[abc`)}</p><p>${i(`def]`)}</p>`,
+                contentBefore: `<p>${em(`[abc`)}</p><p>${em(`def]`)}</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${notI(`[abc`)}</p><p>${notI(`def]`)}</p>`,
+                contentAfter: `<p>[abc</p><p>def]</p>`,
             });
         });
         it('should make a whole heading italic after a triple click', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<h1>[ab</h1><p>]cd</p>`,
                 stepFunction: italic,
-                contentAfter: `<h1>${i(`[ab]`)}</h1><p>cd</p>`,
+                contentAfter: `<h1>${em(`[ab]`)}</h1><p>cd</p>`,
             });
         });
         it('should make a whole heading not italic after a triple click', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<h1>${i(`[ab`)}</h1><p>]cd</p>`,
+                contentBefore: `<h1>${em(`[ab`)}</h1><p>]cd</p>`,
                 stepFunction: italic,
-                // TODO: ideally should restore regular h1 without span instead.
-                contentAfter: `<h1>${notI(`[ab]`)}</h1><p>cd</p>`,
+                contentAfter: `<h1>[ab]</h1><p>cd</p>`,
             });
         });
         it('should make a selection starting with italic text fully italic', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${i(`[ab`)}</p><p>c]d</p>`,
+                contentBefore: `<p>${em(`[ab`)}</p><p>c]d</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${i(`[ab`)}</p><p>${i(`c]`)}d</p>`,
+                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`c]`)}d</p>`,
             });
         });
         it('should make a selection with italic text in the middle fully italic', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>[a${i(`b`)}</p><p>${i(`c`)}d]e</p>`,
+                contentBefore: `<p>[a${em(`b`)}</p><p>${em(`c`)}d]e</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${i(`[ab`)}</p><p>${i(`cd]`)}e</p>`,
+                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`cd]`)}e</p>`,
             });
         });
         it('should make a selection ending with italic text fully italic', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>[ab</p><p>${i(`c]d`)}</p>`,
+                contentBefore: `<p>[ab</p><p>${em(`c]d`)}</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${i(`[ab`)}</p><p>${i(`c]d`)}</p>`,
+                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`c]d`)}</p>`,
             });
         });
         it('should get ready to type in italic', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[]cd</p>`,
                 stepFunction: italic,
-                contentAfterEdit: `<p>ab${i(`[]\u200B`, 'first')}cd</p>`,
+                contentAfterEdit: `<p>ab${em(`[]\u200B`, 'first')}cd</p>`,
                 contentAfter: `<p>ab[]cd</p>`,
             });
         });
         it('should get ready to type in not italic', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>${i(`ab[]cd`)}</p>`,
+                contentBefore: `<p>${em(`ab[]cd`)}</p>`,
                 stepFunction: italic,
-                contentAfterEdit: `<p>${i(`ab${notI(`[]\u200B`, 'first')}cd`)}</p>`,
-                contentAfter: `<p>${i(`ab[]cd`)}</p>`,
+                contentAfterEdit: `<p>${em(`ab`)}${span(`[]\u200B`, 'first')}${em(`cd`)}</p>`,
+                contentAfter: `<p>${em(`ab[]cd`)}</p>`,
             });
         });
     });
-    const u = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="text-decoration-line: underline;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('underline', () => {
         it('should make a few characters underline', async () => {
             await testEditor(BasicEditor, {
@@ -196,7 +289,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${u(`ab[cde]fg`)}</p>`,
                 stepFunction: underline,
-                contentAfter: `<p>${u(`ab[`)}cde]${u(`fg`)}</p>`,
+                contentAfter: `<p>${u(`ab`)}[cde]${u(`fg`)}</p>`,
             });
         });
         it('should make two paragraphs underline', async () => {
@@ -260,12 +353,11 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${u(`ab[]cd`)}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>${u(`ab`)}<span oe-zws-empty-inline="">\u200B[]</span>${u(`cd`)}</p>`,
-                contentAfter: `<p>${u(`ab`)}[]${u(`cd`)}</p>`,
+                contentAfterEdit: `<p>${u(`ab`)}${span(`[]\u200B`, 'first')}${u(`cd`)}</p>`,
+                contentAfter: `<p>${u(`ab[]cd`)}</p>`,
             });
         });
     });
-    const s = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="text-decoration-line: line-through;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('strikeThrough', () => {
         it('should make a few characters strikeThrough', async () => {
             await testEditor(BasicEditor, {
@@ -278,7 +370,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${s(`ab[cde]fg`)}</p>`,
                 stepFunction: strikeThrough,
-                contentAfter: `<p>${s(`ab[`)}cde]${s(`fg`)}</p>`,
+                contentAfter: `<p>${s(`ab`)}[cde]${s(`fg`)}</p>`,
             });
         });
         it('should make a few characters strikeThrough then remove style inside', async () => {
@@ -286,7 +378,7 @@ describe('Format', () => {
                 contentBefore: `<p>ab[c d]ef</p>`,
                 stepFunction: async editor => {
                     await strikeThrough(editor);
-                    const styleSpan = editor.editable.querySelector('span[style="text-decoration-line: line-through;"]').childNodes[0];
+                    const styleSpan = editor.editable.querySelector('s').childNodes[0];
                     const selection = {
                         anchorNode: styleSpan,
                         anchorOffset: 1,
@@ -297,7 +389,7 @@ describe('Format', () => {
                     await setTestSelection(selection);
                     await strikeThrough(editor);
                 },
-                contentAfter: `<p>ab${s(`c[`)} ]${s(`d`)}ef</p>`,
+                contentAfter: `<p>ab${s(`c`)}[ ]${s(`d`)}ef</p>`,
             });
         });
         it('should make strikeThrough then more then remove', async () => {
@@ -398,18 +490,19 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${s(`ab[]cd`)}</p>`,
                 stepFunction: strikeThrough,
-                contentAfterEdit: `<p>${s(`ab`)}<span oe-zws-empty-inline="">\u200B[]</span>${s(`cd`)}</p>`,
-                contentAfter: `<p>${s(`ab`)}[]${s(`cd`)}</p>`,
+                contentAfterEdit: `<p>${s(`ab`)}${span(`[]\u200B`, 'first')}${s(`cd`)}</p>`,
+                contentAfter: `<p>${s(`ab[]cd`)}</p>`,
             });
         });
     });
+
     describe('underline + strikeThrough', () => {
         it('should get ready to write in strikeThrough without underline (underline was first)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(s(`cd[]ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`\u200b[]`, 'last')}${u(s(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(s(`cd`))}[]${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`[]\u200b`, 'last')}${u(s(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(s(`cd[]ef`))}</p>`,
             });
         });
         it('should restore underline after removing it (collapsed, strikeThrough)', async () => {
@@ -417,22 +510,22 @@ describe('Format', () => {
                 contentBefore: `<p>ab${u(s(`cd`))}${s(`\u200b[]`, 'first')}${u(s(`ef`))}</p>`,
                 stepFunction: underline,
                 contentAfterEdit: `<p>ab${u(s(`cd`))}${s(u(`[]\u200b`, 'first'), 'first')}${u(s(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(s(`cd`))}[]${u(s(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(s(`cd[]ef`))}</p>`,
             });
         });
         it('should remove underline after restoring it after removing it (collapsed, strikeThrough)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(s(`cd`))}${s(u(`[]\u200b`, 'first'))}${u(s(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`\u200b[]`, 'last')}${u(s(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(s(`cd`))}[]${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`[]\u200b`, 'last')}${u(s(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(s(`cd[]ef`))}</p>`,
             });
         });
         it('should remove underline after restoring it and writing after removing it (collapsed, strikeThrough)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(s(`cd`))}${s(u(`ghi[]`))}${u(s(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(u(`ghi`) + `<span oe-zws-empty-inline="">\u200b[]</span>`)}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`${u(`ghi`)}${span(`[]\u200b`, 'first')}`)}${u(s(`ef`))}</p>`,
                 contentAfter: `<p>ab${u(s(`cd`))}${s(u(`ghi`) + `[]`)}${u(s(`ef`))}</p>`,
             });
         });
@@ -452,9 +545,15 @@ describe('Format', () => {
                 contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`)}${uselessSpan(`C[]`)}${uselessU}`)}${u(s(`ef`))}</p>`,
             });
         });
+        it('should remove only underline decoration on a span', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span style="text-decoration: underline line-through;">[a]</span></p>`,
+                stepFunction: underline,
+                contentAfter: `<p><span style="text-decoration: line-through;">[a]</span></p>`,
+            });
+        });
     });
     describe('underline + italic', () => {
-        const iAndU = (content, zws) => `<span${zws === 'first' ? ' oe-zws-empty-inline=""' : ''} style="font-style: italic; text-decoration-line: underline;"${zws === 'last' ? ' oe-zws-empty-inline=""' : ''}>${content}</span>`;
         it('should get ready to write in italic and underline', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[]cd</p>`,
@@ -462,11 +561,11 @@ describe('Format', () => {
                     await editor.execCommand('italic');
                     await editor.execCommand('underline');
                 },
-                contentAfterEdit: `<p>ab${iAndU(`[]\u200B`, 'first')}cd</p>`,
+                contentAfterEdit: `<p>ab${em(u(`[]\u200B`, 'first'), 'first')}cd</p>`,
                 contentAfter: `<p>ab[]cd</p>`,
             });
         });
-        it('should get ready to write in italic, after changing one\'s mind about underline', async () => {
+        it('should get ready to write in italic, after changing one\'s mind about underline (two consecutive at the end)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[]cd</p>`,
                 stepFunction: async editor => {
@@ -474,9 +573,11 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('underline');
                 },
-                contentAfterEdit: `<p>ab${i(`\u200B[]`, 'first')}cd</p>`,
+                contentAfterEdit: `<p>ab${em(`[]\u200B`, 'first')}cd</p>`,
                 contentAfter: `<p>ab[]cd</p>`,
             });
+        });
+        it('should get ready to write in italic, after changing one\'s mind about underline (separated by italic)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[]cd</p>`,
                 stepFunction: async editor => {
@@ -484,9 +585,11 @@ describe('Format', () => {
                     await editor.execCommand('italic');
                     await editor.execCommand('underline');
                 },
-                contentAfterEdit: `<p>ab${i(`\u200B[]`, 'first')}cd</p>`,
+                contentAfterEdit: `<p>ab${em(`[]\u200B`, 'first')}cd</p>`,
                 contentAfter: `<p>ab[]cd</p>`,
             });
+        });
+        it('should get ready to write in italic, after changing one\'s mind about underline (two consecutive at the beginning)', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab[]cd</p>`,
                 stepFunction: async editor => {
@@ -494,47 +597,47 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('italic');
                 },
-                contentAfterEdit: `<p>ab${i(`[]\u200B`, 'first')}cd</p>`,
+                contentAfterEdit: `<p>ab${em(`[]\u200B`, 'first')}cd</p>`,
                 contentAfter: `<p>ab[]cd</p>`,
             });
         });
         it('should get ready to write in italic without underline (underline was first)', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>ab${u(i(`cd[]ef`))}</p>`,
+                contentBefore: `<p>ab${u(em(`cd[]ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(i(`cd`))}${i(`\u200b[]`, 'last')}${u(i(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(i(`cd`))}[]${u(i(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(em(`cd`))}${em(`[]\u200b`, 'last')}${u(em(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(em(`cd[]ef`))}</p>`,
             });
         });
         it('should restore underline after removing it (collapsed, italic)', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>ab${u(i(`cd`))}${i(`\u200b[]`)}${u(i(`ef`))}</p>`,
+                contentBefore: `<p>ab${u(em(`cd`))}${em(`[]\u200b`)}${u(em(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(i(`cd`))}${iAndU(`[]\u200b`, 'last')}${u(i(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(i(`cd`))}[]${u(i(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(em(`cd`))}${em(u(`[]\u200b`, 'last'))}${u(em(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(em(`cd`))}${em(`[]`)}${u(em(`ef`))}</p>`,
             });
         });
         it('should remove underline after restoring it after removing it (collapsed, italic)', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>ab${u(i(`cd`))}${i(u(`[]\u200b`))}${u(i(`ef`))}</p>`,
+                contentBefore: `<p>ab${u(em(`cd`))}${em(u(`[]\u200b`))}${u(em(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(i(`cd`))}${i(`\u200b[]`, 'last')}${u(i(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(i(`cd`))}[]${u(i(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(em(`cd`))}${em(`[]\u200b`, 'last')}${u(em(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(em(`cd[]ef`))}</p>`,
             });
         });
         it('should remove underline after restoring it and writing after removing it (collapsed, italic)', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: `<p>ab${u(i(`cd`))}${i(u(`ghi[]`))}${u(i(`ef`))}</p>`,
+                contentBefore: `<p>ab${u(em(`cd`))}${em(u(`ghi[]`))}${u(em(`ef`))}</p>`,
                 stepFunction: underline,
-                contentAfterEdit: `<p>ab${u(i(`cd`))}${i(u(`ghi`) + `<span oe-zws-empty-inline="">\u200b[]</span>`)}${u(i(`ef`))}</p>`,
-                contentAfter: `<p>ab${u(i(`cd`))}${i(u(`ghi`) + `[]`)}${u(i(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(em(`cd`))}${em(u(`ghi`) + `<span oe-zws-empty-inline="">[]\u200b</span>`)}${u(em(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(em(`cd`))}${em(u(`ghi`) + `[]`)}${u(em(`ef`))}</p>`,
             });
         });
         it('should remove underline, write, restore underline, write, remove underline again, write (collapsed, italic)', async () => {
             const uselessSpan = content => `<span>${content}</span>`;
             const uselessU = u(''); // TODO: clean
             await testEditor(BasicEditor, {
-                contentBefore: `<p>ab${u(i(`cd[]ef`))}</p>`,
+                contentBefore: `<p>ab${u(em(`cd[]ef`))}</p>`,
                 stepFunction: async editor => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insertText', 'A');
@@ -543,18 +646,41 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insertText', 'C');
                 },
-                contentAfter: `<p>ab${u(i(`cd`))}${i(`A${u(`B`)}${uselessSpan(`C[]`)}${uselessU}`)}${u(i(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(em(`cd`))}${em(`A${u(`B`)}${uselessSpan(`C[]`)}${uselessU}`)}${u(em(`ef`))}</p>`,
             });
         });
     });
-});
 
-describe('applyInlineStyle', () => {
-    it('should apply style to selection only', async () => {
+    describe('setFontSize', () => {
+        it('should change the font size of a few characters', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[cde]fg</p>',
+                stepFunction: setFontSize('10px'),
+                contentAfter: '<p>ab<span style="font-size: 10px;">[cde]</span>fg</p>',
+            });
+        });
+        it('should change the font size of a whole heading after a triple click', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1>[ab</h1><p>]cd</p>',
+                stepFunction: setFontSize('36px'),
+                contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
+            });
+        });
+        it('should get ready to type with a different font size', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[]cd</p>',
+                stepFunction: setFontSize('36px'),
+                contentAfterEdit: `<p>ab<span oe-zws-empty-inline="" style="font-size: 36px;">[]\u200B</span>cd</p>`,
+                contentAfter: '<p>ab[]cd</p>',
+            });
+        });
+    });
+
+    it('should add style to a span parent of an inline', async () => {
         await testEditor(BasicEditor, {
-            contentBefore: '<p>a<span>[b<span>c]d</span>e</span>f</p>',
-            stepFunction: editor => applyInlineStyle(editor, (el) => el.style.color = 'tomato'),
-            contentAfter: '<p>a<span><span style="color: tomato;">[b</span><span><span style="color: tomato;">c]</span>d</span>e</span>f</p>',
+            contentBefore: `<p>a<span style="background-color: black;">${strong(`[bc]`)}</span>d</p>`,
+            stepFunction: setFontSize('10px'),
+            contentAfter: `<p>a<span style="background-color: black; font-size: 10px;">${strong(`[bc]`)}</span>d</p>`,
         });
     });
 });

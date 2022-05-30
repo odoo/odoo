@@ -8,19 +8,15 @@ import {
     closestPath,
     DIRECTIONS,
     findNode,
-    getCursorDirection,
     getCursors,
     getDeepRange,
     getInSelection,
     getListMode,
-    getNormalizedCursorPosition,
     getSelectedNodes,
     getTraversedNodes,
     insertAndSelectZws,
     insertText,
     isBlock,
-    isFormat,
-    isSelectionFormat,
     isColorGradient,
     isContentTextNode,
     isShrunkBlock,
@@ -40,6 +36,7 @@ import {
     allowsParagraphRelatedElements,
     isUnbreakable,
     makeContentsInline,
+    formatSelection,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -276,232 +273,6 @@ function hasColor(element, mode) {
             getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
     );
 }
-/**
- * This function abstracts the difficulty of applying a inline style to a
- * selection. TODO: This implementations potentially adds one span per text
- * node, in an ideal world it would wrap all concerned nodes in one span
- * whenever possible.
- * @param {Element => void} applyStyle Callback that receives an element to
- * which the wanted style should be applied
- * @param {string | [string, string]} [style] the format type to toggle or an
- * array with the style property name and the value to apply to it
- * @param {boolean} [shouldApply=true] set to false to undo a style rather than
- * apply it.
- * @returns {Element[]} the elements on which the style was changed.
- */
-export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
-    getDeepRange(editor.editable, { splitText: true, select: true });
-    const sel = editor.document.getSelection();
-    const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
-    const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
-    const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
-    const [
-        normalizedStartContainer,
-        normalizedStartOffset
-    ] = getNormalizedCursorPosition(startContainer, startOffset);
-    const [
-        normalizedEndContainer,
-        normalizedEndOffset
-    ] = getNormalizedCursorPosition(endContainer, endOffset);
-    const selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
-        const atLeastOneCharFromNodeInSelection = !(
-            (node === normalizedEndContainer && normalizedEndOffset === 0) ||
-            (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
-        );
-        return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
-    });
-    const textNodesToFormat = selectedTextNodes.filter(node => {
-        let isApplied;
-        if (Array.isArray(style) && style[style[0]]) {
-            let ancestor = node;
-            while (ancestor) {
-                if (ancestor.style[style[0]]) {
-                    isApplied = ancestor.style[style[0]] === style[1];
-                    break;
-                } else {
-                    ancestor = ancestor.parentElement;
-                }
-            }
-        } else {
-            isApplied = isFormat[style] && isFormat[style](node);
-        }
-        return shouldApply ? !isApplied : isApplied;
-    });
-    const changedElements = [];
-    for (const textNode of textNodesToFormat) {
-        // If text node ends after the end of the selection, split it and
-        // keep the part that is inside.
-        if (endContainer === textNode && endOffset < textNode.textContent.length) {
-            // No reassignement needed, entirely dependent on the
-            // splitTextNode implementation.
-            splitTextNode(textNode, endOffset, DIRECTIONS.LEFT);
-        }
-        // If text node starts before the beginning of the selection, split it
-        // and keep the part that is inside as textNode.
-        if (startContainer === textNode && startOffset > 0) {
-            // No reassignement needed, entirely dependent on the
-            // splitTextNode implementation.
-            splitTextNode(textNode, startOffset, DIRECTIONS.RIGHT);
-        }
-        // If the parent is not inline or is not completely in the
-        // selection, wrap text node in inline node. Also skips <a> tags to
-        // work with native `removeFormat` command
-        const siblings = [...textNode.parentElement.childNodes];
-        if (
-            isBlock(textNode.parentElement) ||
-            !(
-                selectedTextNodes.includes(siblings[0]) &&
-                selectedTextNodes.includes(siblings[siblings.length - 1])
-            ) ||
-            textNode.parentElement.tagName === 'A'
-        ) {
-            const newParent = document.createElement('span');
-            textNode.after(newParent);
-            newParent.appendChild(textNode);
-        }
-        applyStyle(textNode.parentElement);
-        changedElements.push(textNode.parentElement);
-    }
-    if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
-        setSelection(selectedTextNodes[0], 0);
-    } else if (selectedTextNodes.length) {
-        const firstNode = selectedTextNodes[0];
-        const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
-        if (direction === DIRECTIONS.RIGHT) {
-            setSelection(firstNode, 0, lastNode, lastNode.length);
-        } else {
-            setSelection(lastNode, lastNode.length, firstNode, 0);
-        }
-    }
-    return changedElements;
-}
-const styles = {
-    bold: {
-        is: editable => isSelectionFormat(editable, 'bold'),
-        name: 'fontWeight',
-        value: 'bolder',
-    },
-    italic: {
-        is: editable => isSelectionFormat(editable, 'italic'),
-        name: 'fontStyle',
-        value: 'italic',
-    },
-    underline: {
-        is: editable => isSelectionFormat(editable, 'underline'),
-        name: 'textDecorationLine',
-        value: 'underline',
-    },
-    strikeThrough: {
-        is: editable => isSelectionFormat(editable, 'strikeThrough'),
-        name: 'textDecorationLine',
-        value: 'line-through',
-    },
-    switchDirection: {
-        is: editable => isSelectionFormat(editable, 'switchDirection'),
-    },
-};
-
-export function toggleFormat(editor, format) {
-    const selection = editor.document.getSelection();
-    if (!selection.rangeCount) return;
-    const wasCollapsed = selection.getRangeAt(0).collapsed;
-    let zws;
-    if (wasCollapsed) {
-        if (selection.anchorNode.nodeType === Node.TEXT_NODE && selection.anchorNode.textContent === '\u200b') {
-            zws = selection.anchorNode;
-            selection.getRangeAt(0).selectNode(zws);
-        } else {
-            zws = insertAndSelectZws(selection);
-        }
-    }
-    getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-    const {anchorNode, anchorOffset, focusNode, focusOffset} = editor.document.getSelection();
-    const style = styles[format];
-    const selectedTextNodes = getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.length);
-    const isAlreadyFormatted = style.is(editor.editable);
-    let changedElements = [];
-    if (isAlreadyFormatted && style.name === 'textDecorationLine') {
-        for (const textNode of selectedTextNodes) {
-            const closestDecorated = closestElement(textNode, `[style*="text-decoration-line: ${style.value}"]`);
-            if (closestDecorated) {
-                const splitResult = splitAroundUntil(textNode, closestDecorated);
-                const decorationToRemove = splitResult[0] || splitResult[1] || closestDecorated;
-                decorationToRemove.style.removeProperty('text-decoration-line');
-                if (!decorationToRemove.style.cssText) {
-                    for (const child of decorationToRemove.childNodes) {
-                        decorationToRemove.before(child);
-                        changedElements.push(child);
-                    }
-                    decorationToRemove.remove();
-                }
-            }
-        }
-        if (wasCollapsed) {
-            const siblings = [...zws.parentElement.childNodes];
-            if (
-                selectedTextNodes.includes(siblings[0]) &&
-                selectedTextNodes.includes(siblings[siblings.length - 1])
-            ) {
-                zws.parentElement.setAttribute('oe-zws-empty-inline', '');
-            } else {
-                const span = document.createElement('span');
-                span.setAttribute('oe-zws-empty-inline', '');
-                zws.before(span);
-                span.append(zws);
-
-            }
-            setSelection(zws, 1);
-        } else {
-            setSelection(anchorNode, anchorOffset, focusNode, focusOffset);
-        }
-    } else if (format === 'switchDirection') {
-        const defaultDirection = editor.options.direction;
-        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
-            if (isAlreadyFormatted) {
-                block.removeAttribute('dir');
-            } else {
-                block.setAttribute('dir', defaultDirection === 'ltr' ? 'rtl' : 'ltr');
-            }
-            changedElements.push(block);
-        }
-    } else {
-        changedElements = applyInlineStyle(editor, el => {
-            if (isAlreadyFormatted) {
-                const block = closestBlock(el);
-                el.style[style.name] = style.is(block) ? 'normal' : getComputedStyle(block)[style.name];
-            } else if (style.name === 'textDecorationLine' && el.style[style.name]) {
-                // The <span> (el) has a text decoration and we want to set
-                // another. We don't want to replace the old with the new, we
-                // want to add a new one (eg it was underlined, we want it also
-                // strikeThrough).
-                const newChild = document.createElement('span');
-                const children = [...el.childNodes];
-                el.prepend(newChild);
-                newChild.append(...children);
-                newChild.style[style.name] = style.value;
-            } else {
-                el.style[style.name] = style.value;
-            }
-            if (zws) {
-                const siblings = [...zws.parentElement.childNodes];
-                if (
-                    selectedTextNodes.includes(siblings[0]) &&
-                    selectedTextNodes.includes(siblings[siblings.length - 1])
-                ) {
-                    zws.parentElement.setAttribute('oe-zws-empty-inline', '');
-                } else {
-                    const span = document.createElement('span');
-                    span.setAttribute('oe-zws-empty-inline', '');
-                    zws.before(span);
-                    span.append(zws);
-
-                }
-            }
-        }, format, !isAlreadyFormatted);
-    }
-    return changedElements;
-}
 function addColumn(editor, beforeOrAfter) {
     getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
     const c = getInSelection(editor.document, 'td');
@@ -596,12 +367,27 @@ export const editorCommands = {
 
     // Formats
     // -------------------------------------------------------------------------
-    bold: editor => toggleFormat(editor, 'bold'),
-    italic: editor => toggleFormat(editor, 'italic'),
-    underline: editor => toggleFormat(editor, 'underline'),
-    strikeThrough: editor => toggleFormat(editor, 'strikeThrough'),
+    bold: editor => formatSelection(editor, 'bold'),
+    italic: editor => formatSelection(editor, 'italic'),
+    underline: editor => formatSelection(editor, 'underline'),
+    strikeThrough: editor => formatSelection(editor, 'strikeThrough'),
+    setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
     switchDirection: editor => {
-        const changedElements = toggleFormat(editor, 'switchDirection');
+        getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+        const selectedTextNodes = getSelectedNodes(editor.editable)
+            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+
+        const changedElements = [];
+        const defaultDirection = editor.options.direction;
+        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
+            if (!shouldApplyStyle) {
+                block.removeAttribute('dir');
+            } else {
+                block.setAttribute('dir', defaultDirection === 'ltr' ? 'rtl' : 'ltr');
+            }
+            changedElements.push(block);
+        }
+
         for (const element of changedElements) {
             const style = getComputedStyle(element);
             if (style.direction === 'ltr' && style.textAlign === 'right') {
@@ -624,19 +410,6 @@ export const editorCommands = {
     justifyRight: editor => align(editor, 'right'),
     justifyCenter: editor => align(editor, 'center'),
     justifyFull: editor => align(editor, 'justify'),
-    /**
-     * @param {string} size A valid css size string
-     */
-    setFontSize: (editor, size) => {
-        const selection = editor.document.getSelection();
-        if (!selection.rangeCount) return;
-        if (selection.getRangeAt(0).collapsed) {
-            insertAndSelectZws(selection);
-        }
-        applyInlineStyle(editor, element => {
-            element.style.fontSize = size;
-        }, ['fontSize', size]);
-    },
 
     // Link
     createLink: (editor, link, content) => {
@@ -765,8 +538,7 @@ export const editorCommands = {
                 // Partially selected <font>: split it.
                 const selectedChildren = children.filter(child => selectedNodes.includes(child));
                 if (selectedChildren.length) {
-                    const splitResult = splitAroundUntil(selectedChildren, font);
-                    font = splitResult[0] || splitResult[1] || font;
+                    font = splitAroundUntil(selectedChildren, font);
                 } else {
                     font = [];
                 }
