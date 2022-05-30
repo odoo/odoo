@@ -17,8 +17,8 @@
                 t-ref="root"
             >
                 <!-- card -->
-                <t t-if="callParticipantCard.rtcVideoView">
-                    <RtcVideo record="callParticipantCard.rtcVideoView"/>
+                <t t-if="callParticipantCard.callParticipantVideoView">
+                    <CallParticipantVideo record="callParticipantCard.callParticipantVideoView"/>
                 </t>
                 <t t-else="">
                     <div class="o_RtcCallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-sm" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">

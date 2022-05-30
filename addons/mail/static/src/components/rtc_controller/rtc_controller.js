@@ -6,21 +6,21 @@ import Popover from "web.Popover";
 
 const { Component } = owl;
 
-export class RtcController extends Component {
+export class CallActionList extends Component {
 
     /**
-     * @returns {RtcController}
+     * @returns {CallActionListView}
      */
-    get rtcController() {
+    get callActionListView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(RtcController, {
+Object.assign(CallActionList, {
     props: { record: Object },
-    template: 'mail.RtcController',
+    template: 'mail.CallActionList',
     components: { Popover },
 });
 
-registerMessagingComponent(RtcController);
+registerMessagingComponent(CallActionList);

@@ -4,7 +4,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class RtcOptionList extends LegacyComponent {
+export class CallOptionMenu extends LegacyComponent {
 
     /**
      * @override
@@ -15,17 +15,17 @@ export class RtcOptionList extends LegacyComponent {
     }
 
     /**
-     * @returns {RtcOptionList}
+     * @returns {CallOptionMenu}
      */
-    get rtcOptionList() {
+    get callOptionMenu() {
         return this.props.record;
     }
 
 }
 
-Object.assign(RtcOptionList, {
+Object.assign(CallOptionMenu, {
     props: { record: Object },
-    template: 'mail.RtcOptionList',
+    template: 'mail.CallOptionMenu',
 });
 
-registerMessagingComponent(RtcOptionList);
+registerMessagingComponent(CallOptionMenu);

@@ -45,7 +45,7 @@
             <t t-if="rtcCallViewer.showOverlay or !rtcCallViewer.isControllerFloating">
                 <div class="o_RtcCallViewer_controls d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': rtcCallViewer.isControllerFloating }">
                     <div class="o_RtcCallViewer_controlsOverlayContainer" t-on-mousemove="rtcCallViewer.onMouseMoveOverlay">
-                        <RtcController record="rtcCallViewer.rtcController"/>
+                        <CallActionList record="rtcCallViewer.callActionListView"/>
                     </div>
                 </div>
             </t>

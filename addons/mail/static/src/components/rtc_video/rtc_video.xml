@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.RtcVideo" owl="1">
-        <t t-if="rtcVideoView">
-            <video class="o_RtcVideo w-100 h-100 rounded-sm bg-black o_cursor_pointer"
+    <t t-name="mail.CallParticipantVideo" owl="1">
+        <t t-if="callParticipantVideoView">
+            <video class="o_CallParticipantVideo w-100 h-100 rounded-sm bg-black o_cursor_pointer"
                 t-attf-class="{{ className }}"
                 playsinline="true"
                 autoplay="true"
                 muted="true"
-                t-on-loadedmetadata="rtcVideoView.rtcSession.onVideoLoadedMetaData"
+                t-on-loadedmetadata="callParticipantVideoView.rtcSession.onVideoLoadedMetaData"
                 t-ref="root"
             />
         </t>
