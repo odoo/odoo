@@ -26,4 +26,10 @@
         <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
         <value eval="{'company_ids': [(4, ref('l10n_be.demo_company_be'))]}"/>
     </function>
+        
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value name="template_code" eval="'be'"/>
+        <value name="company" model="res.company" eval="ref('l10n_be.demo_company_be')"/>
+    </function>
 </odoo>
