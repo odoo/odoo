@@ -104,16 +104,20 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
     def _task_get_page_view_values(self, task, access_token, **kwargs):
         values = super()._task_get_page_view_values(task, access_token, **kwargs)
         values['so_accessible'] = False
-        try:
-            if task.sale_order_id and self._document_check_access('sale.order', task.sale_order_id.id):
+        if task.sale_order_id and not request.env.user._is_public():
+            # request.env.user._is_public is a quick improvement
+            #   since public users never have portal access to orders anyway
+            partner_sudo = request.env.user.partner_id
+            order_sudo = task.sale_order_id.filtered_domain(
+                request.env['sale.order'].sudo()._get_portal_base_domain(partner_sudo)
+            )
+            if order_sudo:  # If linked order is accessible to current user
                 values['so_accessible'] = True
-                title = _('Quotation') if task.sale_order_id.state in ['draft', 'sent'] else _('Sales Order')
+                order_sudo = task.sale_order_id
                 values['task_link_section'].append({
-                    'access_url': task.sale_order_id.get_portal_url(),
-                    'title': title,
+                    'access_url': order_sudo.get_portal_url(),
+                    'title': order_sudo.type_name,
                 })
-        except (AccessError, MissingError):
-            pass
 
         moves = request.env['account.move']
         invoice_ids = task.sale_order_id.invoice_ids

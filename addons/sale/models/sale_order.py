@@ -1416,6 +1416,27 @@ class SaleOrder(models.Model):
             and self.amount_total > 0
         )
 
+    def _get_portal_base_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+        ]
+
+    def _get_portal_quotations_domain(self, partner):
+        return expression.AND([
+            self._get_portal_base_domain(partner),
+            [
+                ('state', 'in', ['sent', 'cancel']),
+            ],
+        ])
+
+    def _get_portal_orders_domain(self, partner):
+        return expression.AND([
+            self._get_portal_base_domain(partner),
+            [
+                ('state', 'in', ['sale', 'done']),
+            ],
+        ])
+
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """
         self.ensure_one()

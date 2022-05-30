@@ -106,7 +106,9 @@
         <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
             <t t-if="task.project_id.allow_billable">
                 <div t-if="task.sale_order_id"><strong>Sales Order:</strong>
-                    <span t-if="so_accessible"><a t-attf-href="{{ task.sale_order_id.access_url }}" t-field="task.sale_order_id"></a></span>
+                    <span t-if="so_accessible">
+                        <a t-att-href="task.sale_order_id.get_portal_url()" t-field="task.sale_order_id"/>
+                    </span>
                     <span t-else="" t-field="task.sale_order_id"></span>
                 </div>
                 <div t-if="invoices_accessible"><strong>Invoices:</strong>

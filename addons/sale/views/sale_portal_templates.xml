@@ -271,7 +271,7 @@
                     <!-- modal relative to the action reject -->
                     <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
-                            <form id="decline" method="POST" t-attf-action="/my/orders/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
+                            <form id="decline" method="POST" t-att-action="sale_order.get_portal_url(suffix='/decline')" class="modal-content">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
                                     <h4 class="modal-title">Reject This Quotation</h4>

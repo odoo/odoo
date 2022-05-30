@@ -663,7 +663,7 @@ class ProjectTask(models.Model):
         return {
             "name": "Portal Sale Order",
             "type": "ir.actions.act_url",
-            "url": self.sale_order_id.access_url,
+            "url": self.sale_order_id.get_portal_url(),
         }
 
     def _rating_get_partner(self):
