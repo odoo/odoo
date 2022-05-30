@@ -242,11 +242,11 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeRtcInvitationCards() {
+        _computeCallInviteRequestPopups() {
             if (this.ringingThreads.length === 0) {
                 return clear();
             }
-            return replace(this.ringingThreads.map(thread => thread.rtcInvitationCard));
+            return replace(this.ringingThreads.map(thread => thread.callInviteRequestPopup));
         },
         /**
          * @private
@@ -421,8 +421,8 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        rtcInvitationCards: many('RtcInvitationCard', {
-            compute: '_computeRtcInvitationCards',
+        callInviteRequestPopups: many('CallInviteRequestPopup', {
+            compute: '_computeCallInviteRequestPopups',
             isCausal: true,
         }),
         soundEffects: one('SoundEffects', {

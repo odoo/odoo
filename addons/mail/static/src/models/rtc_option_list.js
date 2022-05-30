@@ -4,8 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'RtcOptionList',
-    identifyingFields: ['rtcController'],
+    name: 'CallOptionMenu',
+    identifyingFields: ['callActionListView'],
     recordMethods: {
         /**
          * Creates and download a file that contains the logs of the current RTC call.
@@ -13,7 +13,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickDownloadLogs(ev) {
-            const channel = this.rtcController.callViewer.threadView.thread;
+            const channel = this.callActionListView.callViewer.threadView.thread;
             if (!channel.rtc) {
                 return;
             }
@@ -31,21 +31,21 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickActivateFullScreen(ev) {
-            this.rtcController.callViewer.activateFullScreen();
+            this.callActionListView.callViewer.activateFullScreen();
             this.component.trigger('o-popover-close');
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickDeactivateFullScreen(ev) {
-            this.rtcController.callViewer.deactivateFullScreen();
+            this.callActionListView.callViewer.deactivateFullScreen();
             this.component.trigger('o-popover-close');
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickLayout(ev) {
-            this.rtcController.callViewer.toggleLayoutMenu();
+            this.callActionListView.callViewer.toggleLayoutMenu();
             this.component.trigger('o-popover-close');
         },
         /**
@@ -61,8 +61,8 @@ registerModel({
          * States the OWL component of this option list.
          */
         component: attr(),
-        rtcController: one('RtcController', {
-            inverse: 'rtcOptionList',
+        callActionListView: one('CallActionListView', {
+            inverse: 'callOptionMenu',
             readonly: true,
             required: true,
         }),

@@ -4,24 +4,24 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class RtcInvitationCard extends Component {
+export class CallInviteRequestPopup extends Component {
 
     //--------------------------------------------------------------------------
     // Getters / Setters
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {RtcInvitationCard|undefined}
+     * @returns {CallInviteRequestPopup}
      */
-    get rtcInvitationCard() {
+    get callInviteRequestPopup() {
         return this.props.record;
     }
 
 }
 
-Object.assign(RtcInvitationCard, {
+Object.assign(CallInviteRequestPopup, {
     props: { record: Object },
-    template: 'mail.RtcInvitationCard',
+    template: 'mail.CallInviteRequestPopup',
 });
 
-registerMessagingComponent(RtcInvitationCard);
+registerMessagingComponent(CallInviteRequestPopup);

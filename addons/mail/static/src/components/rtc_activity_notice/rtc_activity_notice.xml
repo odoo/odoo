@@ -4,7 +4,7 @@
     <t t-name="mail.RtcActivityNotice" owl="1">
         <div class="o_RtcActivityNotice dropdown" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="messaging">
-                <RtcInvitations/>
+                <CallInviteRequestPopupList/>
                 <t t-if="messaging.rtc.channel">
                     <button class="o_RtcActivityNotice_button px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="rtcActivityNoticeView.buttonTitle" role="button" t-on-click="messaging.rtc.onClickActivityNoticeButton">
                         <div class="o_RtcActivityNotice_buttonContent d-flex align-items-center">
