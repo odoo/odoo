@@ -381,7 +381,8 @@ class ProductTemplateAttributeLine(models.Model):
             # re-use a value that was archived at a previous step.
             ptav_to_activate.write({'ptav_active': True})
             ptav_to_unlink.write({'ptav_active': False})
-        ptav_to_unlink.unlink()
+        if ptav_to_unlink:
+            ptav_to_unlink.unlink()
         ProductTemplateAttributeValue.create(ptav_to_create)
         self.product_tmpl_id._create_variant_ids()
 
