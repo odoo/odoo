@@ -1,4 +1,3 @@
-import { applyInlineStyle } from '../../src/commands/commands.js';
 import { OdooEditor } from '../../src/OdooEditor.js';
 import { getTraversedNodes } from '../../src/utils/utils.js';
 import {
@@ -2876,18 +2875,18 @@ X[]
                 contentAfter: '<p>ab <span>x[]\u200B</span> cd</p>',
             });
         });
-        it('should insert a char into a oe-zws-empty-inline span removing the zws and oe-zws-empty-inline', async () => {
+        it('should insert a char into a data-oe-zws-empty-inline span removing the zws and data-oe-zws-empty-inline', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>ab<span oe-zws-empty-inline="">[]\u200B</span>cd</p>',
+                contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'x');
                 },
                 contentAfter: '<p>ab<span>x[]</span>cd</p>',
             });
         });
-        it('should insert a char into a oe-zws-empty-inline span surrounded by space without removing the zws and oe-zws-empty-inline', async () => {
+        it('should insert a char into a data-oe-zws-empty-inline span surrounded by space without removing the zws and data-oe-zws-empty-inline', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>ab<span oe-zws-empty-inline="">[]\u200B</span>cd</p>',
+                contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'x');
                 },
@@ -3467,12 +3466,8 @@ X[]
                     stepFunction: async editor => {
                         // simulate preview
                         editor.historyPauseSteps();
-                        try {
-                            applyInlineStyle(editor, (el) => el.style.color = 'lime');
-                            // a[bcd]e with bcd in lime
-                        } finally {
-                            editor.historyUnpauseSteps();
-                        }
+                        editor.execCommand('bold');
+                        editor.historyUnpauseSteps();
                         // simulate preview's reset
                         editor.historyRevertCurrentStep(); // back to initial state
                     },
