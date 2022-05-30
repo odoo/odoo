@@ -24,3 +24,12 @@ class MailTestFieldType(models.Model):
         if not self._context.get('default_type'):
             self = self.with_context(default_type='first')
         return super(MailTestFieldType, self).create(vals_list)
+
+class MailTestSelectionTracking(models.Model):
+    """ Test tracking for selection fields """
+    _description = 'Test Selection Tracking'
+    _name = 'mail.test.track.selection'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    type = fields.Selection([('first', 'First'), ('second', 'Second')], tracking=True)
