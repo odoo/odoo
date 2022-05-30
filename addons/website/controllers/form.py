@@ -173,6 +173,10 @@ class WebsiteForm(http.Controller):
                 except ValueError:
                     error_fields.append(field_name)
 
+                if dest_model._name == 'mail.mail' and field_name == 'email_from':
+                    # Always add the email in the custom message
+                    custom_fields.append((_('email'), field_value))
+
             # If it's a custom field
             elif field_name != 'context':
                 custom_fields.append((field_name, field_value))
