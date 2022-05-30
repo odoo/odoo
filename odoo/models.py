@@ -1429,7 +1429,7 @@ class BaseModel(metaclass=MetaModel):
     def fields_get_keys(self):
         warnings.warn(
             'fields_get_keys() method is deprecated, use `_fields` or `get_views` instead',
-            DeprecationWarning
+            DeprecationWarning, stacklevel=2,
         )
         return list(self._fields)
 
@@ -1766,12 +1766,18 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def load_views(self, views, options=None):
-        warnings.warn('`load_views` method is deprecated, use `get_views` instead', DeprecationWarning)
+        warnings.warn(
+            '`load_views` method is deprecated, use `get_views` instead',
+            DeprecationWarning, stacklevel=2,
+        )
         return self.get_views(views, options=options)
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        warnings.warn('Method `_fields_view_get` is deprecated, use `_get_view` instead', DeprecationWarning)
+        warnings.warn(
+            'Method `_fields_view_get` is deprecated, use `_get_view` instead',
+            DeprecationWarning, stacklevel=2,
+        )
         arch, view = self._get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
         result = {
             'arch': etree.tostring(arch, encoding='unicode'),
@@ -1796,7 +1802,10 @@ class BaseModel(metaclass=MetaModel):
 
             Use :meth:`~odoo.models.Model.get_view()` instead.
         """
-        warnings.warn('Method `fields_view_get` is deprecated, use `get_view` instead', DeprecationWarning)
+        warnings.warn(
+            'Method `fields_view_get` is deprecated, use `get_view` instead',
+            DeprecationWarning, stacklevel=2,
+        )
         result = self.get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
         node = etree.fromstring(result['arch'])
         view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
@@ -5162,7 +5171,10 @@ class BaseModel(metaclass=MetaModel):
                 for key, val in results.items()}
 
     def get_xml_id(self):
-        warnings.warn('get_xml_id() is deprecated method, use get_external_id() instead', DeprecationWarning)
+        warnings.warn(
+            'get_xml_id() is deprecated method, use get_external_id() instead',
+            DeprecationWarning, stacklevel=2,
+        )
         return self.get_external_id()
 
     # Transience
@@ -5777,7 +5789,7 @@ class BaseModel(metaclass=MetaModel):
         """
         warnings.warn(
             "Deprecated method flush(), use flush_model(), flush_recordset() or env.flush_all() instead",
-            DeprecationWarning,
+            DeprecationWarning, stacklevel=2,
         )
         if fnames is None:
             self.env.flush_all()
@@ -6127,7 +6139,7 @@ class BaseModel(metaclass=MetaModel):
                 The record cache is automatically invalidated.
         """
         warnings.warn('refresh() is deprecated method, use invalidate_cache() instead',
-                      DeprecationWarning)
+                      DeprecationWarning, stacklevel=2)
         self.env.invalidate_all()
 
     @api.model
@@ -6140,7 +6152,7 @@ class BaseModel(metaclass=MetaModel):
         """
         warnings.warn(
             "Deprecated method invalidate_cache(), use invalidate_model(), invalidate_recordset() or env.invalidate_all() instead",
-            DeprecationWarning,
+            DeprecationWarning, stacklevel=2
         )
         if ids is not None:
             self.browse(ids).invalidate_recordset(fnames)
@@ -6320,8 +6332,7 @@ class BaseModel(metaclass=MetaModel):
         """
         warnings.warn(
             "Deprecated method recompute(), use flush_model(), flush_recordset() or env.flush_all() instead",
-            DeprecationWarning,
-            stacklevel=2,
+            DeprecationWarning, stacklevel=2,
         )
         if fnames is None:
             self.env._recompute()
