@@ -3270,8 +3270,8 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_list_view").offsetWidth
         );
         const largeCells = target.querySelectorAll(".o_data_cell.large");
-        assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
-        assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
+        assert.ok(Math.abs(largeCells[0].offsetWidth - largeCells[1].offsetWidth) <= 1);
+        assert.ok(Math.abs(largeCells[1].offsetWidth - largeCells[2].offsetWidth) <= 1);
         assert.ok(
             target.querySelector(".o_data_cell:not(.large)").offsetWidth < largeCells[0].offsetWidth
         );
@@ -3770,9 +3770,8 @@ QUnit.module("Views", (hooks) => {
         );
         const textWidth = Math.ceil(text.getBoundingClientRect().width);
 
-        assert.strictEqual(
-            fooWidth,
-            textWidth,
+        assert.ok(
+            Math.abs(fooWidth - textWidth) <= 1,
             "both columns should have been given the same width"
         );
 

@@ -9091,4 +9091,72 @@ QUnit.module("Views", (hooks) => {
             "Widget with Option"
         );
     });
+
+    QUnit.skipWOWL("action/type attributes on kanban arch, type='object'", async function (assert) {
+        // assert.expect(6)
+        // var kanban = await createView({
+        //     View: KanbanView,
+        //     model: "partner",
+        //     data: this.data,
+        //     arch:
+        //         '<kanban action="a1" type="object">' +
+        //             '<templates><div t-name="kanban-box">' +
+        //                 '<p>some value</p><field name="foo"/>' +
+        //             '</div></templates>' +
+        //         '</kanban>',
+        //     mockRPC: function (route) {
+        //         assert.step(route);
+        //         return this._super.apply(this, arguments);
+        //     },
+        // });
+        // var count = 0;
+        // testUtils.mock.intercept(kanban, 'execute_action', function (event) {
+        //     count++;
+        //     assert.strictEqual(event.data.action_data.type, "object");
+        //     assert.strictEqual(event.data.action_data.name, "a1");
+        //     event.data.on_closed();
+        // });
+        // testUtils.dom.click(kanban.$('p').first());
+        // await new Promise(r => setTimeout(r));
+        // assert.strictEqual(count, 1, "should have triggered a execute action");
+        // assert.verifySteps([
+        //     '/web/dataset/search_read',
+        //     '/web/dataset/call_kw/partner/read'
+        // ], 'a read should be done after the call button to reload the record');
+        // kanban.destroy();
+    });
+
+    QUnit.skipWOWL("action/type attributes on kanban arch, type='action'", async function (assert) {
+        // assert.expect(6);
+        // var kanban = await createView({
+        //     View: KanbanView,
+        //     model: "partner",
+        //     data: this.data,
+        //     arch:
+        //         '<kanban action="a1" type="action">' +
+        //             '<templates><div t-name="kanban-box">' +
+        //                 '<p>some value</p><field name="foo"/>' +
+        //             '</div></templates>' +
+        //         '</kanban>',
+        //     mockRPC: function (route) {
+        //         assert.step(route);
+        //         return this._super.apply(this, arguments);
+        //     },
+        // });
+        // var count = 0;
+        // testUtils.mock.intercept(kanban, 'execute_action', function (event) {
+        //     count++;
+        //     assert.strictEqual(event.data.action_data.type, "action");
+        //     assert.strictEqual(event.data.action_data.name, "a1");
+        //     event.data.on_closed();
+        // });
+        // testUtils.dom.click(kanban.$('p').first());
+        // await new Promise(r => setTimeout(r));
+        // assert.strictEqual(count, 1, "should have triggered a execute action");
+        // assert.verifySteps([
+        //     '/web/dataset/search_read',
+        //     '/web/dataset/call_kw/partner/read'
+        // ], 'a read should be done after the call button to reload the record');
+        // kanban.destroy();
+    });
 });

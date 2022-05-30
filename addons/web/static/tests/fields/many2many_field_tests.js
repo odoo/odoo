@@ -1818,4 +1818,35 @@ QUnit.module("Fields", (hooks) => {
             "We should have 51 records in the m2m field"
         );
     });
+
+    QUnit.skipWOWL("many2many kanban: action/type attribute", async function (assert) {
+        // assert.expect(2);
+        // this.data.partner.records[0].timmy = [12];
+        // var form = await createView({
+        //     View: FormView,
+        //     model: 'partner',
+        //     data: this.data,
+        //     arch: '<form string="Partners">' +
+        //         '<field name="timmy" add-label="Add timmy" mode="kanban">' +
+        //         '<kanban action="a1" type="object">' +
+        //         '<templates>' +
+        //         '<t t-name="kanban-box">' +
+        //         '<div class="oe_kanban_details">' +
+        //         '<field name="display_name"/>' +
+        //         '</div>' +
+        //         '</t>' +
+        //         '</templates>' +
+        //         '</kanban>' +
+        //         '</field>' +
+        //         '</form>',
+        //     res_id: 1,
+        // });
+        // testUtils.mock.intercept(form, 'execute_action', function (event) {
+        //     assert.strictEqual(event.data.action_data.type, "object");
+        //     assert.strictEqual(event.data.action_data.name, "a1");
+        //     event.data.on_closed();
+        // });
+        // testUtils.dom.click(form.$('.oe_kanban_details').first());
+        // form.destroy();
+    });
 });
