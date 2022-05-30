@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
-import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
@@ -538,7 +537,7 @@ registerModel({
                 return clear();
             }
             let prettyBody;
-            for (const emoji of emojis) {
+            for (const emoji of this.messaging.emojiRegistry.allEmojis) {
                 const { unicode } = emoji;
                 const regexp = new RegExp(
                     `(?:^|\\s|<[a-z]*>)(${unicode})(?=\\s|$|</[a-z]*>)`,

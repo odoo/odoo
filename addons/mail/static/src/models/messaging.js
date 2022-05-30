@@ -331,6 +331,11 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        emojiRegistry: one('EmojiRegistry', {
+            default: insertAndReplace(),
+            isCausal: true,
+            readonly: true,
+        }),
         focusedRtcSession: one('RtcSession'),
         /**
          * Mailbox History.
