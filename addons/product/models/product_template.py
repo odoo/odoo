@@ -316,7 +316,7 @@ class ProductTemplate(models.Model):
         """
         product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
         if product_length_in_feet_param == '1':
-            return self.env.ref('uom.product_uom_foot')
+            return self.env.ref('uom.product_uom_inch')
         else:
             return self.env.ref('uom.product_uom_millimeter')
 
