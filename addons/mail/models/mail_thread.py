@@ -3138,8 +3138,12 @@ class MailThread(models.AbstractModel):
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
     def _get_mail_thread_data(self, request_list):
+        res = {'hasWriteAccess': False, 'hasReadAccess': True}
+        if not self:
+            res['hasReadAccess'] = False
+            return res
+
         self.ensure_one()
-        res = {'hasWriteAccess': False}
         try:
             self.check_access_rights("write")
             self.check_access_rule("write")
