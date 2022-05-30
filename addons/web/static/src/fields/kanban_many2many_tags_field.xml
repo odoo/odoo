@@ -4,7 +4,7 @@
     <t t-name="web.KanbanMany2ManyTagsField" owl="1">
         <div class="o_field_many2manytags o_kanban_tags">
             <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-                <div class="o_tag" t-attf-class="o_tag_color_{{ tag.colorIndex }}">
+                <div class="o_tag" t-attf-class="o_tag_color_{{ tag.colorIndex || 0 }}">
                     <span />
                     <t t-esc="tag.name or 'tag' + tag_index" />
                 </div>

@@ -6579,29 +6579,28 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["2 - 0", "3 - 0"]);
     });
 
-    QUnit.skipWOWL("load more records in column with x2many", async (assert) => {
+    QUnit.test("load more records in column with x2many", async (assert) => {
         assert.expect(10);
 
         serverData.models.partner.records[0].category_ids = [7];
         serverData.models.partner.records[1].category_ids = [];
         serverData.models.partner.records[2].category_ids = [6];
         serverData.models.partner.records[3].category_ids = [];
-
         // record [2] will be loaded after
 
         await makeView({
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                '<templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<field name="category_ids"/>' +
-                '<field name="foo"/>' +
-                "</div>" +
-                "</t></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="category_ids"/>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
             groupBy: ["bar"],
             limit: 2,
             async mockRPC(_route, { args, kwargs, model, method }) {
@@ -6610,14 +6609,10 @@ QUnit.module("Views", (hooks) => {
                 } else if (method === "web_search_read") {
                     const { limit, offset } = kwargs;
                     if (limit) {
-                        assert.strictEqual(limit, 2, "the limit should be correctly set");
+                        assert.strictEqual(limit, 2);
                     }
                     if (offset) {
-                        assert.strictEqual(
-                            offset,
-                            2,
-                            "the offset should be correctly set at load more"
-                        );
+                        assert.strictEqual(offset, 2);
                     }
                 }
             },

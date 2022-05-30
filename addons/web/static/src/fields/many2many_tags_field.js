@@ -53,7 +53,7 @@ export class Many2ManyTagsField extends Component {
         return !this.props.readonly;
     }
     handlesColor() {
-        return !(this.props.colorField === undefined || this.props.colorField === null);
+        return this.props.colorField !== undefined && this.props.colorField !== null;
     }
     switchTagColor(colorIndex, tag) {
         const tagRecord = this.props.value.records.find((record) => record.id === tag.id);
@@ -287,9 +287,8 @@ Many2ManyTagsField.fieldsToFetch = {
 };
 
 Many2ManyTagsField.extractProps = (fieldName, record, attrs) => {
-    const colorField = attrs.options.color_field;
     return {
-        colorField: colorField,
+        colorField: attrs.options.color_field,
         canEditColor:
             !attrs.options.no_edit_color && record.activeFields[fieldName].viewType !== "list",
         relation: record.activeFields[fieldName].relation,
