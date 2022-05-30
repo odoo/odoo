@@ -347,7 +347,7 @@ class IrUiView(models.Model):
         # During a theme module update, theme views' copies receiving an arch
         # update should not be considered as `arch_updated`, as this is not a
         # user made change.
-        test_mode = getattr(threading.currentThread(), 'testing', False)
+        test_mode = getattr(threading.current_thread(), 'testing', False)
         if not (test_mode or self.pool._init):
             return super().write(vals)
         no_arch_updated_views = other_views = self.env['ir.ui.view']
