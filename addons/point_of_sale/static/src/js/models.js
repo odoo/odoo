@@ -1217,6 +1217,7 @@ class Orderline extends PosModel {
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
         const currentPackLotLines = this.pack_lot_lines;
         let nExtraLines = Math.abs(this.quantity) - currentPackLotLines.length;
+        nExtraLines = Math.ceil(nExtraLines);
         nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
         const tempLines = currentPackLotLines
             .map(lotLine => ({
