@@ -1523,8 +1523,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2many list with onchange and edition of a record", async function (assert) {
-        assert.expect(11);
-
         serverData.models.partner.fields.turtles.type = "many2many";
         serverData.models.partner.onchanges.turtles = function () {};
 
@@ -1553,7 +1551,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickEdit(target);
         await click($(target).find("td.o_data_cell:first")[0]);
-        assert.verifySteps(["read"]);
+        assert.verifySteps(["get_views", "read"]);
 
         await click($('.modal-body input[type="checkbox"]')[0]);
         await click($(".modal .modal-footer .btn-primary").first()[0]);

@@ -9598,7 +9598,7 @@ QUnit.module("Fields", (hooks) => {
         // Redo asserts in RO mode after saving
         assert.containsOnce(target, ".o_data_row");
         cells = target.querySelectorAll(".o_data_cell");
-        assert.strictEqual(cells[0].textContent, "04/05/2018 14:00:00");
+        assert.strictEqual(cells[0].textContent, "04/05/2018 13:00:00");
         assert.strictEqual(cells[1].textContent, "michelangelo");
     });
 
