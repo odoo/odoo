@@ -412,8 +412,11 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        res = {}
+        res = {'hasReadAccess': True}
         thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        if not thread:
+            res['hasReadAccess'] = False
+            return res
         if 'activities' in request_list:
             res['activities'] = thread.activity_ids.activity_format()
         if 'attachments' in request_list:

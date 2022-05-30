@@ -635,6 +635,7 @@ registerModel({
                 activities: activitiesData,
                 attachments: attachmentsData,
                 followers: followersData,
+                hasReadAccess,
                 suggestedRecipients: suggestedRecipientsData,
             } = await this.env.services.rpc({
                 route: '/mail/thread/data',
@@ -647,7 +648,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            const values = {};
+            const values = { hasReadAccess };
             if (activitiesData) {
                 Object.assign(values, {
                     activities: insertAndReplace(activitiesData.map(activityData =>
@@ -1995,6 +1996,10 @@ registerModel({
         guestMembers: many('Guest', {
             sort: '_sortGuestMembers',
         }),
+        /**
+         * States whether the current user has read access for this thread.
+         */
+        hasReadAccess: attr(),
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
