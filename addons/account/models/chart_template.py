@@ -138,11 +138,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'record': company
             }])
 
+        template_data = with_company._get_data(template_code, company, 'template_data')
         data = with_company._get_chart_template_data(template_code, company)
-        data = self._pre_process_data(template_code, company, data)
 
+        data = with_company._pre_load_data(template_code, company, template_data, data)
         with_company._load_data(data)
-        with_company._post_load_data(template_code, company)
+        with_company._post_load_data(template_code, company, template_data)
 
         company.flush()
         with_company.env.cache.invalidate()
@@ -158,18 +159,32 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.exception('Error while loading accounting demo data')
         company.chart_template = template_code
 
-    def _pre_process_data(self, template_code, company, data):
+    def _load_template_data(self, template_code, company, template_data, currency_id):
+        # Apply template data to the company
+        filter_properties = lambda key: (
+            (not key.startswith("property_") or key.startswith("property_stock_") or key == "additional_properties")
+            and key in company._fields
+        )
+        # Set the currency to the fiscal country's currency
+        vals = {key: val for key, val in template_data.items() if filter_properties(key)}
+        vals['currency_id'] = currency_id
+
+        # This write method is important because it's overridden and has additional triggers
+        company.write(vals)
+
+    def _pre_load_data(self, template_code, company, template_data, data):
         """
             Some of the data needs special pre_process before being fed to the database.
             e.g. the account codes' width must be standardized to the code_digits applied.
         """
+        xml_id = company.get_external_id()[company.id]
+        currency_id = self.env.ref(data['res.company'][xml_id]['account_fiscal_country_id']).currency_id.id
+        self._load_template_data(template_code, company, template_data, currency_id)
 
         # Normalize the code_digits of the accounts
-        template_data = self._get_data(template_code, company, 'template_data')
         code_digits = int(template_data.get('code_digits', 6))
         for key, account_data in data.get('account.account', {}).items():
             data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
-
         return data
 
     def _load_data(self, data):
@@ -391,28 +406,15 @@ class AccountChartTemplate(models.AbstractModel):
                 return func(template_code, company)
         return {}
 
-    def _post_load_data(self, template_code, company):
+    def _post_load_data(self, template_code, company, template_data):
         company = (company or self.env.company)
         cid = company.id
 
-        template_data = self._get_data(template_code, company, 'template_data')
+        # Create utility bank_accounts
+        bank_prefix = template_data.get('bank_account_code_prefix', '')
         additional_properties = template_data.pop('additional_properties', {})
         code_digits = int(template_data.get('code_digits', 6))
-        bank_prefix = template_data.get('bank_account_code_prefix', '')
 
-        # Apply template data to the company
-        filter_properties = lambda key: (
-            (not key.startswith("property_") or key.startswith("property_stock_"))
-            and key in company._fields
-        )
-        # Set the currency to the fiscal country's currency
-        vals = {key: val for key, val in template_data.items() if filter_properties(key)}
-        vals['currency_id'] = company.account_fiscal_country_id.currency_id.id
-
-        # This write method is important because it's overridden and has additional triggers
-        company.write(vals)
-
-        # Create utility bank_accounts
         self._setup_utility_bank_accounts(template_code, company, bank_prefix, code_digits)
 
         # Set newly created journals as defaults for the company
