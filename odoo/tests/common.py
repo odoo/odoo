@@ -360,7 +360,9 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             if retry:
                 _logger.runbot(f'Retrying a failed test: {self}')
             if retry < tests_run_count-1:
-                with result.soft_fail(), lower_logging(25, logging.INFO) as quiet_log:
+                with warnings.catch_warnings(), \
+                        result.soft_fail(), \
+                        lower_logging(25, logging.INFO) as quiet_log:
                     super().run(result)
                     failure = result.had_failure or quiet_log.had_error_log
             else:  # last try
