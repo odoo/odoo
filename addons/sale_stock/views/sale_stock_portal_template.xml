@@ -20,7 +20,7 @@
                 <div>
                     <t t-foreach="delivery_orders" t-as="picking">
                         <t t-set="delivery_report_url"
-                           t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                           t-value="sale_order.get_portal_url(suffix='/picking/%i' % (picking.id))"/>
                         <div name="delivery_order"
                             class="d-flex flex-wrap align-items-center justify-content-between">
                             <div name="delivery_details">
