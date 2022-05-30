@@ -418,8 +418,11 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        res = {'hasWriteAccess': False}
+        res = {'hasWriteAccess': False, 'hasReadAccess': True}
         thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        if not thread:
+            res['hasReadAccess'] = False
+            return res
         try:
             thread.check_access_rights("write")
             thread.check_access_rule("write")
