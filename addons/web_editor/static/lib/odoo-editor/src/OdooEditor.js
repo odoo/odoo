@@ -2734,8 +2734,6 @@ export class OdooEditor extends EventTarget {
     }
 
     cleanForSave(element = this.editable) {
-        sanitize(element);
-
         this._pluginCall('cleanForSave', [element]);
         // Clean the remaining ZeroWidthspaces added by the `fillEmpty` function
         // ( contain "data-oe-zws-empty-inline" attr)
@@ -2756,6 +2754,8 @@ export class OdooEditor extends EventTarget {
                 emptyElement.removeAttribute('data-oe-zws-empty-inline');
             }
         }
+        sanitize(element);
+
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('data-oe-keep-contenteditable')) {

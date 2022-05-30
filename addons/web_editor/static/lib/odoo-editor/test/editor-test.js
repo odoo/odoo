@@ -5,7 +5,6 @@ import './spec/editor.test.js';
 import './spec/copyPaste.test.js';
 import './spec/list.test.js';
 import './spec/link.test.js';
-import './spec/fontSize.test.js';
 import './spec/format.test.js';
 import './spec/insertHTML.test.js';
 import './spec/fontAwesome.test.js';
