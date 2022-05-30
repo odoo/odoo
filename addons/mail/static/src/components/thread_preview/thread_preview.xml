@@ -35,7 +35,7 @@
                             </span>
                         </t>
                         <t t-if="threadPreviewView.thread.rtcSessions.length > 0">
-                            <span class="o_ThreadPreview_callIndicator fa fa-volume-up mx-2" t-att-class="{ 'o-isCalling': threadPreviewView.thread.rtc }"/>
+                            <span class="o_ThreadPreview_callIndicator fa fa-volume-up mx-2" t-att-class="{ 'o-isCalling text-danger': threadPreviewView.thread.rtc }"/>
                         </t>
                         <span class="o-autogrow"/>
                         <t t-if="threadPreviewView.thread.lastMessage and threadPreviewView.thread.lastMessage.date">
