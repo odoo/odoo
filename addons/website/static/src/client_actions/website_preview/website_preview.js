@@ -89,16 +89,6 @@ export class WebsitePreview extends Component {
         }, () => [this.props.action.context.params]);
 
         useEffect(() => {
-            if (this.websiteContext.edition) {
-                if (this.$welcomeMessage) {
-                    this.$welcomeMessage.detach();
-                }
-            } else {
-                this.addWelcomeMessage();
-            }
-        }, () => [this.websiteContext.edition]);
-
-        useEffect(() => {
             this.websiteService.blockIframe();
             this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe(), { once: true });
         }, () => []);
@@ -169,6 +159,12 @@ export class WebsitePreview extends Component {
                 this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
                 $wrap.empty().append(this.$welcomeMessage);
             }
+        }
+    }
+
+    removeWelcomeMessage() {
+        if (this.$welcomeMessage) {
+            this.$welcomeMessage.detach();
         }
     }
 
