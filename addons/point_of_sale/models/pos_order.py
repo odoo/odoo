@@ -1110,7 +1110,7 @@ class PosOrderLine(models.Model):
                     lines = self.env['pos.order.line'].concat(*lines)
                     moves = pickings_to_confirm.move_lines.filtered(lambda m: m.product_id in tracked_lines.product_id)
                     mls_to_unlink |= moves.move_line_ids
-                    moves._add_mls_related_to_order(lines, are_qties_done=False)
+                    moves[0]._add_mls_related_to_order(lines, are_qties_done=False)
                 mls_to_unlink.unlink()
         return True
 

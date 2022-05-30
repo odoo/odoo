@@ -1100,6 +1100,21 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'tracking': 'lot',
             'available_in_pos': True
         })
+
+        wh_location = self.company_data['default_warehouse'].lot_stock_id
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': wh_location.id,
+        })
+        lot = self.env['stock.production.lot'].create({
+            'name': 'SuperLot',
+            'product_id': tracked_product.id,
+            'company_id': self.env.company.id,
+        })
+        qty = 2
+        self.env['stock.quant']._update_available_quantity(tracked_product, shelf1_location, qty, lot_id=lot)
+
         warehouse_id = self.company_data['default_warehouse']
         warehouse_id.delivery_steps = 'pick_ship'
 
@@ -1123,6 +1138,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'qty': 1.0,
                 'price_subtotal': untax,
                 'price_subtotal_incl': untax + tax,
+                'pack_lot_ids': [[0, 0, {'lot_name': lot.name}]],
             })],
             'amount_tax': tax,
             'amount_total': untax+tax,
@@ -1142,6 +1158,11 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         pos_make_payment.with_context(context_payment).check()
 
         pickings = pos_order.picking_ids
+        pickings[1].move_lines.write({'quantity_done': 1})
+        pickings[1].button_validate()
+
+        reserved = self.env['stock.quant']._gather(tracked_product, pickings[0].location_id, lot_id=lot, strict=True).reserved_quantity
+        self.assertEqual(reserved, 1)
         picking_mls = pickings.move_line_ids
         self.assertEqual(pos_order.state, 'paid')
         self.assertEqual(len(picking_mls), 2)
