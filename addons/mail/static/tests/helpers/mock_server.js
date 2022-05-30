@@ -512,10 +512,11 @@ patch(MockServer.prototype, 'mail', {
     async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
         const res = {
             'hasWriteAccess': true, // mimic user with write access by default
+            'hasReadAccess': true,
         };
         const thread = this.pyEnv[thread_model].searchRead([['id', '=', thread_id]])[0];
         if (!thread) {
-            console.warn(`mock server: reading data "${request_list}" from invalid thread "${thread_model}_${thread_id}"`);
+            res['hasReadAccess'] = false;
             return res;
         }
         if (request_list.includes('activities')) {
