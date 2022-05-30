@@ -871,6 +871,248 @@ export function preserveCursor(document) {
 }
 
 //------------------------------------------------------------------------------
+// Format utils
+//------------------------------------------------------------------------------
+
+const formatsSpecs = {
+    italic: {
+        tagName: 'em',
+        isFormatted: isItalic,
+        isTag: (node) => ['EM', 'I'].includes(node.tagName),
+        hasStyle: (node) => Boolean(node.style && node.style['font-style']),
+        addStyle: (node) => node.style['font-style'] = 'italic',
+        addNeutralStyle: (node) => node.style['font-style'] = 'normal',
+        removeStyle: (node) => removeStyle(node, 'font-style'),
+    },
+    bold: {
+        tagName: 'strong',
+        isFormatted: isBold,
+        isTag: (node) => ['STRONG', 'B'].includes(node.tagName),
+        hasStyle: (node) => Boolean(node.style && node.style['font-weight']),
+        addStyle: (node) => node.style['font-weight'] = 'bolder',
+        addNeutralStyle: (node) => {
+            node.style['font-weight'] = 'normal'
+        },
+        removeStyle: (node) => removeStyle(node, 'font-weight'),
+    },
+    underline: {
+        tagName: 'u',
+        isFormatted: isUnderline,
+        isTag: (node) => node.tagName === 'U',
+        hasStyle: (node) => node.style && node.style['text-decoration-line'].includes('underline'),
+        addStyle: (node) => node.style['text-decoration-line'] += ' underline',
+        removeStyle: (node) => removeStyle(node, 'text-decoration-line', 'underline'),
+    },
+    strikeThrough: {
+        tagName: 's',
+        isFormatted: isStrikeThrough,
+        isTag: (node) => node.tagName === 'S',
+        hasStyle: (node) => node.style && node.style['text-decoration-line'].includes('line-through'),
+        addStyle: (node) => node.style['text-decoration-line'] += ' line-through',
+        removeStyle: (node) => removeStyle(node, 'text-decoration-line', 'line-through'),
+    },
+    fontSize: {
+        isFormatted: isFontSize,
+        hasStyle: (node, props) => node.style && node.style['font-size'] === props.size,
+        addStyle: (node, props) => node.style['font-size'] = props.size,
+        removeStyle: (node) => removeStyle(node, 'font-size'),
+    },
+    switchDirection: {
+        isFormatted: isDirectionSwitched,
+    }
+}
+
+const removeStyle = (node, styleName, item) => {
+    if (item) {
+        const newStyle = node.style[styleName].split(' ').filter(x => x !== item).join(' ');
+        node.style[styleName] = newStyle || null;
+    } else {
+        node.style[styleName] = null;
+    }
+    if (node.getAttribute('style') === '') {
+        node.removeAttribute('style');
+    }
+};
+const getOrCreateSpan = (node, ancestors) => {
+    const span = ancestors.find((element) => element.tagName === 'SPAN' && element.isConnected);
+    if (span) {
+        return span;
+    } else {
+        const span = document.createElement('span');
+        node.after(span);
+        span.append(node);
+        return span;
+    }
+}
+const removeFormat = (node, formatSpec) => {
+    node = closestElement(node);
+    if (formatSpec.hasStyle(node)) {
+        formatSpec.removeStyle(node);
+        if (['SPAN', 'FONT'].includes(node.tagName) && !node.getAttributeNames().length) {
+            return unwrapContents(node);
+        }
+    }
+
+    if (formatSpec.isTag(node)) {
+        const attributesNames = node.getAttributeNames().filter((name)=> {
+            return name !== 'data-oe-zws-empty-inline';
+        });
+        if (attributesNames.length) {
+            // Change tag name
+            const newNode = document.createElement('span');
+            while (node.firstChild) {
+                newNode.appendChild(node.firstChild);
+            }
+            for (let index = node.attributes.length - 1; index >= 0; --index) {
+                newNode.attributes.setNamedItem(node.attributes[index].cloneNode());
+            }
+            node.parentNode.replaceChild(newNode, node);
+        } else {
+            unwrapContents(node);
+        }
+    }
+}
+
+export const formatSelection = (editor, formatName, {applyStyle, formatProps} = {}) => {
+    const selection = editor.document.getSelection();
+    let direction
+    let wasCollapsed;
+    if (editor.editable.querySelector('.o_selected_td')) {
+        direction = DIRECTIONS.RIGHT;
+    } else {
+        if (!selection.rangeCount) return;
+        wasCollapsed = selection.getRangeAt(0).collapsed;
+
+        direction = getCursorDirection(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
+    }
+    getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+
+    if (typeof applyStyle === 'undefined') {
+        applyStyle = !isSelectionFormat(editor.editable, formatName);
+    }
+
+    let zws;
+    if (wasCollapsed) {
+        if (selection.anchorNode.nodeType === Node.TEXT_NODE && selection.anchorNode.textContent === '\u200b') {
+            zws = selection.anchorNode;
+            selection.getRangeAt(0).selectNode(zws);
+        } else {
+            zws = insertAndSelectZws(selection);
+        }
+        getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+    }
+
+    const selectedTextNodes = getSelectedNodes(editor.editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE);
+
+    const formatSpec = formatsSpecs[formatName];
+    for (const selectedTextNode of selectedTextNodes) {
+        // Compute inline ancestors until finding one which is a block or has a class.
+        const inlineAncestors = [];
+        let node = selectedTextNode;
+        while ((node = node.parentElement) && (!isBlock(node) && !(node.classList && node.classList.length))) {
+            inlineAncestors.unshift(node);
+        }
+        const blockOrInlineClass = node;
+
+        const firstBlockOrClassHasFormat = formatSpec.isFormatted(blockOrInlineClass, formatProps);
+
+        let previousAncestorHasFormat = firstBlockOrClassHasFormat;
+        let lastAncestorInlineFormat;
+
+        for (const ancestor of inlineAncestors) {
+            const ancestorIsTag = formatSpec.isTag && formatSpec.isTag(ancestor);
+            const ancestorHasStyle = formatSpec.hasStyle && formatSpec.hasStyle(ancestor, formatProps);
+            const ancestorTagIsFormated = ancestorIsTag || ancestorHasStyle;
+            const isUselessZwsSpan =
+                ancestor.tagName === 'SPAN' &&
+                ancestor.hasAttribute('data-oe-zws-empty-inline') &&
+                ancestor.getAttributeNames().length === 1;
+            const ancestorIsFormatted = formatSpec.isFormatted(ancestor, formatProps);
+
+            if (ancestorTagIsFormated && previousAncestorHasFormat !== ancestorIsFormatted) {
+                if (lastAncestorInlineFormat) {
+                    // Remove format on two node that switch the format to flatten the DOM.
+                    const newLastAncestorInlineFormat = splitAroundUntil(ancestor, lastAncestorInlineFormat);
+                    removeFormat(newLastAncestorInlineFormat, formatSpec);
+                    removeFormat(ancestor, formatSpec);
+                    lastAncestorInlineFormat = undefined;
+                } else {
+                    lastAncestorInlineFormat = ancestor;
+                }
+                // if there is two consecutive format that are the same, remove one.
+            } else if (
+                (ancestorIsTag || ancestorHasStyle) &&
+                (
+                    previousAncestorHasFormat ||
+                    (!previousAncestorHasFormat && !ancestorIsFormatted)
+                )
+            ) {
+                removeFormat(ancestor, formatSpec);
+            } else if (isUselessZwsSpan) {
+                unwrapContents(ancestor);
+            }
+            previousAncestorHasFormat = ancestor.parentElement && formatSpec.isFormatted(ancestor, formatProps);
+        }
+
+        if (selectedTextNode.nodeType === Node.TEXT_NODE) {
+            const isLeafNodeFormated = formatSpec.isFormatted(selectedTextNode, formatProps);
+            if (isLeafNodeFormated !== applyStyle) {
+                if (lastAncestorInlineFormat) {
+                    const splitNode = splitAroundUntil(selectedTextNode, lastAncestorInlineFormat);
+                    removeFormat(splitNode, formatSpec);
+                } else {
+                    if (firstBlockOrClassHasFormat && !applyStyle) {
+                        formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+                    } else if (!firstBlockOrClassHasFormat && applyStyle) {
+                        const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
+                        if (tag) {
+                            selectedTextNode.after(tag);
+                            tag.append(selectedTextNode);
+
+                            if (!formatSpec.isFormatted(tag, formatProps)) {
+                                tag.after(selectedTextNode);
+                                tag.remove();
+                                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                            }
+                        } else {
+                            formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (zws) {
+        const siblings = [...zws.parentElement.childNodes];
+        if (
+            selectedTextNodes.includes(siblings[0]) &&
+            selectedTextNodes.includes(siblings[siblings.length - 1])
+        ) {
+            zws.parentElement.setAttribute('data-oe-zws-empty-inline', '');
+        } else {
+            const span = document.createElement('span');
+            span.setAttribute('data-oe-zws-empty-inline', '');
+            zws.before(span);
+            span.append(zws);
+        }
+    }
+
+    if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
+        setSelection(selectedTextNodes[0], 0);
+    } else if (selectedTextNodes.length) {
+        const firstNode = selectedTextNodes[0];
+        const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
+        if (direction === DIRECTIONS.RIGHT) {
+            setSelection(firstNode, 0, lastNode, lastNode.length, false);
+        } else {
+            setSelection(lastNode, lastNode.length, firstNode, 0, false);
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
 // DOM Info utils
 //------------------------------------------------------------------------------
 
@@ -1000,7 +1242,7 @@ export function isItalic(node) {
 export function isUnderline(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine === 'underline') {
+        if (getComputedStyle(parent).textDecorationLine.includes('underline')) {
             return true;
         }
         parent = parent.parentElement;
@@ -1016,12 +1258,25 @@ export function isUnderline(node) {
 export function isStrikeThrough(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine === 'line-through') {
+        if (getComputedStyle(parent).textDecorationLine.includes('line-through')) {
             return true;
         }
         parent = parent.parentElement;
     }
     return false;
+}
+/**
+ * Return true if the given node font-size is equal to `props.size`.
+ *
+ * @param {Object} props
+ * @param {Node} props.node A node to compare the font-size against.
+ * @param {String} props.size The font-size value of the node that will be
+ *     checked against.
+ * @returns {boolean}
+ */
+export function isFontSize(node, props) {
+    const element = closestElement(node);
+    return getComputedStyle(element)['font-size'] === props.size;
 }
 /**
  * Return true if the given node appears in a different direction than that of
@@ -1038,13 +1293,6 @@ export function isStrikeThrough(node) {
     const defaultDirection = editable.getAttribute('dir');
     return getComputedStyle(closestElement(node)).direction !== defaultDirection;
 }
-export const isFormat = {
-    bold: isBold,
-    italic: isItalic,
-    underline: isUnderline,
-    strikeThrough: isStrikeThrough,
-    switchDirection: isDirectionSwitched,
-};
 /**
  * Return true if the current selection on the editable appears as the given
  * format. The selection is considered to appear as that format if every text
@@ -1055,13 +1303,12 @@ export const isFormat = {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedText = getSelectedNodes(editable)
+    const selectedNodes = getSelectedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
-    if (selectedText.length) {
-        return selectedText.every(n => isFormat[format](n.parentElement, editable))
-    } else {
-        return isFormat[format](closestElement(editable.ownerDocument.getSelection().anchorNode), editable);
-    }
+    const isFormatted = formatsSpecs[format].isFormatted;
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().anchorNode));
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().focusNode));
+    return selectedNodes.every(n => isFormatted(n, editable));
 }
 
 export function isUnbreakable(node) {
@@ -1575,8 +1822,8 @@ export function splitElement(element, offset) {
 /**
  * Split around the given elements, until a given ancestor (included). Elements
  * will be removed in the process so caution is advised in dealing with their
- * references. Returns a tuple containing the new elements on both sides of the
- * split.
+ * references. Returns the new split root element that is a clone of
+ * limitAncestor or the original limitAncestor if no split occured.
  *
  * @see splitElement
  * @param {Node[] | Node} elements
@@ -1585,29 +1832,34 @@ export function splitElement(element, offset) {
  */
 export function splitAroundUntil(elements, limitAncestor) {
     elements = Array.isArray(elements) ? elements : [elements];
-    let after = elements[elements.length - 1].nextSibling;
-    let newUntil = limitAncestor;
+    const firstNode = elements[0];
+    const lastNode = elements[elements.length - 1];
+    if ([firstNode, lastNode].includes(limitAncestor)) {
+        return limitAncestor;
+    }
+    let before = firstNode.previousSibling;
+    let after = lastNode.nextSibling;
     let beforeSplit, afterSplit;
+    if (!before && !after && elements[0] !== limitAncestor) {
+        return splitAroundUntil(elements[0].parentElement, limitAncestor);
+    }
     // Split up ancestors up to font
     while (after && after.parentElement !== limitAncestor) {
         afterSplit = splitElement(after.parentElement, childNodeIndex(after))[0];
-        newUntil = afterSplit;
-        after = newUntil.nextSibling;
+        after = afterSplit.nextSibling;
     }
     if (after) {
         afterSplit = splitElement(limitAncestor, childNodeIndex(after))[0];
         limitAncestor = afterSplit;
     }
-    let before = elements[0].previousSibling;
     while (before && before.parentElement !== limitAncestor) {
         beforeSplit = splitElement(before.parentElement, childNodeIndex(before) + 1)[1];
-        newUntil = beforeSplit;
-        before = newUntil.previousSibling;
+        before = beforeSplit.previousSibling;
     }
     if (before) {
         beforeSplit = splitElement(limitAncestor, childNodeIndex(before) + 1)[1];
     }
-    return [beforeSplit, afterSplit];
+    return beforeSplit || afterSplit || limitAncestor;
 }
 
 export function insertText(sel, content) {
