@@ -143,7 +143,7 @@
     </record>
 
     <record id='fleet_vehicle_model_action' model='ir.actions.act_window'>
-        <field name="name">Vehicle Models</field>
+        <field name="name">Models</field>
         <field name="res_model">fleet.vehicle.model</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{"search_default_groupby_brand" : True,}</field>
@@ -165,6 +165,7 @@
         <field name="arch" type="xml">
             <tree string="Model Make">
                 <field name="name" />
+                <field name="model_count" string="Models"/>
             </tree>
         </field>
     </record>
@@ -209,7 +210,7 @@
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
-                                    <a role="menuitem" type="open" class="dropdown-item">Properties</a>
+                                    <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
                                 </div>
                             </div>
                             <div class="o_kanban_image">
@@ -257,7 +258,7 @@
 
     <!-- Model Category -->
     <record id='fleet_vehicle_model_category_action' model='ir.actions.act_window'>
-        <field name="name">Model Category</field>
+        <field name="name">Categories</field>
         <field name="res_model">fleet.vehicle.model.category</field>
         <field name="view_mode">tree</field>
         <field name="help" type="xml">
@@ -297,7 +298,8 @@
         </field>
     </record>
 
-    <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" sequence="2"/>
-    <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu" sequence="2"/>
-    <menuitem action="fleet_vehicle_model_category_action" parent="fleet_configuration" id="fleet_vehicle_model_category_menu" sequence="2"/>
+    <menuitem name="Models" parent="fleet_configuration" id="fleet_models_configuration" sequence="10" groups="fleet_group_manager"/>
+    <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_models_configuration" id="fleet_vehicle_model_brand_menu" sequence="1"/>
+    <menuitem action="fleet_vehicle_model_action" parent="fleet_models_configuration" id="fleet_vehicle_model_menu" sequence="5"/>
+    <menuitem action="fleet_vehicle_model_category_action" parent="fleet_models_configuration" id="fleet_vehicle_model_category_menu" sequence="10"/>
 </odoo>

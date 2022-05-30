@@ -62,7 +62,7 @@
             <button name="open_assignation_logs" position="before">
                 <button name="action_open_employee" type="object" class="oe_stat_button" icon="fa-id-card-o" groups="hr.group_hr_user" attrs="{'invisible': [('driver_employee_id', '=', False)]}">
                     <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value"><field name="driver_employee_name"/></span>
+                        <span class="o_stat_value">1</span>
                         <span class="o_stat_text">Employee</span>
                     </div>
                 </button>
@@ -80,6 +80,19 @@
                 <field name="driver_employee_id" string="Current Driver (Employee)"/>
                 <field name="future_driver_employee_id" string="Future Driver (Employee)"/>
             </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="driver_id" position="after">
+                <field name="driver_employee_id" optional="hide"/>
+            </field>
+            <field name="future_driver_id" position="after">
+                <field name="future_driver_employee_id" optional="hide"/>
+            </field>
         </field>
     </record>
 
