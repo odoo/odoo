@@ -85,6 +85,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         }, () => []);
     }
     /**
+     * @override
+     */
+    onWillStart() {
+        this.props.removeWelcomeMessage();
+        return super.onWillStart();
+    }
+    /**
      * Stop the widgets and save the content.
      *
      * @returns {Promise} the save promise from the Wysiwyg widget.
