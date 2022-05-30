@@ -18,18 +18,22 @@
                     </div>
                     <div class="row mt32 mb32">
                         <div class="col-3" t-if="o.origin">
-                            <strong>Source Document:</strong><br/>
+                            <strong>Source:</strong><br/>
                             <span t-field="o.origin"/>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3" t-if="o.user_id">
                             <strong>Responsible:</strong><br/>
                             <span t-field="o.user_id"/>
+                        </div>
+                        <div class="col-3" t-if="o.state not in ('done', 'cancel') and o.date_deadline">
+                            <strong>Deadline:</strong><br/>
+                            <span t-field="o.date_deadline"/>
                         </div>
                     </div>
 
                     <div class="row mt32 mb32">
                         <div class="col-3">
-                            <strong>Finished Product:</strong><br/>
+                            <strong>Product:</strong><br/>
                             <span t-field="o.product_id"/>
                         </div>
                         <div class="col-3" t-if="o.product_description_variants">
@@ -41,18 +45,25 @@
                             <span t-field="o.product_qty"/>
                             <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
                         </div>
+                         <div class="col-3" t-if="o.qty_producing">
+                            <strong>Quantity Producing:</strong><br/>
+                            <span t-field="o.qty_producing"/>
+                            <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
+                        </div>
                     </div>
 
                     <div t-if="o.workorder_ids" groups="mrp.group_mrp_routings">
                         <h3>
                             <span t-if="o.state == 'done'">Operations Done</span>
-                            <span t-else="">Operations Planned</span>
+                            <span t-elif="o.is_planned">Operations Planned</span>
+                            <span t-else="">Operations</span>
                         </h3>
                         <table class="table table-sm">
                             <tr>
                                 <th><strong>Operation</strong></th>
                                 <th><strong>WorkCenter</strong></th>
-                                <th><strong>No. Of Minutes</strong></th>
+                                <th><strong>Duration (minutes)</strong></th>
+                                <th t-if="o.state in ('progress', 'to_close')"><strong>Actual Duration (minutes)</strong></th>
                             </tr>
                             <tr t-foreach="o.workorder_ids" t-as="line2">
                                 <td><span t-field="line2.name"/></td>
@@ -60,6 +71,9 @@
                                 <td>
                                     <span t-if="o.state != 'done'" t-field="line2.duration_expected"/>
                                     <span t-if="o.state == 'done'" t-field="line2.duration"/>
+                                </td>
+                                <td t-if="o.state in ('progress', 'to_close')">
+                                    <span t-field="line2.duration"/>
                                 </td>
                             </tr>
                         </table>
@@ -76,11 +90,8 @@
 
 <template id="report_mrp_production_components">
     <h3>
-        <span t-if="o.state == 'done'">
-            Consumed Products
-        </span>
-        <span t-else="">
-            Products to Consume
+        <span>
+            Components
         </span>
     </h3>
     <table class="table table-sm">
@@ -88,7 +99,8 @@
         <thead>
             <tr>
                 <th>Product</th>
-                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Quantity</th>
+                <th t-if="o.state in ('progress', 'to_close','done')" t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Consumed</th>
+                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">To Consume</th>
                 <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
             </tr>
         </thead>
@@ -96,6 +108,11 @@
             <tr t-foreach="o.move_raw_ids" t-as="raw_line">
                 <td>
                     <span t-field="raw_line.product_id"/>
+                </td>
+                <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}" t-if="o.state in ('progress', 'to_close','done')">
+                    <div>
+                        <span t-field="raw_line.quantity_done"/>
+                    </div>
                 </td>
                 <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
                     <span t-field="raw_line.product_uom_qty"/>
