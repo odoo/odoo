@@ -5,7 +5,7 @@ import { one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'RtcVideoView',
+    name: 'CallParticipantVideoView',
     identifyingFields: ['rtcCallParticipantCardOwner'],
     recordMethods: {
         /**
@@ -21,7 +21,7 @@ registerModel({
     },
     fields: {
         rtcCallParticipantCardOwner: one('RtcCallParticipantCard', {
-            inverse: 'rtcVideoView',
+            inverse: 'callParticipantVideoView',
             readonly: true,
             required: true,
         }),

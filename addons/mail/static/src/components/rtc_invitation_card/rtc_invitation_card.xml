@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.RtcInvitationCard" owl="1">
-        <t t-if="rtcInvitationCard">
-            <div class="o_RtcInvitationCard d-flex flex-column m-2 p-5 border border-dark rounded-sm bg-900" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="rtcInvitationCard.thread.rtcInvitingSession">
-                    <div class="o_RtcInvitationCard_partnerInfo d-flex flex-column justify-content-around align-items-center text-nowrap">
-                        <img class="o_RtcInvitationCard_partnerInfoImage mb-2 rounded-circle o_cursor_pointer"
-                            t-att-src="rtcInvitationCard.thread.rtcInvitingSession.avatarUrl"
-                            t-on-click="rtcInvitationCard.onClickAvatar"
+    <t t-name="mail.CallInviteRequestPopup" owl="1">
+        <t t-if="callInviteRequestPopup">
+            <div class="o_CallInviteRequestPopup d-flex flex-column m-2 p-5 border border-dark rounded-sm bg-900" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="callInviteRequestPopup.thread.rtcInvitingSession">
+                    <div class="o_CallInviteRequestPopup_partnerInfo d-flex flex-column justify-content-around align-items-center text-nowrap">
+                        <img class="o_CallInviteRequestPopup_partnerInfoImage mb-2 rounded-circle o_cursor_pointer"
+                            t-att-src="callInviteRequestPopup.thread.rtcInvitingSession.avatarUrl"
+                            t-on-click="callInviteRequestPopup.onClickAvatar"
                             alt="Avatar"/>
-                        <span class="o_RtcInvitationCard_partnerInfoName w-100 font-weight-bolder text-truncate text-center overflow-hidden" t-esc="rtcInvitationCard.thread.rtcInvitingSession.name"/>
-                        <span class="o_RtcInvitationCard_partnerInfoText font-italic opacity-75">Incoming Call...</span>
+                        <span class="o_CallInviteRequestPopup_partnerInfoName w-100 font-weight-bolder text-truncate text-center overflow-hidden" t-esc="callInviteRequestPopup.thread.rtcInvitingSession.name"/>
+                        <span class="o_CallInviteRequestPopup_partnerInfoText font-italic opacity-75">Incoming Call...</span>
                     </div>
                 </t>
-                <div class="o_RtcInvitationCard_buttonList d-flex justify-content-around align-items-center w-100 mt-4">
-                    <button class="o_RtcInvitationCard_buttonListButton o_RtcInvitationCard_buttonListRefuse p-2 rounded-circle border-0 bg-danger"
+                <div class="o_CallInviteRequestPopup_buttonList d-flex justify-content-around align-items-center w-100 mt-4">
+                    <button class="o_CallInviteRequestPopup_buttonListButton o_CallInviteRequestPopup_buttonListRefuse p-2 rounded-circle border-0 bg-danger"
                         aria-label="Refuse"
                         title="Refuse"
-                        t-on-click="rtcInvitationCard.onClickRefuse">
-                        <i class="o_RtcInvitationCard_buttonListButtonIcon fa fa-lg fa-times m-3"/>
+                        t-on-click="callInviteRequestPopup.onClickRefuse">
+                        <i class="o_CallInviteRequestPopup_buttonListButtonIcon fa fa-lg fa-times m-3"/>
                     </button>
-                    <button class="o_RtcInvitationCard_buttonListButton o_RtcInvitationCard_buttonListAccept p-2 rounded-circle border-0 bg-success"
+                    <button class="o_CallInviteRequestPopup_buttonListButton o_CallInviteRequestPopup_buttonListAccept p-2 rounded-circle border-0 bg-success"
                         aria-label="Accept"
                         title="Accept"
-                        t-on-click="rtcInvitationCard.onClickAccept">
-                        <i class="o_RtcInvitationCard_buttonListButtonIcon fa fa-lg fa-phone m-3"/>
+                        t-on-click="callInviteRequestPopup.onClickAccept">
+                        <i class="o_CallInviteRequestPopup_buttonListButtonIcon fa fa-lg fa-phone m-3"/>
                     </button>
                 </div>
             </div>

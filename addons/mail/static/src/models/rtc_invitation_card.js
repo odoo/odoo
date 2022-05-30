@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'RtcInvitationCard',
+    name: 'CallInviteRequestPopup',
     identifyingFields: ['thread'],
     recordMethods: {
         /**
@@ -35,7 +35,7 @@ registerModel({
     },
     fields: {
         thread: one('Thread', {
-            inverse: 'rtcInvitationCard',
+            inverse: 'callInviteRequestPopup',
             readonly: true,
             required: true,
         }),
