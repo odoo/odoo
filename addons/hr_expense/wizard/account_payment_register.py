@@ -26,6 +26,8 @@ class AccountPaymentRegister(models.TransientModel):
             expenses = vals['batch']['lines'].expense_id
             if expenses:
                 payment.line_ids.write({'expense_id': expenses[0].id})
+                receivable_lines = payment.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+                receivable_lines.write({'exclude_from_invoice_tab': True})
         return payments
 
     def _reconcile_payments(self, to_process, edit_mode=False):
