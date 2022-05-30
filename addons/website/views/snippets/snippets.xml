@@ -166,14 +166,14 @@
 </template>
 
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
-    <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]" position="after">
+    <xpath expr="//div[@id='snippet_effect']/div[hasclass('o_panel_body')]" position="inside">
         <t t-install="website_event" string="Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
         <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
         <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.svg"/>
         <t t-install="website_payment" string="Donation" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation.svg"/>
     </xpath>
-    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+    <xpath expr="//div[@id='snippet_content']/div[hasclass('o_panel_body')]" position="inside">
         <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
         <t t-install="website_payment" string="Donation Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation_button.svg"/>
     </xpath>
