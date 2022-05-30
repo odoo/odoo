@@ -13,6 +13,7 @@ class FleetVehicleLogServices(models.Model):
 
     active = fields.Boolean(default=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
+    manager_id = fields.Many2one('res.users', 'Fleet Manager', related='vehicle_id.manager_id', store=True)
     amount = fields.Monetary('Cost')
     description = fields.Char('Description')
     odometer_id = fields.Many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log')

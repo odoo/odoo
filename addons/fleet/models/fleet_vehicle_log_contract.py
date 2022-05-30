@@ -23,7 +23,7 @@ class FleetVehicleLogContract(models.Model):
     date = fields.Date(help='Date when the cost has been executed')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    name = fields.Char(string='Name', compute='_compute_contract_name', store=True)
+    name = fields.Char(string='Name', compute='_compute_contract_name', store=True, readonly=False)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user, index=True)
     start_date = fields.Date(
@@ -34,6 +34,7 @@ class FleetVehicleLogContract(models.Model):
         self.compute_next_year_date(fields.Date.context_today(self)),
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
+    expires_today = fields.Boolean(compute='_compute_days_left')
     insurer_id = fields.Many2one('res.partner', 'Vendor')
     purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string='Driver')
     ins_ref = fields.Char('Reference', size=64, copy=False)
@@ -72,14 +73,16 @@ class FleetVehicleLogContract(models.Model):
         if contract is in a closed state, return -1
         otherwise return the number of days before the contract expires
         """
+        today = fields.Date.from_string(fields.Date.today())
         for record in self:
             if record.expiration_date and record.state in ['open', 'expired']:
-                today = fields.Date.from_string(fields.Date.today())
                 renew_date = fields.Date.from_string(record.expiration_date)
                 diff_time = (renew_date - today).days
                 record.days_left = diff_time if diff_time > 0 else 0
+                record.expires_today = diff_time == 0
             else:
                 record.days_left = -1
+                record.expires_today = False
 
     def write(self, vals):
         res = super(FleetVehicleLogContract, self).write(vals)
@@ -89,7 +92,7 @@ class FleetVehicleLogContract(models.Model):
             for contract in self.filtered(lambda c: c.start_date and c.state != 'closed'):
                 if date_today < contract.start_date:
                     future_contracts |= contract
-                elif not contract.expiration_date or contract.start_date <= date_today < contract.expiration_date:
+                elif not contract.expiration_date or contract.start_date <= date_today <= contract.expiration_date:
                     running_contracts |= contract
                 else:
                     expired_contracts |= contract

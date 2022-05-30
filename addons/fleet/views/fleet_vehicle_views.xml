@@ -5,7 +5,8 @@
         <field name="name">fleet.vehicle.form</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <form string="Vehicle" js_class="fleet_form">
+            <form string="Vehicle" js_class="fleet_form" class="o_fleet_form">
+                <field name="service_activity" invisible="1"/>
                 <header>
                     <button string="Apply New Driver"
                         class="btn btn-primary"
@@ -37,7 +38,26 @@
                             class="oe_stat_button"
                             icon="fa-wrench"
                             context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
-                            help="show the services logs for this vehicle" >
+                            attrs="{'invisible': [('service_activity', '!=', 'none')]}"
+                            help="show the services logs for this vehicle">
+                            <field name="service_count" widget="statinfo" string="Services"/>
+                        </button>
+                        <button name="return_action_to_open"
+                            type="object"
+                            class="oe_stat_button text-danger"
+                            icon="fa-wrench"
+                            context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
+                            attrs="{'invisible': [('service_activity', '!=', 'overdue')]}"
+                            help="show the services logs for this vehicle">
+                            <field name="service_count" widget="statinfo" string="Services"/>
+                        </button>
+                        <button name="return_action_to_open"
+                            type="object"
+                            class="oe_stat_button text-warning"
+                            icon="fa-wrench"
+                            context="{'xml_id':'fleet_vehicle_log_services_action', 'search_default_inactive': not active}"
+                            attrs="{'invisible': [('service_activity', '!=', 'today')]}"
+                            help="show the services logs for this vehicle">
                             <field name="service_count" widget="statinfo" string="Services"/>
                         </button>
                         <button name="return_action_to_open"
@@ -162,8 +182,8 @@
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
                 <field name="category_id"/>
                 <field name="manager_id" optional="hide"/>
-                <field name="driver_id" widget="many2one_avatar" readonly="1"/>
-                <field name="future_driver_id"  widget="many2one_avatar" readonly="1"/>
+                <field name="driver_id" widget="many2one_avatar" readonly="1" optional="show"/>
+                <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="log_drivers" invisible="1"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
@@ -262,7 +282,7 @@
                                         <t t-if="record.future_driver_id.raw_value">Future Driver : <field name="future_driver_id"/></t>
                                     </li>
                                     <li>
-                                        <t t-if="record.location.raw_value"><field name="location"/></t>
+                                        <t t-if="record.location.raw_value"><small><i class="fa fa-map-marker" title="Location"></i> <field name="location"/></small></t>
                                     </li>
                                 </ul>
                                 <div class="o_kanban_record_bottom" t-if="!selection_mode">
@@ -316,7 +336,7 @@
                 <field name="state_id" type="col" />
                 <field name="brand_id" type="row" />
                 <field name="model_id" type="row" />
-                <field name="name" type="row" />
+                <field name="license_plate" type="row" />
             </pivot>
         </field>
     </record>
@@ -446,15 +466,28 @@
         <field name="name">fleet.service.type.tree</field>
         <field name="model">fleet.service.type</field>
         <field name="arch" type="xml">
-            <tree string="Service Types">
+            <tree string="Service Types" editable="bottom">
                 <field name="name" />
                 <field name="category"/>
             </tree>
         </field>
     </record>
 
+    <record id="fleet_vehicle_service_types_view_search" model="ir.ui.view">
+        <field name="model">fleet.service.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="category"/>
+                <group expand="1" string="Group By">
+                    <filter name="groupby_category" context="{'group_by' : 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_service_types_action' model='ir.actions.act_window'>
-        <field name="name">Service Types</field>
+        <field name="name">Types</field>
         <field name="res_model">fleet.service.type</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -465,7 +498,9 @@
           </p>
         </field>
     </record>
-    <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" sequence="3" groups="base.group_no_one"/>
+    <menuitem name="Services" parent="fleet_configuration" id="fleet_services_configuration" sequence="20" groups="base.group_no_one"/>
+    <menuitem action="fleet_vehicle_service_types_action" parent="fleet_services_configuration" name="Types"
+        id="fleet_vehicle_service_types_menu" sequence="1" groups="base.group_no_one"/>
 
     <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.state.tree</field>
@@ -479,7 +514,7 @@
     </record>
 
     <record id='fleet_vehicle_state_action' model='ir.actions.act_window'>
-        <field name="name">Vehicle Status</field>
+        <field name="name">Status</field>
         <field name="res_model">fleet.vehicle.state</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -492,7 +527,8 @@
         </field>
     </record>
 
-    <menuitem action="fleet_vehicle_state_action" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="base.group_no_one"/>
+    <menuitem name="Vehicle" parent="fleet_configuration" id="fleet_vehicles_configuration" sequence="30" groups="base.group_no_one"/>
+    <menuitem action="fleet_vehicle_state_action" parent="fleet_vehicles_configuration" id="fleet_vehicle_state_menu" sequence="10" groups="base.group_no_one"/>
 
     <record id="fleet_vehicle_tag_view_view_form" model="ir.ui.view">
         <field name="name">fleet.vehicle.tag.form</field>
@@ -514,12 +550,13 @@
         <field name="arch" type="xml">
             <tree string="Vehicle Tags" editable="bottom">
                 <field name="name"/>
+                <field name="color" widget="color_picker"/>
             </tree>
         </field>
     </record>
 
     <record id="fleet_vehicle_tag_action" model="ir.actions.act_window">
-        <field name="name">Vehicle Tags</field>
+        <field name="name">Tags</field>
         <field name="res_model">fleet.vehicle.tag</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -528,7 +565,7 @@
         </field>
     </record>
 
-    <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="89" groups="base.group_no_one"/>
+    <menuitem id="fleet_vehicle_tag_menu" parent="fleet_vehicles_configuration" action="fleet_vehicle_tag_action" sequence="20" groups="base.group_no_one"/>
 
     <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
         <field name="name">fleet.vehicle.assignation.log.view.tree</field>

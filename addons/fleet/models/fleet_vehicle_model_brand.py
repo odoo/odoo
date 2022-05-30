@@ -9,16 +9,20 @@ class FleetVehicleModelBrand(models.Model):
     _description = 'Brand of the vehicle'
     _order = 'name asc'
 
-    name = fields.Char('Make', required=True)
+    name = fields.Char('Name', required=True)
     image_128 = fields.Image("Logo", max_width=128, max_height=128)
     model_count = fields.Integer(compute="_compute_model_count", string="", store=True)
     model_ids = fields.One2many('fleet.vehicle.model', 'brand_id')
 
     @api.depends('model_ids')
     def _compute_model_count(self):
-        Model = self.env['fleet.vehicle.model']
+        model_data = self.env['fleet.vehicle.model']._read_group([
+            ('brand_id', 'in', self.ids),
+        ], ['brand_id'], ['brand_id'])
+        models_brand = {x['brand_id'][0]: x['brand_id_count'] for x in model_data}
+
         for record in self:
-            record.model_count = Model.search_count([('brand_id', '=', record.id)])
+            record.model_count = models_brand.get(record.id, 0)
 
     def action_brand_model(self):
         self.ensure_one()
