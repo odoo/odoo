@@ -277,6 +277,12 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     const testNode = document.createElement('div');
     document.querySelector('#editor-test-container').innerHTML = '';
     document.querySelector('#editor-test-container').appendChild(testNode);
+    let styleTag;
+    if (spec.styleContent) {
+        styleTag = document.createElement('style');
+        styleTag.textContent = spec.styleContent;
+        document.querySelector('#editor-test-container').appendChild(styleTag);
+    }
 
     // Add the content to edit and remove the "[]" markers *before* initializing
     // the editor as otherwise those would genererate mutations the editor would
