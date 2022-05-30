@@ -186,7 +186,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     def _prepare_deposit_product(self):
         return {
-            'name': 'Down payment',
+            'name': _('Down payment'),
             'type': 'service',
             'invoice_policy': 'order',
             'property_account_income_id': self.deposit_account_id.id,
