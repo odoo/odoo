@@ -60,6 +60,7 @@ var MrpFieldOne2ManyWithCopy = FieldOne2Many.extend({
             type: 'ir.actions.act_window',
             res_model: 'mrp.routing.workcenter',
             views: [[false, 'list'], [false, 'form']],
+            domain: ['|', ['bom_id', '=', false], ['bom_id.active', '=', true]],
             context: {
                 tree_view_ref: 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
                 bom_id: this.recordData.id,
