@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'RtcController',
+    name: 'CallActionListView',
     identifyingFields: ['callViewer'],
     recordMethods: {
         /**
@@ -150,7 +150,7 @@ registerModel({
             default: '',
         }),
         callViewer: one('RtcCallViewer', {
-            inverse: 'rtcController',
+            inverse: 'callActionListView',
             readonly: true,
             required: true,
         }),
@@ -170,7 +170,7 @@ registerModel({
         }),
         rtcOptionList: one('RtcOptionList', {
             default: insertAndReplace(),
-            inverse: 'rtcController',
+            inverse: 'callActionListView',
             isCausal: true,
         }),
         screenSharingButtonTitle: attr({

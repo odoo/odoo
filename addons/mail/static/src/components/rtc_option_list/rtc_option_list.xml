@@ -8,7 +8,7 @@
                     <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-th-large"/>
                     <span class="o_RtcOptionList_buttonText">Change layout</span>
                 </button>
-                <t t-if="rtcOptionList.rtcController.callViewer.isFullScreen">
+                <t t-if="rtcOptionList.callActionListView.callViewer.isFullScreen">
                     <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickDeactivateFullScreen">
                         <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-compress"/>
                         <span class="o_RtcOptionList_buttonText">Exit full screen</span>
