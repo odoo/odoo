@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { emojis } from '@mail/js/emojis';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
@@ -1143,7 +1142,7 @@ registerModel({
          * @returns {string}
          */
         _generateEmojisOnHtml(htmlString) {
-            for (const emoji of emojis) {
+            for (const emoji of this.messaging.emojiRegistry.allEmojis) {
                 for (const source of emoji.sources) {
                     const escapedSource = String(source).replace(
                         /([.*+?=^!:${}()|[\]/\\])/g,
