@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"PO-Revision-Date: 2022-05-30 06:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2789,14 +2789,6 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid ""
-"Only a Time off Approver can apply the second approval on allocation "
-"requests."
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
 msgid "Only a time off Manager can approve its own requests."
 msgstr ""
 
@@ -3422,7 +3414,7 @@ msgid "The time off has been automatically approved"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "The time off has been canceled: %s"
 msgstr ""
@@ -3485,7 +3477,7 @@ msgid "This modification is not allowed in the current state."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "This time off cannot be canceled."
 msgstr ""
@@ -4105,7 +4097,7 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
-msgid "You can't manually archive a time off."
+msgid "You can't manually archive/unarchive a time off."
 msgstr ""
 
 #. module: hr_holidays
@@ -4129,13 +4121,14 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid "You cannot delete an allocation request which is in %s state."
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
-msgid "You cannot delete an allocation request which has some validated leaves."
+msgid "You cannot delete an allocation request which is in %s state."
 msgstr ""
 
 #. module: hr_holidays
@@ -4172,13 +4165,6 @@ msgstr ""
 #, python-format
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid ""
-"You must be either %s's manager or time off manager to approve this time off"
 msgstr ""
 
 #. module: hr_holidays

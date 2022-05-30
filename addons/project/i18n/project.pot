@@ -6,14 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"PO-Revision-Date: 2022-05-30 06:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    No milestones found. Let's create one!\n"
+"                </p><p>\n"
+"                    Track major progress points that must be reached to achieve success.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -431,8 +444,8 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
+"<span class=\"font-weight-bold oe_read_only text-dark\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only text-dark\">Create tasks by sending an email to </span>"
 msgstr ""
 
 #. module: project
@@ -1086,6 +1099,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Burndown Chart"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__day
+msgid "By Day"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__month
+msgid "By Month"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__year
+msgid "By Year"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__date_group_by__quarter
+msgid "By quarter"
 msgstr ""
 
 #. module: project
@@ -2740,7 +2773,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/models/project_milestone.py:0
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Milestones"

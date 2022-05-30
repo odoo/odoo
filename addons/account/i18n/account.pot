@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:56+0000\n"
-"PO-Revision-Date: 2022-04-19 13:56+0000\n"
+"POT-Creation-Date: 2022-05-30 06:06+0000\n"
+"PO-Revision-Date: 2022-05-30 06:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -607,6 +607,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
+"<span class=\"o_form_label\">Fiscal Country</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
@@ -721,7 +728,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 
 #. module: account
@@ -2270,8 +2277,8 @@ msgstr ""
 #: code:addons/account/models/account_analytic_default.py:0
 #, python-format
 msgid ""
-"An analytic default requires at least an analytic account or an analytic "
-"tag."
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
 msgstr ""
 
 #. module: account
@@ -5812,6 +5819,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__fiscal_country_ids
 msgid "Fiscal Country"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
+msgid "Fiscal Country Code"
 msgstr ""
 
 #. module: account
@@ -12227,6 +12239,11 @@ msgid "Tax Groups"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Tax ID"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
 msgstr ""
@@ -13146,6 +13163,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
+#: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr ""
 
@@ -13960,14 +13978,6 @@ msgid ""
 "This entry contains one or more taxes that are incompatible with your fiscal"
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"This entry contains some tax from an unallowed country. Please check its "
-"fiscal position and your tax configuration."
 msgstr ""
 
 #. module: account
@@ -15978,10 +15988,4 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_analytic_default.py:31
-#, python-format
-msgid "An analytic default requires an analytic account or an analytic tag used for analytic distribution."
 msgstr ""
