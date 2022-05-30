@@ -160,7 +160,7 @@
 </template>
 
 <template id="s_mail_block_header_view" name="View Online">
-    <div class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16 px-3" style="text-align: center;">
+    <div class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" style="text-align: center; padding-left: 15px; padding-right: 15px;">
         <a href="/view">
             View Online
         </a>
@@ -458,6 +458,13 @@
             data-no-transparency="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
+    </div>
+    <!-- Allow customised padding-x on snippets -->
+    <div data-selector="[class*='col-lg-'], .s_discount2, .s_text_block, .s_media_list, .s_picture, .s_rating">
+        <we-row string="Padding ⭤">
+            <we-input data-select-style="" data-unit="px" data-css-property="padding-left"/>
+            <we-input data-select-style="" data-unit="px" data-css-property="padding-right"/>
+        </we-row>
     </div>
 
     <!-- Allow changing background images in Masonry and Cover -->
