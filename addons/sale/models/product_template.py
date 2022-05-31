@@ -32,7 +32,7 @@ class ProductTemplate(models.Model):
         help="Expenses and vendor bills can be re-invoiced to a customer."
              "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
     visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
-    sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
+    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
     visible_qty_configurator = fields.Boolean("Quantity visible in configurator", compute='_compute_visible_qty_configurator')
     invoice_policy = fields.Selection(
         [('order', 'Ordered quantities'),
