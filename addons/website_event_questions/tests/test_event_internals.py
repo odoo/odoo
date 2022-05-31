@@ -75,3 +75,61 @@ class TestEventData(TestEventQuestionCommon):
                 (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
                 (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]}
         ])
+
+    def test_registration_answer_search(self):
+        """ Test our custom name_search implementation in 'event.registration.answer'.
+        We search on both the 'value_answer_id' and 'value_text_box' fields to allow users to easily
+        filter registrations based on the selected answers of the attendees. """
+
+        event = self.env['event.event'].create({
+            'name': 'Test Event',
+            'event_type_id': self.event_type_questions.id,
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+
+        [registration_1, registration_2, registration_3] = self.env['event.registration'].create([{
+            'event_id': event.id,
+            'partner_id': self.env.user.partner_id.id,
+            'registration_answer_ids': [
+                (0, 0, {
+                    'question_id': self.event_question_1.id,
+                    'value_answer_id': self.event_question_1.answer_ids[0].id,
+                }),
+            ]
+        }, {
+            'event_id': event.id,
+            'partner_id': self.env.user.partner_id.id,
+            'registration_answer_ids': [
+                (0, 0, {
+                    'question_id': self.event_question_1.id,
+                    'value_answer_id': self.event_question_1.answer_ids[1].id,
+                }),
+                (0, 0, {
+                    'question_id': self.event_question_3.id,
+                    'value_text_box': "My Answer",
+                }),
+            ]
+        }, {
+            'event_id': event.id,
+            'partner_id': self.env.user.partner_id.id,
+            'registration_answer_ids': [
+                (0, 0, {
+                    'question_id': self.event_question_3.id,
+                    'value_text_box': "Answer2",
+                }),
+            ]
+        }])
+
+        search_res = self.env['event.registration'].search([
+            ('registration_answer_ids', 'ilike', 'Answer1')
+        ])
+        # should fetch "registration_1" because the answer to the first question is "Q1-Answer1"
+        self.assertEqual(search_res, registration_1)
+
+        search_res = self.env['event.registration'].search([
+            ('registration_answer_ids', 'ilike', 'Answer2')
+        ])
+        # should fetch "registration_2" because the answer to the first question is "Q1-Answer2"
+        # should fetch "registration_3" because the answer to the third question is "Answer2" (as free text)
+        self.assertEqual(search_res, registration_2 | registration_3)
