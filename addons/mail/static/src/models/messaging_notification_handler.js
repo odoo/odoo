@@ -92,7 +92,7 @@ registerModel({
                         case 'res.users/connection':
                             return this._handleNotificationPartnerUserConnection(message.payload);
                         case 'mail.activity/updated':
-                            return this.env.bus.trigger('activity_updated', message.payload);
+                            return owl.Component.env.bus.trigger('activity_updated', message.payload);
                         case 'mail.channel/unpin':
                             return this._handleNotificationChannelUnpin(message.payload);
                         case 'mail.channel/joined':

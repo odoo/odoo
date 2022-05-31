@@ -1724,7 +1724,7 @@ registerModel({
                             return;
                         }
                         await this.fetchData(['followers']);
-                        this.env.bus.trigger('Thread:promptAddFollower-closed');
+                        owl.Component.env.bus.trigger('Thread:promptAddFollower-closed');
                     },
                 }
             );

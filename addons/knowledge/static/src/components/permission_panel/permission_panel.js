@@ -253,7 +253,7 @@ class PermissionPanel extends Component {
             const userId = userIds && userIds.length === 1 ? userIds[0] : false;
 
             if (userId) {
-                const messaging = await Component.env.services.messaging.get();
+                const messaging = await this.env.services.messaging.get();
                 messaging.openChat({
                     userId: userId
                 });
