@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import * as mailUtils from '@mail/js/utils';
-
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -37,18 +35,6 @@ export class ThreadNeedactionPreview extends Component {
             return `/web/image/mail.channel/${this.threadNeedactionPreviewView.thread.id}/avatar_128?unique=${this.threadNeedactionPreviewView.thread.avatarCacheKey}`;
         }
         return '/mail/static/src/img/smiley/avatar.jpg';
-    }
-
-    /**
-     * Get inline content of the last message of this conversation.
-     *
-     * @returns {string}
-     */
-    get inlineLastNeedactionMessageAsOriginThreadBody() {
-        if (!this.threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread) {
-            return '';
-        }
-        return mailUtils.htmlToTextContentInline(this.threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.prettyBody);
     }
 
     /**
