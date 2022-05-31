@@ -9,6 +9,7 @@ registerModel({
     identifyingFields: [[
         'messagingOwnerAsFetchImStatusTimer',
         'otherMemberLongTypingInThreadTimerOwner',
+        'rtcSessionOwnerAsBroadcast',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
         'threadAsCurrentPartnerLongTypingTimerOwner',
         'throttleOwner',
@@ -26,6 +27,9 @@ registerModel({
         _computeDuration() {
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
+            }
+            if (this.rtcSessionOwnerAsBroadcast) {
+                return 3 * 1000;
             }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 return 5 * 1000;
@@ -71,6 +75,10 @@ registerModel({
                 this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
                 return;
             }
+            if (this.rtcSessionOwnerAsBroadcast) {
+                this.rtcSessionOwnerAsBroadcast.onBroadcastTimeout();
+                return;
+            }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 this.threadAsCurrentPartnerInactiveTypingTimerOwner.onCurrentPartnerInactiveTypingTimeout();
                 return;
@@ -106,6 +114,10 @@ registerModel({
         otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
             inverse: 'timer',
             isCausal: true,
+            readonly: true,
+        }),
+        rtcSessionOwnerAsBroadcast: one('RtcSession', {
+            inverse: 'broadcastTimer',
             readonly: true,
         }),
         threadAsCurrentPartnerInactiveTypingTimerOwner: one('Thread', {
