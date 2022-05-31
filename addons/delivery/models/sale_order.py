@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
             'is_delivery': True,
         }
         if carrier.invoice_policy == 'real':
-            values['price_unit'] = 0
+            values['price_unit'] = 0 if 'website_id' not in self.env.context else price_unit
             values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
         else:
             values['price_unit'] = price_unit
