@@ -117,11 +117,11 @@ registerModel({
             }
         },
         toggleLayoutMenu() {
-            if (!this.rtcLayoutMenu) {
-                this.update({ rtcLayoutMenu: insertAndReplace() });
+            if (!this.layoutMenu) {
+                this.update({ layoutMenu: insertAndReplace() });
                 return;
             }
-            this.update({ rtcLayoutMenu: clear() });
+            this.update({ layoutMenu: clear() });
         },
         //----------------------------------------------------------------------
         // Private
@@ -373,7 +373,7 @@ registerModel({
         /**
          * The model for the menu to control the layout of the viewer.
          */
-        rtcLayoutMenu: one('RtcLayoutMenu', {
+        layoutMenu: one('CallLayoutMenu', {
             inverse: 'callViewer',
             isCausal: true,
         }),

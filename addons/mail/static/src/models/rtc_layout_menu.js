@@ -5,7 +5,7 @@ import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'RtcLayoutMenu',
+    name: 'CallLayoutMenu',
     identifyingFields: ['callViewer'],
     recordMethods: {
         /**
@@ -43,7 +43,7 @@ registerModel({
     fields: {
         component: attr(),
         callViewer: one('RtcCallViewer', {
-            inverse: 'rtcLayoutMenu',
+            inverse: 'layoutMenu',
             readonly: true,
         }),
     },

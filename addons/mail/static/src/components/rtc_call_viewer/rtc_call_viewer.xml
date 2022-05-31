@@ -59,9 +59,9 @@
                     </t>
                 </Dialog>
             </t>
-            <t t-if="rtcCallViewer.rtcLayoutMenu">
+            <t t-if="rtcCallViewer.layoutMenu">
                 <Dialog size="'small'" title="rtcCallViewer.layoutSettingsTitle" onClosed="rtcCallViewer.onLayoutSettingsDialogClosed">
-                    <RtcLayoutMenu record="rtcCallViewer.rtcLayoutMenu"/>
+                    <CallLayoutMenu record="rtcCallViewer.layoutMenu"/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->
                     </t>
