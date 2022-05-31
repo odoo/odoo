@@ -345,7 +345,6 @@ class AccountAccount(models.Model):
     @api.depends('internal_type')
     def _compute_reconcile(self):
         for record in self:
-            # this should also call _toggle_reconcile_to_true and _toggle_reconcile_to_false - TODO: verify
             record.reconcile = record.internal_type in ('receivable', 'payable')
 
     @api.depends('code')
@@ -438,17 +437,20 @@ class AccountAccount(models.Model):
             account.is_off_balance = account.internal_group == "off_balance"
 
     def _set_opening_debit(self):
-        for record in self.filtered(lambda r: r.opening_debit > 0):
-            record._set_opening_debit_credit(record.opening_debit, 'debit')
+        for record in self:
+            if record.opening_debit > 0:
+                record._set_opening_debit_credit(record.opening_debit, 'debit')
 
     def _set_opening_credit(self):
-        for record in self.filtered(lambda r: r.opening_credit > 0):
-            record._set_opening_debit_credit(record.opening_credit, 'credit')
+        for record in self:
+            if record.opening_credit > 0:
+                record._set_opening_debit_credit(record.opening_credit, 'credit')
 
     def _set_opening_balance(self):
-        for record in self.filtered(lambda r: abs(r.opening_balance) > 0):
-            side = 'debit' if record.opening_balance > 0 else 'credit'
-            record._set_opening_debit_credit(abs(record.opening_balance), side)
+        for record in self:
+            if record.opening_balance:
+                side = 'debit' if record.opening_balance > 0 else 'credit'
+                record._set_opening_debit_credit(abs(record.opening_balance), side)
 
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
