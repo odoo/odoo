@@ -52,7 +52,7 @@ registerModel({
                 { unicode: "🌹", sources: [":sunflower"], description: ":sunflower" },
                 { unicode: "🔥", sources: [":fire"], description: ":fire" },
                 { unicode: "☀️", sources: [":sun"], description: ":sun" },
-                { unicode: "⛅️", sources: [":partly_sunny:"], description: ":partly_sunny:" },
+                { unicode: "⛅️", sources: [":partly_sunny"], description: ":partly_sunny" },
                 { unicode: "🌈", sources: [":rainbow"], description: ":rainbow" },
                 { unicode: "☁️", sources: [":cloud"], description: ":cloud" },
                 { unicode: "⚡️", sources: [":zap"], description: ":zap" },
