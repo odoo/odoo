@@ -10,7 +10,7 @@ import {WebsiteAceEditor, AceEditorAdapterComponent} from '@website/components/a
 import {PagePropertiesDialogWrapper} from '@website/components/dialog/page_properties';
 
 const websiteSystrayRegistry = registry.category('website_systray');
-const { useState, onWillStart } = owl;
+const { useState } = owl;
 
 patch(NavBar.prototype, 'website_navbar', {
     setup() {
@@ -55,17 +55,13 @@ patch(NavBar.prototype, 'website_navbar', {
                 isDisplayed: () => this.canShowPageProperties(),
             },
         };
-
-        onWillStart(async () => {
-            this.isWebsitePublisher = await this.websiteService.isPublisher();
-        });
     },
 
     filterWebsiteMenus(sections) {
         const filteredSections = [];
         for (const section of sections) {
             const isWebsiteCustomMenu = this.websiteEditingMenus[section.xmlid];
-            const displayWebsiteCustomMenu = isWebsiteCustomMenu && this.isWebsitePublisher && this.websiteEditingMenus[section.xmlid].isDisplayed();
+            const displayWebsiteCustomMenu = isWebsiteCustomMenu && this.websiteService.isPublisher && this.websiteEditingMenus[section.xmlid].isDisplayed();
             if (!isWebsiteCustomMenu || displayWebsiteCustomMenu) {
                 let subSections = [];
                 if (section.childrenTree.length) {
@@ -81,7 +77,7 @@ patch(NavBar.prototype, 'website_navbar', {
      * @override
      */
     get systrayItems() {
-        if (this.websiteService.currentWebsite && this.isWebsitePublisher) {
+        if (this.websiteService.currentWebsite && this.websiteService.isPublisher) {
             return websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
