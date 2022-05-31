@@ -1246,7 +1246,7 @@ registerModel({
         recoveryDelay: attr({
             default: 3000,
         }),
-        rtcActivityNoticeView: one('RtcActivityNoticeView', {
+        callSystrayMenu: one('CallSystrayMenu', {
             default: insertAndReplace(),
             inverse: 'rtc',
             isCausal: true,
