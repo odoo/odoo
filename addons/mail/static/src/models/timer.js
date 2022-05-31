@@ -8,6 +8,7 @@ registerModel({
     name: 'Timer',
     identifyingFields: [[
         'messagingOwnerAsFetchImStatusTimer',
+        'messageViewOwnerAsHighlight',
         'otherMemberLongTypingInThreadTimerOwner',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
         'threadAsCurrentPartnerLongTypingTimerOwner',
@@ -26,6 +27,9 @@ registerModel({
         _computeDuration() {
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
+            }
+            if (this.messageViewOwnerAsHighlight) {
+                return 2 * 1000;
             }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 return 5 * 1000;
@@ -71,6 +75,10 @@ registerModel({
                 this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
                 return;
             }
+            if (this.messageViewOwnerAsHighlight) {
+                this.messageViewOwnerAsHighlight.onHighlightTimerTimeout();
+                return;
+            }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 this.threadAsCurrentPartnerInactiveTypingTimerOwner.onCurrentPartnerInactiveTypingTimeout();
                 return;
@@ -101,6 +109,10 @@ registerModel({
         }),
         messagingOwnerAsFetchImStatusTimer: one('Messaging', {
             inverse: 'fetchImStatusTimer',
+            readonly: true,
+        }),
+        messageViewOwnerAsHighlight: one('MessageView', {
+            inverse: 'highlightTimer',
             readonly: true,
         }),
         otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
