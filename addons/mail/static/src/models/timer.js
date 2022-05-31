@@ -7,6 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'Timer',
     identifyingFields: [[
+        'chatterOwnerAsAttachmentsLoader',
         'messagingOwnerAsFetchImStatusTimer',
         'otherMemberLongTypingInThreadTimerOwner',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
@@ -24,6 +25,9 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
+            if (this.chatterOwnerAsAttachmentsLoader) {
+                return this.messaging.loadingBaseDelayDuration;
+            }
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
             }
@@ -67,6 +71,10 @@ registerModel({
          * @private
          */
         _onTimeoutOwner() {
+            if (this.chatterOwnerAsAttachmentsLoader) {
+                this.chatterOwnerAsAttachmentsLoader.onAttachmentsLoadingTimeout();
+                return;
+            }
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
                 return;
@@ -90,6 +98,10 @@ registerModel({
         },
     },
     fields: {
+        chatterOwnerAsAttachmentsLoader: one('Chatter', {
+            inverse: 'attachmentsLoaderTimer',
+            readonly: true,
+        }),
         /**
          * Duration, in milliseconds, until timer times out and calls the
          * timeout function.
