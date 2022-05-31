@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
-
+from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
 PROJECT_TASK_READABLE_FIELDS = {
     'allow_subtasks',
@@ -252,6 +252,7 @@ class Task(models.Model):
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
+    remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Time spent on this task, excluding its sub-tasks.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Time spent on this task, including its sub-tasks.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
@@ -300,6 +301,26 @@ class Task(models.Model):
             else:
                 task.progress = 0.0
                 task.overtime = 0
+
+    @api.depends('planned_hours', 'remaining_hours')
+    def _compute_remaining_hours_percentage(self):
+        for task in self:
+            if task.planned_hours > 0.0:
+                task.remaining_hours_percentage = task.remaining_hours / task.planned_hours
+            else:
+                task.remaining_hours_percentage = 0.0
+
+    def _search_remaining_hours_percentage(self, operator, value):
+        if operator not in OPERATOR_MAPPING:
+            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+        query = f"""
+            SELECT id
+              FROM {self._table}
+             WHERE remaining_hours > 0
+               AND planned_hours > 0
+               AND remaining_hours / planned_hours {operator} %s
+            """
+        return [('id', 'inselect', (query, (value,)))]
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_remaining_hours(self):

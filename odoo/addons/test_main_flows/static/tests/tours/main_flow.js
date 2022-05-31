@@ -887,7 +887,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('See Project'),
     position: 'right',
 },
-tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")')),
+tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")'),
 {
     trigger: '.oe_button_box .oe_stat_button:has(span:contains("Recorded"))',
     extra_trigger: '.o_form_readonly',
