@@ -13,7 +13,7 @@ const components = {
 
 // TODO a nice-to-have would be a resize handle under the videos.
 
-export class RtcCallViewer extends Component {
+export class CallView extends Component {
 
     /**
      * @override
@@ -34,9 +34,9 @@ export class RtcCallViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {RtcCallViewer}
+     * @returns {CallView}
      */
-    get rtcCallViewer() {
+    get callView() {
         return this.props.record;
     }
 
@@ -103,7 +103,7 @@ export class RtcCallViewer extends Component {
         const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
 
         const { tileWidth, tileHeight, columnCount } = this._computeTessellation({
-            aspectRatio: this.rtcCallViewer.aspectRatio,
+            aspectRatio: this.callView.aspectRatio,
             containerHeight: height,
             containerWidth: width,
             tileCount: this.tileContainerRef.el.children.length,
@@ -123,10 +123,10 @@ export class RtcCallViewer extends Component {
 
 }
 
-Object.assign(RtcCallViewer, {
+Object.assign(CallView, {
     components,
     props: { record: Object },
-    template: 'mail.RtcCallViewer',
+    template: 'mail.CallView',
 });
 
-registerMessagingComponent(RtcCallViewer);
+registerMessagingComponent(CallView);

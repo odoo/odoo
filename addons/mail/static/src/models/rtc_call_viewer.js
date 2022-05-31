@@ -10,7 +10,7 @@ import { clear, insert, insertAndReplace, replace } from '@mail/model/model_fiel
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'RtcCallViewer',
+    name: 'CallView',
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
@@ -54,7 +54,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (isEventHandled(ev, 'RtcCallViewer.MouseMoveOverlay')) {
+            if (isEventHandled(ev, 'CallView.MouseMoveOverlay')) {
                 return;
             }
             this._showOverlay();
@@ -66,7 +66,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            markEventHandled(ev, 'RtcCallViewer.MouseMoveOverlay');
+            markEventHandled(ev, 'CallView.MouseMoveOverlay');
             this.update({
                 showOverlay: true,
             });
@@ -359,7 +359,7 @@ registerModel({
          */
         mainParticipantCard: one('RtcCallParticipantCard', {
             compute: '_computeMainParticipantCard',
-            inverse: 'rtcCallViewerOfMainCard',
+            inverse: 'callViewOfMainCard',
         }),
         /**
          * The model for the controller (buttons).
@@ -391,10 +391,10 @@ registerModel({
         }),
         showOverlayTimeout: attr(),
         /**
-         * ThreadView on which the call viewer is attached.
+         * ThreadView on which the call view is attached.
          */
         threadView: one('ThreadView', {
-            inverse: 'rtcCallViewer',
+            inverse: 'callView',
             readonly: true,
             required: true,
         }),
@@ -403,7 +403,7 @@ registerModel({
          */
         tileParticipantCards: many('RtcCallParticipantCard', {
             compute: '_computeTileParticipantCards',
-            inverse: 'rtcCallViewerOfTile',
+            inverse: 'callViewOfTile',
         }),
     },
     onChanges: [

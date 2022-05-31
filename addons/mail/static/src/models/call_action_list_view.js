@@ -149,7 +149,7 @@ registerModel({
             compute: '_computeCallButtonTitle',
             default: '',
         }),
-        callViewer: one('RtcCallViewer', {
+        callViewer: one('CallView', {
             inverse: 'callActionListView',
             readonly: true,
             required: true,

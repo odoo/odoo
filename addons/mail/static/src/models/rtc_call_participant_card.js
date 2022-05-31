@@ -111,8 +111,8 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsMinimized() {
-            const callViewer = this.rtcCallViewerOfMainCard || this.rtcCallViewerOfTile;
-            return Boolean(callViewer && callViewer.isMinimized);
+            const callView = this.callViewOfMainCard || this.callViewOfTile;
+            return Boolean(callView && callView.isMinimized);
         },
         /**
          * @private
@@ -245,15 +245,15 @@ registerModel({
             required: true,
         }),
         /**
-         * The callViewer for which this card is the spotlight.
+         * The call view for which this card is the spotlight.
          */
-        rtcCallViewerOfMainCard: one('RtcCallViewer', {
+        callViewOfMainCard: one('CallView', {
             inverse: 'mainParticipantCard',
         }),
         /**
-         * The callViewer for which this card is one of the tiles.
+         * The call view for which this card is one of the tiles.
          */
-        rtcCallViewerOfTile: one('RtcCallViewer', {
+        callViewOfTile: one('CallView', {
             inverse: 'tileParticipantCards',
         }),
         /**

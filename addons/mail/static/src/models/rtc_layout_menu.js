@@ -42,7 +42,7 @@ registerModel({
     },
     fields: {
         component: attr(),
-        callViewer: one('RtcCallViewer', {
+        callViewer: one('CallView', {
             inverse: 'rtcLayoutMenu',
             readonly: true,
         }),
