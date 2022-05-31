@@ -9,11 +9,11 @@ from odoo.tests import tagged
 class TestOSSBelgium(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template'):
+    def setUpClass(cls, chart_template_ref='be'):
         try:
             super().setUpClass(chart_template_ref=chart_template_ref)
         except ValueError as e:
-            if e.args[0] == "External ID not found in the system: l10n_be.l10nbe_chart_template":
+            if not cls.env['ir.module.module'].search([('name', '=', 'l10n_be'), ('state', '=', 'installed')], limit=1):
                 cls.skipTest(cls, reason="Belgian CoA is required for this testSuite but l10n_be isn't installed")
             else:
                 raise e

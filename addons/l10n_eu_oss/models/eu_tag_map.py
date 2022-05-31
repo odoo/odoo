@@ -23,7 +23,7 @@ EU_TAG_MAP = {
         'refund_tax_tag': None,
     },
     # Belgium
-    'l10n_be.l10nbe_chart_template': {
+    'be': {
         'invoice_base_tag': 'l10n_be.tax_report_line_47',
         'invoice_tax_tag': None,
         'refund_base_tag': 'l10n_be.tax_report_line_49',

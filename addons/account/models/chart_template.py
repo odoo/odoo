@@ -62,7 +62,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'parent': parent
             })
 
-        dict([
+        return dict([
             templ(default_template_code, 'Generic Chart Template', None, ['account']),
             templ('be', 'BE Belgian PCMN'),
             templ('it', 'Italy - Generic Chart of Accounts'),

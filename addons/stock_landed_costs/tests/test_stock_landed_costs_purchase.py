@@ -101,7 +101,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(account_entry['debit'], 430.0, 'Wrong Account Entry')
 
     def test_00_landed_costs_on_incoming_shipment_without_real_time(self):
-        default_chart_template = self.env['account.chart.template'].get_default_chart_template()
+        default_chart_template = self.env['account.chart.template'].get_default_chart_template_code()
         if self.env.company.chart_template != default_chart_template:
             raise unittest.SkipTest('Skip this test as it works only with %s' % default_chart_template)
         # Test landed cost on incoming shipment

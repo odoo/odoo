@@ -62,8 +62,8 @@ class AccountChartTemplateTest(TransactionCase):
                 ))
 
         for template_code, methods in self.chart_templates.items():
-            method = methods.get(model, getattr(self.AccountChartTemplate, f"_get_{model}"))
-            datas = method(self.AccountChartTemplate, self.company)
+            method = methods.get(model, getattr(self.ChartTemplate, f"_get_{model}"))
+            datas = method(self.ChartTemplate, self.company)
             if model == 'template_data':
                 return check(template_code, datas)
             self.assertTrue(isinstance(datas, dict))
@@ -72,13 +72,13 @@ class AccountChartTemplateTest(TransactionCase):
                 check(template_code, data, _id)
 
     def test_default_chart_code(self):
-        default_chart_template = self.AccountChartTemplate.get_default_chart_template()
-        guessed_chart_template = self.AccountChartTemplate._guess_chart_template(self.company)
+        default_chart_template = self.ChartTemplate.get_default_chart_template_code()
+        guessed_chart_template = self.ChartTemplate._guess_chart_template(self.company)
         self.assertEqual(default_chart_template, guessed_chart_template)
 
     def test_country_chart_code(self):
         self.company.country_id = self.env.ref('base.be')
-        guessed_chart_template = self.AccountChartTemplate._guess_chart_template(self.company)
+        guessed_chart_template = self.ChartTemplate._guess_chart_template(self.company)
         self.assertEqual('be', guessed_chart_template)
 
     def test_res_company(self):
