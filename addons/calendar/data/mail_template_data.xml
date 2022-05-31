@@ -54,7 +54,7 @@
             ><t t-out="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
-        <td width="130px;">
+        <td width="130px;" style="min-width: 130px;">
             <div style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
                 <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
             </div>
@@ -108,7 +108,12 @@
                     </li>
                 </ul></li>
                 <t t-if="object.event_id.videocall_location">
-                    <li>Meeting URL: <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">https://meet.jit.si/odoo-xyz</a></li>
+                    <li>
+                        How to Join:
+                        <t t-if="object.get_base_url() in object.event_id.videocall_location"> Join with Odoo Discuss</t>
+                        <t t-else=""> Join at</t><br/>
+                        <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
+                    </li>
                 </t>
                 <t t-if="not is_html_empty(object.event_id.description)">
                     <li>Description of the event:
@@ -182,7 +187,7 @@
             View</a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
-        <td width="130px;">
+        <td width="130px;" style="min-width: 130px;">
             <div style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
                 <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
             </div>
@@ -233,7 +238,12 @@
                     </li>
                 </ul></li>
                 <t t-if="object.event_id.videocall_location">
-                    <li>Meeting URL: <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">https://meet.jit.si/odoo-xyz</a></li>
+                    <li>
+                        How to Join:
+                        <t t-if="object.get_base_url() in object.event_id.videocall_location"> Join with Odoo Discuss</t>
+                        <t t-else=""> Join at</t><br/>
+                        <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
+                    </li>
                 </t>
                 <t t-if="not is_html_empty(object.event_id.description)">
                     <li>Description of the event:
@@ -283,7 +293,7 @@
             View</a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
-        <td width="130px;">
+        <td width="130px;" style="min-width: 130px;">
             <div style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
                 <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
             </div>
@@ -334,7 +344,12 @@
                     </li>
                 </ul></li>
                 <t t-if="object.event_id.videocall_location">
-                    <li>Meeting URL: <a t-attf-href="{{ object.event_id.videocall_location }}" target="_blank" t-out="object.event_id.videocall_location or ''">https://meet.jit.si/odoo-xyz</a></li>
+                    <li>
+                        How to Join:
+                        <t t-if="object.get_base_url() in object.event_id.videocall_location"> Join with Odoo Discuss</t>
+                        <t t-else=""> Join at</t><br/>
+                        <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
+                    </li>
                 </t>
                 <t t-if="not is_html_empty(object.event_id.description)">
                     <li>Description of the event:
@@ -373,7 +388,7 @@
     <div>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
-                <td width="130px;">
+                <td width="130px;" style="min-width: 130px;">
                     <div style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
                         <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) "></t>
                     </div>
@@ -407,10 +422,11 @@
                             <t t-out="object.description">Internal meeting for discussion for new pricing for product and services.</t></li>
                         </t>
                         <t t-if="object.videocall_location">
-                            <li>Meeting URL:
-                                <a t-att-href="object.videocall_location" target="_blank">
-                                    <t t-out="object.videocall_location or ''"></t>
-                                </a>
+                            <li>
+                                How to Join:
+                                <t t-if="object.get_base_url() in object.videocall_location"> Join with Odoo Discuss</t>
+                                <t t-else=""> Join at</t><br/>
+                                <a t-att-href="object.videocall_location" target="_blank" t-out="object.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
                             </li>
                         </t>
                         <t t-if="object.location">
