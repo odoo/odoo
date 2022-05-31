@@ -7,6 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'Timer',
     identifyingFields: [[
+        'callViewAsShowOverlay',
         'messagingOwnerAsFetchImStatusTimer',
         'otherMemberLongTypingInThreadTimerOwner',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
@@ -24,6 +25,9 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
+            if (this.callViewAsShowOverlay) {
+                return 3 * 1000;
+            }
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
             }
@@ -67,6 +71,10 @@ registerModel({
          * @private
          */
         _onTimeoutOwner() {
+            if (this.callViewAsShowOverlay) {
+                this.callViewAsShowOverlay.onShowOverlayTimeout();
+                return;
+            }
             if (this.messagingOwnerAsFetchImStatusTimer) {
                 this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
                 return;
@@ -90,6 +98,10 @@ registerModel({
         },
     },
     fields: {
+        callViewAsShowOverlay: one('CallView', {
+            inverse: 'showOverlayTimer',
+            readonly: true,
+        }),
         /**
          * Duration, in milliseconds, until timer times out and calls the
          * timeout function.

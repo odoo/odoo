@@ -17,7 +17,6 @@ registerModel({
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
         },
         _willDelete() {
-            browser.clearTimeout(this.showOverlayTimeout);
             browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
         },
     },
@@ -69,14 +68,17 @@ registerModel({
             markEventHandled(ev, 'CallView.MouseMoveOverlay');
             this.update({
                 showOverlay: true,
+                showOverlayTimer: clear(),
             });
-            browser.clearTimeout(this.showOverlayTimeout);
         },
         /**
          * @param {MouseEvent} ev
          */
         onRtcSettingsDialogClosed(ev) {
             this.messaging.userSetting.callSettingsMenu.toggle();
+        },
+        onShowOverlayTimeout() {
+            this.update({ showOverlay: false });
         },
         async activateFullScreen() {
             const el = document.body;
@@ -279,10 +281,7 @@ registerModel({
         _showOverlay() {
             this.update({
                 showOverlay: true,
-            });
-            browser.clearTimeout(this.showOverlayTimeout);
-            this.update({
-                showOverlayTimeout: browser.setTimeout(this._onShowOverlayTimeout, 3000),
+                showOverlayTimer: [clear(), insertAndReplace()],
             });
         },
         /**
@@ -295,15 +294,6 @@ registerModel({
                 return;
             }
             this.update({ isFullScreen: false });
-        },
-        /**
-         * @private
-         */
-        _onShowOverlayTimeout() {
-            if (!this.exists()) {
-                return;
-            }
-            this.update({ showOverlay: false });
         },
     },
     fields: {
@@ -389,7 +379,10 @@ registerModel({
         showOverlay: attr({
             default: true,
         }),
-        showOverlayTimeout: attr(),
+        showOverlayTimer: one('Timer', {
+            inverse: 'callViewAsShowOverlay',
+            isCausal: true,
+        }),
         /**
          * ThreadView on which the call view is attached.
          */
