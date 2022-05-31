@@ -8,7 +8,7 @@
                     <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-th-large"/>
                     <span class="o_CallOptionMenu_buttonText">Change layout</span>
                 </button>
-                <t t-if="callOptionMenu.callActionListView.callViewer.isFullScreen">
+                <t t-if="callOptionMenu.callActionListView.callView.isFullScreen">
                     <button class="o_CallOptionMenu_button" t-on-click="callOptionMenu.onClickDeactivateFullScreen">
                         <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-compress"/>
                         <span class="o_CallOptionMenu_buttonText">Exit full screen</span>

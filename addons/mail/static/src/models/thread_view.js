@@ -87,7 +87,7 @@ registerModel({
         /**
          * @private
          */
-        _computeRtcCallViewer() {
+        _computeCallView() {
             return (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0)
                 ? insertAndReplace()
                 : clear();
@@ -507,10 +507,10 @@ registerModel({
          */
         replyingToMessageView: one('MessageView'),
         /**
-         * Determines the Rtc call viewer of this thread.
+         * Determines the call view of this thread.
          */
-        rtcCallViewer: one('RtcCallViewer', {
-            compute: '_computeRtcCallViewer',
+        callView: one('CallView', {
+            compute: '_computeCallView',
             inverse: 'threadView',
             isCausal: true,
             readonly: true,

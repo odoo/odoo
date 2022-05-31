@@ -5,8 +5,8 @@ import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'RtcLayoutMenu',
-    identifyingFields: ['callViewer'],
+    name: 'CallLayoutMenu',
+    identifyingFields: ['callView'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -15,12 +15,12 @@ registerModel({
             ev.preventDefault();
             switch (ev.target.value) {
                 case 'all':
-                    this.callViewer.update({
+                    this.callView.update({
                         filterVideoGrid: false,
                     });
                     break;
                 case 'video':
-                    this.callViewer.update({
+                    this.callView.update({
                         filterVideoGrid: true,
                     });
                     if (this.messaging.focusedRtcSession && !this.messaging.focusedRtcSession.videoStream) {
@@ -42,8 +42,8 @@ registerModel({
     },
     fields: {
         component: attr(),
-        callViewer: one('RtcCallViewer', {
-            inverse: 'rtcLayoutMenu',
+        callView: one('CallView', {
+            inverse: 'layoutMenu',
             readonly: true,
         }),
     },

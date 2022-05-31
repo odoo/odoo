@@ -6,21 +6,21 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallParticipantVideoView',
-    identifyingFields: ['rtcCallParticipantCardOwner'],
+    identifyingFields: ['callParticipantCardOwner'],
     recordMethods: {
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeRtcSession() {
-            if (this.rtcCallParticipantCardOwner.rtcSession) {
-                return replace(this.rtcCallParticipantCardOwner.rtcSession);
+            if (this.callParticipantCardOwner.rtcSession) {
+                return replace(this.callParticipantCardOwner.rtcSession);
             }
             return clear();
         },
     },
     fields: {
-        rtcCallParticipantCardOwner: one('RtcCallParticipantCard', {
+        callParticipantCardOwner: one('CallParticipantCard', {
             inverse: 'callParticipantVideoView',
             readonly: true,
             required: true,

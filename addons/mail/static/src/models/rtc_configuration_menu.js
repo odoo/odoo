@@ -6,7 +6,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'RtcConfigurationMenu',
+    name: 'CallSettingsMenu',
     identifyingFields: ['userSetting'],
     lifecycleHooks: {
         _created() {
@@ -83,7 +83,7 @@ registerModel({
             default: false,
         }),
         userSetting: one('UserSetting', {
-            inverse: 'rtcConfigurationMenu',
+            inverse: 'callSettingsMenu',
             readonly: true,
         }),
     },
