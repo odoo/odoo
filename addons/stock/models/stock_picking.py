@@ -318,13 +318,13 @@ class Picking(models.Model):
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
-        check_company=True, readonly=True, required=True,
-        states={'draft': [('readonly', False)]})
+        check_company=True, required=True,
+        states={'done': [('readonly', True)]})
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id,
-        check_company=True, readonly=True, required=True,
-        states={'draft': [('readonly', False)]})
+        check_company=True, required=True,
+        states={'done': [('readonly', True)]})
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many(
         'stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package',
