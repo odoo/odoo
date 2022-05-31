@@ -4,6 +4,7 @@ import ast
 import csv
 import logging
 from collections import defaultdict
+from functools import lru_cache
 
 from odoo import SUPERUSER_ID, Command, _, api, models
 from odoo.addons.base.models.ir_translation import IrTranslationImport
@@ -47,10 +48,12 @@ class AccountChartTemplate(models.AbstractModel):
     _description = "Account Chart Template"
 
     @classmethod
+    @lru_cache
     def get_default_chart_template_code(cls):
         return 'generic_coa'
 
     @classmethod
+    @lru_cache
     def get_chart_template_mapping(cls):
         default_template_code = AccountChartTemplate.get_default_chart_template_code()
 
@@ -396,20 +399,19 @@ class AccountChartTemplate(models.AbstractModel):
         # Uneffected earnings account on the company (if not present yet)
         company.get_unaffected_earnings_account()
 
-    def _get_data(self, template_code, company, model):
-        default_chart_template = self.get_default_chart_template_code()
-        chart_template_mapping = self.get_chart_template_mapping()
-        def get_parents(code):
-            parents = []
-            if code != default_chart_template:
-                while current := chart_template_mapping.get(code):
-                    parents.append(code)
-                    code = current.get('parent')
-            # Default has no prefix
-            parents.append('')
-            return parents
+    @classmethod
+    @lru_cache
+    def _get_parent_prefixes(cls, code):
+        parents = []
+        if code != cls.get_default_chart_template_code():
+            while current := cls.get_chart_template_mapping().get(code):
+                parents.append(code)
+                code = current.get('parent')
+        parents.append('')
+        return parents
 
-        parents = get_parents(template_code)
+    def _get_data(self, template_code, company, model):
+        parents = self._get_parent_prefixes(template_code)
         for func_name in (f"_get{'_' + prefix if prefix else ''}_{model.replace('.', '_')}" for prefix in parents):
             if func := getattr(self, func_name, None):
                 return func(template_code, company)

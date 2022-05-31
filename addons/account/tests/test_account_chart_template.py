@@ -101,3 +101,10 @@ class AccountChartTemplateTest(TransactionCase):
             # 'property_tax_payable_account_id',
             # 'property_tax_receivable_account_id',
         ])
+
+    def test_parent_prefixes(self):
+        for code, parents in [
+            ('be', ['be', '']),
+            ('se_k3', ['se_k3', 'se_k2', 'se', '']),
+        ]:
+            self.assertEqual(self.ChartTemplate._get_parent_prefixes(code), parents)
