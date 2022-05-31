@@ -2,16 +2,19 @@
 <odoo><data>
     <!-- Design fair -->
     <record id="event_registration_0_0" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=2)"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="event_ticket_id" ref="event.event_0_ticket_1"/>
         <field name="partner_id" ref="base.res_partner_address_1"/>
     </record>
     <record id="event_registration_0_1" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=2)"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="event_ticket_id" ref="event.event_0_ticket_1"/>
         <field name="partner_id" ref="base.res_partner_address_2"/>
     </record>
     <record id="event_registration_0_2" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=2)"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="event_ticket_id" ref="event.event_0_ticket_0"/>
         <field name="name">Tucker Carlson</field>
@@ -51,16 +54,19 @@
 
     <!-- Conference for architects -->
     <record id="event_registration_2_0" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=0.5)"/>
         <field name="event_id" ref="event.event_2"/>
         <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
         <field name="partner_id" ref="base.res_partner_address_1"/>
     </record>
     <record id="event_registration_2_1" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=0.5)"/>
         <field name="event_id" ref="event.event_2"/>
         <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
         <field name="partner_id" ref="base.res_partner_address_2"/>
     </record>
     <record id="event_registration_2_2" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=0.5)"/>
         <field name="event_id" ref="event.event_2"/>
         <field name="event_ticket_id" ref="event.event_2_ticket_2"/>
         <field name="name">Piers Morgan</field>
@@ -68,11 +74,13 @@
         <field name="partner_id" eval="False"/>
     </record>
     <record id="event_registration_2_3" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=1)"/>
         <field name="event_id" ref="event.event_2"/>
         <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
     </record>
     <record id="event_registration_2_4" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=1)"/>
         <field name="event_id" ref="event.event_2"/>
         <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
         <field name="partner_id" ref="base.res_partner_address_4"/>
@@ -110,16 +118,19 @@
 
     <!-- Business Workshop -->
     <record id="event_registration_4_0" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=8)"/>
         <field name="event_id" ref="event.event_4"/>
         <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
         <field name="partner_id" ref="base.res_partner_address_7"/>
     </record>
     <record id="event_registration_4_1" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
         <field name="event_id" ref="event.event_4"/>
         <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
         <field name="partner_id" ref="base.res_partner_address_13"/>
     </record>
     <record id="event_registration_4_2" model="event.registration">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
         <field name="event_id" ref="event.event_4"/>
         <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
         <field name="partner_id" ref="base.res_partner_address_14"/>

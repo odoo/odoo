@@ -13,19 +13,17 @@
                             ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))
                         ]"
                         required="1"
+                        context="{'name_with_seats_availability': True}"
                         options="{'no_open': True, 'no_create': True}"
                     />
                     <field
                         name="event_ticket_id"
-                        domain="[
-                            ('event_id', '=', event_id),
-                            ('product_id','=',product_id),
-                            '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
-                        ]"
+                        domain="[('event_id', '=', event_id), ('product_id', '=', product_id)]"
                         attrs="{
                             'invisible': [('event_id', '=', False)],
                             'required': [('event_id', '!=', False)],
                         }"
+                        context="{'name_with_seats_availability': True}"
                         options="{'no_open': True, 'no_create': True}"
                     />
                     <field name="product_id" invisible="1"/>
@@ -43,6 +41,7 @@
         <field name="res_model">event.event.configurator</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="context">{'name_with_seats_availability': True}</field>
         <field name="view_id" ref="event_configurator_view_form"/>
     </record>
 </odoo>

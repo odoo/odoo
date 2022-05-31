@@ -510,7 +510,7 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(event.seats_expected, 7)
 
         # ------------------------------------------------------------
-        # (UN-)ARCHIVING REGISTRATIONS
+        # SEATS AVAILABILITY AND (UN-)ARCHIVING REGISTRATIONS
         # ------------------------------------------------------------
 
         # Archiving and seats availability
@@ -536,10 +536,41 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(event.seats_expected, 7)
 
         reg_open.action_archive()
+        self.assertEqual(event.seats_reserved, 4)
+
+        # It is not possible to set a seats_max value below number of current
+        # confirmed registrations. (4 "reserved" + 1 "used")
+        with self.assertRaises(exceptions.ValidationError):
+            event.write({'seats_max': 4})
         event.write({'seats_max': 5})
-        # It is not possible to unarchive confirmed seat if event is full
+        self.assertEqual(event.seats_available, 0)
+
+        # It is not possible to unarchive a confirmed seat if the event is fully booked
         with self.assertRaises(exceptions.ValidationError):
             reg_open.action_unarchive()
+
+        # raising the limit allows it
+        event.write({'seats_max': 6})
+        self.assertEqual(reg_open.state, "open")
+        reg_open.action_unarchive()
+
+        # It is not possible to confirm a draft reservation if the event is
+        # fully booked
+        with self.assertRaises(exceptions.ValidationError):
+            reg_draft.write({'state': 'open'})
+
+        # With auto-confirm, it is also impossible to create a draft
+        # registration when the event is full
+        new_draft_to_autoconfirm = {
+            'event_id': event.id,
+            'name': 'New registration with auto confirm'
+        }
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['event.registration'].create(new_draft_to_autoconfirm)
+
+        # If the seats limitation is removed, it becomes possible of course
+        event.write({'seats_limited': 0})
+        self.env['event.registration'].create(new_draft_to_autoconfirm)
 
 
 class TestEventRegistrationData(TestEventInternalsCommon):
@@ -685,7 +716,7 @@ class TestEventTicketData(TestEventInternalsCommon):
             'end_sale_datetime': datetime(2020, 2, 20, 23, 59, 59),
         })
         self.assertTrue(second_ticket.sale_available)
-        self.assertTrue(second_ticket.is_launched())
+        self.assertTrue(second_ticket.is_launched)
         self.assertFalse(second_ticket.is_expired)
         # incoherent dates are invalid
         with self.assertRaises(exceptions.UserError):
@@ -694,7 +725,7 @@ class TestEventTicketData(TestEventInternalsCommon):
         #test if event start/end dates are taking datetime fields (hours, minutes, seconds) into account
         second_ticket.write({'start_sale_datetime': datetime(2020, 1, 31, 11, 0, 0)})
         self.assertFalse(second_ticket.sale_available)
-        self.assertFalse(second_ticket.is_launched())
+        self.assertFalse(second_ticket.is_launched)
 
         second_ticket.write({
             'start_sale_datetime': datetime(2020, 1, 31, 7, 0, 0),
@@ -702,7 +733,7 @@ class TestEventTicketData(TestEventInternalsCommon):
         })
 
         self.assertTrue(second_ticket.sale_available)
-        self.assertTrue(second_ticket.is_launched())
+        self.assertTrue(second_ticket.is_launched)
         self.assertFalse(second_ticket.is_expired)
 
         second_ticket.write({
@@ -713,7 +744,7 @@ class TestEventTicketData(TestEventInternalsCommon):
         self.assertTrue(second_ticket.is_expired)
 
         # ------------------------------------------------------------
-        # (UN-)ARCHIVING TICKET REGISTRATIONS
+        # (UN -)ARCHIVING REGISTRATIONS AND SEATS AVAILABILITY
         # ------------------------------------------------------------
 
         # Archiving and seats availability
@@ -767,11 +798,35 @@ class TestEventTicketData(TestEventInternalsCommon):
         self.assertEqual(first_ticket.seats_unconfirmed, 3)
         self.assertEqual(first_ticket.seats_available, INITIAL_TICKET_SEATS_MAX - 2)
 
+        # It is not possible to set a seats_max value below the current number of confirmed
+        # registrations. (There is still 1 "used" seat too)
+        with self.assertRaises(exceptions.ValidationError):
+            first_ticket.write({'seats_max': 1})
+
         reg_open.action_archive()
         first_ticket.write({'seats_max': 1})
+
         # It is not possible to unarchive confirmed seat if ticket is fully booked
         with self.assertRaises(exceptions.ValidationError):
             reg_open.action_unarchive()
+
+        # SEATS AVAILABILITY
+
+        # With auto-confirm, it is impossible to create a draft
+        # registration when the ticket is fully booked (1 used + 1 reserved)
+        self.assertEqual(event.seats_available, 0)
+        first_ticket.event_id.auto_confirm = True
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['event.registration'].create({
+                'event_id': event.id,
+                'name': 'New registration with auto confirm',
+                'event_ticket_id': first_ticket.id,
+            })
+
+        # It is not possible to convert a draft to an open registration
+        # when the event is fully booked
+        with self.assertRaises(exceptions.ValidationError):
+            reg_draft.write({'state': 'open'})
 
 
 class TestEventTypeData(TestEventInternalsCommon):

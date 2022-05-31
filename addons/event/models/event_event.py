@@ -8,6 +8,7 @@ from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime, is_html_empty
 from odoo.exceptions import ValidationError
+from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
@@ -56,7 +57,7 @@ class EventType(models.Model):
     # registration
     has_seats_limitation = fields.Boolean('Limited Seats')
     seats_max = fields.Integer(
-        'Maximum Registrations', compute='_compute_default_registration',
+        'Maximum Registrations', compute='_compute_seats_max',
         readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
     auto_confirm = fields.Boolean(
@@ -74,7 +75,7 @@ class EventType(models.Model):
         help="This information will be printed on your tickets.")
 
     @api.depends('has_seats_limitation')
-    def _compute_default_registration(self):
+    def _compute_seats_max(self):
         for template in self:
             if not template.has_seats_limitation:
                 template.seats_max = 0
@@ -140,19 +141,19 @@ class EventEvent(models.Model):
                                    precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Number of Registrations',
-        store=True, readonly=True, compute='_compute_seats')
+        store=False, readonly=True, compute='_compute_seats')
     seats_available = fields.Integer(
         string='Available Seats',
-        store=True, readonly=True, compute='_compute_seats')
+        store=False, readonly=True, compute='_compute_seats')
     seats_unconfirmed = fields.Integer(
         string='Unconfirmed Registrations',
-        store=True, readonly=True, compute='_compute_seats')
+        store=False, readonly=True, compute='_compute_seats')
     seats_used = fields.Integer(
         string='Number of Attendees',
-        store=True, readonly=True, compute='_compute_seats')
+        store=False, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        compute_sudo=True, readonly=True, compute='_compute_seats_expected')
+        store=False, readonly=True, compute='_compute_seats')
     # Registration fields
     auto_confirm = fields.Boolean(
         string='Autoconfirmation', compute='_compute_auto_confirm', readonly=False, store=True,
@@ -240,15 +241,12 @@ class EventEvent(models.Model):
             for event_id, state, num in res:
                 results[event_id][state_field[state]] = num
 
-        # compute seats_available
+        # compute seats_available and expected
         for event in self:
             event.update(results.get(event._origin.id or event.id, base_vals))
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
 
-    @api.depends('seats_unconfirmed', 'seats_reserved', 'seats_used')
-    def _compute_seats_expected(self):
-        for event in self:
             event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     @api.depends('date_tz', 'start_sale_datetime')
@@ -262,7 +260,8 @@ class EventEvent(models.Model):
             else:
                 event.event_registrations_started = True
 
-    @api.depends('date_tz', 'event_registrations_started', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
+    @api.depends('date_tz', 'event_registrations_started', 'date_end', 'seats_available', 'seats_limited', 'seats_max',
+                 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
         """ Compute whether people may take registrations for this event
 
@@ -278,7 +277,7 @@ class EventEvent(models.Model):
             date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
             event.event_registrations_open = event.event_registrations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
-                (not event.seats_limited or event.seats_available) and \
+                (not event.seats_limited or not event.seats_max or event.seats_available) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
     @api.depends('event_ticket_ids.start_sale_datetime')
@@ -289,17 +288,19 @@ class EventEvent(models.Model):
             start_dates = [ticket.start_sale_datetime for ticket in event.event_ticket_ids if not ticket.is_expired]
             event.start_sale_datetime = min(start_dates) if start_dates and all(start_dates) else False
 
-    @api.depends('event_ticket_ids.sale_available')
+    @api.depends('event_ticket_ids.sale_available', 'seats_available', 'seats_limited')
     def _compute_event_registrations_sold_out(self):
+        """Note that max seats limits for events and sum of limits for all its tickets may not be
+        equal to enable flexibility.
+        E.g. max 20 seats for ticket A, 20 seats for ticket B
+            * With max 20 seats for the event
+            * Without limit set on the event (=40, but the customer didn't explicitly write 40)
+        """
         for event in self:
-            if event.seats_limited and not event.seats_available:
-                event.event_registrations_sold_out = True
-            elif event.event_ticket_ids:
-                event.event_registrations_sold_out = not any(
-                    ticket.seats_available > 0 if ticket.seats_limited else True for ticket in event.event_ticket_ids
-                )
-            else:
-                event.event_registrations_sold_out = False
+            event.event_registrations_sold_out = (
+                (event.seats_limited and event.seats_max and not event.seats_available)
+                or (event.event_ticket_ids and all(ticket.is_sold_out for ticket in event.event_ticket_ids))
+            )
 
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
@@ -528,13 +529,17 @@ class EventEvent(models.Model):
             else:
                 event.address_inline = event.address_id.name or ''
 
-    @api.constrains('seats_max', 'seats_available', 'seats_limited')
-    def _check_seats_limit(self):
+    @api.constrains('seats_max', 'seats_limited', 'registration_ids')
+    def _check_seats_availability(self, minimal_availability=0):
+        sold_out_events = []
         for event in self:
-            if event.seats_limited and event.seats_max and event.seats_available < 0:
-                raise ValidationError(_('No more available seats for %s. '
-                                        'Raise the limit or remove some other confirmed registrations first.',
-                                        event.name))
+            if event.seats_limited and event.seats_max and event.seats_available < minimal_availability:
+                sold_out_events.append(
+                    (_('- "%(event_name)s": Missing %(nb_too_many)i seats.',
+                        event_name=event.name, nb_too_many=-event.seats_available)))
+        if sold_out_events:
+            raise ValidationError(_('There are not enough seats available for:')
+                                  + '\n%s\n' % '\n'.join(sold_out_events))
 
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
@@ -562,6 +567,26 @@ class EventEvent(models.Model):
         res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
+        return res
+
+    def name_get(self):
+        """Adds ticket seats availability if requested by context."""
+        if not self.env.context.get('name_with_seats_availability'):
+            return super().name_get()
+        res = []
+        for event in self:
+            # event or its tickets are sold out
+            if event.event_registrations_sold_out:
+                name = _('%(event_name)s (Sold out)', event_name=event.name)
+            elif event.seats_limited and event.seats_max:
+                name = _(
+                    '%(event_name)s (%(count)s seats remaining)',
+                    event_name=event.name,
+                    count=formatLang(self.env, event.seats_available, digits=0),
+                )
+            else:
+                name = event.name
+            res.append((event.id, name))
         return res
 
     @api.returns('self', lambda value: value.id)
