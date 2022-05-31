@@ -1052,7 +1052,7 @@ registerModel({
             if (this.currentRtcSession.isMute) {
                 return;
             }
-            if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
+            if (this.messaging.userSetting.callSettingsMenu.isRegisteringKey) {
                 return;
             }
             this.messaging.browser.clearTimeout(this.pushToTalkTimeout);

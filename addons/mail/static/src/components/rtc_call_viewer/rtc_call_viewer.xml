@@ -51,9 +51,9 @@
             </t>
 
             <!-- Dialogs -->
-            <t t-if="messaging.userSetting.rtcConfigurationMenu.isOpen">
+            <t t-if="messaging.userSetting.callSettingsMenu.isOpen">
                 <Dialog size="'small'" title="rtcCallViewer.settingsTitle" onClosed="rtcCallViewer.onRtcSettingsDialogClosed">
-                    <RtcConfigurationMenu record="messaging.userSetting.rtcConfigurationMenu"/>
+                    <CallSettingsMenu record="messaging.userSetting.callSettingsMenu"/>
                     <t t-set-slot="buttons">
                         <!-- Explicit No buttons -->
                     </t>

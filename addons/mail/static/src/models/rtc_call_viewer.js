@@ -76,7 +76,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onRtcSettingsDialogClosed(ev) {
-            this.messaging.userSetting.rtcConfigurationMenu.toggle();
+            this.messaging.userSetting.callSettingsMenu.toggle();
         },
         async activateFullScreen() {
             const el = document.body;

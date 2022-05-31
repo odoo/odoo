@@ -52,7 +52,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickOptions(ev) {
-            this.messaging.userSetting.rtcConfigurationMenu.toggle();
+            this.messaging.userSetting.callSettingsMenu.toggle();
             this.component.trigger('o-popover-close');
         },
     },

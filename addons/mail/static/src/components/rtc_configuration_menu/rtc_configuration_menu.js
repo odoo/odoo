@@ -6,7 +6,7 @@ import { browser } from "@web/core/browser/browser";
 
 const { Component, onWillStart, useState } = owl;
 
-export class RtcConfigurationMenu extends Component {
+export class CallSettingsMenu extends Component {
 
     /**
      * @override
@@ -24,17 +24,17 @@ export class RtcConfigurationMenu extends Component {
     }
 
     /**
-     * @returns {RtcConfigurationMenu|undefined}
+     * @returns {CallSettingsMenu}
      */
-    get rtcConfigurationMenu() {
+    get callSettingsMenu() {
         return this.props.record;
     }
 
 }
 
-Object.assign(RtcConfigurationMenu, {
+Object.assign(CallSettingsMenu, {
     props: { record: Object },
-    template: 'mail.RtcConfigurationMenu',
+    template: 'mail.CallSettingsMenu',
 });
 
-registerMessagingComponent(RtcConfigurationMenu);
+registerMessagingComponent(CallSettingsMenu);
