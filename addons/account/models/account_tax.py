@@ -8,6 +8,7 @@ from odoo.tools import frozendict
 
 from collections import defaultdict
 import math
+import re
 
 
 TYPE_TAX_USE = [
@@ -85,6 +86,7 @@ class AccountTax(models.Model):
         return self.env.ref('account.tax_group_taxes')
 
     name = fields.Char(string='Tax Name', required=True)
+    name_searchable = fields.Char(store=False, search='_search_name')
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
@@ -174,6 +176,25 @@ class AccountTax(models.Model):
             ]
 
         return rslt
+
+    @staticmethod
+    def _parse_name_search(name):
+        """
+        Parse the name to search the taxes faster.
+        E.g.:   0EUM    => VAT 0% EU M.
+                21M     => 21% M , 21% EU M and 21% M.Cocont.
+        """
+        name = re.sub(r"\W+", "", name)  # Remove non-alphanumeric characters.
+        return '%'.join(list(name))
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        return super().name_search(AccountTax._parse_name_search(name), args=args, operator=operator, limit=limit)
+
+    def _search_name(self, operator, value):
+        if operator not in ("ilike", "like") or not isinstance(value, str):
+            return super()._search_name(operator, value)
+        return [('name', operator, AccountTax._parse_name_search(value))]
 
     def _check_repartition_lines(self, lines):
         self.ensure_one()
