@@ -75,6 +75,32 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeAutocompleteMethod() {
+            if (this.discussAsChannel) {
+                return 'channel';
+            }
+            if (this.discussAsChat) {
+                return 'chat';
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeCommandAddTitleText() {
+            if (this.discussAsChannel) {
+                return this.env._t("Add or join a channel");
+            }
+            if (this.discussAsChat) {
+                return this.env._t("Start a conversation");
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeFilteredCategoryItems() {
@@ -91,10 +117,85 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasAddCommand() {
+            if (this.discussAsChannel) {
+                return true;
+            }
+            if (this.discussAsChat) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeHasViewCommand() {
+            if (this.discussAsChannel) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsOpen() {
             return this.isPendingOpen !== undefined ? this.isPendingOpen : this.isServerOpen;
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeName() {
+            if (this.discussAsChannel) {
+                return this.env._t("Channels");
+            }
+            if (this.discussAsChat) {
+                return this.env._t("Direct Messages");
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeNewItemPlaceholderText() {
+            if (this.discussAsChannel) {
+                return this.env._t("Find or create a channel...");
+            }
+            if (this.discussAsChat) {
+                return this.env._t("Find or start a conversation...");
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeSortComputeMethod() {
+            if (this.discussAsChannel) {
+                return 'name';
+            }
+            if (this.discussAsChat) {
+                return 'last_action';
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string[]|FieldCommand}
+         */
+        _computeSupportedChannelTypes() {
+            if (this.discussAsChannel) {
+                return ['channel'];
+            }
+            if (this.discussAsChat) {
+                return ['chat', 'group'];
+            }
+            return clear();
         },
         /**
          * @private
@@ -213,11 +314,17 @@ registerModel({
          * Determines how the autocomplete of this category should behave.
          * Must be one of: 'channel', 'chat'.
          */
-        autocompleteMethod: attr(),
+        autocompleteMethod: attr({
+            compute: '_computeAutocompleteMethod',
+            default: '',
+        }),
         /**
          * The title text in UI for command `add`
          */
-        commandAddTitleText: attr(),
+        commandAddTitleText: attr({
+            compute: '_computeCommandAddTitleText',
+            default: '',
+        }),
         /**
          * Determines the discuss sidebar category items that are displayed by
          * this discuss sidebar category.
@@ -255,17 +362,22 @@ registerModel({
         /**
          * Display name of the category.
          */
-        name: attr(),
+        name: attr({
+            compute: '_computeName',
+            default: '',
+        }),
         /**
          * Boolean that determines whether this category has a 'add' command.
          */
         hasAddCommand: attr({
+            compute: '_computeHasAddCommand',
             default: false,
         }),
         /**
          * Boolean that determines whether this category has a 'view' command.
          */
         hasViewCommand: attr({
+            compute: '_computeHasViewCommand',
             default: false,
         }),
         /**
@@ -295,7 +407,9 @@ registerModel({
         /**
          * The placeholder text used when a new item is being added in UI.
          */
-        newItemPlaceholderText: attr(),
+        newItemPlaceholderText: attr({
+            compute: '_computeNewItemPlaceholderText',
+        }),
         /**
          * The key used in the server side for the category state
          */
@@ -308,12 +422,14 @@ registerModel({
          * Must be one of: 'name', 'last_action'.
          */
         sortComputeMethod: attr({
+            compute: '_computeSortComputeMethod',
             required: true,
         }),
         /**
          * Channel type which is supported by the category.
          */
         supportedChannelTypes: attr({
+            compute: '_computeSupportedChannelTypes',
             required: true,
             readonly: true,
         }),
