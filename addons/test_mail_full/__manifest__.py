@@ -28,6 +28,14 @@ real applications. """,
         'security/ir.model.access.csv',
         'security/ir_rule_data.xml',
     ],
+    'assets': {
+        'web.qunit_suite_tests': [
+            'test_mail_full/static/tests/qunit_suite_tests/*.js',
+        ],
+        'web.tests_assets': [
+            'test_mail_full/static/tests/helpers/*.js',
+        ],
+    },
     'installable': True,
     'license': 'LGPL-3',
 }
