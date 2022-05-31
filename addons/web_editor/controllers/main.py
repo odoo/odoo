@@ -537,7 +537,21 @@ class Web_Editor(http.Controller):
             fields['res_id'] = res_id
         if name:
             fields['name'] = name
-        attachment = attachment.copy(fields)
+
+        # Restricted editors can handle attachments related to records to which
+        # they have access.
+        # Would user be able to read fields of original record ?
+        if attachment and attachment.res_model and attachment.res_id:
+            request.env[attachment.res_model].browse(attachment.res_id).check_access_rights('read')
+
+        # Would user be able to write fields of target record ?
+        # Rights check works with res_id=0 because browse(0) returns an empty
+        # record set.
+        request.env[fields['res_model']].browse(fields['res_id']).check_access_rights('write')
+
+        # Sudo and SUPERUSER_ID because restricted editor will not be able to
+        # copy the record and the mimetype will be forced to plain text.
+        attachment = attachment.with_user(SUPERUSER_ID).sudo().copy(fields)
         if attachment.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.
