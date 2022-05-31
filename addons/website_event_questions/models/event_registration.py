@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class EventRegistration(models.Model):
@@ -37,3 +38,22 @@ class EventRegistrationAnswer(models.Model):
              )
             for reg in self
         ]
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        """ Search records whose selected answer or text answer are matching the ``name`` argument. """
+        if name and operator == 'ilike':
+            if not args:
+                args = []
+
+            # search on both selected answer OR text answer (combined with passed args)
+            selected_answer_domain = [('value_answer_id', operator, name)]
+            text_answer_domain = [('value_text_box', operator, name)]
+            domain = expression.AND([args, expression.OR([
+                selected_answer_domain,
+                text_answer_domain,
+            ])])
+        else:
+            domain = args or []
+
+        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
