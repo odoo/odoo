@@ -1877,8 +1877,13 @@ exports.Orderline = Backbone.Model.extend({
     },
     getPackLotLinesToEdit: function(isAllowOnlyOneLot) {
         const currentPackLotLines = this.pack_lot_lines.models;
-        let nExtraLines = Math.abs(this.quantity) - currentPackLotLines.length;
-        nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
+        let nExtraLines;
+        if (isAllowOnlyOneLot) {
+            nExtraLines = 0
+        } else {
+            nExtraLines = Math.abs(this.quantity) - currentPackLotLines.length;
+            nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
+        }
         const tempLines = currentPackLotLines
             .map(lotLine => ({
                 id: lotLine.cid,
@@ -1889,7 +1894,7 @@ exports.Orderline = Backbone.Model.extend({
                     text: '',
                 }))
             );
-        return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
+        return tempLines;
     },
     /**
      * @param { modifiedPackLotLines, newPackLotLines }
