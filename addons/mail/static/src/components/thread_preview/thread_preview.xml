@@ -45,11 +45,11 @@
                         </t>
                     </div>
                     <div class="o_ThreadPreview_core d-flex align-items-baseline">
-                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ThreadPreview_coreItem o_ThreadPreview_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ThreadPreview_coreItem o_ThreadPreview_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': threadPreviewView.isEmpty }">
                             <t t-if="threadPreviewView.messageAuthorPrefixView">
                                 <MessageAuthorPrefix record="threadPreviewView.messageAuthorPrefixView"/>
                             </t>
-                            <t t-esc="inlineLastMessageBody"/>
+                            <span class="o_ThreadPreview_messageBody" t-esc="threadPreviewView.inlineLastMessageBody"/>
                         </span>
                         <span class="flex-grow-1"/>
                         <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 0">

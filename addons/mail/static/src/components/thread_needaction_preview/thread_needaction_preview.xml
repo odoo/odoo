@@ -41,11 +41,11 @@
                         </t>
                     </div>
                     <div class="o_ThreadNeedactionPreview_core d-flex align-items-baseline">
-                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': threadNeedactionPreviewView.isEmpty }">
                             <t t-if="threadNeedactionPreviewView.messageAuthorPrefixView">
                                 <MessageAuthorPrefix record="threadNeedactionPreviewView.messageAuthorPrefixView"/>
                             </t>
-                            <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
+                            <span class="o_ThreadNeedactionPreview_messageBody" t-esc="threadNeedactionPreviewView.inlineLastNeedactionMessageAsOriginThreadBody"/>
                         </span>
                         <span class="flex-grow-1"/>
                         <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Mark as Read" t-on-click="threadNeedactionPreviewView.onClickMarkAsRead" t-ref="markAsRead"/>

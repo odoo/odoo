@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { htmlToTextContentInline } from '@mail/js/utils';
 
 registerModel({
     name: 'ThreadPreviewView',
@@ -35,6 +36,23 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeInlineLastMessageBody() {
+            if (!this.thread.lastMessage) {
+                return clear();
+            }
+            return htmlToTextContentInline(this.thread.lastMessage.prettyBody);
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsEmpty() {
+            return !this.inlineLastMessageBody;
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeMessageAuthorPrefixView() {
@@ -48,6 +66,15 @@ registerModel({
         },
     },
     fields: {
+        inlineLastMessageBody: attr({
+            compute: '_computeInlineLastMessageBody',
+            default: "",
+            readonly: true,
+        }),
+        isEmpty: attr({
+            compute: '_computeIsEmpty',
+            readonly: true,
+        }),
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
