@@ -44,30 +44,25 @@ class StockMove(models.Model):
                 continue
             quantity_received = 0
             # Gets values for each of those invoice lines.
-            for line in invoice_lines:
-                same_uom = move.product_uom == line.product_uom_id
-                line_qty = line.qty_waiting_for_receipt
-                unit_cost = line.price_unit
-                if not same_uom:
-                    line_qty = line.product_uom_id._compute_quantity(line.qty_waiting_for_receipt, move.product_uom)
-                    unit_cost = line.product_uom_id._compute_price(line.price_unit, move.product_uom)
-                qty_to_process = min(move.quantity_done, line_qty)
+            for inv_line in invoice_lines:
+                inv_uom = inv_line.product_uom_id
+                invoiced_qty = inv_uom._compute_quantity(inv_line.qty_waiting_for_receipt, move.product_uom)
+                unit_cost = inv_uom._compute_price(inv_line.price_unit, move.product_uom)
+                qty_to_process = min(move.quantity_done, invoiced_qty)
                 quantity_received += qty_to_process
 
-                if same_uom:
-                    line.qty_waiting_for_receipt -= qty_to_process
-                else:  # Not the same UoM: reconverts the qty before decreases invoice wainting qty.
-                    line.qty_waiting_for_receipt -= move.product_uom._compute_quantity(qty_to_process, line.product_uom_id)
+                inv_line.qty_waiting_for_receipt -= move.product_uom._compute_quantity(qty_to_process, inv_uom)
 
                 value = move.company_id.currency_id.round(qty_to_process * unit_cost)
                 svl_vals = super(StockMove, move)._get_in_svl_vals(qty_to_process)
-                svl_vals[0]['unit_cost'] = unit_cost
-                svl_vals[0]['value'] = value
-                svl_vals[0]['remaining_value'] = value
-                svl_vals[0]['description'] = move.picking_id.name
+                svl_vals[0].update(
+                    unit_cost=unit_cost,
+                    value=value,
+                    remaining_value=value,
+                    description=move.picking_id.name,
+                )
                 svl_vals_list += svl_vals
                 # If product cost method is AVCO, updates the standard price.
-                # if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 if product.cost_method == 'average' and\
                    not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                     cost_to_add_byproduct[product]['qty'] += qty_to_process
