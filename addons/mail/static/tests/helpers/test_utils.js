@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { ChatterContainer } from '@mail/components/chatter_container/chatter_container';
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
@@ -377,7 +378,7 @@ function getCreateChatterContainerComponent({ afterEvent, env, target }) {
     return async function createChatterContainerComponent(props, { waitUntilMessagesLoaded = true } = {}) {
         let chatterContainerComponent;
         async function func() {
-            chatterContainerComponent = await createRootMessagingComponent(env, "ChatterContainer", {
+            chatterContainerComponent = await createRootComponent(env, ChatterContainer, {
                 props,
                 target,
             });
