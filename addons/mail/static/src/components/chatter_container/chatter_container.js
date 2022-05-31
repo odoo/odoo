@@ -1,7 +1,10 @@
 /** @odoo-module **/
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useModels } from '@mail/component_hooks/use_models';
+// ensure components are registered beforehand.
+import '@mail/components/chatter/chatter';
 import { clear } from '@mail/model/model_field_command';
+import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component, onWillDestroy, onWillUpdateProps } = owl;
 
@@ -27,6 +30,7 @@ export class ChatterContainer extends Component {
      * @override
      */
     setup() {
+        useModels();
         super.setup();
         this.chatter = undefined;
         this.chatterId = getChatterNextTemporaryId();
@@ -87,6 +91,7 @@ export class ChatterContainer extends Component {
 }
 
 Object.assign(ChatterContainer, {
+    components: { Chatter: getMessagingComponent('Chatter') },
     props: {
         hasActivities: {
             type: Boolean,
@@ -128,5 +133,3 @@ Object.assign(ChatterContainer, {
     },
     template: 'mail.ChatterContainer',
 });
-
-registerMessagingComponent(ChatterContainer);
