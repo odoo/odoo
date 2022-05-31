@@ -198,7 +198,7 @@ const Link = Widget.extend({
             href: data.url,
             target: data.isNewWindow ? '_blank' : '',
         });
-        if (data.classes) {
+        if (typeof data.classes === "string") {
             data.classes = data.classes.replace(/o_default_snippet_text/, '');
             attrs.class = `${data.classes}`;
         }
