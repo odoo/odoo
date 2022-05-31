@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form js_class="product_configurator_form">
                 <group>
-                    <field name="product_template_id" class="oe_product_configurator_product_template_id" />
+                    <field name="product_template_id" class="oe_product_configurator_product_template_id" options="{'no_open': True}" readonly="1"/>
                     <field name="product_template_attribute_value_ids" invisible="1">
                         <tree limit="10000"/>
                     </field>
