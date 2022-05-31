@@ -99,21 +99,18 @@ class Attendee(models.Model):
         ics_files = self.mapped('event_id')._get_ics_file()
 
         # prepare rendering context for mail template
-        colors = {
-            'needsAction': 'grey',
-            'accepted': 'green',
-            'tentative': '#FFFF00',
-            'declined': 'red'
-        }
         rendering_context = dict(self._context)
         rendering_context.update({
-            'colors': colors,
+            'colors': self._prepare_notification_calendar_colors(),
             'ignore_recurrence': ignore_recurrence,
             'action_id': self.env['ir.actions.act_window'].sudo().search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
             'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069'),
         })
 
+        self._notify_attendees(ics_files, invitation_template, rendering_context, force_send)
+
+    def _notify_attendees(self, ics_files, mail_template, rendering_context, force_send):
         for attendee in self:
             if attendee.email and attendee.partner_id != self.env.user.partner_id:
                 # FIXME: is ics_file text or bytes?
@@ -122,24 +119,20 @@ class Attendee(models.Model):
 
                 attachment_values = []
                 if ics_file:
-                    attachment_values = [
-                        (0, 0, {'name': 'invitation.ics',
-                                'mimetype': 'text/calendar',
-                                'datas': base64.b64encode(ics_file)})
-                    ]
+                    attachment_values = attendee._prepare_notification_attachment_values(ics_file)
                 try:
-                    body = invitation_template.with_context(rendering_context)._render_field(
+                    body = mail_template.with_context(rendering_context)._render_field(
                         'body_html',
                         attendee.ids,
                         compute_lang=True,
                         post_process=True)[attendee.id]
-                except UserError:   #TO BE REMOVED IN MASTER
-                    body = invitation_template.sudo().with_context(rendering_context)._render_field(
+                except UserError:  # TO BE REMOVED IN MASTER
+                    body = mail_template.sudo().with_context(rendering_context)._render_field(
                         'body_html',
                         attendee.ids,
                         compute_lang=True,
                         post_process=True)[attendee.id]
-                subject = invitation_template._render_field(
+                subject = mail_template._render_field(
                     'subject',
                     attendee.ids,
                     compute_lang=True)[attendee.id]
@@ -152,6 +145,21 @@ class Attendee(models.Model):
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
                     force_send=force_send)
+
+    def _prepare_notification_calendar_colors(self):
+        return {
+            'needsAction': 'grey',
+            'accepted': 'green',
+            'tentative': '#FFFF00',
+            'declined': 'red'
+        }
+
+    def _prepare_notification_attachment_values(self, ics_file):
+        return [
+            (0, 0, {'name': 'invitation.ics',
+                    'mimetype': 'text/calendar',
+                    'datas': base64.b64encode(ics_file)})
+        ]
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """
