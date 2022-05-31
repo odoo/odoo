@@ -12,7 +12,6 @@ QUnit.module('discuss_tests.js', {
         this.start = async params => {
             return start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
-                hasDiscuss: true,
             }));
         };
     },
@@ -42,7 +41,7 @@ QUnit.test('there should be a button to show member list in the thread view topb
         document.body,
         '.o_ThreadViewTopbar_showMemberListButton',
         "there should be a button to show member list in the thread view topbar initially",
-    ); 
+    );
 });
 
 QUnit.test('should show member list when clicking on show member list button in thread view topbar', async function (assert) {
@@ -70,7 +69,7 @@ QUnit.test('should show member list when clicking on show member list button in 
         document.body,
         '.o_ChannelMemberList',
         "should show member list when clicking on show member list button in thread view topbar",
-    ); 
+    );
 });
 
 QUnit.test('should have correct members in member list', async function (assert) {
