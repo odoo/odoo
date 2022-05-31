@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="mailing_contact_subscription_view_form">
+        <field name="name">mailing.contact.subscription.view.form</field>
+        <field name="model">mailing.contact.subscription</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Mailing List Subscription">
+                <sheet>
+                    <group>
+                        <field name="list_id"/>
+                        <field name="is_blacklisted" invisible="1"/>
+                        <label for="contact_id" class="oe_inline"/>
+                        <div class="o_row o_row_readonly">
+                            <i class="fa fa-ban text-danger" role="img" title="This email is blacklisted for mass mailings"
+                                aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
+                            <field name="contact_id"/>
+                        </div>
+                        <field name="unsubscription_date" readonly="1"/>
+                        <field name="opt_out"/>
+                        <field name="message_bounce" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_contact_subscription_view_tree">
+        <field name="name">mailing.contact.subscription.view.tree</field>
+        <field name="model">mailing.contact.subscription</field>
+        <field name="arch" type="xml">
+            <tree string="Mailing List Subscriptions">
+                <field name="contact_id"/>
+                <field name="unsubscription_date"/>
+                <field name="opt_out"/>
+                <field name="message_bounce"/>
+                <field name="is_blacklisted"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_contact_subscription_view_search">
+        <field name="name">mailing.contact.subscription.view.search</field>
+        <field name="model">mailing.contact.subscription</field>
+        <field name="arch" type="xml">
+           <search string="Mailing List Subscriptions">
+                <field name="contact_id"/>
+                <field name="opt_out"/>
+                <field name="list_id"/>
+            </search>
+        </field>
+    </record>
+</odoo>
