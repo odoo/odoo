@@ -357,7 +357,7 @@ registerModel({
         /**
          * If set, the card to be displayed as the "main/spotlight" card.
          */
-        mainParticipantCard: one('RtcCallParticipantCard', {
+        mainParticipantCard: one('CallParticipantCard', {
             compute: '_computeMainParticipantCard',
             inverse: 'rtcCallViewerOfMainCard',
         }),
@@ -401,7 +401,7 @@ registerModel({
         /**
          * List of all participant cards (can either be invitations or rtcSessions).
          */
-        tileParticipantCards: many('RtcCallParticipantCard', {
+        tileParticipantCards: many('CallParticipantCard', {
             compute: '_computeTileParticipantCards',
             inverse: 'rtcCallViewerOfTile',
         }),

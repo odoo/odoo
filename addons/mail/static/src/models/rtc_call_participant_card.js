@@ -8,7 +8,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
-    name: 'RtcCallParticipantCard',
+    name: 'CallParticipantCard',
     identifyingFields: ['relationalId'],
     recordMethods: {
         /**
@@ -262,7 +262,7 @@ registerModel({
         rtcSession: one('RtcSession'),
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute: '_computeCallParticipantVideoView',
-            inverse: 'rtcCallParticipantCardOwner',
+            inverse: 'callParticipantCardOwner',
             isCausal: true,
         }),
         volumeMenuAnchorRef: attr(),
