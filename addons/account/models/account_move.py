@@ -1387,7 +1387,7 @@ class AccountMove(models.Model):
             currencies = move._get_lines_onchange_currency().currency_id
 
             for line in move.line_ids:
-                if move.is_invoice(include_receipts=True):
+                if move._payment_state_matters():
                     # === Invoices ===
 
                     if not line.exclude_from_invoice_tab:
@@ -1431,7 +1431,7 @@ class AccountMove(models.Model):
             # Compute 'payment_state'.
             new_pmt_state = 'not_paid' if move.move_type != 'entry' else False
 
-            if move.is_invoice(include_receipts=True) and move.state == 'posted':
+            if move._payment_state_matters() and move.state == 'posted':
 
                 if currency.is_zero(move.amount_residual):
                     reconciled_payments = move._get_reconciled_payments()
@@ -2163,6 +2163,13 @@ class AccountMove(models.Model):
     @api.model
     def get_invoice_types(self, include_receipts=False):
         return ['out_invoice', 'out_refund', 'in_refund', 'in_invoice'] + (include_receipts and ['out_receipt', 'in_receipt'] or [])
+
+    def _payment_state_matters(self):
+        ''' Determines when new_pmt_state must be upated.
+        Method created to allow overrides.
+        :return: Boolean '''
+        self.ensure_one()
+        return self.is_invoice(include_receipts=True)
 
     def is_invoice(self, include_receipts=False):
         return self.move_type in self.get_invoice_types(include_receipts)
