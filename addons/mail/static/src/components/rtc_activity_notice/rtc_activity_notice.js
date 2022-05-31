@@ -4,20 +4,20 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class RtcActivityNotice extends Component {
+export class CallSystrayMenu extends Component {
 
     /**
-     * @returns {RtcActivityNoticeView}
+     * @returns {CallSystrayMenu}
      */
-    get rtcActivityNoticeView() {
+    get callSystrayMenu() {
         return this.props.record;
     }
 
 }
 
-Object.assign(RtcActivityNotice, {
+Object.assign(CallSystrayMenu, {
     props: { record: Object },
-    template: 'mail.RtcActivityNotice',
+    template: 'mail.CallSystrayMenu',
 });
 
-registerMessagingComponent(RtcActivityNotice);
+registerMessagingComponent(CallSystrayMenu);

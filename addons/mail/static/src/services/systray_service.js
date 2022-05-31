@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
-import { RtcActivityNoticeContainer } from '@mail/components/rtc_activity_notice_container/rtc_activity_notice_container';
+import { CallSystrayMenuContainer } from '@mail/components/rtc_activity_notice_container/rtc_activity_notice_container';
 
 import { registry } from '@web/core/registry';
 
@@ -11,6 +11,6 @@ export const systrayService = {
     dependencies: ['messaging'],
     start() {
         systrayRegistry.add('mail.MessagingMenuContainer', { Component: MessagingMenuContainer });
-        systrayRegistry.add('mail.RtcActivityNoticeContainer', { Component: RtcActivityNoticeContainer }, { sequence: 100 });
+        systrayRegistry.add('mail.CallSystrayMenuContainer', { Component: CallSystrayMenuContainer }, { sequence: 100 });
     },
 };

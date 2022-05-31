@@ -28,7 +28,7 @@ registerModel({
             }
             if (this.channel.defaultDisplayMode === 'video_full_screen') {
                 await this.channel.toggleCall({ startWithVideo: true });
-                await this.threadView.rtcCallViewer.activateFullScreen();
+                await this.threadView.callView.activateFullScreen();
             }
         },
         /**

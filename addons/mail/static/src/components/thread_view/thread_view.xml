@@ -9,8 +9,8 @@
                 </t>
                 <div class="o_ThreadView_bottomPart d-flex flex-grow-1">
                     <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
-                        <t t-if="threadView.rtcCallViewer">
-                            <RtcCallViewer record="threadView.rtcCallViewer"/>
+                        <t t-if="threadView.callView">
+                            <CallView record="threadView.callView"/>
                         </t>
                         <t t-if="threadView.isLoading and !threadView.threadCache.isLoaded" name="loadingCondition">
                             <div class="o_ThreadView_loading d-flex align-self-center flex-grow-1 align-items-center">

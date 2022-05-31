@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallActionListView',
-    identifyingFields: ['callViewer'],
+    identifyingFields: ['callView'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -43,10 +43,10 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickRejectCall(ev) {
-            if (this.callViewer.threadView.thread.hasPendingRtcRequest) {
+            if (this.callView.threadView.thread.hasPendingRtcRequest) {
                 return;
             }
-            await this.callViewer.threadView.thread.leaveCall();
+            await this.callView.threadView.thread.leaveCall();
         },
         /**
          * @param {MouseEvent} ev
@@ -58,19 +58,19 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickToggleAudioCall(ev) {
-            if (this.callViewer.threadView.thread.hasPendingRtcRequest) {
+            if (this.callView.threadView.thread.hasPendingRtcRequest) {
                 return;
             }
-            await this.callViewer.threadView.thread.toggleCall();
+            await this.callView.threadView.thread.toggleCall();
         },
         /**
          * @param {MouseEvent} ev
          */
         async onClickToggleVideoCall(ev) {
-            if (this.callViewer.threadView.thread.hasPendingRtcRequest) {
+            if (this.callView.threadView.thread.hasPendingRtcRequest) {
                 return;
             }
-            await this.callViewer.threadView.thread.toggleCall({
+            await this.callView.threadView.thread.toggleCall({
                 startWithVideo: true,
             });
         },
@@ -79,10 +79,10 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeCallButtonTitle() {
-            if (!this.callViewer.threadView.thread) {
+            if (!this.callView.threadView.thread) {
                 return clear();
             }
-            if (this.callViewer.threadView.thread.rtc) {
+            if (this.callView.threadView.thread.rtc) {
                 return this.env._t("Disconnect");
             } else {
                 return this.env._t("Join Call");
@@ -117,7 +117,7 @@ registerModel({
          * @private
          */
         _computeIsSmall() {
-            return Boolean(this.callViewer && this.callViewer.threadView.compact && !this.callViewer.isFullScreen);
+            return Boolean(this.callView && this.callView.threadView.compact && !this.callView.isFullScreen);
         },
         /**
          * @private
@@ -149,7 +149,7 @@ registerModel({
             compute: '_computeCallButtonTitle',
             default: '',
         }),
-        callViewer: one('RtcCallViewer', {
+        callView: one('CallView', {
             inverse: 'callActionListView',
             readonly: true,
             required: true,

@@ -10,7 +10,7 @@ import { clear, insert, insertAndReplace, replace } from '@mail/model/model_fiel
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'RtcCallViewer',
+    name: 'CallView',
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
@@ -54,7 +54,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (isEventHandled(ev, 'RtcCallViewer.MouseMoveOverlay')) {
+            if (isEventHandled(ev, 'CallView.MouseMoveOverlay')) {
                 return;
             }
             this._showOverlay();
@@ -66,7 +66,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            markEventHandled(ev, 'RtcCallViewer.MouseMoveOverlay');
+            markEventHandled(ev, 'CallView.MouseMoveOverlay');
             this.update({
                 showOverlay: true,
             });
@@ -76,7 +76,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onRtcSettingsDialogClosed(ev) {
-            this.messaging.userSetting.rtcConfigurationMenu.toggle();
+            this.messaging.userSetting.callSettingsMenu.toggle();
         },
         async activateFullScreen() {
             const el = document.body;
@@ -117,11 +117,11 @@ registerModel({
             }
         },
         toggleLayoutMenu() {
-            if (!this.rtcLayoutMenu) {
-                this.update({ rtcLayoutMenu: insertAndReplace() });
+            if (!this.layoutMenu) {
+                this.update({ layoutMenu: insertAndReplace() });
                 return;
             }
-            this.update({ rtcLayoutMenu: clear() });
+            this.update({ layoutMenu: clear() });
         },
         //----------------------------------------------------------------------
         // Private
@@ -357,9 +357,9 @@ registerModel({
         /**
          * If set, the card to be displayed as the "main/spotlight" card.
          */
-        mainParticipantCard: one('RtcCallParticipantCard', {
+        mainParticipantCard: one('CallParticipantCard', {
             compute: '_computeMainParticipantCard',
-            inverse: 'rtcCallViewerOfMainCard',
+            inverse: 'callViewOfMainCard',
         }),
         /**
          * The model for the controller (buttons).
@@ -367,14 +367,14 @@ registerModel({
         callActionListView: one('CallActionListView', {
             default: insertAndReplace(),
             readonly: true,
-            inverse: 'callViewer',
+            inverse: 'callView',
             isCausal: true,
         }),
         /**
          * The model for the menu to control the layout of the viewer.
          */
-        rtcLayoutMenu: one('RtcLayoutMenu', {
-            inverse: 'callViewer',
+        layoutMenu: one('CallLayoutMenu', {
+            inverse: 'callView',
             isCausal: true,
         }),
         /**
@@ -391,19 +391,19 @@ registerModel({
         }),
         showOverlayTimeout: attr(),
         /**
-         * ThreadView on which the call viewer is attached.
+         * ThreadView on which the call view is attached.
          */
         threadView: one('ThreadView', {
-            inverse: 'rtcCallViewer',
+            inverse: 'callView',
             readonly: true,
             required: true,
         }),
         /**
          * List of all participant cards (can either be invitations or rtcSessions).
          */
-        tileParticipantCards: many('RtcCallParticipantCard', {
+        tileParticipantCards: many('CallParticipantCard', {
             compute: '_computeTileParticipantCards',
-            inverse: 'rtcCallViewerOfTile',
+            inverse: 'callViewOfTile',
         }),
     },
     onChanges: [

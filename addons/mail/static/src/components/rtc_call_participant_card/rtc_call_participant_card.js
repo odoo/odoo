@@ -7,7 +7,7 @@ import Popover from "web.Popover";
 
 const { Component } = owl;
 
-export class RtcCallParticipantCard extends Component {
+export class CallParticipantCard extends Component {
 
     /**
      * @override
@@ -30,10 +30,10 @@ export class RtcCallParticipantCard extends Component {
 
 }
 
-Object.assign(RtcCallParticipantCard, {
+Object.assign(CallParticipantCard, {
     props: { record: Object },
-    template: 'mail.RtcCallParticipantCard',
+    template: 'mail.CallParticipantCard',
     components: { Popover },
 });
 
-registerMessagingComponent(RtcCallParticipantCard);
+registerMessagingComponent(CallParticipantCard);

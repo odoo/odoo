@@ -2,7 +2,7 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_RtcCallViewer {
+.o_CallView {
     min-height: 50%;
 
     &.o-isMinimized {
@@ -11,7 +11,7 @@
     }
 }
 
-.o_RtcCallViewer_grid {
+.o_CallView_grid {
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -22,7 +22,7 @@
     &.o-isTiled {
         overflow-y: hidden;
 
-        .o_RtcCallViewer_participantCard {
+        .o_CallView_participantCard {
             width: var(--width);
             height: var(--height);
             min-width: var(--width);
@@ -36,7 +36,7 @@
     }
 }
 
-.o_RtcCallViewer_gridTile {
+.o_CallView_gridTile {
     aspect-ratio: 16/9;
 }
 
@@ -44,7 +44,7 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_RtcCallViewer_grid {
+.o_CallView_grid {
 
     &::-webkit-scrollbar {
         background: gray('900');

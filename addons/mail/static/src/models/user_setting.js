@@ -275,7 +275,7 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        rtcConfigurationMenu: one('RtcConfigurationMenu', {
+        callSettingsMenu: one('CallSettingsMenu', {
             default: insertAndReplace(),
             inverse: 'userSetting',
             isCausal: true,

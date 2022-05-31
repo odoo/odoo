@@ -13,7 +13,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickDownloadLogs(ev) {
-            const channel = this.callActionListView.callViewer.threadView.thread;
+            const channel = this.callActionListView.callView.threadView.thread;
             if (!channel.rtc) {
                 return;
             }
@@ -31,28 +31,28 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickActivateFullScreen(ev) {
-            this.callActionListView.callViewer.activateFullScreen();
+            this.callActionListView.callView.activateFullScreen();
             this.component.trigger('o-popover-close');
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickDeactivateFullScreen(ev) {
-            this.callActionListView.callViewer.deactivateFullScreen();
+            this.callActionListView.callView.deactivateFullScreen();
             this.component.trigger('o-popover-close');
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickLayout(ev) {
-            this.callActionListView.callViewer.toggleLayoutMenu();
+            this.callActionListView.callView.toggleLayoutMenu();
             this.component.trigger('o-popover-close');
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickOptions(ev) {
-            this.messaging.userSetting.rtcConfigurationMenu.toggle();
+            this.messaging.userSetting.callSettingsMenu.toggle();
             this.component.trigger('o-popover-close');
         },
     },
