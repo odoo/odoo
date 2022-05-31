@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
-import { CallSystrayMenuContainer } from '@mail/components/rtc_activity_notice_container/rtc_activity_notice_container';
+import { CallSystrayMenuContainer } from '@mail/components/call_systray_menu_container/call_systray_menu_container';
 
 import { registry } from '@web/core/registry';
 
