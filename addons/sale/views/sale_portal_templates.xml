@@ -400,7 +400,7 @@
                         <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="invoicing_shipping_address">
                     <div class="col-lg-6">
                         <strong class="d-block mb-1">
                             <t t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id">
@@ -459,7 +459,7 @@
                 <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
-                            <th class="text-left">Products</th>
+                            <th class="text-left" id="product_name_header">Products</th>
                             <th class="text-right">Quantity</th>
                             <th t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                 Unit Price
