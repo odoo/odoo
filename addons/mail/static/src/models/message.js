@@ -536,7 +536,7 @@ registerModel({
                 // body null in db, body will be false instead of empty string
                 return clear();
             }
-            let prettyBody;
+            let prettyBody = this.body;
             for (const emoji of this.messaging.emojiRegistry.allEmojis) {
                 const { unicode } = emoji;
                 const regexp = new RegExp(
