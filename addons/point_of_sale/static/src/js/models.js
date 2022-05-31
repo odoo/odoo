@@ -1924,7 +1924,12 @@ exports.Orderline = Backbone.Model.extend({
         }
 
         // Set the quantity of the line based on number of pack lots.
-        this.pack_lot_lines.set_quantity_by_lot();
+        // But only if product tracking is not 'lot' since in that
+        // case product qty != number of pack lots (only 1 lot number)
+        // (setPackLotLines is used for both trackings 'lot' and 'serial')
+        if (this.product.tracking !== 'lot') {
+            this.pack_lot_lines.set_quantity_by_lot();
+        }
     },
     set_product_lot: function(product){
         this.has_product_lot = product.tracking !== 'none';
