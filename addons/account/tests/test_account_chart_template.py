@@ -4,7 +4,6 @@ import re
 import collections
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
-from odoo.addons.account.models import CHART_TEMPLATES, DEFAULT_CHART_TEMPLATE
 
 
 @tagged('post_install', '-at_install')
@@ -34,17 +33,18 @@ class AccountChartTemplateTest(TransactionCase):
         }])
         cls.env.user.company_ids |= cls.company
 
-        cls.AccountChartTemplate = cls.env['account.chart.template']
+        cls.ChartTemplate = cls.env['account.chart.template']
         cls._prepare_subclasses()
 
     @classmethod
     def _prepare_subclasses(cls):
-        template_codes = '|'.join(CHART_TEMPLATES)
+        chart_template_mapping = cls.ChartTemplate.get_chart_template_mapping()
+        template_codes = '|'.join(chart_template_mapping)
         pattern = re.compile(f"^_get_(?P<template_code>{template_codes})_(?P<model>.*)$")
         matcher = lambda x: re.match(pattern, x)
-        attrs = [x for x in dir(cls.AccountChartTemplate)]
+        attrs = [x for x in dir(cls.ChartTemplate)]
         attrs = filter(matcher, attrs)
-        attrs = [getattr(cls.AccountChartTemplate, x) for x in attrs]
+        attrs = [getattr(cls.ChartTemplate, x) for x in attrs]
         get_methods = [x for x in filter(callable, attrs)]
         cls.chart_templates = collections.defaultdict(dict)
         for get_method in get_methods:
@@ -72,11 +72,14 @@ class AccountChartTemplateTest(TransactionCase):
                 check(template_code, data, _id)
 
     def test_default_chart_code(self):
-        self.assertEqual(DEFAULT_CHART_TEMPLATE, self.AccountChartTemplate._guess_chart_template(self.company))
+        default_chart_template = self.AccountChartTemplate.get_default_chart_template()
+        guessed_chart_template = self.AccountChartTemplate._guess_chart_template(self.company)
+        self.assertEqual(default_chart_template, guessed_chart_template)
 
     def test_country_chart_code(self):
         self.company.country_id = self.env.ref('base.be')
-        self.assertEqual('be', self.AccountChartTemplate._guess_chart_template(self.company))
+        guessed_chart_template = self.AccountChartTemplate._guess_chart_template(self.company)
+        self.assertEqual('be', guessed_chart_template)
 
     def test_res_company(self):
         self._test_chart_function("res_company", [

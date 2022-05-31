@@ -13,32 +13,6 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 
-DEFAULT_CHART_TEMPLATE = 'generic_coa'
-
-def templ(code, name, country=None, modules=None, parent=None):
-    return (code, {
-        'name': name,
-        'country': country or f"base.{code[:2]}" if code != DEFAULT_CHART_TEMPLATE else None,
-        'modules': modules or [f'l10n_{code[:2]}'],
-        'parent': parent,
-    })
-
-
-CHART_TEMPLATES = dict([
-    templ(DEFAULT_CHART_TEMPLATE, 'Generic Chart Template', None, ['account']),
-    templ('be', 'BE Belgian PCMN'),
-    templ('it', 'Italy - Generic Chart of Accounts'),
-    templ('fr', 'Plan Comptable Général (France)'),
-    templ('ch', 'Plan comptable 2015 (Suisse)'),
-    templ('de_skr03', 'Deutscher Kontenplan SKR03', modules=['l10n_de', 'l10n_de_skr03']),
-    templ('de_skr04', 'Deutscher Kontenplan SKR04', modules=['l10n_de', 'l10n_de_skr04']),
-    templ('ae', 'U.A.E Chart of Accounts - Standard'),
-    templ('se', 'Swedish BAS Chart of Account Minimalist'),
-    templ('se_k2', 'Swedish BAS Chart of Account complete K2', parent='se'),
-    templ('se_k3', 'Swedish BAS Chart of Account complete K3', parent='se_k2'),
-])
-
-
 class AccountChartTemplateDataError(Exception):
     pass
 
@@ -72,9 +46,40 @@ class AccountChartTemplate(models.AbstractModel):
     _name = "account.chart.template"
     _description = "Account Chart Template"
 
+    @classmethod
+    def get_default_chart_template_code(cls):
+        return 'generic_coa'
+
+    @classmethod
+    def get_chart_template_mapping(cls):
+        default_template_code = AccountChartTemplate.get_default_chart_template_code()
+
+        def templ(code, name, country=None, modules=None, parent=None):
+            return (code, {
+                'name': name,
+                'country': country or f"base.{code[:2]}" if code != default_template_code else None,
+                'modules': modules or [f'l10n_{code[:2]}'],
+                'parent': parent
+            })
+
+        dict([
+            templ(default_template_code, 'Generic Chart Template', None, ['account']),
+            templ('be', 'BE Belgian PCMN'),
+            templ('it', 'Italy - Generic Chart of Accounts'),
+            templ('fr', 'Plan Comptable Général (France)'),
+            templ('ch', 'Plan comptable 2015 (Suisse)'),
+            templ('de_skr03', 'Deutscher Kontenplan SKR03', modules=['l10n_de', 'l10n_de_skr03']),
+            templ('de_skr04', 'Deutscher Kontenplan SKR04', modules=['l10n_de', 'l10n_de_skr04']),
+            templ('ae', 'U.A.E Chart of Accounts - Standard'),
+            templ('se', 'Swedish BAS Chart of Account Minimalist'),
+            templ('se_k2', 'Swedish BAS Chart of Account complete K2', parent='se'),
+            templ('se_k3', 'Swedish BAS Chart of Account complete K3', parent='se_k2'),
+        ])
+
     def _select_chart_template(self, company=False):
         company = company or self.env.company
-        result = [(key, template['name']) for key, template in CHART_TEMPLATES.items()]
+        chart_template_mapping = self.get_chart_template_mapping()
+        result = [(key, template['name']) for key, template in chart_template_mapping.items()]
         if self:
             proposed = self._guess_chart_template(company)
             result.sort(key=lambda sel: (sel[0] != proposed, sel[1]))
@@ -84,11 +89,13 @@ class AccountChartTemplate(models.AbstractModel):
         # TODO: also fix account/populate/res_company.py then
         company = company or self.env.company
         country = company.country_id
+        default_chart_template = self.get_default_chart_template_code()
         if not company.country_id:
-            return DEFAULT_CHART_TEMPLATE
+            return default_chart_template
         # Python 3.7 dicts preserve the order, so it will take the first entry that matches the country code
         country_code = country.get_external_id()[country.id]
-        return next((key for key, template in CHART_TEMPLATES.items() if template['country'] == country_code), DEFAULT_CHART_TEMPLATE)
+        chart_templates = self.get_chart_template_mapping()
+        return next((key for key, template in chart_templates.items() if template['country'] == country_code), default_chart_template)
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Checks if the chart template can be loaded then proceeds installing it.
@@ -124,7 +131,7 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo (bool): whether or not we should load demo data right after loading the
             chart template.
         """
-        module_names = CHART_TEMPLATES[template_code].get('modules', [])
+        module_names = self.get_chart_template_mapping()[template_code].get('modules', [])
         module_ids = self.env['ir.module.module'].search([('name', 'in', module_names), ('state', '=', 'uninstalled')])
         if module_ids:
             module_ids.sudo().button_immediate_install()
@@ -271,7 +278,7 @@ class AccountChartTemplate(models.AbstractModel):
         Model = self.env[model or ".".join(file_name.split(".")[:-1])]
         model_fields = Model._fields
 
-        template = CHART_TEMPLATES.get(template_code)
+        template = self.get_chart_template_mapping().get(template_code)
         module = template['modules'][0]
         path_parts = [x for x in (module, 'data', 'template', file_name) if x]
         # Should the path be False then open(False, 'r') will open STDIN for reading
@@ -357,7 +364,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
         # Transfer account: if the chart_template has no parent, create the single company.transfer_account_id
-        if not CHART_TEMPLATES[template_code].get('parent_id'):
+        if not self.get_chart_template_mapping()[template_code].get('parent_id'):
             accounts_data['transfer_account_id'] = {
                 'company_id': cid,
                 'name': _("Liquidity Transfer"),
@@ -390,10 +397,12 @@ class AccountChartTemplate(models.AbstractModel):
         company.get_unaffected_earnings_account()
 
     def _get_data(self, template_code, company, model):
+        default_chart_template = self.get_default_chart_template_code()
+        chart_template_mapping = self.get_chart_template_mapping()
         def get_parents(code):
             parents = []
-            if code != DEFAULT_CHART_TEMPLATE:
-                while current := CHART_TEMPLATES.get(code):
+            if code != default_chart_template:
+                while current := chart_template_mapping.get(code):
                     parents.append(code)
                     code = current.get('parent')
             # Default has no prefix

@@ -33,5 +33,3 @@ from . import ir_actions_report
 from . import res_currency
 from . import res_bank
 from . import mail_thread
-
-from .chart_template import CHART_TEMPLATES, DEFAULT_CHART_TEMPLATE

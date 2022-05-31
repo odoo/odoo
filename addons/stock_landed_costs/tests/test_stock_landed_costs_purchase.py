@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
-from odoo.addons.account.models import DEFAULT_CHART_TEMPLATE
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestStockValuationLCCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
@@ -102,8 +101,9 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(account_entry['debit'], 430.0, 'Wrong Account Entry')
 
     def test_00_landed_costs_on_incoming_shipment_without_real_time(self):
-        if self.env.company.chart_template != DEFAULT_CHART_TEMPLATE:
-            raise unittest.SkipTest('Skip this test as it works only with %s' % DEFAULT_CHART_TEMPLATE)
+        default_chart_template = self.env['account.chart.template'].get_default_chart_template()
+        if self.env.company.chart_template != default_chart_template:
+            raise unittest.SkipTest('Skip this test as it works only with %s' % default_chart_template)
         # Test landed cost on incoming shipment
         #
         # (A) Purchase product
