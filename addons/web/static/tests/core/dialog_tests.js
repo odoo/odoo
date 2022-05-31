@@ -70,7 +70,7 @@ QUnit.module("Components", (hooks) => {
             `;
 
         const env = await makeTestEnv();
-        parent = await mount(Parent, target, { env, props: {} });
+        parent = await mount(Parent, target, { env, props: { close: () => {} } });
         assert.containsOnce(target, ".o_dialog");
         assert.containsOnce(
             target,

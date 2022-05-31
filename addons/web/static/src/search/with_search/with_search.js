@@ -96,7 +96,7 @@ WithSearch.props = {
     // search view description
     searchViewArch: { type: String, optional: true },
     searchViewFields: { type: Object, optional: true },
-    searchViewId: { type: [Number, false], optional: true },
+    searchViewId: { type: [Number, Boolean], optional: true },
 
     irFilters: { type: Array, element: Object, optional: true },
     loadIrFilters: { type: Boolean, optional: true },
