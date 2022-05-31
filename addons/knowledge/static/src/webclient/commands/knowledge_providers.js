@@ -5,6 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
 import { splitCommandName } from "@web/core/commands/command_palette";
+import { sprintf } from '@web/core/utils/strings';
 
 const { Component } = owl;
 
@@ -60,7 +61,7 @@ commandProviderRegistry.add("knowledge", {
                         const articleId = await Component.env.services.rpc({
                             model: 'knowledge.article',
                             method: 'article_create',
-                            args: [[options.searchValue]],
+                            args: [options.searchValue],
                             kwargs: {
                                 is_private: true
                             },
@@ -72,7 +73,7 @@ commandProviderRegistry.add("knowledge", {
                             }
                         });
                     },
-                    name: "No Article found. Create \"" + options.searchValue + "\"",
+                    name: sprintf(_lt('No Article found. Create "%s"'), options.searchValue),
                     props: {
                         articleName: options.searchValue,
                     },
@@ -106,20 +107,14 @@ commandProviderRegistry.add("knowledge", {
         result.push({
             Component: KnowledgeExtraCommand,
             action() {
-                env.services.action.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: "knowledge.article",
-                    search_view_id: [false, "search"],
-                    views: [[false, "list"]],
-                    target: "current",
-                    context: {
+                env.services.action.doAction('knowledge.knowledge_article_action', {
+                    additionalContext: {
                         search_default_name: options.searchValue,
                     },
-                    name: "Search Articles",
-                })
+                });
             },
             category: "knowledge_extra",
-            name: "Advanced Search",
+            name: _lt("Advanced Search"),
             props: {
                 hotkey: "alt+B",
             },

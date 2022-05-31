@@ -30,8 +30,7 @@
                         <i t-if="article.child_ids" t-att-class="'align-self-center fa fa-fw fa-caret-' + ('down' if article.id in unfolded_articles else 'right')"/>
                         <i t-else="" class="pl-3 align-self-center"/>
                     </button>
-                    <t t-if="not readonly" t-call="knowledge.articles_template_name_editable"/>
-                    <t t-else="" t-call="knowledge.articles_template_name_readonly"/>
+                    <t t-call="knowledge.articles_template_name"/>
                 </div>
                 <ul t-if="not hideChildren and article.child_ids and article.id in unfolded_articles">
                     <t t-call="knowledge.articles_template">
@@ -42,31 +41,28 @@
         </t>
     </template>
 
-    <template id="articles_template_name_editable">
-        <div class="o_article_emoji_dropdown dropdown" t-att-data-article-id="article.id">
-            <a t-attf-class="o_article_emoji p-1 {{'o_article_emoji_active text-900' if isActive else ''}}" type="button"
-                t-attf-id="o_article_emoji_dropdown_#{article.id}" data-toggle="dropdown" aria-expanded="true"
-                t-if="not article.is_locked">
-                <t t-if="article.icon" t-out="article.icon"/>
-                <t t-else="">📄</t>
-            </a>
-            <a t-else="" t-attf-class="p-1">
-                <t t-if="article.icon" t-out="article.icon"/>
-                <t t-else="">📄</t>
-            </a>
-            <div class="o_article_emoji_dropdown_panel dropdown-menu rounded p-0" role="menu"
-                t-attf-aria-labelledby="o_article_emoji_dropdown_#{article.id}"/>
-        </div>
-        <div class="o_article_name flex-grow-1 text-truncate o_cursor_pointer">
-            <t t-out="article.name"/>
-        </div>
-        <button t-if="not hideChildren" class="o_article_create btn p-0 opacity-75 opacity-100-hover" type="button">
-            <i class="fa fa-fw fa-plus" title="Create a nested article" />
-        </button>
-    </template>
-
-    <template id="articles_template_name_readonly">
-        <div class="o_article_name flex-grow-1 text-truncate o_cursor_pointer">
+    <template id="articles_template_name">
+        <t t-if="not portal_readonly_mode">
+            <div class="o_article_emoji_dropdown dropdown" t-att-data-article-id="article.id">
+                <a t-attf-class="o_article_emoji p-1 {{'o_article_emoji_active text-900' if isActive else ''}}" type="button"
+                    t-attf-id="o_article_emoji_dropdown_#{article.id}" data-toggle="dropdown" aria-expanded="true"
+                    t-if="not readonly and not article.is_locked">
+                    <t t-if="article.icon" t-out="article.icon"/>
+                    <t t-else="">📄</t>
+                </a>
+                <a t-else="" class="p-1">
+                    <t t-if="article.icon" t-out="article.icon"/>
+                    <t t-else="">📄</t>
+                </a>
+                <div class="o_article_emoji_dropdown_panel dropdown-menu rounded p-0" role="menu"
+                    t-attf-aria-labelledby="o_article_emoji_dropdown_#{article.id}"/>
+            </div>
+            <div class="o_article_name flex-grow-1 text-truncate o_cursor_pointer" t-out="article.name"/>
+            <button t-if="not hideChildren and not readonly" class="o_article_create btn p-0 opacity-75 opacity-100-hover" type="button">
+                <i class="fa fa-fw fa-plus" title="Create a nested article" />
+            </button>
+        </t>
+        <div class="o_article_name flex-grow-1 text-truncate o_cursor_pointer" t-else="">
             <a t-out="article.display_name" t-attf-href="/knowledge/article/{{article.id}}" class="text-decoration-none"/>
         </div>
     </template>

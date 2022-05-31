@@ -125,6 +125,7 @@ class KnowledgeController(http.Controller):
             "private_articles": root_articles.filtered(
                 lambda article: article.category == "private" and article.user_has_write_access),
             "unfolded_articles": unfolded_articles,
+            'portal_readonly_mode': request.env.user._is_public(),
         }
         favorites = request.env['knowledge.article.favorite']
         if not request.env.user._is_public():
@@ -194,9 +195,11 @@ class KnowledgeController(http.Controller):
                 ('email', 'partner_email'),
                 ('partner_share', 'partner_share'),
             ],
-            'knowledge.article': [('name', 'based_on_name')],
+            'knowledge.article': [
+                ('icon', 'based_on_icon'),
+                ('name', 'based_on_name'),
+            ],
         })[article.id]
-
         for partner_id, member in members_permission.items():
             # empty member added by '_get_article_member_permissions', don't show it in the panel
             if not member['member_id']:
@@ -216,7 +219,7 @@ class KnowledgeController(http.Controller):
                 'partner_name': member['partner_name'],
                 'partner_email': member['partner_email'],
                 'permission': member['permission'],
-                'based_on': member['based_on_name'],
+                'based_on': f'{member["based_on_icon"] or "📄"} {member["based_on_name"]}' if member['based_on_name'] else False,
                 'based_on_id': member['based_on'],
                 'partner_share': member['partner_share'],
                 'is_unique_writer': member['permission'] == "write" and article.inherited_permission != "write" and not any(
