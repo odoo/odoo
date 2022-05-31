@@ -1,15 +1,14 @@
 odoo.define("website.tour.restricted_editor", function (require) {
 "use strict";
 
-var tour = require("web_tour.tour");
+var wTourUtils = require("website.tour_utils");
 
-tour.register("restricted_editor", {
+wTourUtils.registerEditionTour("restricted_editor", {
     test: true,
     url: "/",
 }, [{
-    trigger: 'a.o_frontend_to_backend_edit_btn',
+    trigger: '.o_edit_website_container a',
     content: "Click \"EDIT\" button of website as Restricted Editor",
-    extra_trigger: ".homepage",
 }, {
     trigger: '#oe_snippets.o_loaded',
     content: "Check that the snippets loaded properly",

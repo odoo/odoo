@@ -13,9 +13,13 @@ function makeFakeWebsiteService() {
                 get context() {
                     return {};
                 },
-                isPublisher() {
+                get isPublisher() {
                     return true;
                 },
+                get hasMultiWebsites() {
+                    return true;
+                },
+                async fetchUserGroups() {},
             };
         }
     };

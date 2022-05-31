@@ -34,6 +34,8 @@ export const websiteService = {
         let editedObjectPath;
         let websiteRootInstance;
         let Wysiwyg;
+        let isPublisher;
+        let hasMultiWebsites;
         const context = reactive({
             showNewContentModal: false,
             showAceEditor: false,
@@ -120,8 +122,11 @@ export const websiteService = {
             get editedObjectPath() {
                 return editedObjectPath;
             },
-            isPublisher() {
-                return user.hasGroup('website.group_website_publisher');
+            get isPublisher() {
+                return isPublisher === true;
+            },
+            get hasMultiWebsites() {
+                return hasMultiWebsites === true;
             },
             openMenuDialog(Component, props) {
                 return dialog.add(Component, props);
@@ -140,12 +145,21 @@ export const websiteService = {
                 });
             },
             async fetchWebsites() {
+                // Fetch user groups, before fetching the websites.
+                [isPublisher, hasMultiWebsites] = await Promise.all([
+                    user.hasGroup('website.group_website_publisher'),
+                    user.hasGroup('website.group_multi_website'),
+                ]);
+
                 const [currentWebsiteRepr, allWebsites] = await Promise.all([
                     orm.call('website', 'get_current_website'),
-                    orm.searchRead('website', []),
+                    hasMultiWebsites ? orm.searchRead('website', [], ['domain', 'id', 'name']) : [],
                 ]);
                 websites = [...allWebsites];
                 setCurrentWebsiteId(unslugHtmlDataObject(currentWebsiteRepr).id);
+                if (!websites.length) {
+                    websites = [{ id: currentWebsiteId }];
+                }
             },
             async loadWysiwyg() {
                 if (!Wysiwyg) {
