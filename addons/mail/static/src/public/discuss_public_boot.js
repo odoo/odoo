@@ -75,11 +75,8 @@ Component.env = legacyEnv;
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
-    createDiscussPublicView();
-})();
 
-async function createDiscussPublicView() {
-    const messaging = await Component.env.services.messaging.get();
+    const messaging = await env.services.messaging.get();
     messaging.models['Thread'].insert(messaging.models['Thread'].convertData(data.channelData));
     const discussPublicView = messaging.models['DiscussPublicView'].create(data.discussPublicViewData);
     if (discussPublicView.shouldDisplayWelcomeViewInitially) {
@@ -87,4 +84,4 @@ async function createDiscussPublicView() {
     } else {
         discussPublicView.switchToThreadView();
     }
-}
+})();
