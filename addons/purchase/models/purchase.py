@@ -552,7 +552,7 @@ class PurchaseOrder(models.Model):
             partner_bank_id = self.partner_id.parent_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
         else:
             partner_bank_id = self.partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
-            
+
         invoice_vals = {
             'ref': self.partner_ref or '',
             'move_type': move_type,
