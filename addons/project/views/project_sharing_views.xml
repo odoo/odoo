@@ -123,12 +123,12 @@
         <field name="arch" type="xml">
             <tree string="Tasks" sample="1" delete="0" import="0">
                 <field name="is_closed" invisible="1" />
-                <field name="allow_subtasks" invisible="1" />
                 <field name="sequence" invisible="1" readonly="1"/>
                 <field name="allow_milestones" invisible="1"/>
                 <field name="priority" widget="priority" optional="show" nolabel="1"/>
-                <field name="name" widget="name_with_subtask_count"/>
                 <field name="child_text" invisible="1"/>
+                <field name="allow_subtasks" invisible="1" />
+                <field name="name" widget="name_with_subtask_count"/>
                 <field name="company_id" invisible="1"/>
                 <field name="milestone_id" attrs="{'column_invisible': [('allow_milestones', '=', False)]}"/>
                 <field name="partner_id" optional="hide"/>

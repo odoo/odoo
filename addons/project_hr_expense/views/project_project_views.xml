@@ -8,7 +8,7 @@
         <field name="priority">40</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
-                <button name="action_open_project_expenses" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('expenses_count', '=', 0)]}" groups="hr_expense.group_hr_expense_team_approver">
+                <button name="action_open_project_expenses" type="object" class="oe_stat_button" icon="fa-money" groups="hr_expense.group_hr_expense_team_approver">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="expenses_count" nolabel="1"/>

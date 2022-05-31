@@ -111,12 +111,12 @@
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='child_ids']/tree/field[@name='kanban_state']" position="after">
+                <xpath expr="//field[@name='child_ids']/tree/field[@name='company_id']" position="after">
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide"/>
                     <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="progress" widget="progressbar" optional="hide"/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
@@ -245,9 +245,9 @@
                     <field name="allow_subtasks" invisible="1" />
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="progress" widget="progressbar" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
             </field>
@@ -351,6 +351,7 @@
                 </xpath>
                 <xpath expr="//filter[@name='late']" position='after'>
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
+                    <filter string="Tasks Soon in Overtime" name="remaining_hours_percentage" domain="[('remaining_hours_percentage', '&lt;=', 0.2)]"/>
                 </xpath>
             </field>
         </record>

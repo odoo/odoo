@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
                 <button class="oe_stat_button" type="object" name="action_view_mrp_production"
-                    icon="fa-wrench" attrs="{'invisible': [('production_count', '=', 0)]}"
+                    icon="fa-wrench"
                     groups="mrp.group_mrp_user">
                     <field string="Manufacturing Orders" name="production_count" widget="statinfo"/>
                 </button>
@@ -18,7 +18,7 @@
                     <field string="Work Orders" name="workorder_count" widget="statinfo"/>
                 </button>
                 <button class="oe_stat_button" type="object" name="action_view_mrp_bom"
-                    icon="fa-flask" attrs="{'invisible': [('bom_count', '=', 0)]}"
+                    icon="fa-flask"
                     groups="mrp.group_mrp_user">
                     <field string="Bills of Materials" name="bom_count" widget="statinfo"/>
                 </button>

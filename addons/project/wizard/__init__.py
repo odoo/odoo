@@ -5,4 +5,3 @@ from . import project_delete_wizard
 from . import project_milestone_reach_wizard
 from . import project_task_type_delete
 from . import project_share_wizard
-from . import project_report_wizard
