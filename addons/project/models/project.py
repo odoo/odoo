@@ -308,16 +308,16 @@ class Project(models.Model):
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     alias_value = fields.Char(string='Alias email', compute='_compute_alias_value')
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited employees'),
-            ('employees', 'All employees'),
-            ('portal', 'Invited portal users and all employees'),
+            ('followers', 'Invited internal users'),
+            ('employees', 'All internal users'),
+            ('portal', 'Invited portal users and all internal users'),
         ],
         string='Visibility', required=True,
         default='portal',
         help="Defines the visibility of the tasks of the project:\n"
-            "- Invited employees: employees may only see the followed project and tasks.\n"
-            "- All employees: employees may see all project and tasks.\n"
-            "- Invited portal users and all employees: employees may see everything."
+            "- Invited internal users: internal users may only see the followed project and tasks.\n"
+            "- All internal users: internal users may see all project and tasks.\n"
+            "- Invited portal users and all internal users: internal users may see everything."
             "   Invited portal users may see project and tasks followed by.\n"
             "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
@@ -531,6 +531,7 @@ class Project(models.Model):
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
         if 'tasks' not in default:
             self.map_tasks(project.id)
+
         return project
 
     @api.model
@@ -857,7 +858,7 @@ class Project(models.Model):
                 'number': f'{round(100 * self.rating_avg_percentage, 2)} %',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
-                'show': self.rating_active and self.rating_count > 0,
+                'show': self.rating_active,
                 'sequence': 15,
             })
         if self.user_has_groups('project.group_project_user'):
@@ -1124,7 +1125,7 @@ class Task(models.Model):
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working Days to Close', store=True, group_operator="avg")
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
-    is_private = fields.Boolean(compute='_compute_is_private')
+    is_private = fields.Boolean(compute='_compute_is_private', search='_search_is_private')
     allow_milestones = fields.Boolean(related='project_id.allow_milestones')
     milestone_id = fields.Many2one(
         'project.milestone',
@@ -1153,6 +1154,7 @@ class Task(models.Model):
                                      column2="task_id", string="Block", copy=False,
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
+    is_blocked = fields.Boolean(compute='_compute_is_blocked', store=True, recursive=True)
 
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
@@ -1276,6 +1278,16 @@ class Task(models.Model):
         # Modify accordingly, this field is used to display the lock on the task's kanban card
         for task in self:
             task.is_private = not task.project_id and not task.parent_id
+
+    def _search_is_private(self, operator, value):
+        if not isinstance(value, bool):
+            raise ValueError(_('Value should be True or False (not %s)'), value)
+        if operator not in ['=', '!=']:
+            raise NotImplementedError(_('Operation should be = or != (not %s)'), value)
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            return [('project_id', '=', False)]
+        else:
+            return [('project_id', '!=', False)]
 
     @api.depends('parent_id.ancestor_id')
     def _compute_ancestor_id(self):
@@ -1454,6 +1466,11 @@ class Task(models.Model):
             }
             for task in tasks_with_dependency:
                 task.dependent_tasks_count = dependent_tasks_count_dict.get(task.id, 0)
+
+    @api.depends('depend_on_ids.is_closed', 'depend_on_ids.is_blocked')
+    def _compute_is_blocked(self):
+        for task in self:
+            task.is_blocked = any(not blocking_task.is_closed or blocking_task.is_blocked for blocking_task in task.depend_on_ids)
 
     @api.depends('partner_id.email')
     def _compute_partner_email(self):
