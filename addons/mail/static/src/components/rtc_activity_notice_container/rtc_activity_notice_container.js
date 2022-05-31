@@ -7,7 +7,7 @@ import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 const { Component } = owl;
 
-export class RtcActivityNoticeContainer extends Component {
+export class CallSystrayMenuContainer extends Component {
 
     /**
      * @override
@@ -19,7 +19,7 @@ export class RtcActivityNoticeContainer extends Component {
 
 }
 
-Object.assign(RtcActivityNoticeContainer, {
-    components: { RtcActivityNotice: getMessagingComponent('RtcActivityNotice') },
-    template: 'mail.RtcActivityNoticeContainer',
+Object.assign(CallSystrayMenuContainer, {
+    components: { CallSystrayMenu: getMessagingComponent('CallSystrayMenu') },
+    template: 'mail.CallSystrayMenuContainer',
 });

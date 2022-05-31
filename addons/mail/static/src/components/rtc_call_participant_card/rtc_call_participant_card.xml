@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.RtcCallParticipantCard" owl="1">
+    <t t-name="mail.CallParticipantCard" owl="1">
         <t t-if="callParticipantCard">
-            <div class="o_RtcCallParticipantCard position-relative d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-sm"
+            <div class="o_CallParticipantCard position-relative d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-sm"
                 t-att-class="{
                     'o-isClickable o_cursor_pointer': callParticipantCard.invitedGuest or callParticipantCard.invitedPartner or !callParticipantCard.isMinimized,
                     'o-isTalking': !callParticipantCard.isMinimized and callParticipantCard.isTalking,
@@ -21,13 +21,13 @@
                     <CallParticipantVideo record="callParticipantCard.callParticipantVideoView"/>
                 </t>
                 <t t-else="">
-                    <div class="o_RtcCallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-sm" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
+                    <div class="o_CallParticipantCard_avatarFrame d-flex align-items-center justify-content-center h-100 w-100 rounded-sm" t-att-class="{ 'o-isMinimized': callParticipantCard.isMinimized, 'bg-secondary': !callParticipantCard.isMinimized}" draggable="false">
                         <img alt="Avatar"
                              t-att-class="{
                                 'o-isTalking': callParticipantCard.isTalking,
                                 'o-isInvitation': callParticipantCard.isInvitation,
                              }"
-                             class="o_RtcCallParticipantCard_avatarImage h-100 rounded-circle border-5 o_object_fit_cover"
+                             class="o_CallParticipantCard_avatarImage h-100 rounded-circle border-5 o_object_fit_cover"
                              t-att-src="callParticipantCard.avatarUrl"
                              draggable="false"
                         />
@@ -36,39 +36,39 @@
 
                 <t t-if="callParticipantCard.rtcSession">
                     <!-- overlay -->
-                    <span class="o_RtcCallParticipantCard_overlay o_RtcCallParticipantCard_overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
+                    <span class="o_CallParticipantCard_overlay o_CallParticipantCard_overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
                         <t t-if="!callParticipantCard.isMinimized">
-                            <span class="o_RtcCallParticipantCard_name p-1 rounded-sm bg-black-75 text-white text-truncate" t-esc="callParticipantCard.name"/>
+                            <span class="o_CallParticipantCard_name p-1 rounded-sm bg-black-75 text-white text-truncate" t-esc="callParticipantCard.name"/>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
-                            <small class="o_RtcCallParticipantCard_liveIndicator o-isMinimized badge-pill badge-danger d-flex align-items-center font-weight-bolder" title="live" aria-label="live">
+                            <small class="o_CallParticipantCard_liveIndicator o-isMinimized badge-pill badge-danger d-flex align-items-center font-weight-bolder" title="live" aria-label="live">
                                 LIVE
                             </small>
                         </t>
                     </span>
-                    <div class="o_RtcCallParticipantCard_overlay o_RtcCallParticipantCard_overlayTop position-absolute top-0 end-0 d-flex flex-row-reverse">
+                    <div class="o_CallParticipantCard_overlay o_CallParticipantCard_overlayTop position-absolute top-0 end-0 d-flex flex-row-reverse">
                         <t t-if="callParticipantCard.rtcSession.isSelfMuted and !callParticipantCard.rtcSession.isDeaf">
-                            <span class="o_RtcCallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-isMinimized p-1': callParticipantCard.isMinimized, 'p-2': !callParticipantCard.isMinimized }" title="muted" aria-label="muted">
+                            <span class="o_CallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-isMinimized p-1': callParticipantCard.isMinimized, 'p-2': !callParticipantCard.isMinimized }" title="muted" aria-label="muted">
                                 <i class="fa fa-microphone-slash"/>
                             </span>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isDeaf">
-                            <span class="o_RtcCallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-isMinimized p-1': callParticipantCard.isMinimized, 'p-2': !callParticipantCard.isMinimized }" title="deaf" aria-label="deaf">
+                            <span class="o_CallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-isMinimized p-1': callParticipantCard.isMinimized, 'p-2': !callParticipantCard.isMinimized }" title="deaf" aria-label="deaf">
                                 <i class="fa fa-deaf"/>
                             </span>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.channel.rtc and callParticipantCard.rtcSession.isAudioInError">
-                            <span class="o_RtcCallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900 text-danger" title="Issue with audio">
+                            <span class="o_CallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900 text-danger" title="Issue with audio">
                                 <i class="fa fa-exclamation-triangle"/>
                             </span>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.channel.rtc and !callParticipantCard.rtcSession.rtcAsCurrentSession and !['connected', 'completed'].includes(callParticipantCard.rtcSession.connectionState)">
-                            <span class="o_RtcCallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900" t-att-title="callParticipantCard.rtcSession.connectionState">
-                                <i class="fa fa-exclamation-triangle o_RtcCallParticipantCard_connectionState text-warning"/>
+                            <span class="o_CallParticipantCard_overlayTopElement d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900" t-att-title="callParticipantCard.rtcSession.connectionState">
+                                <i class="fa fa-exclamation-triangle o_CallParticipantCard_connectionState text-warning"/>
                             </span>
                         </t>
                         <t t-if="callParticipantCard.rtcSession.isScreenSharingOn and !callParticipantCard.isMinimized and !callParticipantCard.rtcSession.channel.rtc">
-                            <span class="o_RtcCallParticipantCard_liveIndicator badge-pill badge-danger d-flex align-items-center me-1 font-weight-bolder" title="live" aria-label="live">
+                            <span class="o_CallParticipantCard_liveIndicator badge-pill badge-danger d-flex align-items-center me-1 font-weight-bolder" title="live" aria-label="live">
                                 LIVE
                             </span>
                         </t>
@@ -77,12 +77,12 @@
                     <!-- volume popover -->
                     <t t-if="!callParticipantCard.rtcSession.isOwnSession">
                         <Popover>
-                            <i class="o_RtcCallParticipantCard_volumeMenuAnchor position-absolute bottom-0 start-50" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
+                            <i class="o_CallParticipantCard_volumeMenuAnchor position-absolute bottom-0 start-50" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
                             <t t-set-slot="opened">
                                 <div class="d-flex flex-column">
                                     <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCard.rtcSession.volume" t-on-change="callParticipantCard.onChangeVolume"/>
                                     <t t-if="callParticipantCard.hasConnectionInfo">
-                                        <hr class="o_RtcCallParticipantCard_volumeMenuAnchor_separator w-100 border-top"/>
+                                        <hr class="o_CallParticipantCard_volumeMenuAnchor_separator w-100 border-top"/>
                                         <div t-esc="callParticipantCard.inboundConnectionTypeText"/>
                                         <div t-esc="callParticipantCard.outboundConnectionTypeText"/>
                                     </t>

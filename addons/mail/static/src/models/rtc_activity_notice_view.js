@@ -7,7 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
-    name: 'RtcActivityNoticeView',
+    name: 'CallSystrayMenu',
     identifyingFields: ['rtc'],
     recordMethods: {
         /**
@@ -30,7 +30,7 @@ registerModel({
             default: '',
         }),
         rtc: one('Rtc', {
-            inverse: 'rtcActivityNoticeView',
+            inverse: 'callSystrayMenu',
             readonly: true,
             required: true,
         }),
