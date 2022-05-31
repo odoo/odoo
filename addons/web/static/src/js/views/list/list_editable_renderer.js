@@ -96,6 +96,7 @@ ListRenderer.include({
         this.currentRow = null;
         this.currentFieldIndex = null;
         this.isResizing = false;
+        this.isSelectingRow = false;
         this.eventListeners = [];
     },
     /**
@@ -1261,7 +1262,7 @@ ListRenderer.include({
     _selectCell: function (rowIndex, fieldIndex, options) {
         options = options || {};
         // Do nothing if the user tries to select current cell
-        if (!options.force && rowIndex === this.currentRow && fieldIndex === this.currentFieldIndex) {
+        if (this.isSelectingRow || (!options.force && rowIndex === this.currentRow && fieldIndex === this.currentFieldIndex)) {
             return Promise.resolve();
         }
         var wrap = options.wrap === undefined ? true : options.wrap;
@@ -1269,6 +1270,7 @@ ListRenderer.include({
 
         // Select the row then activate the widget in the correct cell
         var self = this;
+        this.isSelectingRow = true;
         return this._selectRow(rowIndex).then(function () {
             var record = self._getRecord(recordID);
             if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
@@ -1289,6 +1291,12 @@ ListRenderer.include({
                 return Promise.reject();
             }
             self.currentFieldIndex = fieldIndex;
+        }).then(function() {
+            self.isSelectingRow = false;
+            return Promise.resolve();
+        }, function() {
+            self.isSelectingRow = false;
+            return Promise.reject();
         });
     },
     /**
