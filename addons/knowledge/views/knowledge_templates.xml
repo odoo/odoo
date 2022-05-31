@@ -13,6 +13,9 @@
                 </button>
             </div>
             <ul class="o_tree">
+                <span t-att-class="('d-none' if workspace_articles else '') + ' o_knowledge_empty_info text-muted'">
+                    <i>There are no Articles in your Workspace.</i>
+                </span>
                 <t t-call="knowledge.articles_template">
                     <t t-set="articles" t-value="workspace_articles"/>
                 </t>
@@ -38,6 +41,9 @@
                 </button>
             </div>
             <ul class="o_tree">
+                <span t-att-class="('d-none' if private_articles else '') + ' o_knowledge_empty_info text-muted'">
+                    <i>You do not have any private Articles.</i>
+                </span>
                 <t t-call="knowledge.articles_template">
                     <t t-set="articles" t-value="private_articles"/>
                 </t>

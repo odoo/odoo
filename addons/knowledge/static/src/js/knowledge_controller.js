@@ -6,14 +6,15 @@ import FormController from 'web.FormController';
 import { MoveArticleToDialog } from './widgets/knowledge_dialogs.js';
 import emojis from '@mail/js/emojis';
 
-const emojisBlacklist = ['💩', '👎', '💔', '😭', '😢', '😐', '😕', '😞', '😢'];
-const safeEmojis = emojis.filter(emoji => !emojisBlacklist.includes(emoji.unicode));
+const disallowedEmojis = ['💩', '👎', '💔', '😭', '😢', '😐', '😕', '😞', '😢', '💀'];
+const emojisRandomPickerSource = emojis.filter(emoji => !disallowedEmojis.includes(emoji.unicode));
 
 const KnowledgeArticleFormController = FormController.extend({
     events: Object.assign({}, FormController.prototype.events, {
         'click .o_knowledge_add_icon': '_onAddRandomIcon',
         'click .o_knowledge_add_cover': '_onAddCover',
         'click #knowledge_search_bar': '_onSearch',
+        'click .o_breadcrumb_article_name': '_onArticleBreadcrumbClick',
         'change .o_breadcrumb_article_name': '_onRename',
         'click i.o_toggle_favorite': '_onToggleFavorite',
         'input .o_breadcrumb_article_name': '_adjustInputSize',
@@ -69,7 +70,7 @@ const KnowledgeArticleFormController = FormController.extend({
         this.trigger_up('field_changed', {
             dataPointID: this.handle,
             changes: {
-                'icon': safeEmojis[Math.floor(Math.random() * safeEmojis.length)].unicode,
+                'icon': emojisRandomPickerSource[Math.floor(Math.random() * emojisRandomPickerSource.length)].unicode,
             }
         });
     },
@@ -102,8 +103,35 @@ const KnowledgeArticleFormController = FormController.extend({
      * @param {Event} event
      */
     _onRename: async function (event) {
+        var name = event.currentTarget.value;
+        if (name.length === 0) {
+            name = _t('New Article');
+        }
         const id = await this._getId();
-        await this._rename(id, event.currentTarget.value);
+        await this._rename(id, name);
+    },
+
+    /**
+     * When the user clicks on the name of the article, checks if the article
+     * name hasn't been set yet. If it hasn't, it will look for a title in the
+     * body of the article and set it as the name of the article.
+     * @param {Event} event
+     */
+     _onArticleBreadcrumbClick: async function (event) {
+        const name = event.currentTarget.value;
+        if (name === _t('New Article')) {
+            const $articleTitle = this.$('.o_knowledge_editor h1');
+            if ($articleTitle.text().length !== 0) {
+                this.$('.o_breadcrumb_article_name').val($articleTitle.text());
+                this.trigger_up('field_changed', {
+                    dataPointID: this.handle,
+                    changes: {
+                        'name': $articleTitle.text(),
+                    }
+                });
+                this._rename(await this._getId(), $articleTitle.text());
+            }
+        }
     },
 
     /**
@@ -269,6 +297,7 @@ const KnowledgeArticleFormController = FormController.extend({
      */
     _rename: async function (id, name) {
         this.$(`.o_knowledge_tree .o_article[data-article-id="${id}"] > .o_article_handle > .o_article_name`).text(name);
+        this.$(`.o_breadcrumb_article_name`).val(name);
     },
 
     /**
@@ -296,7 +325,7 @@ const KnowledgeArticleFormController = FormController.extend({
         } else {
             let message, confirmation_message;
             if (data.newCategory === 'workspace') {
-                message = _t("Are you sure you want to move this to workspace? It will be accessible by everyone in the company.");
+                message = _t("Are you sure you want to move this article to the Workspace? It will be shared with all internal users.");
                 confirmation_message = _t("Move to Workspace");
             } else if (data.newCategory === 'private') {
                 message = _t("Are you sure you want to move this to private? Only you will be able to access it.");

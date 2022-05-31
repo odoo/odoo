@@ -83,7 +83,8 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                 if ($next.length > 0) {
                     data.before_article_id = $next.data('article-id');
                 }
-
+                $li.siblings('.o_knowledge_empty_info').addClass('d-none');
+                this.$('.o_knowledge_empty_info:only-child').removeClass('d-none');
                 this.trigger_up('move', {...data,
                     onSuccess: () => {
                         const id = $li.data('parent-id');
@@ -112,27 +113,30 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                     onReject: () => {
                         $sortable.sortable('cancel');
                         $sortable.sortable('enable');
+                        this.$('.o_knowledge_empty_info').addClass('d-none');
+                        this.$('.o_knowledge_empty_info:only-child').removeClass('d-none');
                     }
                 });
             },
         });
 
         // Allow drag and drop between sections:
-
-        const selectors = [
-            'section[data-section="workspace"] .o_tree',
-            'section[data-section="shared"] .o_tree',
+        this.$('section[data-section="workspace"] .o_tree').nestedSortable(
+            'option',
+            'connectWith',
             'section[data-section="private"] .o_tree'
-        ];
-
-        selectors.forEach(selector => {
-            // Note: An element can be connected to one selector at most.
-            this.$(selector).nestedSortable(
-                'option',
-                'connectWith',
-                `.o_tree:not(${selector})`
-            );
-        });
+        );
+        this.$('section[data-section="private"] .o_tree').nestedSortable(
+            'option',
+            'connectWith',
+            'section[data-section="workspace"] .o_tree'
+        );
+        // connectWith both workspace and private sections:
+        this.$('section[data-section="shared"] .o_tree').nestedSortable(
+            'option',
+            'connectWith',
+            'section[data-section="workspace"] .o_tree, section[data-section="private"] .o_tree'
+        );
     },
 
     /**
@@ -181,7 +185,7 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         const { data } = this.state;
         const $dropdown = this.$('.o_knowledge_icon > .o_article_emoji_dropdown');
         $dropdown.attr('data-article-id', this.state.res_id);
-        $dropdown.find('.o_article_emoji').text(data.icon);
+        $dropdown.find('.o_article_emoji').text(data.icon || '');
     },
 
     /**
@@ -271,9 +275,9 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
      * @param {integer} id - Article id
      * @param {String} unicode
      */
-    _setEmoji: function (id, unicode) {
+    _setEmoji: function (id, emoji) {
         const emojis = this.$(`.o_article_emoji_dropdown[data-article-id="${id}"] > .o_article_emoji`);
-        emojis.text(unicode || '📄');
+        emojis.text(emoji || '');
     },
 
     /**

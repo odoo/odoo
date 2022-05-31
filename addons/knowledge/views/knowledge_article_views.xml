@@ -101,6 +101,9 @@
                                                 <i class="fa fa-ellipsis-v"/>
                                             </a>
                                             <div class="o_knowledge_more_options_panel dropdown-menu" role="menu">
+                                                <a class="dropdown-item btn-duplicate" href="#" role="button">
+                                                    <i class="fa fa-fw fa-copy"/> Duplicate
+                                                </a>
                                                 <div attrs="{'invisible': [('user_has_write_access', '=', False)]}">
                                                     <a class="dropdown-item btn-move" href="#" role="button">
                                                         <i class="fa fa-fw fa-angle-double-right"/> Move To
@@ -113,9 +116,6 @@
                                                         attrs="{'invisible': [('is_locked', '=', False)]}">
                                                         <i class="fa fa-fw fa-unlock"/> Unlock
                                                     </button>
-                                                    <a class="dropdown-item btn-duplicate" href="#" role="button">
-                                                        <i class="fa fa-fw fa-copy"/> Duplicate
-                                                    </a>
                                                     <button class="dropdown-item" type="object" name="action_article_archive"
                                                             attrs="{'invisible': [('active', '=', False)]}">
                                                         <i class="fa fa-fw fa-archive"/> Archive
@@ -167,14 +167,14 @@
                                                           attrs="{'invisible': [('full_width', '=', False)]}"/>
 
                                                     <!-- Icon and Cover buttons -->
-                                                    <div class="o_knowledge_icon_cover_buttons text-primary bg-white d-print-none mt-2"
+                                                    <div class="o_knowledge_icon_cover_buttons text-muted bg-white d-print-none mt-2"
                                                          attrs="{'invisible': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}">
                                                         <a type="button" role="button" attrs="{'invisible': [('icon', '!=', False)]}"
-                                                           class="btn btn-secondary btn-outline-secondary mr-2 pl-1 o_knowledge_add_icon">
+                                                           class="btn btn-secondary mr-2 pl-1 o_knowledge_add_icon">
                                                             <i class="fa fa-fw fa-smile-o" style="font-size: 1.5em;" title="Add icon"/> Add icon
                                                         </a>
                                                         <a type="button" role="button" attrs="{'invisible': [('cover', '!=', False)]}"
-                                                           class="btn btn-secondary btn-outline-secondary o_knowledge_add_cover">
+                                                           class="btn btn-secondary o_knowledge_add_cover">
                                                             <i class="fa fa-fw fa-picture-o" style="font-size: 1.5em;" title="Add cover"/> Add cover
                                                         </a>
                                                     </div>
@@ -228,7 +228,7 @@
         <field name="name">knowledge.article.view.tree</field>
         <field name="model">knowledge.article</field>
         <field name="arch" type="xml">
-            <tree default_order="is_user_favorite desc, favorite_count desc">
+            <tree create="0" default_order="is_user_favorite desc, favorite_count desc">
                 <field name="display_name"/>
                 <field name="is_user_favorite" widget="boolean_favorite" nolabel="1"
                        force_save="1" options="{'allow_order': '1'}"/>
