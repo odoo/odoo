@@ -532,15 +532,13 @@ class AccountEdiFormat(models.Model):
                         if invoice_form.partner_id and invoice_form.partner_id.commercial_partner_id:
                             bank = self.env['res.partner.bank'].search([
                                 ('acc_number', '=', elements[0].text),
-                                ('partner_id', '=', invoice_form.partner_id.commercial_partner_id.id)
-                                ])
+                                ('partner_id', '=', invoice_form.partner_id.commercial_partner_id.id),
+                                ('company_id', 'in', [invoice_form.company_id.id, False])
+                            ], order='company_id', limit=1)
                         else:
                             bank = self.env['res.partner.bank'].search([
-                                ('acc_number', '=', elements[0].text),
-                                ('company_id', '=', invoice_form.company_id.id),
-                            ])
-                            if len(bank) > 1:
-                                bank = None
+                                ('acc_number', '=', elements[0].text), ('company_id', 'in', [invoice_form.company_id.id, False])
+                            ], order='company_id', limit=1)
                         if bank:
                             invoice_form.partner_bank_id = bank
                         else:
