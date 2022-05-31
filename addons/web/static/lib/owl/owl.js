@@ -1371,51 +1371,6 @@
         vnode.remove();
     }
 
-    const mainEventHandler = (data, ev, currentTarget) => {
-        const { data: _data, modifiers } = filterOutModifiersFromData(data);
-        data = _data;
-        let stopped = false;
-        if (modifiers.length) {
-            let selfMode = false;
-            const isSelf = ev.target === currentTarget;
-            for (const mod of modifiers) {
-                switch (mod) {
-                    case "self":
-                        selfMode = true;
-                        if (isSelf) {
-                            continue;
-                        }
-                        else {
-                            return stopped;
-                        }
-                    case "prevent":
-                        if ((selfMode && isSelf) || !selfMode)
-                            ev.preventDefault();
-                        continue;
-                    case "stop":
-                        if ((selfMode && isSelf) || !selfMode)
-                            ev.stopPropagation();
-                        stopped = true;
-                        continue;
-                }
-            }
-        }
-        // If handler is empty, the array slot 0 will also be empty, and data will not have the property 0
-        // We check this rather than data[0] being truthy (or typeof function) so that it crashes
-        // as expected when there is a handler expression that evaluates to a falsy value
-        if (Object.hasOwnProperty.call(data, 0)) {
-            const handler = data[0];
-            if (typeof handler !== "function") {
-                throw new Error(`Invalid handler (expected a function, received: '${handler}')`);
-            }
-            let node = data[1] ? data[1].__owl__ : null;
-            if (node ? node.status === 1 /* MOUNTED */ : true) {
-                handler.call(node ? node.component : null, ev);
-            }
-        }
-        return stopped;
-    };
-
     // Allows to get the target of a Reactive (used for making a new Reactive from the underlying object)
     const TARGET = Symbol("Target");
     // Escape hatch to prevent reactivity system to turn something into a reactive
@@ -1599,7 +1554,7 @@
             return reactive(originalTarget, callback);
         }
         if (!reactiveCache.has(target)) {
-            reactiveCache.set(target, new Map());
+            reactiveCache.set(target, new WeakMap());
         }
         const reactivesForTarget = reactiveCache.get(target);
         if (!reactivesForTarget.has(callback)) {
@@ -1900,17 +1855,19 @@
     function markup(value) {
         return new Markup(value);
     }
-    // -----------------------------------------------------------------------------
-    //  xml tag helper
-    // -----------------------------------------------------------------------------
-    const globalTemplates = {};
-    function xml(...args) {
-        const name = `__template__${xml.nextId++}`;
-        const value = String.raw(...args);
-        globalTemplates[name] = value;
-        return name;
+
+    class Component {
+        constructor(props, env, node) {
+            this.props = props;
+            this.env = env;
+            this.__owl__ = node;
+        }
+        setup() { }
+        render(deep = false) {
+            this.__owl__.render(deep === true);
+        }
     }
-    xml.nextId = 1;
+    Component.template = "";
 
     // Maps fibers to thrown errors
     const fibersInError = new WeakMap();
@@ -2208,145 +2165,6 @@
         }
     }
 
-    /**
-     * Apply default props (only top level).
-     *
-     * Note that this method does modify in place the props
-     */
-    function applyDefaultProps(props, ComponentClass) {
-        const defaultProps = ComponentClass.defaultProps;
-        if (defaultProps) {
-            for (let propName in defaultProps) {
-                if (props[propName] === undefined) {
-                    props[propName] = defaultProps[propName];
-                }
-            }
-        }
-    }
-    //------------------------------------------------------------------------------
-    // Prop validation helper
-    //------------------------------------------------------------------------------
-    function getPropDescription(staticProps) {
-        if (staticProps instanceof Array) {
-            return Object.fromEntries(staticProps.map((p) => (p.endsWith("?") ? [p.slice(0, -1), false] : [p, true])));
-        }
-        return staticProps || { "*": true };
-    }
-    /**
-     * Validate the component props (or next props) against the (static) props
-     * description.  This is potentially an expensive operation: it may needs to
-     * visit recursively the props and all the children to check if they are valid.
-     * This is why it is only done in 'dev' mode.
-     */
-    function validateProps(name, props, parent) {
-        const ComponentClass = typeof name !== "string"
-            ? name
-            : parent.constructor.components[name];
-        if (!ComponentClass) {
-            // this is an error, wrong component. We silently return here instead so the
-            // error is triggered by the usual path ('component' function)
-            return;
-        }
-        applyDefaultProps(props, ComponentClass);
-        const defaultProps = ComponentClass.defaultProps || {};
-        let propsDef = getPropDescription(ComponentClass.props);
-        const allowAdditionalProps = "*" in propsDef;
-        for (let propName in propsDef) {
-            if (propName === "*") {
-                continue;
-            }
-            const propDef = propsDef[propName];
-            let isMandatory = !!propDef;
-            if (typeof propDef === "object" && "optional" in propDef) {
-                isMandatory = !propDef.optional;
-            }
-            if (isMandatory && propName in defaultProps) {
-                throw new Error(`A default value cannot be defined for a mandatory prop (name: '${propName}', component: ${ComponentClass.name})`);
-            }
-            if (props[propName] === undefined) {
-                if (isMandatory) {
-                    throw new Error(`Missing props '${propName}' (component '${ComponentClass.name}')`);
-                }
-                else {
-                    continue;
-                }
-            }
-            let isValid;
-            try {
-                isValid = isValidProp(props[propName], propDef);
-            }
-            catch (e) {
-                e.message = `Invalid prop '${propName}' in component ${ComponentClass.name} (${e.message})`;
-                throw e;
-            }
-            if (!isValid) {
-                throw new Error(`Invalid Prop '${propName}' in component '${ComponentClass.name}'`);
-            }
-        }
-        if (!allowAdditionalProps) {
-            for (let propName in props) {
-                if (!(propName in propsDef)) {
-                    throw new Error(`Unknown prop '${propName}' given to component '${ComponentClass.name}'`);
-                }
-            }
-        }
-    }
-    /**
-     * Check if an invidual prop value matches its (static) prop definition
-     */
-    function isValidProp(prop, propDef) {
-        if (propDef === true) {
-            return true;
-        }
-        if (typeof propDef === "function") {
-            // Check if a value is constructed by some Constructor.  Note that there is a
-            // slight abuse of language: we want to consider primitive values as well.
-            //
-            // So, even though 1 is not an instance of Number, we want to consider that
-            // it is valid.
-            if (typeof prop === "object") {
-                return prop instanceof propDef;
-            }
-            return typeof prop === propDef.name.toLowerCase();
-        }
-        else if (propDef instanceof Array) {
-            // If this code is executed, this means that we want to check if a prop
-            // matches at least one of its descriptor.
-            let result = false;
-            for (let i = 0, iLen = propDef.length; i < iLen; i++) {
-                result = result || isValidProp(prop, propDef[i]);
-            }
-            return result;
-        }
-        // propsDef is an object
-        if (propDef.optional && prop === undefined) {
-            return true;
-        }
-        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
-        if (propDef.validate) {
-            result = result && propDef.validate(prop);
-        }
-        if (propDef.type === Array && propDef.element) {
-            for (let i = 0, iLen = prop.length; i < iLen; i++) {
-                result = result && isValidProp(prop[i], propDef.element);
-            }
-        }
-        if (propDef.type === Object && propDef.shape) {
-            const shape = propDef.shape;
-            for (let key in shape) {
-                result = result && isValidProp(prop[key], shape[key]);
-            }
-            if (result) {
-                for (let propName in prop) {
-                    if (!(propName in shape)) {
-                        throw new Error(`unknown prop '${propName}'`);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     let currentNode = null;
     function getCurrent() {
         if (!currentNode) {
@@ -2356,6 +2174,18 @@
     }
     function useComponent() {
         return currentNode.component;
+    }
+    /**
+     * Apply default props (only top level).
+     *
+     * Note that this method does modify in place the props
+     */
+    function applyDefaultProps(props, defaultProps) {
+        for (let propName in defaultProps) {
+            if (props[propName] === undefined) {
+                props[propName] = defaultProps[propName];
+            }
+        }
     }
     // -----------------------------------------------------------------------------
     // Integration with reactivity system (useState)
@@ -2384,7 +2214,9 @@
     }
     function arePropsDifferent(props1, props2) {
         for (let k in props1) {
-            if (props1[k] !== props2[k]) {
+            const prop1 = props1[k] && typeof props1[k] === "object" ? toRaw(props1[k]) : props1[k];
+            const prop2 = props2[k] && typeof props2[k] === "object" ? toRaw(props2[k]) : props2[k];
+            if (prop1 !== prop2) {
                 return true;
             }
         }
@@ -2406,7 +2238,7 @@
                 node.forceNextRender = false;
             }
             else {
-                const currentProps = node.component.props[TARGET];
+                const currentProps = node.component.props;
                 shouldRender = parentFiber.deep || arePropsDifferent(currentProps, props);
             }
             if (shouldRender) {
@@ -2423,6 +2255,9 @@
                 C = parent.constructor.components[name];
                 if (!C) {
                     throw new Error(`Cannot find the definition of component "${name}"`);
+                }
+                else if (!(C.prototype instanceof Component)) {
+                    throw new Error(`"${name}" is not a Component. It must inherit from the Component class`);
                 }
             }
             node = new ComponentNode(C, props, ctx.app, ctx, key);
@@ -2452,10 +2287,18 @@
             this.parent = parent;
             this.parentKey = parentKey;
             this.level = parent ? parent.level + 1 : 0;
-            applyDefaultProps(props, C);
+            const defaultProps = C.defaultProps;
+            if (defaultProps) {
+                applyDefaultProps(props, defaultProps);
+            }
             const env = (parent && parent.childEnv) || app.env;
             this.childEnv = env;
-            props = useState(props);
+            for (const key in props) {
+                const prop = props[key];
+                if (prop && typeof prop === "object" && prop[TARGET]) {
+                    props[key] = useState(prop);
+                }
+            }
             this.component = new C(props, env, this);
             this.renderFn = app.getTemplate(C.template).bind(this.component, this.component, this);
             this.component.setup();
@@ -2561,9 +2404,17 @@
             const fiber = makeChildFiber(this, parentFiber);
             this.fiber = fiber;
             const component = this.component;
-            applyDefaultProps(props, component.constructor);
+            const defaultProps = component.constructor.defaultProps;
+            if (defaultProps) {
+                applyDefaultProps(props, defaultProps);
+            }
             currentNode = this;
-            props = useState(props);
+            for (const key in props) {
+                const prop = props[key];
+                if (prop && typeof prop === "object" && prop[TARGET]) {
+                    props[key] = useState(prop);
+                }
+            }
             currentNode = null;
             const prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
             await prom;
@@ -2657,70 +2508,644 @@
         }
     }
 
-    // -----------------------------------------------------------------------------
-    //  Scheduler
-    // -----------------------------------------------------------------------------
-    class Scheduler {
-        constructor() {
-            this.tasks = new Set();
-            this.frame = 0;
-            this.delayedRenders = [];
-            this.requestAnimationFrame = Scheduler.requestAnimationFrame;
-        }
-        addFiber(fiber) {
-            this.tasks.add(fiber.root);
-        }
-        /**
-         * Process all current tasks. This only applies to the fibers that are ready.
-         * Other tasks are left unchanged.
-         */
-        flush() {
-            if (this.delayedRenders.length) {
-                let renders = this.delayedRenders;
-                this.delayedRenders = [];
-                for (let f of renders) {
-                    if (f.root && f.node.status !== 2 /* DESTROYED */ && f.node.fiber === f) {
-                        f.render();
+    const TIMEOUT = Symbol("timeout");
+    function wrapError(fn, hookName) {
+        const error = new Error(`The following error occurred in ${hookName}: `);
+        const timeoutError = new Error(`${hookName}'s promise hasn't resolved after 3 seconds`);
+        const node = getCurrent();
+        return (...args) => {
+            try {
+                const result = fn(...args);
+                if (result instanceof Promise) {
+                    if (hookName === "onWillStart" || hookName === "onWillUpdateProps") {
+                        const fiber = node.fiber;
+                        Promise.race([
+                            result,
+                            new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
+                        ]).then((res) => {
+                            if (res === TIMEOUT && node.fiber === fiber) {
+                                console.warn(timeoutError);
+                            }
+                        });
                     }
-                }
-            }
-            if (this.frame === 0) {
-                this.frame = this.requestAnimationFrame(() => {
-                    this.frame = 0;
-                    this.tasks.forEach((fiber) => this.processFiber(fiber));
-                    for (let task of this.tasks) {
-                        if (task.node.status === 2 /* DESTROYED */) {
-                            this.tasks.delete(task);
+                    return result.catch((cause) => {
+                        error.cause = cause;
+                        if (cause instanceof Error) {
+                            error.message += `"${cause.message}"`;
                         }
-                    }
-                });
+                        throw error;
+                    });
+                }
+                return result;
+            }
+            catch (cause) {
+                if (cause instanceof Error) {
+                    error.message += `"${cause.message}"`;
+                }
+                throw error;
+            }
+        };
+    }
+    // -----------------------------------------------------------------------------
+    //  hooks
+    // -----------------------------------------------------------------------------
+    function onWillStart(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willStart.push(decorate(fn.bind(node.component), "onWillStart"));
+    }
+    function onWillUpdateProps(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willUpdateProps.push(decorate(fn.bind(node.component), "onWillUpdateProps"));
+    }
+    function onMounted(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.mounted.push(decorate(fn.bind(node.component), "onMounted"));
+    }
+    function onWillPatch(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willPatch.unshift(decorate(fn.bind(node.component), "onWillPatch"));
+    }
+    function onPatched(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.patched.push(decorate(fn.bind(node.component), "onPatched"));
+    }
+    function onWillUnmount(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willUnmount.unshift(decorate(fn.bind(node.component), "onWillUnmount"));
+    }
+    function onWillDestroy(fn) {
+        const node = getCurrent();
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        node.willDestroy.push(decorate(fn.bind(node.component), "onWillDestroy"));
+    }
+    function onWillRender(fn) {
+        const node = getCurrent();
+        const renderFn = node.renderFn;
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        fn = decorate(fn.bind(node.component), "onWillRender");
+        node.renderFn = () => {
+            fn();
+            return renderFn();
+        };
+    }
+    function onRendered(fn) {
+        const node = getCurrent();
+        const renderFn = node.renderFn;
+        const decorate = node.app.dev ? wrapError : (fn) => fn;
+        fn = decorate(fn.bind(node.component), "onRendered");
+        node.renderFn = () => {
+            const result = renderFn();
+            fn();
+            return result;
+        };
+    }
+    function onError(callback) {
+        const node = getCurrent();
+        let handlers = nodeErrorHandlers.get(node);
+        if (!handlers) {
+            handlers = [];
+            nodeErrorHandlers.set(node, handlers);
+        }
+        handlers.push(callback.bind(node.component));
+    }
+
+    const VText = text("").constructor;
+    class VPortal extends VText {
+        constructor(selector, realBDom) {
+            super("");
+            this.target = null;
+            this.selector = selector;
+            this.realBDom = realBDom;
+        }
+        mount(parent, anchor) {
+            super.mount(parent, anchor);
+            this.target = document.querySelector(this.selector);
+            if (!this.target) {
+                let el = this.el;
+                while (el && el.parentElement instanceof HTMLElement) {
+                    el = el.parentElement;
+                }
+                this.target = el && el.querySelector(this.selector);
+                if (!this.target) {
+                    throw new Error("invalid portal target");
+                }
+            }
+            this.realBDom.mount(this.target, null);
+        }
+        beforeRemove() {
+            this.realBDom.beforeRemove();
+        }
+        remove() {
+            if (this.realBDom) {
+                super.remove();
+                this.realBDom.remove();
+                this.realBDom = null;
             }
         }
-        processFiber(fiber) {
-            if (fiber.root !== fiber) {
-                this.tasks.delete(fiber);
-                return;
+        patch(other) {
+            super.patch(other);
+            if (this.realBDom) {
+                this.realBDom.patch(other.realBDom, true);
             }
-            const hasError = fibersInError.has(fiber);
-            if (hasError && fiber.counter !== 0) {
-                this.tasks.delete(fiber);
-                return;
-            }
-            if (fiber.node.status === 2 /* DESTROYED */) {
-                this.tasks.delete(fiber);
-                return;
-            }
-            if (fiber.counter === 0) {
-                if (!hasError) {
-                    fiber.complete();
-                }
-                this.tasks.delete(fiber);
+            else {
+                this.realBDom = other.realBDom;
+                this.realBDom.mount(this.target, null);
             }
         }
     }
-    // capture the value of requestAnimationFrame as soon as possible, to avoid
-    // interactions with other code, such as test frameworks that override them
-    Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
+    /**
+     * <t t-slot="default"/>
+     */
+    function portalTemplate(app, bdom, helpers) {
+        let { callSlot } = helpers;
+        return function template(ctx, node, key = "") {
+            return callSlot(ctx, node, key, "default", false, null);
+        };
+    }
+    class Portal extends Component {
+        setup() {
+            const node = this.__owl__;
+            const renderFn = node.renderFn;
+            node.renderFn = () => new VPortal(this.props.target, renderFn());
+            onWillUnmount(() => {
+                if (node.bdom) {
+                    node.bdom.remove();
+                }
+            });
+        }
+    }
+    Portal.template = "__portal__";
+    Portal.props = {
+        target: {
+            type: String,
+        },
+        slots: true,
+    };
+
+    // -----------------------------------------------------------------------------
+    // helpers
+    // -----------------------------------------------------------------------------
+    const isUnionType = (t) => Array.isArray(t);
+    const isBaseType = (t) => typeof t !== "object";
+    function isOptional(t) {
+        return typeof t === "object" && "optional" in t ? t.optional || false : false;
+    }
+    function describeType(type) {
+        return type === "*" || type === true ? "value" : type.name.toLowerCase();
+    }
+    function describe(info) {
+        if (isBaseType(info)) {
+            return describeType(info);
+        }
+        else if (isUnionType(info)) {
+            return info.map(describe).join(" or ");
+        }
+        if ("element" in info) {
+            return `list of ${describe({ type: info.element, optional: false })}s`;
+        }
+        if ("shape" in info) {
+            return `object`;
+        }
+        return describe(info.type || "*");
+    }
+    function toSchema(spec) {
+        return Object.fromEntries(spec.map((e) => e.endsWith("?") ? [e.slice(0, -1), { optional: true }] : [e, { type: "*", optional: false }]));
+    }
+    /**
+     * Main validate function
+     */
+    function validate(obj, spec) {
+        let errors = validateSchema(obj, spec);
+        if (errors.length) {
+            throw new Error("Invalid object: " + errors.join(", "));
+        }
+    }
+    /**
+     * Helper validate function, to get the list of errors. useful if one want to
+     * manipulate the errors without parsing an error object
+     */
+    function validateSchema(obj, schema) {
+        if (Array.isArray(schema)) {
+            schema = toSchema(schema);
+        }
+        let errors = [];
+        // check if each value in obj has correct shape
+        for (let key in obj) {
+            if (key in schema) {
+                let result = validateType(key, obj[key], schema[key]);
+                if (result) {
+                    errors.push(result);
+                }
+            }
+            else if (!("*" in schema)) {
+                errors.push(`unknown key '${key}'`);
+            }
+        }
+        // check that all specified keys are defined in obj
+        for (let key in schema) {
+            const spec = schema[key];
+            if (key !== "*" && !isOptional(spec) && !(key in obj)) {
+                const isObj = typeof spec === "object" && !Array.isArray(spec);
+                const isAny = spec === "*" || (isObj && "type" in spec ? spec.type === "*" : isObj);
+                let detail = isAny ? "" : ` (should be a ${describe(spec)})`;
+                errors.push(`'${key}' is missing${detail}`);
+            }
+        }
+        return errors;
+    }
+    function validateBaseType(key, value, type) {
+        if (typeof type === "function") {
+            if (typeof value === "object") {
+                if (!(value instanceof type)) {
+                    return `'${key}' is not a ${describeType(type)}`;
+                }
+            }
+            else if (typeof value !== type.name.toLowerCase()) {
+                return `'${key}' is not a ${describeType(type)}`;
+            }
+        }
+        return null;
+    }
+    function validateArrayType(key, value, descr) {
+        if (!Array.isArray(value)) {
+            return `'${key}' is not a list of ${describe(descr)}s`;
+        }
+        for (let i = 0; i < value.length; i++) {
+            const error = validateType(`${key}[${i}]`, value[i], descr);
+            if (error) {
+                return error;
+            }
+        }
+        return null;
+    }
+    function validateType(key, value, descr) {
+        if (value === undefined) {
+            return isOptional(descr) ? null : `'${key}' is undefined (should be a ${describe(descr)})`;
+        }
+        else if (isBaseType(descr)) {
+            return validateBaseType(key, value, descr);
+        }
+        else if (isUnionType(descr)) {
+            let validDescr = descr.find((p) => !validateType(key, value, p));
+            return validDescr ? null : `'${key}' is not a ${describe(descr)}`;
+        }
+        let result = null;
+        if ("element" in descr) {
+            result = validateArrayType(key, value, descr.element);
+        }
+        else if ("shape" in descr && !result) {
+            if (typeof value !== "object" || Array.isArray(value)) {
+                result = `'${key}' is not an object`;
+            }
+            else {
+                const errors = validateSchema(value, descr.shape);
+                if (errors.length) {
+                    result = `'${key}' has not the correct shape (${errors.join(", ")})`;
+                }
+            }
+        }
+        if ("type" in descr && !result) {
+            result = validateType(key, value, descr.type);
+        }
+        if ("validate" in descr && !result) {
+            result = !descr.validate(value) ? `'${key}' is not valid` : null;
+        }
+        return result;
+    }
+
+    /**
+     * This file contains utility functions that will be injected in each template,
+     * to perform various useful tasks in the compiled code.
+     */
+    function withDefault(value, defaultValue) {
+        return value === undefined || value === null || value === false ? defaultValue : value;
+    }
+    function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
+        key = key + "__slot_" + name;
+        const slots = ctx.props.slots || {};
+        const { __render, __ctx, __scope } = slots[name] || {};
+        const slotScope = Object.create(__ctx || {});
+        if (__scope) {
+            slotScope[__scope] = extra;
+        }
+        const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
+        if (defaultContent) {
+            let child1 = undefined;
+            let child2 = undefined;
+            if (slotBDom) {
+                child1 = dynamic ? toggler(name, slotBDom) : slotBDom;
+            }
+            else {
+                child2 = defaultContent.call(ctx.__owl__.component, ctx, parent, key);
+            }
+            return multi([child1, child2]);
+        }
+        return slotBDom || text("");
+    }
+    function capture(ctx) {
+        const component = ctx.__owl__.component;
+        const result = Object.create(component);
+        for (let k in ctx) {
+            result[k] = ctx[k];
+        }
+        return result;
+    }
+    function withKey(elem, k) {
+        elem.key = k;
+        return elem;
+    }
+    function prepareList(collection) {
+        let keys;
+        let values;
+        if (Array.isArray(collection)) {
+            keys = collection;
+            values = collection;
+        }
+        else if (collection) {
+            values = Object.keys(collection);
+            keys = Object.values(collection);
+        }
+        else {
+            throw new Error("Invalid loop expression");
+        }
+        const n = values.length;
+        return [keys, values, n, new Array(n)];
+    }
+    const isBoundary = Symbol("isBoundary");
+    function setContextValue(ctx, key, value) {
+        const ctx0 = ctx;
+        while (!ctx.hasOwnProperty(key) && !ctx.hasOwnProperty(isBoundary)) {
+            const newCtx = ctx.__proto__;
+            if (!newCtx) {
+                ctx = ctx0;
+                break;
+            }
+            ctx = newCtx;
+        }
+        ctx[key] = value;
+    }
+    function toNumber(val) {
+        const n = parseFloat(val);
+        return isNaN(n) ? val : n;
+    }
+    function shallowEqual(l1, l2) {
+        for (let i = 0, l = l1.length; i < l; i++) {
+            if (l1[i] !== l2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    class LazyValue {
+        constructor(fn, ctx, node) {
+            this.fn = fn;
+            this.ctx = capture(ctx);
+            this.node = node;
+        }
+        evaluate() {
+            return this.fn(this.ctx, this.node);
+        }
+        toString() {
+            return this.evaluate().toString();
+        }
+    }
+    /*
+     * Safely outputs `value` as a block depending on the nature of `value`
+     */
+    function safeOutput(value) {
+        if (!value) {
+            return value;
+        }
+        let safeKey;
+        let block;
+        if (value instanceof Markup) {
+            safeKey = `string_safe`;
+            block = html(value);
+        }
+        else if (value instanceof LazyValue) {
+            safeKey = `lazy_value`;
+            block = value.evaluate();
+        }
+        else if (value instanceof String || typeof value === "string") {
+            safeKey = "string_unsafe";
+            block = text(value);
+        }
+        else {
+            // Assuming it is a block
+            safeKey = "block_safe";
+            block = value;
+        }
+        return toggler(safeKey, block);
+    }
+    let boundFunctions = new WeakMap();
+    function bind(ctx, fn) {
+        let component = ctx.__owl__.component;
+        let boundFnMap = boundFunctions.get(component);
+        if (!boundFnMap) {
+            boundFnMap = new WeakMap();
+            boundFunctions.set(component, boundFnMap);
+        }
+        let boundFn = boundFnMap.get(fn);
+        if (!boundFn) {
+            boundFn = fn.bind(component);
+            boundFnMap.set(fn, boundFn);
+        }
+        return boundFn;
+    }
+    function multiRefSetter(refs, name) {
+        let count = 0;
+        return (el) => {
+            if (el) {
+                count++;
+                if (count > 1) {
+                    throw new Error("Cannot have 2 elements with same ref name at the same time");
+                }
+            }
+            if (count === 0 || el) {
+                refs[name] = el;
+            }
+        };
+    }
+    /**
+     * Validate the component props (or next props) against the (static) props
+     * description.  This is potentially an expensive operation: it may needs to
+     * visit recursively the props and all the children to check if they are valid.
+     * This is why it is only done in 'dev' mode.
+     */
+    function validateProps(name, props, parent) {
+        const ComponentClass = typeof name !== "string"
+            ? name
+            : parent.constructor.components[name];
+        if (!ComponentClass) {
+            // this is an error, wrong component. We silently return here instead so the
+            // error is triggered by the usual path ('component' function)
+            return;
+        }
+        const schema = ComponentClass.props;
+        if (!schema) {
+            if (parent.__owl__.app.warnIfNoStaticProps) {
+                console.warn(`Component '${ComponentClass.name}' does not have a static props description`);
+            }
+            return;
+        }
+        const defaultProps = ComponentClass.defaultProps;
+        if (defaultProps) {
+            let isMandatory = (name) => Array.isArray(schema)
+                ? schema.includes(name)
+                : name in schema && !("*" in schema) && !isOptional(schema[name]);
+            for (let p in defaultProps) {
+                if (isMandatory(p)) {
+                    throw new Error(`A default value cannot be defined for a mandatory prop (name: '${p}', component: ${ComponentClass.name})`);
+                }
+            }
+        }
+        const errors = validateSchema(props, schema);
+        if (errors.length) {
+            throw new Error(`Invalid props for component '${ComponentClass.name}': ` + errors.join(", "));
+        }
+    }
+    const helpers = {
+        withDefault,
+        zero: Symbol("zero"),
+        isBoundary,
+        callSlot,
+        capture,
+        withKey,
+        prepareList,
+        setContextValue,
+        multiRefSetter,
+        shallowEqual,
+        toNumber,
+        validateProps,
+        LazyValue,
+        safeOutput,
+        bind,
+        createCatcher,
+        markRaw,
+    };
+
+    const bdom = { text, createBlock, list, multi, html, toggler, component, comment };
+    function parseXML$1(xml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, "text/xml");
+        if (doc.getElementsByTagName("parsererror").length) {
+            let msg = "Invalid XML in template.";
+            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
+            if (parsererrorText) {
+                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
+                const re = /\d+/g;
+                const firstMatch = re.exec(parsererrorText);
+                if (firstMatch) {
+                    const lineNumber = Number(firstMatch[0]);
+                    const line = xml.split("\n")[lineNumber - 1];
+                    const secondMatch = re.exec(parsererrorText);
+                    if (line && secondMatch) {
+                        const columnIndex = Number(secondMatch[0]) - 1;
+                        if (line[columnIndex]) {
+                            msg +=
+                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                        }
+                    }
+                }
+            }
+            throw new Error(msg);
+        }
+        return doc;
+    }
+    class TemplateSet {
+        constructor(config = {}) {
+            this.rawTemplates = Object.create(globalTemplates);
+            this.templates = {};
+            this.Portal = Portal;
+            this.dev = config.dev || false;
+            this.translateFn = config.translateFn;
+            this.translatableAttributes = config.translatableAttributes;
+            if (config.templates) {
+                this.addTemplates(config.templates);
+            }
+        }
+        static registerTemplate(name, fn) {
+            globalTemplates[name] = fn;
+        }
+        addTemplate(name, template) {
+            if (name in this.rawTemplates) {
+                const rawTemplate = this.rawTemplates[name];
+                const currentAsString = typeof rawTemplate === "string"
+                    ? rawTemplate
+                    : rawTemplate instanceof Element
+                        ? rawTemplate.outerHTML
+                        : rawTemplate.toString();
+                const newAsString = typeof template === "string" ? template : template.outerHTML;
+                if (currentAsString === newAsString) {
+                    return;
+                }
+                throw new Error(`Template ${name} already defined with different content`);
+            }
+            this.rawTemplates[name] = template;
+        }
+        addTemplates(xml) {
+            if (!xml) {
+                // empty string
+                return;
+            }
+            xml = xml instanceof Document ? xml : parseXML$1(xml);
+            for (const template of xml.querySelectorAll("[t-name]")) {
+                const name = template.getAttribute("t-name");
+                this.addTemplate(name, template);
+            }
+        }
+        getTemplate(name) {
+            if (!(name in this.templates)) {
+                const rawTemplate = this.rawTemplates[name];
+                if (rawTemplate === undefined) {
+                    let extraInfo = "";
+                    try {
+                        const componentName = getCurrent().component.constructor.name;
+                        extraInfo = ` (for component "${componentName}")`;
+                    }
+                    catch { }
+                    throw new Error(`Missing template: "${name}"${extraInfo}`);
+                }
+                const isFn = typeof rawTemplate === "function" && !(rawTemplate instanceof Element);
+                const templateFn = isFn ? rawTemplate : this._compileTemplate(name, rawTemplate);
+                // first add a function to lazily get the template, in case there is a
+                // recursive call to the template name
+                const templates = this.templates;
+                this.templates[name] = function (context, parent) {
+                    return templates[name].call(this, context, parent);
+                };
+                const template = templateFn(this, bdom, helpers);
+                this.templates[name] = template;
+            }
+            return this.templates[name];
+        }
+        _compileTemplate(name, template) {
+            throw new Error(`Unable to compile a template. Please use owl full build instead`);
+        }
+        callTemplate(owner, subTemplate, ctx, parent, key) {
+            const template = this.getTemplate(subTemplate);
+            return toggler(subTemplate, template.call(owner, ctx, parent, key));
+        }
+    }
+    // -----------------------------------------------------------------------------
+    //  xml tag helper
+    // -----------------------------------------------------------------------------
+    const globalTemplates = {};
+    function xml(...args) {
+        const name = `__template__${xml.nextId++}`;
+        const value = String.raw(...args);
+        globalTemplates[name] = value;
+        return name;
+    }
+    xml.nextId = 1;
+    TemplateSet.registerTemplate("__portal__", portalTemplate);
 
     /**
      * Owl QWeb Expression Parser
@@ -2767,8 +3192,8 @@
         ")": "RIGHT_PAREN",
     });
     // note that the space after typeof is relevant. It makes sure that the formatted
-    // expression has a space after typeof
-    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
+    // expression has a space after typeof. Currently we don't support delete and void
+    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ,new ".split(",");
     let tokenizeString = function (expr) {
         let s = expr[0];
         let start = s;
@@ -3009,9 +3434,11 @@
         }
         return tokens;
     }
+    // Leading spaces are trimmed during tokenization, so they need to be added back for some values
+    const paddedValues = new Map([["in ", " in "]]);
     function compileExpr(expr) {
         return compileExprToArray(expr)
-            .map((t) => t.value)
+            .map((t) => paddedValues.get(t.value) || t.value)
             .join("");
     }
     const INTERP_REGEXP = /\{\{.*?\}\}/g;
@@ -3029,6 +3456,11 @@
     // of HTML (as we will parse it as xml later)
     const xmlDoc = document.implementation.createDocument(null, null, null);
     const MODS = new Set(["stop", "capture", "prevent", "self", "synthetic"]);
+    let nextDataIds = {};
+    function generateId(prefix = "") {
+        nextDataIds[prefix] = (nextDataIds[prefix] || 0) + 1;
+        return prefix + nextDataIds[prefix];
+    }
     // -----------------------------------------------------------------------------
     // BlockDescription
     // -----------------------------------------------------------------------------
@@ -3047,12 +3479,8 @@
             this.target = target;
             this.type = type;
         }
-        static generateId(prefix) {
-            this.nextDataIds[prefix] = (this.nextDataIds[prefix] || 0) + 1;
-            return prefix + this.nextDataIds[prefix];
-        }
         insertData(str, prefix = "d") {
-            const id = BlockDescription.generateId(prefix);
+            const id = generateId(prefix);
             this.target.addLine(`let ${id} = ${str};`);
             return this.data.push(id) - 1;
         }
@@ -3090,7 +3518,6 @@
         }
     }
     BlockDescription.nextBlockId = 1;
-    BlockDescription.nextDataIds = {};
     function createContext(parentCtx, params) {
         return Object.assign({
             block: null,
@@ -3158,7 +3585,6 @@
     class CodeGenerator {
         constructor(ast, options) {
             this.blocks = [];
-            this.ids = {};
             this.nextBlockId = 1;
             this.isDebug = false;
             this.targets = [];
@@ -3188,7 +3614,7 @@
             const ast = this.ast;
             this.isDebug = ast.type === 12 /* TDebug */;
             BlockDescription.nextBlockId = 1;
-            BlockDescription.nextDataIds = {};
+            nextDataIds = {};
             this.compileAST(ast, {
                 block: null,
                 index: 0,
@@ -3245,7 +3671,7 @@
             return code;
         }
         compileInNewTarget(prefix, ast, ctx, on) {
-            const name = this.generateId(prefix);
+            const name = generateId(prefix);
             const initialTarget = this.target;
             const target = new CodeTarget(name, on);
             this.targets.push(target);
@@ -3259,10 +3685,6 @@
         }
         define(varName, expr) {
             this.addLine(`const ${varName} = ${expr};`);
-        }
-        generateId(prefix = "") {
-            this.ids[prefix] = (this.ids[prefix] || 0) + 1;
-            return prefix + this.ids[prefix];
         }
         insertAnchor(block) {
             const tag = `block-child-${block.children.length}`;
@@ -3332,7 +3754,7 @@
                 .map((tok) => {
                 if (tok.varName && !tok.isLocal) {
                     if (!mapping.has(tok.varName)) {
-                        const varId = this.generateId("v");
+                        const varId = generateId("v");
                         mapping.set(tok.varName, varId);
                         this.define(varId, tok.value);
                     }
@@ -3472,7 +3894,7 @@
                 block = this.createBlock(block, "block", ctx);
                 this.blocks.push(block);
                 if (ast.dynamicTag) {
-                    const tagExpr = this.generateId("tag");
+                    const tagExpr = generateId("tag");
                     this.define(tagExpr, compileExpr(ast.dynamicTag));
                     block.dynamicTagName = tagExpr;
                 }
@@ -3542,7 +3964,7 @@
                         info[1] = `multiRefSetter(refs, \`${name}\`)`;
                     }
                     else {
-                        let id = this.generateId("ref");
+                        let id = generateId("ref");
                         this.target.refInfo[name] = [id, `(el) => refs[\`${name}\`] = el`];
                         const index = block.data.push(id) - 1;
                         attrs["block-ref"] = String(index);
@@ -3554,10 +3976,10 @@
             if (ast.model) {
                 const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
                 const baseExpression = compileExpr(baseExpr);
-                const bExprId = this.generateId("bExpr");
+                const bExprId = generateId("bExpr");
                 this.define(bExprId, baseExpression);
                 const expression = compileExpr(expr);
-                const exprId = this.generateId("expr");
+                const exprId = generateId("expr");
                 this.define(exprId, expression);
                 const fullExpression = `${bExprId}[${exprId}]`;
                 let idx;
@@ -3566,7 +3988,7 @@
                     attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
                 }
                 else if (hasDynamicChildren) {
-                    const bValueId = this.generateId("bValue");
+                    const bValueId = generateId("bValue");
                     tModelSelectedExpr = `${bValueId}`;
                     this.define(tModelSelectedExpr, fullExpression);
                 }
@@ -3768,7 +4190,7 @@
             let id;
             if (ast.memo) {
                 this.target.hasCache = true;
-                id = this.generateId();
+                id = generateId();
                 this.define(`memo${id}`, compileExpr(ast.memo));
                 this.define(`vnode${id}`, `cache[key${this.target.loopLevel}];`);
                 this.addLine(`if (vnode${id}) {`);
@@ -3797,7 +4219,7 @@
             this.insertBlock("l", block, ctx);
         }
         compileTKey(ast, ctx) {
-            const tKeyExpr = this.generateId("tKey_");
+            const tKeyExpr = generateId("tKey_");
             this.define(tKeyExpr, compileExpr(ast.expr));
             ctx = createContext(ctx, {
                 tKeyExpr,
@@ -3880,19 +4302,20 @@
             }
             const key = `key + \`${this.generateComponentKey()}\``;
             if (isDynamic) {
-                const templateVar = this.generateId("template");
+                const templateVar = generateId("template");
+                if (!this.staticDefs.find((d) => d.id === "call")) {
+                    this.staticDefs.push({ id: "call", expr: `app.callTemplate.bind(app)` });
+                }
                 this.define(templateVar, subTemplate);
                 block = this.createBlock(block, "multi", ctx);
-                this.helpers.add("call");
                 this.insertBlock(`call(this, ${templateVar}, ctx, node, ${key})`, block, {
                     ...ctx,
                     forceNewBlock: !block,
                 });
             }
             else {
-                const id = this.generateId(`callTemplate_`);
-                this.helpers.add("getTemplate");
-                this.staticDefs.push({ id, expr: `getTemplate(${subTemplate})` });
+                const id = generateId(`callTemplate_`);
+                this.staticDefs.push({ id, expr: `app.getTemplate(${subTemplate})` });
                 block = this.createBlock(block, "multi", ctx);
                 this.insertBlock(`${id}.call(this, ctx, node, ${key})`, block, {
                     ...ctx,
@@ -3943,7 +4366,7 @@
             }
         }
         generateComponentKey() {
-            const parts = [this.generateId("__")];
+            const parts = [generateId("__")];
             for (let i = 0; i < this.target.loopLevel; i++) {
                 parts.push(`\${key${i + 1}}`);
             }
@@ -3997,7 +4420,7 @@
             if (ast.slots) {
                 let ctxStr = "ctx";
                 if (this.target.loopLevel || !this.hasSafeContext) {
-                    ctxStr = this.generateId("ctx");
+                    ctxStr = generateId("ctx");
                     this.helpers.add("capture");
                     this.define(ctxStr, `capture(ctx)`);
                 }
@@ -4032,7 +4455,7 @@
             }
             let propVar;
             if ((slotDef && (ast.dynamicProps || hasSlotsProp)) || this.dev) {
-                propVar = this.generateId("props");
+                propVar = generateId("props");
                 this.define(propVar, propString);
                 propString = propVar;
             }
@@ -4044,7 +4467,7 @@
             const key = this.generateComponentKey();
             let expr;
             if (ast.isDynamic) {
-                expr = this.generateId("Comp");
+                expr = generateId("Comp");
                 this.define(expr, compileExpr(ast.name));
             }
             else {
@@ -4075,11 +4498,11 @@
         }
         wrapWithEventCatcher(expr, on) {
             this.helpers.add("createCatcher");
-            let name = this.generateId("catcher");
+            let name = generateId("catcher");
             let spec = {};
             let handlers = [];
             for (let ev in on) {
-                let handlerId = this.generateId("hdlr");
+                let handlerId = generateId("hdlr");
                 let idx = handlers.push(handlerId) - 1;
                 spec[ev] = idx;
                 const handler = this.generateHandlerCode(ev, on[ev]);
@@ -4108,7 +4531,7 @@
             }
             else {
                 if (dynamic) {
-                    let name = this.generateId("slot");
+                    let name = generateId("slot");
                     this.define(name, slotName);
                     blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}, ${dynamic}, ${scope}))`;
                 }
@@ -4132,17 +4555,20 @@
             }
         }
         compileTPortal(ast, ctx) {
-            this.helpers.add("Portal");
+            if (!this.staticDefs.find((d) => d.id === "Portal")) {
+                this.staticDefs.push({ id: "Portal", expr: `app.Portal` });
+            }
             let { block } = ctx;
             const name = this.compileInNewTarget("slot", ast.content, ctx);
             const key = this.generateComponentKey();
             let ctxStr = "ctx";
             if (this.target.loopLevel || !this.hasSafeContext) {
-                ctxStr = this.generateId("ctx");
+                ctxStr = generateId("ctx");
                 this.helpers.add("capture");
                 this.define(ctxStr, `capture(ctx);`);
             }
-            const blockString = `component(Portal, {target: ${ast.target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
+            const target = compileExpr(ast.target);
+            const blockString = `component(Portal, {target: ${target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
             if (block) {
                 this.insertAnchor(block);
             }
@@ -4160,7 +4586,7 @@
     const cache = new WeakMap();
     function parse(xml) {
         if (typeof xml === "string") {
-            const elem = parseXML$1(`<t>${xml}</t>`).firstChild;
+            const elem = parseXML(`<t>${xml}</t>`).firstChild;
             return _parse(elem);
         }
         let ast = cache.get(xml);
@@ -4858,7 +5284,7 @@
      * @param xml the string to parse
      * @returns an XML document corresponding to the content of the string
      */
-    function parseXML$1(xml) {
+    function parseXML(xml) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(xml, "text/xml");
         if (doc.getElementsByTagName("parsererror").length) {
@@ -4898,477 +5324,118 @@
         const codeGenerator = new CodeGenerator(ast, { ...options, hasSafeContext });
         const code = codeGenerator.generateCode();
         // template function
-        return new Function("bdom, helpers", code);
+        return new Function("app, bdom, helpers", code);
     }
 
-    const TIMEOUT = Symbol("timeout");
-    function wrapError(fn, hookName) {
-        const error = new Error(`The following error occurred in ${hookName}: `);
-        const timeoutError = new Error(`${hookName}'s promise hasn't resolved after 3 seconds`);
-        const node = getCurrent();
-        return (...args) => {
-            try {
-                const result = fn(...args);
-                if (result instanceof Promise) {
-                    if (hookName === "onWillStart" || hookName === "onWillUpdateProps") {
-                        const fiber = node.fiber;
-                        Promise.race([
-                            result,
-                            new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
-                        ]).then((res) => {
-                            if (res === TIMEOUT && node.fiber === fiber) {
-                                console.warn(timeoutError);
-                            }
-                        });
-                    }
-                    return result.catch((cause) => {
-                        error.cause = cause;
-                        if (cause instanceof Error) {
-                            error.message += `"${cause.message}"`;
+    const mainEventHandler = (data, ev, currentTarget) => {
+        const { data: _data, modifiers } = filterOutModifiersFromData(data);
+        data = _data;
+        let stopped = false;
+        if (modifiers.length) {
+            let selfMode = false;
+            const isSelf = ev.target === currentTarget;
+            for (const mod of modifiers) {
+                switch (mod) {
+                    case "self":
+                        selfMode = true;
+                        if (isSelf) {
+                            continue;
                         }
-                        throw error;
-                    });
-                }
-                return result;
-            }
-            catch (cause) {
-                if (cause instanceof Error) {
-                    error.message += `"${cause.message}"`;
-                }
-                throw error;
-            }
-        };
-    }
-    // -----------------------------------------------------------------------------
-    //  hooks
-    // -----------------------------------------------------------------------------
-    function onWillStart(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willStart.push(decorate(fn.bind(node.component), "onWillStart"));
-    }
-    function onWillUpdateProps(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willUpdateProps.push(decorate(fn.bind(node.component), "onWillUpdateProps"));
-    }
-    function onMounted(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.mounted.push(decorate(fn.bind(node.component), "onMounted"));
-    }
-    function onWillPatch(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willPatch.unshift(decorate(fn.bind(node.component), "onWillPatch"));
-    }
-    function onPatched(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.patched.push(decorate(fn.bind(node.component), "onPatched"));
-    }
-    function onWillUnmount(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willUnmount.unshift(decorate(fn.bind(node.component), "onWillUnmount"));
-    }
-    function onWillDestroy(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willDestroy.push(decorate(fn.bind(node.component), "onWillDestroy"));
-    }
-    function onWillRender(fn) {
-        const node = getCurrent();
-        const renderFn = node.renderFn;
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        fn = decorate(fn.bind(node.component), "onWillRender");
-        node.renderFn = () => {
-            fn();
-            return renderFn();
-        };
-    }
-    function onRendered(fn) {
-        const node = getCurrent();
-        const renderFn = node.renderFn;
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        fn = decorate(fn.bind(node.component), "onRendered");
-        node.renderFn = () => {
-            const result = renderFn();
-            fn();
-            return result;
-        };
-    }
-    function onError(callback) {
-        const node = getCurrent();
-        let handlers = nodeErrorHandlers.get(node);
-        if (!handlers) {
-            handlers = [];
-            nodeErrorHandlers.set(node, handlers);
-        }
-        handlers.push(callback.bind(node.component));
-    }
-
-    class Component {
-        constructor(props, env, node) {
-            this.props = props;
-            this.env = env;
-            this.__owl__ = node;
-        }
-        setup() { }
-        render(deep = false) {
-            this.__owl__.render(deep === true);
-        }
-    }
-    Component.template = "";
-
-    const VText = text("").constructor;
-    class VPortal extends VText {
-        constructor(selector, realBDom) {
-            super("");
-            this.target = null;
-            this.selector = selector;
-            this.realBDom = realBDom;
-        }
-        mount(parent, anchor) {
-            super.mount(parent, anchor);
-            this.target = document.querySelector(this.selector);
-            if (!this.target) {
-                let el = this.el;
-                while (el && el.parentElement instanceof HTMLElement) {
-                    el = el.parentElement;
-                }
-                this.target = el && el.querySelector(this.selector);
-                if (!this.target) {
-                    throw new Error("invalid portal target");
+                        else {
+                            return stopped;
+                        }
+                    case "prevent":
+                        if ((selfMode && isSelf) || !selfMode)
+                            ev.preventDefault();
+                        continue;
+                    case "stop":
+                        if ((selfMode && isSelf) || !selfMode)
+                            ev.stopPropagation();
+                        stopped = true;
+                        continue;
                 }
             }
-            this.realBDom.mount(this.target, null);
         }
-        beforeRemove() {
-            this.realBDom.beforeRemove();
-        }
-        remove() {
-            if (this.realBDom) {
-                super.remove();
-                this.realBDom.remove();
-                this.realBDom = null;
+        // If handler is empty, the array slot 0 will also be empty, and data will not have the property 0
+        // We check this rather than data[0] being truthy (or typeof function) so that it crashes
+        // as expected when there is a handler expression that evaluates to a falsy value
+        if (Object.hasOwnProperty.call(data, 0)) {
+            const handler = data[0];
+            if (typeof handler !== "function") {
+                throw new Error(`Invalid handler (expected a function, received: '${handler}')`);
+            }
+            let node = data[1] ? data[1].__owl__ : null;
+            if (node ? node.status === 1 /* MOUNTED */ : true) {
+                handler.call(node ? node.component : null, ev);
             }
         }
-        patch(other) {
-            super.patch(other);
-            if (this.realBDom) {
-                this.realBDom.patch(other.realBDom, true);
-            }
-            else {
-                this.realBDom = other.realBDom;
-                this.realBDom.mount(this.target, null);
-            }
-        }
-    }
-    class Portal extends Component {
-        setup() {
-            const node = this.__owl__;
-            const renderFn = node.renderFn;
-            node.renderFn = () => new VPortal(this.props.target, renderFn());
-            onWillUnmount(() => {
-                if (node.bdom) {
-                    node.bdom.remove();
-                }
-            });
-        }
-    }
-    Portal.template = xml `<t t-slot="default"/>`;
-    Portal.props = {
-        target: {
-            type: String,
-        },
-        slots: true,
+        return stopped;
     };
 
-    /**
-     * This file contains utility functions that will be injected in each template,
-     * to perform various useful tasks in the compiled code.
-     */
-    function withDefault(value, defaultValue) {
-        return value === undefined || value === null || value === false ? defaultValue : value;
-    }
-    function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
-        key = key + "__slot_" + name;
-        const slots = ctx.props[TARGET].slots || {};
-        const { __render, __ctx, __scope } = slots[name] || {};
-        const slotScope = Object.create(__ctx || {});
-        if (__scope) {
-            slotScope[__scope] = extra;
+    // -----------------------------------------------------------------------------
+    //  Scheduler
+    // -----------------------------------------------------------------------------
+    class Scheduler {
+        constructor() {
+            this.tasks = new Set();
+            this.frame = 0;
+            this.delayedRenders = [];
+            this.requestAnimationFrame = Scheduler.requestAnimationFrame;
         }
-        const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
-        if (defaultContent) {
-            let child1 = undefined;
-            let child2 = undefined;
-            if (slotBDom) {
-                child1 = dynamic ? toggler(name, slotBDom) : slotBDom;
-            }
-            else {
-                child2 = defaultContent.call(ctx.__owl__.component, ctx, parent, key);
-            }
-            return multi([child1, child2]);
+        addFiber(fiber) {
+            this.tasks.add(fiber.root);
         }
-        return slotBDom || text("");
-    }
-    function capture(ctx) {
-        const component = ctx.__owl__.component;
-        const result = Object.create(component);
-        for (let k in ctx) {
-            result[k] = ctx[k];
-        }
-        return result;
-    }
-    function withKey(elem, k) {
-        elem.key = k;
-        return elem;
-    }
-    function prepareList(collection) {
-        let keys;
-        let values;
-        if (Array.isArray(collection)) {
-            keys = collection;
-            values = collection;
-        }
-        else if (collection) {
-            values = Object.keys(collection);
-            keys = Object.values(collection);
-        }
-        else {
-            throw new Error("Invalid loop expression");
-        }
-        const n = values.length;
-        return [keys, values, n, new Array(n)];
-    }
-    const isBoundary = Symbol("isBoundary");
-    function setContextValue(ctx, key, value) {
-        const ctx0 = ctx;
-        while (!ctx.hasOwnProperty(key) && !ctx.hasOwnProperty(isBoundary)) {
-            const newCtx = ctx.__proto__;
-            if (!newCtx) {
-                ctx = ctx0;
-                break;
-            }
-            ctx = newCtx;
-        }
-        ctx[key] = value;
-    }
-    function toNumber(val) {
-        const n = parseFloat(val);
-        return isNaN(n) ? val : n;
-    }
-    function shallowEqual(l1, l2) {
-        for (let i = 0, l = l1.length; i < l; i++) {
-            if (l1[i] !== l2[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    class LazyValue {
-        constructor(fn, ctx, node) {
-            this.fn = fn;
-            this.ctx = capture(ctx);
-            this.node = node;
-        }
-        evaluate() {
-            return this.fn(this.ctx, this.node);
-        }
-        toString() {
-            return this.evaluate().toString();
-        }
-    }
-    /*
-     * Safely outputs `value` as a block depending on the nature of `value`
-     */
-    function safeOutput(value) {
-        if (!value) {
-            return value;
-        }
-        let safeKey;
-        let block;
-        if (value instanceof Markup) {
-            safeKey = `string_safe`;
-            block = html(value);
-        }
-        else if (value instanceof LazyValue) {
-            safeKey = `lazy_value`;
-            block = value.evaluate();
-        }
-        else if (value instanceof String || typeof value === "string") {
-            safeKey = "string_unsafe";
-            block = text(value);
-        }
-        else {
-            // Assuming it is a block
-            safeKey = "block_safe";
-            block = value;
-        }
-        return toggler(safeKey, block);
-    }
-    let boundFunctions = new WeakMap();
-    function bind(ctx, fn) {
-        let component = ctx.__owl__.component;
-        let boundFnMap = boundFunctions.get(component);
-        if (!boundFnMap) {
-            boundFnMap = new WeakMap();
-            boundFunctions.set(component, boundFnMap);
-        }
-        let boundFn = boundFnMap.get(fn);
-        if (!boundFn) {
-            boundFn = fn.bind(component);
-            boundFnMap.set(fn, boundFn);
-        }
-        return boundFn;
-    }
-    function multiRefSetter(refs, name) {
-        let count = 0;
-        return (el) => {
-            if (el) {
-                count++;
-                if (count > 1) {
-                    throw new Error("Cannot have 2 elements with same ref name at the same time");
-                }
-            }
-            if (count === 0 || el) {
-                refs[name] = el;
-            }
-        };
-    }
-    const helpers = {
-        withDefault,
-        zero: Symbol("zero"),
-        isBoundary,
-        callSlot,
-        capture,
-        withKey,
-        prepareList,
-        setContextValue,
-        multiRefSetter,
-        shallowEqual,
-        toNumber,
-        validateProps,
-        LazyValue,
-        safeOutput,
-        bind,
-        createCatcher,
-    };
-
-    const bdom = { text, createBlock, list, multi, html, toggler, component, comment };
-    function parseXML(xml) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(xml, "text/xml");
-        if (doc.getElementsByTagName("parsererror").length) {
-            let msg = "Invalid XML in template.";
-            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
-            if (parsererrorText) {
-                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
-                const re = /\d+/g;
-                const firstMatch = re.exec(parsererrorText);
-                if (firstMatch) {
-                    const lineNumber = Number(firstMatch[0]);
-                    const line = xml.split("\n")[lineNumber - 1];
-                    const secondMatch = re.exec(parsererrorText);
-                    if (line && secondMatch) {
-                        const columnIndex = Number(secondMatch[0]) - 1;
-                        if (line[columnIndex]) {
-                            msg +=
-                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
-                        }
+        /**
+         * Process all current tasks. This only applies to the fibers that are ready.
+         * Other tasks are left unchanged.
+         */
+        flush() {
+            if (this.delayedRenders.length) {
+                let renders = this.delayedRenders;
+                this.delayedRenders = [];
+                for (let f of renders) {
+                    if (f.root && f.node.status !== 2 /* DESTROYED */ && f.node.fiber === f) {
+                        f.render();
                     }
                 }
             }
-            throw new Error(msg);
-        }
-        return doc;
-    }
-    /**
-     * Returns the helpers object that will be injected in each template closure
-     * function
-     */
-    function makeHelpers(getTemplate) {
-        return Object.assign({}, helpers, {
-            Portal,
-            markRaw,
-            getTemplate,
-            call: (owner, subTemplate, ctx, parent, key) => {
-                const template = getTemplate(subTemplate);
-                return toggler(subTemplate, template.call(owner, ctx, parent, key));
-            },
-        });
-    }
-    class TemplateSet {
-        constructor(config = {}) {
-            this.rawTemplates = Object.create(globalTemplates);
-            this.templates = {};
-            this.dev = config.dev || false;
-            this.translateFn = config.translateFn;
-            this.translatableAttributes = config.translatableAttributes;
-            if (config.templates) {
-                this.addTemplates(config.templates);
+            if (this.frame === 0) {
+                this.frame = this.requestAnimationFrame(() => {
+                    this.frame = 0;
+                    this.tasks.forEach((fiber) => this.processFiber(fiber));
+                    for (let task of this.tasks) {
+                        if (task.node.status === 2 /* DESTROYED */) {
+                            this.tasks.delete(task);
+                        }
+                    }
+                });
             }
-            this.helpers = makeHelpers(this.getTemplate.bind(this));
         }
-        addTemplate(name, template) {
-            if (name in this.rawTemplates) {
-                const rawTemplate = this.rawTemplates[name];
-                const currentAsString = typeof rawTemplate === "string" ? rawTemplate : rawTemplate.outerHTML;
-                const newAsString = typeof template === "string" ? template : template.outerHTML;
-                if (currentAsString === newAsString) {
-                    return;
-                }
-                throw new Error(`Template ${name} already defined with different content`);
-            }
-            this.rawTemplates[name] = template;
-        }
-        addTemplates(xml) {
-            if (!xml) {
-                // empty string
+        processFiber(fiber) {
+            if (fiber.root !== fiber) {
+                this.tasks.delete(fiber);
                 return;
             }
-            xml = xml instanceof Document ? xml : parseXML(xml);
-            for (const template of xml.querySelectorAll("[t-name]")) {
-                const name = template.getAttribute("t-name");
-                this.addTemplate(name, template);
+            const hasError = fibersInError.has(fiber);
+            if (hasError && fiber.counter !== 0) {
+                this.tasks.delete(fiber);
+                return;
             }
-        }
-        getTemplate(name) {
-            if (!(name in this.templates)) {
-                const rawTemplate = this.rawTemplates[name];
-                if (rawTemplate === undefined) {
-                    let extraInfo = "";
-                    try {
-                        const componentName = getCurrent().component.constructor.name;
-                        extraInfo = ` (for component "${componentName}")`;
-                    }
-                    catch { }
-                    throw new Error(`Missing template: "${name}"${extraInfo}`);
+            if (fiber.node.status === 2 /* DESTROYED */) {
+                this.tasks.delete(fiber);
+                return;
+            }
+            if (fiber.counter === 0) {
+                if (!hasError) {
+                    fiber.complete();
                 }
-                const templateFn = this._compileTemplate(name, rawTemplate);
-                // first add a function to lazily get the template, in case there is a
-                // recursive call to the template name
-                const templates = this.templates;
-                this.templates[name] = function (context, parent) {
-                    return templates[name].call(this, context, parent);
-                };
-                const template = templateFn(bdom, this.helpers);
-                this.templates[name] = template;
+                this.tasks.delete(fiber);
             }
-            return this.templates[name];
-        }
-        _compileTemplate(name, template) {
-            return compile(template, {
-                name,
-                dev: this.dev,
-                translateFn: this.translateFn,
-                translatableAttributes: this.translatableAttributes,
-            });
         }
     }
+    // capture the value of requestAnimationFrame as soon as possible, to avoid
+    // interactions with other code, such as test frameworks that override them
+    Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
     let hasBeenLogged = false;
     const DEV_MSG = () => {
@@ -5387,6 +5454,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             if (config.test) {
                 this.dev = true;
             }
+            this.warnIfNoStaticProps = config.warnIfNoStaticProps || false;
             if (this.dev && !config.test && !hasBeenLogged) {
                 console.info(DEV_MSG());
                 hasBeenLogged = true;
@@ -5398,6 +5466,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         }
         mount(target, options) {
             App.validateTarget(target);
+            if (this.dev) {
+                validateProps(this.Root, this.props, { __owl__: { app: this } });
+            }
             const node = this.makeNode(this.Root, this.props);
             const prom = this.mountNode(node, target, options);
             this.root = node;
@@ -5576,6 +5647,15 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     };
     const __info__ = {};
 
+    TemplateSet.prototype._compileTemplate = function _compileTemplate(name, template) {
+        return compile(template, {
+            name,
+            dev: this.dev,
+            translateFn: this.translateFn,
+            translatableAttributes: this.translatableAttributes,
+        });
+    };
+
     exports.App = App;
     exports.Component = Component;
     exports.EventBus = EventBus;
@@ -5606,15 +5686,16 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     exports.useRef = useRef;
     exports.useState = useState;
     exports.useSubEnv = useSubEnv;
+    exports.validate = validate;
     exports.whenReady = whenReady;
     exports.xml = xml;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-7';
-    __info__.date = '2022-04-27T09:08:50.320Z';
-    __info__.hash = '0cd66c8';
+    __info__.version = '2.0.0-beta-8';
+    __info__.date = '2022-05-31T12:26:01.261Z';
+    __info__.hash = 'b56a9c2';
     __info__.url = 'https://github.com/odoo/owl';
 
 
