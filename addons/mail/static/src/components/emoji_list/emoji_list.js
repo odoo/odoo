@@ -10,8 +10,7 @@ export class EmojiList extends LegacyComponent {
      * @override
      */
     setup() {
-        super.setup();
-        this.emojis = this.messaging.emojiRegistry.allEmojis;
+        super.setup();        
         useUpdate({ func: () => this._update() });
     }
 

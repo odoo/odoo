@@ -4,21 +4,11 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class Emoji extends Component {
-
-    /**
-     * @returns {EmojiListView}
-     */
-    get emojiListView() {
-        return this.props.emojiListView;
-    }
-
-}
+export class Emoji extends Component {}
 
 Object.assign(Emoji, {
     props: {
-        emoji: Object,
-        emojiListView: Object,
+        emojiView: Object,
     },
     template: 'mail.Emoji',
 });

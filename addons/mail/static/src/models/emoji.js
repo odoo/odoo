@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { attr, one, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'Emoji',
@@ -13,10 +12,14 @@ registerModel({
             required: true,
         }),
         emojiRegistry: one('EmojiRegistry', {
-            default: insertAndReplace(),
             inverse: 'allEmojis',
             readonly: true,
             required: true,
+        }),
+        emojiViews: many('EmojiView', {
+            inverse: 'emoji',
+            readonly: true,
+            isCausal: true,
         }),
         sources: attr({
             readonly: true,
