@@ -51,10 +51,21 @@ class ProductProduct(models.Model):
         """
             Inherit read_group to calculate the sum of the non-stored fields, as it is not automatically done anymore through the XML.
         """
-        res = super(ProductProduct, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         fields_list = ['turnover', 'sale_avg_price', 'sale_purchase_price', 'sale_num_invoiced', 'purchase_num_invoiced',
                        'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost', 'total_margin',
                        'expected_margin', 'total_margin_rate', 'expected_margin_rate']
+
+        # Not any of the fields_list support aggregate function like :sum
+        def truncate_aggr(field):
+            field_no_aggr, _sep, agg = field.partition(':')
+            if field_no_aggr in fields_list:
+                if agg and agg != 'sum':
+                    raise NotImplementedError('Aggregate functions other than \':sum\' are not allowed.')
+                return field_no_aggr
+            return field
+        fields = {truncate_aggr(field) for field in fields}
+
+        res = super(ProductProduct, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         if any(x in fields for x in fields_list):
             # Calculate first for every product in which line it needs to be applied
             re_ind = 0
