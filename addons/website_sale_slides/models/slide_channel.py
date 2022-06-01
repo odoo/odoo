@@ -52,10 +52,24 @@ class Channel(models.Model):
         return res
 
     def _synchronize_product_publish(self):
+        """
+        Ensure that when publishing a course that its linked product is also published
+        If all courses linked to a product are unpublished, we also unpublished the product
+        """
         if not self:
             return
         self.filtered(lambda channel: channel.is_published and not channel.product_id.is_published).sudo().product_id.write({'is_published': True})
-        self.filtered(lambda channel: not channel.is_published and channel.product_id.is_published).sudo().product_id.write({'is_published': False})
+
+        unpublished_channel_products = self.filtered(lambda channel: not channel.is_published).product_id
+        group_data = self.read_group(
+            [('is_published', '=', True), ('product_id', 'in', unpublished_channel_products.ids)],
+            ['product_id'],
+            ['product_id'],
+        )
+        used_product_ids = [product['product_id'][0] for product in group_data if product['product_id_count'] > 0]
+        product_to_unpublish = unpublished_channel_products.filtered(lambda product: product.id not in used_product_ids)
+        if product_to_unpublish:
+            product_to_unpublish.sudo().write({'is_published': False})
 
     def action_view_sales(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_sale_slides.sale_report_action_slides")
