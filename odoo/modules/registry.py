@@ -245,6 +245,7 @@ class Registry(Mapping):
             This must be called after loading modules and before using the ORM.
         """
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        env.invalidate_all()
 
         # Uninstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
@@ -257,12 +258,6 @@ class Registry(Mapping):
 
         lazy_property.reset_all(self)
         self.registry_invalidated = True
-
-        if env.all.tocompute:
-            _logger.error(
-                "Remaining fields to compute before setting up registry: %s",
-                env.all.tocompute, stack_info=True,
-            )
 
         # we must setup ir.model before adding manual fields because _add_manual_models may
         # depend on behavior that is implemented through overrides, such as is_mail_thread which
