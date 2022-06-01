@@ -666,3 +666,26 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
+
+    def test_no_date_closed_update_between_won_stages(self):
+        # Test for one won lead
+        stage_team1_won2 = self.env['crm.stage'].create({
+            'name': 'Won2',
+            'sequence': 75,
+            'team_id': self.sales_team_1.id,
+            'is_won': True,
+        })
+        won_lead = self.lead_team_1_won
+        date_closed = datetime.strptime('2020-02-02 15:00', '%Y-%m-%d %H:%M')
+        won_lead.date_closed = date_closed
+        with freeze_time('2020-02-02 18:00'):
+            won_lead.stage_id = stage_team1_won2
+        self.assertEqual(won_lead.date_closed, date_closed)
+
+        # Test for one won and one unwon lead
+        leads = won_lead + self.lead_1
+        self.assertFalse(self.lead_1.date_closed)
+        with freeze_time('2020-02-02 18:00'):
+            leads.stage_id = self.stage_team1_won
+        self.assertEqual(won_lead.date_closed, date_closed)
+        self.assertEqual(self.lead_1.date_closed, datetime.strptime('2020-02-02 18:00', '%Y-%m-%d %H:%M'))

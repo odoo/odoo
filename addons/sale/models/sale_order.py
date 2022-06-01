@@ -592,7 +592,7 @@ class SaleOrder(models.Model):
         self and self.activity_unlink(['sale.mail_act_sale_upsell'])
         for order in self:
             ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
-            order_ref = ref % (order._name, order.id, order.name)
+            order_ref = ref % (order._name, order.id or order._origin.id, order.name)
             customer_ref = ref % (order.partner_id._name, order.partner_id.id, order.partner_id.display_name)
             order.activity_schedule(
                 'sale.mail_act_sale_upsell',
