@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import format_date, formatLang
 
 
 class AccountPayment(models.Model):
@@ -202,17 +203,69 @@ class AccountPayment(models.Model):
             self.journal_id.outbound_payment_method_line_ids.payment_account_id,
         )
 
-    def _prepare_payment_display_name(self):
-        '''
-        Hook method for inherit
-        When you want to set a new name for payment, you can extend this method
-        '''
-        return {
-            'outbound-customer': _("Customer Reimbursement"),
-            'inbound-customer': _("Customer Payment"),
-            'outbound-supplier': _("Vendor Payment"),
-            'inbound-supplier': _("Vendor Reimbursement"),
+    def _get_aml_default_display_name_list(self):
+        """ Hook allowing custom values when constructing the default label to set on the journal items.
+
+        :return: A list of terms to concatenate all together. E.g.
+            [
+                ('label', "Vendor Reimbursement"),
+                ('sep', ' '),
+                ('amount', "$ 1,555.00"),
+                ('sep', ' - '),
+                ('date', "05/14/2020"),
+            ]
+        """
+        self.ensure_one()
+        display_map = {
+            ('outbound', 'customer'): _("Customer Reimbursement"),
+            ('inbound', 'customer'): _("Customer Payment"),
+            ('outbound', 'supplier'): _("Vendor Payment"),
+            ('inbound', 'supplier'): _("Vendor Reimbursement"),
         }
+        values = [
+            ('label', _("Internal Transfer") if self.is_internal_transfer else display_map[(self.payment_type, self.partner_type)]),
+            ('sep', ' '),
+            ('amount', formatLang(self.env, self.amount, currency_obj=self.currency_id)),
+        ]
+        if self.partner_id:
+            values += [
+                ('sep', ' - '),
+                ('partner', self.partner_id.display_name),
+            ]
+        values += [
+            ('sep', ' - '),
+            ('date', format_date(self.env, fields.Date.to_string(self.date))),
+        ]
+        return values
+
+    def _get_liquidity_aml_display_name_list(self):
+        """ Hook allowing custom values when constructing the label to set on the liquidity line.
+
+        :return: A list of terms to concatenate all together. E.g.
+            [('reference', "INV/2018/0001")]
+        """
+        self.ensure_one()
+        if self.is_internal_transfer:
+            if self.payment_type == 'inbound':
+                return [('transfer_to', _('Transfer to %s', self.journal_id.name))]
+            else: # payment.payment_type == 'outbound':
+                return [('transfer_from', _('Transfer from %s', self.journal_id.name))]
+        elif self.payment_reference:
+            return [('reference', self.payment_reference)]
+        else:
+            return self._get_aml_default_display_name_list()
+
+    def _get_counterpart_aml_display_name_list(self):
+        """ Hook allowing custom values when constructing the label to set on the counterpart line.
+
+        :return: A list of terms to concatenate all together. E.g.
+            [('reference', "INV/2018/0001")]
+        """
+        self.ensure_one()
+        if self.payment_reference:
+            return [('reference', self.payment_reference)]
+        else:
+            return self._get_aml_default_display_name_list()
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current payment.
@@ -259,30 +312,14 @@ class AccountPayment(models.Model):
         counterpart_balance = -liquidity_balance - write_off_balance
         currency_id = self.currency_id.id
 
-        if self.is_internal_transfer:
-            if self.payment_type == 'inbound':
-                liquidity_line_name = _('Transfer to %s', self.journal_id.name)
-            else: # payment.payment_type == 'outbound':
-                liquidity_line_name = _('Transfer from %s', self.journal_id.name)
-        else:
-            liquidity_line_name = self.payment_reference
-
         # Compute a default label to set on the journal items.
-
-        payment_display_name = self._prepare_payment_display_name()
-
-        default_line_name = self.env['account.move.line']._get_default_line_name(
-            _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
-            self.amount,
-            self.currency_id,
-            self.date,
-            partner=self.partner_id,
-        )
+        liquidity_line_name = ''.join(x[1] for x in self._get_liquidity_aml_display_name_list())
+        counterpart_line_name = ''.join(x[1] for x in self._get_counterpart_aml_display_name_list())
 
         line_vals_list = [
             # Liquidity line.
             {
-                'name': liquidity_line_name or default_line_name,
+                'name': liquidity_line_name,
                 'date_maturity': self.date,
                 'amount_currency': liquidity_amount_currency,
                 'currency_id': currency_id,
@@ -293,7 +330,7 @@ class AccountPayment(models.Model):
             },
             # Receivable / Payable.
             {
-                'name': self.payment_reference or default_line_name,
+                'name': counterpart_line_name,
                 'date_maturity': self.date,
                 'amount_currency': counterpart_amount_currency,
                 'currency_id': currency_id,
@@ -305,6 +342,7 @@ class AccountPayment(models.Model):
         ]
         if not self.currency_id.is_zero(write_off_amount_currency):
             # Write-off line.
+            default_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
             line_vals_list.append({
                 'name': write_off_line_vals.get('name') or default_line_name,
                 'amount_currency': write_off_amount_currency,
