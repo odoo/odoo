@@ -498,7 +498,7 @@
                                     attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                     optional="show"
                                 />
-                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"/>
+                                <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="float_update_lines"/>
                                 <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                 <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                 <field name="state" invisible="1"/>

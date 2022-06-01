@@ -6,13 +6,17 @@ odoo.define('sale.UpdateAllLinesMixin', function (require) {
             if (ev && ev.data.changes) {
                 const fieldName = Object.keys(ev.data.changes)[0];
                 const value = ev.data.changes[fieldName];
-                this.trigger_up(this._getUpdateAllLinesAction(), {fieldName: fieldName, value: value});
+                this.trigger_up(this._getUpdateAllLinesAction(), {fieldName: fieldName, value: value, fieldType: this._getFieldType()});
             }
             this._super.apply(this, arguments);
         },
         _getUpdateAllLinesAction: function () {
             return '';
         },
+        _getFieldType: function () {
+            return 'normal';
+        },
+
     };
     return UpdateAllLinesMixin;
 });

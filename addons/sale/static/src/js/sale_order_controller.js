@@ -4,6 +4,7 @@ odoo.define('sale.SaleOrderFormController', function (require) {
     const FormController = require('web.FormController');
     const Dialog = require('web.Dialog');
     const core = require('web.core');
+    const { sprintf } = require("web.utils");
     const _t = core._t;
 
     const SaleOrderFormController = FormController.extend({
@@ -23,10 +24,10 @@ odoo.define('sale.SaleOrderFormController', function (require) {
          *  (3) value is the same in all other sale order line
          */
         _onOpenUpdateAllWizard(ev) {
-            const orderLines = this._DialogReady(ev, 'normal');
+            const similarOrderLines = this._DialogReady(ev);
             const customValuesCommands = [];
             const confirmCallback = () => {
-                orderLines.slice(1).forEach((line) => {
+                similarOrderLines.slice(1).forEach((line) => {
                     customValuesCommands.push({
                         operation: "UPDATE",
                         id: line.id,
@@ -38,8 +39,8 @@ odoo.define('sale.SaleOrderFormController', function (require) {
                             changes: {order_line: {operation: "MULTI", commands: customValuesCommands}},
                 });
             };
-            if (orderLines) {
-                Dialog.confirm(this, _t("Do you want to apply this value to all order lines?"), {
+            if (similarOrderLines) {
+                Dialog.confirm(this, this._getWizardMessage(ev), {
                     buttons: [{
                                 text: _t('YES'),
                                 classes: 'btn-primary',
@@ -53,38 +54,52 @@ odoo.define('sale.SaleOrderFormController', function (require) {
             }
         },
 
-        _isEqualValue (type, fieldName, orderLines) {
-            let isEqualValue;
-            let secondValue = orderLines[1].data[fieldName];
-            if (type === 'normal') {
-                if (secondValue instanceof moment) {
-                    isEqualValue = orderLines.slice(1).every(line => secondValue.isSame(line.data[fieldName]));
-                } else {
-                    isEqualValue = orderLines.slice(1).every(line => line.data[fieldName] === secondValue);
-                }
-            } else if (type === 'one2many') {
-                // only works for display_name because we want to be able to apply different id with similar properties
-                if (secondValue.data && secondValue.data.display_name) {
-                    secondValue = secondValue.data.display_name;
-                    isEqualValue = orderLines.slice(1).every(line => line.data[fieldName].data && line.data[fieldName].data.display_name === secondValue);
-                } else {
-                    isEqualValue = orderLines.slice(1).every(line => line.data[fieldName] === secondValue);
-                }
+        _getWizardMessage (ev) {
+            const fieldString = ev.target.string;
+            const fieldType = ev.data.fieldType;
+            let currentValue, newValue;
+            if (fieldType === 'normal' || fieldType === 'date') {
+                currentValue = ev.target.recordData[ev.data.fieldName];
+                newValue = ev.data.value;
+            } else if (fieldType === 'one2many') {
+                currentValue = ev.target.recordData[ev.data.fieldName].data.display_name;
+                newValue = ev.data.value.display_name;
             }
-            return isEqualValue;
+            return sprintf(_t(`Do you want to apply this new %s (%s) to other order lines with the same %s (%s)?`),
+                            fieldString, newValue, fieldString, currentValue);
         },
 
-        _DialogReady (ev, type) {
+        _getEqualValue (type, fieldName, fieldValue, orderLines) {
+            let getEqualValue;
+            if (type === 'normal') {
+                getEqualValue = orderLines.filter(line => line.data[fieldName] === fieldValue);
+            } else if (type == 'date') {
+                getEqualValue = orderLines.filter(line => fieldValue.isSame(line.data[fieldName]));
+            } else if (type === 'one2many') {
+                // only works for display_name because we want to be able to apply different id with similar properties
+                if (fieldValue.data && fieldValue.data.display_name) {
+                    fieldValue = fieldValue.data.display_name;
+                    getEqualValue = orderLines.filter(line => line.data[fieldName].data && line.data[fieldName].data.display_name === fieldValue);
+                } else {
+                    getEqualValue = orderLines.filter(line => line.data[fieldName].res_id === fieldValue.res_id);
+                }
+            } else if (type === 'many2many') {
+                getEqualValue = orderLines.filter(line => (line.data[fieldName].res_ids.length == fieldValue.res_ids.length && line.data[fieldName].res_ids.every((val, index) => (val === fieldValue.res_ids[index]))));
+            }
+            return getEqualValue;
+        },
+
+        _DialogReady (ev) {
             const recordData = ev.target.recordData;
             const fieldName = ev.data.fieldName;
+            const fieldValue = recordData[fieldName];
+            const fieldType = ev.data.fieldType;
             const orderLines = this.renderer.state.data.order_line.data.filter(line => !line.data.display_type);
-            if (orderLines.length < 3) {
+            const similarOrderLines = this._getEqualValue(fieldType, fieldName, fieldValue, orderLines);
+            if (similarOrderLines && similarOrderLines.length < 3) {
                 return false;
             }
-            if (recordData.id === orderLines[0].data.id && this._isEqualValue(type, fieldName, orderLines)) {
-               return orderLines;
-            }
-            return false;
+            return similarOrderLines;
         },
 
     });
