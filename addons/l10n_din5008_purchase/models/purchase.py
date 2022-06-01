@@ -23,8 +23,10 @@ class PurchaseOrder(models.Model):
                 data.append((_("Purchase Representative"), record.user_id.name))
             if record.partner_ref:
                 data.append((_("Order Reference"), record.partner_ref))
-            if record.date_order:
-                data.append((_("Order Date"), format_date(self.env, record.date_order)))
+            if record.date_approve:
+                data.append((_("Order Date"), format_date(self.env, record.date_approve)))
+            elif record.date_order:
+                data.append((_("Order Deadline"), format_date(self.env, record.date_order)))
             if record.incoterm_id:
                 data.append((_("Incoterm"), record.incoterm_id.code))
 
