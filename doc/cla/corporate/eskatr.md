@@ -12,4 +12,8 @@ Levent Karakaş leventk@eskayazilim.com.tr https://github.com/eskatr
 
 List of contributors:
 
-Levent Karakaş leventk@eskayazilim.com.tr https://github.com/levkar
+Levent Karakaş levent@mektup.at https://github.com/levkar
+Levent Karakaş leventk@eskayazilim.com.tr https://github.com/lk-eska
+Özlem Atalay ozlema@eskayazilim.com.tr https://github.com/oa-eska
+Erdal Mutlu erdalm@eskayazilim.com.tr https://github.com/em-eska
+
