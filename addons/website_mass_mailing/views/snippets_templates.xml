@@ -100,26 +100,6 @@
 
 <!-- Extend default mass_mailing snippets with website feature -->
 
-<template id="s_mail_block_header_social" inherit_id="mass_mailing.s_mail_block_header_social">
-    <xpath expr="//td[hasclass('o_mail_logo_container')]" position="after">
-        <td width="30%" class="text-right o_mail_no_resize">
-            <div class="o_mail_header_social">
-                <t t-call="mass_mailing.social_links"/>
-            </div>
-        </td>
-    </xpath>
-</template>
-
-<template id="s_mail_block_header_text_social" inherit_id="mass_mailing.s_mail_block_header_text_social">
-    <xpath expr="//table//td" position="after">
-        <td width="30%" class="text-right o_mail_no_resize">
-            <div class="o_mail_header_social">
-                <t t-call="mass_mailing.social_links"/>
-            </div>
-        </td>
-    </xpath>
-</template>
-
 <template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
     <xpath expr="//td[hasclass('o_mail_footer_links')]" position="inside">
         <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
