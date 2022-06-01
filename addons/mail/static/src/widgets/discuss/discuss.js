@@ -120,6 +120,7 @@ export const DiscussWidget = AbstractAction.extend({
             'o-show-rainbow-man',
             this._showRainbowManEventListener
         );
+        this._lastPushStateActiveThread = null;
     },
 
     //--------------------------------------------------------------------------
