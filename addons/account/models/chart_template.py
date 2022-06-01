@@ -186,6 +186,7 @@ class AccountChartTemplate(models.AbstractModel):
         """
             Some of the data needs special pre_process before being fed to the database.
             e.g. the account codes' width must be standardized to the code_digits applied.
+            The fiscal country code must be put in place before taxes are generated.
         """
         xml_id = company.get_external_id()[company.id]
         currency_id = self.env.ref(data['res.company'][xml_id]['account_fiscal_country_id']).currency_id.id
