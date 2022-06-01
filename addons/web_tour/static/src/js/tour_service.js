@@ -185,7 +185,7 @@ return session.is_bound.then(function () {
                                 const iframeEl = findIframe(mutations);
                                 if (iframeEl) {
                                     iframeEl.addEventListener('load', () => {
-                                        observer.observe(iframeEl.contentDocument.body, observerOptions);
+                                        observer.observe(iframeEl.contentDocument, observerOptions);
                                     });
                                     // If the iframe was added without a src,
                                     // its load event was immediately fired and
