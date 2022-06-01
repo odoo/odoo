@@ -1014,80 +1014,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         diff_line = pos_session.move_id.line_ids.filtered(lambda line: line.name == 'Difference at closing PoS session')
         self.assertAlmostEqual(diff_line.credit, 5.0, msg="Missing amount of 5.0")
 
-    def test_order_and_ship_later(self):
-        """ In case the product is tracked and the "Ship Later" feature is enabled, this test ensures
-        that the lots defined on the POS order are the same that the ones on the SMLs of the associated
-        picking"""
-        self.env['stock.picking.type'].search([('code', '=', 'outgoing')]).write({
-            'use_create_lots': True,
-            'use_existing_lots': True,
-        })
-
-        tracked_product = self.env['product.product'].create({
-            'name': 'SuperProduct Tracked',
-            'type': 'product',
-            'tracking': 'lot',
-            'available_in_pos': True,
-        })
-
-        lot01, lot02 = self.env['stock.lot'].create([{
-            'name': name,
-            'product_id': tracked_product.id,
-            'company_id': self.env.company.id,
-        } for name in ['Lot01', 'Lot02']])
-        stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.env['stock.quant']._update_available_quantity(tracked_product, stock_location, 10, lot_id=lot01)
-        self.env['stock.quant']._update_available_quantity(tracked_product, stock_location, 10, lot_id=lot02)
-
-        self.pos_config.ship_later = True
-        self.pos_config.open_session_cb()
-
-        # Create a POS order with:
-        #   1 x Lot01
-        #   1 x Lot02
-        #   1 x Lot03 (-> nonexistent lot!)
-        pos_order = self.PosOrder.create({
-            'company_id': self.env.company.id,
-            'session_id': self.pos_config.current_session_id.id,
-            'pricelist_id': self.partner1.property_product_pricelist.id,
-            'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': tracked_product.id,
-                'price_unit': 5,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': [(6, 0, [])],
-                'price_subtotal': 5,
-                'price_subtotal_incl': 5,
-                'pack_lot_ids': [[0, 0, {'lot_name': lot_name}]],
-            }) for lot_name in [lot01.name, lot02.name, 'Lot03']],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 0,
-            'amount_return': 0,
-            'to_ship': True,
-        })
-
-        context_make_payment = {
-            "active_ids": [pos_order.id],
-            "active_id": pos_order.id,
-        }
-        pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 10,
-        })
-        pos_make_payment.with_context(active_id=pos_order.id).check()
-
-        picking = pos_order.picking_ids
-        picking_mls = picking.move_line_ids
-        lot01_ml = picking_mls.filtered(lambda ml: ml.lot_id == lot01)
-        lot02_ml = picking_mls.filtered(lambda ml: ml.lot_id == lot02)
-        lot03_ml = picking_mls - lot01_ml - lot02_ml
-        self.assertEqual(lot01_ml.reserved_qty, 1)
-        self.assertEqual(lot02_ml.reserved_qty, 1)
-        self.assertEqual(lot03_ml.reserved_qty, 1)
-        self.assertEqual(lot03_ml.lot_id.name, "Lot03")
-
     def test_order_multi_step_route(self):
         """ Test that orders in sessions with "Ship Later" enabled and "Specific Route" set to a
             multi-step (2/3) route can be validated. This config implies multiple picking types
@@ -1099,6 +1025,24 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'tracking': 'lot',
             'available_in_pos': True
         })
+        tracked_product_2 = self.env['product.product'].create({
+            'name': 'SuperProduct Tracked 2',
+            'type': 'product',
+            'tracking': 'lot',
+            'available_in_pos': True
+        })
+        tracked_product_2_lot = self.env['stock.lot'].create({
+            'name': '80085',
+            'product_id': tracked_product_2.id,
+            'company_id': self.env.company.id,
+        })
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': tracked_product_2.id,
+            'inventory_quantity': 1,
+            'location_id': stock_location.id,
+            'lot_id': tracked_product_2_lot.id
+        }).action_apply_inventory()
         warehouse_id = self.company_data['default_warehouse']
         warehouse_id.delivery_steps = 'pick_ship'
 
@@ -1122,6 +1066,20 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'qty': 1.0,
                 'price_subtotal': untax,
                 'price_subtotal_incl': untax + tax,
+                'pack_lot_ids': [
+                    [0, 0, {'lot_name': '80085'}],
+                ]
+            }),
+                (0, 0, {
+                    'name': "OL/0002",
+                    'product_id': tracked_product_2.id,
+                    'price_unit': 1.15,
+                    'qty': 1.0,
+                    'price_subtotal': untax,
+                    'price_subtotal_incl': untax + tax,
+                    'pack_lot_ids': [
+                        [0, 0, {'lot_name': '80085'}],
+                    ]
             })],
             'amount_tax': tax,
             'amount_total': untax+tax,
@@ -1139,9 +1097,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         context_payment = {'active_id': pos_order.id}
         pos_make_payment.with_context(context_payment).check()
-
         pickings = pos_order.picking_ids
-        picking_mls = pickings.move_line_ids
+        picking_mls_no_stock = pickings.move_line_ids.filtered(lambda l: l.product_id.id == tracked_product.id)
+        picking_mls_stock = pickings.move_line_ids.filtered(lambda l: l.product_id.id == tracked_product_2.id)
         self.assertEqual(pos_order.state, 'paid')
-        self.assertEqual(len(picking_mls), 2)
+        self.assertEqual(len(picking_mls_no_stock), 0)
+        self.assertEqual(len(picking_mls_stock), 1)
         self.assertEqual(len(pickings.picking_type_id), 2)
