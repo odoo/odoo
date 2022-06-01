@@ -23,6 +23,17 @@ class QueryTestCase(BaseCase):
             '"product_product", "product_template" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_product__user_id" ON ("product_product"."user_id" = "product_product__user_id"."id")')
         self.assertEqual(where_clause, "product_product.template_id = product_template.id")
 
+    def test_empty(self):
+        query = Query(None, 'a_table')
+        query.add_where('false')
+        query._result = []
+
+        self.assertFalse(query)
+        self.assertEqual(
+            query.select(),
+            ('SELECT "a_table".id FROM "a_table" WHERE false', [])
+        )
+
     def test_query_chained_explicit_joins(self):
         query = Query(None, 'product_product')
         query.add_table('product_template')

@@ -4499,14 +4499,19 @@ Fields:
 
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
-        :return: a list of record ids or an integer (if count is True)
+        :return: a lazy ``Query`` object or an integer (if count is True)
         """
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
         if expression.is_false(self, args):
             # optimization: no need to query, as no record satisfies the domain
-            return 0 if count else []
+            if count:
+                return 0
+            query = Query(self.env.cr, self._table, self._table_query)
+            query.add_where("false")
+            query._result = []
+            return query
 
         # the flush must be done before the _where_calc(), as the latter can do some selects
         self._flush_search(args, order=order)
