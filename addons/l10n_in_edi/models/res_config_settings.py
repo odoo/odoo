@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -17,3 +18,5 @@ class ResConfigSettings(models.TransientModel):
 
     def l10n_in_edi_test(self):
         self.env["account.edi.format"]._l10n_in_edi_authenticate(self.company_id)
+        if not self.company_id.sudo()._l10n_in_edi_token_is_valid():
+            raise UserError("Username/password are incorrect.")
