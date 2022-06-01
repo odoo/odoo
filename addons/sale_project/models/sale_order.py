@@ -17,6 +17,22 @@ class SaleOrder(models.Model):
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
+    milestone_count = fields.Integer(compute='_compute_milestone_count')
+    is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')
+
+    def _compute_milestone_count(self):
+        read_group = self.env['project.milestone']._read_group(
+            [('sale_line_id', 'in', self.order_line.ids)],
+            ['sale_line_id'],
+            ['sale_line_id'],
+        )
+        line_data = {res['sale_line_id'][0]: res['sale_line_id_count'] for res in read_group}
+        for order in self:
+            order.milestone_count = sum(line_data.get(line.id, 0) for line in order.order_line)
+
+    def _compute_is_product_milestone(self):
+        for order in self:
+            order.is_product_milestone = order.order_line.product_id.filtered(lambda p: p.service_policy == 'delivered_milestones')
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
@@ -110,6 +126,31 @@ class SaleOrder(models.Model):
         else:
             action['views'] = [(view_kanban_id, 'kanban'), (view_form_id, 'form')]
         return action
+
+    def action_view_milestone(self):
+        self.ensure_one()
+        default_project = self.project_ids and self.project_ids[0]
+        default_sale_line = default_project.sale_line_id or self.order_line and self.order_line[0]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Milestones'),
+            'domain': [('sale_line_id', 'in', self.order_line.ids)],
+            'res_model': 'project.milestone',
+            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'tree')],
+            'view_mode': 'tree',
+            'help': _("""
+                <p class="o_view_nocontent_smiling_face">
+                    No milestones found. Let's create one!
+                </p><p>
+                    Track major progress points that must be reached to achieve success.
+                </p>
+            """),
+            'context': {
+                **self.env.context,
+                'default_project_id' : default_project.id,
+                'default_sale_line_id' : default_sale_line.id,
+            }
+        }
 
     def write(self, values):
         if 'state' in values and values['state'] == 'cancel':
