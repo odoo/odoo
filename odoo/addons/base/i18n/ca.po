@@ -21,6 +21,7 @@
 # Jonatan Gk, 2022
 # marcescu, 2022
 # eriiikgt, 2022
+# oscaryuu, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: eriiikgt, 2022\n"
+"Last-Translator: oscaryuu, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6747,6 +6748,16 @@ msgid ""
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgments for any event registration\n"
 msgstr ""
+"\n"
+"Organització i gestió d'esdeveniments.\n"
+"======================================\n"
+"\n"
+"El mòdul d'esdeveniments li permet organitzar eficaçment els esdeveniments i totes les tasques relacionades: planificació, seguiment de les inscripcions assistència, etc.\n"
+"\n"
+"Característiques clau\n"
+"------------\n"
+"* Gestioni els seus esdeveniments i inscripcions\n"
+"* Utilitzi els correus electrònics per a confirmar i enviar automàticament els justificants de recepció de qualsevol inscripció a un esdeveniment\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -8228,6 +8239,11 @@ msgid ""
 "    - a generic chart of accounts\n"
 "    - SARS VAT Ready Structure"
 msgstr ""
+"\n"
+"Aquesta és l'última localització bàsica sud-africana necessària per a executar Odoo en ZA:\n"
+"================================================================================\n"
+"    - un pla de comptes genèric\n"
+"    - Estructura preparada per a l'IVA del SARS"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -8240,6 +8256,13 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest és el mòdul per a gestionar el Quadre Comptable, l'estructura de l'IVA, la Posició Fiscal i l'Assignació d'Impostos.\n"
+"En odoo també es pot afegir el número de registre per a Romania.\n"
+"================================================================================================================\n"
+"\n"
+"Gràfic comptable i localització romanès.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -8272,6 +8295,31 @@ msgid ""
 "position.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest és el mòdul per a gestionar el quadre comptable canadenc en Odoo.\n"
+"===========================================================================================\n"
+"\n"
+"Quadres comptables i localitzacions canadenques.\n"
+"\n"
+"Posicions fiscals\n"
+"----------------\n"
+"\n"
+"A l'hora de considerar els impostos a aplicar, l'important és la província on es produeix el lliurament.\n"
+"Per tant, decidim aplicar el cas més comú en les posicions fiscals: el lliurament és responsabilitat del proveïdor i es realitza en la ubicació del client.\n"
+"\n"
+"Alguns exemples:\n"
+"\n"
+"1) Tens un client d'una altra província i lliuraments en la seva localitat.\n"
+"En el client, fixa la posició fiscal a la seva província.\n"
+"\n"
+"2) Vostè té un client d'una altra província. No obstant això, aquest client arriba a la seva localitat amb el seu camió per a recollir els productes. En el client, no s'estableix cap posició fiscal.\n"
+"\n"
+"3) Un venedor internacional no et cobra cap impost. Els impostos es cobren en la duana\n"
+"per l'agent de duanes. En el proveïdor, estableixi la posició fiscal en Internacional.\n"
+"\n"
+"4) Un venedor internacional li cobra el seu impost provincial. Estan registrats en el seu\n"
+"posicion.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -8297,6 +8345,10 @@ msgid ""
 "======================================================================\n"
 "This module applies to companies based in Algeria.\n"
 msgstr ""
+"\n"
+"Aquest és el mòdul per a gestionar el quadre comptable d'Algèria en Odoo.\n"
+"======================================================================\n"
+"Aquest mòdul s'aplica a les empreses establertes a Algèria.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -8323,6 +8375,27 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Aquest és el mòdul per a gestionar el quadre comptable de França en Odoo.\n"
+"========================================================================\n"
+"\n"
+"Aquest mòdul s'aplica a les empreses amb seu a França continental. No s'aplica\n"
+"empreses amb seu en els DOM-TOM (Guadalupe, Martinica, Guyana, Reunió, Mayotte).\n"
+"\n"
+"Aquest mòdul de localització crea els impostos de l'IVA del tipus \"imposat inclòs\" per a les compres\n"
+"(es requereix especialment quan s'utilitza el mòdul 'hr_*expense'). Tingui en compte que aquests\n"
+"\"impost inclòs\" Els impostos de l'IVA no són gestionats per les posicions fiscals previstes en aquests\n"
+"(perquè és complex gestionar tant els \"impostos exclosos\" com els \"impostos inclosos\")\n"
+"escenaris en les posicions fiscals).\n"
+"Aquest mòdul de localització no maneja adequadament l'escenari quan un\n"
+" \n"
+"empresa ven serveis a una empresa amb seu en els DG. Podríem gestionar-ho en el\n"
+"posicions fiscals, però exigiria diferenciar entre els impostos sobre l'IVA dels \"productes\n"
+"i els impostos sobre l'IVA dels \"serveis\". Considerem que és massa \"pesat\" tenir-ho per defecte\n"
+"en l10n_*fr; les empreses que venen serveis a empreses basades en DOM han d'actualitzar el\n"
+"configuració dels seus impostos i posicions fiscals de manera manual.\n"
+"\n"
+"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion y Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -8337,6 +8410,15 @@ msgid ""
 "\n"
 "Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 msgstr ""
+"\n"
+"Aquest és el mòdul per a gestionar el quadre comptable de Mongòlia.\n"
+"===============================================================\n"
+"\n"
+"    * el Plan Contable Oficial de Mongolia,\n"
+"    * el quadre del codi fiscal de Mongolia\n"
+"    * els principals impostos utilitzats a Mongòlia\n"
+"\n"
+"Contribuent de requisits financers: Baskhuu Lodoikhuu. BumanIT LLC\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -8352,6 +8434,16 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+"Aquest és el mòdul per a gestionar el quadre comptable de Vietnam en Odoo.\n"
+"=========================================================================\n"
+"\n"
+"Aquest mòdul s'aplica a les empreses amb seu en la norma comptable vietnamita (VAS)\n"
+"amb el pla de comptes segons la Circular núm. 200/2014/TT-*BTC\n"
+"\n"
+"**Credits:**\n"
+"    - Solucions generals.\n"
+"    - Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -8375,6 +8467,9 @@ msgid ""
 "This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix un bloc de construcció de desplaçament de Twitter al constructor de llocs web, perquè pugui mostrar els feeds de Twitter en qualsevol pàgina del seu lloc web.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -8387,6 +8482,13 @@ msgid ""
 "Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix una eina de comparació a la seva botiga de comerç electrònic, perquè els seus compradors puguin comparar fàcilment els productes en funció dels seus atributs. Accelerarà considerablement la seva decisió de compra.\n"
+"\n"
+"Per a configurar els atributs del producte, activi Atributs i Variants* en la configuració del lloc web. Això afegirà una secció dedicada en el formulari del producte. En la configuració, aquest mòdul afegeix un camp de categoria als atributs del producte per a estructurar la taula de comparació del comprador.\n"
+"\n"
+"Finalment, el mòdul inclou una opció per a mostrar una taula de resum d'atributs en les pàgines web dels productes (disponible en el menú Personalitzar).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_dashboard
@@ -8397,6 +8499,11 @@ msgid ""
 "It also provides new tools to analyse your data.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix una nova vista de panell en l'aplicació del lloc web.\n"
+"Aquest nou tipus de vista conté algunes estadístiques bàsiques, un gràfic i una subvista pivotant que li permeten obtenir una visió general ràpida de les seves vendes en línia. \n"
+"També proporciona noves eines per a analitzar les seves dades.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting_crm
@@ -8408,6 +8515,12 @@ msgid ""
 "This shortcut allows you to generate a rental order based on the selected case.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo añade un acceso directo a uno o varios casos de oportunidad en el CRM.\n"
+"===========================================================================\n"
+"\n"
+"Aquest accés directe li permet generar una ordre de lloguer basada en el cas seleccionat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -8424,6 +8537,17 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix un accés directe a un o diversos casos d'oportunitat en el CRM.\n"
+"===========================================================================\n"
+"\n"
+"Aquest accés directe li permet generar una comanda de venda basat en el cas seleccionat.\n"
+"Si hi ha diferents casos oberts (una llista), genera una comanda de venda per cas.\n"
+"El cas es tanca i es vincula a la comanda de venda generat.\n"
+"\n"
+"Li suggerim que instal·li aquest mòdul, si ha instal·lat tant la venda com el crm\n"
+"mòduls\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_test
@@ -8432,6 +8556,9 @@ msgid ""
 "This module adds a simple payment acquirer allowing to make test payments.\n"
 "It should never be used in production environment. Make sure to disable it before going live.\n"
 msgstr ""
+"\n"
+"Aquest mòdul afegeix un senzill adquirent de pagaments que permet realitzar pagaments de prova.\n"
+"Mai ha d'utilitzar-se en un entorn de producció. Asseguri's de desactivar-lo abans de posar-ho en marxa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_survey
@@ -8440,6 +8567,9 @@ msgid ""
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix una integració amb Survey per a demanar feedback a qualsevol empleat, basat en una enquesta a emplenar.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale_product_configurator
@@ -8447,6 +8577,8 @@ msgid ""
 "\n"
 "This module adds features depending on both modules.\n"
 msgstr ""
+"\n"
+"Aquest mòdul afegeix funcions que depenen de tots dos mòduls.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_proxy_client
@@ -8460,6 +8592,14 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix característiques genèriques per a registrar una base de dades de Odoo en el proxy responsable de la recepció de dades (a través de sol·licituds de serveis web).\n"
+"- Un edi_*proxy_*user té una identificació única en un format específic (per exemple, la cuba per a Peppol) que\n"
+"permet identificar-ho en rebre un document dirigit a ell. Està vinculat a una empresa concreta en un\n"
+"Odoo base de dades.\n"
+"- Les funcions de xifratge permeten desxifrar totes les dades de l'usuari en rebre'ls del proxy.\n"
+"- L'autenticació ofereix un nivell addicional de seguretat per a evitar la suplantació d'identitat, en cas que algú accedeixi a la base de dades de l'usuari.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -8474,6 +8614,14 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Este módulo añade el código base necesario para un portal de clientes totalmente integrado. Contiene la clase de controlador base y las plantillas base. Los complementos de negocio añadirán sus plantillas y controladores específicos para ampliar el portal de\n"
+"de clientes.\n"
+"\n"
+"\n"
+"Aquest mòdul conté la major part del codi procedent de odoo v10 website_portal. Propòsit\n"
+"d'aquest mòdul és permetre la visualització d'un portal de clients sense tenir\n"
+"una dependència cap a les capacitats d'edició i personalització del lloc web."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -8484,6 +8632,11 @@ msgid ""
 "the registration is confirmed.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix suport per a l'escaneig de codis de barres al sistema de gestió d'esdeveniments.\n"
+"Es genera un codi de barres per a cada assistent i s'imprimeix en la targeta. Quan s'escaneja,\n"
+"el registre està confirmat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -8510,6 +8663,10 @@ msgid ""
 "==================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix l'opció de transferència per lots en la gestió de magatzems\n"
+"==================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant_check_printing
@@ -8519,6 +8676,10 @@ msgid ""
 "widget.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix la possibilitat de filtrar per número de xec en la conciliació\n"
+"widget.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -8545,6 +8706,10 @@ msgid ""
 "The actual till still requires one user but an unlimited number of employees can log on to that till and process sales.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet als empleats (i no als usuaris) accedir a l'aplicació de Punt de Venda utilitzant un codi de barres, un número PIN o tots dos.\n"
+"La caixa real continua necessitant un usuari, però un nombre il·limitat d'empleats pot connectar-se a aquesta caixa i processar les vendes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr_l10n_be
@@ -8553,6 +8718,9 @@ msgid ""
 "This module allows Employees (and not users) to log in to the Point of Sale application using the fiscal data module\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet als empleats (i no als usuaris) accedir a l'aplicació de Punt de Venda utilitzant el mòdul de dades fiscals\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -8570,6 +8738,9 @@ msgid ""
 "This module allows ecommerce users to enter their UPS account number and delivery fees will be charged on that account number.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet als usuaris de comerç electrònic introduir el seu número de compte UPS i les despeses d'enviament es carregaran en aquest número de compte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_real_estates
@@ -8578,6 +8749,9 @@ msgid ""
 "This module allows the user to add real estate related data to the Spanish localization and generates a mod 347 report.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet a l'usuari afegir dades relacionades amb el sector immobiliari a la localització espanyola i genera un informe mod 347.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_commission
@@ -8586,6 +8760,9 @@ msgid ""
 "This module allows to configure commissions for resellers.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet configurar les comissions per als revenedors.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -8601,6 +8778,15 @@ msgid ""
 "trigger an automatic reminder email.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet implementar regles d'acció per a qualsevol objecte.\n"
+"============================================================\n"
+"\n"
+"Utilitzi les accions automatitzades per a desencadenar automàticament accions per a diverses pantalles.\n"
+"**Exemple:** Un lead creat per un usuari específic pot ser automàticament fixat a un\n"
+"Equip de vendes, o una oportunitat que encara té l'estat pendent després de 14 dies podria\n"
+"activar un correu electrònic de recordatori automàtic.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_check_printing
@@ -8623,6 +8809,23 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet imprimir els seus pagaments en paper de xec preimprès.\n"
+"pot configurar la sortida (disseny, informació dels talons, etc.) en la configuració de l'empresa, i gestionar el\n"
+"numeració dels xecs (si utilitza xecs preimpresos sense números) en la configuració del diari.\n"
+"\n"
+"Formats admesos\n"
+"-----------------\n"
+"Aquest mòdul és compatible amb els tres formats de xecs més comuns i funcionarà de manera immediata amb els xecs vinculats de checkdepot.net.\n"
+"\n"
+"Veure tots els xecs en: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"Pot triar entre:\n"
+"\n"
+"- Comprova en la part superior: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Comprovació en el centre: Estàndard Peachtree (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
+"- Marca en la part inferior: Norma ADP (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -8640,6 +8843,18 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul permet imprimir els seus pagaments en xecs preimpresos.\n"
+"Pot configurar la sortida (disseny, talons, format de paper, etc.) en la configuració de l'empresa, i gestionar el\n"
+"numeració dels xecs (si utilitza xecs preimpresos sense números) en la configuració del diari.\n"
+"Segons l'Associació Canadenca de Pagaments (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Formats admesos\n"
+"-----------------\n"
+"- Comprovació en la part superior : Quicken / QuickBooks estàndard\n"
+"- Comprovació en el centre: Estàndard Peachtree\n"
+"- Marca en la part inferior: Norma ADP\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
