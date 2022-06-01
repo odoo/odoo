@@ -1097,6 +1097,17 @@ class HrExpenseSheet(models.Model):
     # Mail Thread
     # --------------------------------------------
 
+    def _get_mail_thread_data_attachments(self):
+        """
+        In order to see in the sheet attachment preview the corresponding
+        expenses' attachments, the latter attachments are added to the fetched data for the sheet record.
+        """
+        self.ensure_one()
+        res = super()._get_mail_thread_data_attachments()
+        expense_ids = self.expense_line_ids
+        expense_attachments = self.env['ir.attachment'].search([('res_id', 'in', expense_ids.ids), ('res_model', '=', 'hr.expense')], order='id desc')
+        return res | expense_attachments
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
