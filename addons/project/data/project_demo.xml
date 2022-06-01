@@ -7,6 +7,15 @@
             <field name="groups_id" eval="[Command.link(ref('group_project_user'))]"/>
         </record>
 
+        <!-- Groups : Add milestones feature by default -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[Command.link(ref('group_project_milestone'))]"/>
+        </record>
+        <!-- The feature is also enabled to portal user because the feature is displayed in the Project Sharing feature -->
+        <record id="base.group_portal" model="res.groups">
+            <field name="implied_ids" eval="[Command.link(ref('group_project_milestone'))]"/>
+        </record>
+
         <!-- Categories -->
         <record id="project_tags_00" model="project.tags">
             <field name="name">Bug</field>
@@ -204,6 +213,27 @@
             <field name="user_id" ref="base.user_demo"/>
         </record>
 
+        <!-- Project 1 Milestones -->
+        <record id="project_1_milestone_1" model="project.milestone">
+            <field name="is_reached" eval="True"/>
+            <field name="deadline" eval="time.strftime('%Y-%m-10')"/>
+            <field name="name">First Phase</field>
+            <field name="reached_date" eval="time.strftime('%Y-%m-10')"/>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+        <record id="project_1_milestone_2" model="project.milestone">
+            <field name="is_reached" eval="False"/>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(years=1)).strftime('%Y-%m-15')"/>
+            <field name="name">Second Phase</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+        <record id="project_1_milestone_3" model="project.milestone">
+            <field name="is_reached" eval="False"/>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(years=2)).strftime('%Y-%m-%d')"/>
+            <field name="name">Final Phase</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
         <!-- Project 1 Tasks -->
         <record id="project_1_task_1" model="project.task">
             <field name="sequence">20</field>
@@ -214,6 +244,7 @@
             <field name="stage_id" ref="project_stage_2"/>
             <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_1" />
         </record>
 
         <record id="project_1_task_2" model="project.task">
@@ -224,6 +255,7 @@
             <field name="name">Lunch Room: kitchen</field>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_1" />
         </record>
         <record id="project_1_task_2_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -273,6 +305,7 @@
             <field name="stage_id" ref="project_stage_2"/>
             <field name="color">4</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_2" />
         </record>
         <record id="project_1_task_3_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -322,6 +355,7 @@
             <field name="description">Modifications to the kitchen of the lunch room</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_00')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_2" />
         </record>
         <record id="project_1_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -371,6 +405,7 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=2)"/>
             <field name="color">1</field>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
         </record>
         <record id="project_1_task_5_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -413,6 +448,7 @@
             <field name="tag_ids" eval="[Command.set([ref('project_tags_01')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="color">11</field>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
         </record>
         <record id="project_1_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -452,6 +488,7 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
             <field name="color">9</field>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
         </record>
         <record id="project_1_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -485,6 +522,7 @@
             <field name="kanban_state">blocked</field>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_01')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
         </record>
         <record id="project_1_task_8_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -533,6 +571,7 @@
             <field name="stage_id" ref="project_stage_1"/>
             <field name="color">3</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
         </record>
         <record id="project_1_task_9_activity_1" model="mail.activity">
             <field name="res_id" ref="project_1_task_9"/>
@@ -581,6 +620,7 @@
             <field name="recurring_task" eval="True"/>
             <field name="recurrence_id" ref="project_task_recurrence_1"/>
             <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
         </record>
         <record id="project_1_task_11" model="project.task">
             <field name="sequence">20</field>
@@ -1275,26 +1315,6 @@ Send it ASAP, its urgent.</field>
         <!-- add the email template as value for the project stage 2 -->
         <record id="project.project_stage_2" model="project.task.type">
             <field name="rating_template_id" ref="rating_project_request_email_template"/>
-        </record>
-
-        <record id="project_milestone_1" model="project.milestone">
-            <field name="is_reached" eval="True"/>
-            <field name="deadline" eval="time.strftime('%Y-%m-10')"/>
-            <field name="name">First Phase</field>
-            <field name="reached_date" eval="time.strftime('%Y-%m-10')"/>
-            <field name="project_id" ref="project.project_project_1"/>
-        </record>
-        <record id="project_milestone_2" model="project.milestone">
-            <field name="is_reached" eval="False"/>
-            <field name="deadline" eval="(DateTime.now() + relativedelta(years=1)).strftime('%Y-%m-15')"/>
-            <field name="name">Second Phase</field>
-            <field name="project_id" ref="project.project_project_1"/>
-        </record>
-        <record id="project_milestone_3" model="project.milestone">
-            <field name="is_reached" eval="False"/>
-            <field name="deadline" eval="(DateTime.now() + relativedelta(years=2)).strftime('%Y-%m-%d')"/>
-            <field name="name">Final Phase</field>
-            <field name="project_id" ref="project.project_project_1"/>
         </record>
 
         <record id="project_update_1" model="project.update" context="{'default_project_id': ref('project.project_project_1')}">

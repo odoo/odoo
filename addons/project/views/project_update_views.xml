@@ -119,35 +119,4 @@
         </field>
     </record>
 
-    <record id="project_milestone_view_form" model="ir.ui.view">
-        <field name="name">project.milestone.view.form</field>
-        <field name="model">project.milestone</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <group name="main_details">
-                            <field name="project_id" invisible="1"/>
-                            <field name="name" placeholder="e.g. Product Launch"/>
-                            <field name="deadline"/>
-                            <field name="is_reached"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="project_milestone_view_tree" model="ir.ui.view">
-        <field name="name">project.milestone.view.tree</field>
-        <field name="model">project.milestone</field>
-        <field name="arch" type="xml">
-            <tree decoration-danger="is_deadline_exceeded" decoration-muted="is_reached" editable="bottom">
-                <field name="name"/>
-                <field name="deadline" optional="show"/>
-                <field name="is_reached" optional="show"/>
-                <field name="is_deadline_exceeded" invisible="1"/>
-            </tree>
-        </field>
-    </record>
 </odoo>

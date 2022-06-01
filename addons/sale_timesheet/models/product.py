@@ -6,16 +6,15 @@ import threading
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.sale_project.models.product import SERVICE_POLICY
-
-SERVICE_POLICY = [policy[:1] for policy in SERVICE_POLICY]
-SERVICE_POLICY.insert(1, ('delivered_timesheet', 'Based on Timesheets'))
-
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    service_policy = fields.Selection(selection_add=SERVICE_POLICY)
+    def _selection_service_policy(self):
+        service_policies = super()._selection_service_policy()
+        service_policies.insert(1, ('delivered_timesheet', 'Based on Timesheets'))
+        return service_policies
+
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ], ondelete={'timesheet': 'set manual'})

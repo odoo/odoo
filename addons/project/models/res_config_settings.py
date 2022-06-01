@@ -14,6 +14,7 @@ class ResConfigSettings(models.TransientModel):
     group_project_stages = fields.Boolean("Project Stages", implied_group="project.group_project_stages")
     group_project_recurring_tasks = fields.Boolean("Recurring Tasks", implied_group="project.group_project_recurring_tasks")
     group_project_task_dependencies = fields.Boolean("Task Dependencies", implied_group="project.group_project_task_dependencies")
+    group_project_milestone = fields.Boolean('Milestones', implied_group='project.group_project_milestone', group='base.group_portal,base.group_user')
     rating_status = fields.Selection(
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodic rating')
@@ -41,6 +42,7 @@ class ResConfigSettings(models.TransientModel):
         basic_project_features = {
             "group_subtask_project": "allow_subtasks",
             "group_project_task_dependencies": "allow_task_dependencies",
+            'group_project_milestone': 'allow_milestones',
         }
         config_feature_vals = {config_flag: self[config_flag]
                                for config_flag in global_features.keys() | basic_project_features.keys()}

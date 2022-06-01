@@ -197,8 +197,9 @@
     </t>
 
     <t t-name="project.MilestoneSection" owl="1">
+        <t t-set="show_milestones" t-value="state.data.hasOwnProperty('milestones')"/>
         <t t-set="milestones" t-value="state.data.milestones"/>
-        <div class="o_rightpanel_section" name="milestone">
+        <div class="o_rightpanel_section" name="milestone" t-if="show_milestones">
             <div class="o_rightpanel_header">
                 <div class="o_rightpanel_title o_cursor_default">
                     Milestones

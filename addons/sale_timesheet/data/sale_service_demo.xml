@@ -111,7 +111,7 @@
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
-            <field name="service_policy">delivered_milestones</field>
+            <field name="service_type">milestones</field>
             <field name="service_tracking">no</field>
         </record>
 
@@ -258,6 +258,11 @@
         </record>
 
         <!-- AGR Milestones -->
+        <record id="agr_milestone_0" model="project.milestone">
+            <field name="name">Preparation and Delivery Phase</field>
+            <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
+            <field name="deadline" eval="(datetime.now() + relativedelta(weekday=0, weeks=-1)).strftime('%Y-%m-%d')"/>
+        </record>
         <record id="agr_milestone_1" model="project.milestone">
             <field name="name">Cabinets</field>
             <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -291,6 +296,7 @@
             <field name="name">Kitchen Assembly</field>
             <field name="sale_line_id" ref="sale_line_12"/>
             <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
+            <field name="milestone_id" ref="agr_milestone_1" />
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
         </record>
 
@@ -814,6 +820,7 @@
             <field name="stage_id" ref="project.project_stage_2"/>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="milestone_id" ref="sale_timesheet.agr_milestone_0" />
         </record>
 
         <record id="project_agr_task_3" model="project.task">
@@ -824,6 +831,7 @@
             <field name="stage_id" ref="project.project_stage_1"/>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="milestone_id" ref="sale_timesheet.agr_milestone_0" />
         </record>
 
         <record id="project_agr_task_4" model="project.task">
@@ -835,6 +843,7 @@
             <field name="sale_order_id" ref="sale_timesheet.sale_order_1"/>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="milestone_id" ref="sale_timesheet.agr_milestone_0" />
         </record>
 
         <!-- SO2 project tasks -->

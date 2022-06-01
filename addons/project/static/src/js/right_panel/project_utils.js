@@ -67,8 +67,8 @@ export class OpenMilestone extends MilestoneComponent {
         this.rpc = useService("rpc");
         this.milestone = useState(this.props.milestone);
         this.state = useState({
-            colorClass: this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "",
-            checkboxIcon: this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o",
+            colorClass: this._getColorClass(),
+            checkboxIcon: this._getCheckBoxIcon(),
         });
         onWillUpdateProps(this.onWillUpdateProps);
     }
@@ -77,11 +77,19 @@ export class OpenMilestone extends MilestoneComponent {
         return fieldUtils.format.date(moment(this.milestone.deadline));
     }
 
+    _getColorClass() {
+        return this.milestone.is_deadline_exceeded && !this.milestone.can_be_marked_as_done ? "o_milestone_danger" : this.milestone.can_be_marked_as_done ? "o_color_green" : "";
+    }
+
+    _getCheckBoxIcon() {
+        return this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
+    }
+
     onWillUpdateProps(nextProps) {
         if (nextProps.milestone) {
             this.milestone = nextProps.milestone;
-            this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
+            this.state.colorClass = this._getColorClass();
+            this.state.checkboxIcon = this._getCheckBoxIcon();
         }
         if (nextProps.context) {
             this.contextValue = nextProps.context;
@@ -120,8 +128,8 @@ export class OpenMilestone extends MilestoneComponent {
                 method: 'toggle_is_reached',
                 args: [[this.milestone.id], !this.milestone.is_reached],
             });
-            this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-            this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
+            this.state.colorClass = this._getColorClass();
+            this.state.checkboxIcon = this._getCheckBoxIcon();
             this.write_mutex = false;
         }
     }

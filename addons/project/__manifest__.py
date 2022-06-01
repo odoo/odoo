@@ -36,6 +36,7 @@
         'views/project_collaborator_views.xml',
         'wizard/project_report_wizard_views.xml',
         'views/project_views.xml',
+        'views/project_milestone_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_activity_views.xml',
@@ -49,6 +50,7 @@
         'data/project_data.xml',
         'wizard/project_delete_wizard_views.xml',
         'wizard/project_task_type_delete_views.xml',
+        'wizard/project_milestone_reach_wizard.xml',
     ],
     'demo': [
         'data/mail_template_demo.xml',
