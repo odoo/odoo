@@ -177,7 +177,8 @@ class AccountChartTemplate(models.AbstractModel):
         )
         # Set the currency to the fiscal country's currency
         vals = {key: val for key, val in template_data.items() if filter_properties(key)}
-        vals['currency_id'] = currency_id
+        if template_code != self.get_default_chart_template_code():
+            vals['currency_id'] = currency_id
 
         # This write method is important because it's overridden and has additional triggers
         company.write(vals)
