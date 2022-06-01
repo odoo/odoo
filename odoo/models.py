@@ -3760,74 +3760,77 @@ class BaseModel(metaclass=MetaModel):
             if func._ondelete or not self._context.get(MODULE_UNINSTALL_FLAG):
                 func(self)
 
-        # mark fields that depend on 'self' to recompute them after 'self' has
-        # been deleted (like updating a sum of lines after deleting one line)
+        # TOFIX: this avoids an infinite loop when trying to recompute a
+        # field, which triggers the recomputation of another field using the
+        # same compute function, which then triggers again the computation
+        # of those two fields
+        for field in self._fields.values():
+            self.env.remove_to_compute(field, self)
+
         self.env.flush_all()
-        self.modified(self._fields, before=True)
 
-        with self.env.norecompute():
-            cr = self._cr
-            Data = self.env['ir.model.data'].sudo().with_context({})
-            Defaults = self.env['ir.default'].sudo()
-            Property = self.env['ir.property'].sudo()
-            Attachment = self.env['ir.attachment'].sudo()
-            ir_model_data_unlink = Data
-            ir_attachment_unlink = Attachment
+        cr = self._cr
+        Data = self.env['ir.model.data'].sudo().with_context({})
+        Defaults = self.env['ir.default'].sudo()
+        Property = self.env['ir.property'].sudo()
+        Attachment = self.env['ir.attachment'].sudo()
+        ir_property_unlink = Property
+        ir_model_data_unlink = Data
+        ir_attachment_unlink = Attachment
 
-            # TOFIX: this avoids an infinite loop when trying to recompute a
-            # field, which triggers the recomputation of another field using the
-            # same compute function, which then triggers again the computation
-            # of those two fields
-            for field in self._fields.values():
-                self.env.remove_to_compute(field, self)
+        for sub_ids in cr.split_for_in_conditions(self.ids):
+            records = self.browse(sub_ids)
 
-            for sub_ids in cr.split_for_in_conditions(self.ids):
-                # Check if the records are used as default properties.
-                refs = ['%s,%s' % (self._name, i) for i in sub_ids]
-                if Property.search([('res_id', '=', False), ('value_reference', 'in', refs)], limit=1):
-                    raise UserError(_('Unable to delete this document because it is used as a default property'))
+            # Check if the records are used as default properties.
+            refs = [f'{self._name},{id_}' for id_ in sub_ids]
+            if Property.search([('res_id', '=', False), ('value_reference', 'in', refs)], limit=1):
+                raise UserError(_('Unable to delete this document because it is used as a default property'))
 
-                # Delete the records' properties.
-                Property.search([('res_id', 'in', refs)]).unlink()
+            # Delete the records' properties.
+            ir_property_unlink |= Property.search([('res_id', 'in', refs)])
 
-                query = "DELETE FROM %s WHERE id IN %%s" % self._table
-                cr.execute(query, (sub_ids,))
+            # mark fields that depend on 'self' to recompute them after 'self' has
+            # been deleted (like updating a sum of lines after deleting one line)
+            with self.env.protecting(self._fields.values(), records):
+                self.modified(self._fields, before=True)
 
-                # Removing the ir_model_data reference if the record being deleted
-                # is a record created by xml/csv file, as these are not connected
-                # with real database foreign keys, and would be dangling references.
-                #
-                # Note: the following steps are performed as superuser to avoid
-                # access rights restrictions, and with no context to avoid possible
-                # side-effects during admin calls.
-                data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
-                if data:
-                    ir_model_data_unlink |= data
+            query = f'DELETE FROM "{self._table}" WHERE id IN %s'
+            cr.execute(query, (sub_ids,))
 
-                # For the same reason, remove the defaults having some of the
-                # records as value
-                Defaults.discard_records(self.browse(sub_ids))
+            # Removing the ir_model_data reference if the record being deleted
+            # is a record created by xml/csv file, as these are not connected
+            # with real database foreign keys, and would be dangling references.
+            #
+            # Note: the following steps are performed as superuser to avoid
+            # access rights restrictions, and with no context to avoid possible
+            # side-effects during admin calls.
+            data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
+            ir_model_data_unlink |= data
 
-                # For the same reason, remove the relevant records in ir_attachment
-                # (the search is performed with sql as the search method of
-                # ir_attachment is overridden to hide attachments of deleted
-                # records)
-                query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
-                cr.execute(query, (self._name, sub_ids))
-                attachments = Attachment.browse([row[0] for row in cr.fetchall()])
-                if attachments:
-                    ir_attachment_unlink |= attachments.sudo()
+            # For the same reason, remove the defaults having some of the
+            # records as value
+            Defaults.discard_records(records)
 
-            # invalidate the *whole* cache, since the orm does not handle all
-            # changes made in the database, like cascading delete!
-            self.env.invalidate_all()
-            if ir_model_data_unlink:
-                ir_model_data_unlink.unlink()
-            if ir_attachment_unlink:
-                ir_attachment_unlink.unlink()
-            # DLE P93: flush after the unlink, for recompute fields depending on
-            # the modified of the unlink
-            self.env.flush_all()
+            # For the same reason, remove the relevant records in ir_attachment
+            # (the search is performed with sql as the search method of
+            # ir_attachment is overridden to hide attachments of deleted
+            # records)
+            query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
+            cr.execute(query, (self._name, sub_ids))
+            ir_attachment_unlink |= Attachment.browse(row[0] for row in cr.fetchall())
+
+        # invalidate the *whole* cache, since the orm does not handle all
+        # changes made in the database, like cascading delete!
+        self.env.invalidate_all(flush=False)
+        if ir_property_unlink:
+            ir_property_unlink.unlink()
+        if ir_model_data_unlink:
+            ir_model_data_unlink.unlink()
+        if ir_attachment_unlink:
+            ir_attachment_unlink.unlink()
+        # DLE P93: flush after the unlink, for recompute fields depending on
+        # the modified of the unlink
+        self.env.flush_all()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
@@ -4666,6 +4669,8 @@ class BaseModel(metaclass=MetaModel):
         :return: the qualified field name (or expression) to use for ``field``
         """
         if self.env.lang:
+            # for the COALESCE to work properly, the column must be flushed
+            self.flush_model([field])
             alias = query.left_join(
                 table_alias, 'id', 'ir_translation', 'res_id', field,
                 extra='"{rhs}"."type" = \'model\' AND "{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',
@@ -6151,22 +6156,32 @@ class BaseModel(metaclass=MetaModel):
         else:
             self.env.invalidate_all()
 
-    def invalidate_model(self, fnames=None):
+    def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
         cached values no longer correspond to the database values.  If the
         parameter is given, only the given fields are invalidated from cache.
 
         :param fnames: optional iterable of field names to invalidate
+        :param flush: whether pending updates should be flushed before invalidation.
+            It is ``True`` by default, which ensures cache consistency.
+            Do not use this parameter unless you know what you are doing.
         """
+        if flush:
+            self.flush_model(fnames)
         self._invalidate_cache(fnames)
 
-    def invalidate_recordset(self, fnames=None):
+    def invalidate_recordset(self, fnames=None, flush=True):
         """ Invalidate the cache of the records in ``self``, when the cached
         values no longer correspond to the database values.  If the parameter
         is given, only the given fields on ``self`` are invalidated from cache.
 
         :param fnames: optional iterable of field names to invalidate
+        :param flush: whether pending updates should be flushed before invalidation.
+            It is ``True`` by default, which ensures cache consistency.
+            Do not use this parameter unless you know what you are doing.
         """
+        if flush:
+            self.flush_recordset(fnames)
         self._invalidate_cache(fnames, self._ids)
 
     def _invalidate_cache(self, fnames=None, ids=None):

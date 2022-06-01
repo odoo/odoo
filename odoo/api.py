@@ -701,8 +701,15 @@ class Environment(Mapping):
         )
         return self.cr.savepoint()
 
-    def invalidate_all(self):
-        """ Invalidate the cache of all records. """
+    def invalidate_all(self, flush=True):
+        """ Invalidate the cache of all records.
+
+        :param flush: whether pending updates should be flushed before invalidation.
+            It is ``True`` by default, which ensures cache consistency.
+            Do not use this parameter unless you know what you are doing.
+        """
+        if flush:
+            self.flush_all()
         self.cache.invalidate()
 
     def _recompute_all(self):

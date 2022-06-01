@@ -485,18 +485,51 @@ class TestTranslationWrite(TransactionCase):
         langs = self.env['res.lang'].get_installed()
         self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
             "Test did not started with expected languages")
-        self.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'res.partner.category,name',
-            'lang': 'en_US',
-            'res_id': self.category.id,
-            'src': 'Reblochon',
-            'value': 'Translated Name',
-            'state': 'translated',
-        })
 
-        self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
-        self.category.with_context(lang='en_US').write({'name': 'English Name'})
+        category_en = self.category.with_context(lang='en_US')
+        category_fr = self.category.with_context(lang='fr_FR')
+
+        # no translation at first
+        self.assertEqual(category_fr.name, 'Reblochon')
+        self.assertFalse(self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', self.category.id),
+        ], order='lang'))
+
+        # change source
+        self.category.write({'name': 'Blorb'})
+        self.assertEqual(category_fr.name, 'Blorb')
+        self.assertFalse(self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', self.category.id),
+        ], order='lang'))
+
+        # change source
+        category_en.write({'name': 'Cheese'})
+        self.assertEqual(category_fr.name, 'Cheese')
+        translations = self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', self.category.id),
+        ], order='lang')
+        self.assertRecordValues(translations, [
+            {'src': 'Cheese', 'value': 'Cheese', 'lang': 'en_US'},
+        ])
+
+        # add a translation
+        category_fr.write({'name': 'French Name'})
+        self.assertEqual(category_en.name, 'Cheese')
+        translations = self.env['ir.translation'].search([
+            ('name', '=', 'res.partner.category,name'),
+            ('res_id', '=', self.category.id),
+        ], order='lang')
+        self.assertRecordValues(translations, [
+            {'src': 'Cheese', 'value': 'Cheese', 'lang': 'en_US'},
+            {'src': 'Cheese', 'value': 'French Name', 'lang': 'fr_FR'},
+        ])
+
+        # change source
+        category_en.write({'name': 'English Name'})
+        self.assertEqual(category_fr.name, 'French Name')
         translations = self.env['ir.translation'].search([
             ('name', '=', 'res.partner.category,name'),
             ('res_id', '=', self.category.id),
