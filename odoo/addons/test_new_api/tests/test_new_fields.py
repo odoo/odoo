@@ -1664,6 +1664,85 @@ class TestFields(TransactionCaseWithUserDemo):
             'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
         })
 
+    def test_29_company_dependent_html(self):
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        company2 = self.env['res.company'].create({'name': 'B'})
+
+        user0 = self.env['res.users'].create({
+            'name': 'Foo', 'login': 'foo', 'company_id': company0.id,
+            'company_ids': [Command.set([company0.id, company1.id, company2.id])]})
+        user1 = self.env['res.users'].create({
+            'name': 'Bar', 'login': 'bar', 'company_id': company1.id,
+            'company_ids': [Command.set([company0.id, company1.id, company2.id])]})
+        user2 = self.env['res.users'].create({
+            'name': 'Baz', 'login': 'baz', 'company_id': company2.id,
+            'company_ids': [Command.set([company0.id, company1.id, company2.id])]})
+
+        some_ugly_html_0 = """<p>Oops this should maybe be sanitized
+% if object.some_field and not object.oriented:
+<table>
+    % if object.other_field:
+    <tr style="margin: 0px; border: 10px solid black;">
+        ${object.mako_thing}
+        <td>
+    </tr>
+    <tr class="custom_class">
+        This is some html.
+    </tr>
+    % endif
+    <tr>
+%if object.dummy_field:
+        <p>user0</p>
+%endif"""
+
+        some_ugly_html_1 = """<p>Oops this should maybe be sanitized
+% if object.some_field and not object.oriented:
+<table>
+    % if object.other_field:
+    <tr style="margin: 0px; border: 10px solid black;">
+        ${object.mako_thing}
+        <td>
+    </tr>
+    <tr class="custom_class">
+        This is some html.
+    </tr>
+    % endif
+    <tr>
+%if object.dummy_field:
+        <p>user1</p>
+%endif"""
+
+        record = self.env['test_new_api.company'].create({
+            'html1': some_ugly_html_0,
+            'html2': some_ugly_html_0,
+        })
+
+        self.assertEqual(record.with_user(user0).html1, some_ugly_html_0, 'Error in HTML field: content was sanitized but field has sanitize=False')
+        self.assertEqual(record.with_user(user1).html1, False)
+        self.assertEqual(record.with_user(user2).html1, False)
+
+        # sanitize should have closed tags left open in the original html for user0
+        self.assertIn('</table>', record.with_user(user0).html2, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', record.with_user(user0).html2, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertNotIn('<tr class="', record.with_user(user0).html2, 'Class attr should have been stripped')
+        self.assertNotIn('<tr style="', record.with_user(user0).html2, 'Style attr should have been stripped')
+
+        record.with_user(user1).write({
+            'html1': some_ugly_html_1,
+            'html2': some_ugly_html_1,
+        })
+
+        self.assertEqual(record.with_user(user0).html1, some_ugly_html_0, 'Error in HTML field: content was sanitized but field has sanitize=False')
+        self.assertEqual(record.with_user(user1).html1, some_ugly_html_1, 'Error in HTML field: content was sanitized but field has sanitize=False')
+        self.assertEqual(record.with_user(user2).html1, False)
+
+        # sanitize should have closed tags left open in the original html for user1
+        self.assertIn('</table>', record.with_user(user1).html2, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', record.with_user(user1).html2, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertNotIn('<tr class="', record.with_user(user1).html2, 'Class attr should have been stripped')
+        self.assertNotIn('<tr style="', record.with_user(user1).html2, 'Style attr should have been stripped')
+
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         discussion = self.env.ref('test_new_api.discussion_0')
