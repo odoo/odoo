@@ -4607,7 +4607,6 @@ class BaseModel(metaclass=MetaModel):
 
             :return: the records corresponding to ``data_list``
         """
-
         original_self = self.browse()
         # records created during installation should not display messages
         self = self.with_context(install_mode=True)
