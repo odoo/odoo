@@ -142,7 +142,7 @@ class PosConfig(models.Model):
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
              "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
              "the closing of his session saying that he needs to contact his manager.")
-    payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods())
+    payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods(), copy=False)
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
@@ -351,6 +351,18 @@ class PosConfig(models.Model):
         if not self.company_has_template:
             raise ValidationError(_("No chart of account configured, go to the \"configuration / settings\" menu, and "
                                     "install one from the Invoicing tab."))
+
+    @api.constrains('payment_method_ids')
+    def _check_payment_method_ids_journal(self):
+        cash_journal = self.env['account.journal'].search(
+            [('company_id', '=', self.env.company.id), ('type', '=', 'cash')])
+
+        for cash_method in self.payment_method_ids.filtered(lambda s: s.journal_id.id in cash_journal.ids):
+            if self.env['pos.config'].search([('id', '!=', self.id), ('payment_method_ids', 'in', cash_method.ids)]):
+                raise ValidationError(_("This cash payment method is already used in another Point of Sale.\n"
+                                        "A new cash payment method should be created for this Point of Sale."))
+            if len(cash_method.journal_id.pos_payment_method_ids) > 1:
+                raise ValidationError(_("You cannot use the same journal on multiples cash payment methods."))
 
     def name_get(self):
         result = []
@@ -586,7 +598,11 @@ class PosConfig(models.Model):
             if cash_journal:
                 payment_methods |= payment_methods.create({
                     'name': _('Cash'),
-                    'journal_id': cash_journal.id,
+                    'journal_id': self.env['account.journal'].create({
+                                    'name': "Cash",
+                                    'code': "CSH %s" % pos_config.id,
+                                    'type': 'cash',
+                                }).id,
                     'company_id': company.id,
                 })
             if bank_journal:
