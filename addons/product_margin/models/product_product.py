@@ -59,7 +59,7 @@ class ProductProduct(models.Model):
         def truncate_aggr(field):
             field_no_aggr, _sep, agg = field.partition(':')
             if field_no_aggr in fields_list:
-                if agg != 'sum':
+                if agg and agg != 'sum':
                     raise NotImplementedError('Aggregate functions other than \':sum\' are not allowed.')
                 return field_no_aggr
             return field
