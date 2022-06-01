@@ -77,7 +77,7 @@
                     <t t-snippet="mass_mailing.s_references" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_references.svg"/>
                     <t t-snippet="mass_mailing.s_coupon_code" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount2.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_discount1" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount1.png"/>
-                    <t t-snippet="mass_mailing.s_mail_block_event" t-thumbnail="/mass_mailing/static/src/img/blocks/block_event.png"/>
+                    <t t-snippet="mass_mailing.s_event" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_event.svg"/>
                     <t t-snippet="mass_mailing.s_product_list" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_product_list.svg"/>
                     <t t-snippet="mass_mailing.s_features_grid" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_features_grid.svg"/>
                 </div>
@@ -180,31 +180,6 @@
                 </div>
                 <div class="col-lg-6 pt16">
                     <p>We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template id="s_mail_block_event" name="Event">
-    <div class="o_mail_snippet_general o_mail_block_event s_event bg-300">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-3 px-0 text-center">
-                    <h3>21 Jul</h3>
-                    <p>ALL DAY</p>
-                </div>
-                <div class="col-lg-2 px-0">
-                    <img src="/web/image/mass_mailing.s_mail_block_event_default_image" class="img w-100"/>
-                </div>
-                <div class="col-lg-7">
-                    <h4>Cybersecurity</h4>
-                    <p>Cyber-threats continue to increase.
-                        <br/>The discussion will examine how to develop new norms and integrate them into EU
-                    </p>
-                    <div class="text-start">
-                        <a href="#" class="btn btn-primary">Register</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -493,9 +468,9 @@
         <t t-set="with_shapes" t-value="false"/>
     </t>
 
-    <!-- COLOR | .s_three_columns | .s_comparisons -->
+    <!-- COLOR | .s_three_columns | .s_comparisons | .s_event  -->
     <div data-js="Box"
-         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
          data-target=".card-body">
         <we-colorpicker string="Background Color"
             data-select-style="true"
@@ -503,9 +478,9 @@
             data-css-property="background-color"
             data-color-prefix="bg-"/>
     </div>
-    <!-- BORDER | .s_three_columns | .s_comparisons -->
+    <!-- BORDER | .s_three_columns | .s_comparisons | .s_event  -->
     <div data-js="Box"
-         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
          data-target=".card">
         <t t-call="mass_mailing.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
@@ -520,7 +495,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, s_mail_block_event" data-target=".row">
         <we-button-group string="Vert. Alignment" title="Vertical Alignment">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
