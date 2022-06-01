@@ -1,0 +1,105 @@
+<odoo>
+  <data>
+    
+    <!-- VIEWS: "Partner"
+    
+        - Model·········: edi.partner
+        - _rec_name·····: name
+        - Domain········: []
+        - Context·······: \{}
+        - Parent menu ··: base.menu_custom
+        - View priority·: 16    
+        - Sequence····..: 10
+        - Action help···: Something about edi.partner
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
+    <!-- Tree view for "edi.partner" -->
+    <record id="view_edi_partner_tree" model="ir.ui.view">
+        <field name="name">view.edi.partner.tree</field>
+        <field name="model">edi.partner</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <tree string="edi_partner_tree" create="true" delete="true" edit="true">
+                <field name="name" />
+    
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Form view for "edi.partner" -->
+    <record id="view_edi_partner_form" model="ir.ui.view">
+        <field name="name">view.edi.partner.form</field>
+        <field name="model">edi.partner</field>
+        <field name="type">form</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <form string="edi_partner_form" create="true" delete="true" edit="true">
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" class="oe_inline"
+                                placeholder="name" />
+                        </h1>
+                    </div>
+                    <group>
+    
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Search view for "edi.partner" -->
+    <record id="view_edi_partner_search" model="ir.ui.view">
+        <field name="name">view.edi.partner.search</field>
+        <field name="model">edi.partner</field>
+        <field name="type">search</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="16" />
+        <field name="active" eval="True" />
+        <field name="arch" type="xml">
+            <search string="edi_partner_search">
+                <field name="name" />
+                
+            </search>
+        </field>
+    </record>
+    
+    <!-- Main window action for "edi.partner" -->
+    <record id="action_edi.partner_act_window" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">partner</field>
+        <field name="res_model">edi.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_type">form</field>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <field name="context">\{}</field>
+        <field name="search_view_id" ref="view_edi_partner_search" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add new partner
+            </p><p>
+                Something about edi.partner
+            </p>
+        </field>
+    </record>
+    
+    <!-- Main menu for "edi.partner" -->
+    <record id="menu_edi.partner" model="ir.ui.menu" >
+        <field name="name">partner</field>
+        <field name="sequence" eval="10" />
+        <field name="action" ref="action_edi.partner_act_window" />
+        <field name="parent_id" ref="base.menu_custom" />
+    </record>
+    
+  </data>
+</odoo>
