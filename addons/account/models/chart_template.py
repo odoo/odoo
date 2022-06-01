@@ -155,7 +155,7 @@ class AccountChartTemplate(models.AbstractModel):
         with_company._load_data(data)
         with_company._post_load_data(template_code, company, template_data)
 
-        company.flush()
+        company.flush_model()
         with_company.env.cache.invalidate()
 
         # Install the demo data when the first localization is instanciated on the company
