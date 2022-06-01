@@ -205,7 +205,7 @@ EU_TAG_MAP = {
         'refund_tax_tag': None,
     },
     # Sweden
-    'l10n_se.l10nse_chart_template': {
+    'se': {
         'invoice_base_tag': None,
         'invoice_tax_tag': None,
         'refund_base_tag': None,
