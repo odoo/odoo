@@ -3,25 +3,49 @@
 import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
 
+const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
+    return [{
+        content: "Click on Add New Social Network",
+        trigger: 'we-list we-button.o_we_list_add_optional',
+    },
+    {
+        content: "Ensure new option is found",
+        trigger: `we-list table input:eq(${optionIndex})[data-list-position=${optionIndex}][data-dom-position=${linkIndex}][data-undeletable=false]`,
+        run: () => {}, // This is a check.
+    },
+    {
+        content: "Ensure new link is found",
+        trigger: `.s_social_media:has(a:eq(${linkIndex})[href='https://www.example.com'])`,
+        run: () => {}, // This is a check.
+    },
+    {
+        content: "Change added Option label",
+        trigger: `we-list table input:eq(${optionIndex})`,
+        run: `text ${url}`,
+    },
+    {
+        content: "Ensure new link is changed",
+        trigger: `.s_social_media:has(a:eq(${linkIndex})[href='${url}'])`,
+        run: () => {}, // This is a check.
+    }];
+};
+
 tour.register('snippet_social_media', {
     test: true,
     url: '/?enable_editor=1',
 }, [
     wTourUtils.dragNDrop({id: 's_social_media', name: 'Social Media'}),
     wTourUtils.clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
-    {
-        content: 'Click on Add New Social Network',
-        trigger: 'we-list we-button.o_we_list_add_optional',
-    },
-    {
-        content: 'Change added Option label',
-        trigger: 'we-list table input:eq(6)',
-        run: 'text https://www.youtu.be/y7TlnAv6cto',
-    },
+    ...addNewSocialNetwork(6, 6, 'https://www.youtu.be/y7TlnAv6cto'),
     {
         content: 'Click on the toggle to hide Facebook',
         trigger: 'we-list table we-button.o_we_user_value_widget',
         run: 'click',
+    },
+    {
+        content: "Ensure twitter became first",
+        trigger: '.s_social_media:has(a:eq(0)[href="/website/social/twitter"])',
+        run: () => {}, // This is a check.
     },
     {
         content: 'Drag the facebook link at the end of the list',
@@ -29,26 +53,15 @@ tour.register('snippet_social_media', {
         position: 'bottom',
         run: "drag_and_drop we-list table tr:last-child",
     },
+    {
+        content: 'Check drop completed',
+        trigger: 'we-list table input:eq(6)[data-media="facebook"]',
+        run: () => {}, // This is a check.
+    },
     // Create a Link for which we don't have an icon to propose.
-    {
-        content: 'Click on Add New Social Network',
-        trigger: 'we-list we-button.o_we_list_add_optional',
-    },
-    {
-        content: 'Change added Option label (2)',
-        trigger: 'we-list table input:eq(7)',
-        run: 'text https://whatever.it/1EdSw9X',
-    },
+    ...addNewSocialNetwork(7, 6, 'https://whatever.it/1EdSw9X'),
     // Create a custom instagram link.
-    {
-        content: 'Click on Add New Social Network',
-        trigger: 'we-list we-button.o_we_list_add_optional',
-    },
-    {
-        content: 'Change added Option label (3)',
-        trigger: 'we-list table input:eq(8)',
-        run: 'text https://instagr.am/odoo.official/',
-    },
+    ...addNewSocialNetwork(8, 7, 'https://instagr.am/odoo.official/'),
     {
         content: "Check if the result is correct before removing",
         trigger: ".s_social_media" +
@@ -60,6 +73,7 @@ tour.register('snippet_social_media', {
                  ":has(a:eq(5)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube))" +
                  ":has(a:eq(6)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
                  ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
+        run: () => {}, // This is a check.
     },
     // Create a custom link, not officially supported, ensure icon is found.
     {
@@ -71,11 +85,17 @@ tour.register('snippet_social_media', {
         content: "Ensure paypal icon is found",
         trigger: ".s_social_media" +
                  ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
+        run: () => {}, // This is a check.
     },
     {
         content: 'Delete the custom link',
         trigger: 'we-list we-button.o_we_select_remove_option',
         run: 'click',
+    },
+    {
+        content: "Ensure custom link was removed",
+        trigger: '.s_social_media:has(a:eq(5)[href="https://whatever.it/1EdSw9X"]:has(i.fa-pencil))',
+        run: () => {}, // This is a check.
     },
     {
         content: 'Click on the toggle to show Facebook',
@@ -93,6 +113,7 @@ tour.register('snippet_social_media', {
                  ":has(a:eq(5)[href='/website/social/facebook'])" +
                  ":has(a:eq(6)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
                  ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
+        run: () => {}, // This is a check.
     },
     {
         content: 'Change url of the DB instagram link',
