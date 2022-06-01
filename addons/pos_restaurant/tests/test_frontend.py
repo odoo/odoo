@@ -123,8 +123,8 @@ class TestFrontend(odoo.tests.HttpCase):
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, {
-                'name': 'Cash restaurant',
-                'split_transactions': True,
+                'name': 'Cash',
+                'split_transactions': False,
                 'receivable_account_id': account_receivable.id,
                 'journal_id': cash_journal.id,
             })],

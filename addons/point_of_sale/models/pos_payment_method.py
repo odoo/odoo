@@ -25,7 +25,7 @@ class PosPaymentMethod(models.Model):
     is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
     journal_id = fields.Many2one('account.journal',
         string='Journal',
-        domain=[('type', 'in', ('cash', 'bank'))],
+        domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
         ondelete='restrict',
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'

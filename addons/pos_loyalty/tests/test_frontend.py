@@ -629,7 +629,17 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
 
-        self.main_pos_config2 = self.main_pos_config.copy()
+        self.cash_journal = self.env['account.journal'].create(
+            {'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
+        self.cash_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Cash Test',
+            'journal_id': self.cash_journal.id,
+            'receivable_account_id': self.main_pos_config.payment_method_ids.filtered(lambda s: s.is_cash_count).receivable_account_id.id
+        })
+
+        self.main_pos_config2 = self.main_pos_config.copy({
+            'payment_method_ids': self.cash_payment_method
+        })
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Coupon Program - Pricelist',
@@ -699,7 +709,18 @@ class TestUi(TestPointOfSaleHttpCommon):
             }
         )
 
-        self.main_pos_config2 = self.main_pos_config.copy()
+        self.cash_journal = self.env['account.journal'].create(
+            {'name': 'CASH journal', 'type': 'cash', 'code': 'CSHDI'})
+        self.cash_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Cash Test',
+            'journal_id': self.cash_journal.id,
+            'receivable_account_id': self.main_pos_config.payment_method_ids.filtered(
+                lambda s: s.is_cash_count).receivable_account_id.id
+        })
+
+        self.main_pos_config2 = self.main_pos_config.copy({
+            'payment_method_ids': self.cash_payment_method
+        })
         self.main_pos_config2.write({
             'module_pos_discount' : True,
             'discount_product_id': self.discount_product.id,

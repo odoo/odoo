@@ -31,7 +31,13 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.category.property_stock_valuation_account_id = account_valuation
         self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
-        self.pos_config = self.pos_config.copy({'name': 'New POS config'})
+        self.cash_journal = self.env['account.journal'].create(
+            {'name': 'CASH journal', 'type': 'cash', 'code': 'CSH02'})
+        self.cash_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Cash Test',
+            'journal_id': self.cash_journal.id,
+        })
+        self.pos_config = self.pos_config.copy({'name': 'New POS config', 'payment_method_ids': self.cash_payment_method})
         self.product = self.env['product.product'].create({
             'name': 'New product',
             'standard_price': 100,
