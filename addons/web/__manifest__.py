@@ -327,6 +327,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web._assets_bootstrap': [
             'web/static/src/legacy/scss/import_bootstrap.scss',
+            'web/static/src/libs/bootstrap/helpers_backport.scss',
             'web/static/src/legacy/scss/bootstrap_review.scss',
         ],
         'web._assets_backend_helpers': [
