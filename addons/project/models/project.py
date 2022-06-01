@@ -743,10 +743,14 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.with_context(active_id=self.id, active_ids=self.ids) \
-            .env.ref('project.act_project_project_2_project_task_all') \
-            .sudo().read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('project.act_project_project_2_project_task_all')
         action['display_name'] = _("%(name)s", name=self.name)
+        context = action['context'].replace('active_id', str(self.id))
+        context = ast.literal_eval(context)
+        context.update({
+            'create': self.active,
+            })
+        action['context'] = context
         return action
 
     def action_view_all_rating(self):
