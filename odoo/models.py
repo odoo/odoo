@@ -1058,7 +1058,7 @@ class BaseModel(metaclass=MetaModel):
         :type fields: list(str)
         :param data: row-major matrix of data to import
         :type data: list(list(str))
-        :param key_fields: list of fields that can be used to match records (TODO: confirm if context is preferred)
+        :param key_fields: list of fields used to identify and update existing records (without xid)
         :type key_fields: list(str)
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
@@ -1122,13 +1122,14 @@ class BaseModel(metaclass=MetaModel):
                 dict(xml_id=xid, values=vals, info=info, noupdate=noupdate)
                 for xid, vals, info in batch
             ]
+            data_list = self._identify_existing_records(data_list, key_fields)
             batch.clear()
             batch_xml_ids.clear()
 
             # try to create in batch
             try:
                 with cr.savepoint():
-                    recs = self._load_records(data_list, mode == 'update', key_fields=key_fields)
+                    recs = self._load_records(data_list, mode == 'update')
                     ids.extend(recs.ids)
                 return
             except psycopg2.InternalError as e:
@@ -1145,7 +1146,7 @@ class BaseModel(metaclass=MetaModel):
             for i, rec_data in enumerate(data_list, 1):
                 try:
                     with cr.savepoint():
-                        rec = self._load_records([rec_data], mode == 'update', key_fields=key_fields)
+                        rec = self._load_records([rec_data], mode == 'update')
                         ids.append(rec.id)
                 except psycopg2.Warning as e:
                     info = rec_data['info']
@@ -4517,22 +4518,19 @@ class BaseModel(metaclass=MetaModel):
         self.env.cache.update(records, self._fields['parent_path'], updated.values())
         records.modified(['parent_path'])
 
-    def _find_external_ids(self, data_list, search_fields):
-        ''' Find or create an External ID (xml_id) for each of the records with matching data in the search_fields
+    def _identify_existing_records(self, data_list, search_fields):
+        ''' Find or create an External ID (xml_id) for each of the unique records
+            having matching data in search_fields
 
             :param data_list: list of dicts with keys `xml_id` and record values
             :param search_fields: list of technical field names
 
-            :return: `data_list` containing the new/found xml_id
+            :return: updated data_list containing the new/found xml_id
 
             :raises ValidationError: when multiple records match the search criteria
         '''
-
-        IMD = self.env['ir.model.data']
-
-        # This is SQL method of finding matching records (to improve the inefficient code below)
-        # TODO: self._module used below is not correct
-        # TODO: verify company restrictions and security rights (the ORM methods takes care of this)
+        if not search_fields:
+            return data_list
 
         key_fields = ', '.join(search_fields)
         prefixed_key_fields = ', '.join([f'r.{field}' for field in search_fields])
@@ -4570,42 +4568,28 @@ class BaseModel(metaclass=MetaModel):
         """
         self.env.cr.execute(sql, tuple(key_data))
         res = self.env.cr.fetchall()
-        res_dict = {row[:len(search_fields)]: row[len(search_fields):] for row in res}
         self.env.cr.execute(f'DROP TABLE temp_{self._table}')
+        res_dict = {
+            row[:len(search_fields)]: {
+                'id': row[-3],
+                'xid': row[-2],
+                'count': row[-1],
+            } for row in res if row[-1] == 1
+        }
+        if len(res_dict) < len(res):
+            raise ValidationError(_('Multiple records found matching search key criteria'))
+        records_without_xid = [row['id'] for row in res_dict.values() if row['id'] and not row['xid']]
+        new_external_ids = {}
+        for rec, xid in self.browse(records_without_xid).__ensure_xml_id():
+            new_external_ids[rec.id] = xid
 
         for item in data_list:
             if not item['xml_id']:
                 key = tuple(item['values'][field] or None for field in search_fields)
-                existing_record_info = res_dict.get(key, (0, None, 0))
+                existing_record_info = res_dict.get(key, None)
+                if existing_record_info:
+                    item['xml_id'] = existing_record_info['xid'] or new_external_ids[existing_record_info['id']]
 
-                if existing_record_info[2] == 1 and existing_record_info[1]: # a record and there is an xml_id
-                    item['xml_id'] = existing_record_info[1]
-                elif existing_record_info[2] == 1 and existing_record_info[0]: # a record with no xml_id
-                    item['xml_id'] = IMD.create({
-                        'model': self._name,
-                        'res_id': existing_record_info[0],
-                        'name': f'__FOUND_{self._table}_{existing_record_info[0]}',
-                        'module': self._module,
-                    }).complete_name
-                elif existing_record_info[2] and existing_record_info[2] > 1:  # existing_record_info[2] might be None
-                    raise ValidationError(_('Multiple records found matching %(key)s', key=key))
-
-        # The following code works but may not be efficient when importing thousands of records
-
-        # for index, data in enumerate(filter(lambda d: not d['xml_id'], data_list)):
-        #     domain = [(field, '=', data['values'][field]) for field in search_fields]
-        #     matching_records = self.search(domain)
-        #     if len(matching_records) > 1:
-        #         # should not update multiple records (especially when data['values'][field] is not set)
-        #         raise ValidationError(_(f'Multiple records found matching {domain}'))
-        #     elif matching_records:
-        #         imd = matching_records.get_external_id()[matching_records.id]
-        #         data_list[index]['xml_id'] = imd if imd else IMD.create({
-        #             'model': self._name,
-        #             'res_id': matching_records.id,
-        #             'name': f'FOUND_{self._table}_{matching_records.id}',
-        #             'module': self._module,
-        #         }).complete_name
         return data_list
 
     def _load_records_write(self, values):
@@ -4614,7 +4598,7 @@ class BaseModel(metaclass=MetaModel):
     def _load_records_create(self, values):
         return self.create(values)
 
-    def _load_records(self, data_list, update=False, key_fields=None):
+    def _load_records(self, data_list, update=False):
         """ Create or update records of this model, and assign XMLIDs.
 
             :param data_list: list of dicts with keys `xml_id` (XMLID to
@@ -4623,7 +4607,7 @@ class BaseModel(metaclass=MetaModel):
 
             :return: the records corresponding to ``data_list``
         """
-        key_fields = key_fields or []
+
         original_self = self.browse()
         # records created during installation should not display messages
         self = self.with_context(install_mode=True)
@@ -4633,10 +4617,6 @@ class BaseModel(metaclass=MetaModel):
         # to create, the ones to update, and the others. For each set, we assign
         # data['record'] for each data. All those records are then retrieved for
         # the result.
-
-        # search or create xml_id's based on key_fields
-        if key_fields:
-            data_list = self._find_external_ids(data_list, key_fields)
 
         # determine existing xml_ids
         xml_ids = [data['xml_id'] for data in data_list if data.get('xml_id')]
