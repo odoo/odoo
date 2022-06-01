@@ -540,6 +540,10 @@ odoo.define('website.s_website_form', function (require) {
                     return value >= comparable;
                 case 'less or equal':
                     return value <= comparable;
+                case 'fileSet':
+                    return value.name !== '';
+                case '!fileSet':
+                    return value.name === '';
             }
             // Date & Date Time comparison requires formatting the value
             if (value.includes(':')) {
