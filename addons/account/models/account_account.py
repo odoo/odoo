@@ -325,16 +325,16 @@ class AccountAccount(models.Model):
                 FROM (VALUES {place_holder}) AS V(originalcode, searchterm, matchlen)
             )
             SELECT DISTINCT ON (codes.originalcode)
-                codes.originalcode as original_code,
-                codes.matchlen as match_len,
-                account.id as account_id,
-                account.code as account_code,
-                account.user_type_id as user_type_id
-            FROM account_account account
-            JOIN codes ON account.code ILIKE codes.searchterm
-            WHERE codes.matchlen > 0
-            AND account.company_id = %(company_id)s
-            ORDER BY codes.originalcode, match_len DESC, account.id ASC
+                   codes.originalcode as original_code,
+                   codes.matchlen as match_len,
+                   account.id as account_id,
+                   account.code as account_code,
+                   account.user_type_id as user_type_id
+              FROM account_account account
+              JOIN codes ON account.code ILIKE codes.searchterm
+             WHERE codes.matchlen > 0
+               AND account.company_id = %(company_id)s
+          ORDER BY codes.originalcode, match_len DESC, account.id ASC
         ''', {
             'company_id': self.env.company.id,
             **place_holder_vals,
