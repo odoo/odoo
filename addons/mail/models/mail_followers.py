@@ -124,6 +124,16 @@ class Followers(models.Model):
         self.env['res.groups'].flush(['users'])
         self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
+            pids_query = """UNION
+            SELECT partner.id as pid, NULL::int AS cid,
+            partner.active as active, partner.partner_share as pshare, NULL as ctype,
+            users.notification_type AS notif, array_agg(groups.id) AS groups
+            FROM res_partner partner
+            LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+            LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+            LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
+            WHERE partner.id IN %s
+            GROUP BY partner.id, users.notification_type """
             query = """
 SELECT DISTINCT ON(pid, cid) * FROM (
     WITH sub_followers AS (
@@ -147,9 +157,9 @@ SELECT DISTINCT ON(pid, cid) * FROM (
             WHERE sub_followers.channel_id IS NULL
                 AND sub_followers.partner_id = partner.id
                 AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-        ) %s
+        )
         GROUP BY partner.id, users.notification_type
-    UNION
+    %s UNION
     SELECT NULL::int AS pid, channel.id AS cid,
             TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
             CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
@@ -159,7 +169,7 @@ SELECT DISTINCT ON(pid, cid) * FROM (
         ) %s
 ) AS x
 ORDER BY pid, cid, notif
-""" % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
+""" % (pids_query if pids else '', 'OR channel.id IN %s' if cids else '')
             params = [subtype_id, records._name, tuple(records.ids)]
             if pids:
                 params.append(tuple(pids))
