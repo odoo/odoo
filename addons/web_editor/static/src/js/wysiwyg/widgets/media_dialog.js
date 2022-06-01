@@ -164,6 +164,7 @@ var MediaDialog = Dialog.extend({
             if (self.activeWidget !== self.initiallyActiveWidget) {
                 self._clearWidgets();
             }
+            self.media.classList.remove('o_cropped_img_to_save');
             // Restore classes if the media was replaced (when changing type)
             if (self.media !== data) {
                 var oldClasses = self.media && _.toArray(self.media.classList);

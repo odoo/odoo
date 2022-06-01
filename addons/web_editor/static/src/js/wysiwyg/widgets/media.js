@@ -491,7 +491,6 @@ var FileWidget = SearchableMediaWidget.extend({
                         attrs.push(key);
                     }
                 });
-                self.$media.removeClass('o_cropped_img_to_save');
                 _.each(attrs, function (attr) {
                     self.$media.removeData(attr);
                     self.$media.removeAttr('data-' + attr);
