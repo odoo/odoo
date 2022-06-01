@@ -190,6 +190,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
 
     legacyEnv.services.local_storage = mapStorage(browser.localStorage);
     legacyEnv.services.session_storage = mapStorage(browser.sessionStorage);
+    legacyEnv.services.dialog = wowlEnv.services.dialog;
     // map WebClientReady
     wowlEnv.bus.addEventListener("WEB_CLIENT_READY", () => {
         legacyEnv.bus.trigger("web_client_ready");
