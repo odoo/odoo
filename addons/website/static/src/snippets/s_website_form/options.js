@@ -1162,6 +1162,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datepicker');
             case 'hidden_condition_datetime_opt':
                 return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datetimepicker');
+            case 'hidden_condition_file_opt':
+                return dependencyEl && dependencyEl.type === 'file';
             case 'hidden_condition_opt':
                 return this.$target[0].classList.contains('s_website_form_field_hidden_if');
             case 'char_input_type_opt':
@@ -1256,6 +1258,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 } else if (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
                         || dependencyEl.nodeName === 'TEXTAREA') {
                     this.$target[0].dataset.visibilityComparator = 'equal';
+                } else if (dependencyEl.type === 'file') {
+                    this.$target[0].dataset.visibilityComparator = 'fileSet';
                 }
             }
         }
