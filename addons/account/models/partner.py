@@ -517,9 +517,8 @@ class ResPartner(models.Model):
         res['files'][0]['template'] = '/account/static/xls/generic_import.xlsx'
         return res
 
-    @api.model
-    def _get_import_sheet(self, sheet_names):
-        return 'Contacts' if 'Contacts' in sheet_names else super()._get_import_sheet(sheet_names)
+    def _suggested_import_sheet_names(self):
+        return ['Contacts']
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])

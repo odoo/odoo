@@ -5,7 +5,7 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 
-ACCOUNT_REGEX = re.compile(r'(\d+)?(.*)$')
+ACCOUNT_REGEX = re.compile(r'(\d+)?(.*)')
 
 class AccountAccountType(models.Model):
     _name = "account.account.type"
@@ -510,11 +510,8 @@ class AccountAccount(models.Model):
                 'template': '/account/static/xls/generic_import.xlsx'
         }]}
 
-    @api.model
-    def _get_import_sheet(self, sheet_names):
-        if 'Chart of Accounts' in sheet_names:
-            return 'Chart of Accounts'
-        return 'CoA' if 'CoA' in sheet_names else super()._get_import_sheet(sheet_names)
+    def _suggested_import_sheet_names(self):
+        return ['Chart of Accounts', 'CoA', 'COA']
 
     @api.model
     def default_get(self, default_fields):
@@ -599,8 +596,8 @@ class AccountAccount(models.Model):
         ))
 
     def _split_code_name(self, code_name):
-        results = ACCOUNT_REGEX.match(code_name or '').groups('')
-        return results[0].strip(), results[1].strip()
+        results = ACCOUNT_REGEX.match(code_name or '')
+        return results[1], results[2].strip()
 
     @api.model_create_multi
     def create(self, vals_list):
