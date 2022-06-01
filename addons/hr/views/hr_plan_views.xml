@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <search string="Plan">
                     <field name="name"/>
+                    <field name="department_id"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
@@ -21,6 +22,7 @@
                 <tree string="Planning">
                     <field name="name"/>
                     <field name="steps_count"/>
+                    <field name="department_id" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 </tree>
             </field>
@@ -40,6 +42,7 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="department_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="active" invisible="1"/>
                         </group>

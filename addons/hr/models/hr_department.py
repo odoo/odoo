@@ -23,6 +23,8 @@ class Department(models.Model):
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee')
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
+    plan_ids = fields.One2many('hr.plan', 'department_id')
+    plans_count = fields.Integer(compute='_compute_plan_count')
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
     parent_path = fields.Char(index=True, unaccent=False)
@@ -37,6 +39,7 @@ class Department(models.Model):
     @api.model
     def name_create(self, name):
         return self.create({'name': name}).name_get()[0]
+
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
         for department in self:
@@ -57,6 +60,12 @@ class Department(models.Model):
         result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
         for department in self:
             department.total_employee = result.get(department.id, 0)
+
+    def _compute_plan_count(self):
+        plans_data = self.env['hr.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
+        plans_count = {x['department_id'][0]: x['department_id_count'] for x in plans_data}
+        for department in self:
+            department.plans_count = plans_count.get(department.id, 0)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -117,3 +126,8 @@ class Department(models.Model):
                 'res_id': False,
             })
         return res
+
+    def action_plan_from_department(self):
+        action = self.env['ir.actions.actions']._for_xml_id('hr.hr_plan_action')
+        action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
+        return action
