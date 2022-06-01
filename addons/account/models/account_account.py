@@ -305,13 +305,24 @@ class AccountAccount(models.Model):
         '''
         if not codes:
             return {}
-        sql_vals = ','.join(sum([
-            [f"('{code}', '{code[:i]}%%', {len(code[:i])})" for i in range(1, len(code) + 1)] for code in codes],
-            []))
-        sql = f'''
+
+        place_holder_list = []
+        place_holder_vals = {}
+        for i, code in enumerate(codes):
+            place_holder_vals.update({f"code_{i}": code})
+            for j in range(len(code)):
+                place_holder_list.append(f"(%(code_{i})s, %(code_search_term_{i}_{j})s, %(code_match_len_{i}_{j})s)")
+                place_holder_vals.update({
+                    f"code_search_term_{i}_{j}": f"{code[:j + 1]}%%",
+                    f"code_match_len_{i}_{j}": len(code[:j + 1]),
+                })
+
+        place_holder = ','.join(place_holder_list)
+
+        self.env.cr.execute(f'''
             WITH codes AS (
                 SELECT *
-                FROM (VALUES {sql_vals}) AS V(originalcode, searchterm, matchlen)
+                FROM (VALUES {place_holder}) AS V(originalcode, searchterm, matchlen)
             )
             SELECT DISTINCT ON (codes.originalcode)
                 codes.originalcode as original_code,
@@ -320,15 +331,15 @@ class AccountAccount(models.Model):
                 account.code as account_code,
                 account.user_type_id as user_type_id
             FROM account_account account
-            JOIN codes ON account.code ilike codes.searchterm
+            JOIN codes ON account.code ILIKE codes.searchterm
             WHERE codes.matchlen > 0
             AND account.company_id = %(company_id)s
             ORDER BY codes.originalcode, match_len DESC, account.id ASC
-        '''
-        self._cr.execute(sql, {
+        ''', {
             'company_id': self.env.company.id,
+            **place_holder_vals,
         })
-        res = self._cr.dictfetchall()
+        res = self.env.cr.dictfetchall()
         res_by_code = {record['original_code']: record for record in res}
         return res_by_code
 
