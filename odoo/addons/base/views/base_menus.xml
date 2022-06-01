@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
       <!-- Top menu item -->
-          <menuitem id="menu_board_root" name="Dashboards" sequence="260" web_icon="base,static/description/board.png" groups="base.group_user"/>
+          <menuitem id="menu_board_root" name="Dashboards" sequence="260" web_icon="base,static/description/board.svg" groups="base.group_user"/>
           <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_board_root" sequence="0"/>
           <menuitem id="menu_reporting_config" name="Configuration" parent="menu_board_root" sequence="100" groups="base.group_system"/>
 
       <!-- Top menu item -->
       <menuitem name="Settings"
           id="menu_administration"
-          web_icon="base,static/description/settings.png"
+          web_icon="base,static/description/settings.svg"
           sequence="550"
           groups="base.group_erp_manager"/>
-          <menuitem id="menu_management" name="Apps" sequence="500" web_icon="base,static/description/modules.png" groups="base.group_system"/>
+          <menuitem id="menu_management" name="Apps" sequence="500" web_icon="base,static/description/modules.svg" groups="base.group_system"/>
           <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
           <!-- FYI The group no_one on 'User & Companies' and 'Translations' is a FP/APR request -->
           <menuitem id="menu_users" name="Users &amp; Companies" parent="menu_administration" sequence="1"/>
