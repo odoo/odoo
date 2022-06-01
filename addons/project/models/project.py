@@ -11,7 +11,7 @@ from random import randint
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.osv.expression import OR, AND
+from odoo.osv import expression
 from odoo.tools.misc import get_lang
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -45,6 +45,9 @@ PROJECT_TASK_READABLE_FIELDS = {
     'legend_done',
     'user_ids',
     'display_parent_task_button',
+    'allow_milestones',
+    'milestone_id',
+    'has_late_and_unreached_milestone',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -323,6 +326,7 @@ class Project(models.Model):
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
     allow_recurring_tasks = fields.Boolean('Recurring Tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
     allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
+    allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
 
     # Project Sharing fields
@@ -363,7 +367,7 @@ class Project(models.Model):
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
-    milestone_count = fields.Integer(compute='_compute_milestone_count')
+    milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
 
     _sql_constraints = [
@@ -782,10 +786,11 @@ class Project(models.Model):
             return {}
         panel_data = {
             'user': self._get_user_values(),
-            'milestones': self._get_milestones(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
             'currency_id': self.currency_id.id,
         }
+        if self.allow_milestones:
+            panel_data['milestones'] = self._get_milestones()
         if self._show_profitability():
             profitability_items = self._get_profitability_items()
             if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
@@ -1120,6 +1125,23 @@ class Task(models.Model):
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     is_private = fields.Boolean(compute='_compute_is_private')
+    allow_milestones = fields.Boolean(related='project_id.allow_milestones')
+    milestone_id = fields.Many2one(
+        'project.milestone',
+        'Milestone',
+        domain="[('project_id', '=', project_id)]",
+        compute='_compute_milestone_id',
+        readonly=False,
+        store=True,
+        tracking=True,
+        help="Track major progress points that must be reached to achieve success (e.g. Product Launch). "
+             "After all the tasks connected to this milestone are completed, you will be invited to mark it as reached if you wish. "
+             "You can deliver your services automatically when a milestone is reached by linking it to a sales order item."
+    )
+    has_late_and_unreached_milestone = fields.Boolean(
+        compute='_compute_has_late_and_unreached_milestone',
+        search='_search_has_late_and_unreached_milestone',
+    )
 
     # Task Dependencies fields
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
@@ -1918,7 +1940,7 @@ class Task(models.Model):
             recurrence_domain = []
             if recurrence_update == 'subsequent':
                 for task in self:
-                    recurrence_domain = OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
+                    recurrence_domain = expression.OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
             else:
                 recurrence_domain = [('recurrence_id', 'in', self.recurrence_id.ids)]
             tasks |= self.env['project.task'].search(recurrence_domain)
@@ -1993,6 +2015,38 @@ class Task(models.Model):
         for task in self:
             if task.parent_id:
                 task.project_id = task.display_project_id or task.parent_id.project_id
+
+    @api.depends('project_id')
+    def _compute_milestone_id(self):
+        for task in self:
+            if task.project_id != task.milestone_id.project_id:
+                task.milestone_id = False
+
+    def _compute_has_late_and_unreached_milestone(self):
+        if all(not task.allow_milestones for task in self):
+            self.has_late_and_unreached_milestone = False
+            return
+        late_milestones = self.env['project.milestone'].sudo()._search([  # sudo is needed for the portal user in Project Sharing.
+            ('id', 'in', self.milestone_id.ids),
+            ('is_reached', '=', False),
+            ('deadline', '<', fields.Date.today()),
+        ])
+        for task in self:
+            task.has_late_and_unreached_milestone = task.allow_milestones and task.milestone_id.id in late_milestones
+
+    def _search_has_late_and_unreached_milestone(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise NotImplementedError(f'The search does not support the {operator} operator or {value} value.')
+        domain = [
+            ('allow_milestones', '=', True),
+            ('milestone_id', '!=', False),
+            ('milestone_id.is_reached', '=', False),
+            ('milestone_id.deadline', '!=', False), ('milestone_id.deadline', '<', fields.Date.today())
+        ]
+        if (operator == '!=' and value) or (operator == '=' and not value):
+            domain.insert(0, expression.NOT_OPERATOR)
+            domain = expression.distribute_not(domain)
+        return domain
 
     # ---------------------------------------------------
     # Mail gateway
@@ -2261,6 +2315,22 @@ class Task(models.Model):
             return children
         return children + children._get_all_subtasks(depth - 1)
 
+    def get_milestone_to_mark_as_reached_action(self):
+        """ Return an action if the milestone can be marked as reached otherwise return False """
+        milestones = self.milestone_id.filtered('can_be_marked_as_done')
+        if milestones:
+            wizard = self.env['project.milestone.reach.wizard'].create({'line_ids': [Command.create({'milestone_id': m.id}) for m in milestones]})
+            return {
+                'name': _('Mark milestone as reached'),
+                'view_mode': 'form',
+                'res_model': 'project.milestone.reach.wizard',
+                'views': [(self.env.ref('project.project_milestone_reach_wizard_view_form').id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wizard.id,
+                'target': 'new',
+            }
+        return False
+
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
@@ -2447,7 +2517,7 @@ class ProjectTags(models.Model):
     ]
 
     def _get_project_tags_domain(self, domain, project_id):
-        return AND([
+        return expression.AND([
             domain,
             ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]
         ])

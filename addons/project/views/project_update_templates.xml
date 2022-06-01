@@ -2,9 +2,13 @@
 <odoo>
     <template id="project.milestone_deadline">
 <t t-if="milestone['deadline']">
-(due <t t-esc="milestone['deadline']" t-options='{"widget": "date"}'/><t t-if="not milestone['is_reached'] or not milestone['reached_date']">)</t><t t-else=""> - reached on<t t-if="milestone['reached_date'] &gt; milestone['deadline']">
+(due <t t-esc="milestone['deadline']" t-options='{"widget": "date"}'/><t t-if="not milestone['is_reached'] or not milestone['reached_date']">
+<t t-if="milestone['can_be_marked_as_done']"> - <font t-att-style="'color: rgb(0, ' + str(color_level) + ', 0)'">ready to be marked as reached</font></t>)</t><t t-else=""> - reached on<t t-if="milestone['reached_date'] &gt; milestone['deadline']">
 <font t-att-style="'color: rgb(' + str(color_level) + ', 0, 0)'"><b><t t-esc="milestone['reached_date']" t-options='{"widget": "date"}'/></b></font>)</t><t t-else="">
 <font t-att-style="'color: rgb(0, ' + str(color_level) + ', 0)'"><b><t t-esc="milestone['reached_date']" t-options='{"widget": "date"}'/></b></font>)</t></t>
+</t>
+<t t-elif="milestone['can_be_marked_as_done']">
+(<font t-att-style="'color: rgb(0, ' + str(color_level) + ', 0)'">ready to be marked as reached</font>)
 </t>
     </template>
 
@@ -27,7 +31,7 @@
 <t t-foreach="milestones['list']" t-as="milestone">
 <li t-attf-class="{{milestone['is_reached'] and 'o_checked' or ''}}">
 <t t-esc="milestone['name']"/>
-<span t-if="milestone['is_deadline_future'] and not milestone['is_reached']"><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="64"/><t t-call="project.milestone_deadline"/></font></span>
+<span t-if="milestone['is_deadline_future'] and not milestone['is_reached'] and not milestone['can_be_marked_as_done']"><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="64"/><t t-call="project.milestone_deadline"/></font></span>
 <span t-else=""><t t-set="color_level" t-value="128"/><t t-call="project.milestone_deadline"/></span>
 </li>
 </t>
