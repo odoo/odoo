@@ -14,7 +14,9 @@ class HrPlanWizard(models.TransientModel):
         employee = self.env['hr.employee'].browse(self.env.context.get('active_ids')[0] if self.env.context.get('active_ids') else [])
         return self.env['hr.plan'].search([('company_id', '=', employee.company_id.id)], limit=1)
 
-    plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(), domain="[('company_id', '=', company_id)]")
+    plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(),
+        domain="[('company_id', '=', company_id), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
+    department_id = fields.Many2one(related='employee_ids.department_id')
     employee_ids = fields.Many2many(
         'hr.employee', 'hr_employee_hr_plan_wizard_rel', 'employee_id', 'plan_wizard_id', string='Employee', required=True,
         default=lambda self: self.env.context.get('active_ids', []),

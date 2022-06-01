@@ -11,6 +11,7 @@ class HrPlan(models.Model):
     name = fields.Char('Name', required=True)
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company)
+    department_id = fields.Many2one('hr.department', check_company=True)
     plan_activity_type_ids = fields.One2many(
         'hr.plan.activity.type', 'plan_id',
         string='Activities',
@@ -20,5 +21,7 @@ class HrPlan(models.Model):
 
     @api.depends('plan_activity_type_ids')
     def _compute_steps_count(self):
+        activity_type_data = self.env['hr.plan.activity.type']._read_group([('plan_id', 'in', self.ids)], ['plan_id'], ['plan_id'])
+        steps_count = {x['plan_id'][0]: x['plan_id_count'] for x in activity_type_data}
         for plan in self:
-            plan.steps_count = len(plan.plan_activity_type_ids)
+            plan.steps_count = steps_count.get(plan.id, 0)
