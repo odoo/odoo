@@ -17,6 +17,7 @@ TYPE2FIELD = {
     'date': 'value_datetime',
     'datetime': 'value_datetime',
     'selection': 'value_text',
+    'html': 'value_text',
 }
 
 TYPE2CLEAN = {
@@ -29,6 +30,7 @@ TYPE2CLEAN = {
     'binary': lambda val: val or False,
     'date': lambda val: val.date() if val else False,
     'datetime': lambda val: val or False,
+    'html': lambda val: val or False,
 }
 
 
@@ -56,6 +58,7 @@ class Property(models.Model):
                              ('date', 'Date'),
                              ('datetime', 'DateTime'),
                              ('selection', 'Selection'),
+                             ('html', 'Html'),
                              ],
                             required=True,
                             default='many2one',
