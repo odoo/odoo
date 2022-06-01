@@ -40,8 +40,9 @@ function getSizeFromWidth(width) {
 
 /**
  * Patch legacy objects referring to the ui size. This function must be removed
- * when switching to the new environment in the discuss app. This will impact
- * env.browser.innerWidth, env.device.isMobile and config.device.{size_class/isMobile}.
+ * when the wowl env will be available in the form_renderer (currently the form
+ * renderer relies on config). This will impact env.browser.innerWidth,
+ * env.device.isMobile and config.device.{size_class/isMobile}.
  *
  * @param {number} size
  * @param {number} width
