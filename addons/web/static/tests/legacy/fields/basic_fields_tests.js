@@ -150,19 +150,6 @@ QUnit.module('Legacy basic_fields', {
                     position: "after",
                 }]
             },
-            "ir.translation": {
-                fields: {
-                    lang: {type: "char"},
-                    value: {type: "char"},
-                    res_id: {type: "integer"}
-                },
-                records: [{
-                    id: 99,
-                    res_id: 37,
-                    value: '',
-                    lang: 'en_US'
-                }]
-            },
         };
 
         target = getFixture();
@@ -1581,25 +1568,18 @@ QUnit.module('Legacy basic_fields', {
                 user_context: {lang: 'en_US'},
             },
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-                    return Promise.resolve({
-                        domain: [],
-                        context: {search_default_name: 'partnes,foo'},
-                    });
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    assert.deepEqual(args.args, [[1],"foo"], "should translate the foo field of the record");
+                    return Promise.resolve([
+                        [{"lang": "en_US", "src": "yop", "value": "yop"}, {"lang": "fr_BE", "src": "yop", "value": "valeur français"}],
+                        {"translation_type": "char", "translation_show_src": false}
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
-                if (args.method === "search_read" && args.model == "ir.translation") {
-                    return Promise.resolve([
-                        {lang: 'en_US', src: 'yop', value: 'yop', id: 42},
-                        {lang: 'fr_BE', src: 'yop', value: 'valeur français', id: 43}
-                    ]);
-                }
-                if (args.method === "write" && args.model == "ir.translation") {
-                    assert.deepEqual(args.args[1], {value: "english value"},
-                        "the new translation value should be written");
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
+                    assert.deepEqual(args.args, [[1], "foo", {"en_US": "english value"}], "the new translation value should be written");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1669,31 +1649,21 @@ QUnit.module('Legacy basic_fields', {
                 user_context: {lang: 'en_US'},
             },
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"foo"], 'should call "call_button" route');
-                    return Promise.resolve({
-                        domain: [],
-                        context: {
-                            search_default_name: 'partner,foo',
-                            translation_type: 'char',
-                            translation_show_src: true,
-                        },
-                    });
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    assert.deepEqual(args.args, [[1],"foo"], "should translate the foo field of the record");
+                    return Promise.resolve([
+                        [{"lang": "en_US", "src": "first paragraph", "value": "first paragraph"},
+                            {"lang": "en_US", "src": "second paragraph", "value": "second paragraph"},
+                            {"lang": "fr_BE", "src": "first paragraph", "value": "premier paragraphe"},
+                            {"lang": "fr_BE", "src": "second paragraph", "value": "deuxième paragraphe"}],
+                        {"translation_type": "char", "translation_show_src": true}
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US", "English"], ["fr_BE", "French (Belgium)"]]);
                 }
-                if (args.method === "search_read" && args.model == "ir.translation") {
-                    return Promise.resolve([
-                        {lang: 'en_US', src: 'first paragraph', value: 'first paragraph', id: 42},
-                        {lang: 'en_US', src: 'second paragraph', value: 'second paragraph', id: 43},
-                        {lang: 'fr_BE', src: 'first paragraph', value: 'premier paragraphe', id: 44},
-                        {lang: 'fr_BE', src: 'second paragraph', value: 'deuxième paragraphe', id: 45},
-                    ]);
-                }
-                if (args.method === "write" && args.model == "ir.translation") {
-                    assert.deepEqual(args.args[1], {value: "first paragraph modified"},
-                        "Wrong update on translation");
+                if (route === "/web/dataset/call_kw/partner/update_field_translations") {
+                    assert.deepEqual(args.args, [[1], "foo", {"en_US": {"first paragraph": "first paragraph modified"}}], "the new translation value should be written");
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -1714,11 +1684,11 @@ QUnit.module('Legacy basic_fields', {
         assert.containsN($('.modal .o_translation_dialog'), '.translation', 4,
             'four rows should be visible');
 
-        var $enField = $('.modal .o_translation_dialog .translation:first() input');
-        assert.strictEqual($enField.val(), 'first paragraph',
-            'first part of english translation should be filled');
+        var $frField = $('.modal .o_translation_dialog .translation:first() input');
+        assert.strictEqual($frField.val(), 'first paragraph',
+            'first part of English translation should be filled');
 
-        await testUtils.fields.editInput($enField, "first paragraph modified");
+        await testUtils.fields.editInput($frField, "first paragraph modified");
         await testUtils.dom.click($('.modal button.btn-primary'));  // save
         await testUtils.nextTick();
 
@@ -2622,12 +2592,12 @@ QUnit.module('Legacy basic_fields', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["partner",1,"txt"], 'should call "call_button" route');
-                    return Promise.resolve({
-                        domain: [],
-                        context: {search_default_name: 'partnes,foo'},
-                    });
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    assert.deepEqual(args.args, [[1],"txt"], "should translate the txt field of the record");
+                    return Promise.resolve([
+                        [{"lang": "en_US", "src": "yop", "value": "yop"}, {"lang": "fr_BE", "src": "yop", "value": "valeur français"}],
+                        {"translation_type": "text", "translation_show_src": false}
+                    ]);
                 }
                 if (route === "/web/dataset/call_kw/res.lang/get_installed") {
                     return Promise.resolve([["en_US"], ["fr_BE"]]);
