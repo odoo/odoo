@@ -115,6 +115,15 @@ class AccountPayment(models.Model):
             if record.payment_type == 'outbound' and method_line:
                 record.payment_method_line_id = method_line[0]
 
+    def _get_aml_default_display_name_list(self):
+        # Extends 'account'
+        values = super()._get_aml_default_display_name_list()
+        if self.check_number:
+            date_index = [i for i, value in enumerate(values) if value[0] == 'date'][0]
+            values.insert(date_index - 1, ('check_number', self.check_number))
+            values.insert(date_index - 1, ('sep', ' - '))
+        return values
+
     def action_post(self):
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
         for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
