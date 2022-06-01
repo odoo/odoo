@@ -5,8 +5,7 @@ import unittest
 
 from odoo.tests import tagged
 from odoo.tests.common import can_import
-from odoo.tools import mute_logger
-from odoo.modules.module import get_module_resource
+from odoo.tools import mute_logger, file_open
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -16,8 +15,9 @@ class TestXLSXImport(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        xls_file_path = get_module_resource('account', 'static', 'xls', 'generic_import.xlsx')
-        cls.file_content = open(xls_file_path, 'rb').read()
+        test_file = "account/static/xls/generic_import.xlsx"
+        with file_open(test_file, "rb") as f:
+            cls.file_content = f.read()
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD module not available")
     def test_xlsx_sheet_select(self):
@@ -47,9 +47,9 @@ class TestXLSXImport(AccountTestInvoicingCommon):
             'has_headers': True,
         })
         preview['options']['name_create_enabled_fields'] = {'line_ids/account_id': True, 'journal_id': True}
-        input_file_data, import_fields = import_wizard._convert_import_data(
+        import_fields = import_wizard._convert_import_data(
             ['/'.join(match) for match in preview['matches'].values()],
-            preview['options'])
+            preview['options'])[1]
 
         result = import_wizard.with_company(self.env.company).execute_import(
             import_fields,
@@ -94,6 +94,6 @@ class TestXLSXImport(AccountTestInvoicingCommon):
         self.assertEqual(result['messages'], [], "The import should have been successful without error")
 
         existing_account = self.env['account.account'].browse(existing_id)
-        self.assertEqual(len(result['ids']), 13, '13 Accounts should have been imported')
+        self.assertEqual(len(result['ids']), 14, "14 Accounts should have been imported")
         self.assertEqual(existing_account.name, "Bank", "The existing account should have been updated")
         self.assertEqual(existing_account.current_balance, -3500.0, "The balance should have been updated")
