@@ -18,7 +18,7 @@ class AccountChartTemplateTest(TransactionCase):
             'name': 'Because I am accountman!',
             'login': 'accountman',
             'password': 'accountman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
+            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_invoice').id)],
         })
         user.partner_id.email = 'accountman@test.com'
 
@@ -32,6 +32,8 @@ class AccountChartTemplateTest(TransactionCase):
             'record': cls.company,
         }])
         cls.env.user.company_ids |= cls.company
+        cls.env.user.company_id = cls.company
+        cls.env.user.company_id.currency_id = cls.env.ref('base.EUR')
 
         cls.ChartTemplate = cls.env['account.chart.template']
         cls._prepare_subclasses()
@@ -108,3 +110,33 @@ class AccountChartTemplateTest(TransactionCase):
             ('se_k3', ['se_k3', 'se_k2', 'se', '']),
         ]:
             self.assertEqual(self.ChartTemplate._get_parent_prefixes(code), parents)
+
+
+class DefaultChartTemplateTest(AccountChartTemplateTest):
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super(DefaultChartTemplateTest, cls).setUpClass(chart_template_ref)
+        cls.ChartTemplate.try_loading(template_code=None, company=cls.company, install_demo=False)
+
+    def test_default_chart(self):
+        self.assertEqual(self.company.currency_id.name, 'USD')
+        self.assertTrue(self.env.ref('base.EUR').active)
+        self.assertTrue(self.env.ref('base.USD').active)
+
+# import json
+# from pprint import pprint
+# from odoo import fields
+# def serialize(obj, level=0):
+#     def serialize_val(obj, k):
+#         v = getattr(obj, k)
+#         if isinstance(v, str):
+#             return v
+#         if isinstance(v, (int, float)):
+#             return str(v)
+#         if isinstance(obj._fields[k], (fields.One2many, fields.Many2many)) and level == 0:
+#             return [serialize(x, level=level+1) for x in v]
+#         return v
+#     as_dict = lambda x: {k: serialize_val(obj, k) for k in x._fields}
+#     return [as_dict(x) for x in obj]
+#
+# pprint([serialize(x) for x in self.env['res.currency'].with_context({'active_test': False}).search([('name', 'in', ['EUR', 'USD'])])])

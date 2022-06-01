@@ -33,6 +33,8 @@ def _auto_install_l10n(env):
         template_code = Chart._guess_chart_template(env.company)
         Chart.try_loading(template_code, env.company)
 
+        env.ref('base.EUR').active = True
+
         module_list = []
         if country_code in ['US', 'CA']:
             module_list.append('account_check_printing')
