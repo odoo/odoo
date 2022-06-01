@@ -107,16 +107,13 @@ class Base(models.AbstractModel):
             'files': []
         }
 
-    @api.model
-    def _get_import_sheet(self, sheet_names):
+    def _suggested_import_sheet_names(self):
         """
-        Get the correct sheet id from the available xls sheet names
-
-        :param: sheet_names contains a list of available sheets
-
-        :return: int specifying the id of the
+        Overridable method to get the recommended excel sheet names for the model.
+        It is used to pre-select the sheet when importing excel files.
+        :return: a list of possible sheet names
         """
-        return sheet_names[0]
+        return []
 
 class ImportMapping(models.Model):
     """ mapping of previous column:field selections
@@ -401,10 +398,16 @@ class Import(models.TransientModel):
             raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
         raise ValueError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(self.file_type))
 
+    def _get_suggested_sheet(self, sheets):
+        for suggestion in self.env[self.res_model]._suggested_import_sheet_names():
+            if suggestion in sheets:
+                return suggestion
+        return sheets[0]
+
     def _read_xls(self, options):
         book = xlrd.open_workbook(file_contents=self.file or b'')
         sheets = options['sheets'] = book.sheet_names()
-        sheet = options['sheet'] = options.get('sheet') or self.env[self.res_model]._get_import_sheet(sheets)
+        sheet = options['sheet'] = options.get('sheet') or self._get_suggested_sheet(sheets)
         return self._read_xls_book(book, sheet)
 
     def _read_xls_book(self, book, sheet_name):
