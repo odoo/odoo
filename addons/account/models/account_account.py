@@ -300,8 +300,17 @@ class AccountAccount(models.Model):
     def _find_account_by_closest_parent_code(self, codes):
         ''' Finds the account with the closest matching code
             eg. code 123456 will return 123400 as it is a closer parent than 123756
-            :param codes: a list of string codes to search for
-            :return: a dict with key code and values {original_code: code, match_len: int, account_id: matched account id, account_code: matched account code, user_type_id: matched account type}
+            :param codes: list(str) of codes to search for
+            :return: dict of codes with matching account values
+                {
+                    code1: {
+                        original_code: code1,
+                        match_len: int,
+                        account_id: matched account id,
+                        account_code: matched account code,
+                        user_type_id: matched account type
+                    }, ...
+                }
         '''
         if not codes:
             return {}
@@ -636,8 +645,12 @@ class AccountAccount(models.Model):
 
     @api.model
     def load(self, fields, data, key_fields):
-        """ Overridden for better performances when importing a list of account
-        with opening debit/credit. In that case, the auto-balance is postpone
+        """ Overridden for two reasons
+        1. Split code and name before import since import files could have 1
+        column concatenating code and name, and an update to existing accounts
+        based on a matching code is required.
+        2. better performance when importing a list of accounts
+        with opening debit/credit/. In that case, the auto-balance is postponed
         until the whole file has been imported.
         """
         if 'code' in fields and 'name' not in fields:

@@ -676,7 +676,7 @@ class AccountJournal(models.Model):
     def name_create(self, name):
         # Only when importing
         if 'import_file' in self.env.context:
-            code = name[:4]
+            code = name[:self._fields['code'].size]
             return self.create({'code': code, 'name': name, 'type': 'general'}).name_get()[0]
         return super().name_create(name)
 
