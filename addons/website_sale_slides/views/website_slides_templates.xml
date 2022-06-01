@@ -68,6 +68,18 @@
 </template>
 
 <!-- COURSE -->
+<template name="Course Main" id="course_main" inherit_id="website_slides.course_main">
+    <xpath expr="//div[@id='home']" position="before">
+        <div t-if="channel.enroll == 'payment' and not channel.product_id.is_published"
+            class="alert alert-info" role="alert" groups="website_slides.group_website_slides_officer">
+            This course cannot be bought because its linked product
+            <a t-attf-href="/web#id=#{channel.product_id.product_tmpl_id.id}&amp;view_type=form&amp;model=#{channel.product_id.product_tmpl_id._name}&amp;action=website_sale.product_template_action_website"
+                class="alert-link" t-out="channel.product_id.name"/>
+            is not published.
+        </div>
+    </xpath>
+</template>
+
 <template name="Course Sidebar (infos, CTA)" id="course_join" inherit_id="website_slides.course_join">
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
@@ -84,7 +96,7 @@
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
-    <t t-if="channel.product_id.website_published and not channel.is_member">
+    <t t-if="product_info and channel.product_id.website_published and not channel.is_member">
         <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
             <div class="css_editable_mode_hidden">
                 <!-- real price -->
@@ -120,7 +132,7 @@
     </t>
     <t t-elif="not channel.is_member">
         <div class="alert my-0 bg-200 text-center">
-            Course Not Buyable
+            Course Unavailable
         </div>
     </t>
 </template>
