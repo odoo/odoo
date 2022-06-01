@@ -51,8 +51,7 @@ class AccountEdiFormat(models.Model):
                     # should not happen as the file has been checked by SdiCoop
                     _logger.info('Received file badly formatted, skipping: \n %s', file)
                     continue
-
-                invoice = self.env['account.move'].create({'move_type': 'in_invoice'})
+                invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
                 attachment = self.env['ir.attachment'].create({
                     'name': fattura['filename'],
                     'raw': file,
