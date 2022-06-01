@@ -12,10 +12,10 @@
     #{$parent} {
         color: $color !important;
     }
-    @if $emphasized-link-hover-darken-percentage != 0 {
+    @if $link-shade-percentage != 0 {
         a#{$parent} {
             &:hover, &:focus {
-                color: darken($color, $emphasized-link-hover-darken-percentage) !important;
+                color: darken($color, $link-shade-percentage) !important;
             }
         }
     }
