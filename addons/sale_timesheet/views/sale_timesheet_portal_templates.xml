@@ -116,8 +116,7 @@
                         <t t-if="invoice_line.id in invoices_accessible">
                             <a t-attf-href="/my/invoices/{{ invoice_line.id }}">
                                 <i t-if="invoice_line.state == 'draft'">Draft Invoice</i>
-                                <t t-else="" t-esc="invoice_line.name"/>
-                            </a>
+                                <t t-else="" t-esc="invoice_line.name"/></a>
                             <span t-if="not invoice_line_last">,</span>
                         </t>
                         <t t-else=""><span t-esc="invoice_line.name"></span><span t-if="not invoice_line_last">,</span></t>
