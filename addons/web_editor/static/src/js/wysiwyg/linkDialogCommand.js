@@ -2,7 +2,6 @@
 
 import { registry } from '@web/core/registry'
 import { HotkeyCommandItem } from '@web/core/commands/default_providers'
-import Wysiwyg from 'web_editor.wysiwyg'
 
 // The only way to know if an editor is under focus when the command palette
 // open is to look if there in a selection within a wysiwyg editor in the page.
@@ -14,6 +13,10 @@ let sessionActionLabel = [];
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("link dialog", {
     async provide(env, { sessionId }) {
+        const Wysiwyg = odoo.__DEBUG__.services['web_editor.wysiwyg'];
+        if (!Wysiwyg) {
+            return [];
+        }
         let [lastSessionId, action, label] = sessionActionLabel;
         if (lastSessionId !== sessionId) {
             const wysiwyg = [...Wysiwyg.activeWysiwygs].find((wysiwyg) => {
