@@ -263,6 +263,11 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.cash_split_pm1 = cls.cash_pm1.copy(default={
             'name': 'Split (Cash) PM',
             'split_transactions': True,
+            'journal_id': cls.env['account.journal'].create({
+                                'name': "Cash",
+                                'code': "CSH %s" % config.id,
+                                'type': 'cash',
+                            }).id
         })
         cls.bank_split_pm1 = cls.bank_pm1.copy(default={
             'name': 'Split (Bank) PM',
