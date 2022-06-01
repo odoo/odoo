@@ -142,6 +142,14 @@ Wysiwyg.include({
                 callback: () => {
                     this._insertTemplate();
                 },
+            }, {
+                groupName: 'Knowledge',
+                title: 'Toggle section',
+                description: 'Add a toggle section.',
+                fontawesome: 'fa-caret-square-o-right',
+                callback: () => {
+                    this._insertToggle();
+                }
             });
         }
         return commands;
@@ -182,6 +190,19 @@ Wysiwyg.include({
             });
         }
         this.$editable.trigger('refresh_behaviors', { behaviorsData: behaviorsData});
+    },
+    /**
+     * Insert a /toggle block
+     */
+     _insertToggle: function () {
+        const toggleFragment = new DocumentFragment();
+        const toggleBlock = $(QWeb.render('knowledge.toggle_block', {}))[0];
+        // if the cursor is inside a toggle block, insert the new toggle block below it
+        toggleFragment.append(toggleBlock);
+        const [container] = this.odooEditor.execCommand('insertFragment', toggleFragment);
+        setCursorStart(container.querySelector('.o_knowledge_toggle_header_text'));
+        this._notifyNewToolbars(container);
+        this._notifyNewBehaviors(container);
     },
     /**
      * Insert a /template block

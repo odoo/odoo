@@ -32,4 +32,16 @@
             </div>
         </form>
     </t>
+    <t t-name="knowledge.toggle_block">
+        <!-- NOTE: this could be a <details> block but the Odoo editor doesn't support it well for now -->
+        <div class="o_knowledge_toggle o_knowledge_behavior_anchor o_knowledge_behavior_type_toggle">
+            <div class="o_knowledge_toggle_header">
+                <a class="o_toggle_caret oe_unremovable" href="#"><i class="fa fa-caret-square-o-down mr-2"/></a>
+                <p class="d-inline-flex w-75 o_knowledge_content o_knowledge_toggle_header_text o_no_powerbox"><br /></p>
+            </div>
+            <div class="o_knowledge_content o_knowledge_toggle_content ml-4 oe_unremovable">
+                <p><br/></p>
+            </div>
+        </div>
+    </t>
 </templates>

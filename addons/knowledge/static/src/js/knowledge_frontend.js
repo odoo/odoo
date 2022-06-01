@@ -11,6 +11,7 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
         'keyup .knowledge_search_bar': '_searchArticles',
         'click .o_article_caret': '_onFold',
         'click .o_favorites_toggle_button': '_toggleFavorite',
+        'click .o_toggle_caret': '_onToggleBlockClick',
     },
 
     /**
@@ -85,5 +86,26 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
                 this._setTreeFavoriteListener();
             });
         });
+    },
+
+    /**
+     * @param {Event} event
+     */
+     _onToggleBlockClick: function (event) {
+        const $toggleButton = $(event.currentTarget);
+        const $toggleBlock = $toggleButton.closest('.o_knowledge_toggle');
+        const local_storage = JSON.parse(localStorage.getItem('knowledge_toggle_data')) || {};
+        const id = $toggleBlock[0].id;
+        if (local_storage && local_storage[id]) {
+            local_storage[id] = !local_storage[id];
+        } else {
+            local_storage[id] = true;
+        }
+        localStorage.setItem('knowledge_toggle_data', JSON.stringify(local_storage));
+        const $toggleContent = $toggleBlock.find('.o_knowledge_toggle_content');
+        const caret = $toggleButton[0].firstElementChild;
+        $toggleContent[0].classList.toggle('d-none');
+        caret.classList.toggle('fa-caret-square-o-down');
+        caret.classList.toggle('fa-caret-square-o-right');
     },
 });

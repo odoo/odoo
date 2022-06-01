@@ -115,6 +115,36 @@ HTMLLIElement.prototype.oEnter = function () {
     this.oShiftTab();
 };
 /**
+ * Specific behavior for div items.
+ */
+HTMLDivElement.prototype.oEnter = function () {
+    // NOTE: this should ideally be inherited in knowledge, but there is currently no way of doing that
+    if (this.classList.contains('o_knowledge_toggle_header')) {
+        // if toggle is open and doesn't contain any text, delete it
+        // if toggle is closed and contains text, create new toggle under it
+        // if toggle is open and contains text, go into content node
+
+        const isToggleOpen = this.querySelector('.o_toggle_caret').firstElementChild.classList.contains('fa-caret-square-o-down');
+        const content = this.parentElement.querySelector('.o_knowledge_toggle_content > p:last-child');
+        if (this.textContent.trim().length <= 1 && (!content || content.textContent.trim().length <= 1)) {
+            const newParagraph = document.createElement('p');
+            this.parentElement.after(newParagraph);
+            this.parentElement.remove();
+            fillEmpty(newParagraph);
+            setCursorStart(newParagraph);
+        } else if (isToggleOpen) {
+            setCursorEnd(content);
+        } else {
+            const newToggle = this.parentElement.cloneNode(true);
+            newToggle.querySelector('.o_knowledge_toggle_content').innerHTML = '';
+            newToggle.querySelector('.o_knowledge_toggle_header_text').innerHTML = '';
+            this.parentElement.after(newToggle);
+            setCursorStart(newToggle.querySelector('p'));
+        }
+    }
+    return this;
+};
+/**
  * Specific behavior for pre: insert newline (\n) in text or insert p at end.
  */
 HTMLPreElement.prototype.oEnter = function (offset) {

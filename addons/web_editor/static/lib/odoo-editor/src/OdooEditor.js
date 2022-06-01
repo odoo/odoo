@@ -2205,6 +2205,7 @@ export class OdooEditor extends EventTarget {
      * @param {Node} node
      */
     _cleanForPaste(node) {
+        this._pluginCall('cleanForPaste', [node]);
         if (!this._isWhitelisted(node) || this._isBlacklisted(node)) {
             if (!node.matches || node.matches(CLIPBOARD_BLACKLISTS.remove.join(','))) {
                 node.remove();

@@ -22,5 +22,23 @@ export class KnowledgePlugin {
                 node.oKnowledgeBehavior.removeBehavior();
             }
         }
+        for (const node of editable.querySelectorAll('.o_knowledge_toggle')) {
+            const toggleContent = node.querySelector('.o_knowledge_toggle_content');
+            toggleContent.classList.add('d-none');
+            const caret = node.querySelector('.o_toggle_caret').firstElementChild;
+            caret.classList.remove('fa-caret-square-o-down');
+            caret.classList.add('fa-caret-square-o-right');
+        }
+    }
+    /**
+     * @param {Element} editable
+     */
+    cleanForPaste(editable) {
+        if (editable.querySelectorAll) {
+            // remove ID from toggle elements
+            for (const node of editable.querySelectorAll('.o_knowledge_toggle')) {
+                node.removeAttribute('id');
+            }
+        }
     }
 }

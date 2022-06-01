@@ -159,8 +159,99 @@ const ArticleBehavior = KnowledgeBehavior.extend({
     },
 });
 
+/**
+ * A behavior for the /toggle command @see Wysiwyg . This behavior use a
+ * mutationObserver to creates a toggle section.
+ */
+const ToggleBehavior = ContentsContainerBehavior.extend({
+    /**
+     * @override
+     */
+    init: function () {
+        this.toggleLinkClickHandler = this._onToggleClick.bind(this);
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    applyAttributes: function () {
+        this._super.apply(this, arguments);
+        let toggleBlock = this.anchor;
+        if (!toggleBlock.id) {
+            // generate a unique id based on timestamp
+            const id = `o_knowledge_toggle_${Date.now()}`;
+            toggleBlock.id = id;
+        }
+        else {
+            const local_storage = JSON.parse(localStorage.getItem('knowledge_toggle_data')) || {};
+            const arrowIcon = toggleBlock.querySelector('.o_toggle_caret').firstElementChild;
+            if (local_storage[toggleBlock.id]) {
+                toggleBlock.querySelectorAll('.o_knowledge_toggle_content').forEach(element => {
+                    element.classList.add('d-none');
+                });
+                arrowIcon.classList.add('fa-caret-square-o-right');
+                arrowIcon.classList.remove('fa-caret-square-o-down');
+            }
+            else {
+                toggleBlock.querySelectorAll('.o_knowledge_toggle_content').forEach(element => {
+                    element.classList.remove('d-none');
+                });
+                arrowIcon.classList.add('fa-caret-square-o-down');
+                arrowIcon.classList.remove('fa-caret-square-o-right');
+            }
+        }
+        if (this.mode === 'edit') {
+            this.anchor.querySelectorAll('a').forEach(element => {
+                element.setAttribute('contenteditable', 'false');
+            });
+        }
+    },
+    /**
+     * @override
+     */
+    applyListeners: function () {
+        this._super.apply(this, arguments);
+        this.anchor.querySelector('.o_toggle_caret').addEventListener('click', this.toggleLinkClickHandler);
+    },
+    /**
+     * @override
+     */
+    disableListeners: function () {
+        this.anchor.querySelector('.o_toggle_caret').removeEventListener('click', this.toggleLinkClickHandler);
+    },
+    /**
+     * Toggle hidden section
+     *
+     * @param {Event} event
+     */
+    _onToggleClick: function (event) {
+        event.preventDefault();
+        if (this.handler.editor) {
+            this.handler.editor.observerUnactive('knowledge_attributes');
+        }
+        const id = this.anchor.id;
+        const local_storage = JSON.parse(localStorage.getItem('knowledge_toggle_data')) || {};
+        if (local_storage && local_storage[id]) {
+            local_storage[id] = !local_storage[id];
+        } else {
+            local_storage[id] = true;
+        }
+        localStorage.setItem('knowledge_toggle_data', JSON.stringify(local_storage));
+        const caretLink = this.anchor.querySelector('.o_toggle_caret');
+        const toggleContent = caretLink.parentElement.nextElementSibling;
+        const caret = caretLink.firstElementChild;
+        toggleContent.classList.toggle('d-none');
+        caret.classList.toggle('fa-caret-square-o-down');
+        caret.classList.toggle('fa-caret-square-o-right');
+        if (this.handler.editor) {
+            this.handler.editor.observerActive('knowledge_attributes');
+        }
+    },
+});
+
 export {
     KnowledgeBehavior,
     ContentsContainerBehavior,
     ArticleBehavior,
+    ToggleBehavior,
 };

@@ -11,4 +11,5 @@ CLIPBOARD_WHITELISTS.classes.push(/^o_knowledge_/);
 nonEditableMediaAncestorsSelectors.push(
     '.o_knowledge_file',
     '.o_knowledge_toolbar',
+    '.o_knowledge_toggle',
 );
