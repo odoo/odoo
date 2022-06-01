@@ -230,7 +230,7 @@ class TestTermCount(common.TransactionCase):
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'dot')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")
 
-        self.env.context = dict(self.env.context, lang="dot")
+        self.env = self.env(context=dict(self.env.context, lang="dot"))
         self.assertEqual(_("Accounting"), "samva", "The code translation was not applied")
 
     def test_export_pollution(self):

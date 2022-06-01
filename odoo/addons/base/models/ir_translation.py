@@ -251,6 +251,7 @@ class IrTranslation(models.Model):
         :param src: the source of the translation
         """
         self._modified_model(name.split(',')[0])
+        self.flush_model()
 
         # update existing translations
         self._cr.execute("""UPDATE ir_translation
@@ -259,6 +260,7 @@ class IrTranslation(models.Model):
                             RETURNING res_id""",
                          (value, src, 'translated', lang, tt, name, tuple(ids)))
         existing_ids = [row[0] for row in self._cr.fetchall()]
+        self.invalidate_model(['value', 'src', 'state'])
 
         # create missing translations
         self.sudo().create([{
@@ -723,6 +725,7 @@ class IrTranslation(models.Model):
                 """,
                 (values[0], values[1], values[2], where[0], where[1], where[2], tuple(values[3]))
             )
+        self.invalidate_model(['value', 'src', 'state'])
 
     @api.model
     def translate_fields(self, model, id, field=None):
