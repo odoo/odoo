@@ -121,7 +121,7 @@ var BaseSettingRenderer = FormRenderer.extend({
      * @returns {string} icon url
      */
     _getAppIconUrl: function (module) {
-        return module === "general_settings" ? "/base/static/description/settings.png" : "/"+module+"/static/description/icon.png";
+        return module === "general_settings" ? "/base/static/description/settings.svg" : "/"+module+"/static/description/icon.svg";
     },
     /**
      *
