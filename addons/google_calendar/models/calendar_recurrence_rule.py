@@ -89,7 +89,7 @@ class RecurrenceRule(models.Model):
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
         emails = [a.get('email') for a in google_attendees]
-        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
         existing_attendees = self.calendar_event_ids.attendee_ids
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]

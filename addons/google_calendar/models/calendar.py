@@ -140,7 +140,7 @@ class Meeting(models.Model):
         if google_event.exists(self.env):
             existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
-        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]
             if email in attendees_by_emails:

@@ -2793,7 +2793,7 @@ class AccountMove(models.Model):
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
             for move, reverse_move in zip(self, reverse_moves):
                 group = defaultdict(list)
-                for line in move.line_ids + reverse_move.line_ids:
+                for line in (move.line_ids + reverse_move.line_ids).filtered(lambda l: not l.reconciled):
                     group[(line.account_id, line.currency_id)].append(line.id)
                 for (account, dummy), line_ids in group.items():
                     if account.reconcile or account.internal_type == 'liquidity':

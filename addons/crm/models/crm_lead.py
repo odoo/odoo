@@ -668,13 +668,13 @@ class Lead(models.Model):
     def write(self, vals):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
-
+        stage_is_won = False
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])
             if stage_id.is_won:
                 vals.update({'probability': 100, 'automated_probability': 100})
-
+                stage_is_won = True
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
@@ -683,10 +683,18 @@ class Lead(models.Model):
 
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
+        if not stage_is_won:
+            return super(Lead, self).write(vals)
 
-        write_result = super(Lead, self).write(vals)
-
-        return write_result
+        # stage change between two won stages: does not change the date_closed
+        leads_already_won = self.filtered(lambda r: r.stage_id.is_won)
+        remaining = self - leads_already_won
+        if remaining:
+            result = super(Lead, remaining).write(vals)
+        if leads_already_won:
+            vals.pop('date_closed', False)
+            result = super(Lead, leads_already_won).write(vals)
+        return result
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
