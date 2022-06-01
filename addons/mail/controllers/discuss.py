@@ -431,31 +431,8 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        res = {'hasWriteAccess': False}
         thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
-        try:
-            thread.check_access_rights("write")
-            thread.check_access_rule("write")
-            res['hasWriteAccess'] = True
-        except AccessError:
-            pass
-        if 'activities' in request_list:
-            res['activities'] = thread.activity_ids.activity_format()
-        if 'attachments' in request_list:
-            res['attachments'] = thread.env['ir.attachment'].search([('res_id', '=', thread.id), ('res_model', '=', thread._name)], order='id desc')._attachment_format(commands=True)
-        if 'followers' in request_list:
-            res['followers'] = [{
-                'id': follower.id,
-                'partner_id': follower.partner_id.id,
-                'name': follower.name,
-                'display_name': follower.display_name,
-                'email': follower.email,
-                'is_active': follower.is_active,
-                'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
-            } for follower in thread.message_follower_ids]
-        if 'suggestedRecipients' in request_list:
-            res['suggestedRecipients'] = thread._message_get_suggested_recipients()[thread.id]
-        return res
+        return thread._get_mail_thread_data(request_list)
 
     @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
     def mail_thread_messages(self, thread_model, thread_id, max_id=None, min_id=None, limit=30, **kwargs):

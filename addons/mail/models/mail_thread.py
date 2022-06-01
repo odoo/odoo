@@ -25,7 +25,7 @@ from xmlrpc import client as xmlrpclib
 from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, split_every
@@ -3142,3 +3142,34 @@ class MailThread(models.AbstractModel):
         if 'company_id' in self:
             return self.company_id
         return False
+
+    def _get_mail_thread_data_attachments(self):
+        self.ensure_one()
+        return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+
+    def _get_mail_thread_data(self, request_list):
+        self.ensure_one()
+        res = {'hasWriteAccess': False}
+        try:
+            self.check_access_rights("write")
+            self.check_access_rule("write")
+            res['hasWriteAccess'] = True
+        except AccessError:
+            pass
+        if 'activities' in request_list:
+            res['activities'] = self.activity_ids.activity_format()
+        if 'attachments' in request_list:
+            res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format(commands=True)
+        if 'followers' in request_list:
+            res['followers'] = [{
+                'id': follower.id,
+                'partner_id': follower.partner_id.id,
+                'name': follower.name,
+                'display_name': follower.display_name,
+                'email': follower.email,
+                'is_active': follower.is_active,
+                'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
+            } for follower in self.message_follower_ids]
+        if 'suggestedRecipients' in request_list:
+            res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
+        return res
