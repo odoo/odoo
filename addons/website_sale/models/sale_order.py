@@ -124,7 +124,8 @@ class SaleOrder(models.Model):
         self = self.with_company(self.company_id)
 
         if self.state != 'draft':
-            request.session['sale_order_id'] = None
+            request.session.pop('sale_order_id', None)
+            request.session.pop('website_sale_cart_quantity', None)
             raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
 
         product = self.env['product.product'].browse(product_id).exists()

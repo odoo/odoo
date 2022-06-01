@@ -96,4 +96,6 @@ class WebsiteSale(main.WebsiteSale):
                     )
                     option_parent[option['unique_id']] = option_value['line_id']
 
+        request.session['website_sale_cart_quantity'] = order.cart_quantity
+
         return str(order.cart_quantity)
