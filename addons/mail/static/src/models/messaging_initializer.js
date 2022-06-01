@@ -217,41 +217,18 @@ registerModel({
             }));
         },
         /**
-         * @param {object} resUsersSettings
-         * @param {integer} resUsersSettings.id
-         * @param {boolean} resUsersSettings.is_discuss_sidebar_category_channel_open
-         * @param {boolean} resUsersSettings.is_discuss_sidebar_category_chat_open
-         * @param {boolean} resUsersSettings.use_push_to_talk
-         * @param {String} resUsersSettings.push_to_talk_key
-         * @param {number} resUsersSettings.voice_active_duration
-         * @param {Object} [resUsersSettings.volume_settings]
+         * @param {Object} resUsersSettings
          */
-        _initResUsersSettings({
-            id,
-            is_discuss_sidebar_category_channel_open,
-            is_discuss_sidebar_category_chat_open,
-            use_push_to_talk,
-            push_to_talk_key,
-            voice_active_duration,
-            volume_settings = [],
-        }) {
-            this.messaging.currentUser.update({ resUsersSettingsId: id });
+        _initResUsersSettings(resUsersSettings) {
+            this.messaging.currentUser.update({ resUsersSettingsId: resUsersSettings.id });
             this.messaging.update({
-                userSetting: insertAndReplace({
-                    id,
-                    usePushToTalk: use_push_to_talk,
-                    pushToTalkKey: push_to_talk_key,
-                    voiceActiveDuration: voice_active_duration,
-                    volumeSettings: volume_settings,
-                }),
+                userSetting: insertAndReplace(resUsersSettings),
             });
             this.messaging.discuss.update({
                 categoryChannel: insertAndReplace({
-                    isServerOpen: is_discuss_sidebar_category_channel_open,
                     serverStateKey: 'is_discuss_sidebar_category_channel_open',
                 }),
                 categoryChat: insertAndReplace({
-                    isServerOpen: is_discuss_sidebar_category_chat_open,
                     serverStateKey: 'is_discuss_sidebar_category_chat_open',
                 }),
             });

@@ -8,17 +8,14 @@ import '@mail/models/messaging_initializer';
 patchRecordMethods('MessagingInitializer', {
     /**
      * @override
-     * @param {Object} resUsersSettings
-     * @param {boolean} resUsersSettings.is_discuss_sidebar_category_livechat_open
      */
-    _initResUsersSettings({ is_discuss_sidebar_category_livechat_open }) {
+    _initResUsersSettings(...args) {
+        this._super(...args);
         this.messaging.discuss.update({
             categoryLivechat: insertAndReplace({
-                isServerOpen: is_discuss_sidebar_category_livechat_open,
                 serverStateKey: 'is_discuss_sidebar_category_livechat_open',
             }),
         });
-        this._super(...arguments);
     },
     /**
      * @override

@@ -44,4 +44,15 @@ patchRecordMethods('DiscussSidebarCategory', {
         }
         return this._super();
     },
+    /**
+     * @override
+     * @private
+     * @returns {boolean}
+     */
+    _computeIsServerOpen() {
+        if (this.discussAsLivechat) {
+            return this.messaging.userSetting.isDiscussSidebarCategoryLivechatOpen;
+        }
+        return this._super();
+    },
 });

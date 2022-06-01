@@ -246,7 +246,7 @@ patch(MockServer.prototype, 'mail', {
         if (args.model === 'res.users.settings' && args.method === 'set_res_users_settings') {
             const id = args.args[0][0];
             const newSettings = args.kwargs.new_settings;
-            return this._mockResUsersSettingsSetResUsersSettings(id, newSettings);
+            return this._mockResUsersSettings_SetResUsersSettings(id, newSettings);
         }
         // res.partner methods
         if (args.method === 'get_mention_suggestions') {
@@ -2184,27 +2184,71 @@ patch(MockServer.prototype, 'mail', {
         return settings;
     },
 
+    _mockResUsersSettings_GetRenameTable() {
+        return {
+            is_discuss_sidebar_category_channel_open: 'isDiscussSidebarCategoryChannelOpen',
+            is_discuss_sidebar_category_chat_open: 'isDiscussSidebarCategoryChatOpen',
+            push_to_talk_key: 'pushToTalkKey',
+            use_push_to_talk: 'usePushToTalk',
+            voice_active_duration: 'voiceActiveDuration',
+        };
+    },
+
+    _mockResUsersSettings_ResUsersSettingsFormat(id) {
+        const [settings] = this.getRecords('res.users.settings', [['id', '=', id]]);
+        return {
+            id: settings.id,
+            isDiscussSidebarCategoryChannelOpen: settings.is_discuss_sidebar_category_channel_open,
+            isDiscussSidebarCategoryChatOpen: settings.is_discuss_sidebar_category_chat_open,
+            pushToTalkKey: settings.push_to_talk_key,
+            usePushToTalk: settings.use_push_to_talk,
+            voiceActiveDuration: settings.voice_active_duration,
+            volumeSettings: settings.volume_settings_ids ? [['insert', this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(settings.volume_settings_ids)]] : [],
+        };
+    },
+
     /**
      * Simulates `set_res_users_settings` on `res.users.settings`.
      *
      * @param {integer} id
      * @param {Object} newSettings
      */
-    _mockResUsersSettingsSetResUsersSettings(id, newSettings) {
-        const oldSettings = this.getRecords('res.users.settings', [['id', '=', id]])[0];
-        const changedSettings = {};
-        for (const setting in newSettings) {
-            if (setting in oldSettings && newSettings[setting] !== oldSettings[setting]) {
-                changedSettings[setting] = newSettings[setting];
+    _mockResUsersSettings_SetResUsersSettings(id, newSettings) {
+        const [settingsBeforeUpdate] = this.getRecords('res.users.settings', [['id', '=', id]]);
+        const fieldsToUpdate = {};
+        for (const [fieldName, newValue] of Object.entries(newSettings)) {
+            if (!Object.prototype.hasOwnProperty.call(settingsBeforeUpdate, fieldName)) {
+                throw new Error(`'${fieldName}' is not a valid user setting.`);
+            }
+            if (newValue !== settingsBeforeUpdate[fieldName]) {
+                fieldsToUpdate[fieldName] = newValue;
             }
         }
-        this.pyEnv['res.users.settings'].write(
-            [id],
-            changedSettings,
-        );
-        const [relatedUser] = this.pyEnv['res.users'].searchRead([['id', '=', oldSettings.user_id]]);
+        this.pyEnv['res.users.settings'].write([id], fieldsToUpdate);
+        const [updatedSettings] = this.getRecords('res.users.settings', [['id', '=', id]]);
+        const renameTable = this._mockResUsersSettings_GetRenameTable();
+        const formattedFields = {};
+        for (const fieldName in fieldsToUpdate) {
+            const newName = Object.prototype.hasOwnProperty.call(renameTable, fieldName) ? renameTable[fieldName] : fieldName;
+            formattedFields[newName] = updatedSettings[fieldName];
+        }
+        const [relatedUser] = this.pyEnv['res.users'].searchRead([['id', '=', updatedSettings.user_id]]);
         const [relatedPartner] = this.pyEnv['res.partner'].searchRead([['id', '=', relatedUser.partner_id]]);
-        this.pyEnv['bus.bus']._sendone(relatedPartner, 'res.users.settings/changed', changedSettings);
+        this.pyEnv['bus.bus']._sendone(relatedPartner, 'res.users.settings/changed', formattedFields);
+    },
+
+    _mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(ids) {
+        const volumes = this.getRecords('res.users.settings.volumes', [['id', 'in', ids]]);
+        return volumes.map(volume => {
+            const [relatedGuest] = this.getRecords('mail.guest', [['id', '=', volume.guest_id]]);
+            const [relatedPartner] = this.getRecords('res.partner', [['id', '=', volume.partner_id]]);
+            return {
+                id: volume.id,
+                volume: volume.volume,
+                guest: relatedGuest ? [['insert-and-replace', { id: relatedGuest.id, name: relatedGuest.name }]] : [['clear']],
+                partner: relatedPartner ? [['insert-and-replace', { id: relatedPartner.id, name: relatedPartner.name }]] : [['clear']],
+            };
+        });
     },
 
     /**
@@ -2438,11 +2482,12 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockResUsers_InitMessaging(ids) {
         const user = this.getRecords('res.users', [['id', 'in', ids]])[0];
+        const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         return {
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
-            current_user_settings: this._mockResUsersSettings_FindOrCreateForUser(user.id),
+            current_user_settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),

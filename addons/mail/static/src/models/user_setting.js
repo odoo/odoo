@@ -22,28 +22,6 @@ registerModel({
             this.messaging.browser.clearTimeout(this.globalSettingsTimeout);
         },
     },
-    modelMethods: {
-        /**
-         * @param {Object} data
-         * @returns {Object}
-         */
-        convertData(data) {
-            const data2 = {};
-            if ('use_push_to_talk' in data) {
-                data2.usePushToTalk = data.use_push_to_talk;
-            }
-            if ('push_to_talk_key' in data) {
-                data2.pushToTalkKey = data.push_to_talk_key || '';
-            }
-            if ('voice_active_duration' in data) {
-                data2.voiceActiveDuration = data.voice_active_duration;
-            }
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-            return data2;
-        },
-    },
     recordMethods: {
         /**
          * @returns {Object} MediaTrackConstraints
@@ -266,6 +244,8 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        isDiscussSidebarCategoryChannelOpen: attr(),
+        isDiscussSidebarCategoryChatOpen: attr(),
         /**
          * Formatted string that represent the push to talk key with its modifiers.
          */

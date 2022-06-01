@@ -322,7 +322,7 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
-            'is_discuss_sidebar_category_channel_open': false,
+            'isDiscussSidebarCategoryChannelOpen': false,
         });
     });
     assert.containsNone(
@@ -350,7 +350,7 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
-            'is_discuss_sidebar_category_channel_open': true,
+            'isDiscussSidebarCategoryChannelOpen': true,
         });
     });
     assert.containsOnce(
@@ -690,7 +690,7 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
-            'is_discuss_sidebar_category_chat_open': false,
+            'isDiscussSidebarCategoryChatOpen': false,
         });
     });
     assert.containsNone(
@@ -721,7 +721,7 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
 
     await afterNextRender(() => {
         pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
-            'is_discuss_sidebar_category_chat_open': true,
+            'isDiscussSidebarCategoryChatOpen': true,
         });
     });
     assert.containsOnce(

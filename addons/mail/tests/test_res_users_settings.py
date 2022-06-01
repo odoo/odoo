@@ -36,7 +36,7 @@ class TestResUsersSettings(MailCommon):
                 [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
                 [{
                     "type": "res.users.settings/changed",
-                    "payload": {"is_discuss_sidebar_category_chat_open": True}
+                    "payload": {"isDiscussSidebarCategoryChatOpen": True}
                 }]):
             settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})
 

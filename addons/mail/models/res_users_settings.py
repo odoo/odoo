@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResUsersSettings(models.Model):
@@ -29,24 +30,44 @@ class ResUsersSettings(models.Model):
             settings = self.sudo().create({'user_id': user.id})
         return settings
 
+    def _get_rename_table(self):
+        return {
+            'is_discuss_sidebar_category_channel_open': 'isDiscussSidebarCategoryChannelOpen',
+            'is_discuss_sidebar_category_chat_open': 'isDiscussSidebarCategoryChatOpen',
+            'push_to_talk_key': 'pushToTalkKey',
+            'use_push_to_talk': 'usePushToTalk',
+            'voice_active_duration': 'voiceActiveDuration',
+        }
+
     def _res_users_settings_format(self):
         self.ensure_one()
-        res = self._read_format(fnames=[name for name, field in self._fields.items() if name == 'id' or not field.automatic])[0]
-        res.pop('volume_settings_ids')
         volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
-        res.update({
-            'volume_settings': [('insert', volume_settings)] if volume_settings else [],
-        })
-        return res
+        return {
+            'id': self.id,
+            'isDiscussSidebarCategoryChannelOpen': self.is_discuss_sidebar_category_channel_open,
+            'isDiscussSidebarCategoryChatOpen': self.is_discuss_sidebar_category_chat_open,
+            'pushToTalkKey': self.push_to_talk_key,
+            'usePushToTalk': self.use_push_to_talk,
+            'voiceActiveDuration': self.voice_active_duration,
+            'volumeSettings': [('insert', volume_settings)] if volume_settings else [],
+        }
 
     def set_res_users_settings(self, new_settings):
         self.ensure_one()
-        changed_settings = {}
-        for setting in new_settings.keys():
-            if setting in self._fields and new_settings[setting] != self[setting]:
-                changed_settings[setting] = new_settings[setting]
-        self.write(changed_settings)
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/changed', changed_settings)
+        fields_to_update = {}
+        for field_name, new_value in new_settings.items():
+            if not field_name in self._fields:
+                raise UserError(_("'%(field_name)s' is not a valid user setting.", field_name=field_name))
+            if new_value != self[field_name]:
+                fields_to_update[field_name] = new_value
+        self.write(fields_to_update)
+        formatted_fields = {}
+        rename_table = self._get_rename_table()
+        # Rename fields to match their client-side name.
+        for field_name in fields_to_update:
+            new_name = rename_table[field_name] if field_name in rename_table else field_name
+            formatted_fields[new_name] = self[field_name]
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/changed', formatted_fields)
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
         """

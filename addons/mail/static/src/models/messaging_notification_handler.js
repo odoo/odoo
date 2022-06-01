@@ -382,30 +382,10 @@ registerModel({
         },
         /**
          * @private
-         * @param {object} settings
-         * @param {boolean} settings.use_push_to_talk
-         * @param {String} settings.push_to_talk_key
-         * @param {number} settings.voice_active_duration
-         * @param {boolean} [settings.is_discuss_sidebar_category_channel_open]
-         * @param {boolean} [settings.is_discuss_sidebar_category_chat_open]
-         * @param {Object} [payload.volume_settings]
+         * @param {Object} settingsData
          */
-        _handleNotificationResUsersSettings(settings) {
-            if ('is_discuss_sidebar_category_channel_open' in settings) {
-                this.messaging.discuss.categoryChannel.update({
-                    isServerOpen: settings.is_discuss_sidebar_category_channel_open,
-                });
-            }
-            if ('is_discuss_sidebar_category_chat_open' in settings) {
-                this.messaging.discuss.categoryChat.update({
-                    isServerOpen: settings.is_discuss_sidebar_category_chat_open,
-                });
-            }
-            this.messaging.userSetting.update({
-                usePushToTalk: settings.use_push_to_talk,
-                pushToTalkKey: settings.push_to_talk_key,
-                voiceActiveDuration: settings.voice_active_duration,
-            });
+        _handleNotificationResUsersSettings(settingsData) {
+            this.messaging.userSetting.update(settingsData);
         },
         /**
          * @private

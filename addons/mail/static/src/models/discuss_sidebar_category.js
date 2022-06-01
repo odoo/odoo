@@ -146,6 +146,17 @@ registerModel({
             return this.isPendingOpen !== undefined ? this.isPendingOpen : this.isServerOpen;
         },
         /**
+         * @returns {boolean}
+         */
+        _computeIsServerOpen() {
+            if (this.discussAsChannel) {
+               return this.messaging.userSetting.isDiscussSidebarCategoryChannelOpen;
+            }
+            if (this.discussAsChat) {
+               return this.messaging.userSetting.isDiscussSidebarCategoryChatOpen;
+            }
+        },
+        /**
          * @private
          * @returns {string|FieldCommand}
          */
@@ -403,7 +414,9 @@ registerModel({
         /**
          * Boolean that determines the last open state known by the server.
          */
-        isServerOpen: attr(),
+        isServerOpen: attr({
+            compute: '_computeIsServerOpen',
+        }),
         /**
          * The placeholder text used when a new item is being added in UI.
          */
