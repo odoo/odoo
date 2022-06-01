@@ -585,6 +585,8 @@ class CompanyDependent(models.Model):
     truth = fields.Boolean(company_dependent=True)
     count = fields.Integer(company_dependent=True)
     phi = fields.Float(company_dependent=True, digits=(2, 5))
+    html1 = fields.Html(company_dependent=True, sanitize=False)
+    html2 = fields.Html(company_dependent=True, sanitize_attributes=True, strip_classes=True, strip_style=True)
 
 
 class CompanyDependentAttribute(models.Model):
