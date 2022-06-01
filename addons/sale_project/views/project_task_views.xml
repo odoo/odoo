@@ -187,6 +187,21 @@
         </field>
     </record>
 
+    <record id="sale_project_milestone_view_tree" model="ir.ui.view">
+        <field name="name">project.milestone.view.tree.inherit</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="sale_project.project_milestone_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="sale_line_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="quantity_percentage" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="project_milestone_view_tree_salesman" model="ir.ui.view">
         <field name="name">project.milestone.view.tree.inherit.salesman</field>
         <field name="model">project.milestone</field>

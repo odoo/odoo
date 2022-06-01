@@ -7,6 +7,15 @@
             <search string="Search Update">
                 <field name="name"/>
                 <field name="project_id" invisible="1"/>
+                <filter string="My Updates" name="my_updates" domain="[('user_id', '=', uid)]"/>
+                <filter string="Followed Updates" name="followed_updates" domain="[('message_is_follower', '=', True)]"/>
+                <separator/>
+                <filter string="On Track" name="on_track" domain="[('status', '=', 'on_track')]"/>
+                <filter string="At Risk" name="at_risk" domain="[('status', '=', 'at_risk')]"/>
+                <filter string="Off Track" name="off_track" domain="[('status', '=', 'off_track')]"/>
+                <filter string="On Hold" name="on_hold" domain="[('status', '=', 'on_hold')]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
             </search>
         </field>
     </record>

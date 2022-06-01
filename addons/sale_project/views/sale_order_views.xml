@@ -12,6 +12,10 @@
                     <field name="project_ids" invisible="1"/>
                     <field name="project_count" widget="statinfo" string="Projects"/>
                 </button>
+                <field name="is_product_milestone" invisible="1"/>
+                <button class="oe_stat_button" name="action_view_milestone" type="object" icon="fa-check-square-o"  attrs="{'invisible': ['|', ('is_product_milestone', '=', False), ('project_ids', '=', [])]}" groups="project.group_project_milestone">
+                    <field name="milestone_count" widget="statinfo" string="Milestones"/>
+                </button>
                 <button type="object" name="action_view_task" class="oe_stat_button" icon="fa-tasks" attrs="{'invisible': [('tasks_count', '=', 0)]}" groups="project.group_project_user">
                     <field name="tasks_count" widget="statinfo" string="Tasks"/>
                 </button>
