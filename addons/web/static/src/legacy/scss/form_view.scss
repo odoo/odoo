@@ -1,7 +1,7 @@
 // Define left and right padding according to screen resolution
 @mixin o-form-sheet-inner-left-padding {
     padding-left: $o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-left: $o-horizontal-padding*2;
     }
 }
@@ -10,7 +10,7 @@
 }
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-right: $o-horizontal-padding*2;
     }
 }
@@ -18,7 +18,7 @@
 @mixin o-form-sheet-negative-margin {
     margin-left: -$o-horizontal-padding;
     margin-right: -$o-horizontal-padding;
-    @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         margin-left: -$o-horizontal-padding*2;
         margin-right: -$o-horizontal-padding*2;
     }
