@@ -499,6 +499,9 @@ class WebsiteSale(http.Controller):
         if order and order.state != 'draft':
             request.session['sale_order_id'] = None
             order = request.website.sale_get_order()
+
+        request.session['website_sale_cart_quantity'] = order.cart_quantity
+
         values = {}
         if access_token:
             abandoned_order = request.env['sale.order'].sudo().search([('access_token', '=', access_token)], limit=1)
@@ -557,6 +560,8 @@ class WebsiteSale(http.Controller):
             **kwargs
         )
 
+        request.session['website_sale_cart_quantity'] = sale_order.cart_quantity
+
         if express:
             return request.redirect("/shop/checkout?express=1")
 
@@ -597,6 +602,8 @@ class WebsiteSale(http.Controller):
             **kw
         )
 
+        request.session['website_sale_cart_quantity'] = order.cart_quantity
+
         if not order.cart_quantity:
             request.website.sale_reset()
             return values
@@ -627,8 +634,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/cart/quantity'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_quantity(self):
-        cart = request.website.sale_get_order()
-        return cart and cart.cart_quantity or 0
+        if 'website_sale_cart_quantity' not in request.session:
+            return request.website.sale_get_order().cart_quantity
+        return request.session['website_sale_cart_quantity']
 
     # ------------------------------------------------------
     # Checkout

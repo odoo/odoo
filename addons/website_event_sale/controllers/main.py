@@ -55,6 +55,8 @@ class WebsiteEventSaleController(WebsiteEventController):
                 data['sale_order_id'] = order_sudo.id
                 data['sale_order_line_id'] = cart_data[event_ticket_id]
 
+        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
+
         return super()._create_attendees_from_registration_post(event, registration_data)
 
     @route()
