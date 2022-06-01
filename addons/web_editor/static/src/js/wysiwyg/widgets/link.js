@@ -588,26 +588,13 @@ Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
     const doc = containerNode && containerNode.ownerDocument || document;
     let needLabel = false;
     let link = getInSelection(doc, 'a');
-    const $link = $(link);
     const range = getDeepRange(containerNode, {splitText: true, select: true, correctTripleClick: true});
     if (!range) {
         return {};
     }
     const isContained = containerNode.contains(range.startContainer) && containerNode.contains(range.endContainer);
     let linkCreated = false;
-    if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
-        // Expand the current link to include the whole selection.
-        let before = link.previousSibling;
-        while (before !== null && range.intersectsNode(before)) {
-            link.insertBefore(before, link.firstChild);
-            before = link.previousSibling;
-        }
-        let after = link.nextSibling;
-        while (after !== null && range.intersectsNode(after)) {
-            link.appendChild(after);
-            after = link.nextSibling;
-        }
-    } else if (!link && isContained) {
+    if (!link && isContained) {
         link = document.createElement('a');
         linkCreated = true;
         if (range.collapsed) {
