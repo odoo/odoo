@@ -2355,7 +2355,7 @@ msgstr "Bedrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
 msgid "Amount Company Currency Signed"
-msgstr "Bedrag ondertekende valuta van het bedrijf"
+msgstr "Bedrag in bedrijfsvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
@@ -2381,7 +2381,7 @@ msgstr "Verschuldigd bedrag"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual_signed
 msgid "Amount Due Signed"
-msgstr "Verschuldigd bedrag ondertekend"
+msgstr "Openstaand bedrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
@@ -2413,7 +2413,7 @@ msgstr "Bedrag ontvangen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_signed
 msgid "Amount Signed"
-msgstr "Bedrag getekend"
+msgstr "Bedrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -12822,7 +12822,7 @@ msgstr "BTW over"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_tax_signed
 msgid "Tax Signed"
-msgstr "BTW getekend"
+msgstr "BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
@@ -13671,10 +13671,10 @@ msgid ""
 " its move lines' balance), expressed in its currency. This is a technical "
 "field use to speedup the application of reconciliation models."
 msgstr ""
-"Het bedrag dat nog moet worden afgeletterd op deze afschriftregel "
-"(ondertekend volgens het saldo van de boekingen), uitgedrukt in zijn valuta."
-" Dit is een technisch veldgebruik om de toepassing van aflettermodellen te "
-"versnellen."
+"Het bedrag dat nog moet worden afgeletterd op deze afschriftregel (met "
+"plus/min teken volgens het saldo van de boekingen), uitgedrukt in zijn "
+"valuta. Dit is een technisch veldgebruik om de toepassing van "
+"aflettermodellen te versnellen."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -15104,7 +15104,7 @@ msgstr "Totaal te ontvangen"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
 msgid "Total Signed"
-msgstr "Totaal getekend"
+msgstr "Totaal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -15133,7 +15133,7 @@ msgstr "Totaal in valuta"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_in_currency_signed
 msgid "Total in Currency Signed"
-msgstr "Totaal in ondertekende valuta"
+msgstr "Totaal in valuta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__total_entry_encoding
@@ -15402,7 +15402,7 @@ msgstr "Excl. BTW"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr "Excl. BTW getekend"
+msgstr "Totaal excl. BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
@@ -17038,3 +17038,5 @@ msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
 msgstr ""
+"Een standaard kostenplaats vereist een kostenplaats of een kostenplaatslabel"
+" die wordt gebruikt voor kostenplaatsverdeling."

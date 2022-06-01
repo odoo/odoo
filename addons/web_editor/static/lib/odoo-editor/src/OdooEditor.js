@@ -43,6 +43,7 @@ import {
     isEmptyBlock,
     getUrlsInfosInString,
     URL_REGEX,
+    URL_REGEX_WITH_INFOS,
     isSelectionFormat,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
@@ -2345,13 +2346,32 @@ export class OdooEditor extends EventTarget {
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
                     ev.data &&
-                    ev.data.includes(' ') &&
+                    ev.data === ' ' &&
                     selection &&
-                    selection.anchorNode
-                    && (!this.commandBar._active ||
+                    selection.anchorNode &&
+                    !closestElement(selection.anchorNode).closest('a') &&
+                    selection.anchorNode.nodeType === Node.TEXT_NODE &&
+                    (!this.commandBar._active ||
                         this.commandBar._currentOpenOptions.closeOnSpace !== true)
                 ) {
-                    this._convertUrlInElement(closestElement(selection.anchorNode));
+                    const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
+                    const textNodeSplitted = textSliced.split(/\s/);
+
+                    // Remove added space
+                    textNodeSplitted.pop();
+                    const potentialUrl = textNodeSplitted.pop();
+                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
+
+                    if (lastWordMatch) {
+                        const matches = getUrlsInfosInString(textSliced);
+                        const match = matches[matches.length - 1];
+                        this._createLinkWithUrlInTextNode(
+                            selection.anchorNode,
+                            match.url,
+                            match.index,
+                            match.length,
+                        );
+                    }
                 }
                 this.sanitize();
                 this.historyStep();
@@ -2892,36 +2912,6 @@ export class OdooEditor extends EventTarget {
     _onDoumentMouseup() {
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
-        }
-    }
-
-    /**
-     * Convert valid url text into links inside the given element.
-     *
-     * @param {HTMLElement} el
-     */
-    _convertUrlInElement(el) {
-        // We will not replace url inside already existing Link element.
-        if (el.tagName === 'A') {
-            return;
-        }
-
-        for (let child of el.childNodes) {
-            if (child.nodeType === Node.TEXT_NODE && child.length > 3) {
-                const childStr = child.nodeValue;
-                const matches = getUrlsInfosInString(childStr);
-                if (matches.length) {
-                    // We only to take care of the first match.
-                    // The method `_createLinkWithUrlInTextNode` will split the text node,
-                    // the other url matches will then be matched again in the nexts loops of el.childnodes.
-                    this._createLinkWithUrlInTextNode(
-                        child,
-                        matches[0].url,
-                        matches[0].index,
-                        matches[0].length,
-                    );
-                }
-            }
         }
     }
 
