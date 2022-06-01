@@ -182,6 +182,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # This write method is important because it's overridden and has additional triggers
         company.write(vals)
+        company.currency_id.write({'active': True})
 
     def _pre_load_data(self, template_code, company, template_data, data):
         """
