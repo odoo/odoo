@@ -1,11 +1,11 @@
-odoo.define('board.AddToBoardMenu', function (require) {
+odoo.define("board.AddToBoardMenu", function (require) {
     "use strict";
 
-    const Context = require('web.Context');
-    const Domain = require('web.Domain');
-    const { Dropdown } = require('@web/core/dropdown/dropdown');
-    const FavoriteMenu = require('web.FavoriteMenu');
-    const { sprintf } = require('web.utils');
+    const Context = require("web.Context");
+    const Domain = require("web.Domain");
+    const { Dropdown } = require("@web/core/dropdown/dropdown");
+    const FavoriteMenu = require("web.FavoriteMenu");
+    const { sprintf } = require("web.utils");
     const { useAutofocus } = require("@web/core/utils/hooks");
 
     const { Component, useState } = owl;
@@ -44,20 +44,23 @@ odoo.define('board.AddToBoardMenu', function (require) {
          * @private
          */
         async addToBoard() {
-            const searchQuery = this.env.searchModel.get('query');
+            const searchQuery = this.env.searchModel.get("query");
             const context = new Context(this.env.action.context);
             context.add(searchQuery.context);
             context.add({
                 group_by: searchQuery.groupBy,
                 orderedBy: searchQuery.orderedBy,
             });
-            if (searchQuery.timeRanges && searchQuery.timeRanges.hasOwnProperty('fieldName')) {
+            if (
+                searchQuery.timeRanges &&
+                Object.prototype.hasOwnProperty.call(searchQuery.timeRanges, "fieldName")
+            ) {
                 context.add({
                     comparison: searchQuery.timeRanges,
                 });
             }
             let controllerQueryParams;
-            this.env.searchModel.trigger('get-controller-query-params', params => {
+            this.env.searchModel.trigger("get-controller-query-params", (params) => {
                 controllerQueryParams = params || {};
             });
             controllerQueryParams.context = controllerQueryParams.context || {};
@@ -66,11 +69,16 @@ odoo.define('board.AddToBoardMenu', function (require) {
             context.add(Object.assign(controllerQueryParams, queryContext));
 
             const domainArray = new Domain(this.env.action.domain || []);
-            const domain = Domain.prototype.normalizeArray(domainArray.toArray().concat(searchQuery.domain));
+            const domain = Domain.prototype.normalizeArray(
+                domainArray.toArray().concat(searchQuery.domain)
+            );
 
             const evalutatedContext = context.eval();
             for (const key in evalutatedContext) {
-                if (evalutatedContext.hasOwnProperty(key) && /^search_default_/.test(key)) {
+                if (
+                    Object.prototype.hasOwnProperty.call(evalutatedContext, key) &&
+                    /^search_default_/.test(key)
+                ) {
                     delete evalutatedContext[key];
                 }
             }
@@ -82,7 +90,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
             });
 
             const result = await this.env.services.rpc({
-                route: '/board/add_to_dashboard',
+                route: "/board/add_to_dashboard",
                 params: {
                     action_id: this.env.action.id || false,
                     context_to_save: evalutatedContext,
@@ -94,13 +102,15 @@ odoo.define('board.AddToBoardMenu', function (require) {
             if (result) {
                 this.env.services.notification.notify({
                     title: sprintf(this.env._t("'%s' added to dashboard"), this.state.name),
-                    message: this.env._t("Please refresh your browser for the changes to take effect."),
-                    type: 'warning',
+                    message: this.env._t(
+                        "Please refresh your browser for the changes to take effect."
+                    ),
+                    type: "warning",
                 });
             } else {
                 this.env.services.notification.notify({
                     message: this.env._t("Could not add filter to dashboard"),
-                    type: 'danger',
+                    type: "danger",
                 });
             }
         }
@@ -115,11 +125,11 @@ odoo.define('board.AddToBoardMenu', function (require) {
          */
         onInputKeydown(ev) {
             switch (ev.key) {
-                case 'Enter':
+                case "Enter":
                     ev.preventDefault();
                     this.addToBoard();
                     break;
-                case 'Escape':
+                case "Escape":
                     // Gives the focus back to the component.
                     ev.preventDefault();
                     ev.target.blur();
@@ -136,15 +146,15 @@ odoo.define('board.AddToBoardMenu', function (require) {
          * @returns {boolean}
          */
         static shouldBeDisplayed(env) {
-            return env.action.type === 'ir.actions.act_window';
+            return env.action.type === "ir.actions.act_window";
         }
     }
 
     AddToBoardMenu.props = {};
-    AddToBoardMenu.template = 'board.AddToBoard';
+    AddToBoardMenu.template = "board.AddToBoard";
     AddToBoardMenu.components = { Dropdown };
 
-    FavoriteMenu.registry.add('add-to-board-menu', AddToBoardMenu, 10);
+    FavoriteMenu.registry.add("add-to-board-menu", AddToBoardMenu, 10);
 
     return AddToBoardMenu;
 });
