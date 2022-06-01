@@ -147,6 +147,7 @@ const DiscussWidget = AbstractAction.extend({
             'o-update-control-panel',
             this._updateControlPanelEventListener
         );
+        this._lastPushStateActiveThread = null;
     },
 
     //--------------------------------------------------------------------------
