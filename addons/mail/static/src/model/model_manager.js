@@ -980,13 +980,14 @@ export class ModelManager {
             if (fieldValue instanceof OtherModel) {
                 return `${fieldName}: ${this._getRecordIndex(OtherModel, fieldValue)}`;
             }
-            if (!(fieldValue instanceof FieldCommand)) {
+            const fieldValue2 = model.__fieldMap[fieldName].convertToFieldCommandList(fieldValue)[0];
+            if (!(fieldValue2 instanceof FieldCommand)) {
                 throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command for relational field.`);
             }
-            if (!['link', 'insert', 'replace', 'insert-and-replace'].includes(fieldValue._name)) {
-                throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command of type "insert-and-replace", "replace", "insert" or "link". "${fieldValue._name}" was given instead.`);
+            if (!['link', 'insert', 'replace', 'insert-and-replace'].includes(fieldValue2._name)) {
+                throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command of type "insert-and-replace", "replace", "insert" or "link". "${fieldValue2._name}" was given instead.`);
             }
-            const relationValue = fieldValue._value;
+            const relationValue = fieldValue2._value;
             if (!relationValue) {
                 throw new Error(`Identifying element "${model}/${fieldName}" is lacking a relation value.`);
             }
