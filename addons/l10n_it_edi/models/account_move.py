@@ -8,7 +8,7 @@ from datetime import datetime
 from lxml import etree
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.exceptions import LockError, UserError
-from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html2plaintext
+from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html_to_plaintext
 from odoo.tools.sql import column_exists, create_column
 
 from odoo import _, api, Command, fields, models, modules
@@ -586,7 +586,7 @@ class AccountMove(models.Model):
         return {
             'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
             'l10n_it_exempt_reason': tax.l10n_it_exempt_reason,
-            'invoice_legal_notes': html2plaintext(tax.invoice_legal_notes),
+            'invoice_legal_notes': html_to_plaintext(tax.invoice_legal_notes),
             'tax_exigibility_code': tax_exigibility_code,
             'tax_amount_type_field': tax.amount_type,
             'skip': (
@@ -802,7 +802,7 @@ class AccountMove(models.Model):
                 'aliquota_iva': grouping_key['vat_tax_amount_field'],
                 'ritenuta': 'SI' if grouping_key['has_withholding'] else None,
                 'natura': grouping_key['l10n_it_exempt_reason'],
-                'riferimento_amministrazione': html2plaintext(grouping_key['description']),
+                'riferimento_amministrazione': html_to_plaintext(grouping_key['description']),
             })
 
         # Enasarco values.

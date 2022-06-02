@@ -4,7 +4,7 @@ from math import ceil
 from odoo import api, fields, models
 from odoo.addons.base.models.assetsbundle import ScssStylesheetAsset
 from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.tools import html2plaintext, is_html_empty, image as tools
+from odoo.tools import is_html_empty, image as tools
 
 try:
     from PIL.Image import Resampling
@@ -282,4 +282,4 @@ class BaseDocumentLayout(models.TransientModel):
         # In recent change when an html field is empty a <p> balise remains with a <br> in it,
         # but when company details is empty we want to put the info of the company
         for record in self:
-            record.is_company_details_empty = not html2plaintext(record.company_details or '')
+            record.is_company_details_empty = is_html_empty(record.company_details)

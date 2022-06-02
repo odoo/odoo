@@ -509,7 +509,7 @@ class MailMail(models.Model):
             results.append({
                 'attachments': email_attachments,
                 'body': body_personalized,
-                'body_alternative': tools.html2plaintext(body_personalized),
+                'body_alternative': tools.html_to_plaintext(body_personalized),
                 'email_cc': email_values['email_cc'],
                 'email_from': self.email_from,
                 'email_to': email_values['email_to'],

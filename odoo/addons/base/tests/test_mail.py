@@ -11,7 +11,7 @@ from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import misc
 from odoo.tools.mail import (
-    is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
+    is_html_empty, html_to_inner_content, html_to_plaintext, html_to_formatted_plaintext, html_sanitize, append_content_to_html, plaintext2html,
     email_domain_normalize, email_normalize, email_re,
     email_split, email_split_and_format, email_split_and_format_normalize, email_split_tuples,
     single_email_re,
@@ -411,18 +411,36 @@ class TestHtmlTools(BaseCase):
             html = plaintext2html(content, container_tag)
             self.assertEqual(html, expected, 'plaintext2html is broken')
 
-    def test_html_html_to_inner_content(self):
+    def html_to_inner_content(self):
         cases = [
             ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
              'First Second Third Paragraph -- Signature paragraph with a link'),
             ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
-             'Now => processing\xa0entities\u200band extra whitespace too.'),
+             'Now => processing entities\u200band extra whitespace too.'),
             ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with unmatched tags'),
             ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?')
         ]
         for content, expected in cases:
             text = html_to_inner_content(content)
-            self.assertEqual(text, expected, 'html_html_to_inner_content is broken')
+            self.assertEqual(text, expected, 'html_to_inner_content is broken')
+
+    def test_html_to_formatted_plaintext(self):
+        cases = [
+            ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
+             'First\nSecond\nThird Paragraph\n\n--\nSignature paragraph with a [link][1]\n\n\n[1]: ./link', {}),
+            ('<div><p>First <br/>Second <br/>Third Paragraph</p><p><hr/>Signature paragraph with a <a href="./link">link</a></p></div>',
+             'First\nSecond\nThird Paragraph\n\n* * *\nSignature paragraph with a [link](./link)', {'inline_links': True}),
+            ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
+             'Now => processing\xa0entities\u200band extra whitespace too.',
+             {}),
+            ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with \nunmatched tags', {}),
+            ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with \nAre we good?', {}),
+            ('<div>A list of things <ul> <li>One</li><li>Two</li><li> Three</li></ul>', 'A list of things\n* One\n* Two\n* Three', {})
+        ]
+        for idx, (content, expected, kwargs) in enumerate(cases):
+            with self.subTest(idx=idx):
+                text = html_to_formatted_plaintext(content, **kwargs)
+                self.assertEqual(text, expected, 'html_to_formatted_plaintext is broken')
 
     def test_append_to_html(self):
         test_samples = [
@@ -929,11 +947,14 @@ class TestEmailTools(BaseCase):
 class TestMailTools(BaseCase):
     """ Test mail utility methods. """
 
-    def test_html2plaintext(self):
-        self.assertEqual(html2plaintext(False), '')
-        self.assertEqual(html2plaintext('\t'), '')
-        self.assertEqual(html2plaintext('  '), '')
-        self.assertEqual(html2plaintext("""<h1>Title</h1>
+    def test_html_to_plaintext(self):
+        self.assertEqual(html_to_plaintext(False), '')
+        self.assertEqual(html_to_formatted_plaintext(False), '')
+        self.assertEqual(html_to_plaintext('\t'), '')
+        self.assertEqual(html_to_formatted_plaintext('\t'), '')
+        self.assertEqual(html_to_plaintext('  '), '')
+        self.assertEqual(html_to_formatted_plaintext('  '), '')
+        self.assertEqual(html_to_formatted_plaintext("""<h1>Title</h1>
 <h2>Sub title</h2>
 <br/>
 <h3>Sub sub title</h3>
@@ -941,18 +962,21 @@ class TestMailTools(BaseCase):
 <p>Paragraph <em>with</em> <b>bold</b></p>
 <table><tr><td>table element 1</td></tr><tr><td>table element 2</td></tr></table>
 <p><special-chars>0 &lt; 10 &amp;  &nbsp; 10 &gt; 0</special-chars></p>"""),
-                         """**Title**
-**Sub title**
+                         """# Title
 
-*Sub sub title*
-Sub sub sub title
-Paragraph /with/ *bold*
+## Sub title
+
+### Sub sub title
+
+#### Sub sub sub title
+
+Paragraph *with* **bold**
 
 table element 1
 table element 2
 0 < 10 & \N{NO-BREAK SPACE} 10 > 0""")
-        self.assertEqual(html2plaintext('<p><img src="/web/image/428-c064ab1b/test-image.jpg?access_token=f72b5ec5-a363-45fb-b9ad-81fc794d6d7b" class="img img-fluid o_we_custom_image"><br></p>'),
-                         """test-image [1]
+        self.assertEqual(html_to_formatted_plaintext('<p><img src="/web/image/428-c064ab1b/test-image.jpg?access_token=f72b5ec5-a363-45fb-b9ad-81fc794d6d7b" class="img img-fluid o_we_custom_image"><br></p>'),
+                         """![test-image][1]
 
 
-[1] /web/image/428-c064ab1b/test-image.jpg?access_token=f72b5ec5-a363-45fb-b9ad-81fc794d6d7b""")
+[1]: /web/image/428-c064ab1b/test-image.jpg?access_token=f72b5ec5-a363-45fb-b9ad-81fc794d6d7b""")

@@ -1,7 +1,7 @@
 from lxml import etree
 
 from odoo import _, models, Command
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 from odoo.tools.float_utils import float_is_zero, float_round, float_repr
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
@@ -232,7 +232,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'cbc:ID': {'_text': invoice.name},
             'cbc:IssueDate': {'_text': invoice.invoice_date},
             'cbc:InvoiceTypeCode': {'_text': 389 if vals['process_type'] == 'selfbilling' else 380} if vals['document_type'] == 'invoice' else None,
-            'cbc:Note': {'_text': html2plaintext(invoice.narration)} if invoice.narration else None,
+            'cbc:Note': {'_text': html_to_formatted_plaintext(invoice.narration)} if invoice.narration else None,
             'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
             'cac:OrderReference': {
                 # OrderReference/ID (order_reference) is mandatory inside the OrderReference node
@@ -300,7 +300,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         if payment_term:
             document_node['cac:PaymentTerms'] = {
                 # The payment term's note is automatically embedded in a <p> tag in Odoo
-                'cbc:Note': {'_text': html2plaintext(payment_term.note)}
+                'cbc:Note': {'_text': html_to_formatted_plaintext(payment_term.note)}
             }
 
     def _add_invoice_allowance_charge_nodes(self, document_node, vals):

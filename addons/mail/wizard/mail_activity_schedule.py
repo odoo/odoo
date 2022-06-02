@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 from odoo.tools.misc import format_date
 _logger = logging.getLogger(__name__)
 
@@ -297,7 +297,7 @@ class MailActivitySchedule(models.TransientModel):
                     'activity_type_id', 'activity_user_id')  # activity specific
     def _check_consistency(self):
         for scheduler in self.filtered('error'):
-            raise ValidationError(html2plaintext(scheduler.error))
+            raise ValidationError(html_to_plaintext(scheduler.error))
 
     @api.constrains('res_ids')
     def _check_res_ids(self):

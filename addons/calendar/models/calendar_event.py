@@ -27,7 +27,7 @@ from odoo.addons.calendar.models.utils import interval_from_events
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
+from odoo.tools import html_to_plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1610,7 +1610,7 @@ class CalendarEvent(models.Model):
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting._get_customer_summary()
-            description = html2plaintext(meeting._get_customer_description())
+            description = html_to_plaintext(meeting._get_customer_description())
             if description:
                 event.add('description').value = description
             if meeting.location:

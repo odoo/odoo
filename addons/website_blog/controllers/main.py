@@ -9,7 +9,7 @@ from odoo import http, fields, tools, models
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
 from odoo.tools.translate import LazyTranslate
@@ -219,7 +219,7 @@ class WebsiteBlog(http.Controller):
         v['blog'] = blog
         v['base_url'] = blog.get_base_url()
         v['posts'] = request.env['blog.post'].search([('blog_id', '=', blog.id)], limit=min(int(limit), 50), order="post_date DESC")
-        v['html2plaintext'] = html2plaintext
+        v['html_to_formatted_plaintext'] = html_to_formatted_plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
 

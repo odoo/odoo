@@ -11,7 +11,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.float_utils import float_compare
-from odoo.tools.mail import html2plaintext, is_html_empty
+from odoo.tools.mail import html_to_plaintext
 
 PY_OPERATORS = {
     '<': py_operator.lt,
@@ -297,7 +297,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if picking_type_id.code == 'outgoing':
             return self.display_name
-        return html2plaintext(self.description) if not is_html_empty(self.description) else self.display_name
+        return html_to_plaintext(self.description) or self.display_name
 
     def _get_picking_description(self, picking_type_id):
         """

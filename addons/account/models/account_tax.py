@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
+from odoo.tools import frozendict, groupby, html_to_plaintext, split_every, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.translate import html_translate
@@ -4307,9 +4307,7 @@ class AccountTax(models.Model):
 
     def _get_description_plaintext(self):
         self.ensure_one()
-        if is_html_empty(self.description):
-            return ''
-        return html2plaintext(self.description)
+        return html_to_plaintext(self.description)
 
 
 class AccountTaxRepartitionLine(models.Model):

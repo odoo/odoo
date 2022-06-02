@@ -1,5 +1,5 @@
 from odoo import _, models, Command
-from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
+from odoo.tools import float_repr, is_html_empty, html_to_formatted_plaintext, cleanup_xml_node
 from lxml import etree
 
 from datetime import datetime
@@ -118,7 +118,7 @@ class AccountEdiXmlCii(models.AbstractModel):
             'id': invoice.name,
             'type_code': '380' if invoice.move_type == 'out_invoice' else '381',
             'issue_date_time': invoice.invoice_date,
-            'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
+            'included_note': html_to_formatted_plaintext(invoice.narration) if invoice.narration else '',
         }
 
     def _export_invoice_vals(self, invoice):

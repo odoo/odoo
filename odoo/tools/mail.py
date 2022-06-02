@@ -30,7 +30,7 @@ from lxml.html import (
 )
 from werkzeug import urls
 
-from odoo.tools import misc
+from odoo.tools import html_to_text, misc
 
 __all__ = [
     "email_domain_extract",
@@ -40,7 +40,8 @@ __all__ = [
     "email_split",
     "encapsulate_email",
     "formataddr",
-    "html2plaintext",
+    "html_to_plaintext",
+    "html_to_formatted_plaintext",
     "html_normalize",
     "html_sanitize",
     "is_html_empty",
@@ -512,106 +513,72 @@ def html_keep_url(text):
 
 
 def html_to_inner_content(html):
-    """Returns unformatted text after removing html tags and excessive whitespace from a
-    string/Markup. Passed strings will first be sanitized.
+    """Return unformatted text from an HTML string/Markup.
+
+    Remove HTML tags, compress whitespace, sanitize strings first be sanitized.
+    Typical use case: email preview.
     """
+    return _html_to_text(html)
+
+
+def _html_to_text(html, convert_entities=False, formatted=False, keep_newlines=False,
+                  skip_sanitation=False, **kwargs):
+    if not html:
+        return ''
+
     if is_html_empty(html):
         return ''
-    if not isinstance(html, markupsafe.Markup):
+
+    if not isinstance(html, markupsafe.Markup) and not skip_sanitation:
         html = html_sanitize(html)
-    processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
-    processed = re.sub(HTML_TAGS_REGEX, '', processed)
-    processed = re.sub(r' {2,}|\t', ' ', processed)
-    processed = processed.replace("\xa0", " ")
-    processed = htmllib.unescape(processed)
-    return processed.strip()
+
+    tree = etree.fromstring(html, parser=etree.HTMLParser())
+    root = tree.xpath('//body')[0]
+    if formatted:
+        processed = html_to_text.html_to_plaintext(root, **kwargs)
+    else:
+        processed = etree.tostring(root, encoding=str)
+        processed = re.sub(HTML_NEWLINES_REGEX, '\n' if keep_newlines else ' ', processed)
+        processed = re.sub(HTML_TAGS_REGEX, '', processed)  # as before
+        processed = re.sub(r' {2,}|\t', ' ', processed)
+        processed = processed.replace("\xa0", " ")
+    if convert_entities:
+        processed = htmllib.unescape(processed)
+    processed = processed.strip()
+    return processed
 
 
 def create_link(url, label):
     return f'<a href="{url}" target="_blank" rel="noreferrer noopener">{label}</a>'
 
 
-def html2plaintext(
+def html_to_plaintext(
     html: str | markupsafe.Markup | Literal[False] | None,
-    body_id: str | None = None,
-    encoding: str = 'utf-8',
-    include_references: bool = True
-) -> str:
-    """ From an HTML text, convert the HTML to plain text.
-    If @param body_id is provided then this is the tag where the
-    body (not necessarily <body>) starts.
-    :param include_references: If False, numbered references and
-        URLs for links and images will not be included.
+    keep_newlines=False,
+    skip_sanitation=False
+):
+    """Return unformatted text from an HTML string/Markup.
+
+    Will remove HTML tags, excessive whitespace, images.
+
+    :param str|markupsafe.Markup html: Text/Markup to process
+    :param keep_newlines: Set True to preserve `\n` characters
+    :param skip_sanitation: Set True to skip string sanitation
+    :rtype: str
     """
-    ## (c) Fry-IT, www.fry-it.com, 2007
-    ## <peter@fry-it.com>
-    ## download here: http://www.peterbe.com/plog/html2plaintext
-    if not (html and html.strip()):
-        return ''
+    return _html_to_text(html, convert_entities=True, formatted=False, keep_newlines=keep_newlines,
+                         skip_sanitation=skip_sanitation, strip_images=True)
 
-    if isinstance(html, bytes):
-        html = html.decode(encoding)
-    else:
-        assert isinstance(html, str), f"expected str got {html.__class__.__name__}"
 
-    tree = etree.fromstring(html, parser=etree.HTMLParser())
+def html_to_formatted_plaintext(html, skip_sanitation=False, **kwargs):
+    """Return formatted text from an HTML string/Markup with markdown-like markup.
 
-    if body_id is not None:
-        source = tree.xpath('//*[@id=%s]' % (body_id,))
-    else:
-        source = tree.xpath('//body')
-    if len(source):
-        tree = source[0]
-
-    url_index = []
-    linkrefs = itertools.count(1)
-    if include_references:
-        for link in tree.findall('.//a'):
-            if url := link.get('href'):
-                link.tag = 'span'
-                link.text = f'{link.text} [{next(linkrefs)}]'
-                url_index.append(url)
-
-        for img in tree.findall('.//img'):
-            if src := img.get('src'):
-                img.tag = 'span'
-                if src.startswith('data:'):
-                    img_name = None  # base64 image
-                else:
-                    img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
-                img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
-                url_index.append(src)
-
-    html = etree.tostring(tree, encoding="unicode")
-    # \r char is converted into &#13;, must remove it
-    html = html.replace('&#13;', '')
-
-    html = html.replace('<strong>', '*').replace('</strong>', '*')
-    html = html.replace('<b>', '*').replace('</b>', '*')
-    html = html.replace('<h3>', '*').replace('</h3>', '*')
-    html = html.replace('<h2>', '**').replace('</h2>', '**')
-    html = html.replace('<h1>', '**').replace('</h1>', '**')
-    html = html.replace('<em>', '/').replace('</em>', '/')
-    html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n')
-    html = re.sub(r'<br\s*/?>', '\n', html)
-    html = re.sub('<.*?>', ' ', html)
-    html = html.replace(' ' * 2, ' ')
-    html = html.replace('&gt;', '>')
-    html = html.replace('&lt;', '<')
-    html = html.replace('&amp;', '&')
-    html = html.replace('&nbsp;', '\N{NO-BREAK SPACE}')
-
-    # strip all lines
-    html = '\n'.join([x.strip() for x in html.splitlines()])
-    html = html.replace('\n' * 2, '\n')
-
-    if url_index:
-        html += '\n\n'
-        for i, url in enumerate(url_index, start=1):
-            html += f'[{i}] {url}\n'
-
-    return html.strip()
+    :param str|markupsafe.Markup html: Text/Markup to process
+    :param skip_sanitation: Set True to skip string sanitation
+    :param kwargs: formatting options, see ``html_to_text.html_to_plaintext``.
+    :rtype: str
+    """
+    return _html_to_text(html, formatted=True, skip_sanitation=skip_sanitation, **kwargs)
 
 
 def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: bool = True) -> markupsafe.Markup:
@@ -648,8 +615,10 @@ def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: 
         final += text[idx:] + '</p>'
 
     # 5. container
-    if container_tag: # FIXME: validate that container_tag is just a simple tag?
-        final = '<%s>%s</%s>' % (container_tag, final, container_tag)
+    if container_tag:
+        if not re.match(r'^[a-zA-Z]+$', container_tag):
+            raise ValueError('`container_tag` should be a simple tag.')
+        final = f'<{container_tag}>{final}</{container_tag}>'
     return markupsafe.Markup(final)
 
 def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):

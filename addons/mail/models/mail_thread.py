@@ -34,7 +34,7 @@ from odoo.addons.mail.tools.web_push import (
 from odoo.exceptions import MissingError, AccessError
 from odoo.fields import Domain
 from odoo.tools import (
-    is_html_empty, html_escape, html2plaintext,
+    is_html_empty, html_escape, html_to_plaintext, html_to_formatted_plaintext,
     clean_context, split_every, SQL,
     ormcache, is_list_of,
 )
@@ -836,7 +836,7 @@ class MailThread(models.AbstractModel):
                     Domain('mail_email_address', '=', bounced_email) if bounced_email else [],
                 ]),
                 ).write({
-                    'failure_reason': html2plaintext(message_dict.get('body') or ''),
+                    'failure_reason': html_to_plaintext(message_dict.get('body')),
                     'failure_type': 'mail_bounce',
                     'notification_status': 'bounce',
                 })
@@ -4000,7 +4000,7 @@ class MailThread(models.AbstractModel):
         return {
             'title': title,
             'options': {
-                'body': html2plaintext(body, include_references=False) + self._generate_tracking_message(message),
+                'body': html_to_formatted_plaintext(body, strip_links=True) + self._generate_tracking_message(message),
                 'icon': icon,
                 'data': {
                     'model': model if model else '',

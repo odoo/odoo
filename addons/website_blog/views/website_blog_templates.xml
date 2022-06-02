@@ -416,7 +416,7 @@ list of filtered posts (by date or tag).
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
         <id t-out="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-out="post.sudo().author_id.name"/></author>
-        <summary t-out="html2plaintext(post.teaser)"/>
+        <summary t-out="html_to_formatted_plaintext(post.teaser)"/>
         <updated t-out="str(post.post_date).replace(' ', 'T') + 'Z'"/>
     </entry>
 </feed>
