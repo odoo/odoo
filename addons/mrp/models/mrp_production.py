@@ -747,7 +747,11 @@ class MrpProduction(models.Model):
 
     def write(self, vals):
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
+<<<<<<< HEAD
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
+=======
+            vals['move_finished_ids'] = vals['move_byproduct_ids']
+>>>>>>> 4072819fd0b... temp
             del vals['move_byproduct_ids']
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
