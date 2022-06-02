@@ -8,10 +8,9 @@ class SaleOrderLine(models.Model):
     @api.depends('analytic_line_ids.amount', 'qty_delivered_method')
     def _compute_purchase_price(self):
         timesheet_sols = self.filtered(
-            lambda sol: sol.qty_delivered_method == 'timesheet' and not sol.product_id.standard_price and not sol.product_id.service_policy == 'ordered_prepaid'
+            lambda sol: sol.qty_delivered_method == 'timesheet' and not sol.product_id.standard_price
         )
-        already_computed_service = self.filtered(lambda sol: sol.create_date is not False and sol.product_id.service_policy == 'ordered_prepaid')
-        super(SaleOrderLine, self - timesheet_sols - already_computed_service)._compute_purchase_price()
+        super(SaleOrderLine, self - timesheet_sols)._compute_purchase_price()
         if timesheet_sols:
             group_amount = self.env['account.analytic.line'].read_group(
                 [('so_line', 'in', timesheet_sols.ids), ('project_id', '!=', False)],
