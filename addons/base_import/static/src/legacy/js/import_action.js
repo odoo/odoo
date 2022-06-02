@@ -168,18 +168,14 @@ var DataImport = AbstractAction.extend({
         this.setup_float_format_picker();
         this.setup_date_format_picker();
         this.setup_sheets_picker();
+        this.renderButtons();
+        this.controlPanelProps.cp_content = { $buttons: this.$buttons };
 
         return Promise.all([
             this._super(),
             self.create_model().then(function (id) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
-
-                self.renderButtons();
-                var status = {
-                    cp_content: {$buttons: self.$buttons},
-                };
-                self.updateControlPanel(status);
             }),
         ]);
     },
