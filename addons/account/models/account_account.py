@@ -300,6 +300,7 @@ class AccountAccount(models.Model):
     def _find_account_by_closest_parent_code(self, codes):
         ''' Finds the account with the closest matching code
             eg. code 123456 will return 123400 as it is a closer parent than 123756
+
             :param codes: list(str) of codes to search for
             :return: dict of codes with matching account values
                 {
@@ -322,7 +323,7 @@ class AccountAccount(models.Model):
             for j in range(len(code)):
                 place_holder_list.append(f"(%(code_{i})s, %(code_search_term_{i}_{j})s, %(code_match_len_{i}_{j})s)")
                 place_holder_vals.update({
-                    f"code_search_term_{i}_{j}": f"{code[:j + 1]}%%",
+                    f"code_search_term_{i}_{j}": f"{code[:j + 1]}%",
                     f"code_match_len_{i}_{j}": len(code[:j + 1]),
                 })
 

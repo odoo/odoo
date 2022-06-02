@@ -7099,7 +7099,7 @@ def itemgetter_tuple(items):
     if len(items) == 0:
         return lambda a: ()
     if len(items) == 1:
-        return lambda gettable: (gettable[items[0]],) if gettable else ()
+        return lambda gettable: (gettable[items[0]],)
     return operator.itemgetter(*items)
 
 def convert_pgerror_not_null(model, fields, info, e):
