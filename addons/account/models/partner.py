@@ -8,7 +8,7 @@ from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 _logger = logging.getLogger(__name__)
@@ -551,6 +551,20 @@ class ResPartner(models.Model):
                 elif is_supplier and 'supplier_rank' not in vals:
                     vals['supplier_rank'] = 1
         return super().create(vals_list)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_partner_in_account_move(self):
+        """
+        Prevent the deletion of a partner "Individual", child of a company if:
+        - partner in 'account.move'
+        - state: all states (draft and posted)
+        """
+        moves = self.sudo().env['account.move'].search_count([
+            ('partner_id', 'in', self.ids),
+            ('state', 'in', ['draft', 'posted']),
+        ])
+        if moves:
+            raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
 
     def _increase_rank(self, field, n=1):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
