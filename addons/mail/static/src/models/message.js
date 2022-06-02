@@ -524,6 +524,20 @@ registerModel({
             return false;
         },
         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeLastTrackingValue() {
+            const {
+                length: l,
+                [l - 1]: lastTrackingValue,
+            } = this.trackingValues;
+            if (lastTrackingValue) {
+                return replace(lastTrackingValue);
+            }
+            return clear();
+        },
+        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -597,6 +611,11 @@ registerModel({
             }
             return replace(threads);
         },
+        _sortTrackingValues() {
+            return [
+                ['smaller-first', 'id'],
+            ];
+        }
     },
     fields: {
         authorName: attr({
@@ -779,6 +798,12 @@ registerModel({
             default: false,
         }),
         /**
+         * Last tracking value of the message.
+         */
+        lastTrackingValue: one('TrackingValue', {
+            compute: '_computeLastTrackingValue',
+        }),
+        /**
          * Groups of reactions per content allowing to know the number of
          * reactions for each.
          */
@@ -841,6 +866,7 @@ registerModel({
         trackingValues: many('TrackingValue', {
             inverse: 'messageOwner',
             isCausal: true,
+            sort: '_sortTrackingValues',
         }),
     },
 });

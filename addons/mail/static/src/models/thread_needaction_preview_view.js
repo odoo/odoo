@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 registerModel({
@@ -50,7 +50,17 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsEmpty() {
-            return !this.inlineLastNeedactionMessageAsOriginThreadBody;
+            return !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue;
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeLastTrackingValue() {
+            if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
+                return replace(this.thread.lastMessage.lastTrackingValue);
+            }
+            return clear();
         },
         /**
          * @private
@@ -74,6 +84,10 @@ registerModel({
         }),
         isEmpty: attr({
             compute: '_computeIsEmpty',
+            readonly: true,
+        }),
+        lastTrackingValue: one('TrackingValue', {
+            compute:'_computeLastTrackingValue',
             readonly: true,
         }),
         /**
