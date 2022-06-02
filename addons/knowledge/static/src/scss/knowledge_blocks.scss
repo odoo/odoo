@@ -3,6 +3,8 @@
     margin-bottom: 5px;
     border-radius: 5px;
     background-color: $o-gray-100;
+    outline: 1px solid $o-gray-300;
+    outline-offset: -1px;
     display: flex;
     padding: 5px;
     & > .o_knowledge_file_image {
@@ -23,6 +25,8 @@
     margin-bottom: 5px;
     border-radius: 5px;
     background-color: $o-gray-100;
+    outline: 1px solid $o-gray-300;
+    outline-offset: -1px;
     & > .o_knowledge_content {
         padding: 5px;
         border-bottom: 5px solid $o-gray-100;
@@ -34,6 +38,12 @@
     }
     .o_knowledge_toolbar_anchor {
         min-height: 5px;
+    }
+    .o_knowledge_template_label {
+        font-family: $font-family-base !important;
+        font-weight: $font-weight-bold;
+        padding: $btn-padding-y-sm $btn-padding-x-sm;
+        color: $o-gray-600;
     }
 }
 
