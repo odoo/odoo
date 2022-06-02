@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, Command, models, fields
 from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -174,7 +174,7 @@ class MailThread(models.AbstractModel):
         sms_all = self.env['sms.sms'].sudo()
 
         # pre-compute SMS data
-        body = sms_content or html2plaintext(msg_vals['body'] if 'body' in msg_vals else message.body)
+        body = sms_content or html_to_plaintext(msg_vals['body'] if 'body' in msg_vals else message.body)  # noqa: SIM401
         sms_base_vals = {
             'body': body,
             'mail_message_id': message.id,

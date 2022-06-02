@@ -3,7 +3,7 @@
 from markupsafe import Markup
 
 from odoo import fields, models, _
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class SlideChannelPartner(models.Model):
@@ -43,7 +43,7 @@ class SlideChannelPartner(models.Model):
                         'employee_id': employee.id,
                         'name': channel.name,
                         'date_start': fields.Date.today(),
-                        'description': html2plaintext(channel.description),
+                        'description': html_to_plaintext(channel.description),
                         'line_type_id': line_type_id,
                         'course_type': 'elearning',
                         'channel_id': channel.id,

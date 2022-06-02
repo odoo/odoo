@@ -5,7 +5,7 @@ from datetime import datetime
 from pytz import UTC
 
 from odoo import api, models
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 # Far from ideal, but no better solution yet.
 COUNTRY_CODE_MAP = {
@@ -390,7 +390,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if vals['invoice_payment_term_id']:
             document_node['cac:PaymentTerms'] = {
                 # The payment term's note is automatically embedded in a <p> tag in Odoo
-                'cbc:Note': {'_text': html2plaintext(vals['invoice_payment_term_id'].note)}
+                'cbc:Note': {'_text': html_to_plaintext(vals['invoice_payment_term_id'].note)}
             }
 
     def _add_myinvois_document_exchange_rate_nodes(self, document_node, vals):

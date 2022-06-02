@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from odoo import _, models, fields
 from odoo.fields import Domain
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class ChatbotScriptStep(models.Model):
@@ -29,7 +29,7 @@ class ChatbotScriptStep(models.Model):
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
         name = self.env._("%s's New Lead", self.chatbot_script_id.title)
         if msg := self._find_first_user_free_input(discuss_channel):
-            name = html2plaintext(msg.body)[:100]
+            name = html_to_plaintext(msg.body)[:100]
         partner = self.env.user.partner_id
         team = self.crm_team_id
         if partner.company_id and team.company_id and partner.company_id != team.company_id:

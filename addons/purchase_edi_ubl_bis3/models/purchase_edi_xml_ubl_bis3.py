@@ -1,7 +1,7 @@
 from lxml import etree
 
 from odoo import models, Command, _
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 from odoo.addons.account_edi_ubl_cii.tools import Order
 from odoo.addons.account.tools import dict_to_xml
 
@@ -93,7 +93,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             'cbc:ID': {'_text': purchase_order.name},
             'cbc:IssueDate': {'_text': purchase_order.create_date.date()},
             'cbc:OrderTypeCode': {'_text': '105'},
-            'cbc:Note': {'_text': html2plaintext(purchase_order.note)} if purchase_order.note else None,
+            'cbc:Note': {'_text': html_to_plaintext(purchase_order.note)} if purchase_order.note else None,
             'cbc:DocumentCurrencyCode': {'_text': vals['currency_name']},
             'cac:QuotationDocumentReference': {
                 'cbc:ID': {'_text': purchase_order.partner_ref}

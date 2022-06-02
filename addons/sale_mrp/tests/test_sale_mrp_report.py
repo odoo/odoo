@@ -2,7 +2,7 @@
 
 from odoo.fields import Command
 from odoo.tests import tagged
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 
@@ -65,8 +65,8 @@ class TestSaleMrpInvoices(TestSaleCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html(
             'account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html.decode())
-        self.assertRegex(text, r'Product By Lot\n1.00Units\nLOT0001', "There should be a line that specifies 1 x LOT0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By Lot 1.00Units LOT0001', "There should be a line that specifies 1 x LOT0001")
 
     def test_report_forecast_for_mto_procure_method(self):
         """
