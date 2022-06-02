@@ -26,18 +26,18 @@
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView"/>
-                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute px-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
+                <div t-if="messageView.isActive and messageView.messageActionList" class="o_Message_actionListContainer position-absolute top-0 end-0 mt-n3 px-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
                     <MessageActionList record="messageView.messageActionList"/>
                 </div>
                 <div class="d-flex flex-shrink-0">
-                    <div class="o_Message_highlightIndicator h-100" t-att-class="{ 'o-active bg-primary': messageView.message.isHighlighted or messageView.isHighlighted }"/>
+                    <div class="o_Message_highlightIndicator position-absolute top-0 start-0 h-100" t-att-class="{ 'o-active bg-primary': messageView.message.isHighlighted or messageView.isHighlighted }"/>
                     <div class="o_Message_sidebar d-flex justify-content-center flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative mx-1">
-                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.authorTitleText" t-att-alt="messageView.authorTitleText"/>
+                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-class="{ 'o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.authorTitleText" t-att-alt="messageView.authorTitleText"/>
                                 <t t-if="messageView.personaImStatusIconView">
                                     <PersonaImStatusIcon
-                                        className="'o_Message_personaImStatusIcon d-flex align-items-center justify-content-center'"
+                                        className="'o_Message_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
                                         classNameObj="{
                                             'o-message-selected text-400': messageView.isSelected,
                                             'o_Message_personaImStatusIcon-mobile': messaging.device.isSmall,
@@ -58,7 +58,7 @@
                                 </small>
                             </t>
                             <t t-if="!messageView.isActive and messageView.messageSeenIndicatorView">
-                                <MessageSeenIndicator className="'o_Message_seenIndicator'" record="messageView.messageSeenIndicatorView"/>
+                                <MessageSeenIndicator className="'o_Message_seenIndicator me-1'" record="messageView.messageSeenIndicatorView"/>
                             </t>
                         </t>
                     </div>
@@ -66,7 +66,7 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_header d-flex flex-wrap align-items-baseline ms-2">
                                 <t t-if="messageView.message.author">
-                                    <strong class="o_Message_authorName o_redirect text-truncate" t-att-class="{'o_cursor_pointer': messageView.hasAuthorOpenChat}" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorName" t-att-title="messageView.authorTitleText">
+                                    <strong class="o_Message_authorName o_redirect me-2 text-truncate" t-att-class="{'o_cursor_pointer': messageView.hasAuthorOpenChat}" t-att-role="messageView.hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="messageView.hasAuthorOpenChat ? '0' : ''" t-on-click="messageView.onClickAuthorName" t-att-title="messageView.authorTitleText">
                                         <t t-if="messageView.message.originThread">
                                             <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
                                         </t>
@@ -76,37 +76,37 @@
                                     </strong>
                                 </t>
                                 <t t-elif="messageView.message.guestAuthor">
-                                    <strong class="o_Message_authorName text-truncate">
+                                    <strong class="o_Message_authorName me-2 text-truncate">
                                         <t t-esc="messageView.message.guestAuthor.name"/>
                                     </strong>
                                 </t>
                                 <t t-elif="messageView.message.email_from">
-                                    <a class="o_Message_authorName text-truncate" t-attf-href="mailto:{{ messageView.message.email_from }}?subject=Re: {{ messageView.message.subject ? messageView.message.subject : '' }}">
+                                    <a class="o_Message_authorName me-2 text-truncate" t-attf-href="mailto:{{ messageView.message.email_from }}?subject=Re: {{ messageView.message.subject ? messageView.message.subject : '' }}">
                                         <strong>
                                             <t t-esc="messageView.message.email_from"/>
                                         </strong>
                                     </a>
                                 </t>
                                 <t t-else="">
-                                    <strong class="o_Message_authorName text-truncate">
+                                    <strong class="o_Message_authorName me-2 text-truncate">
                                         Anonymous
                                     </strong>
                                 </t>
                                 <t t-if="messageView.message.date">
-                                    <small class="o_Message_date o_Message_headerDate text-500" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }" t-att-title="messageView.message.datetime">
+                                    <small class="o_Message_date o_Message_headerDate me-2 text-500" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }" t-att-title="messageView.message.datetime">
                                         - <t t-esc="messageView.dateFromNow"/>
                                     </small>
                                 </t>
                                 <t t-if="messageView.messageSeenIndicatorView">
-                                    <MessageSeenIndicator className="'o_Message_seenIndicator'" record="messageView.messageSeenIndicatorView"/>
+                                    <MessageSeenIndicator className="'o_Message_seenIndicator me-1'" record="messageView.messageSeenIndicatorView"/>
                                 </t>
                                 <t t-if="messageView.messageListViewMessageViewItemOwner and messageView.message.originThread and messageView.message.originThread !== messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread">
-                                    <small class="o_Message_originThread" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
+                                    <small class="o_Message_originThread me-2" t-att-class="{ 'o-message-selected text-600': messageView.isSelected, 'text-500': !messageView.isSelected }">
                                         <t t-if="messageView.message.originThread.model === 'mail.channel'">
-                                            (from <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
+                                            (from <a class="o_Message_originThreadLink fs-6" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName">#<t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">channel</t></a>)
                                         </t>
                                         <t t-else="">
-                                            on <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName"><t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">document</t></a>
+                                            on <a class="o_Message_originThreadLink fs-6" t-att-href="messageView.message.originThread.url" t-on-click="messageView.onClickOriginThread"><t t-if="messageView.message.originThread.displayName"><t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">document</t></a>
                                         </t>
                                     </small>
                                 </t>

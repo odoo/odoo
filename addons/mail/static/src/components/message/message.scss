@@ -2,27 +2,13 @@
 // Layout
 // ------------------------------------------------------------------
 
-// TODO : When the migration to BS5 for the backend AND the frontend
-// will be done, we could use BS5 classes to handle the position values
-// (eg. position-absolute top-0 end-0 mt-n3)
 .o_Message_actionListContainer {
-    @include o-position-absolute($top: - map-get($spacers, 3), $right: 0);
     z-index: 10; // Place the element in front of the Composer when they overlap
-}
-
-.o_Message_authorAvatar {
-    object-fit: cover;
 }
 
 .o_Message_authorAvatarContainer {
     height: $o-mail-thread-avatar-size;
     width: $o-mail-thread-avatar-size;
-}
-
-.o_Message_authorName {
-    // Could be replaced by "me-2" after the migration to BS5
-    // for the backend AND the frontend
-    margin-inline-end: map-get($spacers, 2);
 }
 
 .o_Message_content {
@@ -45,45 +31,15 @@
 
 .o_Message_core {
     min-width: 0; // allows this flex child to shrink more than its content
-    // Could be replaced by "me-4" after the migration to BS5
-    // for the backend AND the frontend
-    margin-inline-end: map-get($spacers, 4);
-}
-
-.o_Message_headerDate {
-    // Could be replaced by "me-2" after the migration to BS5
-    // for the backend AND the frontend
-    margin-inline-end: map-get($spacers, 2);
 }
 
 .o_Message_highlightIndicator {
-    // Could be replaced by "position absolute top-0 start-0"
-    // after the migration to BS5 for the backend AND the frontend
-    @include o-position-absolute($top: 0, $left: 0);
     width: $o-mail-discuss-message-highlight-indicator-width;
     transition: background-color .5s ease-out;
 }
 
-.o_Message_originThread {
-    // Could be replaced by "me-2" after the migration to BS5
-    // for the backend AND the frontend
-    margin-inline-end: map-get($spacers, 2);
-}
-
-.o_Message_personaImStatusIcon {
-    // Could be replaced by "position absolute bottom-0 end-0"
-    // after the migration to BS5 for the backend AND the frontend
-    @include o-position-absolute($bottom: 0, $right: 0);
-}
-
 .o_Message_prettyBody > p {
     margin-bottom: 0;
-}
-
-.o_Message_seenIndicator {
-    // Could be replaced by "me-1" after the migration to BS5
-    // for the backend AND the frontend
-    margin-inline-end: map-get($spacers, 1);
 }
 
 .o_Message_sidebar {
@@ -109,10 +65,6 @@
             background-color: rgba($o-brand-primary, .2);
         }
     }
-}
-
-.o_Message_originThreadLink {
-    font-size: 1.25em; // original size
 }
 
 // Used to hide buttons on rating emails in chatter
