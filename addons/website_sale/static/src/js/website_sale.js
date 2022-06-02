@@ -80,6 +80,9 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
                 $('.popover').on('mouseleave', function () {
                     self.$el.trigger('mouseleave');
                 });
+                self.cartQty = +$(data).find('.o_wsale_cart_quantity').text();
+                sessionStorage.setItem('website_sale_cart_quantity', self.cartQty);
+                self._updateCartQuantityText();
             });
         }, 300);
     },
@@ -129,10 +132,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _updateCartQuantityValue() {
-        return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
-            this.cartQty = cartQty;
-        });
+    async _updateCartQuantityValue() {
+        if ('website_sale_cart_quantity' in sessionStorage) {
+            this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
+        }
+        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
+            return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
+                this.cartQty = cartQty;
+                sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
+            });
+        }
     },
     /**
      * @private
@@ -359,6 +368,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 $input.trigger('change');
                 return;
             }
+            sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }

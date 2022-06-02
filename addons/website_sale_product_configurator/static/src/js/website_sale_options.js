@@ -116,6 +116,7 @@ publicWidget.registry.WebsiteSale.include({
                         const $quantity = $(".my_cart_quantity");
                         $quantity.parent().parent().removeClass('d-none');
                         $quantity.text(quantity).hide().fadeIn(600);
+                        sessionStorage.setItem('website_sale_cart_quantity', quantity);
                     });
             });
     },

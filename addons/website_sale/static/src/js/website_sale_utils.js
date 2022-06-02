@@ -34,6 +34,7 @@ const cartHandlerMixin = {
             route: "/shop/cart/update_json",
             params: params,
         }).then(async data => {
+            sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
                 await animateClone($('header .o_wsale_my_cart').first(), this.$itemImgContainer, 25, 40);
                 updateCartNavBar(data);
