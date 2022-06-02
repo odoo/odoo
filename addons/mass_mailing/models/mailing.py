@@ -317,7 +317,7 @@ class MassMailing(models.Model):
         that mailing_model being mailing.list means contacting mailing.contact
         (see mailing_model_name versus mailing_model_real). """
         for mailing in self:
-            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list']:
+            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list', 'mailing.contact']:
                 mailing.reply_to_mode = 'new'
             else:
                 mailing.reply_to_mode = 'update'
