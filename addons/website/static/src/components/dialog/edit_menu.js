@@ -1,22 +1,74 @@
 /** @odoo-module **/
 
-import { useService } from '@web/core/utils/hooks';
+import { useService, useAutofocus } from '@web/core/utils/hooks';
+import wUtils from 'website.utils';
 import { WebsiteDialog } from './dialog';
 
 const { Component, useState, useEffect, onWillStart, useRef, onMounted } = owl;
 
+const useControlledInput = (initialValue, validate) => {
+    const input = useState({
+        value: initialValue,
+        hasError: false,
+    });
+
+    const isValid = () => {
+        if (validate(input.value)) {
+            return true;
+        }
+        input.hasError = true;
+        return false;
+    };
+
+    useEffect(() => {
+        input.hasError = false;
+    }, () => [input.value]);
+
+    return {
+        input,
+        isValid,
+    };
+};
+
 export class MenuDialog extends Component {
     setup() {
+        this.rpc = useService('rpc');
+        this.website = useService('website');
         this.title = this.env._t("Add a menu item");
+        useAutofocus();
 
-        this.state = useState({
-            name: this.props.name,
-            url: this.props.url,
-        });
+        this.name = useControlledInput(this.props.name, value => !!value);
+        this.url = useControlledInput(this.props.url, value => !!value);
+        this.urlInputRef = useRef('url-input');
+
+        useEffect(() => {
+            const $input = $(this.urlInputRef.el);
+            // This is only there to avoid changing the
+            // wUtils.autocompleteWithPages api
+            const fakeWidget = {
+                _rpc: ({ route, params }) => this.rpc(route, params),
+                trigger_up: () => {
+                    this.url.input.value = this.urlInputRef.el.value;
+                },
+            };
+            const options = {
+                body: this.website.pageDocument.body,
+                classes: {
+                    'ui-autocomplete': 'o_edit_menu_autocomplete'
+                },
+            };
+            wUtils.autocompleteWithPages(fakeWidget, $input, options);
+            return () => $input.urlcomplete('destroy');
+        }, () => []);
     }
 
     onClickOk() {
-        this.props.save(this.state.name, this.state.url);
+        if (this.name.isValid()) {
+            if (this.props.isMegaMenu || this.url.isValid()) {
+                this.props.save(this.name.input.value, this.url.input.value);
+                this.props.close();
+            }
+        }
     }
 }
 MenuDialog.template = 'website.MenuDialog';
@@ -26,10 +78,6 @@ MenuDialog.props = {
     isMegaMenu: { type: Boolean, optional: true },
     save: Function,
     close: Function,
-};
-MenuDialog.defaultProps = {
-    name: '',
-    url: '/',
 };
 MenuDialog.components = { WebsiteDialog };
 

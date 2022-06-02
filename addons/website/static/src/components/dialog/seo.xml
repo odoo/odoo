@@ -127,7 +127,7 @@
                     <label for="website_meta_title">
                         Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
                     </label>
-                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70"/>
+                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
                 <div class="form-group">
                     <label for="website_meta_description">

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MenuDialog" owl="1">
-    <WebsiteDialog close="props.close" title="title" primaryClick="() => this.onClickOk()">
-        <div class="form-group row">
+    <WebsiteDialog title="title" closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
+        <div class="o_menu_dialog_form form-group row">
             <label class="col-form-label col-md-3">
                 Name
             </label>
             <div class="col-md-9">
-                <input type="text" t-model="state.name" class="form-control" required="required"/>
+                <input type="text" t-model="name.input.value" class="form-control" t-att-class="{ 'is-invalid': name.input.hasError }" t-ref="autofocus"/>
             </div>
         </div>
         <div t-if="!props.isMegaMenu" class="form-group row">
@@ -15,7 +15,7 @@
                 Url or Email
             </label>
             <div class="col-md-9">
-                <input id="url_input" type="text" t-model="state.url" class="form-control" required="required"/>
+                <input id="url_input" t-ref="url-input" type="text" t-model="url.input.value" class="form-control" t-att-class="{ 'is-invalid': url.input.hasError }"/>
             </div>
         </div>
     </WebsiteDialog>
