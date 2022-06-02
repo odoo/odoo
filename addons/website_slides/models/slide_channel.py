@@ -287,7 +287,8 @@ class Channel(models.Model):
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_completed'),
         domain=[('model', '=', 'slide.channel.partner')])
     enroll = fields.Selection([
-        ('public', 'Public'), ('invite', 'On Invitation')],
+        ('public', 'Open'), ('invite', 'On Invitation')],
+        compute='_compute_enroll', store=True, readonly=False,
         default='public', string='Enroll Policy', required=True,
         help='Defines how people can enroll to your Course.', copy=False)
     enroll_msg = fields.Html(
@@ -295,8 +296,10 @@ class Channel(models.Model):
         default=_get_default_enroll_msg, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
-        ('public', 'Open To All'), ('members', 'Members Only')],
-        default='public', string='Visibility', required=True,
+        ('public', 'Everyone'),
+        ('connected', 'Signed In'),
+        ('members', 'Course Attendees')
+    ], default='public', string='Show Course To', required=True,
         help='Defines who can access your courses and their content.')
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
@@ -326,6 +329,18 @@ class Channel(models.Model):
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights', compute_sudo=False)
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights', compute_sudo=False)
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights', compute_sudo=False)
+
+    _sql_constraints = [
+        (
+            "check_enroll",
+            "CHECK(visibility != 'members' OR enroll = 'invite')",
+            "The Enroll Policy should be set to 'On Invitation' when visibility is set to 'Course Attendees'"
+        ),
+    ]
+
+    @api.depends('visibility')
+    def _compute_enroll(self):
+        self.filtered(lambda channel: channel.visibility == 'members').enroll = 'invite'
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
