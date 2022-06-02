@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
+import { useAutofocus } from '@web/core/utils/hooks';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
 import { _t } from 'web.core';
 
 const { xml, useState, Component } = owl;
+
+const NO_OP = () => {};
 
 export class WebsiteDialog extends Component {
     async primaryClick() {
@@ -41,7 +44,7 @@ WebsiteDialog.props = {
     secondaryTitle: { type: String, optional: true },
     secondaryClick: { type: Function, optional: true },
     showSecondaryButton: { type: Boolean, optional: true },
-    close: Function,
+    close: { type: Function, optional: true },
     closeOnClick: { type: Boolean, optional: true },
     body: { type: String, optional: true },
     slots: { type: Object, optional: true },
@@ -54,12 +57,14 @@ WebsiteDialog.defaultProps = {
     showSecondaryButton: true,
     size: "md",
     closeOnClick: true,
+    close: NO_OP,
 };
 WebsiteDialog.template = "website.WebsiteDialog";
 
 export class AddPageDialog extends Component {
     setup() {
         super.setup();
+        useAutofocus();
 
         this.title = this.env._t("New Page");
         this.primaryTitle = this.env._t("Create");
@@ -94,7 +99,7 @@ AddPageDialog.template = xml`
             Page Title
         </label>
         <div class="col-md-9">
-            <input type="text" t-model="state.name" class="form-control" required="required"/>
+            <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
         </div>
     </div>
     <Switch extraClasses="'offset-md-3 col-md-9 text-left'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>

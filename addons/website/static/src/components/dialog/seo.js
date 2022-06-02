@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from '@web/core/utils/hooks';
+import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 
@@ -261,6 +261,7 @@ SEOPreview.props = {
 class TitleDescription extends Component {
     setup() {
         this.seoContext = useState(seoContext);
+        useAutofocus();
 
         this.previousSeoName = this.seoContext.seoName;
 
