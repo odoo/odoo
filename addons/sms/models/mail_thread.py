@@ -4,7 +4,7 @@
 import logging
 
 from odoo import api, Command, models, fields
-from odoo.tools import html2plaintext, plaintext2html
+from odoo.tools import html_to_plaintext, plaintext2html
 
 _logger = logging.getLogger(__name__)
 
@@ -201,7 +201,8 @@ class MailThread(models.AbstractModel):
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
-            body=plaintext2html(html2plaintext(body)), partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
+            body=plaintext2html(html_to_plaintext(body)),
+            partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
             message_type='sms', subtype_id=subtype_id,
             sms_numbers=sms_numbers, sms_pid_to_number=sms_pid_to_number,
             **kwargs
@@ -250,7 +251,7 @@ class MailThread(models.AbstractModel):
         # pre-compute SMS data
         body = msg_vals['body'] if msg_vals and 'body' in msg_vals else message.body
         sms_base_vals = {
-            'body': html2plaintext(body),
+            'body': html_to_plaintext(body),
             'mail_message_id': message.id,
             'state': 'outgoing',
         }

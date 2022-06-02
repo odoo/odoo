@@ -1,5 +1,5 @@
 from odoo import _, models, tools
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
@@ -223,7 +223,7 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
                 'amount': sign * line.amount_currency,
                 'currency_name': line.currency_id.name,
                 'currency_dp': self._get_currency_decimal_places(line.currency_id),
-                'note_vals': [{'note_vals': [{'note': html2plaintext(invoice.invoice_payment_term_id.note)}]}],
+                'note_vals': [{'note_vals': [{'note': html_to_plaintext(invoice.invoice_payment_term_id.note)}]}],
                 'settlement_period': {
                     'start_date': invoice.invoice_date,
                     'end_date': line.date_maturity,

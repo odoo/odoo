@@ -17,8 +17,8 @@
                     <tr t-foreach="lot_values" t-as="snln_line">
                         <td><t t-esc="snln_line['product_name']">Bacon</t></td>
                         <td class="text-end">
-                            <t t-esc="snln_line['quantity']">6.00</t>
-                            <t t-esc="snln_line['uom_name']" groups="uom.group_uom">units</t>
+                            <span t-esc="snln_line['quantity']">6.00</span>
+                            <span t-esc="snln_line['uom_name']" groups="uom.group_uom">units</span>
                         </td>
                         <td><t class="text-end" t-esc="snln_line['lot_name']">BC46282798</t></td>
                     </tr>

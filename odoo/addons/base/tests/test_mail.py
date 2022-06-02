@@ -10,7 +10,8 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import (
-    is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
+    append_content_to_html, is_html_empty, html_to_plaintext, html_sanitize, style_to_dict,
+    plaintext2html,
     email_domain_normalize, email_normalize, email_re,
     email_split, email_split_and_format, email_split_tuples,
     single_email_re,
@@ -381,7 +382,7 @@ class TestHtmlTools(BaseCase):
             html = plaintext2html(content, container_tag)
             self.assertEqual(html, expected, 'plaintext2html is broken')
 
-    def test_html_html_to_inner_content(self):
+    def test_html_to_plaintext(self):
         cases = [
             ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
              'First Second Third Paragraph -- Signature paragraph with a link'),
@@ -391,8 +392,38 @@ class TestHtmlTools(BaseCase):
             ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?')
         ]
         for content, expected in cases:
-            text = html_to_inner_content(content)
-            self.assertEqual(text, expected, 'html_html_to_inner_content is broken')
+            text = html_to_plaintext(content)
+            self.assertEqual(text, expected, 'html_to_plaintext is broken')
+
+    def test_html_to_formatted_plaintext(self):
+        cases = [
+            ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
+             'First  \nSecond  \nThird Paragraph  \n--  \nSignature paragraph with a [link][1]\n\n   [1]: ./link', {}),
+            ('<div><p>First <br/>Second <br/>Third Paragraph</p><p><hr/>Signature paragraph with a <a href="./link">link</a></p></div>',
+             'First \nSecond \nThird Paragraph\n* * *\nSignature paragraph with a [link](./link)', {'inline_links': True}),
+            ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
+             'Now => processing entities\u200band extra whitespace too.',
+             {}),
+            ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with \nunmatched tags', {}),
+            ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with \nAre we good?', {}),
+            ('<div>A list of things <ul> <li>One</li><li>Two</li><li> Three</li></ul>', 'A list of things \n  * One\n  * Two\n  * Three', {})
+        ]
+        for content, expected, kwargs in cases:
+            text = html_to_plaintext(content, **kwargs)
+            self.assertEqual(text, expected, 'html_to_plaintext is broken')
+
+    def test_css_extraction(self):
+        cases = [
+            ("position: absolute; top: -1000px; height: 1px; overflow: hidden;",
+             {"position": "absolute", "top": "-1000px", "height": "1px", "overflow": "hidden"}),
+            ("position: absolute;\ntop: -1000px;\nheight: 1px;\noverflow:hidden;",
+             {"position": "absolute", "top": "-1000px", "height": "1px", "overflow": "hidden"}),
+            ("background-color:transparent", {"background-color": "transparent"}),
+        ]
+
+        for content, expected in cases:
+            result = style_to_dict(content)
+            self.assertEqual(result, expected, 'style_to_dict is broken')
 
     def test_append_to_html(self):
         test_samples = [

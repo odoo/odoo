@@ -4,7 +4,7 @@ import requests
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -150,7 +150,7 @@ class AutoCompleteController(http.Controller):
             standard_address['number'] = self._guess_number_from_input(address, standard_address)
             standard_address['formatted_street_number'] = f'{standard_address["number"]} {standard_address.get("street", "")}'
         else:
-            formatted_from_html = html2plaintext(html_address.split(',')[0])
+            formatted_from_html = html_to_plaintext(html_address.split(',')[0])
             formatted_manually = f'{standard_address["number"]} {standard_address.get("street", "")}'
             # Sometimes, the google api sends back abbreviated data :
             # "52 High Road Street" becomes "52 HR St" for example. We usually take the result from google, but if it's an abbreviation, take our guess instead.

@@ -3,9 +3,11 @@
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2html
+from odoo.tools import email_normalize, html_escape
 
 from markupsafe import Markup
+
+from odoo import _, api, fields, models, tools
 
 
 class DiscussChannel(models.Model):
@@ -93,7 +95,8 @@ class DiscussChannel(models.Model):
     def _send_history_message(self, pid, page_history):
         message_body = _('No history found')
         if page_history:
-            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (html_escape(page), html_escape(page)) for page in page_history]
+            html_links = [f'<li><a href="{tools.html_escape(page)}" target="_blank">{tools.html_escape(page)}</a></li>'
+                          for page in page_history]
             message_body = '<ul>%s</ul>' % (''.join(html_links))
         self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
 
@@ -171,7 +174,8 @@ class DiscussChannel(models.Model):
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
         return Markup('').join(
-            Markup('%s: %s<br/>') % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
+            Markup(f'{message.author_id.name or self.anonymous_name}: '
+                   f'{tools.html_to_plaintext(message.body)}<br/>')
             for message in self.message_ids.sorted('id')
         )
 
@@ -194,7 +198,7 @@ class DiscussChannel(models.Model):
         for message_id in filtered_message_ids:
             field_name = step_type_to_field[message_id.script_step_id.step_type]
             if not values.get(field_name):
-                values[field_name] = html2plaintext(message_id.user_raw_answer or '')
+                values[field_name] = tools.html_to_plaintext(message_id.user_raw_answer or '')
 
         return values
 
@@ -212,8 +216,8 @@ class DiscussChannel(models.Model):
         )
 
     def _chatbot_validate_email(self, email_address, chatbot_script):
-        email_address = html2plaintext(email_address)
-        email_normalized = email_normalize(email_address)
+        email_address = tools.html_to_plaintext(email_address)
+        email_normalized = tools.email_normalize(email_address)
 
         posted_message = False
         error_message = False
@@ -222,7 +226,7 @@ class DiscussChannel(models.Model):
                 "'%(input_email)s' does not look like a valid email. Can you please try again?",
                 input_email=email_address
             )
-            posted_message = self._chatbot_post_message(chatbot_script, plaintext2html(error_message))
+            posted_message = self._chatbot_post_message(chatbot_script, tools.plaintext2html(error_message))
 
         return {
             'success': bool(email_normalized),

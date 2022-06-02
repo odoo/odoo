@@ -24,7 +24,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
 )
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html2plaintext, is_html_empty, single_email_re
+from odoo.tools import pycompat, html_to_plaintext, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1361,7 +1361,7 @@ class Meeting(models.Model):
 
     def _get_customer_description(self):
         """:return (str): The description to include in calendar exports"""
-        return html2plaintext(self.description) if self.description else ''
+        return html_to_plaintext(self.description)
 
     def _get_customer_summary(self):
         """:return (str): The summary to include in calendar exports"""

@@ -12,6 +12,7 @@ from .config import config
 from .date_utils import *
 from .float_utils import *
 from .func import *
+from .html_to_md import html_to_md
 from .image import *
 from .mail import *
 from .misc import *

@@ -5,7 +5,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.tools import html2plaintext, is_html_empty
+from odoo.tools import html_to_plaintext, is_html_empty
 from odoo.tools.misc import file_path
 
 try:
@@ -308,4 +308,4 @@ class BaseDocumentLayout(models.TransientModel):
         # In recent change when an html field is empty a <p> balise remains with a <br> in it,
         # but when company details is empty we want to put the info of the company
         for record in self:
-            record.is_company_details_empty = not html2plaintext(record.company_details or '')
+            record.is_company_details_empty = not html_to_plaintext(record.company_details or '')

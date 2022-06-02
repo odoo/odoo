@@ -6,7 +6,7 @@ from uuid import uuid4
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext, plaintext2html
+from odoo.tools import html_to_plaintext, plaintext2html
 
 
 class SendSMS(models.TransientModel):
@@ -333,7 +333,7 @@ class SendSMS(models.TransientModel):
     def _prepare_log_body_values(self, sms_records_values):
         result = {}
         for record_id, sms_values in sms_records_values.items():
-            result[record_id] = plaintext2html(html2plaintext(sms_values['body']))
+            result[record_id] = plaintext2html(html_to_plaintext(sms_values['body']))
         return result
 
     def _prepare_mass_log_values(self, records, sms_records_values):

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class SurveyUserInput(models.Model):
@@ -27,7 +27,7 @@ class SurveyUserInput(models.Model):
                 'name': survey.title,
                 'date_start': fields.Date.today(),
                 'date_end': fields.Date.today(),
-                'description': html2plaintext(survey.description),
+                'description': html_to_plaintext(survey.description),
                 'line_type_id': line_type and line_type.id,
                 'display_type': 'certification',
                 'survey_id': survey.id

@@ -169,7 +169,7 @@ class Post(models.Model):
     @api.depends('content')
     def _compute_plain_content(self):
         for post in self:
-            post.plain_content = tools.html2plaintext(post.content)[0:500] if post.content else False
+            post.plain_content = tools.html_to_plaintext(post.content)[0:500] if post.content else False
 
     @api.depends('name')
     def _compute_website_url(self):

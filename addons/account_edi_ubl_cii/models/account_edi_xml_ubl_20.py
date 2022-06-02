@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+
 from lxml import etree
 
 from odoo import models, _
-from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools import html_to_plaintext, cleanup_xml_node
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
@@ -162,7 +163,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         payment_term = invoice.invoice_payment_term_id
         if payment_term:
             # The payment term's note is automatically embedded in a <p> tag in Odoo
-            return [{'note_vals': [{'note': html2plaintext(payment_term.note)}]}]
+            return [{'note_vals': [{'note': html_to_plaintext(payment_term.note)}]}]
         else:
             return []
 
@@ -521,7 +522,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'id': invoice.name,
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
-                'note_vals': [{'note': html2plaintext(invoice.narration)}] if invoice.narration else [],
+                'note_vals': [{'note': html_to_plaintext(invoice.narration)}] if invoice.narration else [],
                 'order_reference': order_reference,
                 'sales_order_id': sales_order_id,
                 'accounting_supplier_party_vals': {

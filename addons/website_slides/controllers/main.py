@@ -766,7 +766,7 @@ class WebsiteSlides(WebsiteProfile):
 
             values.update({
                 'last_message_id': last_message_values.get('id'),
-                'last_message': tools.html2plaintext(last_message_values.get('body', '')),
+                'last_message': tools.html_to_plaintext(last_message_values.get('body', '')),
                 'last_rating_value': last_message_values.get('rating_value'),
                 'last_message_attachment_ids': last_message_attachment_ids,
             })

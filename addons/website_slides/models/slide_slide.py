@@ -17,7 +17,7 @@ from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug, url_for
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
-from odoo.tools import html2plaintext, sql
+from odoo.tools import html_to_plaintext, sql
 
 _logger = logging.getLogger(__name__)
 
@@ -1320,9 +1320,9 @@ class Slide(models.Model):
     def _default_website_meta(self):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = html2plaintext(self.description)
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = html_to_plaintext(self.description)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
-        res['default_meta_description'] = html2plaintext(self.description)
+        res['default_meta_description'] = html_to_plaintext(self.description)
         return res
 
     # ---------------------------------------------------------

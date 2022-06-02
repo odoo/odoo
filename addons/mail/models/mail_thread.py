@@ -30,7 +30,7 @@ from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachable
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import (
-    is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
+    is_html_empty, html_escape, html_to_plaintext, parse_contact_from_email,
     clean_context, split_every, Query, SQL,
 )
 
@@ -763,7 +763,7 @@ class MailThread(models.AbstractModel):
                     ('mail_message_id', '=', bounced_message.id),
                     ('res_partner_id', 'in', bounced_partner.ids)]
                 ).write({
-                    'failure_reason': html2plaintext(message_dict.get('body') or ''),
+                    'failure_reason': html_to_plaintext(message_dict.get('body') or ''),
                     'failure_type': 'mail_bounce',
                     'notification_status': 'bounce',
                 })
@@ -3667,7 +3667,7 @@ class MailThread(models.AbstractModel):
                 }
             }
         }
-        payload['options']['body'] = tools.html2plaintext(body)
+        payload['options']['body'] = tools.html_to_plaintext(body)
         payload['options']['body'] += self._generate_tracking_message(message)
 
         return payload
