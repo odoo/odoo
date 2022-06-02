@@ -5,7 +5,7 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 
-ACCOUNT_REGEX = re.compile(r'(\d+)?(.*)')
+ACCOUNT_REGEX = re.compile(r'(?:(^\S*\d)\s)?(.*)')
 
 class AccountAccountType(models.Model):
     _name = "account.account.type"
