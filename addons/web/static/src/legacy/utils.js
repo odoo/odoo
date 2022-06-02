@@ -13,7 +13,7 @@ import { useService } from "@web/core/utils/hooks";
 
 const { useComponent } = owl;
 
-const wowlServicesSymbol = Symbol("wowlServices");
+export const wowlServicesSymbol = Symbol("wowlServices");
 
 export function makeLegacyRpcService(legacyEnv) {
     return {
