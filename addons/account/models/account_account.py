@@ -599,22 +599,13 @@ class AccountAccount(models.Model):
 
     @api.model
     def name_create(self, name):
-        # Enforce no_quick_create from forms - however name_create is possible when importing from a related model
+        # name_create is possible when importing from a related model
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise ValidationError(_(
-            "The operation cannot be completed:\n"
-            "- Create/update: a mandatory field is not set.\n"
-            "- Delete: another model requires the record being deleted."
-            " If possible, archive it instead.\n\n"
-            "Model: %(model_name)s (%(model_tech_name)s)\n"
-            "Field: %(field_name)s (%(field_tech_name)s)\n",
-            model_name=self._description,
-            model_tech_name=self._name,
-            field_name='Type',
-            field_tech_name='user_type_id',
-        ))
+        # Enforce no_quick_create from forms to ensure that the account.account form view pops up
+        # even when no_quick_create is mistakenly forgotten from the view
+        raise ValueError(_("The values for the created account need to be verified."))
 
     def _split_code_name(self, code_name):
         results = ACCOUNT_REGEX.match(code_name or '')

@@ -4529,69 +4529,44 @@ class BaseModel(metaclass=MetaModel):
 
             :raises ValidationError: when multiple records match the search criteria
         '''
-        # check if search_fields exist in the models and filter out everything else preventing error and SQL injection
-        search_fields = [f for f in search_fields if f in self._fields.keys()]
+        # filter search_fields if they can be used as import key
+        available_import_keys = [f.name for f in self._fields.values() if f.import_key]
+        search_fields = [f for f in search_fields if f in available_import_keys]
         if not search_fields:
             return data_list
 
         key_fields = ', '.join(search_fields)
-        prefixed_key_fields = ', '.join([f'r.{field}' for field in search_fields])
         key_data = [tuple(item['values'][field] for field in search_fields) for item in data_list]
 
         sql = f"""
-            CREATE TEMP TABLE temp_{self._table}(
-                {', '.join([f'{f} {self._fields[f].column_type[1]}' for f in search_fields])}
-            );
-            INSERT INTO temp_{self._table}
-            VALUES {','.join(['%s' for d in key_data])};
-            WITH rec_count AS (
-                SELECT
-                    ({key_fields}) AS val_tup,
-                    count(*) as cnt
-                FROM
-                    {self._table}
-                {f'WHERE company_id IS NULL or company_id = {self.env.company.id} ' if 'company_id' in self._fields else None}
-                GROUP BY val_tup
-            ), tmp_data AS (
-                SELECT
-                    DISTINCT ({key_fields}) AS val_tup
-                FROM temp_{self._table}
-            )
-            SELECT
-                {prefixed_key_fields},
-                r.id,
-                i.module || '.' || i.name as external_id,
-                c.cnt
-            FROM {self._table} r
-            INNER JOIN tmp_data t ON ({prefixed_key_fields}) = t.val_tup
-            LEFT JOIN rec_count c ON ({prefixed_key_fields}) = c.val_tup
-            LEFT JOIN ir_model_data i ON r.id = i.res_id AND i.model = '{self._name}'
-            {f'WHERE r.company_id IS NULL or company_id = {self.env.company.id} ' if 'company_id' in self._fields else None}
+            SELECT ({key_fields}) as value_key,
+                   max(id) as id,
+                   count(*) as cnt_matches
+              FROM {self._table}
+             WHERE ({key_fields}) IN ({','.join(['%s' for d in key_data])})
+           {f' AND (company_id IS NULL or company_id = {self.env.company.id})' if 'company_id' in self._fields else None}
+          GROUP BY ({key_fields})
         """
+
         self.env.cr.execute(sql, tuple(key_data))
         res = self.env.cr.fetchall()
-        self.env.cr.execute(f'DROP TABLE temp_{self._table}')
-        res_dict = {
-            row[:len(search_fields)]: {
-                'id': row[-3],
-                'xid': row[-2],
-                'count': row[-1],
-            } for row in res if row[-1] == 1
-        }
+        res_dict = {row[0]: {'id': row[1], 'count': row[2]}  for row in res if row[2] == 1}
+
         if len(res_dict) < len(res):
+            # could modify the SQL to ensure this but we notify the user instead
             raise ValidationError(_('Multiple records found matching search key criteria'))
-        records_without_xid = [row['id'] for row in res_dict.values() if row['id'] and not row['xid']]
-        new_external_ids = {}
-        for rec, xid in self.browse(records_without_xid).__ensure_xml_id():
-            new_external_ids[rec.id] = xid
 
         for item in data_list:
-            if not item['xml_id']:
-                key = tuple(item['values'][field] or None for field in search_fields)
+            if not item['xml_id'] and not item['values'].get('id', None):
+                if len(search_fields) == 1:
+                    # postgres doesn't give a tuple when there is only one field
+                    # csonsider adding this key to the data_list instead of preparing it a second time
+                    key = item['values'][search_fields[0]]
+                else:
+                    key = tuple(item['values'][field] or None for field in search_fields)
                 existing_record_info = res_dict.get(key, None)
                 if existing_record_info:
-                    item['xml_id'] = existing_record_info['xid'] or new_external_ids[existing_record_info['id']]
-
+                    item['values']['id'] = existing_record_info['id']
         return data_list
 
     def _load_records_write(self, values):
