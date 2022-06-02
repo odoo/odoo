@@ -125,8 +125,8 @@ class TestDefaultTeam(TestSalesCommon):
                 default_team_id=self.sales_team_1.id
             )._get_default_team_id()
             self.assertEqual(
-                team, self.team_sequence,
-                'SalesTeam: default not taken into account if member / responsible'
+                team, self.sales_team_1,
+                'SalesTeam: default takes over ordering when member / responsible'
             )
 
         # remove all memberships
