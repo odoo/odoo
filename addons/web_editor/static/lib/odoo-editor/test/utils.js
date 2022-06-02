@@ -401,39 +401,19 @@ export async function click(el, options) {
     const pos = el.getBoundingClientRect();
     options = Object.assign(
         {
-            bubbles: true,
             clientX: pos.left + 1,
             clientY: pos.top + 1,
         },
         options,
     );
-    el.dispatchEvent(new MouseEvent('mousedown', options));
+    triggerEvent(el, 'mousedown', options);
     await nextTickFrame();
-    el.dispatchEvent(new MouseEvent('mouseup', options));
+    triggerEvent(el, 'mouseup', options);
     await nextTick();
-    el.dispatchEvent(new MouseEvent('click', options));
+    triggerEvent(el, 'click', options);
     await nextTickFrame();
 }
 
-export async function keydown(editable, key, options = {}) {
-    options = Object.assign(
-        { key: key },
-        options
-    );
-    const ev = new KeyboardEvent('keydown', options);
-    editable.dispatchEvent(ev);
-    await nextTickFrame();
-}
-
-export async function keyup(editable, key, options = {}) {
-    options = Object.assign(
-        { key: key },
-        options
-    );
-    const ev = new KeyboardEvent('keyup', options);
-    editable.dispatchEvent(ev);
-    await nextTickFrame();
-}
 
 export async function deleteForward(editor) {
     editor.execCommand('oDeleteForward');
@@ -486,13 +466,10 @@ export async function insertText(editor, text) {
     // Unfortunatly those Event are flagged `isTrusted: false`.
     // So we have no choice and need to detect them inside the Editor.
     // But it's the closest to real Browser we can go.
-    var event = new InputEvent('input', {
+    triggerEvent(editor.editable, 'input', {
         inputType: 'insertText',
         data: text,
-        bubbles: true,
-        cancelable: true,
     });
-    editor.editable.dispatchEvent(event);
 }
 
 export function undo(editor) {
