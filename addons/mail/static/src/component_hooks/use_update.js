@@ -12,26 +12,19 @@ const { onMounted, onPatched, onWillDestroy, useComponent } = owl;
  */
 export function useUpdate({ func }) {
     const component = useComponent();
-    const { modelManager } = component.env.services.messaging;
     const listener = new Listener({
         isLocking: false, // unfortunately onUpdate methods often have side effect
         name: `useUpdate() of ${component}`,
         onChange: () => component.render(),
     });
     function onUpdate() {
-        if (modelManager) {
-            modelManager.startListening(listener);
-        }
+        component.env.services.messaging.modelManager.startListening(listener);
         func();
-        if (modelManager) {
-            modelManager.stopListening(listener);
-        }
+        component.env.services.messaging.modelManager.stopListening(listener);
     }
     onMounted(onUpdate);
     onPatched(onUpdate);
     onWillDestroy(() => {
-        if (modelManager) {
-            modelManager.removeListener(listener);
-        }
+        component.env.services.messaging.modelManager.removeListener(listener);
     });
 }

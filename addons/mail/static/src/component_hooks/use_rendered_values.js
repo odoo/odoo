@@ -17,21 +17,20 @@ export function useRenderedValues(selector) {
     const component = useComponent();
     let renderedValues;
     let patchedValues;
-    const { modelManager } = component.env.services.messaging;
     const listener = new Listener({
         name: `useRenderedValues() of ${component}`,
         onChange: () => component.render(),
     });
     onWillRender(() => {
-        modelManager.startListening(listener);
+        component.env.services.messaging.modelManager.startListening(listener);
         renderedValues = selector();
-        modelManager.stopListening(listener);
+        component.env.services.messaging.modelManager.stopListening(listener);
     });
     onMounted(onUpdate);
     onPatched(onUpdate);
     function onUpdate() {
         patchedValues = renderedValues;
     }
-    onWillDestroy(() => modelManager.removeListener(listener));
+    onWillDestroy(() => component.env.services.messaging.modelManager.removeListener(listener));
     return () => patchedValues;
 }
