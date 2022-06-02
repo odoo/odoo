@@ -121,6 +121,9 @@ class HrExpense(models.Model):
     sample = fields.Boolean()
     label_convert_rate = fields.Char(compute='_compute_label_convert_rate')
 
+    def attach_document(self, **kwargs):
+        pass
+
     @api.depends('product_has_cost')
     def _compute_currency_id(self):
         for expense in self.filtered("product_has_cost"):
