@@ -25,11 +25,12 @@ class GamificationBadge(models.Model):
 
     @api.depends('owner_ids.employee_id')
     def _compute_granted_employees_count(self):
+        badge_data = self.env['gamification.badge.user']._read_group(
+            [('badge_id', 'in', self.ids), ('employee_id', '!=', False)], ['badge_id'], ['badge_id']
+        )
+        badge_count = {c['badge_id'][0]: c['badge_id_count'] for c in badge_data}
         for badge in self:
-            badge.granted_employees_count = self.env['gamification.badge.user'].search_count([
-                ('badge_id', '=', badge.id),
-                ('employee_id', '!=', False)
-            ])
+            badge.granted_employees_count = badge_count.get(badge.id, 0)
 
     def get_granted_employees(self):
         employee_ids = self.mapped('owner_ids.employee_id').ids
