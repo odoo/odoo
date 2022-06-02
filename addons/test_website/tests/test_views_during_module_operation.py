@@ -5,7 +5,7 @@ from odoo.addons.website.tools import MockRequest
 from odoo.tests import standalone
 
 
-@standalone('cow_views')
+@standalone('cow_views', 'website_standalone')
 def test_01_cow_views_unlink_on_module_update(env):
     """ Ensure COW views are correctly removed during module update.
     Not removing the view could lead to traceback:
@@ -84,7 +84,7 @@ def test_01_cow_views_unlink_on_module_update(env):
     ]), "Specific COW views did not get removed!"
 
 
-@standalone('theme_views')
+@standalone('theme_views', 'website_standalone')
 def test_02_copy_ids_views_unlink_on_module_update(env):
     """ Ensure copy_ids views are correctly removed during module update.
     - Having an ir.ui.view A in the codebase, eg `website.layout`
