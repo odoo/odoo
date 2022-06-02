@@ -125,7 +125,7 @@ registerModel({
          * @returns {Messaging}
          */
         messaging() {
-            return this.modelManager.messaging;
+            return this.modelManager && this.modelManager.messaging;
         },
         /**
          * Returns all existing models.
@@ -149,6 +149,9 @@ registerModel({
          * @returns {boolean}
          */
         exists() {
+            if (!this.modelManager) {
+                return false;
+            }
             return this.modelManager.exists(this.constructor, this);
         },
         /**

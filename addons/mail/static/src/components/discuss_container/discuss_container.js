@@ -53,6 +53,10 @@ export class DiscussContainer extends Component {
         DiscussContainer.currentInstance = this;
     }
 
+    get messaging() {
+        return this.env.services.messaging.modelManager.messaging;
+    }
+
     _willDestroy() {
         if (this.discuss && DiscussContainer.currentInstance === this) {
             this.discuss.close();

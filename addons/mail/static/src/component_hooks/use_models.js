@@ -15,31 +15,21 @@ const { onRendered, onWillDestroy, onWillRender, useComponent } = owl;
  */
 export function useModels() {
     const component = useComponent();
-    const { modelManager } = component.env.services.messaging;
-    Object.defineProperty(component, 'messaging', {
-        get: () => modelManager.messaging,
-    });
     const listener = new Listener({
         isLocking: false, // unfortunately __render has side effects such as children components updating their reference to their corresponding model
         name: `useModels() of ${component}`,
         onChange: () => component.render(),
     });
     onWillRender(() => {
-        if (modelManager) {
-            modelManager.startListening(listener);
-        }
+        component.env.services.messaging.modelManager.startListening(listener);
     });
     onRendered(() => {
-        if (modelManager) {
-            modelManager.stopListening(listener);
-        }
+        component.env.services.messaging.modelManager.stopListening(listener);
     });
     onWillDestroy(() => {
-        if (modelManager) {
-            modelManager.removeListener(listener);
-        }
+        component.env.services.messaging.modelManager.removeListener(listener);
     });
-    modelManager.messagingCreatedPromise.then(() => {
+    component.env.services.messaging.modelManager.messagingCreatedPromise.then(() => {
         component.render();
     });
 }

@@ -406,9 +406,9 @@ function getCreateChatterContainerComponent({ afterEvent, env, target }) {
     };
 }
 
-function getCreateComposerComponent({ env, modelManager, target }) {
+function getCreateComposerComponent({ env, target }) {
     return async function createComposerComponent(composer, props) {
-        const composerView = modelManager.messaging.models['ComposerView'].create({
+        const composerView = env.services.messaging.modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),
@@ -420,9 +420,9 @@ function getCreateComposerComponent({ env, modelManager, target }) {
     };
 }
 
-function getCreateComposerSuggestionComponent({ env, modelManager, target }) {
+function getCreateComposerSuggestionComponent({ env, target }) {
     return async function createComposerSuggestionComponent(composer, props) {
-        const composerView = modelManager.messaging.models['ComposerView'].create({
+        const composerView = env.services.messaging.modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),
@@ -434,9 +434,9 @@ function getCreateComposerSuggestionComponent({ env, modelManager, target }) {
     };
 }
 
-function getCreateMessageComponent({ env, modelManager, target }) {
+function getCreateMessageComponent({ env, target }) {
     return async function createMessageComponent(message) {
-        const messageView = modelManager.messaging.models['MessageView'].create({
+        const messageView = env.services.messaging.modelManager.messaging.models['MessageView'].create({
             message: replace(message),
             qunitTest: insertAndReplace(),
         });
@@ -453,9 +453,9 @@ function getCreateMessagingMenuComponent({ env, target }) {
     };
 }
 
-function getCreateNotificationListComponent({ env, modelManager, target }) {
+function getCreateNotificationListComponent({ env, target }) {
     return async function createNotificationListComponent({ filter = 'all' } = {}) {
-        const notificationListView = modelManager.messaging.models['NotificationListView'].create({
+        const notificationListView = env.services.messaging.modelManager.messaging.models['NotificationListView'].create({
             filter,
             qunitTestOwner: insertAndReplace(),
         });
@@ -595,10 +595,10 @@ async function start(param0 = {}) {
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
     const webClient = await getWebClientReady({ ...param0, messagingBus, testSetupDoneDeferred });
 
-    const { modelManager } = webClient.env.services.messaging;
+    webClient.env.services.messaging.modelManager;
     registerCleanup(async () => {
-        await modelManager.messagingInitializedPromise;
-        modelManager.messaging.delete();
+        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
+        webClient.env.services.messaging.modelManager.destroy();
         webClient.env.services.legacy_bus_service.destroy();
         delete webClient.env.services.messaging;
         delete owl.Component.env.services.messaging;
@@ -606,11 +606,11 @@ async function start(param0 = {}) {
         delete owl.Component.env;
     });
     if (waitUntilMessagingCondition === 'created') {
-        await modelManager.messagingCreatedPromise;
+        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
     }
     if (waitUntilMessagingCondition === 'initialized') {
-        await modelManager.messagingCreatedPromise;
-        await modelManager.messagingInitializedPromise;
+        await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
+        await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
     }
     const openDiscuss = getOpenDiscuss(webClient, discuss);
     if (autoOpenDiscuss) {
@@ -629,16 +629,16 @@ async function start(param0 = {}) {
         afterNextRender,
         click: getClick({ afterNextRender }),
         createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, env: webClient.env, target }),
-        createComposerComponent: getCreateComposerComponent({ env: webClient.env, modelManager, target }),
-        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, modelManager, target }),
-        createMessageComponent: getCreateMessageComponent({ env: webClient.env, modelManager, target }),
+        createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
+        createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ env: webClient.env, target }),
+        createMessageComponent: getCreateMessageComponent({ env: webClient.env, target }),
         createMessagingMenuComponent: getCreateMessagingMenuComponent({ env: webClient.env, target }),
-        createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, modelManager, target }),
+        createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, env: webClient.env, target }),
         env: webClient.env,
         insertText,
-        messaging: modelManager.messaging,
+        messaging: webClient.env.services.messaging.modelManager.messaging,
         openDiscuss,
         openView,
         pyEnv,
