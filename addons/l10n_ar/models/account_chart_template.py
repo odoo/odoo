@@ -33,15 +33,15 @@ class AccountChartTemplate(models.Model):
         return res
 
     @api.model
-    def _get_ar_responsibility_match(self, chart_template_id):
-        """ return responsibility type that match with the given chart_template_id
+    def _get_ar_responsibility_match(self, chart_template):
+        """ return responsibility type that match with the given chart_template code
         """
         match = {
-            self.env.ref('l10n_ar.l10nar_base_chart_template').id: self.env.ref('l10n_ar.res_RM'),
-            self.env.ref('l10n_ar.l10nar_ex_chart_template').id: self.env.ref('l10n_ar.res_IVAE'),
-            self.env.ref('l10n_ar.l10nar_ri_chart_template').id: self.env.ref('l10n_ar.res_IVARI'),
+            self.env.ref('ar_base').id: self.env.ref('l10n_ar.res_RM'),
+            self.env.ref('ar_ex').id: self.env.ref('l10n_ar.res_IVAE'),
+            self.env.ref('ar_ri').id: self.env.ref('l10n_ar.res_IVARI'),
         }
-        return match.get(chart_template_id)
+        return match.get(chart_template)
 
     def _load(self, company):
         """ Set companies AFIP Responsibility and Country if AR CoA is installed, also set tax calculation rounding
@@ -66,8 +66,7 @@ class AccountChartTemplate(models.Model):
         res = super()._load(company)
 
         # If Responsable Monotributista remove the default purchase tax
-        if self == self.env.ref('l10n_ar.l10nar_base_chart_template') or \
-           self == self.env.ref('l10n_ar.l10nar_ex_chart_template'):
+        if self in (self.env.ref('ar_base'), self.env.ref('ar_ex')):
             company.account_purchase_tax_id = self.env['account.tax']
 
         return res

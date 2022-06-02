@@ -21,12 +21,11 @@ class AccountChartTemplateDataError(Exception):
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     '''
         This is a utility function used to manually set the flag noupdate to False on tags
-        and account tax templates on localization modules that need migration
-        (for example in case of VAT report improvements).
+        on localization modules that need migration (for example in case of VAT report improvements).
     '''
     env = api.Environment(cr, SUPERUSER_ID, {})
     xml_record_ids = env['ir.model.data'].search([
-        ('model', 'in', ['account.tax.template', 'account.account.tag']),
+        ('model', '=', 'account.account.tag'),
         ('module', 'like', module)
     ]).ids
     if xml_record_ids:
@@ -62,7 +61,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': name,
                 'country': country or f"base.{code[:2]}" if code != default_template_code else None,
                 'modules': modules or [f'l10n_{code[:2]}'],
-                'parent': parent
+                'parent': parent,
             })
 
         return dict([
@@ -97,8 +96,11 @@ class AccountChartTemplate(models.AbstractModel):
             return default_chart_template
         # Python 3.7 dicts preserve the order, so it will take the first entry that matches the country code
         country_code = country.get_external_id()[country.id]
+        return next((x for x in self._get_template_codes_for_country(country_code)), default_chart_template)
+
+    def _get_template_codes_for_country(self, country_code):
         chart_templates = self.get_chart_template_mapping()
-        return next((key for key, template in chart_templates.items() if template['country'] == country_code), default_chart_template)
+        return [key for key, template in chart_templates.items() if template['country'] == country_code]
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Checks if the chart template can be loaded then proceeds installing it.
@@ -412,12 +414,19 @@ class AccountChartTemplate(models.AbstractModel):
         parents.append('')
         return parents
 
-    def _get_data(self, template_code, company, model):
+    def _is_templated(self, template_code, model):
+        func = template_code and self._get_data_func(template_code, model)
+        return func and func.__name__ != f"_get_{model.replace('.', '_')}"
+
+    def _get_data_func(self, template_code, model):
         parents = self._get_parent_prefixes(template_code)
         for func_name in (f"_get{'_' + prefix if prefix else ''}_{model.replace('.', '_')}" for prefix in parents):
             if func := getattr(self, func_name, None):
-                return func(template_code, company)
-        return {}
+                return func
+        return None
+
+    def _get_data(self, template_code, company, model):
+        return self._get_data_func(template_code, model)(template_code, company)
 
     def _post_load_data(self, template_code, company, template_data):
         company = (company or self.env.company)

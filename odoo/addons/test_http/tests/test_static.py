@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from babel.dates import format_datetime
 from datetime import datetime, timedelta
 from os.path import basename, join as opj
 from unittest.mock import patch
@@ -209,13 +210,14 @@ class TestHttpStatic(TestHttpStaticCommon):
 
 
 class TestHttpStaticCache(TestHttpStaticCommon):
+
+    def format_datetime(self, dt):
+        return format_datetime(dt, 'eee, dd MMM YYYY HH:mm:ss z', locale="en").replace('UTC', 'GMT')
+
     @freeze_time(datetime.utcnow())
     def test_static_cache0_standard(self, domain=''):
         # Wed, 21 Oct 2015 07:28:00 GMT
-        # The timezone should be %Z (instead of 'GMT' hardcoded) but
-        # somehow strftime doesn't set it.
-        http_date_format = '%a, %d %b %Y %H:%M:%S GMT'
-        one_week_away = (datetime.utcnow() + timedelta(weeks=1)).strftime(http_date_format)
+        one_week_away = self.format_datetime(datetime.utcnow() + timedelta(weeks=1))
 
         res1 = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png')
         res1.raise_for_status()
@@ -232,11 +234,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
 
     @freeze_time(datetime.utcnow())
     def test_static_cache1_unique(self, domain=''):
-        # Wed, 21 Oct 2015 07:28:00 GMT
-        # The timezone should be %Z (instead of 'GMT' hardcoded) but
-        # somehow strftime doesn't set it.
-        http_date_format = '%a, %d %b %Y %H:%M:%S GMT'
-        one_year_away = (datetime.utcnow() + timedelta(days=365)).strftime(http_date_format)
+        one_year_away = self.format_datetime(datetime.utcnow() + timedelta(days=365))
 
         res1 = self.assertDownloadGizeh(f'{domain}/web/content/test_http.gizeh_png?unique=1')
         self.assertEqual(res1.headers.get('Cache-Control'), 'public, max-age=31536000')  # one year
