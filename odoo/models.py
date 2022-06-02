@@ -1272,7 +1272,7 @@ class BaseModel(metaclass=MetaModel):
             # Get all following rows which have relational values attached to
             # the current record (no non-relational values or matching non-relational values)
             o2m_vals = get_o2m_values(row)
-            non_o2m_vals = get_nono2m_values(row)
+            non_o2m_vals = row and get_nono2m_values(row)
             record_span = itertools.takewhile(
                 lambda r: row_continues(r, o2m_vals, non_o2m_vals), itertools.islice(data, index + 1, None))
             # stitch record row back on for relational fields
