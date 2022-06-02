@@ -135,9 +135,9 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
         states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        string='Partner', change_default=True)
+        string='Partner', change_default=True, ondelete="restrict")
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
-        compute='_compute_commercial_partner_id')
+        compute='_compute_commercial_partner_id', ondelete="restrict")
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
