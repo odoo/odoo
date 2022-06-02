@@ -32,7 +32,7 @@ export function scrollTo(element, options = { scrollable: null, isAnchor: false 
         if (elementBottom > scrollBottom && !options.isAnchor) {
             // The scroll place the element at the bottom border of the scrollable
             scrollable.scrollTop +=
-                elementTop - scrollBottom + element.getBoundingClientRect().height;
+                elementTop - scrollBottom + Math.ceil(element.getBoundingClientRect().height);
         } else if (elementTop < scrollTop || options.isAnchor) {
             // The scroll place the element at the top of the scrollable
             scrollable.scrollTop -= scrollTop - elementTop;
