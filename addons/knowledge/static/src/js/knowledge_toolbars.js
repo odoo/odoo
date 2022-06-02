@@ -320,12 +320,18 @@ const TemplateToolbar = KnowledgeToolbar.extend({
                     button,
                     {target: () => content}
                 );
+                const title = button.getAttribute('title');
                 clipboard.on('success', (e) => {
                     e.clearSelection();
-                    this.displayNotification({
-                        type: 'success',
-                        message: _t("Template copied to clipboard."),
-                    });
+                    button.setAttribute('title', _t('Template copied to clipboard.'));
+                    $(button).tooltip({trigger: 'manual', placement: 'left'});
+                    $(button).tooltip('enable');
+                    $(button).tooltip('show');
+                    setTimeout(function () {
+                        $(button).tooltip('hide');
+                        button.setAttribute('title', title);
+                        $(button).tooltip('disable');
+                    }, 800);
                 });
                 break;
         }
