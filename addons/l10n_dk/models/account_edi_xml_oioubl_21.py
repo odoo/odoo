@@ -1,5 +1,5 @@
 from odoo import _, models, tools
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
@@ -230,7 +230,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             document_node['cac:PaymentTerms'] = [
                 {
                     'cbc:ID': {'_text': line.id},
-                    'cbc:Note': {'_text': html2plaintext(payment_term.note)},
+                    'cbc:Note': {'_text': html_to_plaintext(payment_term.note)},
                     'cbc:Amount': {
                         '_text': self.format_float(sign * line.amount_currency, 2),  # OIOUBL needs format to 2 decimals
                         'currencyID': line.currency_id.name,

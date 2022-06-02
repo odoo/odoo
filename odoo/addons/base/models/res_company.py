@@ -7,7 +7,7 @@ from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
-from odoo.tools import html2plaintext, file_open, ormcache
+from odoo.tools import html_to_plaintext, file_open, ormcache
 from odoo.tools.image import image_process
 
 _logger = logging.getLogger(__name__)
@@ -268,7 +268,7 @@ class ResCompany(models.Model):
         # In recent change when an html field is empty a <p> balise remains with a <br> in it,
         # but when company details is empty we want to put the info of the company
         for record in self:
-            record.is_company_details_empty = not html2plaintext(record.company_details or '')
+            record.is_company_details_empty = not html_to_plaintext(record.company_details)
 
     @api.model_create_multi
     def create(self, vals_list):
