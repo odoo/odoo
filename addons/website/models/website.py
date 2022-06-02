@@ -1759,7 +1759,14 @@ class Website(models.Model):
                 fields_domain.append([(field, '=ilike', '%%>%s%%' % first)]) # HTML
             domain.append(OR(fields_domain))
             domain = AND(domain)
-            records = model.search_read(domain, fields, limit=1000)
+            perf_limit = 1000
+            records = model.search_read(domain, fields, limit=perf_limit)
+            if len(records) == perf_limit:
+                # Exact match might have been missed because the fetched
+                # results are limited for performance reasons.
+                exact_records, _ = model._search_fetch(search_detail, search, 1, None)
+                if exact_records:
+                    yield search
             for record in records:
                 for field, value in record.items():
                     if isinstance(value, str):
