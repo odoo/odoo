@@ -23,7 +23,7 @@
         </t>
     </t>
 
-    <t t-extend="website.dashboard_content">
+    <t t-name="website_sale.dashboard_content" t-extend="website.dashboard_content">
         <t t-jquery="div.o_website_dashboard_content" t-operation="prepend">
             <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
                 <div class="col-12 row o_box">
