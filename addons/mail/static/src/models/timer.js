@@ -7,6 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'Timer',
     identifyingFields: [[
+        'messagingOwnerAsFetchImStatusTimer',
         'otherMemberLongTypingInThreadTimerOwner',
         'threadAsCurrentPartnerInactiveTypingTimerOwner',
         'threadAsCurrentPartnerLongTypingTimerOwner',
@@ -22,6 +23,9 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
+            if (this.messagingOwnerAsFetchImStatusTimer) {
+                return this.messagingOwnerAsFetchImStatusTimer.fetchImStatusTimerDuration;
+            }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 return 5 * 1000;
             }
@@ -59,6 +63,10 @@ registerModel({
          * @private
          */
         _onTimeoutOwner() {
+            if (this.messagingOwnerAsFetchImStatusTimer) {
+                this.messagingOwnerAsFetchImStatusTimer.onFetchImStatusTimerTimeout();
+                return;
+            }
             if (this.threadAsCurrentPartnerInactiveTypingTimerOwner) {
                 this.threadAsCurrentPartnerInactiveTypingTimerOwner.onCurrentPartnerInactiveTypingTimeout();
                 return;
@@ -82,6 +90,10 @@ registerModel({
             compute: '_computeDuration',
             readonly: true,
             required: true,
+        }),
+        messagingOwnerAsFetchImStatusTimer: one('Messaging', {
+            inverse: 'fetchImStatusTimer',
+            readonly: true,
         }),
         otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
             inverse: 'timer',

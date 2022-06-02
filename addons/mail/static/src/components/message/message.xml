@@ -22,7 +22,7 @@
                     'bg-200': !messageView.message.isDiscussionOrNotification and messageView.isActive and !messageView.isSelected,
                     'bg-400': messageView.isSelected and !(messageView.message.isHighlighted or messageView.isHighlighted),
                     'opacity-50': (messageView.threadView and messageView.threadView.replyingToMessageView) and !messageView.isSelected,
-                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-message-local-id="messageView.message.localId"
+                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView"/>
