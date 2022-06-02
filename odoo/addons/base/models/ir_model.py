@@ -477,6 +477,7 @@ class IrModelFields(models.Model):
                                        store=True, string="Related field", ondelete='cascade')
     required = fields.Boolean()
     readonly = fields.Boolean()
+    exportable = fields.Boolean(default=True)
     index = fields.Boolean(string='Indexed')
     translate = fields.Boolean(string='Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)")
     size = fields.Integer()
@@ -999,6 +1000,7 @@ class IrModelFields(models.Model):
             'on_delete': field.ondelete if field.type == 'many2one' else None,
             'related': field.related or None,
             'readonly': bool(field.readonly),
+            'exportable': bool(field.exportable),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
             'size': getattr(field, 'size', None),

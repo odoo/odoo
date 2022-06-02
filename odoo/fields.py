@@ -283,6 +283,7 @@ class Field(MetaField('DummyField', (object,), {})):
     invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
+    exportable = True                   # whether the field is exportable
     states = None                       # set readonly and required depending on state
     groups = None                       # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
@@ -405,6 +406,9 @@ class Field(MetaField('DummyField', (object,), {})):
         if name == 'state':
             # by default, `state` fields should be reset on copy
             attrs['copy'] = attrs.get('copy', False)
+        if attrs.get('exportable'):
+            attrs['exportable'] = attrs.get('exportable', False)
+
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not
@@ -815,6 +819,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
+    _description_exportable = property(attrgetter('exportable'))
     _description_required = property(attrgetter('required'))
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
@@ -4127,6 +4132,7 @@ class Id(Field):
     store = True
     readonly = True
     prefetch = False
+    exportable = True
 
     def update_db(self, model, columns):
         pass                            # this column is created with the table
