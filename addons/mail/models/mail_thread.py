@@ -11,6 +11,7 @@ import hashlib
 import hmac
 import lxml
 import logging
+from psycopg2 import IntegrityError
 import pytz
 import re
 import time
@@ -1203,6 +1204,97 @@ class MailThread(models.AbstractModel):
         thread_id = self._message_route_process(message, msg_dict, routes)
         return thread_id
 
+    def _get_safe_create_data(self, vals_list, is_remove_missing_ref=False):
+        """ Return cleaned create vals_list to avoid missing reference, creation of new record, deletion and update by:
+
+        - Removing set to any non-existing id for relations many2one and many2many if is_remove_missing_ref
+        - Removing set to non-existing fields
+        - Removing set to one2many relation (which will update the other side of the relation)
+        - Removing set that create sub-record
+        - Removing any command != LINK or SET (i.e. skipping CREATE, UPDATE, DELETE, UNLINK, CLEAR)
+
+        :param list|dict vals_list: value to be cleaned
+        :param bool is_remove_missing_ref: whether to remove missing reference or not (see above). If set to False, no
+        DB query is done and the method is fast.
+        """
+        if isinstance(vals_list, dict):
+            vals_list = [vals_list]
+
+        def filter_existing_ids(f_name, ids):
+            """ Filter existing ids if is_remove_missing_ref, otherwise return the ids as is.
+
+             :param str f_name: field name of this record
+             :param list ids: id of the target of the field relation
+             :return: If is_remove_missing_ref, returns only existing ids of the relation defined by f_name
+             (being active or not) otherwise returns the ids as is.
+             Note: Null (False, None, ...) are considered as existing ids.
+             """
+            if not is_remove_missing_ref:
+                return ids
+            ids_not_null = {c_id for c_id in ids if c_id}
+            if ids_not_null:
+                self.env.cr.execute(
+                    query=f"SELECT id FROM {self.env[self._fields[f_name].comodel_name]._table} WHERE id IN %(ids)s",
+                    params=dict(ids=tuple(ids_not_null)))
+                filtered_existing_ids_set = set(map(lambda r: r['id'], self.env.cr.dictfetchall()))
+            else:
+                filtered_existing_ids_set = set()
+            return [c_id for c_id in ids if not c_id or c_id in filtered_existing_ids_set]
+
+        new_vals_list = []
+        for vals in vals_list:
+            vals_filtered = dict()
+            for field_name, value in vals.items():
+                new_value = None
+                field = self._fields.get(field_name)
+                if not field or field.type == 'one2many':
+                    continue  # skip none existing fields and one2many fields
+
+                # Inspired from fields.convert_to_cache
+                if isinstance(value, (list, tuple)):
+                    # Value is a list/tuple of commands, dicts or record ids
+                    new_list_values = []
+                    if all(map(lambda v: isinstance(v, int), value)):
+                        # special case, all int -> do in one search
+                        existing_ids = filter_existing_ids(field_name, ids=value)
+                        if existing_ids:
+                            new_list_values.extend(existing_ids)
+                    else:
+                        for command in value:
+                            if isinstance(command, (tuple, list)):
+                                # Only modify SET AND LINK command, keep other as-is
+                                if command[0] == Command.SET:
+                                    existing_ids = filter_existing_ids(field_name, ids=command[2])
+                                    if existing_ids:
+                                        new_list_values.append((command[0], command[1], existing_ids))
+                                elif command[0] == Command.LINK:
+                                    existing_ids = filter_existing_ids(field_name, ids=[command[1]])
+                                    if existing_ids:
+                                        new_list_values.append((command[0], existing_ids[0], command[2]))
+                                # Skip other commands (CREATE, UPDATE, DELETE, UNLINK, CLEAR)
+                            elif isinstance(command, dict):
+                                pass  # Skip creation of sub record
+                            else:  # an id
+                                existing_ids = filter_existing_ids(field_name, ids=[command])
+                                if existing_ids:
+                                    new_list_values.append(existing_ids[0])
+                    if new_list_values:
+                        new_value = new_list_values
+                elif isinstance(value, dict):  # Keep creation
+                    pass  # Skip creation of sub-record
+                elif field.type in ('many2one', 'many2many'):
+                    existing_ids = filter_existing_ids(field_name, [value])
+                    if existing_ids:
+                        new_value = existing_ids[0]
+                elif field.type == 'one2many':
+                    pass  # skip one2many relation
+                else:
+                    new_value = value
+                if new_value is not None:
+                    vals_filtered[field_name] = new_value
+            new_vals_list.append(vals_filtered)
+        return new_vals_list
+
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         """Called by ``message_process`` when a new message is received
@@ -1235,7 +1327,12 @@ class MailThread(models.AbstractModel):
         if primary_email and msg_dict.get('email_from'):
             data[primary_email] = msg_dict['email_from']
 
-        return self.create(data)
+        try:
+            # Internal transaction to be able to correct data if it fails because of incorrect data
+            with self.env.cr.savepoint():
+                return self.create(data)
+        except IntegrityError:
+            return self.create(self._get_safe_create_data(data, is_remove_missing_ref=True))
 
     def message_update(self, msg_dict, update_vals=None):
         """Called by ``message_process`` when a new message is received

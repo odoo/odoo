@@ -206,3 +206,36 @@ class MailTestComposerMixin(models.Model):
 
     def _compute_render_model(self):
         self.render_model = self._name
+
+
+class MailTestDocumentTags(models.Model):
+    """ Model required for mail.test.document to define a many2many relation. """
+    _name = "mail.test.document.tag"
+    _description = "Tag"
+
+    name = fields.Char(required=True)
+    active = fields.Boolean(default=True, string="Active")
+
+
+class MailTestDocumentFolder(models.Model):
+    """ Model required for mail.test.document to define a many2one relation. """
+    _name = "mail.test.document.folder"
+    _description = "Folder"
+
+    name = fields.Char(required=True)
+    active = fields.Boolean(default=True, string="Active")
+
+
+class MailTestDocument(models.Model):
+    """ Model with all kind of relations and most field types to test with alias_defaults. """
+    _description = 'Document'
+    _name = 'mail.test.document'
+    _inherit = ['mail.thread']
+
+    name = fields.Char(required=True)
+    type = fields.Selection([('url', 'URL'), ('binary', 'File'), ('empty', 'Request')])
+    is_todo = fields.Boolean()
+    description = fields.Char()
+
+    folder_id = fields.Many2one('mail.test.document.folder')
+    tag_ids = fields.Many2many('mail.test.document.tag', 'mail_test_document_tag_rel')

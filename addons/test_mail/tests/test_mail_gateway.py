@@ -8,7 +8,7 @@ from datetime import datetime
 from unittest.mock import DEFAULT
 from unittest.mock import patch
 
-from odoo import exceptions
+from odoo import exceptions, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
@@ -1543,3 +1543,121 @@ class TestMailThreadCC(TestMailCommon):
                                 cc='cc2 <cc2@example.com>, cc3@example.com', target_model='mail.test.cc')
         cc = email_split_and_format(record.email_cc)
         self.assertEqual(sorted(cc), ['"cc2" <cc2@example.com>', 'cc3@example.com'], 'new cc should have been added on record (unique)')
+
+
+@tagged('mail_gateway')
+class TestMailGatewayDefensiveAlias(TestMailCommon):
+    """ Test the mechanism that allows to correct alias_defaults that would otherwise prevent the creation of an
+    instance of the target model when such error happens (for example, when a record referenced in the alias_defaults
+    has been removed).
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailGatewayDefensiveAlias, cls).setUpClass()
+        cls.Tag = cls.env['mail.test.document.tag']
+        cls.Folder = cls.env['mail.test.document.folder']
+        cls.Document = cls.env['mail.test.document']
+        cls.target_model = 'mail.test.document'
+        cls.test_model = cls.env['ir.model']._get(cls.target_model)
+        cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
+        # Document non-relational field with some valid value
+        cls.basic_fields = {
+            'type': 'empty',
+            'description': 'Document received by mail inbox',
+            'is_todo': True
+        }
+
+        # inbox@.. will cause the creation of new mail.test.document
+        cls.alias = cls.env['mail.alias'].create({
+            'alias_name': 'inbox',
+            'alias_user_id': False,
+            'alias_model_id': cls.test_model.id,
+            'alias_contact': 'everyone'})
+
+    def _assert_creation(self, descr, alias_default, expected):
+        """Process model instance creation based on an incoming message and asserts expected values.
+
+        :param str descr: description of the test
+        :param dict alias_default: alias_default to use while processing the incoming message (repr on this value must
+        produce a valid value for the alias_default field of 'mail.alias')
+        :param dict expected: the value of the dict represents the expected value for the field name given by the
+        corresponding key. None value can be used to force the test that the field is False.
+        """
+        alias_default_str = repr(alias_default)
+        full_descr = f'{descr} (alias_default: {alias_default_str})'
+        self.alias.write({'alias_defaults': alias_default_str})
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'inbox@test.com',
+                                         target_model=self.target_model)
+
+        self.assertEqual(len(record), 1)
+        for key, value in expected.items():
+            if value is None:
+                self.assertFalse(record[key], full_descr)
+            else:
+                self.assertEqual(record[key], value, full_descr)
+        record.unlink()
+
+    @staticmethod
+    def _cmd_compat(command_tuple):
+        """Make a command tuple to be serialized in the correct form with repr function."""
+        cmd, arg1, arg2 = command_tuple
+        return int(cmd), arg1, arg2
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.sql_db')
+    def test_skip_set_with_non_existing_references(self):
+        """Test that the autocorrection of alias defaults removes reference to non-existing records."""
+        for alias_defaults_fct in [
+            lambda folder, t_inbox, t_todo: {'folder_id': folder, 'tag_ids': [t_inbox, t_todo]},
+            lambda folder, t_inbox, t_todo: {
+                'folder_id': folder,
+                'tag_ids': [self._cmd_compat(Command.set([t_inbox, t_todo]))]
+            },
+            lambda folder, t_inbox, t_todo: {
+                'folder_id': folder,
+                'tag_ids': [self._cmd_compat(Command.link(t_inbox)), self._cmd_compat(Command.link(t_todo))]
+            },
+            lambda folder, t_inbox, t_todo: {
+                'folder_id': folder,
+                'tag_ids': [self._cmd_compat(Command.set([t_inbox])), self._cmd_compat(Command.link(t_todo))]
+            },
+        ]:
+            tag_inbox = self.Tag.create({'name': 'inbox'})
+            tag_todo = self.Tag.create({'name': 'todo'})
+            folder_inbox = self.Folder.create({'name': 'inbox'})
+            alias_defaults = alias_defaults_fct(folder_inbox.id, tag_inbox.id, tag_todo.id)
+            alias_defaults.update(self.basic_fields)
+
+            self._assert_creation(
+                'Common use-case: all related data exists and are not archived',
+                alias_defaults,
+                expected={**self.basic_fields, 'folder_id': folder_inbox, 'tag_ids': tag_inbox + tag_todo})
+
+            folder_inbox.action_archive()
+            tag_inbox.action_archive()
+            # Unlike command, the id is set even if the record is archived
+            self._assert_creation('Some related data are archived (archived: folder, tag_inbox)', alias_defaults,
+                                  expected={**self.basic_fields, 'folder_id': folder_inbox, 'tag_ids': tag_todo})
+
+            folder_inbox.unlink()
+            self._assert_creation(
+                "Some related data doesn't exist, some are archived, some exists (archived: tag_inbox, del: folder)",
+                alias_defaults,
+                expected={**self.basic_fields, 'folder_id': None, 'tag_ids': tag_todo})
+
+            tag_inbox.action_unarchive()
+            self._assert_creation(
+                "Some related data doesn't exist, Many2Many count more than 1 element (deleted: folder)",
+                alias_defaults,
+                expected={**self.basic_fields, 'folder_id': None, 'tag_ids': tag_todo + tag_inbox})
+
+            tag_inbox.action_archive()
+            tag_todo.unlink()
+            self._assert_creation(
+                "All related data doesn't exit, some are archived (deleted: folder, tag_todo; archived: tag_inbox)",
+                alias_defaults,
+                expected={**self.basic_fields, 'folder_id': None, 'tag_ids': None})
+
+            tag_inbox.unlink()
+            self._assert_creation("All related data doesn't exit", alias_defaults,
+                                  expected={**self.basic_fields, 'folder_id': None, 'tag_ids': None})
