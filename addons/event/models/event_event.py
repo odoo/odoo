@@ -194,7 +194,8 @@ class EventEvent(models.Model):
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    address_search = fields.Many2one(related='address_id', string='Address', search='_search_address_search')
+    address_search = fields.Many2one(
+        'res.partner', string='Address', compute='_compute_address_search', search='_search_address_search')
     address_inline = fields.Char(
         string='Venue (formatted for one line uses)', compute='_compute_address_inline',
         compute_sudo=True)
@@ -380,6 +381,11 @@ class EventEvent(models.Model):
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
+
+    @api.depends('address_id')
+    def _compute_address_search(self):
+        for event in self:
+            event.address_search = event.address_id
 
     def _search_address_search(self, operator, value):
         if operator != 'ilike' or not isinstance(value, str):
