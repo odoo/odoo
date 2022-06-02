@@ -173,7 +173,6 @@ class account_journal(models.Model):
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
                 weeks.append((start_date, next_date))
                 start_date = next_date
-        # Ensure results returned by postgres match the order of data list
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         is_sample_data = True
