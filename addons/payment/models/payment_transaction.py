@@ -15,6 +15,7 @@ from odoo.tools import consteq, format_amount, ustr
 from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.models.const import SET_STATE_MAPPING
 
 _logger = logging.getLogger(__name__)
 
@@ -659,63 +660,88 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    def _set_pending(self, state_message=None):
+    def _set_pending(self, state_message=None, extra_states=None):
         """ Update the transactions' state to 'pending'.
 
         :param str state_message: The reason for which the transaction is set in 'pending' state
+        :param tuple[str] extra_states: Extra states to be added to allowed states for custom
+                                        provider flows.
         :return: None
         """
-        allowed_states = ('draft',)
-        target_state = 'pending'
-        txs_to_process = self._update_state(allowed_states, target_state, state_message)
+        txs_to_process = self._update_state(
+            SET_STATE_MAPPING['pending']['a'],
+            SET_STATE_MAPPING['pending']['t'],
+            state_message,
+            extra_states,
+        )
         txs_to_process._log_received_message()
 
-    def _set_authorized(self, state_message=None):
+    def _set_authorized(self, state_message=None, extra_states=None):
         """ Update the transactions' state to 'authorized'.
 
         :param str state_message: The reason for which the transaction is set in 'authorized' state
+        :param tuple[str] extra_states: Extra states to be added to allowed states for custom
+                                        provider flows.
         :return: None
         """
-        allowed_states = ('draft', 'pending')
-        target_state = 'authorized'
-        txs_to_process = self._update_state(allowed_states, target_state, state_message)
+        txs_to_process = self._update_state(
+            SET_STATE_MAPPING['authorized']['a'],
+            SET_STATE_MAPPING['authorized']['t'],
+            state_message,
+            extra_states,
+        )
         txs_to_process._log_received_message()
 
-    def _set_done(self, state_message=None):
+    def _set_done(self, state_message=None, extra_states=None):
         """ Update the transactions' state to 'done'.
 
+        :param tuple[str] extra_states: Extra states to be added to allowed states for custom
+                                        provider flows.
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized', 'error')
-        target_state = 'done'
-        txs_to_process = self._update_state(allowed_states, target_state, state_message)
+        txs_to_process = self._update_state(
+            SET_STATE_MAPPING['done']['a'],
+            SET_STATE_MAPPING['done']['t'],
+            state_message,
+            extra_states,
+        )
         txs_to_process._log_received_message()
 
-    def _set_canceled(self, state_message=None):
+    def _set_canceled(self, state_message=None, extra_states=None):
         """ Update the transactions' state to 'cancel'.
 
         :param str state_message: The reason for which the transaction is set in 'cancel' state
+        :param tuple[str] extra_states: Extra states to be added to allowed states for custom
+                                        provider flows.
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized')
-        target_state = 'cancel'
-        txs_to_process = self._update_state(allowed_states, target_state, state_message)
+        txs_to_process = self._update_state(
+            SET_STATE_MAPPING['done']['a'],
+            SET_STATE_MAPPING['done']['t'],
+            state_message,
+            extra_states,
+        )
         # Cancel the existing payments
         txs_to_process.mapped('payment_id').action_cancel()
         txs_to_process._log_received_message()
 
-    def _set_error(self, state_message):
+    def _set_error(self, state_message, extra_states=None):
         """ Update the transactions' state to 'error'.
 
         :param str state_message: The reason for which the transaction is set in 'error' state
+        :param tuple[str] extra_states: Extra states to be added to allowed states for custom
+                                        provider flows.
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized', 'done')  # 'done' for Stripe refunds.
-        target_state = 'error'
-        txs_to_process = self._update_state(allowed_states, target_state, state_message)
+        txs_to_process = self._update_state(
+            SET_STATE_MAPPING['done']['a'],
+            SET_STATE_MAPPING['done']['t'],
+            state_message,
+            extra_states,
+        )
         txs_to_process._log_received_message()
 
-    def _update_state(self, allowed_states, target_state, state_message):
+    def _update_state(self, allowed_states, target_state, state_message, extra_states):
         """ Update the transactions' state to the target state if the current state allows it.
 
         If the current state is the same as the target state, the transaction is skipped.
@@ -723,9 +749,12 @@ class PaymentTransaction(models.Model):
         :param tuple[str] allowed_states: The allowed source states for the target state
         :param str target_state: The target state
         :param str state_message: The message to set as `state_message`
+        :param tuple[str] extra_states: Extra states for acquirer custom flows to be
+                                        added to allowed_states.
         :return: The recordset of transactions whose state was correctly updated
         :rtype: recordset of `payment.transaction`
         """
+        allowed_states = allowed_states + (extra_states or ())
 
         def _classify_by_state(_transactions):
             """Classify the transactions according to their current state.
