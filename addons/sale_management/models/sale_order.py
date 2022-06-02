@@ -70,7 +70,7 @@ class SaleOrder(models.Model):
             return
         template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
-        order_lines = [(5, 0, 0)]
+        order_lines = self.env['sale.order.line']
         for line in template.sale_order_template_line_ids:
             data = self._compute_line_data_for_template_change(line)
             if line.product_id:
@@ -97,10 +97,15 @@ class SaleOrder(models.Model):
                     'product_id': line.product_id.id,
                     'product_uom': line.product_uom_id.id,
                     'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
+                    'order_id': self.id
                 })
+
+                new_sol = order_lines.new(data)
+                new_sol.product_uom_change()
+                new_sol._onchange_discount()
                 if self.pricelist_id:
-                    data.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
-            order_lines.append((0, 0, data))
+                    new_sol.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
+            order_lines += new_sol
 
         self.order_line = order_lines
         self.order_line._compute_tax_id()
