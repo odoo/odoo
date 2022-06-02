@@ -90,7 +90,6 @@ function setupMessagingServiceRegistries({
     const messagingValues = {
         start() {
             return {
-                autofetchPartnerImStatus: false,
                 disableAnimation: true,
                 loadingBaseDelayDuration,
                 messagingBus,

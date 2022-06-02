@@ -48,10 +48,8 @@ registerModel({
             if (discuss.discussView) {
                 discuss.openInitThread();
             }
-            if (this.messaging.autofetchPartnerImStatus) {
-                this.messaging.models['Partner'].startLoopFetchImStatus();
-            }
             if (this.messaging.currentUser) {
+                this.messaging.startFetchImStatus();
                 this._loadMessageFailures();
             }
         },
