@@ -9,6 +9,7 @@ import { getAdvanceTime } from '@mail/../tests/helpers/time_control';
 import { getWebClientReady } from '@mail/../tests/helpers/webclient_setup';
 
 import { registry } from '@web/core/registry';
+import { wowlServicesSymbol } from "@web/legacy/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -598,6 +599,11 @@ async function start(param0 = {}) {
     registerCleanup(async () => {
         await modelManager.messagingInitializedPromise;
         modelManager.messaging.delete();
+        webClient.env.services.legacy_bus_service.destroy();
+        delete webClient.env.services.messaging;
+        delete owl.Component.env.services.messaging;
+        delete owl.Component.env[wowlServicesSymbol].messaging;
+        delete owl.Component.env;
     });
     if (waitUntilMessagingCondition === 'created') {
         await modelManager.messagingCreatedPromise;
