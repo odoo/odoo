@@ -292,6 +292,9 @@ registerModel({
                 return;
             }
             const fetchedMessages = await this._loadMessages();
+            if (!this.exists()) {
+                return;
+            }
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('messages-loaded', { fetchedMessages });
             }

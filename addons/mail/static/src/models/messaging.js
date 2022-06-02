@@ -14,10 +14,14 @@ registerModel({
     name: 'Messaging',
     identifyingFields: [],
     lifecycleHooks: {
+        _created() {
+            odoo.__DEBUG__.messaging = this;
+        },
         _willDelete() {
             if (this.env.services['legacy_bus_service']) {
                 this.env.services['legacy_bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             }
+            delete odoo.__DEBUG__.messaging;
         },
     },
     recordMethods: {
