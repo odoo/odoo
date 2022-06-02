@@ -5,10 +5,14 @@
 <div t-name="website.s_searchbar.autocomplete"
     class="dropdown-menu show w-100">
     <t t-if="fuzzySearch and results.length">
-        <span class="dropdown-item-text text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
+        <span class="dropdown-item-text">
+            <span class="text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
+        </span>
     </t>
     <t t-elif="!results.length">
-        <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
+        <span class="dropdown-item-text">
+            <span class="text-muted">No results found. Please try another search.</span>
+        </span>
     </t>
     <a t-foreach="results" t-as="result"
         t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
