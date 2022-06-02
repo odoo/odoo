@@ -20,7 +20,7 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         mockRPC: function (route, args) {
             if (
                 args.method !== 'get_views' &&
-                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+                !['/mail/init_messaging', '/mail/load_message_failures', '/longpolling/im_status', ...WEBCLIENT_LOAD_ROUTES].includes(route)
             ) {
                 assert.step(route);
             }
@@ -69,7 +69,7 @@ QUnit.test('list activity widget with activities', async function (assert) {
         mockRPC: function (route, args) {
             if (
                 args.method !== 'get_views' &&
-                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+                !['/mail/init_messaging', '/mail/load_message_failures', '/longpolling/im_status', ...WEBCLIENT_LOAD_ROUTES].includes(route)
             ) {
                 assert.step(route);
             }
@@ -114,7 +114,7 @@ QUnit.test('list activity widget with exception', async function (assert) {
         mockRPC: function (route, args) {
             if (
                 args.method !== 'get_views' &&
-                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+                !['/mail/init_messaging', '/mail/load_message_failures', '/longpolling/im_status', ...WEBCLIENT_LOAD_ROUTES].includes(route)
             ) {
                 assert.step(route);
             }
@@ -171,7 +171,7 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
         mockRPC: function (route, args) {
             if (
                 args.method !== 'get_views' &&
-                !['/mail/init_messaging', '/mail/load_message_failures', ...WEBCLIENT_LOAD_ROUTES].includes(route)
+                !['/mail/init_messaging', '/mail/load_message_failures', '/longpolling/im_status', ...WEBCLIENT_LOAD_ROUTES].includes(route)
             ) {
                 assert.step(args.method || route);
             }

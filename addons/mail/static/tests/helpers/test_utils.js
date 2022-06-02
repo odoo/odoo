@@ -571,6 +571,7 @@ async function start(param0 = {}) {
         waitUntilEvent,
         waitUntilMessagingCondition = 'initialized',
     } = param0;
+    const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
     const target = param0['target'] || getFixture();
     param0['target'] = target;
     if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
@@ -617,7 +618,7 @@ async function start(param0 = {}) {
     };
     await waitUntilEventPromise;
     return {
-        advanceTime: hasTimeControl ? getAdvanceTime() : undefined,
+        advanceTime,
         afterEvent,
         afterNextRender,
         click: getClick({ afterNextRender }),

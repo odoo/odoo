@@ -256,40 +256,6 @@ registerModel({
             }
             return [mainSuggestionList, extraSuggestionList];
         },
-        async startLoopFetchImStatus() {
-            await this._fetchImStatus();
-            this._loopFetchImStatus();
-        },
-        /**
-         * @private
-         */
-        async _fetchImStatus() {
-            const partnerIds = [];
-            for (const partner of this.all()) {
-                if (partner.im_status !== 'im_partner' && partner.id > 0) {
-                    partnerIds.push(partner.id);
-                }
-            }
-            if (partnerIds.length === 0) {
-                return;
-            }
-            const dataList = await this.messaging.rpc({
-                route: '/longpolling/im_status',
-                params: {
-                    partner_ids: partnerIds,
-                },
-            }, { shadow: true });
-            this.insert(dataList);
-        },
-        /**
-         * @private
-         */
-        _loopFetchImStatus() {
-            setTimeout(async () => {
-                await this._fetchImStatus();
-                this._loopFetchImStatus();
-            }, 50 * 1000);
-        },
     },
     recordMethods: {
         /**

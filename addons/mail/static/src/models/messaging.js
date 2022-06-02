@@ -73,6 +73,9 @@ registerModel({
             const { message, ...options } = params;
             return this.env.services.notification.add(message, options);
         },
+        onFetchImStatusTimerTimeout() {
+            this.startFetchImStatus();
+        },
         /**
          * Opens a chat with the provided person and returns it.
          *
@@ -195,6 +198,25 @@ registerModel({
         refreshIsNotificationPermissionDefault() {
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
         },
+        async startFetchImStatus() {
+            this.update({ fetchImStatusTimer: [clear(), insertAndReplace()] });
+            const partnerIds = [];
+            for (const partner of this.models['Partner'].all()) {
+                if (partner.im_status !== 'im_partner' && partner.id > 0) {
+                    partnerIds.push(partner.id);
+                }
+            }
+            if (partnerIds.length === 0) {
+                return;
+            }
+            const dataList = await this.messaging.rpc({
+                route: '/longpolling/im_status',
+                params: {
+                    partner_ids: partnerIds,
+                },
+            }, { shadow: true });
+            this.models['Partner'].insert(dataList);
+        },
         /**
          * @param {String} sessionId
          */
@@ -309,13 +331,6 @@ registerModel({
             inverse: 'messaging',
             isCausal: true,
         }),
-        /**
-         * Determines whether a loop should be started at initialization to
-         * periodically fetch the im_status of all users.
-         */
-        autofetchPartnerImStatus: attr({
-            default: true,
-        }),
         browser: attr({
             compute: '_computeBrowser',
         }),
@@ -356,6 +371,13 @@ registerModel({
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
+        }),
+        fetchImStatusTimer: one('Timer', {
+            inverse: 'messagingOwnerAsFetchImStatusTimer',
+            isCausal: true,
+        }),
+        fetchImStatusTimerDuration: attr({
+            default: 50 * 1000,
         }),
         focusedRtcSession: one('RtcSession'),
         /**

@@ -34,9 +34,7 @@ Component.env = legacyEnv;
 
     const messagingValuesService = {
         start() {
-            return {
-                autofetchPartnerImStatus: false,
-            };
+            return {};
         }
     };
 
