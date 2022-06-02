@@ -130,6 +130,13 @@ var MrpBomReport = stock_report_generic.extend({
         };
         return this.updateControlPanel(status);
     },
+    getControlPanelProps: function() {
+        this.renderSearch();
+        return {
+            $buttons: this.$buttonsPanel,
+            $searchview: this.$searchView
+        }
+    },
     renderSearch: function () {
         this.$buttonsPanel = $(QWeb.render('mrp.button', {'is_variant_applied': this.data.is_variant_applied}));
         this.$buttonsPanel.find('.o_mrp_bom_print').on('click', this._onClickPrint.bind(this));
