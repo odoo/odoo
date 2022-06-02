@@ -21,6 +21,7 @@
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <separator/>
                 <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>

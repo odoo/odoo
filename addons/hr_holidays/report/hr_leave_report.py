@@ -11,6 +11,7 @@ class LeaveReport(models.Model):
     _auto = False
     _order = "date_from DESC, employee_id"
 
+    active = fields.Boolean(readonly=True)
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Leave Request", readonly=True)
     allocation_id = fields.Many2one('hr.leave.allocation', string="Allocation Request", readonly=True)
@@ -48,13 +49,14 @@ class LeaveReport(models.Model):
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.allocation_id as allocation_id, leaves.leave_id as leave_id,
                 leaves.employee_id as employee_id, leaves.name as name,
-                leaves.active_employee as active_employee,
+                leaves.active_employee as active_employee, leaves.active as active,
                 leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
                 leaves.date_to as date_to, leaves.company_id
                 from (select
+                    allocation.active as active,
                     allocation.id as allocation_id,
                     null as leave_id,
                     allocation.employee_id as employee_id,
@@ -73,6 +75,7 @@ class LeaveReport(models.Model):
                 from hr_leave_allocation as allocation
                 inner join hr_employee as employee on (allocation.employee_id = employee.id)
                 union all select
+                    request.active as active,
                     null as allocation_id,
                     request.id as leave_id,
                     request.employee_id as employee_id,
