@@ -100,7 +100,8 @@
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
-                                        <field name="enroll" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="visibility" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="enroll" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('visibility', '=', 'course_attendees')]}"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_msg" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
@@ -116,7 +117,6 @@
                                     </group>
                                     <group name="display" string="Display">
                                         <field string="Type" name="channel_type" widget="radio" options="{'horizontal': true}"/>
-                                        <field name="visibility" widget="radio" options="{'horizontal': true}"/>
                                         <field name="promote_strategy" widget="selection"
                                             attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
                                         <field name="promoted_slide_id"
@@ -162,8 +162,8 @@
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="channel_type" string="Course Type"/>
-                    <field name="visibility" optional="hide"/>
-                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'"/>
+                    <field name="visibility"/>
+                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'" optional="hide"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
