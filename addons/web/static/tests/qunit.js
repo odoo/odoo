@@ -308,12 +308,47 @@
         errorMessages.push(info);
     });
 
-    QUnit.debug = (name, cb) => {
-        owl.whenReady(() => document.body.classList.add("debug"));
-        QUnit.config.debug = true;
+    // Append a "Rerun in debug" link.
+    // Only works if the test is not hidden.
+    QUnit.testDone(async ({ testId}) => {
+        const testElement = document.getElementById(`qunit-test-output-${testId}`);
+        if (!testElement) { // Is probably hidden because it passed
+            return;
+        }
+        const reRun = testElement.querySelector("li a");
+        const reRunDebug = document.createElement("a");
+        reRunDebug.textContent = "Rerun in debug";
+        const location = window.location;
+        reRunDebug.setAttribute("href", `${location.origin}${location.pathname}${location.search}&debugTestId=${testId}`);
+
+        reRun.parentElement.insertBefore(reRunDebug, reRun.nextSibling);
+    });
+
+    function setQUnitDebugMode() {
+        owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
+        QUnit.config.debug = true; // allows for helper functions to behave differently (logging, the HTML element in which the test occurs etc...)
         QUnit.config.testTimeout = 60 * 60 * 1000;
+        // Allows for interacting with the test when it is over
+        // In fact, this will pause QUnit.
+        // Also, logs useful info in the console.
+        QUnit.testDone(async (...args) => {
+            console.groupCollapsed("Debug Test output");
+            console.log(...args);
+            console.groupEnd();
+            await new Promise(() => {});
+        });
+    }
+
+    QUnit.debug = (name, cb) => {
+        setQUnitDebugMode();
         QUnit.only(name, cb);
     };
+
+    const debugTestId = new URLSearchParams(location.search).get("debugTestId");
+    if (debugTestId) {
+        QUnit.config.testId = [debugTestId];
+        setQUnitDebugMode();
+    }
 
     // Override global UnhandledRejection that is assigned wayyy before this file
     // Do not really crash on non-errors rejections
