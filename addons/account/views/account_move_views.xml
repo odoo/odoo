@@ -1031,7 +1031,7 @@
                                             </group>
                                             <group>
                                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" readonly="1"/>
+                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" />
                                                 <field name="tax_ids" widget="many2many_tags"/>
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                             </group>
