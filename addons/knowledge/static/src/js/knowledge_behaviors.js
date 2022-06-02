@@ -117,6 +117,7 @@ const ArticleBehavior = KnowledgeBehavior.extend({
         if (this.mode === 'edit') {
             this.anchor.setAttribute('contenteditable', 'false');
         }
+        this.anchor.setAttribute('target', '_blank');
     },
     /**
      * @override
@@ -130,6 +131,7 @@ const ArticleBehavior = KnowledgeBehavior.extend({
      * @override
      */
     disableListeners: function () {
+        this._super.apply(this, arguments);
         this.anchor.removeEventListener("click", this.linkClickHandler);
         this.anchor.removeEventListener("dblclick", this.linkDblClickHandler);
     },
@@ -140,8 +142,8 @@ const ArticleBehavior = KnowledgeBehavior.extend({
      * @param {Event} event
      */
     _onLinkClick: async function (event) {
-        const res_id = parseInt(event.currentTarget.dataset.res_id);
-        if (res_id) {
+        const res_id = parseInt(event.currentTarget.href.slice(event.currentTarget.href.lastIndexOf('/') + 1));
+        if (res_id && event.currentTarget.closest('.o_knowledge_editor')) {
             event.stopPropagation();
             event.preventDefault();
             const actionPromise = this.handler.do_action('knowledge.ir_actions_server_knowledge_home_page', {

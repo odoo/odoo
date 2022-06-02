@@ -208,7 +208,6 @@ Wysiwyg.include({
                 const articleLinkBlock = $(QWeb.render('knowledge.wysiwyg_article_link', {
                     display_name: article.display_name,
                     href: '/knowledge/article/' + article.id,
-                    article_id: article.id,
                 }))[0];
                 articleLinkFragment.append(articleLinkBlock);
                 const [anchor] = this.odooEditor.execCommand('insertFragment', articleLinkFragment);
