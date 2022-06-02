@@ -37,10 +37,9 @@ import {
 import {
     BasicEditor,
     insertText,
-    keydown,
-    keyup,
     nextTickFrame,
     testEditor,
+    triggerEvent,
     unformat,
 } from '../utils.js';
 
@@ -742,12 +741,13 @@ describe('Utils', () => {
                 stepFunction: async editor => {
                     const sel = document.getSelection();
                     const element = sel.anchorNode;
-                    await keydown(editor.editable, '/');
+                    triggerEvent(editor.editable, 'keydown', { key: '/' });
                     await insertText(editor, '/');
-                    await keyup(editor.editable, '/');
+                    triggerEvent(editor.editable, 'keyup', { key: '/' });
                     await insertText(editor, 'h2');
-                    await keyup(element, '2', { bubbles: true });
-                    await keydown(editor.editable, 'Enter');
+                    triggerEvent(element, 'keyup', { key: '2' });
+                    await nextTickFrame();
+                    triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
                     const activeElement = document.activeElement;
                     setCursorStart(activeElement.lastElementChild);
                     await nextTickFrame();
