@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import threading
+
 from odoo import api, fields, models, _
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
 from odoo.exceptions import UserError
@@ -89,12 +91,23 @@ class AccountInvoiceSend(models.TransientModel):
 
     def _send_email(self):
         if self.is_email:
-            # with_context : we don't want to reimport the file we just exported.
-            self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
                 #Salesman send posted invoice, without the right to write
                 #but they should have the right to change this flag
                 self.mapped('invoice_ids').sudo().write({'is_move_sent': True})
+                # Current transaction might take long time, because in case of
+                # batch invoices we send the emails immediately. But blocking
+                # `is_move_sent` field for a long time might easily lead to
+                # SerializationFailure error, because someone else might change
+                # that field while emails are being sent. SerializationFailure leads
+                # to repeating the process and hence to sending the emails
+                # again.
+                # (In test mode everything should be rolled back, so don't
+                # commit in that case.)
+                if not getattr(threading.currentThread(), 'testing', False):
+                    self.env.cr.commit()
+            # with_context : we don't want to reimport the file we just exported.
+            self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
