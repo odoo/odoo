@@ -48,9 +48,13 @@ var stock_report_generic = AbstractAction.extend({
         });
     },
     start: async function() {
-        this.controlPanelProps.cp_content = { $buttons: this.$buttons };
+        const props = this.getControlPanelProps();
+        this.controlPanelProps.cp_content = props;
         await this._super(...arguments);
         this.set_html();
+    },
+    getControlPanelProps: function() {
+        return { $buttons: this.$buttons }
     },
     // Fetches the html and is previous report.context if any, else create it
     get_html: async function() {
