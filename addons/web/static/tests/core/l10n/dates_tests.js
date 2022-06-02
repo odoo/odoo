@@ -757,7 +757,7 @@ QUnit.module(
              * Type of testSet key: string
              * Type of testSet value: [newExpected: string, legacyExpected: string]
              */
-            const testSet = new Map([
+            let testSet = new Map([
                 ["932-10-10", [undefined]],
                 ["1932-10-10", ["1932-10-10T00:00:00.000Z"]],
                 ["09990101", [undefined]],
@@ -775,6 +775,30 @@ QUnit.module(
                 ["2016-01-03 09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
                 ["2016-01-03T09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
             ]);
+            // ****************************************************************************************
+            // TODO: remove this conditional assignation once Chrome has been upgraded to 97+ on Runbot
+            // ****************************************************************************************
+            const chromeVersionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
+            if (chromeVersionMatch && parseInt(chromeVersionMatch[1], 10) < 97) {
+                testSet = new Map([
+                    ["932-10-10", [undefined, "2000-10-10T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["1932-10-10", ["1932-10-10T00:00:00.000Z", "2000-10-10T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["09990101", [undefined, "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["19993012", [undefined, "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+
+                    ["19990101", ["1999-01-01T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["19990130", ["1999-01-30T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["19991230", ["1999-12-30T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["2016-01-03 09:24:15.123", ["2016-01-03T09:24:15.123Z"]],
+                    ["2016-01-03T09:24:15.123", ["2016-01-03T09:24:15.123Z"]],
+                    ["2016-01-03 09:24:15.123+06:00", ["2016-01-03T03:24:15.123Z", undefined]],
+                    ["2016-01-03T09:24:15.123+06:00", ["2016-01-03T03:24:15.123Z", undefined]],
+                    ["2016-01-03 09:24:15.123+16:00", ["2016-01-02T17:24:15.123Z", undefined]],
+                    ["2016-01-03T09:24:15.123+16:00", ["2016-01-02T17:24:15.123Z", undefined]],
+                    ["2016-01-03 09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
+                    ["2016-01-03T09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
+                ]);
+            }
 
             runTestSet(assert, testSet, {
                 newFn: (input) => parseDateTime(input, { format: "YYYY-MM-DD HH:mm:ss" }).toISO(),
