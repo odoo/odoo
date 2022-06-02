@@ -16,6 +16,10 @@ export class DialogManagerContainer extends Component {
         useModels();
         super.setup();
     }
+
+    get messaging() {
+        return this.env.services.messaging.modelManager.messaging;
+    }
 }
 
 Object.assign(DialogManagerContainer, {

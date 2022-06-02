@@ -18,7 +18,11 @@ export class DiscussPublicViewContainer extends Component {
     }
 
     get discussPublicView() {
-        return this.messaging.models['DiscussPublicView'].findFromIdentifyingData(this.messaging);
+        return this.messaging && this.messaging.models['DiscussPublicView'].findFromIdentifyingData(this.messaging);
+    }
+
+    get messaging() {
+        return this.env.services.messaging.modelManager.messaging;
     }
 
 }
