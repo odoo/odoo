@@ -4529,6 +4529,8 @@ class BaseModel(metaclass=MetaModel):
 
             :raises ValidationError: when multiple records match the search criteria
         '''
+        # check if search_fields exist in the models and filter out everything else preventing error and SQL injection
+        search_fields = [f for f in search_fields if f in self._fields.keys()]
         if not search_fields:
             return data_list
 
