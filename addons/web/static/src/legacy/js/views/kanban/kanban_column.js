@@ -2,6 +2,7 @@ odoo.define('web.KanbanColumn', function (require) {
 "use strict";
 
 var core = require('web.core');
+var config = require('web.config');
 var session = require('web.session');
 var Dialog = require('web.Dialog');
 var KanbanRecord = require('web.KanbanRecord');
@@ -66,7 +67,7 @@ var KanbanColumn = Widget.extend({
         this.offset = 0;
         this.loadMoreCount = data.loadMoreCount;
         this.loadMoreOffset = data.loadMoreOffset;
-        this.canBeFolded = this.folded;
+        this.isMobile = config.device.isMobile;
 
         if (options.hasProgressBar) {
             this.barOptions = {
@@ -107,7 +108,7 @@ var KanbanColumn = Widget.extend({
             defs.push(this._addRecord(this.data_records[i]));
         }
 
-        if (this.recordsDraggable) {
+        if (this.recordsDraggable && !config.device.isMobile) {
             this.$el.sortable({
                 connectWith: '.o_kanban_group',
                 containment: this.draggable ? false : 'parent',
@@ -147,21 +148,23 @@ var KanbanColumn = Widget.extend({
                 }
             });
         }
-        this.$el.click(function (event) {
-            if (self.folded) {
-                self._onToggleFold(event);
-            }
-        });
+        if (!config.device.isMobile) {
+            this.$el.click(function (event) {
+                if (self.folded) {
+                    self._onToggleFold(event);
+                }
+            });
+        }
         if (this.barOptions) {
             this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = this._getKanbanColumnProgressBar();
             defs.push(this.progressBar.appendTo(this.$header));
         }
 
-        var title = this.folded ? this.title + ' (' + this.data.count + ')' : this.title;
+        var title = !config.device.isMobile && this.folded ? this.title + ' (' + this.data.count + ')' : this.title;
         this.$header.find('.o_column_title').text(title);
 
-        this.$el.toggleClass('o_column_folded', this.canBeFolded);
+        this.$el.toggleClass('o_column_folded', !config.device.isMobile && this.folded);
         if (this.tooltipInfo) {
             this.$header.find('.o_kanban_header_title').tooltip({}).attr('data-original-title', this.tooltipInfo);
         }
@@ -365,7 +368,11 @@ var KanbanColumn = Widget.extend({
      */
     _onLoadMore: function (event) {
         event.preventDefault();
-        this.trigger_up('kanban_load_column_records', { loadMoreOffset: this.loadMoreOffset });
+        if (this.folded) {
+            this.trigger_up('column_toggle_fold');
+        } else {
+            this.trigger_up('kanban_load_column_records', { loadMoreOffset: this.loadMoreOffset });
+        }
     },
     /**
      * @private
