@@ -234,7 +234,7 @@
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
-                    <div class="o_wprofile_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5">
+                    <div class="o_wprofile_sidebar px-3 py-2 py-md-3 mb-3 mb-md-5">
                         <div class="o_wprofile_sidebar_top d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="fw-bold me-2">Current rank:</small>
@@ -315,8 +315,11 @@
                 <t t-else="">
                     <t t-set="user_points" t-value="0"/>
                 </t>
-                <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" mask="url(#mask)"/>
+                <g data-bs-toggle="tooltip" data-bs-delay="0"
+                    t-attf-title="{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}">
+                    <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" mask="url(#mask)"/>
+                </g>
                 <mask id="mask">
                     <polygon points="0,0 17.2,0 17.2,10 18,10 18,0 36,0 36,36 0,36" fill="white"/>
                 </mask>
@@ -326,25 +329,21 @@
                 </linearGradient>
             </svg>
             <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center">
-                <img class="img-fluid"
-                    t-att-src="website.image_url(next_rank_id if next_rank_id else user.rank_id, 'image_128')"
-                    t-att-alt="(next_rank_id.name if next_rank_id else user.rank_id.name) + ' badge'"
-                    t-att-style="'max-width: ' + (img_max_width if img_max_width else '50%;')"/>
-                <h4 class=" mb-0">
-                    <span t-if="next_rank_id" t-field="next_rank_id.name"/>
-                    <span t-else="" t-field="user.rank_id.name"/>
-                </h4>
-                <small>
-                    <span class="fw-bold text-primary"
-                        t-field="user.karma"
-                        t-options="{'format_decimalized_number': True, 'precision_digits': 2}"/> /
-                    <span t-if="next_rank_id" class="fw-bold"
-                        t-field="next_rank_id.karma_min"
-                        t-options="{'format_decimalized_number': True, 'precision_digits': 2}"/>
-                    <span t-else="" class="fw-bold"
-                        t-field="user.rank_id.karma_min"
-                        t-options="{'format_decimalized_number': True, 'precision_digits': 2}"/>
-                     xp
+                <t t-set="rank_id" t-value="next_rank_id if next_rank_id else user.rank_id"/>
+                <div t-field="rank_id.image_1920"
+                    t-attf-style="max-width: {{img_max_width or '50%'}};"
+                    t-options="{'widget': 'image', 'preview_image': 'image_128'}"/>
+                <h4 class="text-center" t-field="rank_id.name"/>
+                <small class="w-50 text-center">
+                    <t t-set="karma_value" t-value="next_rank_id.karma_min - user.karma if next_rank_id else user.karma"/>
+                    <t t-if="next_rank_id">
+                        Get
+                        <span class="fw-bold text-primary" t-out="karma_value" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> xp
+                        to level up!
+                    </t>
+                    <t t-else="">
+                        <span class="fw-bold text-primary" t-out="karma_value" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> xp
+                    </t>
                 </small>
             </div>
         </div>
@@ -358,14 +357,11 @@
                         <div class="card">
                             <div class="card-body p-2 pe-3">
                                 <div class="d-flex align-items-center">
-                                    <img t-if="not badge.badge_id.image_1920 and badge.badge_id.level"
-                                        width="38" height="38"
-                                        t-attf-src="/website_profile/static/src/img/badge_#{badge.badge_id.level}.svg"
-                                        class="o_object_fit_cover me-0"
-                                        t-att-alt="badge.badge_id.name"/>
+                                    <div t-if="badge.badge_id.image_1920 and badge.badge_id.level" t-field="badge.badge_id.image_1920"
+                                        t-options="{'widget': 'image', 'preview_image': 'image_128', 'class': 'o_object_fit_cover me-0', 'style': 'height: 38px; width: 38px'}"/>
                                     <img t-else=""
                                         width="38" height="38"
-                                        t-att-src="website.image_url(badge.badge_id, 'image_128')"
+                                        t-attf-src="/website_profile/static/src/img/badge_#{badge.badge_id.level}.svg"
                                         class="o_object_fit_cover me-0"
                                         t-att-alt="badge.badge_id.name"/>
                                     <div class="flex-grow-1 col-md-10 p-0">
@@ -417,7 +413,8 @@
                                 <t t-foreach="ranks" t-as="rank">
                                     <li t-attf-class="list-group-item">
                                         <div class="d-flex align-items-center">
-                                            <img t-att-src="website.image_url(rank, 'image_128')" class="me-2 o_image_40_cover" alt="Rank badge"/>
+                                            <div t-field="rank.image_1920"
+                                                t-options="{'widget': 'image', 'preview_image': 'image_128', 'class': 'me-2 o_image_40_cover'}"/>
                                             <div class="flex-grow-1">
                                                 <h5 class="mt-0 mb-0" t-field="rank.name"/>
                                                 <span class="badge text-bg-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
@@ -464,7 +461,8 @@
     <template id="badge_header">
         <img t-if="not badge.image_1920 and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.level}.svg"
                 class="my-1 me-1 wprofile_badge_img" t-att-alt="badge.name"/>
-        <img t-else="" t-att-src="website.image_url(badge, 'image_1024')" class="my-1 me-1 wprofile_badge_img" t-att-alt="badge.name"/>
+        <div t-else="" t-field="badge.image_1920"
+            t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'my-1 me-1 wprofile_badge_img'}"/>
         <a t-if="badge_url" t-att-href="badge_url">
             <h6 t-field="badge.name" class="d-inline my-0"/>
         </a>
