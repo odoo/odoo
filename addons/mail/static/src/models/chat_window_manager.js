@@ -19,15 +19,15 @@ const BASE_VISUAL = {
          */
         chatWindowLocalIds: [],
         /**
-         * Whether hidden menu is visible or not
-         */
-        isVisible: false,
-        /**
          * Offset of hidden menu starting point from the starting point
          * of chat window manager. Makes only sense if it is visible.
          */
         offset: 0,
     },
+    /**
+     * Whether hidden menu is visible or not
+     */
+    isHiddenMenuVisible: false,
     /**
      * Data related to visible chat windows. Index determine order of
      * docked chat windows.
@@ -326,7 +326,7 @@ registerModel({
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 if (this.allOrdered.length > maxAmountWithHidden) {
-                    visual.hidden.isVisible = !this.messaging.device.isSmall;
+                    visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
                     visual.hidden.offset = visual.visible[maxAmountWithHidden - 1].offset
                         + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
                 }
@@ -336,7 +336,7 @@ registerModel({
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
-                visual.hidden.isVisible = !this.messaging.device.isSmall;
+                visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
                 visual.hidden.offset = START_GAP_WIDTH;
                 visual.hidden.chatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
                 console.warn('cannot display any visible chat windows (screen is too small)');
