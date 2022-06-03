@@ -4536,7 +4536,11 @@ class BaseModel(metaclass=MetaModel):
             return data_list
 
         key_fields = ', '.join(search_fields)
-        key_data = [tuple(item['values'][field] for field in search_fields) for item in data_list]
+        key_data = [
+            tuple(self._fields[field].convert_to_column(item['values'][field], self)
+            for field in search_fields)
+            for item in data_list
+        ]
 
         sql = f"""
             SELECT ({key_fields}) as value_key,
@@ -4544,7 +4548,7 @@ class BaseModel(metaclass=MetaModel):
                    count(*) as cnt_matches
               FROM {self._table}
              WHERE ({key_fields}) IN ({','.join(['%s' for d in key_data])})
-           {f' AND (company_id IS NULL or company_id = {self.env.company.id})' if 'company_id' in self._fields else None}
+           {f' AND (company_id IS NULL or company_id = {self.env.company.id})' if 'company_id' in self._fields else ''}
           GROUP BY ({key_fields})
         """
 
