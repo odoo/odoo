@@ -1,11 +1,15 @@
 /** @odoo-module **/
 
-import { addFields } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { addFields, patchRecordMethods } from '@mail/model/model_core';
+import { attr, many } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging';
 
 addFields('Messaging', {
+    isInPublicLivechat: attr({
+        default: false,
+    }),
     /**
      * All pinned livechats that are known.
      */
@@ -13,4 +17,26 @@ addFields('Messaging', {
         inverse: 'messagingAsPinnedLivechat',
         readonly: true,
     }),
+});
+
+patchRecordMethods('Messaging', {
+     /**
+     * @override
+     */
+    async performInitRpc() {
+        if (this.isInPublicLivechat) {
+            return {};
+        } else {
+            return this._super();
+        }
+    },
+    /**
+     * @override
+     */
+    _computeNotificationHandler() {
+        if (this.isInPublicLivechat) {
+            return clear();
+        }
+        return this._super();
+    },
 });

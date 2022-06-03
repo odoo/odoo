@@ -399,7 +399,10 @@ registerModel({
                 }
                 return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
             }
-            return this.messaging.currentPartner.avatarUrl;
+            if (this.messaging.currentPartner) {
+                return this.messaging.currentPartner.avatarUrl;
+            }
+            return '';
         },
         /**
          * @private

@@ -34,7 +34,9 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.notificationHandler.start();
+            if (this.notificationHandler) {
+                this.notificationHandler.start();
+            }
             this.update({ isInitialized: true });
             this.initializedPromise.resolve();
         },
@@ -59,6 +61,15 @@ registerModel({
                 const partner = this.messaging.models['Partner'].insert({ id: partnerId });
                 return partner.getChat();
             }
+        },
+        /**
+         * @returns {Object}
+         */
+        async performInitRpc() {
+            const res = await this.messaging.rpc({
+                route: '/mail/init_messaging',
+            }, { shadow: true });
+            return res;
         },
         /**
          * Display a notification to the user.
@@ -311,6 +322,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationHandler() {
+            return insertAndReplace();
+        },
+        /**
+         * @private
          */
         _onChangeRingingThreads() {
             if (this.ringingThreads && this.ringingThreads.length > 0) {
@@ -453,7 +471,7 @@ registerModel({
             readonly: true,
         }),
         notificationHandler: one('MessagingNotificationHandler', {
-            default: insertAndReplace(),
+            compute: '_computeNotificationHandler',
             isCausal: true,
             readonly: true,
         }),
