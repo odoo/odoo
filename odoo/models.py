@@ -5059,6 +5059,64 @@ class BaseModel(metaclass=MetaModel):
 
         return [default]
 
+    def copy_translations(self, new, excluded=()):
+        """ Recursively copy the translations from original to new record
+
+        :param self: the original record
+        :param new: the new record (copy of the original one)
+        :param excluded: a container of user-provided field names
+        """
+        old = self
+        # avoid recursion through already copied records in case of circular relationship
+        if '__copy_translations_seen' not in old._context:
+            old = old.with_context(__copy_translations_seen=defaultdict(set))
+        seen_map = old._context['__copy_translations_seen']
+        if old.id in seen_map[old._name]:
+            return
+        seen_map[old._name].add(old.id)
+
+        for name, field in old._fields.items():
+            if not field.copy:
+                continue
+
+            if field.inherited and field.related.split('.')[0] in excluded:
+                # inherited fields that come from a user-provided parent record
+                # must not copy translations, as the parent record is not a copy
+                # of the old parent record
+                continue
+
+            if field.type == 'one2many' and field.name not in excluded:
+                # we must recursively copy the translations for o2m; here we
+                # rely on the order of the ids to match the translations as
+                # foreseen in copy_data()
+                old_lines = old[name].sorted(key='id')
+                new_lines = new[name].sorted(key='id')
+                for (old_line, new_line) in zip(old_lines, new_lines):
+                    # don't pass excluded as it is not about those lines
+                    old_line.copy_translations(new_line)
+
+            elif field.translate and field.store and name not in excluded and old[name]:
+                # for translatable fields we copy their translations
+                try:
+                    old_cache_value = old.env.cache.get(old, field) or {}
+                except CacheMiss:
+                    old[name]  # prefetch all translations
+                    old_cache_value = old.env.cache.get(old, field) or {}
+                old_cache_value = old_cache_value.copy()
+                old_value_en = old_cache_value.pop('en_US', None)
+                if not old_value_en or not old_cache_value:
+                    continue
+                if not callable(field.translate):
+                    new.sudo().update_field_translations(name, old_cache_value)
+                else:
+                    translations = defaultdict(dict)
+                    # {from_lang_term: {lang: to_lang_term}
+                    translation_dictionary = field.get_translation_dictionary(old_value_en, old_cache_value)
+                    for from_lang_term, to_lang_terms in translation_dictionary.items():
+                        for lang, to_lang_term in to_lang_terms.items():
+                            translations[lang][from_lang_term] = to_lang_term
+                    new.sudo().update_field_translations(name, translations)
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         """ copy(default=None)
@@ -5078,9 +5136,12 @@ class BaseModel(metaclass=MetaModel):
         # TODO VSC: copy_data MUST return the entire translation for each translated fields and create MUST accept it.
         #   use lang="ALL" here or inside copy_data, also lang in the context is used by the cache to discriminate
         # vals = self.with_context(active_test=False, lang="ALL").copy_data(default)[0]
+        self_en = self.with_context(lang='en_US')
+        vals = self_en.with_context(active_test=False).copy_data(default)[0]
+        record_copy = self_en.create(vals)
+        self.with_context(from_copy_translation=True).copy_translations(record_copy, excluded=default or ())
 
-        vals = self.with_context(active_test=False).copy_data(default)[0]
-        return self.create(vals)
+        return record_copy.with_context(lang=self.env.lang)
 
     @api.returns('self')
     def exists(self):
