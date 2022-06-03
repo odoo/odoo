@@ -24,13 +24,6 @@ const L10nFrPosGlobalState = (PosGlobalState) => class L10nFrPosGlobalState exte
         let result = super.disallowLineQuantityChange(...arguments);
         return this.is_french_country() || result;
     }
-    cashierHasPriceControlRights() {
-        if (this.is_french_country()) {
-            return false;
-        } else {
-            return super.cashierHasPriceControlRights();
-        }
-    }
 }
 Registries.Model.extend(PosGlobalState, L10nFrPosGlobalState);
 
