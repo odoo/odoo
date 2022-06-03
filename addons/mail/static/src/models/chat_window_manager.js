@@ -289,21 +289,18 @@ registerModel({
             if (!this.messaging || !this.messaging.device) {
                 return visual;
             }
-            const discuss = this.messaging.discuss;
             const BETWEEN_GAP_WIDTH = 5;
             const CHAT_WINDOW_WIDTH = 325;
             const END_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
-            const GLOBAL_WINDOW_WIDTH = this.messaging.device.globalWindowInnerWidth;
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
             const START_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
-            const chatWindows = this.allOrdered;
-            if (!this.messaging.device.isSmall && discuss.discussView) {
+            if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
                 return visual;
             }
-            if (!chatWindows.length) {
+            if (!this.allOrdered.length) {
                 return visual;
             }
-            const relativeGlobalWindowWidth = GLOBAL_WINDOW_WIDTH - START_GAP_WIDTH - END_GAP_WIDTH;
+            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - START_GAP_WIDTH - END_GAP_WIDTH;
             let maxAmountWithoutHidden = Math.floor(
                 relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
             let maxAmountWithHidden = Math.floor(
@@ -313,10 +310,10 @@ registerModel({
                 maxAmountWithoutHidden = 1;
                 maxAmountWithHidden = 1;
             }
-            if (chatWindows.length <= maxAmountWithoutHidden) {
+            if (this.allOrdered.length <= maxAmountWithoutHidden) {
                 // all visible
-                for (let i = 0; i < chatWindows.length; i++) {
-                    const chatWindowLocalId = chatWindows[i].localId;
+                for (let i = 0; i < this.allOrdered.length; i++) {
+                    const chatWindowLocalId = this.allOrdered[i].localId;
                     const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
@@ -324,24 +321,24 @@ registerModel({
             } else if (maxAmountWithHidden > 0) {
                 // some visible, some hidden
                 for (let i = 0; i < maxAmountWithHidden; i++) {
-                    const chatWindowLocalId = chatWindows[i].localId;
+                    const chatWindowLocalId = this.allOrdered[i].localId;
                     const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
-                if (chatWindows.length > maxAmountWithHidden) {
+                if (this.allOrdered.length > maxAmountWithHidden) {
                     visual.hidden.isVisible = !this.messaging.device.isSmall;
                     visual.hidden.offset = visual.visible[maxAmountWithHidden - 1].offset
                         + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
                 }
-                for (let j = maxAmountWithHidden; j < chatWindows.length; j++) {
-                    visual.hidden.chatWindowLocalIds.push(chatWindows[j].localId);
+                for (let j = maxAmountWithHidden; j < this.allOrdered.length; j++) {
+                    visual.hidden.chatWindowLocalIds.push(this.allOrdered[j].localId);
                 }
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
                 visual.hidden.isVisible = !this.messaging.device.isSmall;
                 visual.hidden.offset = START_GAP_WIDTH;
-                visual.hidden.chatWindowLocalIds.concat(chatWindows.map(chatWindow => chatWindow.localId));
+                visual.hidden.chatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
                 console.warn('cannot display any visible chat windows (screen is too small)');
                 visual.availableVisibleSlots = 0;
             }
