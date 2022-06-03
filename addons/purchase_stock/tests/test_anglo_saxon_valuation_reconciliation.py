@@ -166,15 +166,14 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.discount = 0.92431
         move_form.save()
-
         invoice.action_post()
 
         # Check the price difference amount.
-        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_stock_valuation_account_id)
         self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
         self.assertAlmostEqual(price_diff_line.price_total, -6100.446)
 
-        picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         self.check_reconciliation(invoice, picking)
 
     def test_rounding_price_unit(self):
@@ -197,12 +196,12 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         invoice.action_post()
 
         # Check the price difference amount. It's expected that price_unit * qty != price_total.
-        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_stock_valuation_account_id)
         self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
         self.assertAlmostEqual(price_diff_line.price_unit, 0.0001)
         self.assertAlmostEqual(price_diff_line.price_total, 100.0)
 
-        picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         self.check_reconciliation(invoice, picking)
 
     def test_reconcile_cash_basis_bill(self):

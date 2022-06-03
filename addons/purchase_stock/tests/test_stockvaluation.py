@@ -246,6 +246,11 @@ class TestStockValuation(TransactionCase):
         receipt.move_ids.quantity_done = 5
         receipt.button_validate()
 
+        # Checks stock valuation layers.
+        svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
+        self.assertRecordValues(svl, [
+            {'quantity': 5, 'unit_cost': 5, 'value': 25, 'remaining_value': 25}])
+
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
         invoice_form.purchase_id = order
@@ -257,15 +262,11 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl, [
-            {'quantity': 5, 'unit_cost': 5, 'value': 25.0},
-            {'quantity': 0, 'unit_cost': 0, 'value': 25.0, 'stock_valuation_layer_id': svl[0].id},
-        ])
+        self.assertRecordValues(svl[0], [
+            {'quantity': 5, 'unit_cost': 5, 'value': 25, 'remaining_value': 50}])
+        self.assertRecordValues(svl[1], [
+            {'quantity': 0, 'unit_cost': 0, 'value': 25, 'stock_valuation_layer_id': svl[0].id}])
         self.assertEqual(sum(svl.mapped('value')), 50.0)
-
-        # # Checks if something was posted in the price difference account
-        # price_diff_aml = self.env['account.move.line'].search([('account_id', '=', self.price_diff_account.id)])
-        # self.assertEqual(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")
 
         # Checks what was posted in stock input account
         input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
@@ -302,10 +303,10 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl[2:], [
-            {'quantity': 2, 'unit_cost': 5, 'value': 10},
-            {'quantity': 0, 'unit_cost': 0, 'value': 40, 'stock_valuation_layer_id': svl[2].id},
-        ])
+        self.assertRecordValues(svl[2], [
+            {'quantity': 2, 'unit_cost': 5, 'value': 10, 'remaining_value': 50}])
+        self.assertRecordValues(svl[3], [
+            {'quantity': 0, 'unit_cost': 0, 'value': 40, 'stock_valuation_layer_id': svl[2].id}])
         self.assertEqual(sum(svl.mapped('value')), 100.0)
 
     def test_anglosaxon_valuation_price_unit_diff_receipt_before_bill_02(self):
@@ -336,9 +337,8 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertEqual(len(svl), 1)
-        svl_1 = svl[0]  # SVL for the receipt of product1.
-        self.assertRecordValues(svl_1, [{'quantity': 4, 'unit_cost': 5, 'value': 20.0}])
+        self.assertRecordValues(svl, [
+            {'quantity': 4, 'unit_cost': 5, 'value': 20, 'remaining_value': 20}])
 
         # Creates an invoice and increases the price AND the quantity.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
@@ -352,9 +352,10 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
+        self.assertRecordValues(svl[0], [
+            {'quantity': 4, 'unit_cost': 5, 'value': 20, 'remaining_value': 40}])
         self.assertRecordValues(svl[1], [
-            {'quantity': 0, 'unit_cost': 0, 'value': 20, 'stock_valuation_layer_id': svl[0].id},
-        ])
+            {'quantity': 0, 'unit_cost': 0, 'value': 20, 'stock_valuation_layer_id': svl[0].id}])
         self.assertEqual(sum(svl.mapped('value')), 40.0)
 
         # Edits the PO line.
@@ -371,7 +372,7 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl[2], [{'quantity': 1.0, 'unit_cost': 10.0, 'value': 10.0}])
+        self.assertRecordValues(svl[2], [{'quantity': 1.0, 'unit_cost': 10, 'value': 10}])
         self.assertEqual(sum(svl.mapped('value')), 50.0)
 
     def test_anglosaxon_valuation_price_unit_diff_receipt_before_bill_03(self):
@@ -403,9 +404,10 @@ class TestStockValuation(TransactionCase):
         receipt.move_ids.quantity_done = 4
         receipt.button_validate()
 
-        # Checks stock valuation layers.
+        # Checks the stock valuation layer.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl[0], [{'quantity': 4.0, 'unit_cost': 5.0, 'value': 20.0}])
+        self.assertRecordValues(svl, [  # Receipt SVL
+            {'quantity': 4, 'unit_cost': 5, 'value': 20, 'remaining_value': 20}])
 
         # Creates an invoice and increases the price.
         invoice_form = Form(self.env['account.move'].with_context(default_purchase_id=order.id, default_move_type='in_invoice'))
@@ -419,8 +421,10 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl[1], [
-            {'quantity': 0.0, 'unit_cost': 0.0, 'value': 20.0, 'stock_valuation_layer_id': svl[0].id},
+        self.assertRecordValues(svl[0], [  # Receipt SVL
+            {'quantity': 4, 'unit_cost': 5, 'value': 20, 'remaining_value': 40}])
+        self.assertRecordValues(svl[1], [  # Correction SVL (from the invoice)
+            {'quantity': 0, 'unit_cost': 0, 'value': 20, 'stock_valuation_layer_id': svl[0].id},
         ])
         self.assertEqual(sum(svl.mapped('value')), 40.0)
 
@@ -438,9 +442,9 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl[2:], [
-            {'quantity': 1.0, 'unit_cost': 10.0, 'value': 10.0},
-            {'quantity': 1.0, 'unit_cost': 5.0, 'value': 5.0},
+        self.assertEqual(len(svl), 3)
+        self.assertRecordValues(svl[-1], [  # Second receipt SVL
+            {'quantity': 2, 'unit_cost': 7.5, 'value': 15, 'remaining_value': 15}
         ])
         self.assertEqual(sum(svl.mapped('value')), 55.0)
 
@@ -456,8 +460,12 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl[4], [
-            {'quantity': 0.0, 'unit_cost': 0.0, 'value': 5.0, 'stock_valuation_layer_id': svl[3].id},
+        self.assertEqual(len(svl), 4)
+        self.assertRecordValues(svl[2], [  # Second receipt SVL
+            {'quantity': 2, 'unit_cost': 7.5, 'value': 15, 'remaining_value': 20}
+        ])
+        self.assertRecordValues(svl[3], [  # Second correction SVL (last invoice)
+            {'quantity': 0, 'unit_cost': 0, 'value': 5, 'stock_valuation_layer_id': svl[2].id}
         ])
         self.assertEqual(sum(svl.mapped('value')), 60.0)
 
@@ -558,10 +566,10 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertRecordValues(svl, [
-            {'quantity': 4.0, 'unit_cost': 5.0, 'value': 20.0},
-            {'quantity': 0.0, 'unit_cost': 0.0, 'value': 20.0, 'stock_valuation_layer_id': svl[0].id},
-        ])
+        self.assertRecordValues(svl[0], [  # Receipt SVL
+            {'quantity': 4, 'unit_cost': 5, 'value': 20, 'remaining_value': 40}])
+        self.assertRecordValues(svl[1], [  # Correction SVL (from the invoice)
+            {'quantity': 0, 'unit_cost': 0, 'value': 20, 'stock_valuation_layer_id': svl[0].id}])
         self.assertEqual(sum(svl.mapped('value')), 40.0)
 
         # Returns 2 units.
@@ -616,7 +624,6 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
-        self.assertEqual(len(svl), 1)
         self.assertRecordValues(svl, [{'quantity': 4.0, 'unit_cost': 10.0, 'value': 40.0}])
 
         # Returns 2 units.
@@ -706,7 +713,6 @@ class TestStockValuation(TransactionCase):
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
         self.assertEqual(len(svl), 2)
-        svl_2 = svl[1]
         self.assertRecordValues(svl[1], [{'quantity': 2.0, 'unit_cost': 25.0, 'value': 50.0}])
         self.assertEqual(sum(svl.mapped('value')), 100.0)
 
@@ -782,10 +788,7 @@ class TestStockValuation(TransactionCase):
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
         # The second receipt must have created two SVL because the 3 received
         # quantities refer to two invoices with different prices.
-        self.assertRecordValues(svl[1:].sorted(lambda layer: layer.quantity), [
-            {'quantity': 1.0, 'unit_cost': 10.0, 'value': 10.0},
-            {'quantity': 2.0, 'unit_cost': 25.0, 'value': 50.0},
-        ])
+        self.assertRecordValues(svl[1:], [{'quantity': 3, 'unit_cost': 20, 'value': 60}])
         self.assertEqual(sum(svl.mapped('value')), 100.0)
 
     def test_anglosaxon_valuation_price_unit_diff_bill_before_receipt_03_uom(self):
@@ -830,8 +833,6 @@ class TestStockValuation(TransactionCase):
         svl = StockValuationLayer.search([('product_id', '=', self.product1.id)])
         self.assertEqual(len(svl), 1)
         self.assertRecordValues(svl, [{'quantity': 24.0, 'unit_cost': 15, 'value': 360.0}])
-        #  Checks the waiting quantity on the invoice line was correclty decreased.
-        self.assertEqual(invoice.invoice_line_ids.qty_waiting_for_receipt, 0)
 
     def test_anglosaxon_valuation_price_unit_diff_mixed_order_01(self):
         """ For one purchase order, creates an invoice then receives product.
@@ -1124,8 +1125,7 @@ class TestStockValuation(TransactionCase):
         svl = StockValuationLayer.search([('product_id', 'in', [product_fifo.id, product_avco.id])])
         self.assertRecordValues(svl[2:], [
             {'product_id': product_fifo.id, 'quantity': 2, 'unit_cost': 10.0, 'value': 20.0},
-            {'product_id': product_avco.id, 'quantity': 5, 'unit_cost': 14.0, 'value': 70.0},
-            {'product_id': product_avco.id, 'quantity': 5, 'unit_cost': 7.0, 'value': 35.0},
+            {'product_id': product_avco.id, 'quantity': 10, 'unit_cost': 10.5, 'value': 105},
         ])
         self.assertEqual(sum(svl.mapped('value')), 165.0)
 
@@ -1140,8 +1140,8 @@ class TestStockValuation(TransactionCase):
 
         # Checks stock valuation layers.
         svl = StockValuationLayer.search([('product_id', 'in', [product_fifo.id, product_avco.id])])
-        self.assertRecordValues(svl[5], [
-            {'product_id': product_avco.id, 'value': 25.0, 'stock_valuation_layer_id': svl[4].id},
+        self.assertRecordValues(svl[4], [
+            {'product_id': product_avco.id, 'value': 25.0, 'stock_valuation_layer_id': svl[3].id},
         ])
         self.assertEqual(sum(svl.mapped('value')), 190.0)
 

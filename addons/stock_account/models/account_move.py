@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.tools.float_utils import float_is_zero
 
 
 class AccountMove(models.Model):
@@ -45,11 +46,25 @@ class AccountMove(models.Model):
         if self._context.get('move_reverse_cancel'):
             return super()._post(soft)
 
+        # Create correction layer if invoice price is different
+        stock_valuation_layers = self.env['stock.valuation.layer']
+        valued_lines = self.env['account.move.line']
+        for invoice in self:
+            if invoice.stock_valuation_layer_ids:
+                continue
+            if invoice.move_type == 'in_invoice':
+                valued_lines |= invoice.invoice_line_ids
+        if valued_lines:
+            stock_valuation_layers |= valued_lines._create_in_invoice_svl()
+
         # Create additional COGS lines for customer invoices.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
 
         # Post entries.
         posted = super()._post(soft)
+
+        for layer in stock_valuation_layers:
+            layer.description = layer.description.replace('/', layer.account_move_line_id.move_id.name)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         posted._stock_account_anglo_saxon_reconcile_valuation()
@@ -220,6 +235,44 @@ class AccountMoveLine(models.Model):
 
     is_anglo_saxon_line = fields.Boolean(help="Technical field used to retrieve the anglo-saxon lines.")
 
+    def _create_in_invoice_svl(self):
+        svl_vals_list = []
+        for line in self:
+            line = line.with_company(line.company_id)
+            po_line = line.purchase_line_id
+            valued_moves = line._get_valued_in_moves()
+            layers = valued_moves.stock_valuation_layer_ids
+            uom = line.product_uom_id or line.product_id.uom_id
+            if not layers:
+                continue
+            # Computes price difference between invoice line and SVL.
+            previous_invoices = (po_line.invoice_lines - self)
+            total_prices = sum(layers.mapped('remaining_value')) - sum(previous_invoices.mapped('price_subtotal'))
+            total_quantity = sum(layers.mapped('quantity')) - sum(previous_invoices.mapped('quantity'))
+            if float_is_zero(total_quantity, precision_rounding=uom.rounding):
+                continue
+            layers_price_unit = total_prices / total_quantity
+            price_difference = line.price_unit - layers_price_unit
+            if float_is_zero(price_difference, precision_rounding=line.currency_id.rounding):
+                continue
+            # Don't create value for more quantity than received
+            quantity = po_line.qty_received - (po_line.qty_invoiced - line.quantity)
+            quantity = max(min(line.quantity, quantity), 0)
+            if float_is_zero(quantity, precision_rounding=uom.rounding):
+                continue
+            svl_vals = line.product_id._prepare_in_svl_vals(quantity, price_difference)
+            svl_vals.update(
+                line._prepare_common_svl_vals(),
+                quantity=0,
+                unit_cost=0,
+                remaining_qty=0,
+                stock_valuation_layer_id=layers[-1:].id,
+            )
+            svl_vals_list.append(svl_vals)
+            # Adds the difference into the last SVL's remaining value.
+            layers[-1:].remaining_value += svl_vals['value']
+        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+
     def _get_computed_account(self):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing
         # with anglo-saxon accounting.
@@ -234,9 +287,28 @@ class AccountMoveLine(models.Model):
                 return accounts['stock_input']
         return super(AccountMoveLine, self)._get_computed_account()
 
+    def _get_price_difference(self, valued_moves):
+        if not valued_moves:
+            return 0
+        layers = valued_moves.stock_valuation_layer_ids
+        layers_price_unit = sum(layers.mapped('value')) / sum(layers.mapped('quantity'))
+        return self.price_unit - layers_price_unit
+
+    def _get_valued_in_moves(self):
+        return self.env['stock.move']
+
     def _eligible_for_cogs(self):
         self.ensure_one()
         return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
+
+    def _prepare_common_svl_vals(self):
+        self.ensure_one()
+        return {
+            'account_move_line_id': self.id,
+            'company_id': self.company_id.id,
+            'product_id': self.product_id.id,
+            'description': self.move_id.name and '%s - %s' % (self.move_id.name, self.product_id.name) or self.product_id.name,
+        }
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()

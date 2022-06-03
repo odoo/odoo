@@ -200,8 +200,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             self.company_data['default_account_stock_out'].id:      (10.0, 10.0),
         }
         # Interim IN is not balanced because because there's a difference between the po line
-        # price unit and the standard price. We could set a price difference account on the
-        # category to compensate.
+        # price unit and the standard price.
 
         self._check_results(expected_aml, 10, all_amls)
 
@@ -223,8 +222,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             self.company_data['default_account_stock_out'].id:      (10.0, 10.0),
         }
         # Interim IN is not balanced because because there's a difference between the po line
-        # price unit and the standard price. We could set a price difference account on the
-        # category to compensate.
+        # price unit and the standard price.
 
         self._check_results(expected_aml, 10, all_amls)
 
