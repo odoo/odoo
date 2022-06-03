@@ -591,28 +591,25 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, searchQty=1, searchVariant=False)
         subcontracting_values = report_values['lines']['subcontracting']
         self.assertEqual(subcontracting_values['name'], self.subcontractor_partner1.display_name)
-        self.assertEqual(report_values['lines']['total'], 20)  # 10 For subcontracting + 5 for comp1 + 5 for subcontracting of comp2_bom
-        self.assertEqual(report_values['lines']['bom_cost'], 20)
+        self.assertEqual(report_values['lines']['bom_cost'], 20)  # 10 For subcontracting + 5 for comp1 + 5 for subcontracting of comp2_bom
         self.assertEqual(subcontracting_values['bom_cost'], 10)
         self.assertEqual(subcontracting_values['prod_cost'], 10)
-        self.assertEqual(report_values['lines']['components'][0]['total'], 5)
-        self.assertEqual(report_values['lines']['components'][1]['total'], 5)
+        self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 5)
+        self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 5)
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, searchQty=3, searchVariant=False)
         subcontracting_values = report_values['lines']['subcontracting']
-        self.assertEqual(report_values['lines']['total'], 60)  # 30 for subcontracting + 15 for comp1 + 15 for subcontracting of comp2_bom
-        self.assertEqual(report_values['lines']['bom_cost'], 60)
+        self.assertEqual(report_values['lines']['bom_cost'], 60)  # 30 for subcontracting + 15 for comp1 + 15 for subcontracting of comp2_bom
         self.assertEqual(subcontracting_values['bom_cost'], 30)
         self.assertEqual(subcontracting_values['prod_cost'], 30)
-        self.assertEqual(report_values['lines']['components'][0]['total'], 15)
-        self.assertEqual(report_values['lines']['components'][1]['total'], 15)
+        self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 15)
+        self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 15)
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, searchQty=5, searchVariant=False)
         subcontracting_values = report_values['lines']['subcontracting']
-        self.assertEqual(report_values['lines']['total'], 80)  # 50 for subcontracting + 25 for comp1 + 5 for subcontracting of comp2_bom
-        self.assertEqual(report_values['lines']['bom_cost'], 80)
+        self.assertEqual(report_values['lines']['bom_cost'], 80)  # 50 for subcontracting + 25 for comp1 + 5 for subcontracting of comp2_bom
         self.assertEqual(subcontracting_values['bom_cost'], 50)
         self.assertEqual(subcontracting_values['prod_cost'], 50)
-        self.assertEqual(report_values['lines']['components'][0]['total'], 25)
-        self.assertEqual(report_values['lines']['components'][1]['total'], 5)
+        self.assertEqual(report_values['lines']['components'][0]['bom_cost'], 25)
+        self.assertEqual(report_values['lines']['components'][1]['bom_cost'], 5)
 
     def test_several_backorders(self):
         def process_picking(picking, qty):
