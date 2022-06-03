@@ -44,51 +44,6 @@ export class CallView extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Finds a tile layout and dimensions that respects param0.aspectRatio while maximizing
-     * the total area covered by the tiles within the specified container dimensions.
-     *
-     * @private
-     * @param {Object} param0
-     * @param {number} [param0.aspectRatio]
-     * @param {number} param0.containerHeight
-     * @param {number} param0.containerWidth
-     * @param {number} param0.tileCount
-     */
-    _computeTessellation({ aspectRatio = 1, containerHeight, containerWidth, tileCount }) {
-        let optimalLayout = {
-            area: 0,
-            cols: 0,
-            tileHeight: 0,
-            tileWidth: 0,
-        };
-
-        for (let columnCount = 1; columnCount <= tileCount; columnCount++) {
-            const rowCount = Math.ceil(tileCount / columnCount);
-            const potentialHeight = containerWidth / (columnCount * aspectRatio);
-            const potentialWidth = containerHeight / rowCount;
-            let tileHeight;
-            let tileWidth;
-            if (potentialHeight > potentialWidth) {
-                tileHeight = Math.floor(potentialWidth);
-                tileWidth = Math.floor(tileHeight * aspectRatio);
-            } else {
-                tileWidth = Math.floor(containerWidth / columnCount);
-                tileHeight = Math.floor(tileWidth / aspectRatio);
-            }
-            const area = tileHeight * tileWidth;
-            if (area <= optimalLayout.area) {
-                continue;
-            }
-            optimalLayout = {
-                area,
-                tileHeight,
-                tileWidth,
-            };
-        }
-        return optimalLayout;
-    }
-
-    /**
      * @private
      */
     _setTileLayout() {
@@ -100,7 +55,7 @@ export class CallView extends Component {
         }
         const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
 
-        const { tileWidth, tileHeight } = this._computeTessellation({
+        const { tileWidth, tileHeight } = this.callView.calculateTessellation({
             aspectRatio: this.callView.aspectRatio,
             containerHeight: height,
             containerWidth: width,
