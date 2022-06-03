@@ -329,10 +329,24 @@
                     <field name="tax_audit"/>
                     <field name="move_id"/>
                 </field>
-                <field name="date_maturity" position="replace"/>
-                <field name="analytic_account_id" position="replace"/>
-                <field name="debit" position="replace"/>
-                <field name="credit" position="replace"/>
+                <field name="date_maturity" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="analytic_account_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="debit" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="credit" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="journal_id" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="move_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
             </field>
         </record>
 
