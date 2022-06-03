@@ -3531,7 +3531,9 @@ class AccountMove(models.Model):
     def _compute_narration(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         for move in self:
-            if not use_invoice_terms or not move.is_sale_document(include_receipts=True):
+            if not move.is_sale_document(include_receipts=True):
+                continue
+            if not use_invoice_terms:
                 move.narration = False
             else:
                 lang = move.partner_id.lang or self.env.user.lang

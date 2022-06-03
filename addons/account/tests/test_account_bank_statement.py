@@ -1573,3 +1573,30 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         self.assertRecordValues(statement.line_ids, [{
             'partner_id': False,
         }])
+
+    def test_statement_line_note_onchange_partner(self):
+        """
+        Check if narration field stays as it is when changing the partner
+        in reconciliation widget.
+        """
+        bank_stmt = self.env['account.bank.statement'].create({
+            'company_id': self.env.company.id,
+            'journal_id': self.bank_journal_1.id,
+            'name': 'test',
+        })
+
+        bank_stmt_line = self.env['account.bank.statement.line'].create({
+            'payment_ref': 'testLine',
+            'statement_id': bank_stmt.id,
+            'narration': 'This is a note',
+            'amount': 100,
+        })
+
+        bank_stmt_line.partner_id = self.partner_b
+
+        self.assertRecordValues(bank_stmt_line, [{
+            'payment_ref': 'testLine',
+            'statement_id': bank_stmt.id,
+            'narration': '<p>This is a note</p>',
+            'amount': 100,
+        }])
