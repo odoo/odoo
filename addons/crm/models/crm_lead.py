@@ -1768,6 +1768,9 @@ class Lead(models.Model):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
         groups = super(Lead, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
+
         local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()

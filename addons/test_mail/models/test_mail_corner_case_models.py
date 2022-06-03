@@ -68,6 +68,7 @@ class MailTestLang(models.Model):
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         groups = super(MailTestLang, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+
         local_msg_vals = dict(msg_vals or {})
 
         for group in [g for g in groups if g[0] in('follower', 'customer')]:
@@ -79,6 +80,9 @@ class MailTestLang(models.Model):
             ]
         return groups
 
+# ------------------------------------------------------------
+# TRACKING MODELS
+# ------------------------------------------------------------
 
 class MailTestTrackCompute(models.Model):
     _name = 'mail.test.track.compute'
@@ -90,6 +94,7 @@ class MailTestTrackCompute(models.Model):
     partner_email = fields.Char(related='partner_id.email', store=True, tracking=True)
     partner_phone = fields.Char(related='partner_id.phone', tracking=True)
 
+
 class MailTestTrackMonetary(models.Model):
     _name = 'mail.test.track.monetary'
     _description = 'Test tracking monetary field'
@@ -98,6 +103,7 @@ class MailTestTrackMonetary(models.Model):
     company_id = fields.Many2one('res.company')
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
+
 
 class MailTestTrackAll(models.Model):
     _name = 'mail.test.track.all'
@@ -118,6 +124,10 @@ class MailTestTrackAll(models.Model):
     selection_field = fields.Selection(string='Selection', selection=[['first', 'FIRST']], tracking=True)
     text_field = fields.Text('Text', tracking=True)
 
+# ------------------------------------------------------------
+# OTHER
+# ------------------------------------------------------------
+
 class MailTestMultiCompany(models.Model):
     """ This model can be used in multi company tests"""
     _name = 'mail.test.multi.company'
@@ -126,3 +136,14 @@ class MailTestMultiCompany(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
+
+
+class MailTestNotMailThread(models.Model):
+    """ Models not inheriting from mail.thread but using some cross models
+    capabilities of mail. """
+    _name = 'mail.test.nothread'
+    _description = "NoThread Model"
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    customer_id = fields.Many2one('res.partner')

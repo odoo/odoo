@@ -81,7 +81,7 @@ class KnowledgePerformanceCase(KnowledgeCommonWData):
     @users('employee')
     @warmup
     def test_article_invite_members(self):
-        with self.assertQueryCount(employee=86):  # knowledge only: 86
+        with self.assertQueryCount(employee=89):  # knowledge only: 89
             shared_article = self.shared_children.with_env(self.env)
             partners = (self.customer + self.partner_employee_manager + self.partner_employee2).with_env(self.env)
             shared_article.invite_members(partners, 'write')
