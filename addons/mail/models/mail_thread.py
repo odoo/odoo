@@ -2067,11 +2067,12 @@ class MailThread(models.AbstractModel):
             _logger.warning('Message notify called without recipient_ids, skipping')
             return self.env['mail.message']
 
+        # allow to link a notification to a document that does not inherit from
+        # MailThread by supporting model / res_id
         if not (model and res_id):  # both value should be set or none should be set (record)
             model = False
             res_id = False
 
-        MailThread = self.env['mail.thread']
         msg_values = {
             'parent_id': parent_id,
             'model': self._name if self else model,
@@ -2082,18 +2083,21 @@ class MailThread(models.AbstractModel):
             'author_id': author_id,
             'email_from': email_from,
             'partner_ids': partner_ids,
-            'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'is_internal': True,
             'record_name': False,
-            'reply_to': MailThread._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
         msg_values.update(msg_kwargs)
+        # add default-like values afterwards, to avoid useless queries
+        if 'subtype_id' not in msg_values:
+            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        if 'reply_to' not in msg_values:
+            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
 
-        new_message = MailThread._message_create(msg_values)
-        MailThread._notify_thread(new_message, msg_values, **notif_kwargs)
+        new_message = self._message_create(msg_values)
+        self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
     def _message_log_with_view(self, views_or_xmlid, **kwargs):
@@ -2126,6 +2130,7 @@ class MailThread(models.AbstractModel):
             'email_add_signature': False,  # False as no notification -> no need to compute signature
         }
         msg_values.update(kwargs)
+
         return self.sudo()._message_create(msg_values)
 
     def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):

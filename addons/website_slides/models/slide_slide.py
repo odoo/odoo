@@ -730,7 +730,10 @@ class Slide(models.Model):
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is active. """
         groups = super(Slide, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
 
+        self.ensure_one()
         if self.website_published:
             for _group_name, _group_method, group_data in groups:
                 group_data['has_button_access'] = True

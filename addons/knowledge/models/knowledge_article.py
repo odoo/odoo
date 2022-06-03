@@ -1437,8 +1437,10 @@ class Article(models.Model):
                 })
 
             self.with_context(lang=partner_lang).message_notify(
-                partner_ids=partner.ids, body=body, subject=subject,
-                email_layout_xmlid='mail.mail_notification_light'
+                body=body,
+                email_layout_xmlid='mail.mail_notification_light',
+                partner_ids=partner.ids,
+                subject=subject,
             )
 
     # ------------------------------------------------------------

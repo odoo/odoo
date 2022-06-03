@@ -1146,6 +1146,10 @@ class SaleOrder(models.Model):
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
         groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
+
+        self.ensure_one()
         if self._context.get('proforma'):
             for group in [g for g in groups if g[0] in ('portal_customer', 'portal', 'follower', 'customer')]:
                 group[2]['has_button_access'] = False

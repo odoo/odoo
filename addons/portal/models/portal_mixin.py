@@ -65,8 +65,11 @@ class PortalMixin(models.AbstractModel):
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
     def _notify_get_recipients_groups(self, msg_vals=None):
-        access_token = self._portal_ensure_token()
         groups = super(PortalMixin, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
+
+        access_token = self._portal_ensure_token()
         local_msg_vals = dict(msg_vals or {})
 
         if access_token and 'partner_id' in self._fields and self['partner_id']:
