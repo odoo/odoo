@@ -50,7 +50,7 @@ class QWeb(models.AbstractModel):
 
         atts = super(QWeb, self)._post_processing_att(tagName, atts, options)
 
-        if tagName == 'img' and 'loading' not in atts:
+        if tagName in ('iframe', 'img') and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 
         if options.get('inherit_branding') or options.get('rendering_bundle') or \

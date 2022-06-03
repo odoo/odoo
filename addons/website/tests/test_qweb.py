@@ -68,6 +68,7 @@ class TestQweb(TransactionCaseWithUserDemo):
     <body>
         <img src="http://test.external.link/img.png" loading="lazy"/>
         <img src="http://test.cdn/website/static/img.png" loading="lazy"/>
+        <iframe src="http://test.external.link/iframe" loading="lazy"></iframe>
         <a href="http://test.external.link/link">x</a>
         <a href="http://test.cdn/web/content/local_link">x</a>
         <span style="background-image: url('http://test.cdn/web/image/2')">xxx</span>
