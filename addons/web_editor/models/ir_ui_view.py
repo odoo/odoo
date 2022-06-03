@@ -6,8 +6,9 @@ import logging
 import uuid
 from lxml import etree, html
 
-from odoo import api, models
+from odoo import api, models, _
 from odoo.osv import expression
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +41,11 @@ class IrUiView(models.Model):
 
         model = 'ir.qweb.field.' + el.get('data-oe-type')
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
-        value = converter.from_html(Model, Model._fields[field], el)
+
+        try:
+            value = converter.from_html(Model, Model._fields[field], el)
+        except ValueError:
+            raise ValidationError(_("Invalid field value for %s: %s", Model._fields[field].string, el.text_content().strip()))
 
         if value is not None:
             # TODO: batch writes?
