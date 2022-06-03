@@ -741,7 +741,7 @@
                                     icon="fa-bars"
                                     type="object"
                                     attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
-                                    string="Reconciled Entries">
+                                    string="Reconciled Items">
                             </button>
                             <button name="open_created_caba_entries"
                                     class="oe_stat_button"
@@ -1107,9 +1107,6 @@
                                 </group>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly">
-                                <div class="alert alert-info text-center mb-0" role="alert" attrs="{'invisible': ['|', ('payment_state', '!=', 'invoicing_legacy'), ('move_type', '=', 'entry')]}">
-                                    <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
-                                </div>
                                 <field name="line_ids"
                                        mode="tree,kanban"
                                        context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
@@ -1123,6 +1120,7 @@
                                                }"
                                                domain="[('deprecated', '=', False), ('company_id', '=', parent.company_id)]" />
                                         <field name="partner_id"
+                                               optional="show"
                                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                                attrs="{'column_invisible': [('parent.move_type', '!=', 'entry')]}"/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
@@ -1240,6 +1238,9 @@
                                       </group>
                                     </form>
                                 </field>
+                                <div class="alert alert-info text-center mb-0" role="alert" attrs="{'invisible': ['|', ('payment_state', '!=', 'invoicing_legacy'), ('move_type', '=', 'entry')]}">
+                                    <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
+                                </div>
                             </page>
                             <page id="other_tab" string="Other Info" name="other_info"
                                   attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
@@ -1426,6 +1427,15 @@
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
             <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1, 'create':0}</field>
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
+            <field name="view_id" ref="view_move_line_tree_grouped"/>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
+        </record>
+
+        <record id="action_account_moves_all_grouped_matching" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general', 'search_default_group_by_matching': 1, 'search_default_posted':1, 'expand':'1'}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
