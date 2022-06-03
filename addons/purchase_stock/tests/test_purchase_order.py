@@ -370,19 +370,14 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
 
     def test_message_qty_already_received(self):
-        _product = self.env['product.product'].create({
-            'name': 'TempProduct',
-            'type': 'consu',
-            'company_id': self.env.user.company_id.id,
-        })
+        self.env.user.write({'company_id': self.company_data['company'].id})
 
         _purchase_order = self.env['purchase.order'].create({
-            'company_id': self.env.user.company_id.id,
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
-                    'name': _product.name,
-                    'product_id': _product.id,
+                    'name': self.product_id_2.name,
+                    'product_id': self.product_id_2.id,
                     'product_qty': 25.0,
                     'price_unit': 250.0,
                 })],

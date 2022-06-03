@@ -17,9 +17,13 @@ def _prepare_data(env, data):
         raise UserError(_('Product model not defined, Please contact your administrator.'))
 
     total = 0
+    qty_by_product_in = data.get('quantity_by_product')
+    # search for products all at once, ordered by name desc since popitem() used in xml to print the labels
+    # is LIFO, which results in ordering by product name in the report
+    products = Product.search([('id', 'in', [int(p) for p in qty_by_product_in.keys()])], order='name desc')
     quantity_by_product = defaultdict(list)
-    for p, q in data.get('quantity_by_product').items():
-        product = Product.browse(int(p))
+    for product in products:
+        q = qty_by_product_in[str(product.id)]
         quantity_by_product[product].append((product.barcode, q))
         total += q
     if data.get('custom_barcodes'):

@@ -11,10 +11,11 @@ from odoo.exceptions import UserError
 class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
-    @api.depends('quant_ids')
+    @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):
         for package in self:
-            weight = 0.0
+            # set initial weight to package type base weight
+            weight = package.package_type_id.base_weight or 0.0
             if self.env.context.get('picking_id'):
                 # TODO: potential bottleneck: N packages = N queries, use groupby ?
                 current_picking_move_line_ids = self.env['stock.move.line'].search([
