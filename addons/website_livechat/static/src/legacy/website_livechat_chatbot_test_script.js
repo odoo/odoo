@@ -17,7 +17,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
     /**
      * Initialize various data received from the 'chatbot_test_script_page' template.
      */
-    init: function (parent, chatbotData) {
+    init: function (parent, messaging, chatbotData) {
         this._super(...arguments);
 
         this._rule = {
@@ -73,18 +73,25 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
 
 publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
     selector: '.o_livechat_js_chatbot_test_script',
-
+    init(parent) {
+        this._super(...arguments);
+        this.env = parent.env;
+    },
     /**
      * Remove any existing session cookie to start fresh
      */
-    start: function () {
+    async start() {
         utils.set_cookie('im_livechat_session', '', -1);
         utils.set_cookie('im_livechat_auto_popup', '', -1);
         utils.set_cookie('im_livechat_history', '', -1);
         utils.set_cookie('im_livechat_previous_operator_pid', '', -1);
-
+        const messaging = this.env.services.messaging.get();
         return this._super(...arguments).then(() => {
-            this.livechatButton = new LivechatButtonTestChatbot(this, this.$el.data());
+            messaging.update({
+                isInPublicLivechat: true,
+                isPublicLivechatAvailable: true,
+            });
+            this.livechatButton = new LivechatButtonTestChatbot(this, messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);
         });
     }

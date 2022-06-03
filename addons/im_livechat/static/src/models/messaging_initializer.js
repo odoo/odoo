@@ -8,6 +8,16 @@ import '@mail/models/messaging_initializer';
 patchRecordMethods('MessagingInitializer', {
     /**
      * @override
+     */
+    async performInitRpc() {
+        if (this.messaging.isInPublicLivechat) {
+            return {};
+        } else {
+            return this._super();
+        }
+    },
+    /**
+     * @override
      * @param {Object} resUsersSettings
      * @param {boolean} resUsersSettings.is_discuss_sidebar_category_livechat_open
      */

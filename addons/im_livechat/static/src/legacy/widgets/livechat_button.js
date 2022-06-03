@@ -28,9 +28,10 @@ const LivechatButton = Widget.extend({
     events: {
         'click': '_openChat'
     },
-    init(parent, serverURL, options) {
+    init(parent, messaging) {
         this._super(parent);
-        this.options = _.defaults(options || {}, {
+        this.messaging = messaging;
+        this.options = _.defaults(this.messaging.publicLivechatOptions || {}, {
             input_placeholder: _t("Ask something ..."),
             default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
@@ -43,7 +44,7 @@ const LivechatButton = Widget.extend({
         // livechat window
         this._chatWindow = null;
         this._messages = [];
-        this._serverURL = serverURL;
+        this._serverURL = this.messaging.publicLivechatServerUrl;
     },
     async willStart() {
         const cookie = utils.get_cookie('im_livechat_session');

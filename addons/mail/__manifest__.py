@@ -108,6 +108,15 @@
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/xml/base.xml',
         ],
+        'web.assets_frontend': [
+            'mail/static/src/utils/*.js',
+            'mail/static/src/js/emojis.js',
+            'mail/static/src/js/utils.js',
+            'mail/static/src/component_hooks/*.js',
+            'mail/static/src/model/*.js',
+            'mail/static/src/models/*.js',
+            'mail/static/src/services/messaging_service.js',
+        ],
         'web._assets_primary_variables': [
             'mail/static/src/scss/variables/primary_variables.scss',
         ],

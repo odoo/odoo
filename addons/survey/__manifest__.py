@@ -61,7 +61,6 @@ sent mails with personal token for the invitation of the survey.
     'assets': {
         'survey.survey_assets': [
             'web/static/lib/Chart/Chart.js',
-            'web/static/src/legacy/js/fields/field_utils.js',
             'survey/static/src/js/survey_quick_access.js',
             'survey/static/src/js/survey_timer.js',
             'survey/static/src/js/survey_breadcrumb.js',
