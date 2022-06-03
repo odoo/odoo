@@ -238,6 +238,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeEndGapWidth() {
+            if (this.messaging.device.isSmall) {
+                return 0;
+            }
+            return 10;
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasVisibleChatWindows() {
@@ -291,7 +301,6 @@ registerModel({
             }
             const BETWEEN_GAP_WIDTH = 5;
             const CHAT_WINDOW_WIDTH = 325;
-            const END_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
             const START_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
@@ -300,7 +309,7 @@ registerModel({
             if (!this.allOrdered.length) {
                 return visual;
             }
-            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - START_GAP_WIDTH - END_GAP_WIDTH;
+            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - START_GAP_WIDTH - this.endGapWidth;
             let maxAmountWithoutHidden = Math.floor(
                 relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
             let maxAmountWithHidden = Math.floor(
@@ -361,6 +370,9 @@ registerModel({
         chatWindows: many('ChatWindow', {
             inverse: 'manager',
             isCausal: true,
+        }),
+        endGapWidth: attr({
+            compute: '_computeEndGapWidth',
         }),
         hasVisibleChatWindows: attr({
             compute: '_computeHasVisibleChatWindows',
