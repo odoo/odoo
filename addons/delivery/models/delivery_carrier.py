@@ -308,7 +308,7 @@ class DeliveryCarrier(models.Model):
         for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
             total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
 
-        total_weight = order._get_estimated_weight()
+        total_weight = order._get_estimated_weight() + default_package_type.base_weight
         # If max weight == 0 => division by 0. If this happens, we want to have
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
@@ -327,7 +327,7 @@ class DeliveryCarrier(models.Model):
 
         if picking.is_return_picking:
             commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
-            weight = picking._get_estimated_weight()
+            weight = picking._get_estimated_weight() + default_package_type.base_weight
             packages.append(DeliveryPackage(commodities, weight, default_package_type, currency=picking.company_id.currency_id, picking=picking))
             return packages
 

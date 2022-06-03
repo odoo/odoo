@@ -61,6 +61,7 @@
             <xpath expr="//page[@name='purchase_delivery_invoice']/group/group" position="inside">
                 <field name="default_location_dest_id_usage" invisible="1"/>
                 <field name="incoterm_id"/>
+                <field name="incoterm_location" />
             </xpath>
             <xpath expr="//div[@name='reminder']" position="after">
                 <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>

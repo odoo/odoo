@@ -104,7 +104,8 @@ class StockQuant(models.Model):
         'Counted Quantity', digits='Product Unit of Measure',
         help="The product's counted quantity.")
     inventory_quantity_auto_apply = fields.Float(
-        'Inventoried Quantity', compute='_compute_inventory_quantity_auto_apply',
+        'Inventoried Quantity', digits='Product Unit of Measure',
+        compute='_compute_inventory_quantity_auto_apply',
         inverse='_set_inventory_quantity', groups='stock.group_stock_manager'
     )
     inventory_diff_quantity = fields.Float(
@@ -302,6 +303,13 @@ class StockQuant(models.Model):
             if 'inventory_quantity_auto_apply' in fields:
                 group['inventory_quantity_auto_apply'] = group['quantity']
         return result
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Inventory Adjustments'),
+            'template': '/stock/static/xlsx/stock_quant.xlsx'
+        }]
 
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
@@ -877,6 +885,10 @@ class StockQuant(models.Model):
             name = _('Product Quantity Confirmed')
         else:
             name = _('Product Quantity Updated')
+
+        if self.inventory_date:
+            name += _(' [Scheduled on %s]', self.inventory_date)
+
         return {
             'name': self.env.context.get('inventory_name') or name,
             'product_id': self.product_id.id,

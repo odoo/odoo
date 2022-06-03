@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
         'account.account', string="Price Difference Account", company_dependent=True,
         help="This account is used in automated inventory valuation to "\
              "record the price difference between a purchase order and its related vendor bill when validating this vendor bill.")
-    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased')
+    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased', digits='Product Unit of Measure')
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
@@ -52,7 +52,8 @@ class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = 'product.product'
 
-    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased')
+    purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
+        digits='Product Unit of Measure')
 
     def _compute_purchased_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
