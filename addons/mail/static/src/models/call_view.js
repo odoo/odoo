@@ -398,6 +398,9 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        tileHeight: attr({
+            default: 0,
+        }),
         /**
          * List of all participant cards (can either be invitations or rtcSessions).
          */

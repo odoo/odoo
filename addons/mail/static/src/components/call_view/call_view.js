@@ -22,7 +22,6 @@ export class CallView extends Component {
         super.setup();
         this.state = useState({
             tileWidth: 0,
-            tileHeight: 0,
             columnCount: 0,
         });
         this.tileContainerRef = useRef('tileContainer');
@@ -110,7 +109,7 @@ export class CallView extends Component {
         });
 
         this.state.tileWidth = tileWidth;
-        this.state.tileHeight = tileHeight;
+        this.callView.update({ tileHeight });
         this.state.columnCount = columnCount;
     }
 
