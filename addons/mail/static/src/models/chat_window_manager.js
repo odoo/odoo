@@ -292,7 +292,6 @@ registerModel({
             const BETWEEN_GAP_WIDTH = 5;
             const CHAT_WINDOW_WIDTH = 325;
             const END_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
-            const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
             const START_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
                 return visual;
@@ -304,7 +303,7 @@ registerModel({
             let maxAmountWithoutHidden = Math.floor(
                 relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
             let maxAmountWithHidden = Math.floor(
-                (relativeGlobalWindowWidth - HIDDEN_MENU_WIDTH - BETWEEN_GAP_WIDTH) /
+                (relativeGlobalWindowWidth - this.hiddenMenuWidth - BETWEEN_GAP_WIDTH) /
                 (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
             if (this.messaging.device.isSmall) {
                 maxAmountWithoutHidden = 1;
@@ -367,6 +366,9 @@ registerModel({
         }),
         hiddenChatWindowHeaderViews: many('ChatWindowHeaderView', {
             compute: '_computeHiddenChatWindowHeaderViews',
+        }),
+        hiddenMenuWidth: attr({
+            default: 200, // max width, including width of dropup list items
         }),
         isHiddenMenuOpen: attr({
             default: false,
