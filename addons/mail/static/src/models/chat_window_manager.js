@@ -6,6 +6,7 @@ import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_
 
 const BASE_VISUAL = {
     /**
+     * @deprecated, should use ChatWindowManager/availableVisibleSlots instead
      * Amount of visible slots available for chat windows.
      */
     availableVisibleSlots: 0,
@@ -238,6 +239,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeAvailableVisibleSlots() {
+            return this.visual.availableVisibleSlots;
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasVisibleChatWindows() {
@@ -357,6 +365,13 @@ registerModel({
         }),
         allOrderedVisible: many('ChatWindow', {
             compute: '_computeAllOrderedVisible',
+        }),
+        /**
+         * Amount of visible slots available for chat windows.
+         */
+        availableVisibleSlots: attr({
+            compute: '_computeAvailableVisibleSlots',
+            default: 0,
         }),
         chatWindows: many('ChatWindow', {
             inverse: 'manager',
