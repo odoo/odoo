@@ -48,6 +48,28 @@ class GoogleDrive(models.Model):
             url = self.copy_doc(res_id, template_id, name_gdocs, model.model).get('url')
         return url
 
+    def _request_token(self, token_type, **values):
+        ConfigParam = self.env['ir.config_parameter'].sudo()
+        client_id = ConfigParam.get_param('google_drive_client_id')
+        client_secret = ConfigParam.get_param('google_drive_client_secret')
+
+        base_url = ConfigParam.get_param('web.base.url')
+        redirect_uri = werkzeug.urls.url_join(base_url, '/google_drive/confirm')
+
+        request_data = {
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'grant_type': token_type,
+            'redirect_uri': redirect_uri,
+            **values,
+        }
+
+        req = requests.post('https://oauth2.googleapis.com/token', data=request_data, timeout=10)
+        if not req.ok:
+            raise UserError(_('An error occurred when fetching token'))
+
+        return req.json()
+
     @api.model
     def get_access_token(self, scope=None):
         Config = self.env['ir.config_parameter'].sudo()
