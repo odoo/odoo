@@ -268,6 +268,16 @@ registerModel({
          * @private
          * @returns {integer}
          */
+        _computeStartGapWidth() {
+            if (this.messaging.device.isSmall) {
+                return 0;
+            }
+            return 10;
+        },
+        /**
+         * @private
+         * @returns {integer}
+         */
         _computeUnreadHiddenConversationAmount() {
             const allHiddenWithThread = this.allOrderedHidden.filter(
                 chatWindow => chatWindow.thread
@@ -293,14 +303,13 @@ registerModel({
             const CHAT_WINDOW_WIDTH = 325;
             const END_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
-            const START_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
                 return visual;
             }
             if (!this.allOrdered.length) {
                 return visual;
             }
-            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - START_GAP_WIDTH - END_GAP_WIDTH;
+            const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - END_GAP_WIDTH;
             let maxAmountWithoutHidden = Math.floor(
                 relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
             let maxAmountWithHidden = Math.floor(
@@ -314,7 +323,7 @@ registerModel({
                 // all visible
                 for (let i = 0; i < this.allOrdered.length; i++) {
                     const chatWindowLocalId = this.allOrdered[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
+                    const offset = this.startGapWidth + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 visual.availableVisibleSlots = maxAmountWithoutHidden;
@@ -322,7 +331,7 @@ registerModel({
                 // some visible, some hidden
                 for (let i = 0; i < maxAmountWithHidden; i++) {
                     const chatWindowLocalId = this.allOrdered[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
+                    const offset = this.startGapWidth + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 if (this.allOrdered.length > maxAmountWithHidden) {
@@ -337,7 +346,7 @@ registerModel({
             } else {
                 // all hidden
                 visual.hidden.isVisible = !this.messaging.device.isSmall;
-                visual.hidden.offset = START_GAP_WIDTH;
+                visual.hidden.offset = this.startGapWidth;
                 visual.hidden.chatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
                 console.warn('cannot display any visible chat windows (screen is too small)');
                 visual.availableVisibleSlots = 0;
@@ -377,6 +386,9 @@ registerModel({
         newMessageChatWindow: one('ChatWindow', {
             inverse: 'managerAsNewMessage',
             isCausal: true,
+        }),
+        startGapWidth: attr({
+            compute: '_computeStartGapWidth',
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',
