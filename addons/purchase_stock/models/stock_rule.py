@@ -169,7 +169,10 @@ class StockRule(models.Model):
         security_delay = buy_rule.picking_type_id.company_id.po_lead
         if not bypass_delay_description:
             delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
-        return delay + supplier_delay + security_delay, delay_description
+        days_to_order = values.get('days_to_order', buy_rule.company_id.days_to_purchase)
+        if not bypass_delay_description:
+            delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
+        return delay + supplier_delay + security_delay + days_to_order, delay_description
 
     @api.model
     def _get_procurements_to_merge_groupby(self, procurement):

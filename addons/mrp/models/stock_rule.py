@@ -166,7 +166,10 @@ class StockRule(models.Model):
         delay += security_delay
         if not bypass_delay_description:
             delay_description.append((_('Manufacture Security Lead Time'), _('+ %d day(s)', security_delay)))
-        return delay, delay_description
+        days_to_order = values.get('days_to_order', product.product_tmpl_id.days_to_prepare_mo)
+        if not bypass_delay_description:
+            delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
+        return delay + days_to_order, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
