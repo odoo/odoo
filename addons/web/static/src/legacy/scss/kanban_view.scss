@@ -428,6 +428,13 @@
         padding: 0;
         background-color: $gray-100;
 
+        @include media-breakpoint-down(sm) {
+            min-height: initial;
+            height: 100%;
+            overflow: scroll hidden !important;
+            scroll-snap-type: x mandatory;
+        }
+
         .o_kanban_record, .o_kanban_quick_create {
             width: 100%;
             margin-left: 0;
@@ -441,7 +448,7 @@
 
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
-        flex: 0 0 auto;
+        flex: 0 0 $o-kanban-default-record-width + 2*$o-kanban-group-padding;
         padding: 0 $o-kanban-group-padding $o-kanban-group-padding $o-kanban-group-padding;
         background-color: inherit;
 
@@ -471,20 +478,14 @@
             .o_kanban_config {
                 visibility: hidden;
 
+                @include media-breakpoint-down(sm) {
+                    visibility: visible;
+                }
+
                 i {
                     @include o-kanban-icon;
                 }
             }
-        }
-
-        .o_kanban_load_more {
-            padding: $o-kanban-record-margin 0;
-            box-shadow: inset 0 10px 13px -13px black;
-            text-align: center;
-        }
-
-        &:not(.o_column_folded) {
-            width: $o-kanban-default-record-width + 2*$o-kanban-group-padding;
         }
 
         &.o_kanban_dragged {
@@ -495,45 +496,50 @@
             }
         }
     }
-
     &.ui-sortable .o_kanban_header_title .o_column_title {
         cursor: move;
     }
 
     // Kanban Grouped Layout - Column Folded
     .o_kanban_group.o_column_folded {
-        @include o-kanban-slim-col;
-        background-color: $gray-200;
+        // don't visually fold on smaller screens (aka. mobile)
+        @include media-breakpoint-up(md) {
+            @include o-kanban-slim-col;
+            background-color: $gray-200;
 
-        & + .o_kanban_group.o_column_folded {
-            margin-left: 1px;
-        }
 
-        .o_kanban_header_title {
-            position: relative;
-            opacity: 0.5;
-
-            .o_column_title {
-                @include o-kanban-v-title;
+            & + .o_kanban_group.o_column_folded {
+                margin-left: 1px;
             }
-            .o_column_unfold {
-                @include o-kanban-icon(1);
-            }
-        }
 
-        > .o_kanban_record, .o_kanban_quick_add, .o_kanban_config, .o_kanban_load_more {
-            display: none!important;
-        }
-
-        &:hover, &.o_kanban_hover {
             .o_kanban_header_title {
-                opacity: 1;
+                position: relative;
+                opacity: 0.5;
+
+                .o_column_title {
+                    @include o-kanban-v-title;
+                }
+
+                .o_column_unfold {
+                    @include o-kanban-icon(1);
+                }
+            }
+
+            > .o_kanban_record, .o_kanban_quick_add, .o_kanban_config, .o_kanban_load_more {
+                display: none !important;
+            }
+            &:hover, &.o_kanban_hover {
+                .o_kanban_header_title {
+                    opacity: 1;
+                }
             }
         }
     }
 
     // Kanban Grouped Layout - "Create new column" column
     .o_column_quick_create {
+        flex-basis: $o-kanban-small-record-width + 2*$o-kanban-group-padding;
+
         .o_quick_create_folded {
             cursor: pointer;
             padding: 12px 16px;
@@ -541,21 +547,15 @@
             font-weight: $font-weight-bold;
             @include o-hover-opacity(.7);
             @include o-hover-text-color($text-muted, $body-color);
-
-            .o_kanban_add_column {
-                margin-right: $o-kanban-inside-hgutter;
-                display: inline-block;
-                padding: 10px 14px;
-                background-color: rgba($text-muted, .1);
-            }
         }
 
         .o_quick_create_unfolded {
             margin: $border-width ($o-kanban-inside-hgutter * .5) 0;
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
-            width: $o-kanban-small-record-width;
-            height: 100%;
-            background-color: $o-view-background-color;
+
+            @include media-breakpoint-down(sm) {
+                margin: 0;
+            }
 
             .o_kanban_header {
                 height: 50px;
@@ -576,6 +576,25 @@
                 margin: 10px 0px;
             }
 
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        .o_kanban_group, .o_column_quick_create {
+            flex: 1 0 90%; // don't take full width to give a hint of next/previous column
+            scroll-snap-align: center;
+            overflow-y: scroll;
+
+            .o_kanban_header {
+                position: sticky; // keep it visible
+                top: 0;
+                z-index: 10; // same as the sticky ControlPanel
+                background-color: inherit;
+            }
+
+            .o_kanban_header_title {
+                margin-top: 0 !important; // avoid sticky glitch when scrolling
+            }
         }
     }
 

@@ -14,6 +14,14 @@
         .modal-body {
             &.o_act_window {
                 padding: 0;
+
+                @include media-breakpoint-down(sm) {
+                    .o_action {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                    }
+                }
             }
 
             .o_modal_header {

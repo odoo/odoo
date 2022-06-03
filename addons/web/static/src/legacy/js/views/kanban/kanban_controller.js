@@ -9,6 +9,7 @@ odoo.define('web.KanbanController', function (require) {
 
 var BasicController = require('web.BasicController');
 var Context = require('web.Context');
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Domain = require('web.Domain');
@@ -50,6 +51,14 @@ var KanbanController = BasicController.extend({
         this.hasButtons = params.hasButtons;
         this.quickCreateEnabled = params.quickCreateEnabled;
     },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        const { groupedBy } = this.model.get(this.handle);
+        this.el.classList.toggle("o_action_delegate_scroll", config.device.isMobile && groupedBy.length);
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -71,6 +80,14 @@ var KanbanController = BasicController.extend({
         if ($node) {
             this.$buttons.appendTo($node);
         }
+    },
+    /**
+     * @override
+     */
+    async update() {
+        await this._super(...arguments);
+        const { groupedBy } = this.model.get(this.handle);
+        this.el.classList.toggle("o_action_delegate_scroll", config.device.isMobile && groupedBy.length);
     },
     /**
      * In grouped mode, set 'Create' button as btn-secondary if there is no column
