@@ -91,26 +91,12 @@
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
                 window.addEventListener('load', function () {
-                    <t t-if="web_session_required">
-                    odoo.define('web.session', function (require) {
-                        var Session = require('web.Session');
-                        var modules = odoo._modules;
-                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: true});
-                    });
-                    </t>
-
-                    odoo.define('im_livechat.livesupport', function (require) {
-            <t t-if="info['available']" t-translation="off">
-                        var rootWidget = require('root.widget');
-                        var LivechatButton = require('@im_livechat/legacy/widgets/livechat_button')[Symbol.for("default")];
-                        var button = new LivechatButton(
-                            rootWidget,
-                            "<t t-esc="info['server_url']"/>",
-                            <t t-out="json.dumps(info.get('options', {}))"/>
-                        );
-                        button.appendTo(document.body);
-                        window.livechat_button = button;
-            </t>
+                    odoo.define('im_livechat.loaderData', function() {
+                        return {
+                            isAvailable: <t t-out="info['available']"/>,
+                            serverUrl: "<t t-out="info['server_url']"/>",
+                            options: <t t-out="json.dumps(info.get('options', {}))"/>,
+                        };
                     });
                 });
             </t>

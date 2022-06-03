@@ -390,7 +390,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
+         * @returns {string|FieldCommand}
          */
         _computeAvatarUrl() {
             if (this.messaging.isCurrentUserGuest) {
@@ -399,7 +399,10 @@ registerModel({
                 }
                 return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
             }
-            return this.messaging.currentPartner.avatarUrl;
+            if (this.messaging.currentPartner) {
+                return this.messaging.currentPartner.avatarUrl;
+            }
+            return clear();
         },
         /**
          * @private
@@ -481,6 +484,7 @@ registerModel({
          */
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
+            default: '',
             readonly: true,
         }),
         /**

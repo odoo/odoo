@@ -9,6 +9,14 @@ registerModel({
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
+         * @returns {Object}
+         */
+        async performInitRpc() {
+            return await this.messaging.rpc({
+                route: '/mail/init_messaging',
+            }, { shadow: true });
+        },
+        /**
          * Fetch messaging data initially to populate the store specifically for
          * the current user. This includes pinned channels for instance.
          */
@@ -35,9 +43,7 @@ registerModel({
             });
             this.messaging.device.start();
             const discuss = this.messaging.discuss;
-            const data = await this.messaging.rpc({
-                route: '/mail/init_messaging',
-            }, { shadow: true });
+            const data = await this.performInitRpc();
             if (!this.exists()) {
                 return;
             }
@@ -114,7 +120,9 @@ registerModel({
                 this._initCommands();
             }
             // channels when the rest of messaging is ready
-            await this._initChannels(channels);
+            if (channels) {
+                await this._initChannels(channels);
+            }
             if (!this.exists()) {
                 return;
             }
@@ -279,9 +287,11 @@ registerModel({
                     currentUser: insert({ id: currentUserId }),
                 });
             }
-            this.messaging.update({
-                partnerRoot: insert(this.messaging.models['Partner'].convertData(partner_root)),
-            });
+            if (partner_root) {
+                this.messaging.update({
+                    partnerRoot: insert(this.messaging.models['Partner'].convertData(partner_root)),
+                });
+            }
         },
         /**
          * @private

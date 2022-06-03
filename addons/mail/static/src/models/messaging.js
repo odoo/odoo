@@ -34,7 +34,9 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.notificationHandler.start();
+            if (this.notificationHandler) {
+                this.notificationHandler.start();
+            }
             this.update({ isInitialized: true });
             this.initializedPromise.resolve();
         },
@@ -293,6 +295,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationHandler() {
+            return insertAndReplace();
+        },
+        /**
+         * @private
          */
         _onChangeRingingThreads() {
             if (this.ringingThreads && this.ringingThreads.length > 0) {
@@ -428,7 +437,7 @@ registerModel({
             readonly: true,
         }),
         notificationHandler: one('MessagingNotificationHandler', {
-            default: insertAndReplace(),
+            compute: '_computeNotificationHandler',
             isCausal: true,
             readonly: true,
         }),

@@ -50,6 +50,20 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/*/*',
             'im_livechat/static/src/models/*.js',
         ],
+        'web.assets_frontend': [
+            'im_livechat/static/src/models/*.js',
+            'im_livechat/static/src/public/main.js',
+            'im_livechat/static/src/services/*.js',
+            'im_livechat/static/src/legacy/public_livechat_constants.js',
+            'im_livechat/static/src/legacy/public_livechat_history_tracking.js',
+            'im_livechat/static/src/legacy/models/*',
+            'im_livechat/static/src/legacy/widgets/*',
+            'im_livechat/static/src/legacy/widgets/*/*',
+            'im_livechat/static/src/legacy/public_livechat_chatbot.js',
+            'im_livechat/static/src/legacy/website_livechat_message_chatbot.js',
+            'im_livechat/static/src/legacy/public_livechat.scss',
+            'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
+        ],
         'web.assets_backend': [
             'im_livechat/static/src/js/im_livechat_channel_form_view.js',
             'im_livechat/static/src/js/im_livechat_channel_form_controller.js',
@@ -189,6 +203,33 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/scss/im_livechat_bootstrap.scss',
             'im_livechat/static/src/legacy/public_livechat.scss',
             'im_livechat/static/src/legacy/public_livechat_chatbot.scss',
+
+
+            'web/static/src/core/utils/transitions.scss',
+
+            'mail/static/src/utils/*.js',
+            'mail/static/src/js/emojis.js',
+            'mail/static/src/component_hooks/*.js',
+            'mail/static/src/model/*.js',
+            'mail/static/src/models/*.js',
+            'im_livechat/static/src/models/*.js',
+            'mail/static/src/services/messaging_service.js',
+            # Framework JS
+            'bus/static/src/js/*.js',
+            'bus/static/src/js/services/bus_service.js',
+            'bus/static/src/js/services/legacy/legacy_bus_service.js',
+            'web/static/lib/luxon/luxon.js',
+            'web/static/src/core/**/*',
+            # FIXME: debug menu currently depends on webclient, once it doesn't we don't need to remove the contents of the debug folder
+            ('remove', 'web/static/src/core/debug/**/*'),
+            'web/static/src/env.js',
+            'web/static/src/legacy/js/core/dialog.js',
+            'web/static/src/legacy/js/core/owl_dialog.js',
+            'web/static/src/legacy/js/core/misc.js',
+            'web/static/src/legacy/js/fields/field_utils.js',
+
+            'im_livechat/static/src/public/*.js',
+            'im_livechat/static/src/services/*.js',
         ]
     },
     'license': 'LGPL-3',
