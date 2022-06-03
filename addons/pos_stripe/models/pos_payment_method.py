@@ -21,9 +21,6 @@ class PosPaymentMethod(models.Model):
 
     @api.constrains('stripe_serial_number')
     def _check_stripe_serial_number(self):
-        if not self.sudo()._get_stripe_secret_key():
-            raise ValidationError(_('Complete the Stripe onboarding.'))
-
         for payment_method in self:
             if not payment_method.stripe_serial_number:
                 continue
@@ -109,3 +106,14 @@ class PosPaymentMethod(models.Model):
 
         _logger.error("Unexpected stripe_capture_payment response: %s", resp.status_code)
         raise UserError(_("Unexpected error between us and Stripe."))
+
+    def action_stripe_key(self):
+        res_id = self.env['payment.acquirer'].search([('provider', '=', 'stripe')], limit=1).id
+        # Redirect
+        return {
+            'name': _('Stripe'),
+            'res_model': 'payment.acquirer',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_id': res_id,
+        }
