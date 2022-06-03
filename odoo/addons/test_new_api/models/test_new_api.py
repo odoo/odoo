@@ -942,7 +942,20 @@ class DecimalPrecisionTestModel(models.Model):
     float = fields.Float()
     float_2 = fields.Float(digits=(16, 2))
     float_4 = fields.Float(digits=(16, 4))
+    float_string = fields.Float(digits='New API Precision')
 
+    computed_float = fields.Float(compute="_compute_float")
+    computed_float_2 = fields.Float(digits=(16, 2), compute="_compute_float")
+    computed_float_4 = fields.Float(digits=(16, 4), compute="_compute_float")
+    computed_float_string = fields.Float(digits='New API Precision', compute="_compute_float")
+
+    @api.depends("float", "float_2", "float_4", "float_string")
+    def _compute_float(self):
+        for rec in self:
+            rec.computed_float = self.float * 1.33333
+            rec.computed_float_2 = self.float_2 * 1.33333
+            rec.computed_float_4 = self.float_4 * 1.33333
+            rec.computed_float_string = self.float_string * 1.33333
 
 class ModelA(models.Model):
     _name = 'test_new_api.model_a'
