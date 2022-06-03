@@ -125,7 +125,7 @@ class KnowledgeController(http.Controller):
             "private_articles": root_articles.filtered(
                 lambda article: article.category == "private" and article.user_has_write_access),
             "unfolded_articles": unfolded_articles,
-            'portal_readonly_mode': request.env.user._is_public(),
+            'portal_readonly_mode': not request.env.user.has_group('base.group_user'),
         }
         favorites = request.env['knowledge.article.favorite']
         if not request.env.user._is_public():
@@ -160,7 +160,7 @@ class KnowledgeController(http.Controller):
             return werkzeug.exceptions.NotFound()
         return request.env['ir.qweb']._render('knowledge.articles_template', {
             'articles': parent.child_ids,
-            'portal_readonly_mode': request.env.user._is_public(),  # used to bypass access check (to speed up loading)
+            'portal_readonly_mode': not request.env.user.has_group('base.group_user'),  # used to bypass access check (to speed up loading)
         })
 
     @http.route('/knowledge/tree_panel/favorites', type='json', auth='user')
