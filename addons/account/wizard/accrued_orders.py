@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape
-import json
+
 from odoo import models, fields, api, _, Command
 from odoo.tools import format_date
 from odoo.exceptions import UserError
@@ -57,15 +57,14 @@ class AccruedExpenseRevenue(models.TransientModel):
         check_company=True,
         domain=_get_account_domain,
     )
-    preview_data = fields.Text(compute='_compute_preview_data')
+    preview_data = fields.Binary(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
 
     @api.depends('date', 'amount')
     def _compute_display_amount(self):
         single_order = len(self._context['active_ids']) == 1
         for record in self:
-            preview_data = json.loads(self.preview_data)
-            lines = preview_data.get('groups_vals', [])[0].get('items_vals', [])
+            lines = self.preview_data.get('groups_vals', [])[0].get('items_vals', [])
             record.display_amount = record.amount or (single_order and not lines)
 
     @api.depends('date')
@@ -97,12 +96,12 @@ class AccruedExpenseRevenue(models.TransientModel):
                 {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
                 {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
             ]
-            record.preview_data = json.dumps({
+            record.preview_data = {
                 'groups_vals': preview_vals,
                 'options': {
                     'columns': preview_columns,
                 },
-            })
+            }
 
     def _compute_move_vals(self):
         def _get_aml_vals(order, balance, amount_currency, account_id, label="", analytic_distribution=None):

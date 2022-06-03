@@ -5,7 +5,6 @@ from odoo.tests import tagged, Form
 from odoo.tools import format_date
 from freezegun import freeze_time
 import time
-import json
 
 
 @tagged('post_install', '-at_install')
@@ -375,8 +374,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 self.assertRecordValues(new_moves, [{'date': fields.Date.from_string(wizard_date)},
                                                     {'date': fields.Date.from_string(expected_date)},
                                                     ])
-                preview_move_data = json.loads(wizard.preview_move_data)
-                self.assertRegex(preview_move_data['groups_vals'][1]['group_name'],
+                self.assertRegex(wizard.preview_move_data['groups_vals'][1]['group_name'],
                                  '%s, .*' % format_date(self.env, fields.Date.from_string(expected_date)))
         # test having yearly reset sequence on misc journal
 

@@ -7,7 +7,6 @@ from odoo.tools.float_utils import float_repr
 from collections import defaultdict
 from itertools import groupby
 from markupsafe import Markup, escape
-import json
 
 class AutomaticEntryWizard(models.TransientModel):
     _name = 'account.automatic.entry.wizard'
@@ -15,8 +14,8 @@ class AutomaticEntryWizard(models.TransientModel):
 
     # General
     action = fields.Selection([('change_period', 'Change Period'), ('change_account', 'Change Account')], required=True)
-    move_data = fields.Text(compute="_compute_move_data") # JSON value of the moves to be created
-    preview_move_data = fields.Text(compute="_compute_preview_move_data") # JSON value of the data to be displayed in the previewer
+    move_data = fields.Binary(compute="_compute_move_data") # JSON value of the moves to be created
+    preview_move_data = fields.Binary(compute="_compute_preview_move_data") # JSON value of the data to be displayed in the previewer
     move_line_ids = fields.Many2many('account.move.line')
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     company_id = fields.Many2one('res.company', required=True, readonly=True)
@@ -298,9 +297,9 @@ class AutomaticEntryWizard(models.TransientModel):
                 if any(line.account_id.account_type != record.move_line_ids[0].account_id.account_type for line in record.move_line_ids):
                     raise UserError(_('All accounts on the lines must be of the same type.'))
             if record.action == 'change_period':
-                record.move_data = json.dumps(record._get_move_dict_vals_change_period())
+                record.move_data = record._get_move_dict_vals_change_period()
             elif record.action == 'change_account':
-                record.move_data = json.dumps(record._get_move_dict_vals_change_account())
+                record.move_data = record._get_move_dict_vals_change_account()
 
     @api.depends('move_data')
     def _compute_preview_move_data(self):
@@ -314,26 +313,24 @@ class AutomaticEntryWizard(models.TransientModel):
             if record.action == 'change_account':
                 preview_columns[2:2] = [{'field': 'partner_id', 'label': _('Partner')}]
 
-            move_vals = json.loads(record.move_data)
             preview_vals = []
-            for move in move_vals[:4]:
+            for move in record.move_data[:4]:
                 preview_vals += [self.env['account.move']._move_dict_to_preview_vals(move, record.company_id.currency_id)]
-            preview_discarded = max(0, len(move_vals) - len(preview_vals))
+            preview_discarded = max(0, len(record.move_data) - len(preview_vals))
 
-            record.preview_move_data = json.dumps({
+            record.preview_move_data = {
                 'groups_vals': preview_vals,
                 'options': {
                     'discarded_number': _("%d moves", preview_discarded) if preview_discarded else False,
                     'columns': preview_columns,
                 },
-            })
+            }
 
     def do_action(self):
-        move_vals = json.loads(self.move_data)
         if self.action == 'change_period':
-            return self._do_action_change_period(move_vals)
+            return self._do_action_change_period(self.move_data)
         elif self.action == 'change_account':
-            return self._do_action_change_account(move_vals)
+            return self._do_action_change_account(self.move_data)
 
     def _do_action_change_period(self, move_vals):
         accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
