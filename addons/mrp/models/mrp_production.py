@@ -78,10 +78,11 @@ class MrpProduction(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation Type', copy=True, readonly=False,
+        'stock.picking.type', 'Operation Type', copy=True, readonly=True,
         compute='_compute_picking_type_id', store=True, precompute=True,
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
-        required=True, check_company=True, index=True)
+        required=True, check_company=True, index=True,
+        states={'draft': [('readonly', False)]})
     use_create_components_lots = fields.Boolean(related='picking_type_id.use_create_components_lots')
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
