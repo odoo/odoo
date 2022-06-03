@@ -23,7 +23,6 @@ export class CallView extends Component {
         this.state = useState({
             tileWidth: 0,
             tileHeight: 0,
-            columnCount: 0,
         });
         this.tileContainerRef = useRef('tileContainer');
         useUpdate({ func: () => this._update() });
@@ -82,7 +81,6 @@ export class CallView extends Component {
             }
             optimalLayout = {
                 area,
-                columnCount,
                 tileHeight,
                 tileWidth,
             };
@@ -102,7 +100,7 @@ export class CallView extends Component {
         }
         const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
 
-        const { tileWidth, tileHeight, columnCount } = this._computeTessellation({
+        const { tileWidth, tileHeight } = this._computeTessellation({
             aspectRatio: this.callView.aspectRatio,
             containerHeight: height,
             containerWidth: width,
@@ -111,7 +109,6 @@ export class CallView extends Component {
 
         this.state.tileWidth = tileWidth;
         this.state.tileHeight = tileHeight;
-        this.state.columnCount = columnCount;
     }
 
     /**
