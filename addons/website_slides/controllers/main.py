@@ -820,7 +820,7 @@ class WebsiteSlides(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
 
         return request.env['ir.binary']._get_image_stream_from(
-            slide, field, width=width, height=int(height), crop=int(crop)
+            slide, field, width=int(width), height=int(height), crop=int(crop)
         ).get_response()
 
     # SLIDE.SLIDE UTILS
