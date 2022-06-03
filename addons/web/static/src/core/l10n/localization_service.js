@@ -67,6 +67,9 @@ export const localizationService = {
             }
         }
 
+        if (!userLocalization) {
+            return;
+        }
         const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
         const timeFormat = strftimeToLuxonFormat(userLocalization.time_format);
         const dateTimeFormat = `${dateFormat} ${timeFormat}`;
