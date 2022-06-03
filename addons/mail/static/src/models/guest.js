@@ -30,6 +30,13 @@ registerModel({
         _computeAvatarUrl() {
             return `/web/image/mail.guest/${this.id}/avatar_128?unique=${this.name}`;
         },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsOnline() {
+            return ['online', 'away'].includes(this.im_status);
+        },
     },
     fields: {
         authoredMessages: many('Message', {
@@ -38,11 +45,21 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
+        channelMembers: many('ChannelMember', {
+            inverse: 'guest',
+            isCausal: true,
+        }),
         id: attr({
             required: true,
             readonly: true,
         }),
         im_status: attr(),
+        /**
+         * States whether this guest is online.
+         */
+        isOnline: attr({
+            compute: '_computeIsOnline',
+        }),
         name: attr(),
         rtcSessions: many('RtcSession', {
             inverse: 'guest',

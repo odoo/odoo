@@ -13,21 +13,28 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeChannelAsOfflineMember() {
-            return this.partner && !this.partner.isOnline ? replace(this.channel) : clear();
+            return this.member && !this.member.isOnline ? replace(this.channel) : clear();
         },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeChannelAsOnlineMember() {
-            return this.partner && this.partner.isOnline ? replace(this.channel) : clear();
+            return this.member && this.member.isOnline ? replace(this.channel) : clear();
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeMember() {
+            return this.partner ? this.partner : this.guest;
         },
         /**
          * @private
          * @returns {string}
          */
         _computeName() {
-            return this.partner.nameOrDisplayName;
+            return this.partner ? this.partner.nameOrDisplayName : this.guest.name;
         },
     },
     fields: {
@@ -48,12 +55,19 @@ registerModel({
             inverse: 'channelMember',
             isCausal: true,
         }),
+        guest: one('Guest', {
+            inverse: 'channelMembers',
+            readonly: true,
+        }),
         id: attr({
             readonly: true,
             required: true,
         }),
         name: attr({
             compute: '_computeName',
+        }),
+        member: attr({
+            compute: '_computeMember',
         }),
         partner: one('Partner', {
             inverse: 'channelMembers',
