@@ -32,6 +32,7 @@ MODELS = [
     ('one2many', fields.One2many('export.one2many.child', 'parent_id')),
     ('many2many', fields.Many2many('export.many2many.other')),
     ('function', fields.Integer(compute=compute_fn, inverse=inverse_fn)),
+    ('id.int', fields.Integer(import_key=True)),
     # related: specialization of fields.function, should work the same way
     # TODO: reference
 ]

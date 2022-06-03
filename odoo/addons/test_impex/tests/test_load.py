@@ -9,6 +9,7 @@ from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests import common
 from odoo.tools.misc import mute_logger
+from odoo.exceptions import ValidationError
 
 def message(msg, type='error', from_=0, to_=0, record=0, field='value', **kwargs):
     return dict(kwargs,
@@ -42,12 +43,12 @@ class ImporterCase(common.TransactionCase):
         self.env['ir.model.data'].clear_caches()
         self.cr.cache.clear()
 
-    def import_(self, fields, rows, context=None):
+    def import_(self, fields, rows, keys=None, context=None):
         context = context or {}
         context.update({
             'import_file': True
         })
-        return self.model.with_context(context or {}).load(fields, rows)
+        return self.model.with_context(context or {}).load(fields, rows, key_fields=keys)
 
     def read(self, fields=('value',), domain=(), context=None):
         records = self.model.with_context(context or {}).search(domain)
@@ -920,6 +921,19 @@ class test_o2m(ImporterCase):
         (b,) = self.browse()
         self.assertEqual(set(values(b.value)), set([63, 64, 65, 66]))
 
+    def test_multisub_nogap(self):
+        result = self.import_(['const', 'value/value'], [
+            ['5', '63'],
+            ['5', '64'],
+            ['5', '65'],
+            ['5', '66'],
+        ])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
+        (b,) = self.browse()
+        self.assertEqual(set(values(b.value)), set([63, 64, 65, 66]))
+
     def test_multi_subfields(self):
         result = self.import_(['value/str', 'const', 'value/value'], [
             ['this', '5', '63'],
@@ -935,6 +949,22 @@ class test_o2m(ImporterCase):
         self.assertEqual(
             values(b.value.sorted(), 'str'),
             'this is the rhythm'.split())
+
+    def test_multi_subfields_nogap(self):
+        result = self.import_(['value/str', 'const', 'value/value'], [
+            ['of', '5', '63'],
+            ['the', '5', '64'],
+            ['night', '5', '65'],
+            ['oh-yeah', '5', '66'],
+        ])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
+        (b,) = self.browse()
+        self.assertEqual(set(values(b.value.sorted())), set([63, 64, 65, 66]))
+        self.assertEqual(
+            values(b.value.sorted(), 'str'),
+            'of the night oh-yeah'.split())
 
     def test_subfields_fail_by_implicit_id(self):
         result = self.import_(['value/parent_id'], [['noxidforthat']])
@@ -1215,7 +1245,7 @@ class test_datetime(ImporterCase):
 
         # UTC+1400
         result = self.import_(
-            ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Kiritimati'})
+            ['value'], [['2012-02-03 11:11:11']], context={'tz': 'Pacific/Kiritimati'})
         self.assertFalse(result['messages'])
         self.assertEqual(
             [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
@@ -1223,7 +1253,7 @@ class test_datetime(ImporterCase):
 
         # UTC-0930
         result = self.import_(
-            ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Marquesas'})
+            ['value'], [['2012-02-03 11:11:11']], context={'tz': 'Pacific/Marquesas'})
         self.assertFalse(result['messages'])
         self.assertEqual(
             [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
@@ -1464,3 +1494,51 @@ class test_inherits(ImporterCase):
             parent._get_external_ids()[parent.id],
             ['xxx.parent'],
         )
+
+class test_no_xid_int(ImporterCase):
+    model_name = 'export.id.int'
+
+    def setUp(self):
+        super().setUp()
+        self.existing = self.model.create({'const': 7, 'value': 3})
+
+    def test_update(self):
+        result = self.import_(['const', 'value'], [['8', '3']], keys=['value'])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertEqual(self.existing.const, 8)
+
+    def test_invalid_key(self):
+        result = self.import_(['const', 'value'], [['8', '3']], keys=['const'])
+        self.assertEqual(values(self.read()), [3, 3])
+
+    def test_create_update(self):
+        data = [
+                ['8', '3'],
+                ['9', '4']
+            ]
+        result = self.import_(['const', 'value'], data, keys=['value'])
+        for index, record in enumerate(self.browse()):
+            self.assertEqual(record.const, int(data[index][0]))
+            self.assertEqual(record.value, int(data[index][1]))
+
+    def test_empty_keys(self):
+        result = self.import_(['const', 'value'], [
+                ['8', ''],
+                ['9', '']
+            ], keys=['value'])
+        self.assertEqual(len(self.browse()), 3)
+
+    def test_multi_match(self):
+        self.model.create({'const': 100, 'value': 3})
+        with self.assertRaises(ValidationError):
+            result = self.import_(['const', 'value'], [['8', '3']], keys=['value'])
+
+# class test_multi_key(ImporterCase):
+#     model_name = 'export.multi.key'
+
+# class test_no_xid_char(ImporterCase):
+#     model_name = 'export.o2m.key'
+
+# class test_no_xid_o2m(ImporterCase):
+#     model_name = 'export.o2m.key'
