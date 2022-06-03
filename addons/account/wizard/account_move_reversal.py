@@ -105,7 +105,7 @@ class AccountMoveReversal(models.TransientModel):
             'journal_id': self.journal_id.id,
             'invoice_payment_term_id': None,
             'invoice_user_id': move.invoice_user_id.id,
-            'auto_post': True if reverse_date > fields.Date.context_today(self) else False,
+            'auto_post': 'at_date' if reverse_date > fields.Date.context_today(self) else 'no',
         }
 
     def reverse_moves(self):
@@ -122,7 +122,7 @@ class AccountMoveReversal(models.TransientModel):
             [self.env['account.move'], [], False],  # Others.
         ]
         for move, default_vals in zip(moves, default_values_list):
-            is_auto_post = bool(default_vals.get('auto_post'))
+            is_auto_post = default_vals.get('auto_post') != 'no'
             is_cancel_needed = not is_auto_post and self.refund_method in ('cancel', 'modify')
             batch_index = 0 if is_cancel_needed else 1
             batches[batch_index][0] |= move

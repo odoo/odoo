@@ -2,15 +2,11 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
-from odoo import fields, api, SUPERUSER_ID
-from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools import mute_logger
+from odoo import fields
+from odoo.exceptions import UserError, RedirectWarning
 
 from dateutil.relativedelta import relativedelta
-from functools import reduce
-import json
-import psycopg2
-
+from freezegun import freeze_time
 from collections import defaultdict
 
 @tagged('post_install', '-at_install')
@@ -66,6 +62,61 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 500.0,
         }
+
+    def test_out_invoice_auto_post_at_date(self):
+        # Create auto-posted (but not recurring) entry
+        nb_invoices = self.env['account.move'].search_count(domain=[])
+        self.test_move.auto_post = 'at_date'
+        self.test_move.date = fields.Date.today()
+        with freeze_time(fields.Date.today() - relativedelta(days=1)):
+            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+            self.assertEqual(self.test_move.state, 'draft')  # can't be posted before its date
+        with freeze_time(fields.Date.today() + relativedelta(days=1)):
+            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+            self.assertEqual(self.test_move.state, 'posted')  # can be posted after its date
+        self.assertEqual(nb_invoices, self.env['account.move'].search_count(domain=[]))
+
+    def test_posting_future_invoice_fails(self):
+        # Create auto-posted, recurring entry, attempt manually posting it
+        self.test_move.date = fields.Date.today() + relativedelta(days=1)
+        self.test_move.auto_post = 'quarterly'
+        self.test_move._post()  # default soft=True parameter filters out future moves
+        self.assertEqual(self.test_move.state, 'draft')
+        with self.assertRaisesRegex(UserError, "This move is configured to be auto-posted"):
+            self.test_move._post(soft=False)
+
+    def test_out_invoice_auto_post_monthly(self):
+        # Create auto-posted entry, recurring monthly until two months later
+        prev_invoices = self.env['account.move'].search(domain=[])
+        self.test_move.auto_post = 'monthly'
+        self.test_move.auto_post_until = fields.Date.from_string('2022-02-28')
+        date = fields.Date.from_string('2021-12-30')
+        self.test_move.invoice_date = date
+        self.test_move.date = date  # invoice_date's onchange does not trigger from code
+        self.test_move.invoice_date_due = date + relativedelta(days=1)
+
+        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # first recurrence
+        new_invoices_1 = self.env['account.move'].search(domain=[]) - prev_invoices
+        new_date_1 = fields.Date.from_string('2022-01-30')
+        self.assertEqual(self.test_move.state, 'posted')
+        self.assertEqual(1, len(new_invoices_1))  # following entry is created
+        self.assertEqual('monthly', new_invoices_1.auto_post)
+        self.assertEqual(new_date_1, new_invoices_1.date)
+        self.assertEqual(new_date_1 + relativedelta(days=1), new_invoices_1.invoice_date_due)  # due date maintains delta with date
+
+        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # second recurrence
+        new_invoices_2 = self.env['account.move'].search(domain=[]) - prev_invoices - new_invoices_1
+        new_date_2 = fields.Date.from_string('2022-02-28')
+        self.assertEqual(new_invoices_1.state, 'posted')
+        self.assertEqual(1, len(new_invoices_2))
+        self.assertEqual('monthly', new_invoices_2.auto_post)
+        self.assertEqual(new_date_2, new_invoices_2.date)  # date does not overflow because of shorter month
+        self.assertEqual(new_date_2 + relativedelta(days=1), new_invoices_2.invoice_date_due)
+        self.assertEqual(new_invoices_2.invoice_user_id, self.test_move.invoice_user_id)
+
+        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # no more recurrences
+        new_invoices_3 = self.env['account.move'].search(domain=[]) - prev_invoices - new_invoices_1 - new_invoices_2
+        self.assertEqual(0, len(new_invoices_3))
 
     def test_custom_currency_on_account_1(self):
         custom_account = self.company_data['default_account_revenue'].copy()
