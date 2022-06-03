@@ -716,8 +716,10 @@ class Article(models.Model):
         return self.with_context(res_id=False).action_home_page()
 
     def action_unarchive(self):
-        super(Article, self).action_unarchive()
-        return self.with_context(res_id=self.id).action_home_page()
+        res = super(Article, self).action_unarchive()
+        if len(self) == 1:
+            return self.with_context(res_id=self.id).action_home_page()
+        return res
 
     # ------------------------------------------------------------
     # SEQUENCE / ORDERING
