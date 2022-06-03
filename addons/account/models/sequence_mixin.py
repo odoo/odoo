@@ -161,7 +161,7 @@ class SequenceMixin(models.AbstractModel):
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
-        if with_prefix:
+        if with_prefix is not None:
             where_string += " AND sequence_prefix = %(with_prefix)s "
             param['with_prefix'] = with_prefix
 
@@ -270,7 +270,7 @@ class SequenceMixin(models.AbstractModel):
             seq = format_values.pop('seq')
             batch = batched[(format, frozendict(format_values))]
             batch['seq_list'].append(seq)
-            if batch['last_rec'].sequence_number < record.sequence_number:
+            if batch['last_rec'].sequence_number <= record.sequence_number:
                 batch['last_rec'] = record
 
         for values in batched.values():
