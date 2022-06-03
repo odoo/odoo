@@ -18,10 +18,10 @@ class ResConfigSettings(models.TransientModel):
                 [],
             )
             sale_line_ids = milestone_read_group[0]['sale_line_ids'] if milestone_read_group else []
-            sale_lines = self.env['sale.order.line'].browse(sale_line_ids)
+            sale_lines = self.env['sale.order.line'].sudo().browse(sale_line_ids)
             sale_lines.product_id.service_policy = 'delivered_milestones'
         else:
             product_domain = [('type', '=', 'service'), ('service_type', '=', 'milestones')]
             products = self.env['product.product'].search(product_domain)
             products.service_policy = 'delivered_manual'
-            self.env['sale.order.line'].search([('product_id', 'in', products.ids)]).qty_delivered_method = 'manual'
+            self.env['sale.order.line'].sudo().search([('product_id', 'in', products.ids)]).qty_delivered_method = 'manual'
