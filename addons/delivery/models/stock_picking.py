@@ -136,7 +136,7 @@ class StockPicking(models.Model):
     def _send_confirmation_email(self):
         for pick in self:
             if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
-                pick.send_to_shipper()
+                pick.sudo().send_to_shipper()
             pick._check_carrier_details_compliance()
         return super(StockPicking, self)._send_confirmation_email()
 
