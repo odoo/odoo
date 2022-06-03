@@ -405,6 +405,9 @@ registerModel({
             compute: '_computeTileParticipantCards',
             inverse: 'callViewOfTile',
         }),
+        tileWidth: attr({
+            default: 0,
+        }),
     },
     onChanges: [
         new OnChange({
