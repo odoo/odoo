@@ -6,19 +6,6 @@ import { registerModel } from '@mail/model/model_core';
 registerModel({
     name: 'MediaPreview',
     identifyingFields: ['welcomeView'],
-    modelMethods: {
-        /**
-         * Iterates tracks of the provided MediaStream, calling the `stop`
-         * method on each of them.
-         *
-         * @param {MediaStream} mediaStream
-         */
-        stopTracksOnMediaStream(mediaStream) {
-            for (const track of mediaStream.getTracks()) {
-                track.stop();
-            }
-        },
-    },
     recordMethods: {
         /**
          * Stops recording user's microphone.
@@ -28,7 +15,7 @@ registerModel({
             if (!this.audioStream) {
                 return;
             }
-            this.messaging.models['MediaPreview'].stopTracksOnMediaStream(this.audioStream);
+            this.stopTracksOnMediaStream(this.audioStream);
             this.update({ audioStream: null });
         },
         /**
@@ -39,7 +26,7 @@ registerModel({
             if (!this.videoStream) {
                 return;
             }
-            this.messaging.models['MediaPreview'].stopTracksOnMediaStream(this.videoStream);
+            this.stopTracksOnMediaStream(this.videoStream);
             this.update({ videoStream: null });
         },
         /**
@@ -99,6 +86,17 @@ registerModel({
          */
         onClickEnableVideoButton() {
             this.enableVideo();
+        },
+        /**
+         * Iterates tracks of the provided MediaStream, calling the `stop`
+         * method on each of them.
+         *
+         * @param {MediaStream} mediaStream
+         */
+        stopTracksOnMediaStream(mediaStream) {
+            for (const track of mediaStream.getTracks()) {
+                track.stop();
+            }
         },
         /**
          * @private
