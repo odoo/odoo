@@ -14,11 +14,6 @@ const BASE_VISUAL = {
      */
     hidden: {
         /**
-         * List of hidden docked chat windows. Useful to compute counter.
-         * Chat windows are ordered by their `chatWindows` order.
-         */
-        chatWindowLocalIds: [],
-        /**
          * Whether hidden menu is visible or not
          */
         isVisible: false,
@@ -28,6 +23,11 @@ const BASE_VISUAL = {
          */
         offset: 0,
     },
+    /**
+     * List of hidden docked chat windows. Useful to compute counter.
+     * Chat windows are ordered by their `chatWindows` order.
+     */
+    hiddenChatWindowLocalIds: [],
     /**
      * Data related to visible chat windows. Index determine order of
      * docked chat windows.
@@ -223,7 +223,7 @@ registerModel({
          * @returns {ChatWindow[]}
          */
         _computeAllOrderedHidden() {
-            return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
+            return replace(this.visual.hiddenChatWindowLocalIds.map(chatWindowLocalId =>
                 this.messaging.models['ChatWindow'].get(chatWindowLocalId)
             ));
         },
@@ -331,14 +331,14 @@ registerModel({
                         + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
                 }
                 for (let j = maxAmountWithHidden; j < this.allOrdered.length; j++) {
-                    visual.hidden.chatWindowLocalIds.push(this.allOrdered[j].localId);
+                    visual.hiddenChatWindowLocalIds.push(this.allOrdered[j].localId);
                 }
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
                 visual.hidden.isVisible = !this.messaging.device.isSmall;
                 visual.hidden.offset = START_GAP_WIDTH;
-                visual.hidden.chatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
+                visual.hiddenChatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
                 console.warn('cannot display any visible chat windows (screen is too small)');
                 visual.availableVisibleSlots = 0;
             }
