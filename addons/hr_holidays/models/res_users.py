@@ -11,6 +11,7 @@ class User(models.Model):
     show_leaves = fields.Boolean(related='employee_id.show_leaves')
     allocation_count = fields.Float(related='employee_id.allocation_count')
     leave_date_to = fields.Date(related='employee_id.leave_date_to')
+    current_leave_state = fields.Selection(related='employee_id.current_leave_state')
     is_absent = fields.Boolean(related='employee_id.is_absent')
     allocation_remaining_display = fields.Char(related='employee_id.allocation_remaining_display')
     allocation_display = fields.Char(related='employee_id.allocation_display')
@@ -23,6 +24,7 @@ class User(models.Model):
             'show_leaves',
             'allocation_count',
             'leave_date_to',
+            'current_leave_state',
             'is_absent',
             'allocation_remaining_display',
             'allocation_display',
@@ -49,7 +51,7 @@ class User(models.Model):
         self.env['hr.leave'].flush(fnames=['user_id', 'state', 'date_from', 'date_to'])
         self.env.cr.execute('''SELECT res_users.%s FROM res_users
                             JOIN hr_leave ON hr_leave.user_id = res_users.id
-                            AND state not in ('cancel', 'refuse')
+                            AND state in ('validate')
                             AND hr_leave.active = 't'
                             AND res_users.active = 't'
                             AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))
