@@ -116,6 +116,19 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     },
 });
 
+publicWidget.registry.websiteProfileNextRankCard = publicWidget.Widget.extend({
+    selector: '.o_wprofile_progress_circle',
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.$('g[data-bs-toggle="tooltip"]').tooltip();
+        return this._super.apply(this, arguments);
+    },
+
+});
+
 return publicWidget.registry.websiteProfile;
 
 });
