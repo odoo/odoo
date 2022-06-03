@@ -20,7 +20,7 @@ class AccountPayment(models.Model):
             ('partner_id', 'in', related_partner_ids),
         ]""",
         help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
-    related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partners')
+    related_partner_ids = fields.Many2many('res.partner', compute='_compute_related_partners', compute_sudo=True)
 
     def _get_payment_chatter_link(self):
         self.ensure_one()
