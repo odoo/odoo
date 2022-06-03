@@ -24,7 +24,6 @@ Create booths for your favorite event.
     ],
     'demo': [
         'data/event_booth_demo.xml',
-        'data/event_type_demo.xml',
     ],
     'license': 'LGPL-3',
 }

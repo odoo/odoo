@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
-    <!-- EVENT TYPE SPECIFIC -->
-    <record id="event_type_data_conference_question_0" model="event.question">
-        <field name="title">Participate in Social Event</field>
-        <field name="once_per_order" eval="False"/>
-        <field name="event_type_id" ref="event.event_type_data_conference"/>
-    </record>
-    <record id="event_type_data_conference_question_0_answer_0" model="event.question.answer">
-        <field name="name">Yes</field>
-        <field name="sequence">1</field>
-        <field name="question_id" ref="website_event_questions.event_type_data_conference_question_0"/>
-    </record>
-    <record id="event_type_data_conference_question_0_answer_1" model="event.question.answer">
-        <field name="name">No</field>
-        <field name="sequence">2</field>
-        <field name="question_id" ref="website_event_questions.event_type_data_conference_question_0"/>
-    </record>
-
     <!-- EVENT SPECIFIC -->
     <record id="event_0_question_0" model="event.question">
         <field name="title">Meal Type</field>

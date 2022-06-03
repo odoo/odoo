@@ -10,7 +10,6 @@
     'data': [
         'security/ir.model.access.csv',
         'security/event_track_security.xml',
-        'data/event_data.xml',
         'data/mail_data.xml',
         'data/mail_template_data.xml',
         'data/event_track_data.xml',

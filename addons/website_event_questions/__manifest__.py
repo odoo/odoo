@@ -17,7 +17,6 @@
     ],
     'demo': [
         'data/event_question_demo.xml',
-        'data/event_demo.xml',
         'data/event_registration_demo.xml',
     ],
     'installable': True,
