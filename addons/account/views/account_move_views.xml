@@ -150,9 +150,9 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" edit="false" sample="1">
-                    <field name="date" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                <tree string="Journal Items" create="false" edit="false" multi_edit="1" sample="1">
+                    <field name="date" readonly="1"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="move_id" optional="show"/>
                     <field name="account_id" options="{'no_open': True}" groups="account.group_account_readonly"/>
@@ -161,19 +161,41 @@
                     <field name="ref" optional="show"/>
                     <field name="name" optional="show"/>
                     <field name="analytic_account_id" groups="account.group_account_readonly" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide"/>
-                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show"/>
-                    <field name="debit" sum="Total Debit"/>
-                    <field name="credit" sum="Total Credit"/>
-                    <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide" readonly="1"/>
+                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show" readonly="1"/>
+                    <field name="debit" sum="Total Debit" readonly="1"/>
+                    <field name="credit" sum="Total Credit" readonly="1"/>
+                    <field name="amount_currency" groups="base.group_multi_currency" optional="hide" readonly="1"/>
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
-                    <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
-                    <field name="matching_number" optional="show"/>
+                    <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" width="0.5" optional="hide"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
+                    <field name="tax_line_id" optional="hide" readonly="1"/>
+                    <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
+                    <field name="matching_number" optional="show"/>
+                    <field name="product_id" optional="hide"/>
+                    <button name="open_move" title="Open Journal Entry" type="object" icon="fa-edit"/>
+                    <groupby name="move_id">
+                        <field name="state" invisible="1"/>
+                        <field name="move_type" invisible="1"/>
+                        <field name="statement_id" invisible="1"/>
+                        <field name="payment_id" invisible="1"/>
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit" attrs="{'invisible': ['&amp;', ('move_type', '=', 'entry'), '|', ('statement_id', '!=', False), ('payment_id', '!=', False)]}"/>
+                        <button name="open_bank_statement_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('statement_id', '=', False)]}"/>
+                        <button name="open_payment_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"/>
+                    </groupby>
+                    <groupby name="account_id">
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    </groupby>
+                    <groupby name="partner_id">
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    </groupby>
+                    <groupby name="journal_id">
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    </groupby>
                 </tree>
             </field>
         </record>
@@ -192,7 +214,7 @@
                            domain="[('company_id', '=', company_id)]"
                            groups="account.group_account_readonly"/>
                     <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" optional="hide" readonly="1"/>
+                    <field name="partner_id" optional="hide"/>
                     <field name="ref" optional="hide"/>
                     <field name="name"/>
                     <field name="reconciled" invisible="1"/>
@@ -221,9 +243,6 @@
                         <button name="edit" type="edit" icon="fa-edit" title="Edit" attrs="{'invisible': ['&amp;', ('move_type', '=', 'entry'), '|', ('statement_id', '!=', False), ('payment_id', '!=', False)]}"/>
                         <button name="open_bank_statement_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('statement_id', '=', False)]}"/>
                         <button name="open_payment_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"/>
-                        <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
-                        <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-undo" type="action" groups="account.group_account_invoice"/>
-                        <button name="action_duplicate" icon="fa-files-o" title="Duplicate" type="object" groups="account.group_account_invoice"/>
                     </groupby>
                 </tree>
             </field>
@@ -379,6 +398,9 @@
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
+                        <filter string="Tax Grid" name="group_by_tax_grid" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
+                        <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1408,7 +1430,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_sales" model="ir.actions.act_window">
@@ -1481,7 +1503,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('parent_state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="view_mode">tree,pivot,graph,form,kanban</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <!-- account.move (Journal Entry) -->
