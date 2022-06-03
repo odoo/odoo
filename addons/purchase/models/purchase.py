@@ -340,7 +340,10 @@ class PurchaseOrder(models.Model):
         """ Tweak 'view document' button for portal customers, calling directly
         routes for confirm specific to PO model. """
         groups = super(PurchaseOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
 
+        self.ensure_one()
         customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault('button_access', {})

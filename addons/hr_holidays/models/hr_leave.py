@@ -1599,7 +1599,10 @@ class HolidaysRequest(models.Model):
                 recipient = leave.employee_id.address_home_id.id
 
             if recipient:
-                self.env['mail.thread'].sudo().message_notify(body=message, partner_ids=[recipient])
+                self.env['mail.thread'].sudo().message_notify(
+                    body=message,
+                    partner_ids=[recipient]
+                )
 
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
@@ -1611,6 +1614,9 @@ class HolidaysRequest(models.Model):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
         groups = super(HolidaysRequest, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
+
         local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()

@@ -263,12 +263,14 @@ class TestDiscuss(TestMailCommon, TestRecipients):
     @users("employee")
     def test_unlink_notification_message(self):
         channel = self.env['mail.channel'].create({'name': 'testChannel'})
-        channel.message_notify(
+        notification_msg = channel.with_user(self.user_admin).message_notify(
             body='test',
             message_type='user_notification',
             partner_ids=[self.partner_2.id],
-            author_id=2
         )
+
+        with self.assertRaises(exceptions.AccessError):
+            notification_msg.with_env(self.env)._message_format(['id', 'body', 'date', 'author_id', 'email_from'])
 
         channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
         self.assertEqual(len(channel_message), 1, "Test message should have been posted")
@@ -338,3 +340,37 @@ class TestMultiCompany(HttpCase):
         action = url_decode(fragment)['action']
 
         self.assertEqual(action, 'mail.action_discuss')
+
+
+@tagged('mail_thread')
+class TestNoThread(TestMailCommon, TestRecipients):
+    """ Specific tests for cross models thread features """
+
+    @users('employee')
+    def test_message_notify(self):
+        test_record = self.env['mail.test.nothread'].create({
+            'customer_id': self.partner_1.id,
+            'name': 'Not A Thread',
+        })
+        with self.assertPostNotifications([{
+                'content': 'Hello Paulo',
+                'email_values': {
+                    'reply_to': self.company_admin.catchall_formatted,
+                },
+                'message_type': 'user_notification',
+                'notif': [{
+                    'check_send': True,
+                    'is_read': True,
+                    'partner': self.partner_2,
+                    'status': 'sent',
+                    'type': 'email',
+                }],
+                'subtype': 'mail.mt_note',
+            }]):
+            _message = self.env['mail.thread'].message_notify(
+                body='<p>Hello Paulo</p>',
+                model=test_record._name,
+                res_id=test_record.id,
+                subject='Test Notify',
+                partner_ids=self.partner_2.ids
+            )

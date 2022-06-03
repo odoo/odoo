@@ -382,7 +382,10 @@ class SaleOrder(models.Model):
         """ In case of cart recovery email, update link to redirect directly
         to the cart (like ``mail_template_sale_cart_recovery`` template). """
         groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
 
+        self.ensure_one()
         customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault('button_access', {})

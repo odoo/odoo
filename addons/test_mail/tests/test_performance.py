@@ -522,7 +522,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_assignation_email(self):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=26, employee=27):
+        with self.assertQueryCount(__system__=27, employee=28):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -531,7 +531,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=17, employee=19):
+        with self.assertQueryCount(__system__=18, employee=20):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -806,7 +806,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         })
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(__system__=23, employee=24):
+        with self.assertQueryCount(__system__=24, employee=25):
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -826,7 +826,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=55, employee=56):
+        with self.assertQueryCount(__system__=56, employee=57):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
