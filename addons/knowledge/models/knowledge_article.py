@@ -1483,7 +1483,7 @@ class Article(models.Model):
         """ Returns the descendants recordset of the current article. """
         return self.env['knowledge.article'].search([('id', 'not in', self.ids), ('parent_id', 'child_of', self.ids)])
 
-    def _get_readable_ancetors(self):
+    def _get_readable_ancestors(self):
         """ Returns the parents recordset of the current article. Do the computation
         as sudo """
         self.ensure_one()

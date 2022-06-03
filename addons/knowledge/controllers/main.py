@@ -112,7 +112,7 @@ class KnowledgeController(http.Controller):
         unfolded_articles = set() if not unfolded_articles else set(unfolded_articles)
         if active_article:
             # root articles = starting point of the tree view : unfold only if root_article in (accessible) parents
-            ancestors = active_article._get_readable_ancetors()
+            ancestors = active_article._get_readable_ancestors()
             if active_article.root_article_id in ancestors:
                 unfolded_articles |= set(ancestors.ids)
 
@@ -125,7 +125,7 @@ class KnowledgeController(http.Controller):
             "private_articles": root_articles.filtered(
                 lambda article: article.category == "private" and article.user_has_write_access),
             "unfolded_articles": unfolded_articles,
-            'portal_readonly_mode': not request.env.user.has_group('base.group_user'),
+            'portal_readonly_mode': request.env.user.share,
         }
         favorites = request.env['knowledge.article.favorite']
         if not request.env.user._is_public():
@@ -160,7 +160,7 @@ class KnowledgeController(http.Controller):
             return werkzeug.exceptions.NotFound()
         return request.env['ir.qweb']._render('knowledge.articles_template', {
             'articles': parent.child_ids,
-            'portal_readonly_mode': not request.env.user.has_group('base.group_user'),  # used to bypass access check (to speed up loading)
+            'portal_readonly_mode': request.env.user.share,  # used to bypass access check (to speed up loading)
         })
 
     @http.route('/knowledge/tree_panel/favorites', type='json', auth='user')
@@ -180,7 +180,7 @@ class KnowledgeController(http.Controller):
     @http.route('/knowledge/get_article_permission_panel_data', type='json', auth='user')
     def get_article_permission_panel_data(self, article_id):
         """
-        Returns a dictionnary containing all values required to render the permission panel.
+        Returns a dictionary containing all values required to render the permission panel.
         :param article_id: (int) article id
         """
         article = self._fetch_article(article_id)
