@@ -18,7 +18,7 @@
                 <span class="o_kanban_config dropdown">
                     <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
                     <div class="dropdown-menu o_cursor_default" role="menu">
-                        <a role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
+                        <a t-if="!widget.isMobile" role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
                         <t t-if="widget.grouped_by_m2o">
                             <a t-if="widget.editable and widget.id" role="menuitem" class="dropdown-item o_column_edit" href="#">Edit Stage</a>
                             <a t-if="widget.deletable and widget.id" role="menuitem" class="dropdown-item o_column_delete" href="#">Delete</a>
@@ -39,14 +39,16 @@
 </t>
 
 <t t-name="KanbanView.LoadMore">
-    <a href="#">Load more... (<t t-esc="widget.loadMoreCount"/> remaining)</a>
+    <button class="btn btn-outline-primary w-100 mt-4">Load more... (<t t-out="widget.loadMoreCount"/> remaining)</button>
 </t>
 
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
         <div class="o_quick_create_folded">
-            <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
-            <span class="o_kanban_title">Add a Column</span>
+            <button class="o_kanban_add_column btn btn-outline-secondary w-100">
+                <i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/>
+                Add a Column
+            </button>
         </div>
         <div class="o_quick_create_unfolded">
             <div class="o_kanban_header">
