@@ -1917,7 +1917,9 @@ export class OdooEditor extends EventTarget {
             onShow: () => {
                 this.commandbarTablePicker.hide();
             },
-            shouldActivate: () => !!this.options.getPowerboxElement(),
+            shouldActivate: () => {
+                return !!this.options.getPowerboxElement();
+            },
             onActivate: () => {
                 this._beforeCommandbarStepIndex = this._historySteps.length - 1;
             },

@@ -160,9 +160,82 @@ const ArticleBehavior = KnowledgeBehavior.extend({
         }
     },
 });
+/**
+ * A behavior for the /file command @see Wysiwyg
+ */
+const FileBehavior = ContentsContainerBehavior.extend({
+    init: function (handler, anchor, mode) {
+        this.fileNameEl = anchor.querySelector('.o_knowledge_file_name');
+        this.focusFileNameHandler = this._onFocusFileName.bind(this);
+        this.focusOutFileNameHandler = this._onFocusOutFileName.bind(this);
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    applyListeners: function () {
+        this._super.apply(this, arguments);
+        this.fileNameEl.addEventListener("focus", this.focusFileNameHandler);
+        this.fileNameEl.addEventListener("focusout", this.focusOutFileNameHandler);
+    },
+    disableListeners: function () {
+        this._super.apply(this, arguments);
+        this.fileNameEl.removeEventListener("focus", this.focusFileNameHandler);
+        this.fileNameEl.removeEventListener("focusout", this.focusOutFileNameHandler);
+    },
+    _onFocusFileName: function (ev) {
+        if (this.handler.editor) {
+            this.handler.editor.observerUnactive('knowledge_attributes');
+        }
+        ev.currentTarget.classList.add('o_knowledge_file_name_edit');
+        if (this.handler.editor) {
+            this.handler.editor.observerActive('knowledge_attributes');
+        }
+    },
+    /**
+     * Edit the file url so that the proposed filename is the customized one
+     * from the article. The attachment name stored in the database is unchanged
+     */
+    _onFocusOutFileName: function (ev) {
+        // convert any number of URL/filename unsafe/forbidden characters:
+        // !',;:@&=%#>< *()+$/?[]|\ to one underscore '_', and trim the result
+        // to 80 characters
+        ev.currentTarget.textContent = ev.currentTarget.textContent.replace(/[_!',;:@&=%#><\s\*\(\)\+\$\/\?\[\]\|\\]+/g, '_').substring(0, 80);
+        this.handler.editor.historyStep();
+        if (this.handler.editor) {
+            this.handler.editor.observerUnactive('knowledge_attributes');
+        }
+        const fileElement = ev.currentTarget.closest('.o_knowledge_file');
+        const imageElement = fileElement.querySelector('.o_knowledge_file_image > a');
+        const extension = fileElement.querySelector('.o_knowledge_file_extension').textContent;
+        const previousName = imageElement.getAttribute('title');
+        let currentName = ev.currentTarget.textContent;
+        if (previousName !== currentName) {
+            let href = imageElement.getAttribute('href');
+            if (previousName) {
+                // remove the previous name from the URL
+                href = href.split(`/${previousName}`).join('');
+            }
+            const hrefParts = href.split('?');
+            if (extension && currentName.includes('.') && !currentName.toLowerCase().endsWith(extension.toLowerCase())) {
+                // append the correct file extension if the name is ambiguous
+                currentName += currentName.endsWith('.') ? extension : `.${extension}`;
+            }
+            imageElement.setAttribute('title', currentName);
+            // insert the current name
+            hrefParts.splice(1, 0, currentName ? `/${currentName}?` : '?');
+            imageElement.setAttribute('href', hrefParts.join(''));
+        }
+        ev.currentTarget.classList.remove('o_knowledge_file_name_edit');
+        if (this.handler.editor) {
+            this.handler.editor.observerActive('knowledge_attributes');
+        }
+    }
+});
 
 export {
     KnowledgeBehavior,
     ContentsContainerBehavior,
     ArticleBehavior,
+    FileBehavior,
 };

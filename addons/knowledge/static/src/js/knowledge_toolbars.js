@@ -207,7 +207,7 @@ const FileToolbar = KnowledgeToolbar.extend({
                     // Roundabout way to click on the link, to avoid OdooEditor interference with the event
                     const downloadLink = document.createElement('a');
                     const originalLink = this.container.querySelector('.o_knowledge_file_image > a');
-                    const title = originalLink.getAttribute('title') ? `"${originalLink.getAttribute('title')}" `: "";
+                    const title = originalLink.getAttribute('title') ? originalLink.getAttribute('title') : '';
                     const href = originalLink.getAttribute('href');
                     const response = await fetch(href).then((response) => response);
                     if (response.ok) {
