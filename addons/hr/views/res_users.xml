@@ -34,7 +34,7 @@
                 <field name="tz" position="after">
                     <field name="is_system" invisible="1"/>
                 </field>
-                <xpath expr="//button[@name='%(base.res_lang_act_window)d']" position="attributes">
+                <xpath expr="//button[@name='%(base.action_view_base_language_install)d']" position="attributes">
                     <attribute name="attrs">{'invisible': [('is_system', '=', False)]}</attribute>
                 </xpath>
             </field>
