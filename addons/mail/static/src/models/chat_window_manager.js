@@ -289,7 +289,6 @@ registerModel({
             if (!this.messaging || !this.messaging.device) {
                 return visual;
             }
-            const BETWEEN_GAP_WIDTH = 5;
             const CHAT_WINDOW_WIDTH = 325;
             const END_GAP_WIDTH = this.messaging.device.isSmall ? 0 : 10;
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
@@ -302,10 +301,10 @@ registerModel({
             }
             const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - START_GAP_WIDTH - END_GAP_WIDTH;
             let maxAmountWithoutHidden = Math.floor(
-                relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
+                relativeGlobalWindowWidth / (CHAT_WINDOW_WIDTH + this.betweenGapWidth));
             let maxAmountWithHidden = Math.floor(
-                (relativeGlobalWindowWidth - HIDDEN_MENU_WIDTH - BETWEEN_GAP_WIDTH) /
-                (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH));
+                (relativeGlobalWindowWidth - HIDDEN_MENU_WIDTH - this.betweenGapWidth) /
+                (CHAT_WINDOW_WIDTH + this.betweenGapWidth));
             if (this.messaging.device.isSmall) {
                 maxAmountWithoutHidden = 1;
                 maxAmountWithHidden = 1;
@@ -314,7 +313,7 @@ registerModel({
                 // all visible
                 for (let i = 0; i < this.allOrdered.length; i++) {
                     const chatWindowLocalId = this.allOrdered[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
+                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + this.betweenGapWidth);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 visual.availableVisibleSlots = maxAmountWithoutHidden;
@@ -322,13 +321,13 @@ registerModel({
                 // some visible, some hidden
                 for (let i = 0; i < maxAmountWithHidden; i++) {
                     const chatWindowLocalId = this.allOrdered[i].localId;
-                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH);
+                    const offset = START_GAP_WIDTH + i * (CHAT_WINDOW_WIDTH + this.betweenGapWidth);
                     visual.visible.push({ chatWindowLocalId, offset });
                 }
                 if (this.allOrdered.length > maxAmountWithHidden) {
                     visual.hidden.isVisible = !this.messaging.device.isSmall;
                     visual.hidden.offset = visual.visible[maxAmountWithHidden - 1].offset
-                        + CHAT_WINDOW_WIDTH + BETWEEN_GAP_WIDTH;
+                        + CHAT_WINDOW_WIDTH + this.betweenGapWidth;
                 }
                 for (let j = maxAmountWithHidden; j < this.allOrdered.length; j++) {
                     visual.hidden.chatWindowLocalIds.push(this.allOrdered[j].localId);
@@ -357,6 +356,9 @@ registerModel({
         }),
         allOrderedVisible: many('ChatWindow', {
             compute: '_computeAllOrderedVisible',
+        }),
+        betweenGapWidth: attr({
+            default: 5,
         }),
         chatWindows: many('ChatWindow', {
             inverse: 'manager',
