@@ -285,6 +285,32 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         self.env.company.days_to_purchase = 2.0
 
+        # Test if the orderpoint is created when opening the replenishment view
+        prod = self.env['product.product'].create({
+            'name': 'Carrot',
+            'type': 'product',
+            'seller_ids': [
+                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+            ]
+        })
+
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        self.env['stock.move'].create({
+            'name': 'Delivery',
+            'date': datetime.today() + timedelta(days=3),
+            'product_id': prod.id,
+            'product_uom': prod.uom_id.id,
+            'product_uom_qty': 5.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })._action_confirm()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishment = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', prod.id),
+        ])
+        self.assertEqual(len(replenishment), 1)
+
+        # Test if purchase orders are created according to the days to purchase
         product = self.env['product.product'].create({
             'name': 'Chicory',
             'type': 'product',
@@ -304,7 +330,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form.product_min_qty = 0.0
         orderpoint = orderpoint_form.save()
 
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
         delivery_moves = self.env['stock.move']
         for i in range(0, 6):
             delivery_moves |= self.env['stock.move'].create({

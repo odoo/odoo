@@ -246,6 +246,7 @@ class Orderpoint(models.Model):
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.days_to_order = orderpoint.company_id.days_to_purchase
         return res
+
     @api.depends('route_id')
     def _compute_show_suppplier(self):
         buy_route = []
