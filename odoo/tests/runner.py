@@ -15,12 +15,13 @@ class OdooTestResult(unittest.result.TestResult):
     have based on the test object that is running.
     """
 
-    def __init__(self):
+    def __init__(self, suite_tests_count=0):
         super().__init__()
         self.time_start = None
         self.queries_start = None
         self._soft_fail = False
         self.had_failure = False
+        self.suite_tests_count = suite_tests_count
 
     def __str__(self):
         return f'{len(self.failures)} failed, {len(self.errors)} error(s) of {self.testsRun} tests'
@@ -81,9 +82,16 @@ class OdooTestResult(unittest.result.TestResult):
 
     def startTest(self, test):
         super().startTest(test)
-        self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
+        self.log(logging.INFO, 'Starting (%d/%d) %s ...', self.testsRun, self.suite_tests_count,
+                 self.getDescription(test), test=test)
         self.time_start = time.time()
         self.queries_start = sql_db.sql_counter
+
+    def stopTest(self, test):
+        super().stopTest(test)
+        self.log(logging.DEBUG, '%s Finished (%.3fs, %d queries)',
+                 self.getDescription(test), time.time() - self.time_start,
+                 sql_db.sql_counter - self.queries_start, test=test)
 
     def addError(self, test, err):
         if self._soft_fail:

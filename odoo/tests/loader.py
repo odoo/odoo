@@ -74,7 +74,7 @@ def run_suite(suite, module_name=None):
     module.current_test = module_name
     threading.current_thread().testing = True
 
-    results = OdooTestResult()
+    results = OdooTestResult(suite_tests_count=suite.countTestCases())
     suite(results)
 
     threading.current_thread().testing = False
