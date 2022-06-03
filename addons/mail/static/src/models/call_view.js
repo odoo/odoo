@@ -314,6 +314,7 @@ registerModel({
             default: 16 / 9,
             compute: '_computeAspectRatio',
         }),
+        tileContainerRef: attr(),
         /**
          * Determines whether we only display the videos or all the participants
          */

@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Dialog from 'web.OwlDialog';
 
-const { Component, useRef, useState } = owl;
+const { Component, useState } = owl;
 
 const components = {
     Dialog,
@@ -20,12 +21,12 @@ export class CallView extends Component {
      */
     setup() {
         super.setup();
+        useRefToModel({ fieldName: 'tileContainerRef', refName: 'tileContainer', });
         this.state = useState({
             tileWidth: 0,
             tileHeight: 0,
             columnCount: 0,
         });
-        this.tileContainerRef = useRef('tileContainer');
         useUpdate({ func: () => this._update() });
     }
 
@@ -97,16 +98,16 @@ export class CallView extends Component {
         if (!this.root.el) {
             return;
         }
-        if (!this.tileContainerRef.el) {
+        if (!this.callView.tileContainerRef.el) {
             return;
         }
-        const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
+        const { width, height } = this.callView.tileContainerRef.el.getBoundingClientRect();
 
         const { tileWidth, tileHeight, columnCount } = this._computeTessellation({
             aspectRatio: this.callView.aspectRatio,
             containerHeight: height,
             containerWidth: width,
-            tileCount: this.tileContainerRef.el.children.length,
+            tileCount: this.callView.tileContainerRef.el.children.length,
         });
 
         this.state.tileWidth = tileWidth;
