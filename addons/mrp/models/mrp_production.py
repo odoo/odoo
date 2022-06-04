@@ -78,7 +78,8 @@ class MrpProduction(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
-        default=_get_default_picking_type, required=True, check_company=True)
+        default=_get_default_picking_type, required=True, check_company=True,
+        readonly=True, states={'draft': [('readonly', False)]})
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
         default=_get_default_location_src_id,
