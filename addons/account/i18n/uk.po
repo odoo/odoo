@@ -5549,6 +5549,11 @@ msgid "Documentation"
 msgstr "Документація"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "Вітчизняна країна вашого бухобліку"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__done
@@ -14739,6 +14744,18 @@ msgstr "Це може використовуватися лише в елеме�
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+"Цей запис містить один або кілька податків, які несумісні з вашою фіскальною"
+" країною. Перевірте фіскальну країну компанії в налаштуваннях і країну "
+"оподаткування в конфігурації податків."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr ""
@@ -14754,6 +14771,17 @@ msgid ""
 msgstr ""
 "Цей запис продубльовано з <a href=# data-oe-model=account.move data-oe-"
 "id=%(id)d>%(title)s</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr ""
+"Цей запис містить податки, які не сумісні з вашою схемою оподаткування. "
+"Перевірте країну, встановлену у схемі оподаткування та у вашій податковій "
+"конфігурації."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0

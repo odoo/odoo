@@ -6,7 +6,6 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
 # Felix Yang <felixyangsh@aliyun.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
@@ -44,6 +43,12 @@ msgid "DocumentType"
 msgstr "文件类型"
 
 #. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid "Display the currency"
+msgstr "显示无效币种警告"
+
+#. module: account_edi_facturx
 #: model:ir.model,name:account_edi_facturx.model_account_edi_format
 msgid "EDI format"
 msgstr "EDI 格式"
@@ -71,8 +76,18 @@ msgstr "由Odoo生成的发票"
 #. module: account_edi_facturx
 #: code:addons/account_edi_facturx/models/account_edi_format.py:0
 #, python-format
+msgid ""
+"The currency (%s) of the document you are uploading is not active in this database.\n"
+"Please activate it before trying again to import."
+msgstr ""
+"您上载的文件的货币 (%s) 在此数据库中无效。\n"
+"请先激活它，然后再尝试导入。"
+
+#. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
 msgid "No information about the journal or the type of invoice is passed"
-msgstr "未传递有关日记账或结算单类型的信息。"
+msgstr "未传递有关日记账或结算单类型的信息"
 
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
@@ -127,4 +142,4 @@ msgstr "urn:cen.eu:en16931:2017"
 #. module: account_edi_facturx
 #: model_terms:ir.ui.view,arch_db:account_edi_facturx.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#."
+msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"

@@ -113,6 +113,89 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object.partner_id.name\">\n"
+"            تهانينا <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،<br/>\n"
+"        </t>\n"
+"\n"
+"        إليك مكافأتك من <t t-out=\"object.program_id.company_id.name or ''\">شركتك</t>.<br/>\n"
+"\n"
+"        <t t-if=\"object.program_id.reward_type == 'discount'\">\n"
+"            <t t-if=\"object.program_id.discount_type == 'fixed_amount'\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-out=\"'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id) or ''\">$ 10.00</span><br/>\n"
+"                <strong style=\"font-size: 24px;\">خصم على طلبك التالي</strong><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\"><t t-out=\"object.program_id.discount_percentage or ''\">10</t> %</span>\n"
+"            </t>\n"
+"            <t t-if=\"object.program_id.discount_apply_on == 'specific_products'\">\n"
+"                <br/>\n"
+"                <t t-if=\"len(object.program_id.discount_specific_product_ids) != 1\">\n"
+"                    <t t-set=\"display_specific_products\" t-value=\"True\"/>\n"
+"                    <strong style=\"font-size: 24px;\">\n"
+"                        على بعض المنتجات*\n"
+"                    </strong>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <strong style=\"font-size: 24px;\" t-out=\"'on %s' % object.program_id.discount_specific_product_ids.name or ''\">مكتب قابل للتعديل</strong>\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-elif=\"object.program_id.discount_apply_on == 'cheapest_product'\">\n"
+"                <br/><strong style=\"font-size: 24px;\">\n"
+"                    خصم على أرخص منتج\n"
+"                </strong>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <br/><strong style=\"font-size: 24px;\">\n"
+"                    خصم على طلبك التالي\n"
+"                </strong>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
+"        <t t-elif=\"object.program_id.reward_type == 'product'\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\" t-out=\"'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name) or ''\">احصل على مكتب زاوية 1 مجاني</span><br/>\n"
+"            <strong style=\"font-size: 24px;\">في طلبك التالي</strong><br/>\n"
+"        </t>\n"
+"        <t t-elif=\"object.program_id.reward_type == 'free_shipping'\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                شحن مجاني\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">في طلبك التالي</strong><br/>\n"
+"        </t>\n"
+"    </td></tr>\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        استخدم هذا الرمز الترويجي\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            قبل <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-if=\"object.program_id.rule_min_quantity not in [0, 1]\">\n"
+"            <span style=\"font-size: 14px;\">\n"
+"                الحد الأدنى للشراء هو <t t-out=\"object.program_id.rule_min_quantity or ''\">10</t> منتجات\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.program_id.rule_minimum_amount != 0.00\">\n"
+"            <span style=\"font-size: 14px;\">\n"
+"                صالح للمشتريات التي تفوق قيمتها <t t-out=\"object.program_id.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(object.program_id.rule_minimum_amount) or ''\">10.00</t>\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <t t-if=\"display_specific_products\">\n"
+"            <span>\n"
+"                *صالح للمنتجات التالية: <t t-out=\"', '.join(object.program_id.discount_specific_product_ids.mapped('name')) or ''\">مكتب قابل للتعديل</t>\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        شكراً لك،\n"
+"        <t t-if=\"object.order_id.user_id.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"object.order_id.user_id.signature or ''\">--<br/>ميتشل آدمن</t>\n"
+"        </t>\n"
+"    </td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -126,7 +209,7 @@ msgstr "تم بالفعل تطبيق كوبون لنفس المكافأة"
 #, python-format
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
+msgstr "يجب شراء %(amount)s %(currency)s كحد أدنى للحصول على المكافأة  "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -168,7 +251,7 @@ msgstr "لم يتم استيفاء بعض شروط الحصول على المك�
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 msgid "Cancel"
-msgstr "الغاء"
+msgstr "إلغاء "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
@@ -206,19 +289,19 @@ msgstr "أنشئ في"
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
-msgstr ""
+msgstr "الخصم: %(program)s - على المنتجات ذات الضرائب التالية: %(taxes)s "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %s"
-msgstr ""
+msgstr "الخصم: %s "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
@@ -276,30 +359,30 @@ msgstr "الكوبونات المعروضة"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
 msgid "Order Count"
-msgstr "عدد الأوامر"
+msgstr "عدد الطلبات "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__order_id
 msgid "Order Reference"
-msgstr "رقم إشارة الأمر"
+msgstr "مرجع الطلب "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code %s has been expired."
-msgstr "انتهت صلاحية البروموكود %s."
+msgstr "انتهت صلاحية الكود الترويجي %s. "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code is expired"
-msgstr "البروموكود منتهي الصلاحية"
+msgstr "انتهت صلاحية الكود الترويجي "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code is invalid"
-msgstr "البروموكود غير صالح"
+msgstr "الكود الترويجي غير صالح "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
@@ -326,7 +409,7 @@ msgstr "العروض "
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr "قيمة المكافأة"
+msgstr "مبلغ المكافأة "
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
@@ -367,13 +450,13 @@ msgstr "لا يملك العميل صلاحية الوصول لهذه المكا
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promo code is already applied on this order"
-msgstr "تم بالفعل تطبيق البروموكود على هذا الأمر"
+msgstr "تم تطبيق الكود الترويجي على هذا الطلب بالفعل "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promotional offer is already applied on this order"
-msgstr "تم بالفعل تطبيق العرض الترويجي على هذا الأمر"
+msgstr "تم تطبيق العرض الترويجي على هذا الطلب بالفعل "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -382,7 +465,7 @@ msgstr "تم بالفعل تطبيق العرض الترويجي على هذا �
 msgid ""
 "The reward products should be in the sales order lines to apply the "
 "discount."
-msgstr "يجب أن تكون المنتجات المكافأة في بنود أمر المبيعات لتطبيق الخصم."
+msgstr "يجب أن تكون منتجات المكافأة في بنود أمر المبيعات لتطبيق الخصم. "
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
@@ -404,12 +487,12 @@ msgstr "هذا الكوبون غير صالح (%s). "
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "This coupon is not yet usable. It will be starting from %s"
-msgstr ""
+msgstr "هذا الكوبون غير قابل للاستخدام بعد. ستتمكن من استخدامه بدءاً من %s "
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "Used in"
-msgstr ""
+msgstr "مُستخدَم في "
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -417,6 +500,8 @@ msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
+"عندما تقوم بالضغط عليه، سوف يتم التحقق من محتوى طلبك لرصد (وتطبيق) البرامج "
+"الترويجية الممكنة. "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -426,9 +511,9 @@ msgid ""
 "products should be recorded on the sales order. (Example: You need to have 3"
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
-"لا تملك كمية المنتج المطلوبة بأمر مبيعاتك. يجب تسجيل كافة المنتجات على أمر "
-"المبيعات. (مثال: يجب تسجيل 3 قمصان بأمر المبيعات إذا كان العرض هو 'اشتري "
-"قميصين، واحصل على الثالث مجانًا')."
+"لا تملك كميات المنتج المطلوبة في أمر مبيعاتك. يجب أن تكون كافة المنتجات "
+"مسجلة في أمر المبيعات. (مثال: يجب أن يكون هناك 3 قمصان في أمر المبيعات إذا "
+"كان العرض هو 'اشترِ قميصين، واحصل على الثالث مجاناً'). "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
@@ -439,10 +524,10 @@ msgid ""
 "recorded on the sales order (Example: You need to have 3 T-shirts on your "
 "sales order if the promotion is 'Buy 2, Get 1 Free'."
 msgstr ""
-"لا تملك كمية المنتج المطلوبة بأمر مبيعاتك. إذا كانت المكافأة من نفس كمية "
-"المنتج، برجاء التأكد من تسجيل كافة المنتجات بأمر المبيعات (مثال: يجب تسجيل 3"
-" قمصان بأمر المبيعات إذا كان العرض هو 'اشتري قميصين، واحصل على الثالث "
-"مجانًا')."
+"لا تملك كميات المنتج المطلوبة في أمر مبيعاتك. إذا كانت المكافأة هي نفس كمية "
+"المنتج، يرجى التأكد من أن كافة المنتجات مسجلة في أمر المبيعات. (مثال: يجب أن"
+" يكون هناك 3 قمصان في أمر المبيعات إذا كان العرض هو 'اشترِ قميصين، واحصل على"
+" الثالث مجاناً'). "
 
 #. module: sale_coupon
 #: model:mail.template,report_name:sale_coupon.mail_template_sale_coupon
@@ -457,10 +542,10 @@ msgstr "كوبون المكافأة الخاص بك من {{ object.program_id.co
 #. module: sale_coupon
 #: model:mail.template,name:sale_coupon.mail_template_sale_coupon
 msgid "[Sales] Coupon: Send by Email"
-msgstr ""
+msgstr "كوبون [المبيعات]: الإرسال عبر البريد الإلكتروني "
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "limited to "
-msgstr "محدود حتى "
+msgstr "يقتصر على "

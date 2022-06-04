@@ -3472,8 +3472,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Bridge module adding rating capabilities on portal. It includes notably\n"
-"inclusion of rating directly within the customer portal discuss widget.\n"
+"Portalda derecelendirme özellikleri ekleyen köprü modülü. Özellikle şunları içerir:\n"
+"derecelendirmenin doğrudan müşteri portalı tartışma widget'ına dahil edilmesi.\n"
 "        "
 
 #. module: base
@@ -3577,7 +3577,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Cash Basis for Accounting Reports\n"
+"Muhasebe Raporları için Gerçekleşme Esası\n"
 "=================================\n"
 "    "
 
@@ -10159,10 +10159,10 @@ msgid ""
 "                                <span colspan=\"2\">Month: %(month)s</span>\n"
 "                                <span colspan=\"2\">Day: %(day)s</span>"
 msgstr ""
-"<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
-"                                <span colspan=\"2\">Current Year without Century: %(y)s</span>\n"
-"                                <span colspan=\"2\">Month: %(month)s</span>\n"
-"                                <span colspan=\"2\">Day: %(day)s</span>"
+"<span colspan=\"2\">Yüzyıl ile Mevcut Yıl: %(year)s</span>\n"
+"                                 <span colspan=\"2\">Yüzyılsız Mevcut Yıl: %(y)s</span>\n"
+"                                 <span colspan=\"2\">Ay: %(month)s</span>\n"
+"                                 <span colspan=\"2\">Gün: %(day)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -10171,9 +10171,9 @@ msgid ""
 "                                <span colspan=\"2\">Week of the Year: %(woy)s</span>\n"
 "                                <span colspan=\"2\">Day of the Week (0:Monday): %(weekday)s</span>"
 msgstr ""
-"<span colspan=\"2\">Day of the Year: %(doy)s</span>\n"
-"                                <span colspan=\"2\">Week of the Year: %(woy)s</span>\n"
-"                                <span colspan=\"2\">Day of the Week (0:Monday): %(weekday)s</span>"
+"<span colspan=\"2\">Yılın Günü: %(doy)s</span>\n"
+"                                 <span colspan=\"2\">Yılın Haftası: %(woy)s</span>\n"
+"                                 <span colspan=\"2\">Haftanın Günü (0:Pazartesi): %(weekday)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -10183,10 +10183,10 @@ msgid ""
 "                                <span colspan=\"2\">Minute: %(min)s</span>\n"
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
-"<span colspan=\"2\">Hour 00-&gt;24: %(h24)s</span>\n"
-"                                <span colspan=\"2\">Hour 00-&gt;12: %(h12)s</span>\n"
-"                                <span colspan=\"2\">Minute: %(min)s</span>\n"
-"                                <span colspan=\"2\">Second: %(sec)s</span>"
+"<span colspan=\"2\">Saat 00-&gt;24: %(h24)s</span>\n"
+"                                 <span colspan=\"2\">Saat 00-&gt;12: %(h12)s</span>\n"
+"                                 <span colspan=\"2\">Dakika: %(min)s</span>\n"
+"                                 <span colspan=\"2\">Saniye: %(sec)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -12127,7 +12127,7 @@ msgstr "Değerlendirme - Beceriler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
 msgid "Appraisal - Survey"
-msgstr "Appraisal - Survey"
+msgstr "Değerleme - Anket"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
@@ -12144,12 +12144,12 @@ msgstr "Onaylamalar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase
 msgid "Approvals - Purchase"
-msgstr "Approvals - Purchase"
+msgstr "Onaylar - Satın Alma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_approvals_purchase_stock
 msgid "Approvals - Purchase - Stock"
-msgstr "Approvals - Purchase - Stock"
+msgstr "Onaylar - Satın Alma - Stok"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree
@@ -12183,12 +12183,12 @@ msgstr "Mimari"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
 msgid "Arch Filename"
-msgstr "Arch Filename"
+msgstr "Mimari Dosya Adı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
 msgid "Arch To Compare To"
-msgstr "Arch To Compare To"
+msgstr "Mimari Karşılaştırılacak"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -12374,12 +12374,12 @@ msgstr "Katılımcılar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
 msgid "Attendances Barcode in Mobile"
-msgstr "Attendances Barcode in Mobile"
+msgstr "Katılımlar Mobil Barkod"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_mobile
 msgid "Attendances Barcode scan in Mobile"
-msgstr "Attendances Barcode scan in Mobile"
+msgstr "Katılımlar Mobil cihazlarda barkod taraması"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
@@ -12390,7 +12390,8 @@ msgstr "Posta listelerine abone olmak için ziyaretçileri çekin"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
-msgstr "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
+msgstr ""
+"Özellik %(attribute)s değerlendirmesi bir işaretleme bekliyor, %(value)s var"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -12517,8 +12518,8 @@ msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
 msgstr ""
-"Automatically finds the purchase order linked to a vendor bill when using "
-"invoice extraction"
+"Fatura ayıklama özelliğini kullanırken tedarikçi faturasına bağlı satınalma "
+"siparişini otomatik olarak bulur"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__state
@@ -12922,8 +12923,8 @@ msgid ""
 "Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>\n"
 "                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio."
 msgstr ""
-"Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>\n"
-"                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio."
+"Standart görünümün mimarisinin düzenlenmesinin önerilmediğini unutmayın, çünkü gelecekteki modül güncelleştirmeleri sırasında değişikliklerin üzerine yazılacaktır.<br/>\n"
+"                       Devralınan görünümler veya Odoo Studio ile özelleştirme yoluyla standart görünümlere değişiklikler uygulamanızı öneririz."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
@@ -12975,7 +12976,7 @@ msgstr "Belçika Kaydedilmiş Kasa Hareketleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_l10n_be
 msgid "Belgian Registered Cash Register Employee module"
-msgstr "Belgian Registered Cash Register Employee module"
+msgstr "Belçika Kayıtlı Yazar Kasa Çalışanı modülü"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -13195,13 +13196,13 @@ msgstr "Brezilya - Muhasebe"
 #: model:ir.module.module,description:base.module_iap_crm
 #: model:ir.module.module,summary:base.module_iap_crm
 msgid "Bridge between IAP and CRM"
-msgstr "Bridge between IAP and CRM"
+msgstr "IAP ve CRM arasında köprü"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_mail
 #: model:ir.module.module,summary:base.module_iap_mail
 msgid "Bridge between IAP and mail"
-msgstr "Bridge between IAP and mail"
+msgstr "IAP ve posta arasında köprü"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
@@ -14363,7 +14364,7 @@ msgstr "Yapılandır"
 #. module: base
 #: model:ir.model,name:base.model_res_config_installer
 msgid "Config Installer"
-msgstr "Config Installer"
+msgstr "Yapılandırma Yükleyici"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
@@ -14566,7 +14567,7 @@ msgstr "Kontak Ünvanları"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact image"
-msgstr "Contact image"
+msgstr "Kontak resmi"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
@@ -14599,7 +14600,7 @@ msgstr "Kişiler bir ad gerektiriyor"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr "Contains In-App Purchases"
+msgstr "Uygulama İçi Satın Alımlar İçerir"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -16292,7 +16293,7 @@ msgstr "Dominik Cumhuriyeti - muhasebe"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Don't display the font awesome marker"
-msgstr "Yazı tipi müthiş işaretçisini görüntüleme"
+msgstr "Harika yazı tipi işaretçisini görüntülemeyin"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_todo__state__done
@@ -16429,7 +16430,7 @@ msgstr "Meksika için EDI"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_extended
 msgid "EDI for Mexico (Advanced Features)"
-msgstr "EDI for Mexico (Advanced Features)"
+msgstr "Meksika için EDI (Gelişmiş Özellikler)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_edi
@@ -16459,7 +16460,7 @@ msgstr "AB Tek Durak Noktası (OSS) Raporları"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_obj_name_uniq
 msgid "Each model must have a unique name."
-msgstr "Each model must have a unique name."
+msgstr "Her modelin benzersiz bir adı olmalıdır."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_sms
@@ -16479,8 +16480,8 @@ msgid ""
 "Easily format text data across multiple records. Find duplicate records and "
 "easily merge them."
 msgstr ""
-"Easily format text data across multiple records. Find duplicate records and "
-"easily merge them."
+"Metin verilerini birden çok kayıtta kolayca biçimlendirin. Yinelenen "
+"kayıtları bulun ve kolayca birleştirin."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_easypost
@@ -16947,22 +16948,22 @@ msgstr "Etkinlik Kabinleri, otomatik olarak bir sponsor oluşturun."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm
 msgid "Event CRM"
-msgstr "Event CRM"
+msgstr "Etkinlik CRM'i"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm_sale
 msgid "Event CRM Sale"
-msgstr "Event CRM Sale"
+msgstr "Event CRM Satış"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_exhibitor
 msgid "Event Exhibitors"
-msgstr "Event Exhibitors"
+msgstr "Etkinlik Katılımcıları"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet
 msgid "Event Meeting / Rooms"
-msgstr "Event Meeting / Rooms"
+msgstr "Etkinlik Görüşmesi / Odalar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social
@@ -16977,7 +16978,7 @@ msgstr "Etkinlik: sponsorları ve katılımcıları yönetin"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet
 msgid "Event: meeting and chat rooms"
-msgstr "Event: meeting and chat rooms"
+msgstr "Etkinlik: toplantı ve sohbet odaları"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_events
@@ -17097,7 +17098,7 @@ msgstr "Executive 4 7.5 x 10 inç, 190.5 x 254 mm"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__group_expand
 msgid "Expand Groups"
-msgstr "Expand Groups"
+msgstr "Grupları Genişletme"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_expenses
@@ -17400,46 +17401,45 @@ msgid ""
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
 msgstr ""
-"Fichier d'Échange Informatisé (FEC) pour la France\n"
-"==================================================\n"
+"Fransa için Bilgisayarlı Değişim Dosyası (FEC)\n"
+"===============================================\n"
 "\n"
-"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
-"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
-"portant modification des dispositions de l'article A. 47 A-1 du\n"
-"livre des procédures fiscales.\n"
+"Bu modül, 29 sayılı kararname ile tanımlandığı gibi FEC dosyasını oluşturur.\n"
+"Temmuz 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"A. 47 A-1 maddesindeki hükümlerin değiştirilmesi\n"
+"vergi prosedürleri kitabı.\n"
 "\n"
-"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
-"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
-"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
-"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"Bu emir, hesapları olan şirketler için yükümlülük sağlar.\n"
+"vergi makamlarına bir dosya sağlayabilmek için bilgisayarlı\n"
+"mali yıl için tüm muhasebe girişlerini bir araya toplamak. Bunun formatı\n"
+"*FEC* adlı dosya, kararnamede tanımlanmıştır.\n"
 "\n"
-"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
-"FEC au format texte et non au format XML, car le format texte sera facilement\n"
-"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"FEC formatının ayrıntıları resmi kamu maliyesi bülteni `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexPermalien/ BOI-'de belirtilmiştir. CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifier=BOI-CF-IOR-60-40-20-20131213>` 13 Aralık 2013. Bu modül dosyayı uygular\n"
+"FEC, XML biçiminde değil, metin biçimindedir, çünkü metin biçimi kolayca\n"
+"hesap tablosu kullanılarak muhasebeci tarafından okunabilir ve doğrulanabilir.\n"
 "\n"
-"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
-"*Test Compta Demat* version 1_00_05 disponible sur\n"
-"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
-"en utilisant une base de donnée Odoo réelle.\n"
+"Bu modül tarafından oluşturulan FEC dosyasının yapısı yazılım ile doğrulanmıştır.\n"
+"*Test Compta Demat* sürüm 1_00_05 şurada mevcut\n"
+"`Kamu Maliyesi Genel Müdürlüğü sitesi <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>'\n"
+"gerçek bir Odoo veritabanı kullanarak.\n"
 "\n"
-"Configuration\n"
+"Yapılandırma\n"
 "=============\n"
 "\n"
-"Aucune configuration n'est nécessaire.\n"
+"Yapılandırma gerekli değildir.\n"
 "\n"
-"Utilisation\n"
+"Kullanmak\n"
 "===========\n"
 "\n"
-"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"*FEC* oluşturmak için, FEC oluşturma sihirbazını başlatacak olan *Muhasebe > Raporlama > Fransızca İfadeler > FEC* menüsüne gidin.\n"
 "\n"
-"Credits\n"
+"Kredi\n"
 "=======\n"
 "\n"
-"Contributors\n"
+"katkıda bulunanlar\n"
 "------------\n"
 "\n"
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
-"\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__field_id
@@ -17455,7 +17455,7 @@ msgstr "Alan"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
-msgstr "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
+msgstr "\"%(field_name)s\" alanı \"%(model_name)s\" modelinde mevcut değil"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -18090,7 +18090,7 @@ msgstr "Fransız Polinezyası"
 #. module: base
 #: model:res.country,name:base.tf
 msgid "French Southern Territories"
-msgstr "French Southern Territories"
+msgstr "Fransız Güney Toprakları"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
@@ -18543,7 +18543,7 @@ msgstr "Google Kullanıcıları"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
 msgid "Google reCAPTCHA integration"
-msgstr "Google reCAPTCHA integration"
+msgstr "Google reCAPTCHA entegrasyonu"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_18
@@ -21928,7 +21928,7 @@ msgstr "Many2One"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
-msgstr "Many2one %s on model %s does not exist!"
+msgstr "%s modelinde Many2one %s mevcut değil!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -27703,27 +27703,27 @@ msgstr "Etkinliklerle ilgili Sorular"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet_quiz
 msgid "Quiz and Meet on community"
-msgstr "Test ve Toplulukta Görüşme"
+msgstr "Test ve Toplulukta görüşme"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet_quiz
 msgid "Quiz and Meet on community route"
-msgstr "Test ve Toplulukta Görüşmesine yönlendirme"
+msgstr "Test ve Topluluk görüşmesine yönlendirme"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
 msgid "Quiz on Live Event Tracks"
-msgstr "Quiz on Live Event Tracks"
+msgstr "Canlı Etkinlik Bölüm Testi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
 msgid "Quizzes on Tracks"
-msgstr "Quizzes on Tracks"
+msgstr "Bölümlerde Testler"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
 msgid "Quizzes on tracks"
-msgstr "Quizzes on tracks"
+msgstr "Bölümlerde testler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
@@ -28261,7 +28261,7 @@ msgstr "Bayiler"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_commission
 msgid "Resellers Commissions For Subscription"
-msgstr "Resellers Commissions For Subscription"
+msgstr "Abonelik için Bayi Komisyonları"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
@@ -28286,7 +28286,7 @@ msgstr "Görünüm Mimarisini Sıfırla Sihirbazı"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__other_view
 msgid "Reset to another view."
-msgstr "Reset to another view."
+msgstr "Başka bir görünüme sıfırlayın."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__hard
@@ -28452,7 +28452,7 @@ msgstr "S DİĞER HİZMET ETKİNLİKLERİ"
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
 msgid "SEPA Countries"
-msgstr "SEPA Countries"
+msgstr "SEPA Ülkeleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa
@@ -29590,7 +29590,7 @@ msgstr "Sosyal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_demo
 msgid "Social Demo Module"
-msgstr "Social Demo Module"
+msgstr "Sosyal Demo Modülü"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
@@ -29808,24 +29808,24 @@ msgstr "Sponsorlar, Ajanda,  Etkinlik Haberleri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_spreadsheet_account
 msgid "Spreadsheet Accounting Templates"
-msgstr "Spreadsheet Accounting Templates"
+msgstr "Spreadsheet Hesap Şablonları"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet_account
 #: model:ir.module.module,summary:base.module_documents_spreadsheet_account
 msgid "Spreadsheet Accounting templates"
-msgstr "Spreadsheet Accounting templates"
+msgstr "Spreadsheet Hesap şablonları"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_spreadsheet_crm
 msgid "Spreadsheet CRM Templates"
-msgstr "Spreadsheet CRM Templates"
+msgstr "Spreadsheet CRM Şablonları"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet_crm
 #: model:ir.module.module,summary:base.module_documents_spreadsheet_crm
 msgid "Spreadsheet CRM templates"
-msgstr "Spreadsheet CRM templates"
+msgstr "Spreadsheet CRM şablonları"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
@@ -29845,7 +29845,7 @@ msgstr "Standart"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft
 msgid "Standard Audit File for Tax Base module"
-msgstr "Standard Audit File for Tax Base module"
+msgstr "Vergi Matrahı modülü için Standart Denetim Dosyası"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -29967,7 +29967,7 @@ msgstr "Stok kuruluşu"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_be_hr_payroll
 msgid "Store employee 281.10 and 281.45 forms in the Document app"
-msgstr "Store employee 281.10 and 281.45 forms in the Document app"
+msgstr "Çalışan 281.10 ve 281.45 formlarını Belgeler uygulamasında depolama"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_contract
@@ -30054,7 +30054,7 @@ msgstr "Fason Üretim"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mrp_subcontracting
 msgid "Subcontract with Barcode"
-msgstr "Subcontract with Barcode"
+msgstr "Barkod ile Fason"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account
@@ -30126,12 +30126,12 @@ msgstr "Tedarik argümanları"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
-msgstr "Support live tracks: streaming, participation, youtube"
+msgstr "Canlı bölümleri destekleyin: akış, katılım, youtube"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
 msgid "Support of quality control into batch transfers"
-msgstr "Support of quality control into batch transfers"
+msgstr "Toplu transferlerde kalite kontrol desteği"
 
 #. module: base
 #: model:res.country,name:base.sr
@@ -30453,7 +30453,7 @@ msgstr "Bağlantıyı Sına"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_cleaning
 msgid "Test Data Cleaning"
-msgstr "Test Data Cleaning"
+msgstr "Test Verileri Temizleme"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_discuss_full
@@ -30463,12 +30463,12 @@ msgstr "Test Tartışması (tam)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full
 msgid "Test Full Event Flow"
-msgstr "Test Full Event Flow"
+msgstr "Tüm Etkinlik Akışını Test Edin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_slides_full
 msgid "Test Full eLearning Flow"
-msgstr "Tam e-Öğrenim Akışını Test Edin"
+msgstr "Tüm e-Öğrenim Akışını Test Edin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
@@ -30493,12 +30493,12 @@ msgstr "RPC Sınama"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
 msgid "Test Suite for Automated Marketing Campaigns"
-msgstr "Test Suite for Automated Marketing Campaigns"
+msgstr "Otomatik Pazarlama Kampanyaları için Test Paketi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_data_cleaning
 msgid "Test Suite for Data Cleaning"
-msgstr "Test Suite for Data Cleaning"
+msgstr "Veri Temizleme için Test Paketi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module_install
@@ -30893,7 +30893,7 @@ msgstr "Bu alandaki modelin ait olduğu"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
-msgstr "The modes in view_mode must not be duplicated: %s"
+msgstr "view_mode'daki modlar kopyalanmamalıdır: %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
@@ -30945,7 +30945,7 @@ msgstr "Sonraki adım dosya biçimine bağlıdır:"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The ondelete policy %r is not valid for field %r"
-msgstr "The ondelete policy %r is not valid for field %r"
+msgstr "%r ondelete politikası %r alanı için geçerli değil"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -31078,7 +31078,7 @@ msgid ""
 "The server has closed the connection unexpectedly. Check configuration served on this port number.\n"
 " %s"
 msgstr ""
-"The server has closed the connection unexpectedly. Check configuration served on this port number.\n"
+"Sunucu bağlantıyı beklenmedik şekilde kapattı. Bu bağlantı noktası numarasında sunulan yapılandırmayı kontrol edin.\n"
 " %s"
 
 #. module: base
@@ -34461,7 +34461,7 @@ msgstr "pos_sale_product_configurator"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
 msgid "predict the product from the expense description based on old ones"
-msgstr "predict the product from the expense description based on old ones"
+msgstr "Ürünü eskilerine dayalı masraf açıklamasından tahmin edin"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference
