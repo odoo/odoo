@@ -11,7 +11,8 @@ registerModel({
         /**
          * Handles click on activity box title.
          */
-        onClickActivityBoxTitle() {
+        onClickActivityBoxTitle(ev) {
+            ev.preventDefault();
             this.update({ isActivityListVisible: !this.isActivityListVisible });
         },
         /**
