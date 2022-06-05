@@ -187,42 +187,58 @@ class StockMove(models.Model):
         existing_lots = moves_remaining._create_production_lots_for_pos_order(related_order_lines)
         move_lines_to_create = []
         mls_qties = []
-        for move in moves_remaining:
-            for line in lines_data[move.product_id.id]['order_lines']:
-                sum_of_lots = 0
-                for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
-                    if line.product_id.tracking == 'serial':
-                        qty = 1
-                    else:
-                        qty = abs(line.qty)
-                    ml_vals = dict(move._prepare_move_line_vals())
-                    if existing_lots:
-                        existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
-                        quant = self.env['stock.quant']
-                        if existing_lot:
-                            quant = self.env['stock.quant'].search(
-                                [('lot_id', '=', existing_lot.id), ('quantity', '>', '0.0'), ('location_id', 'child_of', move.location_id.id)],
-                                order='id desc',
-                                limit=1
-                            )
-                        ml_vals.update({
-                            'lot_id': existing_lot.id,
-                            'location_id': quant.location_id.id or move.location_id.id
-                        })
-                    else:
-                        ml_vals.update({'lot_name': lot.lot_name})
-                    move_lines_to_create.append(ml_vals)
-                    mls_qties.append(qty)
-                    sum_of_lots += qty
-                if abs(line.qty) != sum_of_lots:
-                    difference_qty = abs(line.qty) - sum_of_lots
-                    ml_vals = move._prepare_move_line_vals()
-                    if line.product_id.tracking == 'serial':
-                        move_lines_to_create.extend([ml_vals for i in range(int(difference_qty))])
-                        mls_qties.extend([1]*int(difference_qty))
-                    else:
+        if are_qties_done:
+            for move in moves_remaining:
+                for line in lines_data[move.product_id.id]['order_lines']:
+                    sum_of_lots = 0
+                    for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                        if line.product_id.tracking == 'serial':
+                            qty = 1
+                        else:
+                            qty = abs(line.qty)
+                        ml_vals = dict(move._prepare_move_line_vals())
+                        if existing_lots:
+                            existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
+                            quant = self.env['stock.quant']
+                            if existing_lot:
+                                quant = self.env['stock.quant'].search(
+                                    [('lot_id', '=', existing_lot.id), ('quantity', '>', '0.0'), ('location_id', 'child_of', move.location_id.id)],
+                                    order='id desc',
+                                    limit=1
+                                )
+                            ml_vals.update({
+                                'lot_id': existing_lot.id,
+                                'location_id': quant.location_id.id or move.location_id.id
+                            })
+                        else:
+                            ml_vals.update({'lot_name': lot.lot_name})
                         move_lines_to_create.append(ml_vals)
-                        mls_qties.append(difference_qty)
-        move_lines = self.env['stock.move.line'].create(move_lines_to_create)
-        for move_line, qty in zip(move_lines, mls_qties):
-            move_line.write({qty_fname: qty})
+                        mls_qties.append(qty)
+                        sum_of_lots += qty
+                    if abs(line.qty) != sum_of_lots:
+                        difference_qty = abs(line.qty) - sum_of_lots
+                        ml_vals = move._prepare_move_line_vals()
+                        if line.product_id.tracking == 'serial':
+                            move_lines_to_create.extend([ml_vals for i in range(int(difference_qty))])
+                            mls_qties.extend([1]*int(difference_qty))
+                        else:
+                            move_lines_to_create.append(ml_vals)
+                            mls_qties.append(difference_qty)
+            move_lines = self.env['stock.move.line'].create(move_lines_to_create)
+            for move_line, qty in zip(move_lines, mls_qties):
+                move_line.write({qty_fname: qty})
+        else:
+            for move in moves_remaining:
+                for line in lines_data[move.product_id.id]['order_lines']:
+                    for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                        if line.product_id.tracking == 'serial':
+                            qty = 1
+                        else:
+                            qty = abs(line.qty)
+                        if existing_lots:
+                            existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
+                            if existing_lot:
+                                available_quantity = move._get_available_quantity(move.location_id, lot_id=existing_lot, strict=True)
+                                if not float_is_zero(available_quantity, precision_rounding=line.product_id.uom_id.rounding):
+                                    move._update_reserved_quantity(qty, min(qty, available_quantity), move.location_id, existing_lot)
+                                    continue
