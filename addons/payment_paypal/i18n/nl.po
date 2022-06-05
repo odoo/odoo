@@ -3,17 +3,17 @@
 # 	* payment_paypal
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,25 +33,15 @@ msgstr ""
 "                <b>Het Odoo Team</b>"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:0
+#: code:addons/payment_paypal/models/payment_acquirer.py:0
 #, python-format
-msgid "Add your Paypal account to Odoo"
-msgstr "Voeg uw Paypal account toe aan Odoo"
+msgid "Add your PayPal account to Odoo"
+msgstr "Voeg je PayPal-account toe aan Odoo"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Email"
 msgstr "E-mail"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
-msgid "Fixed domestic fees"
-msgstr "Vaste huishoudelijke toeslagen"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
-msgid "Fixed international fees"
-msgstr "Vaste internationale vergoedingen"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -62,11 +52,16 @@ msgid ""
 "                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
 "                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
 msgstr ""
+"Hallo,\n"
+"<br/><br/>\n"
+"Je hebt een betaling ontvangen via PayPal. <br/>\n"
+"Volg de instructies van PayPal op om je account aan te maken. <br/>\n"
+"Help ons vervolgens met het invullen van je Paypal-gegevens in Odoo.<br/><br/>"
 
 #. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
 msgid "How to configure your paypal account?"
-msgstr "Hoe uw Paypal account te configureren?"
+msgstr "Hoe je Paypal account te configureren?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -74,9 +69,33 @@ msgid "Merchant Account ID"
 msgstr "Handelaarsaccount ID"
 
 #. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr ""
+"Ontbrekende waarde voor txn_id (%(txn_id)s) of txn_type (%(txn_type)s)."
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid "Notification data were not acknowledged."
+msgstr "Meldingsgegevens werden niet bevestigd."
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr "PDT identiteitstoken"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
+msgstr "PayPal-transactietype"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -84,13 +103,9 @@ msgid "Payment Acquirer"
 msgstr "Betalingsprovider"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
-msgid ""
-"Payment Data Transfer allows you to receive notification of successful "
-"payments as they are made."
-msgstr ""
-"Betalingsgegevens overdracht staat u in staat notificaties te ontvangen "
-"wanneer succesvolle betalingen worden gemaakt."
+#: model:ir.model,name:payment_paypal.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Betaalwijzes"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -98,6 +113,7 @@ msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: payment_paypal
+#: model:account.payment.method,name:payment_paypal.payment_method_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
 msgstr "Paypal"
@@ -108,15 +124,25 @@ msgid "Paypal Instant Payment Notification"
 msgstr "Directe betaling notificatie Paypal"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:0
-#, python-format
-msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr "Paypal: data ontvangen met ontbrekende referentie (%s) of txn_id (%s)"
-
-#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Provider"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "Gegevens ontvangen met ongeldige betalingsstatus: %s"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"Received unrecognized authentication check response code: received %s, "
+"expected VERIFIED or INVALID."
+msgstr ""
+"Niet-herkende responscode voor authenticatiecontrole ontvangen: ontvangen "
+"%s, verwacht VERIFIED of INVALID."
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -124,30 +150,25 @@ msgid "Set Paypal credentials"
 msgstr "Stel Paypal inloggegevens in"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
-msgid ""
-"The Merchant ID is used to ensure communications coming from Paypal are "
-"valid and secured."
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
-"De Merchant ID wordt gebruikt om communicatie afkomstig van Paypal te "
-"bevestigen en beveiligen."
+"De betalingsdienstaanbieder die bij deze profider moet worden gebruikt"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
-msgid "Transaction type"
-msgstr "Type transactie"
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr ""
+"Het openbare zakelijke e-mailadres dat uitsluitend wordt gebruikt om het "
+"account bij PayPal te identificeren"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type
+msgid "This has no use in Odoo except for debugging."
+msgstr "Dit heeft geen nut in Odoo, behalve voor debuggen."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
 msgstr "Gebruik IPN"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
-msgid "Variable domestic fees (in percents)"
-msgstr "Variabele binnenlandse kosten (in percentage)"
-
-#. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
-msgid "Variable international fees (in percents)"
-msgstr "Variabele internationale vergoedingen (in percentage)"

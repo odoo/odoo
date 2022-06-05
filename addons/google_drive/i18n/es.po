@@ -3,24 +3,35 @@
 # 	* google_drive
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Cristopher Cravioto <ccr@odoo.com>, 2019
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Antonio Trueba, 2016
+# Kiko <kiko@comunitea.com>, 2016
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Jon Perez <jop@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# marcescu, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Mariana Santos Romo <msn@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -33,21 +44,21 @@ msgid ""
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 "<b>Para crear un nuevo filtro:</b><br/>\n"
-"- Vaya al documento de Odoo que quiera filtrar. Por ejemplo, vaya a Oportunidades y busque por Departamento de ventas.<br/>\n"
-"- En esta vista de \"Búsqueda\", seleccione la opción \"Guardar filtro actual\", introduzca el nombre (P.ej.: Depto. ventas)<br/>\n"
-"- Si selecciona \"Compartir con todos los usuarios\", el enlace al documento de google aparecerá en el botón de opciones \"Más\" para todos los usuarios en las oportunidades de Depto. ventas.<br/>\n"
-"- Si no selecciona \"Compartir con todos los usuarios\", el enlace al documento de google no estará disponible para otros usuarios en las oportunidades de Depto. ventas.<br/>\n"
-"- Si no especifica un filtro,  el enlace al documento de google aparecerá en el botón de opciones \"Más\" para todos los usuarios en todas las oportunidades."
+"                                - Dirígete al documento de Odoo que quieres filtrar. Por ejemplo, ve a Oportunidades y busca por departamento de ventas.<br/>\n"
+"                                - En esta vista de \"Búsqueda\", selecciona la opción \"Guardar filtro actual\", introduce el nombre (por ejemplo: departamento de ventas)<br/>\n"
+"                                - Si seleccionas \"compartir con todos los usuarios\", el enlace al documento de google aparecerá en el botón de opciones \"Más\" para todos los usuarios en las oportunidades del departamento de ventas.<br/>\n"
+"                                - Si no seleccionas \"compartir con todos los usuarios\", el enlace al documento no estará disponible para otros usuarios en las oportunidades del Departamento de ventas.<br/>\n"
+"                                - Si no se especifica un filtro, el enlace al documento de google aparecerá en el botón de opciones \"Más\" para todos los usuarios en todas las oportunidades."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
-msgstr "<i class=\"fa fa-arrow-right\"/>Restablecer token"
+msgstr "<i class=\"fa fa-arrow-right\"/> Restablecer token"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
-msgstr "<i class=\"fa fa-arrow-right\"/>Configurar token"
+msgstr "<i class=\"fa fa-arrow-right\"/> Configurar token"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
@@ -55,19 +66,20 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
 " token set"
 msgstr ""
-" <i class=\"fa fa-exclamation-triangle text-warning\"/>&amp;nbsp; No se ha "
+" <i class=\"fa fa-exclamation-triangle text-warning\"/>  No se ha "
 "configurado ningún token de actualización"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
 msgstr ""
+"<i class=\"text-success fa fa-check\"/>   Token de actualización establecido"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
 msgid "<span>Get an authorization code and set it in the field below.</span>"
 msgstr ""
-"<span>Obtenga un código de autorización y configúrelo en el campo a "
+"<span>Obtén un código de autorización y configúralo en el campo a "
 "continuación</span>"
 
 #. module: google_drive
@@ -111,7 +123,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
-msgstr "Cídigo de autorización"
+msgstr "Código de autorización"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
@@ -124,13 +136,13 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
-"Elija el nombre de la nueva unidad de Google Drive, en el lado de Google. "
-"P.ej.: gdoc_%(field_name)s"
+"Elige el nombre de la nueva unidad de Google Drive, en el lado de Google. "
+"ej.: gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de Configuración"
+msgstr "Ajustes de configuración"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
@@ -156,6 +168,11 @@ msgstr ""
 "una."
 
 #. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
@@ -164,6 +181,11 @@ msgstr "Nombre mostrado"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
 msgid "Filter"
 msgstr "Filtro"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Get Authorization Code"
+msgstr "Obtener código de autorización"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -191,16 +213,14 @@ msgstr "Patrón de nombres de Google Drive"
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "Google Drive Templates"
-msgstr "Plantillas Google Drive"
+msgstr "Plantillas de Google Drive"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
 #: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
-"Google Drive está sin configurar aún. Contacte por favor con su "
-"administrador."
+msgstr "Google Drive está aún sin configurar. Contacta a tu administrador."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -213,9 +233,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
+msgstr ""
+"Google Drive incoherente %(drive)s: el modelo del filtro %(filter)r "
+"seleccionado no coincide con el modelo de la plantilla (%(filter_model)r, "
+"%(drive_model)r) actual"
+
+#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última modificación el"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
@@ -236,13 +268,12 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear una nueva plantilla.\n"
-"</p>\n"
-"<p>\n"
-"Enlace sus plantillas de Google Drive a cualquier registro de Odoo. Si ha especificado documentos que quiere que rellene su colaborador, como por ejemplo una hoja para el control de la calidad de su producto o para revisar la lista de envío de cada pedido al extranjero..., es muy sencillo de gestionar, enlazándolos a Odoo y usándolos para colaborar con sus empleados.\n"
-"</p>\n"
-"            "
+"Vincula tus plantillas de Google Drive a cualquier registro de Odoo. Si "
+"tienes documentos muy específicos que quieres que tus colaboradores "
+"completen, por ejemplo, usar una hoja de cálculo para controlar la calidad "
+"de tu producto o revisar la lista de envío de cada orden en el extranjero, "
+"... es muy sencillo gestionarlas, vincúlalas a Odoo y úsalas para colaborar "
+"con tus empleados."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
@@ -253,12 +284,12 @@ msgstr "Modelo"
 #: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr "Por favor, introduzca una URL de documento de Google válida."
+msgstr "Por favor, introduce un URL de Documento de Google válido."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
 msgid "Refresh Token Generated"
-msgstr "Actualizar el Token Generado "
+msgstr "Token de actualización generado"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
@@ -268,18 +299,18 @@ msgstr "Modelo relacionado"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
 msgid "Resource Id"
-msgstr "Id recurso"
+msgstr "Id del recurso"
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
 msgid "Search Google Drive Config"
-msgstr "Buscar en Google Drive Config"
+msgstr "Configuración de búsqueda en Google Drive"
 
 #. module: google_drive
 #: code:addons/google_drive/models/res_config_settings.py:0
 #, python-format
 msgid "Set up refresh token"
-msgstr "Configurar el token de actualización"
+msgstr "Configura el token de actualización"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -288,13 +319,13 @@ msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
 msgstr ""
-"Algo fue mal durante la generación del token. Solicite de nuevo por favor un"
-" código de autorización."
+"Algo salió mal durante la generación del token. Solicita de nuevo un código "
+"de autorización."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
 msgid "Template Name"
-msgstr "Nombre de plantilla"
+msgstr "Nombre de la plantilla"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
@@ -310,12 +341,22 @@ msgstr "Plantillas"
 #: code:addons/google_drive/models/google_drive.py:0
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr "No se encuentra la plantilla de Google. Tal vez se haya eliminado."
+msgstr "No se encuentra la plantilla de Google. Tal vez ha sido eliminada."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr "La URL para generar el código de autorización de Google"
+msgstr "El URL para generar el código de autorización de Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
+"El filtro de documentos no debe incluir ninguna parte 'dinámica', por lo que"
+" no debe basarse en la hora actual o en el usuario actual, por ejemplo."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -325,6 +366,10 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"El nombre del documento adjunto puede usar datos fijos o variables. Para distinguir entre documentos en\n"
+"                                Google Drive, usa palabras y campos fijos. Por ejemplo, en el ejemplo anterior, si escribiste Deco_Addict_%(name)s_Sales\n"
+"                                en el campo de nombre de Google Drive  el documento en tu Google Drive entonces en Odoo el adjunto sera nombrado\n"
+"                                'Deco_Addict_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:0
@@ -333,7 +378,7 @@ msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
 msgstr ""
-"El permiso de 'lector' para 'todo el mundo con enlace' no ha sido "
+"El permiso de 'lector' para 'cualquier persona con el enlace' no ha sido "
 "establecido en el documento"
 
 #. module: google_drive

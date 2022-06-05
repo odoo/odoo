@@ -3,36 +3,27 @@
 # 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Riccardo Di Maio <riccardodimaio11@gmail.com>, 2019
-# Paolo Valier, 2019
-# Pietro Della Notte <pdellanotte@gmail.com>, 2019
-# mymage <stefano.consolaro@mymage.it>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: bus
 #: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "Un utente può avere un solo stato IM."
-
-#. module: bus
-#: model:ir.model,name:bus.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Pulizia automatica"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -62,7 +53,7 @@ msgstr "Creato da"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -117,12 +108,27 @@ msgstr "Messaggio"
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
-msgstr "Fuori linea"
+msgstr "Non in linea"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "In linea"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "Refresh"
+msgstr "Ricarica"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr "La pagina non sembra essere aggiornata."
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

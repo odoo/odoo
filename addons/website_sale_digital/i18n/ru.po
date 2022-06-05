@@ -3,17 +3,20 @@
 # 	* website_sale_digital
 # 
 # Translators:
+# 6da4f49c4b78e697e34b24b2a66289f5, 2017
+# Collex100, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Martin Trigaux, 2019
-# Collex100, 2019
-# Viktor Pogrebniak <vp@aifil.ru>, 2019
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
+# Irina Fedulova <istartlin@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 12:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +25,20 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_sale_digital
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
+#, python-format
+msgid "Add attachments for this digital product"
+msgstr ""
+
+#. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_ir_attachment
 msgid "Attachment"
 msgstr "Приложение"
 
 #. module: website_sale_digital
-#: code:addons/website_sale_digital/models/product.py:23
-#: code:addons/website_sale_digital/models/product.py:54
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
 #, python-format
 msgid "Digital Attachments"
 msgstr "Цифровые вложения"
@@ -37,18 +47,17 @@ msgstr "Цифровые вложения"
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
 msgid "Digital Files"
-msgstr ""
+msgstr "цифровые файлы"
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
-#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document__product_downloadable
 msgid "Downloadable from product portal"
 msgstr "Скачать с портала продукта"
 
 #. module: website_sale_digital
 #: model_terms:ir.ui.view,arch_db:website_sale_digital.sale_order_portal_content_inherit_website_sale_digital
 msgid "Downloads"
-msgstr ""
+msgstr "Загрузка"
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_product_product__attachment_count
@@ -70,3 +79,22 @@ msgstr "Продукт"
 #: model:ir.model,name:website_sale_digital.model_product_template
 msgid "Product Template"
 msgstr "Шаблон продукта"
+
+#. module: website_sale_digital
+#: code:addons/website_sale_digital/models/product.py:0
+#: code:addons/website_sale_digital/models/product.py:0
+#, python-format
+msgid ""
+"The attached files are the ones that will be purchased and sent to the "
+"customer."
+msgstr ""
+
+#. module: website_sale_digital
+#: model:product.template,uom_name:website_sale_digital.product_1
+msgid "Units"
+msgstr "Единицы"
+
+#. module: website_sale_digital
+#: model:product.template,name:website_sale_digital.product_1
+msgid "eBook: Office Renovation for Dummies"
+msgstr "Электронная книга Офисный ремонт для чайников"

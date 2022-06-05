@@ -3,22 +3,39 @@
 # 	* note
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
-# Jan Meyer, 2019
+# Henry Mineehen <info@mineehen.de>, 2017
+# Niki Waibel, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# dd256e210d6036751f64d38852b8a332_e79cb88 <9b58773c6587e6146b8596f8192096a0_521366>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Andi, 2017
+# brokemeister <work@maltejansen.de>, 2017
+# Wolfgang Taferner, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Tom, 2018
+# Michael Schütt <michael.schuett.lwl@gmail.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
-# Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
-# Sebastian <shu@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Sebastian <shu@odoo.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
+# Friederike Fasterling-Nesselbosch, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
+# Raymond Vetter, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,14 +54,14 @@ msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed
 msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Aktion"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "Aktion notwendig"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Action to Perform"
-msgstr "Aktion beginnen"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
@@ -85,6 +102,11 @@ msgstr "Status der Aktivität"
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
 msgstr "Aktivitätstyp"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivitäts-Typ-Icon"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
@@ -139,6 +161,11 @@ msgid "Color Index"
 msgstr "Farbkennzeichnung"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -180,11 +207,6 @@ msgid "Dropdown menu"
 msgstr "Dropdownmenu"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Exception Activities"
-msgstr "Ausnahmeaktivitäten"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Im Standard zugeklappt"
@@ -200,14 +222,14 @@ msgid "Followers"
 msgstr "Abonnenten"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Abonnenten (Kanäle)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Abonnenten (Partner)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "FontAwesome Icon, z.B. fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -218,6 +240,11 @@ msgstr "Anstehende Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Gruppieren nach"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Hat eine Nachricht"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -238,7 +265,6 @@ msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
-#: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
@@ -299,9 +325,19 @@ msgid "Messages"
 msgstr "Nachrichten"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Deadline für meine Aktivitäten"
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Neu"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nächstes Aktivitätskalenderereignis"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -349,8 +385,8 @@ msgstr "Notiz 'Tag'"
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "Notizen"
@@ -383,11 +419,6 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -438,6 +469,7 @@ msgstr "Sequenz"
 
 #. module: note
 #. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
@@ -535,16 +567,6 @@ msgstr "Zu erledigen"
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Typ der Ausnahmeaktivität im Datensatz."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr "Ungelesene Nachrichten"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence

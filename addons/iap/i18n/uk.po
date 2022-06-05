@@ -3,16 +3,18 @@
 # 	* iap
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2017-12-13 14:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,26 +25,20 @@ msgstr ""
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Account Information"
-msgstr "Інформація про рахунок"
+msgstr "Інформація про обліковий запис"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 msgid "Account Token"
-msgstr "Токен рахунку"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
-#, python-format
-msgid "Buy credits"
-msgstr "Отримати кредит"
+msgstr "Токен облікового запису"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:0
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
-msgid "Buy credits at Odoo"
-msgstr "Беріть кредити в Odoo"
+msgid "Buy credits"
+msgstr "Отримати кредит"
 
 #. module: iap
 #. openerp-web
@@ -69,12 +65,17 @@ msgstr "Створив"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Документація"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -86,23 +87,23 @@ msgstr "IAP"
 #: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr "Рахунок IAP "
+msgstr "Обліковий запис IAP "
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
-msgstr "Рахунки IAP "
+msgstr "Облікові записи IAP "
+
+#. module: iap
+#: model:ir.model,name:iap.model_iap_enrich_api
+msgid "IAP Lead Enrichment API"
+msgstr " API збільшення лідів IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 msgid "ID"
 msgstr "ID"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
-msgid "In-App Purchases"
-msgstr "Купівлі в програмі"
 
 #. module: iap
 #. openerp-web
@@ -121,7 +122,7 @@ msgstr "Недостатній кредит для виконання цієї �
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -153,10 +154,10 @@ msgstr "Назва послуги"
 #: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr "Почати пробну версію в Odoo"
+msgstr "Почати випробування в Odoo"
 
 #. module: iap
-#: code:addons/iap/models/iap.py:0
+#: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
 "The url that this service requested returned an error. Please contact the "
@@ -166,7 +167,10 @@ msgstr ""
 "програми. URL, з яким він намагався зв’язатися %s"
 
 #. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+#, python-format
 msgid "View My Services"
 msgstr "Переглянути мої послуги"
 
