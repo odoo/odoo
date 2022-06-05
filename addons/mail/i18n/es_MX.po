@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -875,6 +875,8 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to unblacklist this Email Address?"
 msgstr ""
+"¿Está seguro de que quiere eliminar esta dirección de correo electrónico de "
+"la lista negra?"
 
 #. module: mail
 #. openerp-web
@@ -1792,7 +1794,7 @@ msgstr "Error en la entrega"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr ""
+msgstr "Fallo en la entrega"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2287,7 +2289,7 @@ msgstr "Correos electrónicos"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Emojis"
-msgstr ""
+msgstr "Emojis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_internal
@@ -6245,7 +6247,7 @@ msgstr "Este registro tiene una actividad de excepción."
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "This user can not be added in this channel"
-msgstr "No se puede añadir al usuario en este canal"
+msgstr "No se puede añadir el usuario a este canal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -6752,7 +6754,7 @@ msgstr "Tipo de vista"
 #: code:addons/mail/static/src/components/attachment/attachment.xml:0
 #, python-format
 msgid "View image"
-msgstr ""
+msgstr "Ver imagen"
 
 #. module: mail
 #. openerp-web
@@ -6934,7 +6936,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "You can not write on this field"
-msgstr ""
+msgstr "No puede escribir en este campo"
 
 #. module: mail
 #. openerp-web
@@ -7002,6 +7004,8 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
+"No tiene los suficientes derechos de acceso para eliminar correos "
+"electrónicos de la lista negra. Contacte con su administrador."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

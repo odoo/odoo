@@ -20,6 +20,7 @@
 # hed shefer <hed@laylinetech.com>, 2021
 # david danilov, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: Netta Waizer, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -378,7 +379,7 @@ msgstr "דירוגי לקוחות מושבתים בפרויקטים הבאים:"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr ""
+msgstr "<p><em>מספר משימות:%(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -427,12 +428,12 @@ msgstr "שביעות רצון לקוחות"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">חזרה מחודשת</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr ""
+msgstr "<span>האם אתה בטוח שברצונך למחוק את הפרויקט הזה?</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -440,6 +441,8 @@ msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
 msgstr ""
+"<span>לא ניתן למחוק פרויקט המכיל משימות. אתה יכול להעביר אותו לארכיון או "
+"למחוק תחילה את כל המשימות שלו.</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -698,7 +701,7 @@ msgstr "האם אתה בטוח שברצונך למחוק שלבים אלו?"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "הרכבה"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -903,7 +906,7 @@ msgstr "עיר"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr ""
+msgstr "סקירת לקוח"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
@@ -1058,7 +1061,7 @@ msgstr "מטבע"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current project of the task"
-msgstr ""
+msgstr "הפרויקט הנוכחי של המשימה"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -1119,12 +1122,12 @@ msgstr "דירוגי לקוח"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
+msgstr "סטטוס דירוג לקוחות"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
 msgid "Customer Ratings on Task"
-msgstr ""
+msgstr "דירוג לקוחות במשימה"
 
 #. module: project
 #. openerp-web
@@ -1135,6 +1138,9 @@ msgid ""
 "you can communicate on the task directly. Your managers decide which "
 "feedback is accepted %s and which feedback is moved to the %s column. %s"
 msgstr ""
+"לקוחות מציעים משוב בדוא\"ל; Odoo יוצר משימות באופן אוטומטי, ואתה יכול לתקשר "
+"ישירות על המשימה. המנהלים שלך מחליטים איזה משוב יתקבל%sואיזה משוב מועבר "
+"אל%sהעמודה.%s"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1162,7 +1168,7 @@ msgstr "יום בחודש"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__date
 msgid "Date of the Year"
-msgstr ""
+msgstr "תאריך השנה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -1180,7 +1186,7 @@ msgstr "יום בחודש"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__day
 msgid "Day of the Year"
-msgstr ""
+msgstr "יום השנה"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1242,7 +1248,7 @@ msgstr "מחק"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Delete Project"
-msgstr ""
+msgstr "מחק פרויקט"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1305,7 +1311,7 @@ msgstr "שיווק דיגיטלי"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
 msgid "Disabled Rating Warning"
-msgstr ""
+msgstr "אזהרת דירוג מושבתת"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1380,7 +1386,7 @@ msgstr "ערוך"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Edit recurring task"
-msgstr ""
+msgstr "ערוך משימה חוזרת"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1408,7 +1414,7 @@ msgstr "דוא\"ל"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email From"
-msgstr ""
+msgstr "אימייל מ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
@@ -1631,13 +1637,15 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea. %s"
 msgstr ""
+"טפל באיסוף הרעיונות שלך בתוך משימות של הפרויקט החדש שלך ודון בהם בצ'אט של "
+"המשימות. השתמש ב%sו%sכדי לאותת מה המצב הנוכחי של הרעיון שלך.%s"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "למסור את"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2009,14 +2017,14 @@ msgstr "דירוג אחרון: מרוצה"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr ""
+msgstr "בוא ניצור את <b>הפרויקט</b>הראשון שלך."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr ""
+msgstr "בוא ניצור את <b>המשימה</b> הראשונה שלך."
 
 #. module: project
 #. openerp-web
@@ -2038,7 +2046,7 @@ msgstr "בוא נתחיל לעבוד על המשימה שלך."
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr ""
+msgstr "בואו נחכה שהלקוחות שלכם יבואו לידי ביטוי."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2091,6 +2099,8 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"נהל את מחזור החיים של הפרויקט שלך באמצעות תצוגת הקנבן. הוסף פרויקטים חדשים "
+"שנרכשו, הקצה אותם והשתמש ב-%sו-%sכדי להגדיר אם הפרויקט מוכן לשלב הבא.%s"
 
 #. module: project
 #. openerp-web
@@ -2111,7 +2121,7 @@ msgstr "מרץ"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Material Sourcing"
-msgstr ""
+msgstr "מקורות חומרים"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
@@ -2141,7 +2151,7 @@ msgstr "הודעות"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr ""
+msgstr "ערבוב"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -2271,12 +2281,12 @@ msgstr "סוג הפעילות הבאה"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
 msgid "Next Recurrence Date"
-msgstr ""
+msgstr "תאריך החזרה המחודשת הבא"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
-msgstr ""
+msgstr "החזרות המחודשות הבאות"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2294,7 +2304,7 @@ msgstr "אין עדיין דירוג לקוחות"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "No projects found. Let's create one!"
-msgstr ""
+msgstr "לא נמצאו פרויקטים. בואו ניצור אחד!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -2307,7 +2317,7 @@ msgstr "לא נמצאו תגיות. בואו ניצור אחת!"
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
-msgstr ""
+msgstr "לא נמצאו משימות. בואו ניצור אחת!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -2337,7 +2347,7 @@ msgstr "מספר פעולות"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__after
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "מספר חזרות"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
@@ -2404,7 +2414,7 @@ msgstr "אישור"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "ספרינט ישן הושלם"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -2514,7 +2524,7 @@ msgstr "אחוז הדירוגים השמחים"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Percentage of happy ratings over the past 30 days."
-msgstr ""
+msgstr "אחוז הדירוגים המאושרים במהלך 30 הימים האחרונים."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
@@ -2554,7 +2564,7 @@ msgstr "אנא הסר משימות קיימות בפרויקט המקושר לח
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr ""
+msgstr "הפקת פודקאסט והפקת וידאו"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -2639,7 +2649,7 @@ msgstr "כמות פרויקטים"
 #. module: project
 #: model:ir.model,name:project.model_project_delete_wizard
 msgid "Project Delete Wizard"
-msgstr ""
+msgstr "אשף מחיקת הפרויקט"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -2677,7 +2687,7 @@ msgstr "משימות הפרויקט"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
+msgstr "נראות הפרויקט"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__subtask_project_id
@@ -2733,7 +2743,7 @@ msgstr "פרויקטים ומשימות"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__projects_archived
 msgid "Projects Archived"
-msgstr ""
+msgstr "פרויקטים בארכיון"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2821,7 +2831,7 @@ msgstr "שביעות רצון דירוג"
 #: code:addons/project/static/src/js/project_rating_reporting.js:0
 #, python-format
 msgid "Rating Value (/5)"
-msgstr ""
+msgstr "ערך דירוג (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -2894,7 +2904,7 @@ msgstr "מזהה רשומת שרשור"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Recording"
-msgstr ""
+msgstr "הקלטה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
@@ -2940,7 +2950,7 @@ msgstr "נדחה"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_day
 msgid "Repeat Day"
-msgstr ""
+msgstr "יום חוזר"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
@@ -2957,7 +2967,7 @@ msgstr "חזור חודשי"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Repeat On"
-msgstr ""
+msgstr "חזור על"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_month
@@ -2969,17 +2979,17 @@ msgstr "חזור בחודש"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_year
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_year
 msgid "Repeat On Year"
-msgstr ""
+msgstr "חזור על שנה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_day
 msgid "Repeat Show Day"
-msgstr ""
+msgstr "חזרת יום המופע"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_dow
 msgid "Repeat Show Dow"
-msgstr ""
+msgstr "עקרון חזרת המופע"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_month
@@ -2995,7 +3005,7 @@ msgstr "חזור תצוגה בשבוע"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "חזור על יחידה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
@@ -3007,7 +3017,7 @@ msgstr "חזור בשבוע"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_number
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_number
 msgid "Repetitions"
-msgstr ""
+msgstr "חזרות"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -3086,7 +3096,7 @@ msgstr "יום שבת"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Script"
-msgstr ""
+msgstr "תסריט"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3121,7 +3131,7 @@ msgstr "חפש בהודעות"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "חפש בפרויקט"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3206,7 +3216,7 @@ msgstr "פיתוח תוכנה"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr ""
+msgstr "מצטער. לא ניתן להגדיר משימה כמשימת האב שלה."
 
 #. module: project
 #. openerp-web
@@ -3233,14 +3243,14 @@ msgstr "ספרינט פיגור"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr ""
+msgstr "ספרינט הושלם"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "ספרינט בתהליך"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3337,7 +3347,7 @@ msgstr "משימות משנה"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Sub-tasks Planned Hours"
-msgstr ""
+msgstr "משימות משנה שעות מתוכננות"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -3522,7 +3532,7 @@ msgstr "ניתוח נתוני משימות"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks In Progress"
-msgstr ""
+msgstr "משימות בתהליך"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3538,7 +3548,7 @@ msgstr "שלבי המשימות"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
-msgstr ""
+msgstr "משימות בחזרה מחודשת"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__is_closed
@@ -3622,7 +3632,7 @@ msgstr "אין פרויקטים."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr ""
+msgstr "אין דירוגים לפרויקט זה כרגע"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3685,7 +3695,7 @@ msgstr "צעד זה בוצע. לחץ כדי לחסום או להגדיר בתה�
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__this
 msgid "This task"
-msgstr ""
+msgstr "המשימה הזו"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -3714,7 +3724,7 @@ msgstr "ניהול זמן"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__planned_hours
 msgid "Time planned to achieve this task (including its sub-tasks)."
-msgstr ""
+msgstr "מתוכנן זמן להשגת משימה זו (כולל משימות המשנה שלה)."
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -3828,7 +3838,7 @@ msgstr "עד"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Use <b>activities</b> to organize your daily work."
-msgstr ""
+msgstr "השתמש<b>בפעילויות</b>לארגן את העבודה היומיומית שלך."
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -3855,7 +3865,7 @@ msgstr "השתמש במשימות כ"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
+msgstr "השתמש בכך לפרויקט שלי"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
@@ -4072,7 +4082,7 @@ msgstr "למשל מסיבת משרד"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "למשל מסיבת משרד"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
