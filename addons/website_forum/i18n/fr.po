@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Grégory Schreiner <gregory@mokatourisme.fr>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
@@ -2725,6 +2726,9 @@ msgid ""
 "Signed In: Forum is visible for signed in users\n"
 "Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
+"Public : Le forum est public\n"
+"Utilisateurs connectés : Le forum est visible pour les utilisateurs connectés\n"
+"Certains utilisateurs : Le forum et ses contenus sont pour les nom-membres des groupes sélectionnés"
 
 #. module: website_forum
 #. openerp-web
@@ -2735,6 +2739,9 @@ msgid ""
 "users\\nSome users: Forum and their content are hidden for non members of "
 "selected group"
 msgstr ""
+"Public : Le forum est public\n"
+"Utilisateurs connectés : Le forum est visible pour les utilisateurs connectés\n"
+"Certains utilisateurs : Le forum et ses contenus sont pour les nom-membres des groupes sélectionnés"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -3113,7 +3120,7 @@ msgstr "Se connecter"
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__connected
 #, python-format
 msgid "Signed In"
-msgstr "Arrivée"
+msgstr "Utilisateurs connectés"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block

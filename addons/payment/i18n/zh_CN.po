@@ -6,8 +6,8 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "数据已获取"
+msgstr " 数据已获取"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -333,7 +333,7 @@ msgstr "授权信息"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 msgid "Authorize.net"
-msgstr "Authorize.net "
+msgstr "Authorize.net"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
@@ -958,7 +958,7 @@ msgstr "是经过后期处理的"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr "目前，它与以下文件相关联。"
+msgstr "目前，它与以下文件相关联:"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_journal
@@ -1474,7 +1474,7 @@ msgstr "请设置金额小于 %s."
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "Please switch to company '%s' to make this payment."
-msgstr ""
+msgstr "请切换到公司“%s”进行此付款。"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -1554,7 +1554,7 @@ msgstr "退款金额"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr "退款金额： "
+msgstr "退款金额"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1783,7 +1783,7 @@ msgstr "访问令牌无效。"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
 msgid "The acquirer reference of the token of the transaction"
-msgstr "已经存在一个单号%s的支付交易。"
+msgstr "已经存在一个单号%s的支付交易"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1824,12 +1824,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__description
 msgid "The description shown in the card in kanban view "
-msgstr "在看板视图中显示在卡片上的描述"
+msgstr "在看板视图中显示在卡片上的描述 "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
-msgstr "费用金额；由系统设定，因为它取决于收单方。"
+msgstr "费用金额；由系统设定，因为它取决于收单方"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1873,7 +1873,7 @@ msgstr "如果订单在支付过程中被成功完成，所显示的信息"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid "The message displayed if the order pending after the payment process"
-msgstr "如果订单在付款过程中被搁置，所显示的信息。"
+msgstr "如果订单在付款过程中被搁置，所显示的信息"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
@@ -1913,7 +1913,7 @@ msgstr "相关退款交易的源交易"
 msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
-msgstr "模板渲染一个提交的表单，以便在付款时重定向用户。"
+msgstr "模板渲染一个提交的表单，以便在付款时重定向用户"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inline_form_view_id
@@ -1993,7 +1993,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_icon__image_payment_form
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
-msgstr "这个字段持有用于该支付图标的图像，限制在64x64 px以内。"
+msgstr "这个字段持有用于该支付图标的图像，限制在64x64 px以内"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2196,7 +2196,7 @@ msgid ""
 "Linked acquirer(s): %s"
 msgstr ""
 "你不能删除与处于启用或测试状态的收单机构链接的支付方式。\n"
-"链接的收单机构：%s。"
+"链接的收单机构：%s"
 
 #. module: payment
 #: code:addons/payment/models/ir_ui_view.py:0
@@ -2208,7 +2208,7 @@ msgstr "你不能删除一个由支付收单机构使用的视图。"
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "您无权访问此付款令牌。"
 
 #. module: payment
 #. openerp-web

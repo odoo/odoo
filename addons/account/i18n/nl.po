@@ -5555,6 +5555,11 @@ msgid "Documentation"
 msgstr "Documentatie"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "Land van je boekhouding"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__done
@@ -14800,6 +14805,18 @@ msgstr "Dit kan alleen op dagboek items gebruikt worden"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+"Dit item bevat een of meer btw's die niet compatibel zijn met uw fiscale "
+"land. Controleer het fiscale land van het bedrijf in de instellingen en het "
+"belastingland in de btw-configuratie."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr ""
@@ -14815,6 +14832,17 @@ msgid ""
 msgstr ""
 "Dit bericht is gekopieerd van <a href=# data-oe-model=account.move data-oe-"
 "id=%(id)d>%(title)s</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr ""
+"Deze invoer bevat btw's die niet verenigbaar zijn met uw fiscale positie. "
+"Controleer het land dat is ingesteld in fiscale positie en in uw btw-"
+"configuratie."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16068,9 +16096,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Je kunt geen standaard communicatie plaatsen die getoond zal worden op de "
-"klanten factuur, eens bevestigd, om de klant bij te staan als verwijzing "
-"naar dat bijzonder factuur bij het uitvoeren van de betaling."
+"Je kunt hier de standaardcommunicatie instellen die na bevestigen op de "
+"klantfacturen zal verschijnen om de klant te helpen bij het uitvoeren van de"
+" betaling en naar die specifieke factuur te verwijzen."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0

@@ -8,8 +8,8 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr "1 年"
 #: model:product.product,description_sale:product.product_product_4d
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs."
-msgstr "160X80cm，大桌腿"
+msgstr "160X80cm，大桌腿."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -327,7 +327,7 @@ msgstr "所有产品"
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr "允许用户为该属性值输入自定义值 "
+msgstr "允许用户为该属性值输入自定义值"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -453,7 +453,7 @@ msgstr "条码"
 msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
-msgstr "条码主要用于快速确定包裹。在App中扫描此物流包裹条码可以快速处理库存调拨。"
+msgstr "条码主要用于快速确定包裹。在App中扫描此物流包裹条码可以快速处理库存调拨"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -1040,7 +1040,7 @@ msgstr "排除"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr "价格表明细的详细规则名称"
+msgstr "价格表明细的详细规则名称."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
@@ -1160,7 +1160,7 @@ msgstr "使用条形码获取产品图片"
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
 #: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr "对同一产品采取不同的打包方式"
+msgstr "对同一产品采取不同的打包方式."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
@@ -2617,6 +2617,12 @@ msgid "The product template is archived so no combination is possible."
 msgstr "产品模板已经存档，所以无法合并。"
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr "产品多属性必须是产品模板的多属性."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2653,7 +2659,7 @@ msgstr "没有余下的最佳组合。"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "There are no remaining possible combination."
-msgstr "没有余下的可能组合"
+msgstr "没有余下的可能组合."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
@@ -2690,7 +2696,7 @@ msgstr "本说明仅供内部使用。"
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "这价格表将会被使用,取代默认值,用之出售给当前伙伴."
+msgstr "这价格表将会被使用,取代默认值,用之出售给当前伙伴"
 
 #. module: product
 #: code:addons/product/models/uom_uom.py:0
@@ -3153,19 +3159,19 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr "不可变更该属性值 %s 的产品，该值已被用于产品 %s"
+msgstr "不可变更该属性值 %s 的产品，该值已被用于产品 %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr "不可变更该属性值 %s ，该值已被用于产品 %s"
+msgstr "不可变更该属性值 %s ，该值已被用于产品 %s."
 
 #. module: product
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "You cannot create recursive categories."
-msgstr "不能创建递归的类别"
+msgstr "不能创建递归的类别."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
@@ -3227,7 +3233,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr "不能将属性 %s 从产品 %s 调整至产品 %s"
+msgstr "不能将属性 %s 从产品 %s 调整至产品 %s."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3334,7 +3340,7 @@ msgstr "上级公司"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr "产品模板"
+msgstr "产品模板."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

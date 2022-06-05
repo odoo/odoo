@@ -11,11 +11,11 @@
 # wei zhou, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
 # Dong <dong@freshoo.cn>, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr "%(lock_type)s 锁定日期设置为 %(lock_date)s。"
+msgstr " %(lock_type)s 锁定日期设置为 %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -2027,7 +2027,7 @@ msgstr "调整分录 {link}: {percent:f}% of {amount} 认可于 {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry of {date} ({percent:f}% recognized on {new_date})"
-msgstr "调整 {date} 的分录 ({percent:f}% 认可于 {new_date})"
+msgstr "调整分录{date} ({percent:f}% 在上识别 {new_date})"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -5361,6 +5361,11 @@ msgid "Documentation"
 msgstr "系统使用说明"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "你的会计所属国家"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_invoice_onboarding_state__done
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_onboarding_create_invoice_state__done
@@ -7145,7 +7150,7 @@ msgstr "结算单和退款通知分配应分别包含一行基数。"
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr "发票及贷方票据分摊需至少一个分摊明细行"
+msgstr "发票及贷方票据分摊需至少一个分摊明细行."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -10045,7 +10050,7 @@ msgstr "请设置至少一个匹配文本以创建合作伙伴映射."
 #: code:addons/account/models/ir_module_module.py:0
 #, python-format
 msgid "Please update the Invoicing module before continuing."
-msgstr "处理前请更新发票模块"
+msgstr "处理前请更新发票模块."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -14083,6 +14088,15 @@ msgstr "这只能用于日记帐项目"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr "此条目包含一个或多个与您的财政国家/地区不兼容的税种。在设置中检查公司会计国家/地区，在税收配置中检查税收国家/地区。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr "此分录包含来自不被允许的国家/地区的一些税款. 请检查其财务状况和您的税务设置."
@@ -14095,6 +14109,14 @@ msgid ""
 "data-oe-id=%(id)d>%(title)s</a>"
 msgstr ""
 "此分录已从<a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s 复制</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr "此条目包含与您的财务状况不兼容的税款。检查在财政状况和税收配置中设置的国家/地区。"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -16090,4 +16112,4 @@ msgstr "→ 计数"
 msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
-msgstr ""
+msgstr "分析默认值需要用于分析分发的分析帐户或分析标记。"

@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
@@ -5572,6 +5572,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentación"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "País de origen de su contabilidad"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
@@ -14836,6 +14841,18 @@ msgstr "Esto solo se puede usar en apuntes de diario"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+"Este asiento contiene uno o más impuestos que no son compatibles con su país"
+" fiscal. Compruebe el país fiscal de la empresa en los ajustes y el país de "
+"los impuestos en la configuración de impuestos."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr ""
@@ -14851,6 +14868,17 @@ msgid ""
 msgstr ""
 "Este asiento se ha duplicado de <a href=# data-oe-model=account.move data-"
 "oe-id=%(id)d>%(title)s</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr ""
+"Este asiento contiene impuestos que no son compatibles con su posición "
+"fiscal. Compruebe el país que se estableció en la posición fiscal y en su "
+"configuración de impuestos."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0

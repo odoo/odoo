@@ -3,11 +3,11 @@
 # 	* base
 # 
 # Translators:
+# Philipp Köhler <philipp.koehler@manatec.de>, 2021
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2021
 # Ermin Trevisan <trevi@twanda.com>, 2021
 # Chris Egal <sodaswed@web.de>, 2021
 # Jan Meyer, 2021
-# Philipp Köhler <philipp.koehler@manatec.de>, 2021
 # qndi <andreas.brueckl@datenpol.at>, 2021
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2022
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
@@ -2866,7 +2866,7 @@ msgid ""
 "Supported devices include payment terminals, receipt printers, scales and customer displays.\n"
 msgstr ""
 "\n"
-"Ermöglicht die Verwendung von Geräten, die mit einer IoT-Box verbunden sind, am Point of Sale.\n"
+"Ermöglicht die Verwendung von Geräten, die mit einer IoT-Box verbunden sind, am Verkaufspunkt.\n"
 "Zu den unterstützten Geräten gehören Zahlungsterminals, Bondrucker, Waagen und Kundendisplays.\n"
 
 #. module: base
@@ -8707,7 +8707,8 @@ msgstr ""
 "Diese Anwendung bietet dem Benutzer die Möglichkeit, Fertigung und Verkauf gleichzeitig zu installieren. \n"
 "==============================================================================================\n"
 "\n"
-"Das Modul wird grundsätzlich verwendet, wenn wir den Überblick über Fertigungsaufträge, die aus Verkaufsaufträge erstellt werden, behalten wollen. Es fügt Verkaufsnamen und Verkaufsreferenzen dem Fertigungsauftrag hinzu.\n"
+"Es wird grundsätzlich verwendet, um den Überblick über Produktionsaufträge zu behalten, die\n"
+"aus einem Kundenauftrag generiert wurden. Es fügt den Verkaufsnamen und die Verkaufsreferenz zum Produktionsauftrag hinzu.\n"
 "    "
 
 #. module: base
@@ -12045,7 +12046,7 @@ msgstr "Aktiva"
 #: model_terms:ir.ui.view,arch_db:base.asset_view_search
 #: model_terms:ir.ui.view,arch_db:base.asset_view_tree
 msgid "Assets"
-msgstr "Anlagevermögen"
+msgstr "Vermögenswerte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
@@ -13503,8 +13504,8 @@ msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
 msgstr ""
-"Wechsel der Datentyps eines Feldes wird (noch) nicht unterstützt. Bitte löschen Sie das Feld \n"
-"und legen es mit gewünschtem Datentyp neu an."
+"Das Ändern des Typs eines Feldes wird noch nicht unterstützt. Bitte löschen "
+"Sie es und erstellen Sie es neu!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__char
@@ -14932,7 +14933,7 @@ msgstr "Zeitschalter"
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_tree
 msgid "Cron Triggers"
-msgstr "Zeitschalter"
+msgstr "Cron Trigger"
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -18903,7 +18904,7 @@ msgstr "HR Spesenauszug"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
 msgid "Hr Expense Predict product"
-msgstr "Operazione di ricerca non supportata"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
@@ -26557,8 +26558,9 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
-"Bitte benutzen Sie den Passwort Assistenten (in den Benutzereinstellungen "
-"oder dem Menü Benutzer) für eine Änderung des Passworts."
+"Bitte verwenden Sie den Assistenten zum Ändern des Passworts (in den "
+"Benutzereinstellungen oder im Benutzermenü), um Ihr eigenes Passwort zu "
+"ändern."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
@@ -26581,7 +26583,7 @@ msgstr "Point-of-Sale Rabatte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
 msgid "Point of Sale Settle Due"
-msgstr "Kassensystem Abrechnung fällig"
+msgstr "Verkaufspunkt Abrechnung fällig"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
@@ -27749,7 +27751,7 @@ msgstr "Rekrutierung Berichterstattung"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_recruitment
 msgid "Recruitment resumés and letters from documents"
-msgstr "Lebensläufe und Schreiben aus Dokumenten"
+msgstr "Lebensläufe und Anschreiben aus Dokumenten"
 
 #. module: base
 #: code:addons/models.py:0
@@ -30922,10 +30924,10 @@ msgid ""
 "browser PDF means the report will be rendered using Wkhtmltopdf and "
 "downloaded by the user."
 msgstr ""
-"Der Typ des Berichts, der generiert werden soll, verfügt über eine eigene "
-"generiermethode. HTML bedeutet, dass der Bericht direkt in Ihrem Browser "
-"geöffnet wird. PDF bedeutet, dass der Bericht mit Wkhtmltopdf generiert wird"
-" und vom Benutzer heruntergeladen wird."
+"Der Typ des Berichts, der gerendert wird, wobei jeder seine eigene "
+"Rendering-Methode hat. HTML bedeutet, dass der Bericht direkt in Ihrem "
+"Browser geöffnet wird. PDF bedeutet, dass der Bericht mit Wkhtmltopdf "
+"gerendert und vom Benutzer heruntergeladen wird."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -31089,9 +31091,11 @@ msgid ""
 " and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
-"Dieses Funktionsfeld ermittelt eine sortierte Liste von Sichten, die von "
-"Aktionen, Sichten und referenzierenden Sichten verwendet wird. Das Resultat "
-"ist eine Liste von Paaren(view_id,view_mode)"
+"Dieses Funktionsfeld berechnet die geordnete Liste der Ansichten, die bei "
+"der Anzeige des Ergebnisses einer Aktion aktiviert werden sollen, wobei "
+"Ansichtsmodus, Ansichten und Referenzansicht miteinander verknüpft werden. "
+"Das Ergebnis wird als geordnete Liste von Paaren (view_id,view_mode) "
+"ausgegeben."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -31473,7 +31477,7 @@ msgstr "Zeitzone"
 #: model:ir.model.fields,field_description:base.field_res_partner__tz_offset
 #: model:ir.model.fields,field_description:base.field_res_users__tz_offset
 msgid "Timezone offset"
-msgstr "Zeitzonendifferenz"
+msgstr "Zeitzonen-Offset"
 
 #. module: base
 #: model:res.country,name:base.tl
@@ -32013,7 +32017,7 @@ msgstr "UTM Trackers"
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_crm
 msgid "UTM and mass mailing on lead / opportunities"
-msgstr "UTM and mass mailing on lead / opportunities"
+msgstr "UTM und Massenmailing für Leads/Verkaufschancen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale
