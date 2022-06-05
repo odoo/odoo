@@ -40,6 +40,7 @@
 # Alexandra Jubert <aju@odoo.com>, 2021
 # sakodoo <sak@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
 # 
 msgid ""
 msgstr ""
@@ -47,13 +48,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Grégory Schreiner <gregory@mokatourisme.fr>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
@@ -2727,6 +2728,9 @@ msgid ""
 "Signed In: Forum is visible for signed in users\n"
 "Some users: Forum and their content are hidden for non members of selected group"
 msgstr ""
+"Public : Le forum est public\\n Utilisateurs connectés : Le forum est "
+"visible pour les utilisateurs connectés\\n Certains utilisateurs : Le forum "
+"et ses contenus sont pour les nom-membres des groupes sélectionnés"
 
 #. module: website_forum
 #. openerp-web
@@ -2737,6 +2741,9 @@ msgid ""
 "users\\nSome users: Forum and their content are hidden for non members of "
 "selected group"
 msgstr ""
+"Public : Le forum est public\\nUtilisateurs connectés : Le forum est visible"
+" pour les utilisateurs connectés\\nCertains utilisateurs : Le forum et ses "
+"contenus sont pour les nom-membres des groupes sélectionnés"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
