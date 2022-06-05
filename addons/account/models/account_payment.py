@@ -50,7 +50,7 @@ class AccountPayment(models.Model):
     qr_code = fields.Char(string="QR Code",
         compute="_compute_qr_code",
         help="QR-code report URL to use to generate the QR-code to scan with a banking app to perform this payment.")
-    paired_internal_transfer_payment_id = fields.Many2one('account.payment', copy=False
+    paired_internal_transfer_payment_id = fields.Many2one('account.payment', copy=False ,
         help="When an internal transfer is posted, a paired payment is created. "
         "They are cross referenced trough this field")
 
