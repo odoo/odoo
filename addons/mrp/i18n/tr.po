@@ -22,9 +22,9 @@
 # Yedigen, 2019
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1925,6 +1925,17 @@ msgstr "Mevctu Kullanıcı Çalışıyor Mu?"
 #, python-format
 msgid "It has already been unblocked."
 msgstr "Engeli kaldırıldı."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Tek bir İş Emrinin planını iptal etmek mümkün değildir. Bunun yerine tüm "
+"bağlantılı operasyonların planını kaldırmak için Üretim Siparişinin planını "
+"kaldırmalısınız."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -3971,6 +3982,18 @@ msgid ""
 msgstr ""
 "İş emrinin planlanan bitiş tarihi planlanan başlangıç tarihinden önce "
 "olamaz, lütfen iş emrini kaydetmek için bunu düzeltin."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+"Ürün en az bir kez kullanılmış olup, yapısının değiştirilmesi istenmeyen "
+"davranışlara yol açabilir. Ürünü arşivlemeyi ve yeni bir malzeme listesi ile"
+" yeni bir tane oluşturmayı tercih etmelisiniz."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
