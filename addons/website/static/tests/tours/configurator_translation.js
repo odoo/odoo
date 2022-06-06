@@ -52,11 +52,17 @@ tour.register('configurator_translation', {
         trigger: 'body.editor_started',
         timeout: 30000,
     }, {
-        // Check the content of the save button to make sure
-        // the website is in French. (The editor should be in the website's
-        // default language, which should be french in this test.)
+        // Check the content of the save button to make sure the website is in
+        // French. (The editor should be in the website's default language,
+        // which should be french in this test.)
+        // Also note that sometimes the translation is being changed on
+        // Transifex from "Sauvegarder" to "Sauver" or the other way around.
+        // TODO: Strengthen this tour by creating a new fake language and some
+        //       translations for the checked terms. See what's done in `Sign`
+        //       `test_translate_sign_instructions` tour with the `Parseltongue`
+        //       language.
         content: "exit edit mode",
-        trigger: '.o_we_website_top_actions button.btn-primary:contains("Sauvegarder")',
+        trigger: '.o_we_website_top_actions button.btn-primary:contains("Sauvegarder"), .o_we_website_top_actions button.btn-primary:contains("Sauver")',
     }, {
          content: "wait for editor to be closed",
          trigger: 'body:not(.editor_enable)',
