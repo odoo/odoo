@@ -6,6 +6,7 @@
      © 2015 Vicent Cubells
      © 2013-2016 Pedro M. Baeza
      © 2020 Harald Panten - Sygel Technology
+     © 2022 Moduon - Rafael Blasco
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <data>
@@ -35,7 +36,12 @@
             <field name="sequence">3</field>
             <field name="name">Régimen Intracomunitario</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
-            <field name="auto_apply" eval="True"/>
+            <field name="note">
+                De acuerdo con el artículo 196 de la Directiva del Consejo 2006/112/CEE, 
+                el destinatario de este servicio está obligado a auto-liquidar el IVA 
+                correspondiente.
+            </field>
+            <field name="auto_apply" eval="False"/>
             <field name="vat_required" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
         </record>
