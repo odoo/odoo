@@ -205,7 +205,7 @@ class AccountJournal(models.Model):
     )
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, company_id)', 'Journal codes must be unique per company.'),
+        ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')

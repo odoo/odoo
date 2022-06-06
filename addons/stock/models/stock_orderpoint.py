@@ -62,7 +62,7 @@ class StockWarehouseOrderpoint(models.Model):
         ondelete="cascade", required=True, check_company=True)
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
-        'product.product', 'Product', index=True,
+        'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
         ondelete='cascade', required=True, check_company=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id', store=True)
