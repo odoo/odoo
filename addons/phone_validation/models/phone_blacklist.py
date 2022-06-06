@@ -17,7 +17,7 @@ class PhoneBlackList(models.Model):
     _description = 'Phone Blacklist'
     _rec_name = 'number'
 
-    number = fields.Char(string='Phone Number', required=True, index=True, tracking=True, help='Number should be E164 formatted')
+    number = fields.Char(string='Phone Number', required=True, tracking=True, help='Number should be E164 formatted')
     active = fields.Boolean(default=True, tracking=True)
 
     _sql_constraints = [
