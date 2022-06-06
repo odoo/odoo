@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in_edi_ewaybill" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in_edi_ewaybill</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <app name="account" position="inside">
+                <block title="Indian Electronic Waybill" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <setting id="l10n_in_eway_iap" string="Setup Electronic Waybill" help="Check the documentation to get credentials." company_dependent="1">
+                        <div class="content-group mt16">
+                            <label for="l10n_in_edi_ewaybill_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="l10n_in_edi_ewaybill_username"  nolabel="1"/>
+                        </div>
+                        <div class="content-group">
+                            <label for="l10n_in_edi_ewaybill_password" string="Password" class="col-3 col-lg-3 o_light_label" />
+                            <field name="l10n_in_edi_ewaybill_password" password="True" nolabel="1"/>
+                        </div>
+                        <div class="content-group">
+                            <label for="l10n_in_edi_production_env" string="Production Environment" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="l10n_in_edi_production_env" nolabel="1"/>
+                        </div>
+                        <div class='mt8'>
+                            <button name="l10n_in_edi_ewaybill_test" icon="fa-arrow-right" type="object" string="Verify Username and Password" class="btn-link"/>
+                        </div>
+                    </setting>
+                </block>
+            </app>
+        </field>
+    </record>
+</odoo>
