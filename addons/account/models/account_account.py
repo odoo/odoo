@@ -61,7 +61,7 @@ class AccountAccount(models.Model):
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.", tracking=True)
-    code = fields.Char(size=64, required=True, index=True, tracking=True)
+    code = fields.Char(size=64, required=True, tracking=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True, tracking=True,
