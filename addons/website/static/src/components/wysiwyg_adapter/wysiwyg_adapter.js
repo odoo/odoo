@@ -544,10 +544,12 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                     invalidateSnippetCache: event.data.invalidateSnippetCache
                 });
             };
-        } else {
-            if (event.data.onSuccess) {
-                callback = event.data.onSuccess;
-            }
+        } else if (event.data.onSuccess) {
+            callback = event.data.onSuccess;
+        } else if (event.data.reloadWebClient) {
+            const currentPath = encodeURIComponent(window.location.pathname);
+            const websiteId = this.websiteService.currentWebsite.id;
+            callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
         }
         if (isDirty) {
             return this.save().then(callback);
