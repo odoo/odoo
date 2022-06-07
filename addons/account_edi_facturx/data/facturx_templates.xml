@@ -129,6 +129,8 @@
 
                     <!-- Partners. -->
                     <ram:ApplicableHeaderTradeAgreement>
+                        <ram:BuyerReference t-esc="buyer_reference or record.ref"/>
+
                         <!-- Seller. -->
                         <ram:SellerTradeParty>
                             <!-- Address. -->
@@ -159,8 +161,12 @@
 
                         <!-- Reference. -->
                         <ram:BuyerOrderReferencedDocument>
-                            <ram:IssuerAssignedID t-esc="record.payment_reference if record.payment_reference else record.name"/>
+                            <ram:IssuerAssignedID t-esc="purchase_order_reference or record.payment_reference or record.name"/>
                         </ram:BuyerOrderReferencedDocument>
+
+                        <ram:ContractReferencedDocument t-if="contract_reference">
+                            <ram:IssuerAssignedID t-esc="contract_reference"/>
+                        </ram:ContractReferencedDocument>
                     </ram:ApplicableHeaderTradeAgreement>
 
                     <!-- Delivery. Don't make a dependency with sale only for one field. -->
