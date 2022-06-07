@@ -17,7 +17,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
     /**
      * Initialize various data received from the 'chatbot_test_script_page' template.
      */
-    init: function (parent, chatbotData) {
+    init: function (parent, messaging, chatbotData) {
         this._super(...arguments);
 
         this._rule = {
@@ -84,7 +84,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         utils.set_cookie('im_livechat_previous_operator_pid', '', -1);
 
         return this._super(...arguments).then(() => {
-            this.livechatButton = new LivechatButtonTestChatbot(this, this.$el.data());
+            this.livechatButton = new LivechatButtonTestChatbot(this, owl.Component.env.messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);
         });
     }

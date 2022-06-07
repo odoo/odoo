@@ -12,8 +12,7 @@ export const publicLivechatService = {
         if (messaging.isPublicLivechatAvailable) {
             livechatButton = new LivechatButton(
                 rootWidget,
-                messaging.publicLivechatServerUrl,
-                messaging.publicLivechatOptions,
+                messaging,
             );
             livechatButton.appendTo(document.body);
         }
