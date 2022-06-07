@@ -24,7 +24,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      */
     init: function (parent) {
         this._super.apply(this, arguments);
-        this.wishlistProductIDs = [];
+        this.wishlistProductIDs = JSON.parse(sessionStorage.getItem('website_sale_wishlist_product_ids') || '[]');
     },
     /**
      * Gets the current wishlist items.
@@ -35,13 +35,16 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     willStart: function () {
         var self = this;
         var def = this._super.apply(this, arguments);
+        var wishDef;
+        if (this.wishlistProductIDs.length != +$('#top_menu .my_wish_quantity').text()) {
+            wishDef = $.get('/shop/wishlist', {
+                count: 1,
+            }).then(function (res) {
+                self.wishlistProductIDs = JSON.parse(res);
+                sessionStorage.setItem('website_sale_wishlist_product_ids', res);
+            });
 
-        var wishDef = $.get('/shop/wishlist', {
-            count: 1,
-        }).then(function (res) {
-            self.wishlistProductIDs = JSON.parse(res);
-        });
-
+        }
         return Promise.all([def, wishDef]);
     },
     /**
@@ -107,6 +110,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                 }).then(function () {
                     var $navButton = $('header .o_wsale_my_wish').first();
                     self.wishlistProductIDs.push(productId);
+                    sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
                     self._updateWishlistView();
                     wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
                 }).guardedCatch(function () {
@@ -143,6 +147,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         });
 
         this.wishlistProductIDs = _.without(this.wishlistProductIDs, product);
+        sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(this.wishlistProductIDs));
         if (this.wishlistProductIDs.length === 0) {
             if (deferred_redirect) {
                 deferred_redirect.then(function () {
