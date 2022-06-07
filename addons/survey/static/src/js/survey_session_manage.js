@@ -51,6 +51,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             self.stopNextQuestion = false;
             // Background Management
             self.refreshBackground = self.$el.data('refreshBackground');
+            // Copy link tooltip
+            self.$('.o_survey_session_copy').tooltip({delay: 0, title: 'Click to copy link', placement: 'right'});
 
             var isRpcCall = self.$el.data('isRpcCall');
             if (!isRpcCall) {
