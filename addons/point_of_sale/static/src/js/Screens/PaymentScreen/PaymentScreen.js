@@ -8,6 +8,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
     const { isConnectionError } = require('point_of_sale.utils');
+    const utils = require('web.utils');
 
     class PaymentScreen extends PosComponent {
         setup() {
@@ -383,6 +384,14 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             if (isPaymentSuccessful) {
                 line.set_payment_status('done');
                 line.can_be_reversed = payment_terminal.supports_reversals;
+                // Automatically validate the order when after an electronic payment,
+                // the current order is fully paid and due is zero.
+                if (
+                    this.currentOrder.is_paid() &&
+                    utils.float_is_zero(this.currentOrder.get_due(), this.env.pos.currency.decimal_places)
+                ) {
+                    this.trigger('validate-order');
+                }
             } else {
                 line.set_payment_status('retry');
             }
