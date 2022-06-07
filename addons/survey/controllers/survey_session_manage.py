@@ -19,21 +19,18 @@ class UserInputSession(http.Controller):
         return request.env['survey.survey'].search([('access_token', '=', survey_token)])
 
     def _fetch_from_session_code(self, session_code):
-        """ Matches a survey against a passed session_code.
-        We don't limit the session_state to be reachable (ready / in_progress) here because
-        in some cases, we want closed session as well (where session_state = False).
-        Instead, when necessary, the reachability is forced in routes calling this method to
-        avoid people using those routes to access other (private) surveys.
-        We limit to sessions opened within the last 7 days to avoid potential abuses. """
-        if session_code:
-            matching_survey = request.env['survey.survey'].sudo().search([
-                ('session_start_time', '>', fields.Datetime.now() - relativedelta(days=7)),
-                ('session_code', '=', session_code),
-            ], limit=1)
-            if matching_survey:
-                return matching_survey
-
-        return False
+        """ Matches a survey against a passed session_code, and checks if it is valid.
+        If it is valid, returns the start url. Else, the error type."""
+        if not session_code:
+            return None, {'error': 'survey_wrong'}
+        survey = request.env['survey.survey'].sudo().search([('session_code', '=', session_code)], limit=1)
+        if not survey or survey.certification:
+            return None, {'error': 'survey_wrong'}
+        if survey.session_state in ['ready', 'in_progress']:
+            return survey, None
+        if request.env.user.has_group("survey.group_survey_user"):
+            return None, {'error': 'survey_session_not_launched', 'survey_id': survey.id}
+        return None, {'error': 'survey_session_not_launched'}
 
     # ------------------------------------------------------------
     # SURVEY SESSION MANAGEMENT
@@ -176,28 +173,24 @@ class UserInputSession(http.Controller):
     @http.route('/s/<string:session_code>', type='http', auth='public', website=True)
     def survey_start_short(self, session_code):
         """" Redirects to 'survey_start' route using a shortened link & token.
-        We match the session_code for open surveys.
+        Shows an error message if the survey is not valid.
         This route is used in survey sessions where we need short links for people to type. """
+        survey, survey_error = self._fetch_from_session_code(session_code)
 
-        survey = self._fetch_from_session_code(session_code)
-        if survey and survey.session_state in ['ready', 'in_progress']:
-            return request.redirect("/survey/start/%s" % survey.access_token)
-
-        return request.redirect("/s")
+        if survey_error:
+            return request.render('survey.survey_session_code',
+                                  dict(**survey_error, session_code=session_code))
+        return request.redirect(survey.get_start_url())
 
     @http.route('/survey/check_session_code/<string:session_code>', type='json', auth='public', website=True)
     def survey_check_session_code(self, session_code):
         """ Checks if the given code is matching a survey session_code.
         If yes, redirect to /s/code route.
-        If not, return error. The user is invited to type again the code. """
-        survey = self._fetch_from_session_code(session_code)
-        if survey:
-            if survey.session_state in ['ready', 'in_progress']:
-                return {"survey_url": "/survey/start/%s" % survey.access_token}
-            else:
-                return {"error": "survey_session_closed"}
-
-        return {"error": "survey_wrong"}
+        If not, return error. The user is invited to type again the code."""
+        survey, survey_error = self._fetch_from_session_code(session_code)
+        if survey_error:
+            return survey_error
+        return {'survey_url': survey.get_start_url()}
 
     def _prepare_manage_session_values(self, survey):
         is_first_question, is_last_question = False, False
