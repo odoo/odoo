@@ -214,11 +214,11 @@
                 <td>
                     <span style="font-weight:bold;">Shipping Method:</span>
                     <t t-out="object.carrier_id.name or ''"></t>
-                    <t t-if="object.carrier_id.fixed_price == 0.0 or object.amount_delivery == 0.0">
+                    <t t-if="object.amount_delivery == 0.0">
                         (Free)
                     </t>
                     <t t-else="">
-                        (<t t-out="format_amount(object.carrier_id.fixed_price, object.currency_id) or ''">$ 10.00</t>)
+                        (<t t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 10.00</t>)
                     </t>
                 </td>
             </tr>
