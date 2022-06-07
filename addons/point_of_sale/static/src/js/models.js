@@ -1309,7 +1309,7 @@ class Orderline extends PosModel {
             this.order.remove_orderline(this);
             return true;
         }else{
-            var quant = typeof(quantity) === 'number' ? quantity : (field_utils.parse.float('' + quantity) || 0);
+            var quant = typeof(quantity) === 'number' ? quantity : (field_utils.parse.float('' + (quantity ? quantity : 0 )));
             if (this.refunded_orderline_id in this.pos.toRefundLines) {
                 const toRefundDetail = this.pos.toRefundLines[this.refunded_orderline_id];
                 const maxQtyToRefund = toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty
