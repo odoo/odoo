@@ -378,6 +378,7 @@
 
     <!-- Replace a media -->
     <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
+    <!-- TODO adapt in master, this was patched in js to add data-exclude -->
     <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video, span.fa, i.fa">
         <we-row string="Media">
             <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
@@ -414,6 +415,7 @@
         </we-button-group>
     </div>
 
+    <!-- TODO adapt in master, this was patched in js to add data-exclude -->
     <div data-selector="img">
         <we-input string="Description" class="o_we_large"
             data-select-attribute="" data-attribute-name="alt"
@@ -513,6 +515,7 @@
         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
     </div>
 
+    <!-- TODO adapt in master, this was patched in js to add data-exclude -->
     <div data-js="ImageTools" data-selector="img">
         <we-row string="Transform">
             <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>
@@ -533,6 +536,7 @@
         </we-button-group>
     </div>
 
+    <!-- TODO adapt in master, this was patched in js to add data-exclude -->
     <div data-selector="span.fa, i.fa, img">
         <we-select string="Alignment" data-state-to-first-class="true">
             <we-button data-select-class="" title="Unalign">None</we-button>
