@@ -3235,6 +3235,47 @@ options.registry.sizing.include({
     }
 });
 
+options.registry.SwitchableViews = options.Class.extend({
+    /**
+     * @override
+     */
+    async willStart() {
+        const _super = this._super.bind(this);
+        this.switchableRelatedViews = await new Promise((resolve, reject) => {
+            this.trigger_up('get_switchable_related_views', {
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        });
+        return _super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        for (const view of this.switchableRelatedViews) {
+            const weCheckboxEl = document.createElement('we-checkbox');
+            weCheckboxEl.setAttribute('string', view.name);
+            weCheckboxEl.setAttribute('data-customize-website-views', view.key);
+            weCheckboxEl.setAttribute('data-no-preview', 'true');
+            weCheckboxEl.setAttribute('data-reload', '/');
+            uiFragment.appendChild(weCheckboxEl);
+        }
+    },
+    /***
+     * @override
+     */
+    _computeVisibility() {
+        return !!this.switchableRelatedViews.length;
+    },
+    /**
+     * @override
+     */
+    _checkIfWidgetsUpdateNeedReload() {
+        return true;
+    }
+});
+
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,

@@ -821,7 +821,7 @@ var SnippetEditor = Widget.extend({
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
-        return Promise.all(defs).then(() => {
+        return Promise.all(defs).then(async () => {
             const options = _.sortBy(this.styles, '__order');
             const firstOptions = [];
             options.forEach(option => {
@@ -2988,18 +2988,7 @@ var SnippetsMenu = Widget.extend({
         if (!ev.currentTarget.classList.contains('active')) {
             this._activateSnippet(false);
             this._mutex.exec(() => {
-                let $pageOptionsTarget = $();
-                let i = 0;
-                const pageOptions = this.templateOptions.filter(template => template.data.pageOptions);
-                while (!$pageOptionsTarget.length && i < pageOptions.length) {
-                    $pageOptionsTarget = pageOptions[i].selector.all();
-                    i++;
-                }
-                if ($pageOptionsTarget.length) {
-                    this._activateSnippet($pageOptionsTarget);
-                } else {
-                    this._activateEmptyOptionsTab();
-                }
+                this._activateEmptyOptionsTab();
             });
         }
     },
