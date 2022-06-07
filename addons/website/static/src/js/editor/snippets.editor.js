@@ -55,43 +55,6 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Adds the "customize_show" templates to the options page of the editor
-     * panel.
-     *
-     * @override
-     */
-    async loadSnippets() {
-        const viewName = $(this.options.wysiwyg.odooEditor.document.documentElement).data('view-xmlid');
-        const snippets = await this._super(...arguments);
-        if (!viewName) {
-            return snippets;
-        }
-        const $snippets = $(snippets);
-        return this._rpc({
-            route: '/website/get_switchable_related_views',
-            params: {
-                key: viewName,
-            },
-        }).then(function (result) {
-            _.each(result, view => {
-                $snippets.siblings('#snippet_options').append($(`
-                    <div data-selector="#wrapwrap > main" data-page-options="true" data-no-check="true">
-                        <we-checkbox string="${view.name}"
-                                    data-customize-website-views="${view.key}"
-                                    data-no-preview="true"
-                                    data-reload="/"/>
-                    </div>
-                `));
-            });
-            return $('<div>').append($snippets).html();
-        });
-    },
-
-    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -354,6 +317,40 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 releaseLoader();
             }
             throw e;
+        }
+    },
+    /**
+     * @override
+     */
+    _onOptionsTabClick(ev) {
+        if (!ev.currentTarget.classList.contains('active')) {
+            this._activateSnippet(false);
+            this._mutex.exec(async () => {
+                const switchableViews = await new Promise((resolve, reject) => {
+                    this.trigger_up('get_switchable_related_views', {
+                        onSuccess: resolve,
+                        onFailure: reject,
+                    });
+                });
+                if (switchableViews.length) {
+                    // These do not need to be awaited as we're in teh context
+                    // of the mutex.
+                    this._activateSnippet(this.$body.find('#wrapwrap > main'));
+                    return;
+                }
+                let $pageOptionsTarget = $();
+                let i = 0;
+                const pageOptions = this.templateOptions.filter(template => template.data.pageOptions);
+                while (!$pageOptionsTarget.length && i < pageOptions.length) {
+                    $pageOptionsTarget = pageOptions[i].selector.all();
+                    i++;
+                }
+                if ($pageOptionsTarget.length) {
+                    this._activateSnippet($pageOptionsTarget);
+                } else {
+                    this._activateEmptyOptionsTab();
+                }
+            });
         }
     },
     /**
