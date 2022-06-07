@@ -2155,7 +2155,6 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(discussion2.categories.ids, category21.ids)
 
     def test_80_copy(self):
-        Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
         message = self.env.ref('test_new_api.message_0_0')
         message1 = self.env.ref('test_new_api.message_0_1')
@@ -2165,27 +2164,20 @@ class TestFields(TransactionCaseWithUserDemo):
 
         self.env['res.lang']._activate_lang('fr_FR')
 
-        def count(msg):
-            # return the number of translations of msg.label
-            return Translations.search_count([
-                ('name', '=', 'test_new_api.message,label'),
-                ('res_id', '=', msg.id),
-            ])
-
         # set a translation for message.label
         email.with_context(lang='fr_FR').label = "bonjour"
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
         # setting the parent record should not copy its translations
         email.copy({'message': message1.id})
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
         # setting a one2many should not copy translations on the lines
         discussion.copy({'messages': [Command.set(message1.ids)]})
-        self.assertEqual(count(message), 1)
-        self.assertEqual(count(message1), 0)
+        self.assertEqual(message.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertFalse(message1.label)
 
     def test_85_binary_guess_zip(self):
         from odoo.addons.base.tests.test_mimetypes import ZIP
@@ -2557,7 +2549,8 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertTrue(Model.description.prefetch)
         self.assertTrue(Model.html_description.prefetch)
 
-        # translated fields should be prefetch=False by default
+        # # translated fields should be prefetch=False by default
+        # TODO CWG: discuss if we can prefetch translated fields now
         self.assertFalse(Model.rare_description.prefetch)
         self.assertFalse(Model.rare_html_description.prefetch)
 
