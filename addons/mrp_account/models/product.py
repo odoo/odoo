@@ -3,6 +3,7 @@
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_round
 
 
 class ProductTemplate(models.Model):
@@ -55,10 +56,11 @@ class ProductProduct(models.Model):
             boms_to_recompute = []
         total = 0
         for opt in bom.routing_id.operation_ids:
+            operation_cycle = float_round(bom.product_qty / opt.workcenter_id.capacity, precision_rounding=1, rounding_method='UP')
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +
-                opt.time_cycle)
+                operation_cycle * opt.time_cycle)
             total += (duration_expected / 60) * opt.workcenter_id.costs_hour
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):
