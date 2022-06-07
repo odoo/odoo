@@ -214,7 +214,9 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/legacy/js/core/misc.js',
             # 'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/fields/field_utils.js',
+
             'im_livechat/static/src/public/*.js',
+            'im_livechat/static/src/services/*.js',
         ]
     },
     'license': 'LGPL-3',

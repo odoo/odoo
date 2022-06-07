@@ -62,6 +62,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'web/static/src/legacy/js/core/misc.js',
             # 'web/static/src/legacy/js/env.js',
             'im_livechat/static/src/public/main.js',
+            'im_livechat/static/src/services/*.js',
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/**/*',

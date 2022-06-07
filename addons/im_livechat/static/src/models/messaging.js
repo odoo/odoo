@@ -10,12 +10,21 @@ addFields('Messaging', {
     isInPublicLivechat: attr({
         default: false,
     }),
+    isPublicLivechatAvailable: attr({
+        default: false,
+    }),
     /**
      * All pinned livechats that are known.
      */
     pinnedLivechats: many('Thread', {
         inverse: 'messagingAsPinnedLivechat',
         readonly: true,
+    }),
+    publicLivechatOptions: attr({
+        default: {},
+    }),
+    publicLivechatServerUrl: attr({
+        default: '',
     }),
 });
 
