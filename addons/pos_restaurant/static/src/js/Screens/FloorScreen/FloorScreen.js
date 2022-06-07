@@ -282,12 +282,10 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
         async changeShape() {
             if (!this.selectedTable) return;
             this.selectedTable.shape = this.selectedTable.shape === 'square' ? 'round' : 'square';
-            this.render();
             await this._save(this.selectedTable);
         }
         async setTableColor(color) {
             this.selectedTable.color = color;
-            this.render();
             await this._save(this.selectedTable);
         }
         async setFloorColor(color) {

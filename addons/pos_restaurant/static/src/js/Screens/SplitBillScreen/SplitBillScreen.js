@@ -27,7 +27,6 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                         temporary: true,
                     }
                 );
-                this.render();
             });
         }
         get currentOrder() {

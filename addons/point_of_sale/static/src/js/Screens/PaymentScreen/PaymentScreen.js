@@ -97,7 +97,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         toggleIsToInvoice() {
             // click_invoice
             this.currentOrder.set_to_invoice(!this.currentOrder.is_to_invoice());
-            this.render(true);
         }
         openCashbox() {
             this.env.proxy.printer.open_cashbox();
@@ -121,7 +120,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         toggleIsToShip() {
             // click_ship
             this.currentOrder.set_to_ship(!this.currentOrder.is_to_ship());
-            this.render(true);
         }
         deletePaymentLine(event) {
             var self = this;
@@ -136,13 +134,11 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 line.payment_method.payment_terminal.send_payment_cancel(this.currentOrder, cid).then(function() {
                     self.currentOrder.remove_paymentline(line);
                     NumberBuffer.reset();
-                    self.render(true);
                 })
             }
             else if (line.get_payment_status() !== 'waitingCancel') {
                 this.currentOrder.remove_paymentline(line);
                 NumberBuffer.reset();
-                this.render(true);
             }
         }
         selectPaymentLine(event) {
@@ -150,7 +146,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             const line = this.paymentLines.find((line) => line.cid === cid);
             this.currentOrder.select_paymentline(line);
             NumberBuffer.reset();
-            this.render(true);
         }
         async validateOrder(isForceValidate) {
             if(this.env.pos.config.cash_rounding) {

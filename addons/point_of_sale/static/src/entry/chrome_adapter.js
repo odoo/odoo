@@ -49,6 +49,7 @@ export class ChromeAdapter extends Component {
         const updateUI = debounce(() => {
             if (this.env.isMobile !== currentIsMobile) {
                 currentIsMobile = this.env.isMobile;
+                // Make sure to render the full UI when switching to mobile view.
                 this.render(true);
             }
         }, 15);

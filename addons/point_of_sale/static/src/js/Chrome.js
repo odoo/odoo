@@ -72,7 +72,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
             this.previous_touch_y_coordinate = -1;
 
-            const pos = reactive(this.env.pos, batched(() => this.render(true)))
+            const pos = reactive(this.env.pos, batched(() => this.render()))
             useSubEnv({ pos });
 
             onMounted(() => {
@@ -194,7 +194,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
             if (this.env.pos.config.limited_products_loading && this.env.pos.config.product_load_background) {
                 this.env.pos.loadProductsBackground().then(() => {
                     this.env.pos.isEveryProductLoaded = true;
-                    this.render(true);
                 });
             }
         }

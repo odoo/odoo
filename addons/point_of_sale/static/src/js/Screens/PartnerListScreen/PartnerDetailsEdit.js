@@ -13,10 +13,11 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
             super.setup();
             this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
             const partner = this.props.partner;
-            this.changes = {
+            this.changes = owl.useState({
                 'country_id': partner.country_id && partner.country_id[0],
                 'state_id': partner.state_id && partner.state_id[0],
-            };
+            });
+
             if (!partner.property_product_pricelist)
                 this.changes['property_product_pricelist'] = this.env.pos.default_pricelist.id;
 
@@ -79,8 +80,6 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
                 if (loadedImage) {
                     const resizedImage = await this._resizeImage(loadedImage, 800, 600);
                     this.changes.image_1920 = resizedImage.toDataURL();
-                    // Rerender to reflect the changes in the screen
-                    this.render(true);
                 }
             }
         }

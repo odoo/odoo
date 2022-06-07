@@ -37,14 +37,14 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             // to Observer proxy. Not sure of the side-effects of making
             // a persistent object, such as pos, into Observer. But it
             // is better to be safe.
-            this.state = {
+            this.state = owl.useState({
                 query: null,
                 selectedPartner: this.props.partner,
                 detailIsShown: false,
                 editModeProps: {
                     partner: null,
                 },
-            };
+            });
             this.updatePartnerList = debounce(this.updatePartnerList, 70);
             onWillUnmount(this.updatePartnerList.cancel);
             onMounted(() => {
@@ -57,7 +57,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         back() {
             if(this.state.detailIsShown) {
                 this.state.detailIsShown = false;
-                this.render(true);
             } else {
                 this.props.resolve({ confirmed: false, payload: false });
                 this.trigger('close-temp-screen');
@@ -69,7 +68,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         }
         activateEditMode() {
             this.state.detailIsShown = true;
-            this.render(true);
         }
         // Getters
 
@@ -121,7 +119,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         _clearSearch() {
             this.searchWordInputRef.el.value = '';
             this.state.query = '';
-            this.render(true);
         }
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
@@ -129,8 +126,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             this.state.query = event.target.value;
             if (event.code === 'Enter') {
                 this._onPressEnterKey();
-            } else {
-                this.render(true);
             }
         }
         clickPartner(partner) {
@@ -178,7 +173,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             let result = await this.getNewPartners();
             this.env.pos.db.add_partners(result);
             if (!this.env.pos.isEveryPartnerLoaded) await this.env.pos.updateIsEveryPartnerLoaded();
-            this.render(true);
             return result;
         }
         async getNewPartners() {

@@ -13,6 +13,11 @@ odoo.define('point_of_sale.PosComponent', function (require) {
                     console.log('Rendered:', this.constructor.name);
                 }
             });
+            if (this.env.pos) {
+                owl.useSubEnv({
+                    pos: owl.useState(this.env.pos),
+                });
+            }
         }
         /**
          * This function is available to all Components that inherit this class.
