@@ -95,6 +95,10 @@ class AccountEdiFormat(models.Model):
             'invoice_line_values': [],
             'seller_specified_legal_organization': seller_siret,
             'buyer_specified_legal_organization': buyer_siret,
+            # Chorus PRO fields
+            'buyer_reference': 'buyer_reference' in invoice._fields and invoice.buyer_reference or '',
+            'contract_reference': 'contract_reference' in invoice._fields and invoice.contract_reference or '',
+            'purchase_order_reference': 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference or '',
         }
         # Tax lines.
         # The old system was making one total "line" per tax in the xml, by using the tax_line_id.
