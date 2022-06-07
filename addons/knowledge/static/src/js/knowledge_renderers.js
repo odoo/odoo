@@ -372,15 +372,44 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                             }
                         }
                         $li.data('parent-id', $parent.data('article-id'));
+                        $li.attr('data-parent-id', $parent.data('article-id'));
                         $li.data('category', data.newCategory);
+                        $li.attr('data-category', data.newCategory);
                         let $children = $li.find('.o_article');
                         $children.each((_, child) => {
                             $(child).data('category', data.newCategory);
+                            $(child).attr('data-category', data.newCategory);
                         });
                         $sortable.sortable('enable');
                     },
                     onReject: () => {
-                        $sortable.sortable('cancel');
+                        /**
+                         * When a move between two connected nestedSortable
+                         * trees is canceled, more than one operation may be
+                         * undone (library bug). To bypass sortable('cancel'),
+                         * the last moved $item is returned at its original
+                         * location (which may have to be restored too if it was
+                         * cleaned), and a 'change' event is triggered from that
+                         * rectified position for consistency (see the
+                         * nestedSortable library).
+                         */
+                        const $item = ui.item.data('nestedSortableItem');
+                        if ($item.domPosition.prev) {
+                            // Restore $item position after its previous sibling
+                            $item.domPosition.prev.after($item.currentItem[0]);
+                        } else {
+                            // Restore $item as the first child of the parent ul
+                            $item.domPosition.parent.prepend($item.currentItem[0]);
+                            if (!$item.domPosition.parent.parentElement) {
+                                // The ul was cleaned from the document since it
+                                // was empty, so it has to be restored too
+                                const offsetParent = $item.offsetParent[0];
+                                offsetParent.append($item.domPosition.parent);
+                            }
+                        }
+                        // For consistency with the nestedSortable library,
+                        // trigger the 'change' event from the moved $item
+                        $item._trigger('change', null, $item._uiHash());
                         $sortable.sortable('enable');
                         this.$('.o_knowledge_empty_info').addClass('d-none');
                         this.$('.o_knowledge_empty_info:only-child').removeClass('d-none');
