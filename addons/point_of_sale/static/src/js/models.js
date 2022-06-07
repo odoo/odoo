@@ -3528,11 +3528,10 @@ exports.Order = Backbone.Model.extend({
             (position) => position.id === this.pos.config.default_fiscal_position_id[0]
         );
         if (newClient) {
-            newClientFiscalPosition = newClient.property_account_position_id
-                ? this.pos.fiscal_positions.find(
+            newClientFiscalPosition =
+                this.pos.fiscal_positions.find(
                       (position) => position.id === newClient.property_account_position_id[0]
-                  )
-                : defaultFiscalPosition;
+                  ) || defaultFiscalPosition;
             newClientPricelist =
                 this.pos.pricelists.find(
                     (pricelist) => pricelist.id === newClient.property_product_pricelist[0]
