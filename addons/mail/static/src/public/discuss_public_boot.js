@@ -5,6 +5,7 @@ import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_e
 
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
 import { DiscussPublicViewContainer } from '@mail/components/discuss_public_view_container/discuss_public_view_container';
+import { PopoverManagerContainer } from '@mail/components/popover_manager_container/popover_manager_container';
 import { messagingService } from '@mail/services/messaging_service';
 
 import { processTemplates } from '@web/core/assets';
@@ -54,6 +55,7 @@ Component.env = legacyEnv;
     mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer });
     // needed by the attachment viewer
     mainComponentsRegistry.add('DialogManagerContainer', { Component: DialogManagerContainer });
+    mainComponentsRegistry.add('PopoverManagerContainer', { Component: PopoverManagerContainer });
 
     await legacySession.is_bound;
     Object.assign(odoo, {
