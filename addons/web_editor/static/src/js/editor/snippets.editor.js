@@ -2934,9 +2934,9 @@ var SnippetsMenu = Widget.extend({
                         args: [[moduleID]],
                     }).then(() => {
                         self.trigger_up('request_save', {
-                            reloadEditor: true,
                             invalidateSnippetCache: true,
                             _toMutex: true,
+                            reloadWebClient: true,
                         });
                     }).guardedCatch(reason => {
                         reason.event.preventDefault();
