@@ -97,10 +97,12 @@ class Sanitize {
         // Merge identical elements together
         while (areSimilarElements(node, node.previousSibling) && !isUnbreakable(node)) {
             getDeepRange(this.root, { select: true });
-            const restoreCursor = preserveCursor(this.root.ownerDocument);
+            const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
             const nodeP = node.previousSibling;
             moveNodes(...endPos(node.previousSibling), node);
-            restoreCursor();
+            if (restoreCursor) {
+                restoreCursor();
+            };
             node = nodeP;
         }
 
@@ -125,10 +127,12 @@ class Sanitize {
             !isBlock(node.parentElement) &&
             anchor !== node
         ) {
-            const restoreCursor = preserveCursor(this.root.ownerDocument);
+            const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
             node.textContent = node.textContent.replace('\u200B', '');
             node.parentElement.removeAttribute("oe-zws-empty-inline");
-            restoreCursor();
+            if (restoreCursor) {
+                restoreCursor();
+            };
         }
 
         // Remove empty blocks in <li>
@@ -136,11 +140,13 @@ class Sanitize {
             const next = node.nextSibling;
             const pnode = node.parentElement;
             if (isEmptyBlock(node)) {
-                const restoreCursor = preserveCursor(this.root.ownerDocument);
+                const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
                 node.remove();
                 fillEmpty(pnode);
                 this._parse(next);
-                restoreCursor(new Map([[node, pnode]]));
+                if (restoreCursor) {
+                    restoreCursor(new Map([[node, pnode]]));
+                };
                 return;
             }
         }
