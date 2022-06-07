@@ -17,7 +17,7 @@ class CrmTeam(models.Model):
     _name = "crm.team"
     _inherit = ['mail.thread']
     _description = "Sales Team"
-    _order = "sequence"
+    _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=None, domain=None):
@@ -52,7 +52,7 @@ class CrmTeam(models.Model):
         team = self.env['crm.team']
         teams = self.env['crm.team'].search([
             ('company_id', 'in', valid_cids),
-            '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id]),
+             '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id])
         ])
         if teams and domain:
             team = teams.filtered_domain(domain)[:1]
