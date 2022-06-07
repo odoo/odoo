@@ -3,8 +3,10 @@
 
 import logging
 
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models, _
+from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import AccessError
@@ -50,7 +52,7 @@ class SeoMetadata(models.AbstractModel):
             'og:type': 'website',
             'og:title': title,
             'og:site_name': company.name,
-            'og:url': request.httprequest.url,
+            'og:url': url_join(request.httprequest.url_root, url_for(request.httprequest.path)),
             'og:image': img,
         }
         # Default meta for Twitter
