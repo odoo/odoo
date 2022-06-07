@@ -301,19 +301,20 @@ function getAfterEvent({ messagingBus }) {
             }, timeoutDelay);
         });
         // Set up the promise to resolve if the event is triggered.
-        const eventProm = new Promise(resolve => {
-            messagingBus.on(eventName, null, data => {
-                if (!predicate || predicate(data)) {
-                    resolve();
-                }
-            });
-        });
+        const eventProm = makeDeferred();
+        const eventHandler = ev => {
+            if (!predicate || predicate(ev.detail)) {
+                eventProm.resolve();
+            }
+        };
+        messagingBus.addEventListener(eventName, eventHandler);
         // Start the function expected to trigger the event after the
         // promise has been registered to not miss any potential event.
         const funcRes = func();
         // Make them race (first to resolve/reject wins).
         await Promise.race([eventProm, timeoutProm]);
         clearTimeout(timeoutNoEvent);
+        messagingBus.removeEventListener(eventName, eventHandler);
         // If the event is triggered before the end of the async function,
         // ensure the function finishes its job before returning.
         return await funcRes;
