@@ -382,13 +382,16 @@ class AccountChartTemplate(models.Model):
         bank_journals = self.env['account.journal']
         # Create the journals that will trigger the account.account creation
         for acc in self._get_default_bank_journals_data():
-            bank_journals += self.env['account.journal'].create({
+            journal_vals = {
                 'name': acc['acc_name'],
                 'type': acc['account_type'],
                 'company_id': company.id,
-                'currency_id': acc.get('currency_id', self.env['res.currency']).id or company.currency_id.id,
                 'sequence': 10,
-            })
+            }
+            if acc.get('currency_id'):
+                journal_vals['currency_id'] = acc['currency_id']
+
+            bank_journals += self.env['account.journal'].create(journal_vals)
 
         return bank_journals
 
