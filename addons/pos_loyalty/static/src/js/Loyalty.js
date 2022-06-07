@@ -249,6 +249,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         return json;
     }
     init_from_JSON(json) {
+        // Filter out coupon point changes that are coming from unloaded programs.
+        for (const couponId in json.couponPointChanges || {}) {
+            const pointsChange = json.couponPointChanges[couponId];
+            if (!(pointsChange.program_id in this.pos.program_by_id)) {
+                delete json.couponPointChanges[couponId];
+            }
+        }
         this.couponPointChanges = json.couponPointChanges;
         // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
         this.oldCouponMapping = {};
