@@ -204,13 +204,17 @@
         <table t-if="hasattr(object, 'carrier_id') and object.carrier_id" width="100%" style="color: #454748; font-size: 12px;">
             <tr>
                 <td>
-                    <strong>Shipping Method:</strong>
-                    <t t-out="object.carrier_id.name or ''"></t>
-                    <t t-if="object.carrier_id.fixed_price == 0.0">
-                        (Free)
-                    </t>
-                    <t t-else="">
-                        (<t t-out="format_amount(object.carrier_id.fixed_price, object.currency_id) or ''">$ 10.00</t>)
+                    <t t-foreach="object.order_line" t-as="line">
+                        <t t-if="line.is_delivery">
+                            <strong>Shipping Method:</strong>
+                            <t t-out="object.carrier_id.name or ''"></t>
+                            <t t-if="line.price_total == 0.0">
+                                (Free)
+                            </t>
+                            <t t-else="">
+                                (<t t-out="format_amount(line.price_total, line.currency_id) or ''">$ 10.00</t>)
+                            </t>
+                        </t>
                     </t>
                 </td>
             </tr>
