@@ -1484,6 +1484,10 @@ var SnippetsMenu = Widget.extend({
         // Next, notify that we want the DOM to be cleaned (e.g. in website this
         // may be the moment where the public widgets need to be destroyed).
         this.trigger_up('ready_to_clean_for_save');
+        // Wait for the mutex a second time as some options do editor actions when
+        // their snippets are destroyed. (E.g. s_popup triggers visibility updates
+        // when hidden, destroying the widget hides it.)
+        await this._mutex.getUnlockedDef();
 
         // Then destroy all snippet editors, making them call their own
         // "clean for save" methods (and options ones).

@@ -29,7 +29,7 @@ options.registry.SnippetPopup = options.Class.extend({
                 iframe.src = media.dataset.oeExpression || media.dataset.src; // TODO still oeExpression to remove someday
             });
         });
-        this.$iframeTarget.on('hidden.bs.modal.SnippetPopup', () => {
+        this.$iframeTarget.on('hide.bs.modal.SnippetPopup', () => {
             this.trigger_up('snippet_option_visibility_update', {show: false});
             this._removeIframeSrc();
         });
