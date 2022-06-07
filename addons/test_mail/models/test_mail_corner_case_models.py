@@ -64,6 +64,7 @@ class MailTestLang(models.Model):
     name = fields.Char()
     email_from = fields.Char()
     customer_id = fields.Many2one('res.partner')
+    partner_id = fields.Many2one('res.partner')
     lang = fields.Char('Lang')
 
     def _notify_get_recipients_groups(self, msg_vals=None):

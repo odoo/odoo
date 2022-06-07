@@ -2394,9 +2394,17 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
+        if not force_email_lang:
+            # use partner_id's language when the field exists
+            try:
+                force_email_lang = self.partner_id.lang
+            except AttributeError:
+                pass
+
         model = msg_vals.get('model') if msg_vals else message.model
-        model_name = model_description or (self.env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_data = self._notify_get_recipients_classify(partners_data, model_name, msg_vals=msg_vals)
+        model_name = model_description or (self.env['ir.model'].with_context(lang=force_email_lang or self.env.lang)._get(model).display_name if model else False) # one query for display name
+        recipients_groups_data = self.with_context(lang=force_email_lang or self.env.lang)\
+                                     ._notify_get_recipients_classify(partners_data, model_name, msg_vals=msg_vals)
 
         if not recipients_groups_data:
             return True

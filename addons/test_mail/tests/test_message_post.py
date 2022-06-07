@@ -942,6 +942,40 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_layout_email_lang_partner(self):
+        # Similar to test_layout_email_lang_context, but
+        # current user's lang is English
+        # partner's lang is Spanish
+        test_records = self.test_records.with_user(self.env.user)
+        test_records[1].message_subscribe(self.partner_2.ids)
+        test_records[1].partner_id = self.partner_2
+        test_records[1].partner_id.lang = 'es_ES'
+
+        with self.mock_mail_gateway():
+            test_records[1].message_post(
+                body='<p>Hello</p>',
+                email_layout_xmlid='mail.test_layout',
+                message_type='comment',
+                subject='Subject',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        customer_email = self._find_sent_mail_wemail(self.partner_2.email_formatted)
+        self.assertTrue(customer_email)
+        body = customer_email['body']
+        # check notification layout translation
+        self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
+        self.assertNotIn('English Layout for', body)
+        self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
+        self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
+        self.assertNotIn('View %s' % test_records[1]._description, body)
+        self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
+        self.assertNotIn('TestStuff', body)
+        # check content
+        self.assertIn('Hello', body, 'Body of posted message should be present')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_layout_email_lang_template(self):
         test_records = self.test_records.with_user(self.env.user)
         test_template = self.test_template.with_user(self.env.user)
