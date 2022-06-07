@@ -22,7 +22,7 @@ wTourUtils.registerEditionTour('snippet_popup_add_remove', {
 }, {
     content: `Remove the s_popup snippet`,
     in_modal: false,
-    trigger: '.o_we_customize_panel we-button.oe_snippet_remove:first',
+    trigger: '.o_we_customize_panel we-customizeblock-options we-button.oe_snippet_remove:first',
 }, {
     content: 'Check the s_popup was removed',
     in_modal: false,
