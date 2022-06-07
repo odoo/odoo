@@ -119,7 +119,7 @@ RewardButton.template = 'RewardButton';
 ProductScreen.addControlButton({
     component: RewardButton,
     condition: function() {
-        return this.env.pos.config.use_coupon_programs || this.env.pos.config.loyalty_program_id || this.env.pos.config.use_gift_card;
+        return this.env.pos.config.use_coupon_programs || this.env.pos.isLoyaltyProgramActive() || this.env.pos.config.use_gift_card;
     }
 });
 

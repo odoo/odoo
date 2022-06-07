@@ -80,7 +80,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
         async _postPushOrderResolve(order, server_ids) {
             // Compile data for our function
             const rewardLines = order._get_reward_lines();
-            const loyaltyProgramId = this.env.pos.config.loyalty_program_id ? this.env.pos.config.loyalty_program_id[0] : 0;
+            const loyaltyProgramId = this.env.pos.isLoyaltyProgramActive() ? this.env.pos.config.loyalty_program_id[0] : 0;
             const partner = order.get_partner();
             let partnerLoyaltyCardId = partner ? partner.loyalty_card_id : 0;
             let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {

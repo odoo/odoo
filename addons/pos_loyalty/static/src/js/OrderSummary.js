@@ -6,7 +6,7 @@ import Registries from 'point_of_sale.Registries';
 export const PosLoyaltyOrderSummary = (OrderSummary) => 
     class PosLoyaltyOrderSummary extends OrderSummary {
         getLoyaltyPoints() {
-            if (!this.env.pos.config.loyalty_program_id) {
+            if (!this.env.pos.isLoyaltyProgramActive()) {
                 return {};
             }
             const order = this.env.pos.get_order();

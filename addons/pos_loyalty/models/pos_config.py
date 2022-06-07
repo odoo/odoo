@@ -46,7 +46,7 @@ class PosConfig(models.Model):
                 programs |= config.coupon_program_ids
                 programs |= config.promo_program_ids
             # This may be a separate field on the config but it actually will be handled just like any other program
-            if config.loyalty_program_id:
+            if config.module_pos_loyalty:
                 programs |= config.loyalty_program_id
             # We also include the gift card program to be able to claim the reward (discount)
             # This one will behave a little differently as it will display more options

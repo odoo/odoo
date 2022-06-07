@@ -167,7 +167,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
      * @param {int} partnerId
      */
     async fetchLoyaltyCard(programId, partnerId) {
-        if (programId === this.config.loyalty_program_id[0]) {
+        if (this.isLoyaltyProgramActive() && programId === this.config.loyalty_program_id[0]) {
             // In this case we actually have it loaded separately to avoid needing to be online
             //  for the loyalty program functionalities
             // see `_get_pos_ui_res_partner` in pos_session.py
@@ -181,6 +181,9 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
         }
         const dbCoupon = await this.fetchCoupons([['partner_id', '=', partnerId], ['program_id', '=', programId]])[0];
         return dbCoupon || new PosLoyaltyCard(null, null, programId, partnerId, 0);
+    }
+    isLoyaltyProgramActive() {
+        return this.config.module_pos_loyalty && this.config.loyalty_program_id;
     }
 }
 Registries.Model.extend(PosGlobalState, PosLoyaltyGlobalState);
@@ -304,7 +307,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      */
     export_for_printing() {
         const result = super.export_for_printing(...arguments);
-        if (this.pos.config.loyalty_program_id && this.get_partner()) {
+        if (this.pos.isLoyaltyProgramActive() && this.get_partner()) {
             const loyaltyProgram = this.pos.program_by_id[this.pos.config.loyalty_program_id[0]];
             result.loyalty = {
                 name: loyaltyProgram.name,
@@ -323,7 +326,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      */
     finalize() {
         const partner = this.get_partner();
-        const loyaltyProgramId = this.pos.config.loyalty_program_id ? this.pos.config.loyalty_program_id[0]: 0;
+        const loyaltyProgramId = this.pos.isLoyaltyProgramActive() ? this.pos.config.loyalty_program_id[0]: 0;
         if (partner && loyaltyProgramId) {
             for (const pe of Object.values(this.couponPointChanges)) {
                 if (pe.program_id === loyaltyProgramId) {
@@ -454,7 +457,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         })}).catch(() => {/* catch the reject of dp when calling `add` to avoid unhandledrejection */});
     }
     async _updateLoyaltyPrograms() {
-        if (this.partner && !(this.partner.loyalty_card_id in this.pos.couponCache)) {
+        if (this.pos.isLoyaltyProgramActive() && this.partner && !(this.partner.loyalty_card_id in this.pos.couponCache)) {
             this.pos.couponCache[this.partner.loyalty_card_id] = new PosLoyaltyCard(null, this.partner.loyalty_card_id, this.pos.config.loyalty_program_id[0], this.partner.id, this.partner.loyalty_points);
         }
         await this._checkMissingCoupons();
@@ -597,7 +600,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         let spent = 0;
         let total = 0;
         const partner = this.get_partner();
-        if (partner && this.pos.config.loyalty_program_id) {
+        if (partner && this.pos.isLoyaltyProgramActive()) {
             let couponId = partner.loyalty_card_id;
             let balance = partner.loyalty_points;
             for (const pe of Object.values(this.couponPointChanges)) {
@@ -619,7 +622,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             total = balance + won - spent;
         }
         let name = _t('Points');
-        if (this.pos.config.loyalty_program_id) {
+        if (this.pos.isLoyaltyProgramActive()) {
             name = this.pos.program_by_id[this.pos.config.loyalty_program_id[0]].portal_point_name;
         }
         return {
