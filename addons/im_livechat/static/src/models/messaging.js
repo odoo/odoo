@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { addFields, patchRecordMethods } from '@mail/model/model_core';
-import { attr, many } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { addFields, addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
+import { attr, many, one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging';
 
@@ -12,6 +12,10 @@ addFields('Messaging', {
     }),
     isPublicLivechatAvailable: attr({
         default: false,
+    }),
+    livechatButtonView: one('LivechatButtonView', {
+        compute: '_computeLivechatButtonView',
+        isCausal: true,
     }),
     /**
      * All pinned livechats that are known.
@@ -26,6 +30,19 @@ addFields('Messaging', {
     publicLivechatServerUrl: attr({
         default: '',
     }),
+});
+
+addRecordMethods('Messaging', {
+    /**
+     * @private
+     * @returns {FieldCommand}
+     */
+    _computeLivechatButtonView() {
+        if (this.isInPublicLivechat) {
+            return insertAndReplace();
+        }
+        return clear();
+    },
 });
 
 patchRecordMethods('Messaging', {
