@@ -13,7 +13,7 @@
     </template>
 
     <template id="survey_page_statistics_header" name="Survey: result statistics header">
-        <div class="py-5 mt32">
+        <div class="o_survey_statistics_header pt-5 mt32">
             <h1>
                 <span t-field="survey.title"/>
                 <span style="font-size:1.5em;"
@@ -64,31 +64,33 @@
         <t t-set="table_data" t-value="question_data['table_data']"/>
 
         <div class="o_survey_results_question pb-5 border-bottom">
-        <div class="d-flex align-items-start mb-2">
-            <div class="mr-auto">
-                <h5 t-field="question.title" class="mb-3"/>
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h5 t-field="question.title" class="mr-3"/>
             </div>
             <!-- Question info -->
-            <span class="badge badge-info" t-field='question.question_type'/>
-            <t t-if="question.question_type == 'matrix'">
-                <span class="badge badge-info ml-2" t-field='question.matrix_subtype'/>
-            </t>
-            <!-- Scoring info -->
-            <t t-if="question.is_scored_question">
-                <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']" class="mr-1"/>Correct</span>
-                <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
-                    <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
-                        <span t-esc="question_data['partial_inputs_count']" class="mr-1"/>Partial
-                    </span>
+            <div class="col-sm-6">
+                <span class="badge badge-info mr-1" t-field='question.question_type'/>
+                <t t-if="question.question_type == 'matrix'">
+                    <span class="badge badge-info ml-1" t-field='question.matrix_subtype'/>
                 </t>
-            </t>
-            <!-- Inputs info -->
-            <span class="badge badge-info ml-3">
-                <span t-esc="len(question_data['answer_input_done_ids'])" class="mr-1"/>Answered
-            </span>
-            <span class="badge badge-info ml-1">
-                <span t-esc="len(question_data['answer_input_skipped_ids'])" class="mr-1"/>Skipped
-            </span>
+                <!-- Scoring info -->
+                <t t-if="question.is_scored_question">
+                    <span class="badge badge-success mr-1"><span t-esc="question_data['right_inputs_count']" class="mr-1"/>Correct</span>
+                    <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
+                        <span class="badge badge-warning mr-1" t-if="question.question_type == 'multiple_choice'">
+                            <span t-esc="question_data['partial_inputs_count']" class="mr-1"/>Partial
+                        </span>
+                    </t>
+                </t>
+                <!-- Inputs info -->
+                <span class="badge badge-info mr-1">
+                    <span t-esc="len(question_data['answer_input_done_ids'])" class="mr-1"/>Answered
+                </span>
+                <span class="badge badge-info mr-1">
+                    <span t-esc="len(question_data['answer_input_skipped_ids'])" class="mr-1"/>Skipped
+                </span>
+            </div>
         </div>
 
         <!-- Question Description -->
