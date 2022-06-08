@@ -16,8 +16,7 @@ class Emoji extends Component {
 
 Emoji.template = 'mail.Emoji';
 Emoji.props = {
-    emoji: Object,
-    emojiListView: Object,
+    emojiView: Object
 };
 
 class EmojiPicker extends Component {
@@ -26,15 +25,23 @@ class EmojiPicker extends Component {
      */
     setup () {
         // Mock the template variables:
-        this.emojis = emojis;
         this.className = '';
-        this.emojiListView = {
+        const viewEventHandlers =  {
             /**
              * @param {Event} event
              */
             onClickEmoji: event => {
                 this.props.onClickEmoji(event.target.dataset.unicode);
-            }
+            },
+        };
+        this.emojiListView = {
+            emojiViews: emojis.map((emoji, index) => {
+                return {
+                    localId: index,
+                    emoji: emoji,
+                    emojiListView: viewEventHandlers
+                };
+            })
         };
     }
 
