@@ -58,6 +58,7 @@ export const SERVICES_METADATA = {};
  */
 export async function startServices(env) {
     const toStart = new Set();
+    let isStartingService = false;
     serviceRegistry.addEventListener("UPDATE", async (ev) => {
         // Wait for all synchronous code so that if new services that depend on
         // one another are added to the registry, they're all present before we
@@ -74,6 +75,10 @@ export async function startServices(env) {
             const namedService = Object.assign(Object.create(service), { name });
             toStart.add(namedService);
         } else {
+            if (isStartingService) {
+                return;
+            }
+            isStartingService = true;
             await _startServices(env, toStart);
         }
     });
