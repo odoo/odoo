@@ -3,6 +3,7 @@
 import { memoize } from "./utils/functions";
 import { browser } from "./browser/browser";
 import { registry } from "./registry";
+import { session } from "@web/session";
 
 class AssetsLoadingError extends Error {}
 
@@ -74,9 +75,8 @@ export const loadCSS = memoize(function loadCSS(url) {
  *      the owl templates or an empty string if the bundle has none.
  */
 export const fetchAndProcessTemplates = memoize(async function fetchAndProcessTemplates(bundle) {
-    // TODO: quid of the "unique" in the URL? We can't have one cache_hash
-    // for each and every bundle I'm guessing.
-    const bundleURL = `/web/webclient/qweb/${Date.now()}?bundle=${bundle}`;
+    const unicityHash = (session.cache_hashes && session.cache_hashes[bundle]) || Date.now();
+    const bundleURL = `/web/webclient/qweb/${unicityHash}?bundle=${bundle}`;
     const templates = await (await browser.fetch(bundleURL)).text();
     if (!templates) {
         return "";

@@ -23,6 +23,7 @@ from odoo import api, models, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import QWebException
+from odoo.addons.web.controllers.utils import HomeStaticTemplateHelpers
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
@@ -299,6 +300,7 @@ class IrHttp(models.AbstractModel):
             'translationURL': '/website/translations',
             'cache_hashes': {
                 'translations': translation_hash,
+                'web.assets_frontend': HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle='web.assets_frontend'),
             },
         })
         return session_info
