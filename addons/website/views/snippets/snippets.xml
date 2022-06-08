@@ -587,7 +587,7 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div data-js="WebsiteLevelColor"
+    <div data-js="HeaderLayout"
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
@@ -754,7 +754,8 @@
     <div data-js="TopMenuVisibility"
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
-        <we-select string="Header Position" id="option_header_visibility" data-no-preview="true">
+        <we-select string="Header Position" data-no-preview="true"
+                   data-dependencies="!header_sidebar_opt">
             <we-button data-visibility="transparent">Over The Content</we-button>
             <we-button data-name="regular_header_visibility_opt"
                        data-visibility="regular">Regular</we-button>
