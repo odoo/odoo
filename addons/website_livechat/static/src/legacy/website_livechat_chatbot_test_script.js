@@ -28,7 +28,6 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         this._chatbotCurrentStep = this._chatbot.chatbot_welcome_steps[
             this._chatbot.chatbot_welcome_steps.length - 1];
         this._channelData = chatbotData.channel;
-        this._isChatbot = true;
         this._serverURL = chatbotData.serverUrl;
 
         this.options.input_placeholder = '';
@@ -84,7 +83,10 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         utils.set_cookie('im_livechat_previous_operator_pid', '', -1);
 
         return this._super(...arguments).then(() => {
-            owl.Component.env.messaging.update({ isInPublicLivechat: true });
+            owl.Component.env.messaging.update({
+                isInPublicLivechat: true,
+                isPublicLivechatChatbot: true,
+            });
             this.livechatButton = new LivechatButtonTestChatbot(this, owl.Component.env.messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);
         });
