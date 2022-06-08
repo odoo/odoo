@@ -69,11 +69,11 @@ class HrLeave(models.Model):
                         ('date_end', '=', False),
                         ('state', '!=', 'close')
             ]
-            nbr_contracts = self.env['hr.contract'].sudo().search_count(domain)
-            if nbr_contracts > 1:
+            contracts = self.env['hr.contract'].sudo().search(domain)
+            if len(contracts.resource_calendar_id) > 1:
                 contracts = self.env['hr.contract'].sudo().search(domain)
                 raise ValidationError(
-                    _('A leave cannot be set across multiple contracts.') + '\n%s\n%s' % (
+                    _('A leave cannot be set across multiple contracts with different working schedules.') + '\n%s\n%s' % (
                         ', '.join(contracts.mapped('name')),
                         holiday.display_name))
 
