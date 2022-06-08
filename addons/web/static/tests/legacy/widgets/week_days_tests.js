@@ -89,31 +89,31 @@ odoo.define('web.week_days_tests', function (require) {
             assert.containsNone(form, '.custom-control input:disabled', 7,
                 "all inputs should be enabled in readonly mode");
 
-            await testUtils.dom.click(form.el.querySelector('input[id^="sun"'));
-            assert.ok(form.el.querySelector('input[id^="sun"').checked,
+            await testUtils.dom.click(form.el.querySelector('input[id^="sun"]'));
+            assert.ok(form.el.querySelector('input[id^="sun"]').checked,
                 "sunday checkbox should be checked");
             await testUtils.form.clickSave(form);
 
             await testUtils.form.clickEdit(form);
-            await testUtils.dom.click(form.el.querySelector('input[id^="mon"'));
-            assert.ok(form.el.querySelector('input[id^="mon"').checked,
+            await testUtils.dom.click(form.el.querySelector('input[id^="mon"]'));
+            assert.ok(form.el.querySelector('input[id^="mon"]').checked,
                 "monday checkbox should be checked");
 
-            await testUtils.dom.click(form.el.querySelector('input[id^="tue"'));
-            assert.ok(form.el.querySelector('input[id^="tue"').checked,
+            await testUtils.dom.click(form.el.querySelector('input[id^="tue"]'));
+            assert.ok(form.el.querySelector('input[id^="tue"]').checked,
                 "tuesday checkbox should be checked");
 
             // uncheck Sunday checkbox and check write call
-            await testUtils.dom.click(form.el.querySelector('input[id^="sun"'));
-            assert.notOk(form.el.querySelector('input[id^="sun"').checked,
+            await testUtils.dom.click(form.el.querySelector('input[id^="sun"]'));
+            assert.notOk(form.el.querySelector('input[id^="sun"]').checked,
                 "sunday checkbox should be unchecked");
 
             await testUtils.form.clickSave(form);
-            assert.notOk(form.el.querySelector('input[id^="sun"').checked,
+            assert.notOk(form.el.querySelector('input[id^="sun"]').checked,
                 "sunday checkbox should be unchecked");
-            assert.ok(form.el.querySelector('input[id^="mon"').checked,
+            assert.ok(form.el.querySelector('input[id^="mon"]').checked,
                 "monday checkbox should be checked");
-            assert.ok(form.el.querySelector('input[id^="tue"').checked,
+            assert.ok(form.el.querySelector('input[id^="tue"]').checked,
                 "tuesday checkbox should be checked");
 
             form.destroy();
