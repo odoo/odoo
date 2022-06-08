@@ -20,6 +20,7 @@ class Article(models.Model):
     _description = "Knowledge Article"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "favorite_count, create_date desc, id desc"
+    _mail_post_access = 'read'
 
     active = fields.Boolean(default=True)
     name = fields.Char(string="Title", default=lambda self: _('New Article'), required=True, tracking=20)
@@ -1411,6 +1412,15 @@ class Article(models.Model):
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
+
+    def _mail_track(self, tracked_fields, initial):
+        changes, tracking_value_ids = super(Article, self)._mail_track(tracked_fields, initial)
+        if {'parent_id', 'root_article_id'} & changes and not self.user_has_write_access:
+            partner_name = self.env.user.partner_id.display_name
+            message_body = _("Logging changes from %(partner_name)s without write access on article %(article_name)s due to hierarchy tree update",
+                partner_name=partner_name, article_name=self.display_name)
+            self._track_set_log_message("<p>%s</p>" % message_body)
+        return changes, tracking_value_ids
 
     def _send_invite_mail(self, partners):
         # TDE NOTE: try to cleanup and batchize
