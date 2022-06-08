@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one, many } from '@mail/model/model_field';
+import { many, one } from '@mail/model/model_field';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -30,8 +30,26 @@ registerModel({
                 })
             );
         },
+        
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeEmojiCategoryViews() {
+            return insertAndReplace(
+                this.messaging.emojiRegistry.allCategories.map(emojiCategory => {
+                    return { emojiCategory: replace(emojiCategory) };
+                })
+            );
+        },
     },
     fields: {
+        emojiCategoryViews: many('EmojiCategoryView', {
+            compute: '_computeEmojiCategoryViews',
+            inverse: 'emojiListView',
+            readonly: true,
+            isCausal: true,
+        }),
         emojiViews: many('EmojiView', {
             compute: '_computeEmojiViews',
             inverse: 'emojiListView',

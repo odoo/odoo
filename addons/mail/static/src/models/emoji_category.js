@@ -5,8 +5,8 @@ import { attr, many, one } from '@mail/model/model_field';
 import { replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'Emoji',
-    identifyingFields: ['unicode'],
+    name: 'EmojiCategory',
+    identifyingFields: ['categoryName'],
     recordMethods: {
         /**
          * @private
@@ -17,28 +17,21 @@ registerModel({
         },
     },
     fields: {
-        description: attr({
-            readonly: true,
+        allEmojis: many('Emoji', {
+            inverse: 'emojiCategories',
         }),
-        emojiCategories: many('EmojiCategory', {
-            inverse: 'allEmojis',
-        }),
-        emojiRegistry: one('EmojiRegistry', {
-            compute: '_computeEmojiRegistry',
-            inverse: 'allEmojis',
+        categoryName: attr({
             readonly: true,
             required: true,
         }),
-        emojiViews: many('EmojiView', {
-            inverse: 'emoji',
+        emojiCategoryViews: many('EmojiCategoryView', {
+            inverse: 'emojiCategory',
             readonly: true,
             isCausal: true,
         }),
-        sources: attr({
-            readonly: true,
-        }),
-        unicode: attr({
-            readonly: true,
+        emojiRegistry: one('EmojiRegistry', {
+            compute: '_computeEmojiRegistry',
+            inverse: 'allCategories',
             required: true,
         }),
     },
