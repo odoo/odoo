@@ -86,24 +86,24 @@ class TestReadProgressBar(common.TransactionCase):
         c1, c2, c3 = self.env['res.country'].search([], limit=3)
 
         self.env['x_progressbar'].create([
-            # week 21
-            {'x_country_id': c1.id, 'x_date': '2021-05-20', 'x_state': 'foo'},
-            {'x_country_id': c1.id, 'x_date': '2021-05-21', 'x_state': 'foo'},
-            {'x_country_id': c1.id, 'x_date': '2021-05-22', 'x_state': 'foo'},
-            {'x_country_id': c1.id, 'x_date': '2021-05-23', 'x_state': 'bar'},
-            # week 22
-            {'x_country_id': c1.id, 'x_date': '2021-05-24', 'x_state': 'baz'},
-            {'x_country_id': c2.id, 'x_date': '2021-05-25', 'x_state': 'foo'},
-            {'x_country_id': c2.id, 'x_date': '2021-05-26', 'x_state': 'bar'},
-            {'x_country_id': c2.id, 'x_date': '2021-05-27', 'x_state': 'bar'},
-            {'x_country_id': c2.id, 'x_date': '2021-05-28', 'x_state': 'baz'},
-            {'x_country_id': c2.id, 'x_date': '2021-05-29', 'x_state': 'baz'},
-            {'x_country_id': c3.id, 'x_date': '2021-05-30', 'x_state': 'foo'},
-            # week 23
-            {'x_country_id': c3.id, 'x_date': '2021-05-31', 'x_state': 'foo'},
-            {'x_country_id': c3.id, 'x_date': '2021-06-01', 'x_state': 'baz'},
-            {'x_country_id': c3.id, 'x_date': '2021-06-02', 'x_state': 'baz'},
-            {'x_country_id': c3.id, 'x_date': '2021-06-03', 'x_state': 'baz'},
+            # week 53 2018 / week 1 2019
+            {'x_country_id': c1.id, 'x_date': '2019-01-01', 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_date': '2019-01-02', 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_date': '2019-01-03', 'x_state': 'foo'},
+            {'x_country_id': c1.id, 'x_date': '2019-01-04', 'x_state': 'bar'},
+            {'x_country_id': c1.id, 'x_date': '2019-01-05', 'x_state': 'baz'},
+            # week 2 2019
+            {'x_country_id': c2.id, 'x_date': '2019-01-06', 'x_state': 'foo'},
+            {'x_country_id': c2.id, 'x_date': '2019-01-07', 'x_state': 'bar'},
+            {'x_country_id': c2.id, 'x_date': '2019-01-08', 'x_state': 'bar'},
+            {'x_country_id': c2.id, 'x_date': '2019-01-09', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2019-01-10', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2019-01-11', 'x_state': 'foo'},
+            {'x_country_id': c3.id, 'x_date': '2019-01-12', 'x_state': 'foo'},
+            # week 3 2019
+            {'x_country_id': c3.id, 'x_date': '2019-01-13', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2019-01-14', 'x_state': 'baz'},
+            {'x_country_id': c3.id, 'x_date': '2019-01-15', 'x_state': 'baz'},
         ])
 
         progress_bar = {
@@ -113,16 +113,16 @@ class TestReadProgressBar(common.TransactionCase):
         result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
         self.assertEqual(result, {
             c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
-            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 2},
-            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 3},
+            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 1},
+            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 4},
         })
 
         # check date aggregation and format
         result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
         self.assertEqual(result, {
-            'W21 2021': {'foo': 3, 'bar': 1, 'baz': 0},
-            'W22 2021': {'foo': 2, 'bar': 2, 'baz': 3},
-            'W23 2021': {'foo': 1, 'bar': 0, 'baz': 3},
+            'W53 2018': {'foo': 3, 'bar': 1, 'baz': 1},
+            'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
+            'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
         })
 
         # add a computed field on model
@@ -146,13 +146,14 @@ class TestReadProgressBar(common.TransactionCase):
         result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
         self.assertEqual(result, {
             c1.display_name: {'foo': 3, 'bar': 1, 'baz': 1},
-            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 2},
-            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 3},
+            c2.display_name: {'foo': 1, 'bar': 2, 'baz': 1},
+            c3.display_name: {'foo': 2, 'bar': 0, 'baz': 4},
         })
 
         result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
         self.assertEqual(result, {
-            'W21 2021': {'foo': 3, 'bar': 1, 'baz': 0},
-            'W22 2021': {'foo': 2, 'bar': 2, 'baz': 3},
-            'W23 2021': {'foo': 1, 'bar': 0, 'baz': 3},
+            # first week is not the same as above, but that seems acceptable...
+            'W1 2019': {'foo': 3, 'bar': 1, 'baz': 1},
+            'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
+            'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
         })
