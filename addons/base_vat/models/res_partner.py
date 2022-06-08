@@ -547,7 +547,11 @@ class ResPartner(models.Model):
         format_func_name = 'format_vat_' + vat_country
         format_func = getattr(self, format_func_name, None) or stdnum_vat_fix_func
         if format_func:
-            vat_number = format_func(vat_number)
+            try:
+                vat_number = format_func(vat_number)
+            except InvalidComponent:
+                # Prevent populating errors from stdnum
+                pass
         return vat_country.upper() + vat_number
 
     @api.model_create_multi
