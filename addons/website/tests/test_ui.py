@@ -91,6 +91,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
             </t>
         '''
         generic_page.arch = oe_structure_layout
+        oe_structure_layout = generic_page.arch
         self.start_tour(self.env['website'].get_client_action_url('/generic'), 'html_editor_multiple_templates', login='admin')
         self.assertEqual(View.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
         self.assertTrue(generic_page.arch == oe_structure_layout, "Generic homepage view should be untouched")

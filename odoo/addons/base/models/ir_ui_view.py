@@ -308,6 +308,7 @@ actual arch.
 
     def _inverse_arch(self):
         for view in self:
+            view.arch = view._fields['arch_db'].translate(lambda x: None, view.arch)
             data = dict(arch_db=view.arch)
             if 'install_filename' in self._context:
                 # we store the relative path to the resource instead of the absolute path, if found
