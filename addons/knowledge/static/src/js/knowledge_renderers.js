@@ -328,6 +328,13 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
             helper: 'clone',
             cursor: 'grabbing',
             cancel: '.readonly',
+            isAllowed: (placeholder, placeholderParent, currentItem) => {
+                if (placeholder[0].closest('section[data-section="shared"]') &&
+                    !placeholder[0].closest('.o_article')) {
+                    return false;
+                }
+                return true;
+            },
             /**
              * @param {Event} event
              * @param {Object} ui
@@ -423,12 +430,12 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         this.$('section[data-section="workspace"] .o_tree').nestedSortable(
             'option',
             'connectWith',
-            'section[data-section="private"] .o_tree'
+            'section[data-section="private"] .o_tree, section[data-section="shared"] .o_tree'
         );
         this.$('section[data-section="private"] .o_tree').nestedSortable(
             'option',
             'connectWith',
-            'section[data-section="workspace"] .o_tree'
+            'section[data-section="workspace"] .o_tree, section[data-section="shared"] .o_tree'
         );
         // connectWith both workspace and private sections:
         this.$('section[data-section="shared"] .o_tree').nestedSortable(

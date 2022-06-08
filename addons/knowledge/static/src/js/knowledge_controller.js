@@ -336,6 +336,9 @@ const KnowledgeArticleFormController = FormController.extend({
             } else if (data.newCategory === 'private') {
                 message = _t("Are you sure you want to move this to private? Only you will be able to access it.");
                 confirmation_message = _t("Set as Private");
+            } else if (data.newCategory === 'shared') {
+                message = _t("Are you sure you want to move this to shared? The article will inherit the rights of its parent.");
+                confirmation_message = _t("Share");
             }
             Dialog.confirm(this, message, {
                 cancel_callback: data.onReject,
