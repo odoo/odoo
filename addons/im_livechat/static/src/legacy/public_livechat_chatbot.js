@@ -75,12 +75,6 @@ const QWeb = core.qweb;
             }
         }
 
-        if (this.messaging.isPublicLivechatChatbot) {
-            // void the default livechat placeholder in the user input
-            // as we use it for specific things (e.g: showing "please select an option above")
-            this.options.input_placeholder = '';
-        }
-
         if (this.chatbotState === 'init') {
             // we landed on a website page where a channel rule is configured to run a chatbot.script
             // -> initialize necessary state
