@@ -5,8 +5,6 @@ import { ChatterContainer } from '@mail/components/chatter_container/chatter_con
 import FormRenderer from 'web.FormRenderer';
 import { ComponentWrapper } from 'web.OwlCompatibility';
 
-const { Component } = owl;
-
 class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
 /**
@@ -44,7 +42,6 @@ FormRenderer.include({
         this._chatterContainerComponent = undefined;
         this.off('o_chatter_rendered', this);
         this.off('o_message_posted', this);
-        Component.env.bus.off('Thread:promptAddFollower-closed', this);
     },
 
     //--------------------------------------------------------------------------
@@ -79,9 +76,6 @@ FormRenderer.include({
                 this.trigger_up('reload', { keepChanges: true });
             });
         }
-        if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
-            Component.env.bus.on('Thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
-        }
     },
     /**
      * @private
@@ -93,6 +87,7 @@ FormRenderer.include({
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
             hasMessageList: this.chatterFields.hasMessageIds,
             hasParentReloadOnAttachmentsChanged: this.chatterFields.hasRecordReloadOnAttachmentsChanged,
+            hasParentReloadOnFollowersUpdate: this.chatterFields.hasRecordReloadOnFollowersUpdate,
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
             threadId: this.state.res_id,
             threadModel: this.state.model,
