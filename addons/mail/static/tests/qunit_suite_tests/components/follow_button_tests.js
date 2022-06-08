@@ -49,11 +49,11 @@ QUnit.test('hover following button', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const threadId = pyEnv['res.partner'].create({});
     const followerId = pyEnv['mail.followers'].create({
         is_active: true,
         partner_id: pyEnv.currentPartnerId,
-        res_id: resPartnerId1,
+        res_id: threadId,
         res_model: 'res.partner',
     });
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
@@ -75,7 +75,7 @@ QUnit.test('hover following button', async function (assert) {
         serverData: { views },
     });
     await openView({
-        res_id: pyEnv.currentPartnerId,
+        res_id: threadId,
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
@@ -129,7 +129,7 @@ QUnit.test('hover following button', async function (assert) {
 });
 
 QUnit.test('click on "follow" button', async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     const views = {
         'res.partner,false,form':
@@ -144,11 +144,6 @@ QUnit.test('click on "follow" button', async function (assert) {
             </form>`,
     };
     const { click, openView, pyEnv } = await start({
-        async mockRPC(route, args) {
-            if (route.includes('message_subscribe')) {
-                assert.step('rpc:message_subscribe');
-            }
-        },
         serverData: { views },
     });
     await openView({
@@ -168,9 +163,6 @@ QUnit.test('click on "follow" button', async function (assert) {
     );
 
     await click('.o_FollowButton_follow');
-    assert.verifySteps([
-        'rpc:message_subscribe',
-    ]);
     assert.containsNone(
         document.body,
         '.o_FollowButton_follow',
@@ -184,14 +176,14 @@ QUnit.test('click on "follow" button', async function (assert) {
 });
 
 QUnit.test('click on "unfollow" button', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const threadId = pyEnv['res.partner'].create({});
     const followerId = pyEnv['mail.followers'].create({
         is_active: true,
         partner_id: pyEnv.currentPartnerId,
-        res_id: resPartnerId1,
+        res_id: threadId,
         res_model: 'res.partner',
     });
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
@@ -210,15 +202,10 @@ QUnit.test('click on "unfollow" button', async function (assert) {
             </form>`,
     };
     const { click, openView } = await start({
-        async mockRPC(route, args) {
-            if (route.includes('message_unsubscribe')) {
-                assert.step('rpc:message_unsubscribe');
-            }
-        },
         serverData: { views },
     });
     await openView({
-        res_id: pyEnv.currentPartnerId,
+        res_id: threadId,
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
@@ -239,7 +226,6 @@ QUnit.test('click on "unfollow" button', async function (assert) {
     );
 
     await click('.o_FollowButton_unfollow');
-    assert.verifySteps(['rpc:message_unsubscribe']);
     assert.containsOnce(
         document.body,
         '.o_FollowButton_follow',
