@@ -42,7 +42,6 @@ FormRenderer.include({
     destroy() {
         this._super(...arguments);
         this._chatterContainerComponent = undefined;
-        this.off('o_attachments_changed', this);
         this.off('o_chatter_rendered', this);
         this.off('o_message_posted', this);
         Component.env.bus.off('Thread:promptAddFollower-closed', this);
@@ -79,9 +78,6 @@ FormRenderer.include({
             this.on('o_message_posted', this, ev => {
                 this.trigger_up('reload', { keepChanges: true });
             });
-        }
-        if (this.chatterFields.hasRecordReloadOnAttachmentsChanged) {
-            this.on('o_attachments_changed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
         if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
             Component.env.bus.on('Thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
