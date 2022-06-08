@@ -261,7 +261,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 res.push(...this._do.pressNumpad('Qty'));
                 res.push(...this._check.modeIsActive('Qty'));
             }
-            for (let char of quantity.toString()) {
+            for (let char of (quantity.toString() == '1' ? '' : quantity.toString())) {
                 if ('.0123456789'.includes(char)) {
                     res.push(...this._do.pressNumpad(char));
                 } else if ('-'.includes(char)) {
