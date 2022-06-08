@@ -581,3 +581,31 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         picking = pickings[1]
         self.assertEqual(len(picking.move_ids), 1)
         picking.product_id = self.complex_product
+
+    def test_child_parent_relationship_on_backorder_creation(self):
+        """ Test Child Mo and Source Mo in 2/3-step production for reorder
+            rules in backorder using order points with the help of run scheduler """
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        rr_form = Form(self.env['stock.warehouse.orderpoint'])
+        rr_form.product_id = self.finished_product
+        rr_form.product_min_qty = 20
+        rr_form.product_max_qty = 40
+        rr_form.save()
+
+        self.env['procurement.group'].run_scheduler()
+
+        mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
+        mo_form = Form(mo)
+        mo_form.qty_producing = 20
+        mo = mo_form.save()
+
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+
+        self.assertEqual(mo.mrp_production_child_count, 0, "Children MOs counted as existing where there should be none")
+        self.assertEqual(mo.mrp_production_source_count, 0, "Source MOs counted as existing where there should be none")
+        self.assertEqual(mo.mrp_production_backorder_count, 2)
