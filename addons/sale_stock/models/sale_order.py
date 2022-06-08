@@ -95,6 +95,10 @@ class SaleOrder(models.Model):
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
+    @api.onchange('commitment_date')
+    def _onchange_commitment_date(self):
+        self.order_line.move_ids.date_deadline = self.commitment_date or self.expected_date
+
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
@@ -109,13 +113,6 @@ class SaleOrder(models.Model):
                         From <strong>"%s"</strong> To <strong>"%s"</strong>,
                         You should probably update the partner on this document.""") % addresses
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
-
-        if 'commitment_date' in values:
-            # protagate commitment_date as the deadline of the related stock move.
-            # TODO: Log a note on each down document
-            deadline_datetime = values.get('commitment_date')
-            for order in self:
-                order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
