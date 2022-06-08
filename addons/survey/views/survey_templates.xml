@@ -30,7 +30,7 @@
         </xpath>
         <xpath expr="//footer" position="after">
             <div class="py-3 m-0 p-0 text-right">
-                <div class="o_survey_progress_wrapper d-inline-block pr-5 text-left">
+                <div class="o_survey_progress_wrapper d-inline-block pr-1 text-left">
                     <t t-call="survey.survey_progression"
                         t-if="survey and survey.questions_layout != 'one_page' and answer and answer.state == 'in_progress' and (not question or not question.is_page) and not survey_form_readonly">
                         <t t-if="survey.questions_layout == 'page_per_section'">
