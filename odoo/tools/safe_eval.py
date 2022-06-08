@@ -415,7 +415,7 @@ dateutil = wrap_module(dateutil, {
     for mod in mods
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
-time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime'])
+time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])
