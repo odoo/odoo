@@ -422,6 +422,9 @@ registerModel({
         hasParentReloadOnFollowersUpdate: attr({
             default: false,
         }),
+        hasParentReloadOnMessagePosted: attr({
+            default: false,
+        }),
         /**
          * Determines whether `this.thread` should be displayed.
          */

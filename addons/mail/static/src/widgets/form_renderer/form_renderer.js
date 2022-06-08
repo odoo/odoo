@@ -41,7 +41,6 @@ FormRenderer.include({
         this._super(...arguments);
         this._chatterContainerComponent = undefined;
         this.off('o_chatter_rendered', this);
-        this.off('o_message_posted', this);
     },
 
     //--------------------------------------------------------------------------
@@ -71,11 +70,6 @@ FormRenderer.include({
         // Not in custom_events because other modules may remove this listener
         // while attempting to extend them.
         this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
-        if (this.chatterFields.hasRecordReloadOnMessagePosted) {
-            this.on('o_message_posted', this, ev => {
-                this.trigger_up('reload', { keepChanges: true });
-            });
-        }
     },
     /**
      * @private
@@ -88,6 +82,7 @@ FormRenderer.include({
             hasMessageList: this.chatterFields.hasMessageIds,
             hasParentReloadOnAttachmentsChanged: this.chatterFields.hasRecordReloadOnAttachmentsChanged,
             hasParentReloadOnFollowersUpdate: this.chatterFields.hasRecordReloadOnFollowersUpdate,
+            hasParentReloadOnMessagePosted: this.chatterFields.hasRecordReloadOnMessagePosted,
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
             threadId: this.state.res_id,
             threadModel: this.state.model,

@@ -586,6 +586,7 @@ registerModel({
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
                 const { threadView = {} } = this;
+                const chatter = this.chatter;
                 const { thread: chatterThread } = this.chatter || {};
                 const { thread: threadViewThread } = threadView;
                 const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params });
@@ -599,6 +600,9 @@ registerModel({
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
+                }
+                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted) {
+                    chatter.reloadParentView();
                 }
                 if (chatterThread) {
                     if (this.exists()) {
