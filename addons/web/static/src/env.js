@@ -48,6 +48,7 @@ export function makeEnv() {
 const serviceRegistry = registry.category("services");
 
 export const SERVICES_METADATA = {};
+let startServicesPromise = null;
 
 /**
  * Start all services registered in the service registry, while making sure
@@ -85,6 +86,9 @@ export async function startServices(env) {
 }
 
 async function _startServices(env, toStart) {
+    if (startServicesPromise) {
+        return startServicesPromise.then(() => _startServices(env, toStart));
+    }
     const services = env.services;
     for (const [name, service] of serviceRegistry.getEntries()) {
         if (!(name in services)) {
@@ -135,7 +139,9 @@ async function _startServices(env, toStart) {
             return start();
         }
     }
-    await start();
+    startServicesPromise = start();
+    await startServicesPromise;
+    startServicesPromise = null;
     if (toStart.size) {
         const names = [...toStart].map((s) => s.name);
         const missingDeps = new Set();
