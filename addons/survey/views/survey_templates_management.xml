@@ -118,16 +118,20 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-4 offset-md-4 text-center">
-                                    <input id="session_code" type="text" placeholder="e.g. 4812" autocomplete="off"
-                                           class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
+                                    <input id="session_code"
+                                        type="text" placeholder="e.g. 4812"
+                                        autocomplete="off"
+                                        t-attf-value="{{session_code if session_code else ''}}"
+                                        class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
                                 </div>
-                                <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger pt-2" role="alert">
-                                    <span class="o_survey_session_error_invalid_code d-none">Code is incorrect.</span>
-                                    <span class="o_survey_session_error_closed d-none">Session is finished.</span>
+                                <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger h4 pt-2 px-0" role="alert">
+                                    <span t-attf-class="o_survey_session_error_invalid_code {{'d-none' if error != 'survey_wrong' else ''}}">Oops! No survey matches this code.</span>
+                                    <span t-attf-class="o_survey_session_error_not_launched {{'d-none' if error != 'survey_session_not_launched' else ''}}">The session did not start yet.</span>
                                 </div>
                             </div>
                             <div class="text-center mt32 p-2">
-                                <button type="submit" class="btn btn-primary">Join Session</button>
+                                <button groups="survey.group_survey_user" type="button" t-attf-class="o_survey_launch_session btn btn-primary {{'d-none' if error != 'survey_session_not_launched' else ''}}" t-att-data-survey-id="survey_id">Launch Session</button>
+                                <button type="submit" t-attf-class="btn btn-primary {{'d-none' if error == 'survey_session_not_launched' and request.env.user.has_group('survey.group_survey_user') else ''}}">Join Session</button>
                             </div>
                         </div>
                     </div>
