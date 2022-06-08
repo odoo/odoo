@@ -18,7 +18,6 @@ class TestFrontend(odoo.tests.HttpCase):
 
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
-            'barcode_nomenclature_id': self.env.ref('barcodes.default_barcode_nomenclature').id,
             'module_pos_restaurant': True,
             'is_table_management': True,
             'iface_splitbill': True,

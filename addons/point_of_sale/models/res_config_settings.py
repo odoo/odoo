@@ -40,6 +40,7 @@ class ResConfigSettings(models.TransientModel):
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
     is_default_pricelist_displayed = fields.Boolean(compute="_compute_pos_pricelist_id", compute_sudo=True)
+    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
 
     # pos.config fields
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
@@ -50,7 +51,6 @@ class ResConfigSettings(models.TransientModel):
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
     pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_available_pricelist_ids', readonly=False, store=True, pos='available_pricelist_ids')
-    pos_barcode_nomenclature_id = fields.Many2one(related='pos_config_id.barcode_nomenclature_id', readonly=False)
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")
     pos_company_has_template = fields.Boolean(related='pos_config_id.company_has_template')
