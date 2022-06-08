@@ -83,31 +83,24 @@ export class Mutex {
      * @returns {Promise}
      */
     async exec(action) {
-        const currentLock = this._lock;
-        let result;
         this._queueSize++;
-        this._unlockedProm =
-            this._unlockedProm ||
-            new Promise((resolve) => {
-                this._unlock = resolve;
-            });
-        this._lock = new Promise((unlockCurrent) => {
-            currentLock.then(() => {
-                result = action();
-                const always = (returnedResult) => {
-                    unlockCurrent();
-                    this._queueSize--;
-                    if (this._queueSize === 0) {
-                        this._unlockedProm = undefined;
-                        this._unlock();
-                    }
-                    return returnedResult;
+        if (!this._unlockedProm) {
+            this._unlockedProm = new Promise((resolve) => {
+                this._unlock = () => {
+                    resolve();
+                    this._unlockedProm = undefined;
                 };
-                Promise.resolve(result).then(always).guardedCatch(always);
             });
-        });
-        await this._lock;
-        return result;
+        }
+        const always = () => {
+            return Promise.resolve(action()).finally(() => {
+                if (--this._queueSize === 0) {
+                    this._unlock();
+                }
+            });
+        };
+        this._lock = this._lock.then(always, always);
+        return this._lock;
     }
     /**
      * @returns {Promise} resolved as soon as the Mutex is unlocked
