@@ -19,7 +19,6 @@ const KnowledgeArticleFormController = FormController.extend({
         'click i.o_toggle_favorite': '_onToggleFavorite',
         'input .o_breadcrumb_article_name': '_adjustInputSize',
     }),
-
     custom_events: Object.assign({}, FormController.prototype.custom_events, {
         create: '_onCreate',
         duplicate: '_onDuplicate',
@@ -28,7 +27,6 @@ const KnowledgeArticleFormController = FormController.extend({
         reload_tree: '_onReloadTree',
         emoji_click: '_onEmojiClick',
     }),
-
     /**
      * Register the fact that the current @see FormController is one from
      * Knowledge in order not to try and search for a matching record for
@@ -50,14 +48,41 @@ const KnowledgeArticleFormController = FormController.extend({
         this._super.apply(this, arguments);
         this.onFieldSavedListeners = new Map();
     },
-
+    /**
+     * If a reload is called with param 'keepChanges', only the chatter needs
+     * to be updated, no need for a full reload
+     *
+     * @override
+     */
+    reload: function (params) {
+        if (params && params.keepChanges) {
+            return this.renderer.updateChatter();
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+    /**
+     * @override
+     */
+    saveRecord: async function () {
+        const modifiedFields = await this._super(...arguments);
+        const { data } = this.model.get(this.handle);
+        for (const field of modifiedFields) {
+            if (this.onFieldSavedListeners.has(field)) {
+                this.onFieldSavedListeners.get(field).forEach(listener => {
+                    listener.call(this, data[field]);
+                });
+            }
+        }
+        return modifiedFields;
+    },
     /**
      * @override
      * @returns {Promise}
      */
     start: function () {
         return this._super.apply(this, arguments).then(() => {
-            this.onFieldSaved('icon', unicode => {
+            this._onFieldSaved('icon', unicode => {
                 const { id } = this.getState();
                 this.renderer._setEmoji(id, unicode);
             });
@@ -66,6 +91,18 @@ const KnowledgeArticleFormController = FormController.extend({
 
     // Listeners:
 
+    /**
+     * @param {Event} event
+     */
+    _adjustInputSize: function (event) {
+        event.target.setAttribute('size', event.target.value.length);
+    },
+    _onAddCover: async function() {
+        if (this.mode === 'readonly') {
+            await this._setMode('edit');
+        }
+        this.$('.o_input_file').click();
+    },
     _onAddRandomIcon: function() {
         this.trigger_up('field_changed', {
             dataPointID: this.handle,
@@ -74,50 +111,13 @@ const KnowledgeArticleFormController = FormController.extend({
             }
         });
     },
-
-    _onAddCover: async function() {
-        if (this.mode === 'readonly') {
-            await this._setMode('edit');
-        }
-        this.$('.o_input_file').click();
-    },
-
-    /**
-     * When the user clicks on a field in readonly mode, a new 'quick_edit' event
-     * will be triggered. To prevent the view from switching to the edit mode when
-     * the article is locked, we will overwrite the `_onQuickEdit` handler. This
-     * function will now ignore the event if the article is locked.
-     * @override
-     */
-    _onQuickEdit: function () {
-        const { data } = this.model.get(this.handle);
-        if (data.is_locked) {
-            return;
-        }
-        this._super.apply(this, arguments);
-    },
-
-    /**
-     * Callback function called when the user renames the active article.
-     * The function will update the name of the articles in the aside block.
-     * @param {Event} event
-     */
-    _onRename: async function (event) {
-        var name = event.currentTarget.value;
-        if (name.length === 0) {
-            name = _t('New Article');
-        }
-        const id = await this._getId();
-        await this._rename(id, name);
-    },
-
     /**
      * When the user clicks on the name of the article, checks if the article
      * name hasn't been set yet. If it hasn't, it will look for a title in the
      * body of the article and set it as the name of the article.
      * @param {Event} event
      */
-     _onArticleBreadcrumbClick: async function (event) {
+    _onArticleBreadcrumbClick: async function (event) {
         const name = event.currentTarget.value;
         if (name === _t('New Article')) {
             const $articleTitle = this.$('.o_knowledge_editor h1');
@@ -133,14 +133,12 @@ const KnowledgeArticleFormController = FormController.extend({
             }
         }
     },
-
     /**
-     * @param {Event} event
+     * @param {OdooEvent} event
      */
-    _adjustInputSize: function (event) {
-        event.target.setAttribute('size', event.target.value.length);
+    _onCreate: async function (event) {
+        await this._create(event.data);
     },
-
     /**
      * @param {OdooEvent} event
      */
@@ -151,21 +149,78 @@ const KnowledgeArticleFormController = FormController.extend({
             additional_context: { res_id }
         });
     },
-
     /**
-     * @param {OdooEvent} event
+     * @param {Event} event
      */
-    _onCreate: async function (event) {
-        await this._create(event.data);
+    _onEmojiClick: async function (event) {
+        const { id } = this.getState();
+        const { articleId, unicode } = event.data;
+        if (articleId === id) {
+            this.trigger_up('field_changed', {
+                dataPointID: this.handle,
+                changes: {
+                    icon: unicode
+                }
+            });
+        } else {
+            const result = await this._rpc({
+                model: 'knowledge.article',
+                method: 'write',
+                args: [[articleId], { icon: unicode }],
+            });
+            if (result) {
+                this.renderer._setEmoji(articleId, unicode);
+            }
+        }
     },
-
+    /**
+     * @override
+     * @param {Event} event
+     */
+    _onFieldChanged: async function (event) {
+        this._super(...arguments);
+        const { changes } = event.data;
+        for (const field of this._getFieldsToForceSave()) {
+            if (changes.hasOwnProperty(field)) {
+                await this.saveRecord(this.handle, {
+                    reload: false,
+                    stayInEdit: true
+                });
+                return;
+            }
+        }
+    },
+    /**
+     * @param {String} name - field name
+     * @param {Function} callback
+     */
+    _onFieldSaved: function (name, callback) {
+        if (this.onFieldSavedListeners.has(name)) {
+            this.onFieldSavedListeners.get(name).push(callback);
+        } else {
+            this.onFieldSavedListeners.set(name, [callback]);
+        }
+    },
+    /**
+     * When the user clicks on a field in readonly mode, a new 'quick_edit' event
+     * will be triggered. To prevent the view from switching to the edit mode when
+     * the article is locked, we will overwrite the `_onQuickEdit` handler. This
+     * function will now ignore the event if the article is locked.
+     * @override
+     */
+    _onQuickEdit: function () {
+        const { data } = this.model.get(this.handle);
+        if (data.is_locked) {
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
     /**
      * @param {Event} event
      */
     _onMove: function (event) {
         this._confirmMove(event.data);
     },
-
     /**
      * Opens the "Move To" modal
      * @param {OdooEvent} event
@@ -197,7 +252,6 @@ const KnowledgeArticleFormController = FormController.extend({
         });
         dialog.open();
     },
-
     /**
      * @param {Event} event
      */
@@ -205,7 +259,19 @@ const KnowledgeArticleFormController = FormController.extend({
         // TODO JBN: Create a widget for the tree and reload it without reloading the whole view.
         this.reload();
     },
-
+    /**
+     * Callback function called when the user renames the active article.
+     * The function will update the name of the articles in the aside block.
+     * @param {Event} event
+     */
+    _onRename: async function (event) {
+        var name = event.currentTarget.value;
+        if (name.length === 0) {
+            name = _t('New Article');
+        }
+        const id = await this._getId();
+        await this._rename(id, name);
+    },
     /**
      * @param {Event} event
      */
@@ -215,7 +281,6 @@ const KnowledgeArticleFormController = FormController.extend({
             searchValue: "?",
         });
     },
-
     /**
      * @param {Event} event
      */
@@ -237,68 +302,9 @@ const KnowledgeArticleFormController = FormController.extend({
             this.renderer._setTreeFavoriteListener();
             this.renderer._renderEmojiPicker($dom);
         });
-   },
-
-    /**
-     * @param {Event} event
-     */
-    _onEmojiClick: async function (event) {
-        const { id } = this.getState();
-        const { articleId, unicode } = event.data;
-        if (articleId === id) {
-            this.trigger_up('field_changed', {
-                dataPointID: this.handle,
-                changes: {
-                    icon: unicode
-                }
-            });
-        } else {
-            const result = await this._rpc({
-                model: 'knowledge.article',
-                method: 'write',
-                args: [[articleId], { icon: unicode }],
-            });
-            if (result) {
-                this.renderer._setEmoji(articleId, unicode);
-            }
-        }
     },
+
     // API calls:
-
-    /**
-     * @param {Object} data
-     * @param {String} data.category
-     * @param {integer} data.target_parent_id
-     */
-    _create: async function (data) {
-        const articleId = await this._rpc({
-            model: 'knowledge.article',
-            method: 'article_create',
-            args: [[]],
-            kwargs: {
-                is_private: data.category === 'private',
-                parent_id: data.target_parent_id ? data.target_parent_id : false
-            },
-        });
-        if (!articleId) {
-            return;
-        }
-        this.do_action('knowledge.ir_actions_server_knowledge_home_page', {
-            stackPosition: 'replaceCurrentAction',
-            additional_context: {
-                res_id: articleId
-            }
-        });
-    },
-
-    /**
-     * @param {integer} id - Target id
-     * @param {string} name - Target Name
-     */
-    _rename: async function (id, name) {
-        this.$(`.o_knowledge_tree .o_article[data-article-id="${id}"] > .o_article_handle > .o_article_name`).text(name);
-        this.$(`.o_breadcrumb_article_name`).val(name);
-    },
 
     /**
      * @param {Object} data
@@ -348,7 +354,48 @@ const KnowledgeArticleFormController = FormController.extend({
             });
         }
     },
-
+    /**
+     * @param {Object} data
+     * @param {String} data.category
+     * @param {integer} data.target_parent_id
+     */
+    _create: async function (data) {
+        const articleId = await this._rpc({
+            model: 'knowledge.article',
+            method: 'article_create',
+            args: [[]],
+            kwargs: {
+                is_private: data.category === 'private',
+                parent_id: data.target_parent_id ? data.target_parent_id : false
+            },
+        });
+        if (!articleId) {
+            return;
+        }
+        this.do_action('knowledge.ir_actions_server_knowledge_home_page', {
+            stackPosition: 'replaceCurrentAction',
+            additional_context: {
+                res_id: articleId
+            }
+        });
+    },
+    /**
+     * @returns {Array[String]}
+     */
+    _getFieldsToForceSave: function () {
+        return ['full_width', 'icon', 'cover'];
+    },
+    /**
+     * @returns {integer}
+     */
+    _getId: async function () {
+        let state = this.getState();
+        if (typeof state.id === 'undefined') {
+            await this.saveRecord(this.handle);
+            state = this.getState();
+        }
+        return state.id;
+    },
     /**
      * @param {Object} data
      * @param {integer} data.article_id
@@ -373,7 +420,14 @@ const KnowledgeArticleFormController = FormController.extend({
             data.onReject();
         })
     },
-
+    /**
+     * @param {integer} id - Target id
+     * @param {string} name - Target Name
+     */
+    _rename: async function (id, name) {
+        this.$(`.o_knowledge_tree .o_article[data-article-id="${id}"] > .o_article_handle > .o_article_name`).text(name);
+        this.$(`.o_breadcrumb_article_name`).val(name);
+    },
     /**
      * @param {integer} id - article id
      * @returns {Promise}
@@ -384,71 +438,6 @@ const KnowledgeArticleFormController = FormController.extend({
             method: 'action_toggle_favorite',
             args: [id]
         });
-    },
-
-    /**
-     * @returns {Array[String]}
-     */
-    _getFieldsToForceSave: function () {
-        return ['full_width', 'icon', 'cover'];
-    },
-
-    /**
-     * @override
-     * @param {Event} event
-     */
-    _onFieldChanged: async function (event) {
-        this._super(...arguments);
-        const { changes } = event.data;
-        for (const field of this._getFieldsToForceSave()) {
-            if (changes.hasOwnProperty(field)) {
-                await this.saveRecord(this.handle, {
-                    reload: false,
-                    stayInEdit: true
-                });
-                return;
-            }
-        }
-    },
-
-    /**
-     * @override
-     */
-    saveRecord: async function () {
-        const modifiedFields = await this._super(...arguments);
-        const { data } = this.model.get(this.handle);
-        for (const field of modifiedFields) {
-            if (this.onFieldSavedListeners.has(field)) {
-                this.onFieldSavedListeners.get(field).forEach(listener => {
-                    listener.call(this, data[field]);
-                });
-            }
-        }
-        return modifiedFields;
-    },
-
-    /**
-     * @param {String} name - field name
-     * @param {Function} callback
-     */
-    onFieldSaved: function (name, callback) {
-        if (this.onFieldSavedListeners.has(name)) {
-            this.onFieldSavedListeners.get(name).push(callback);
-        } else {
-            this.onFieldSavedListeners.set(name, [callback]);
-        }
-    },
-
-    /**
-     * @returns {integer}
-     */
-    _getId: async function () {
-        let state = this.getState();
-        if (typeof state.id === 'undefined') {
-            await this.saveRecord(this.handle);
-            state = this.getState();
-        }
-        return state.id;
     },
 });
 

@@ -519,7 +519,7 @@ registerModel({
                 default_model: this.composer.activeThread.model,
                 default_partner_ids: this.composer.recipients.map(partner => partner.id),
                 default_res_id: this.composer.activeThread.id,
-                mail_post_autofollow: true,
+                mail_post_autofollow: this.composer.activeThread.hasWriteAccess,
             };
 
             const action = {
@@ -579,7 +579,7 @@ registerModel({
                         subtype_xmlid: composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
                     });
                     if (!composer.isLog) {
-                        params.context = { mail_post_autofollow: true };
+                        params.context = { mail_post_autofollow: this.composer.activeThread.hasWriteAccess };
                     }
                 }
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
