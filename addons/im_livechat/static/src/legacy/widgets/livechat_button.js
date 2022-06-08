@@ -33,7 +33,6 @@ const LivechatButton = Widget.extend({
         this.messaging = messaging;
         this.options = _.defaults(this.messaging.publicLivechatOptions || {}, {
             input_placeholder: _t("Ask something ..."),
-            default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
         });
@@ -328,7 +327,7 @@ const LivechatButton = Widget.extend({
     _prepareGetSessionParameters() {
         return {
             channel_id: this.options.channel_id,
-            anonymous_name: this.options.default_username,
+            anonymous_name: this.messaging.livechatButtonView.defaultUsername,
             previous_operator_id: this._get_previous_operator_id(),
         };
     },
