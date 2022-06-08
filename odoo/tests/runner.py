@@ -7,6 +7,17 @@ from .. import sql_db
 from ..tools import config
 
 
+try:
+    import progressbar
+    if progressbar.__about__.__package_name__ == 'progressbar2':
+        progressbar.streams.wrap_stderr()
+        progressbar.streams.wrap_stdout()
+    else:
+        progressbar = None
+except ImportError:
+    progressbar = None
+
+
 _logger = logging.getLogger(__name__)
 class OdooTestResult(unittest.result.TestResult):
     """
@@ -23,6 +34,35 @@ class OdooTestResult(unittest.result.TestResult):
         self._soft_fail = False
         self.had_failure = False
         self.suite_tests_count = suite_tests_count
+
+        self.progressbar = progressbar and progressbar.ProgressBar(
+            widgets=[
+                progressbar.SimpleProgress(),
+                progressbar.MultiRangeBar("progress_counter", markers=[
+                    '\x1b[32m▣\x1b[39m',  # Passing
+                    '\x1b[31m▢\x1b[39m',  # Errors
+                    '\x1b[33m▢\x1b[39m',  # Failures
+                    '\x1b[37m▫\x1b[39m',  # Skipped
+                    ' '  # Not started
+                ]),
+            ],
+            max_value=suite_tests_count,
+            redirect_stdout=True,
+        ).start()
+
+    def __del__(self):
+        if self.progressbar:
+            self.progressbar.finish()
+
+    @property
+    def progress_counter(self):
+        return [
+            self.testsRun - len(self.failures) - len(self.errors) - len(self.skipped),
+            len(self.errors),
+            len(self.failures),
+            len(self.skipped),
+            self.suite_tests_count - self.testsRun,
+        ]
 
     def __str__(self):
         return f'{len(self.failures)} failed, {len(self.errors)} error(s) of {self.testsRun} tests'
@@ -98,6 +138,9 @@ class OdooTestResult(unittest.result.TestResult):
         else:
             self.log(logging.DEBUG, '%s Finished (%.3fs)',
                      self.getDescription(test), time.time() - self.time_start, test=test)
+
+        if self.progressbar is not None:
+            self.progressbar.update(self.testsRun, progress_counter=self.progress_counter)
 
     def addError(self, test, err):
         if self._soft_fail:
