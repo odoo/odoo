@@ -20,7 +20,7 @@ class BaseLanguageInstall(models.TransientModel):
     # add a context on the field itself, to be sure even inactive langs are displayed
     lang_ids = fields.Many2many('res.lang', 'res_lang_install_rel',
                                 'language_wizard_id', 'lang_id', 'Languages',
-                                default=_default_lang_ids, context={'active_test': False})
+                                default=_default_lang_ids, context={'active_test': False}, required=True)
     overwrite = fields.Boolean('Overwrite Existing Terms',
                                default=True,
                                help="If you check this box, your customized translations will be overwritten and replaced by the official ones.")
