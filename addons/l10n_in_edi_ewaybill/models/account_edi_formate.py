@@ -16,15 +16,26 @@ DEFAULT_IAP_TEST_ENDPOINT = "https://l10n-in-edi-demo.api.odoo.com"
 class AccountEdiFormat(models.Model):
     _inherit = "account.edi.format"
 
+    def _l10n_in_edi_ewaybill_base_irn_or_direct(self, move):
+        """
+            There is two type of api call to create E-waybill
+            1. base on IRN, IRN is number created when we do E-invoice
+            2. direct call, when E-invoice not aplicable or it's credit not
+        """
+        if move.move_type == 'out_invoice':
+            return 'direct'
+        einvoice_in_edi_format = move.journal_id.edi_format_ids.filtered(lambda f: f.code == 'in_einvoice_1_03')
+        return einvoice_in_edi_format._is_required_for_invoice(invoice) and 'irn' or 'direct'
+
     def _is_enabled_by_default_on_journal(self, journal):
         self.ensure_one()
-        if self.code == "in_irn_ewaybill_1_03":
+        if self.code == "in_ewaybill_1_03":
             return journal.company_id.country_id.code == 'IN'
         return super()._is_enabled_by_default_on_journal(journal)
 
     def _is_required_for_invoice(self, invoice):
         self.ensure_one()
-        if self.code == "in_irn_ewaybill_1_03":
+        if self.code == "in_ewaybill_1_03":
             product_types = invoice.mapped('invoice_line_ids.product_id.type')
             # only create if there is one or more goods.
             if 'consu' in product_types or 'product' in product_types:
@@ -37,17 +48,19 @@ class AccountEdiFormat(models.Model):
 
     def _needs_web_services(self):
         self.ensure_one()
-        return self.code == "in_irn_ewaybill_1_03" or super()._needs_web_services()
+        return self.code == "in_ewaybill_1_03" or super()._needs_web_services()
 
     def _get_invoice_edi_content(self, move):
-        if self.code != "in_irn_ewaybill_1_03":
+        if self.code != "in_ewaybill_1_03":
             return super()._get_invoice_edi_content(move)
-        json_dump = json.dumps(self._l10n_in_edi_generate_irn_ewaybill_json(move))
+        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
+        if base == 'irn':
+            json_dump = json.dumps(self._l10n_in_edi_generate_irn_ewaybill_json(move))
+        else:
+            json_dump = json.dumps(self._l10n_in_edi_generate_ewaybill_json(move))
         return json_dump.encode()
 
-    def _post_invoice_edi(self, invoices):
-        if self.code != "in_irn_ewaybill_1_03":
-            return super()._post_invoice_edi(invoices)
+    def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):
         response = {}
         res = {}
         generate_json = self._l10n_in_edi_generate_irn_ewaybill_json(invoices)
@@ -110,16 +123,84 @@ class AccountEdiFormat(models.Model):
             res[invoices] = inv_res
         return res
 
+    def _l10n_in_edi_ewaybill_post_invoice_edi(self, invoices):
+        response = {}
+        res = {}
+        generate_json = self._l10n_in_edi_generate_ewaybill_json(invoices)
+        response = self._l10n_in_edi_generate_ewaybill(invoices.company_id, generate_json)
+        if response.get("error"):
+            error = response["error"]
+            error_codes = [e.get("code") for e in error]
+            if "1005" in error_codes:
+                # Invalid token eror then create new token and send generate request again.
+                # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
+                authenticate_response = self._l10n_in_edi_ewaybill_authenticate(invoices.company_id)
+                if not authenticate_response.get("error"):
+                    error = []
+                    response = self._l10n_in_edi_generate_ewaybill(invoices.company_id, generate_json)
+                    if response.get("error"):
+                        error = response["error"]
+                        error_codes = [e.get("code") for e in error]
+            if "4002" in error_codes:
+                # Get IRN by details in case of IRN is already generated
+                # this happens when timeout from the Government portal but IRN is generated
+                response = self._l10n_in_edi_get_ewaybill(invoices.company_id, generate_json.get('docNo'))
+                if not response.get("error"):
+                    error = []
+                    odoobot = self.env.ref("base.partner_root")
+                    invoices.message_post(author_id=odoobot.id, body=_(
+                        "Somehow this Ewaybill is generate in government portal before." \
+                        "<br/>Normally, this should not happen too often" \
+                        "<br/>Just verify value of invoice by enter details into government website " \
+                        "<a href='https://ewaybillgst.gov.in/Others/EBPrintnew.aspx'>here<a>."
+                    ))
+            if "no-credit" in error_codes:
+                res[invoices] = {
+                    "success": False,
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoices.company_id),
+                    "blocking_level": "error",
+                }
+            elif error:
+                error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
+                blocking_level = "error"
+                if "404" in error_codes or "waiting" in error_codes:
+                    blocking_level = "warning"
+                res[invoices] = {
+                    "success": False,
+                    "error": error_message,
+                    "blocking_level": blocking_level,
+                }
+        if not response.get("error"):
+            json_dump = json.dumps(response.get("data"))
+            json_name = "%s_irn_ewaybill.json" % (invoices.name.replace("/", "_"))
+            attachment = self.env["ir.attachment"].create({
+                "name": json_name,
+                "raw": json_dump.encode(),
+                "res_model": "account.move",
+                "res_id": invoices.id,
+                "mimetype": "application/json",
+            })
+            inv_res = {"success": True, "attachment": attachment}
+            if response.get("Remarks"):
+                inv_res.update({'blocking_level': "info", "error": response.get("Remarks")})
+            res[invoices] = inv_res
+        return res
+
+    def _post_invoice_edi(self, invoices):
+        if self.code != "in_ewaybill_1_03":
+            return super()._post_invoice_edi(invoices)
+        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(invoices)
+        if base == 'irn':
+            return self._l10n_in_edi_ewaybill_irn_post_invoice_edi(invoices)
+        else:
+            return self._l10n_in_edi_ewaybill_post_invoice_edi(invoices)
+
     def _cancel_invoice_edi(self, invoices):
-        if self.code != "in_irn_ewaybill_1_03":
+        if self.code != "in_ewaybill_1_03":
             return super()._cancel_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
-            res[invoice] = {
-                "success": False,
-                "error": "You need to cancel E-waybill using government portal",
-                "blocking_level": "info"
-            }
+            
         return res
 
     def _l10n_in_edi_generate_irn_ewaybill_json(self, invoice):
@@ -147,16 +228,12 @@ class AccountEdiFormat(models.Model):
             })
         return json_payload
 
-    #================================ API methods ===========================
-
-    @api.model
-    def _l10n_in_edi_generate_irn_ewaybill(self, company, json_payload):
-        token = self._l10n_in_edi_get_token(company)
-        if not token:
-            return self._l10n_in_edi_no_config_response()
-        # required details is check here because it's depends on other EDI and post process when goods are shipping
-        # shipping details normally not available when invoice is posting
-        if not json_payload.get("Irn"):
+    def _l10n_in_edi_ewaybill_after_check(self, json_payload, check_for_irn=False):
+        """
+            Shipping details normally not available when invoice is posting
+            So we check this after post and wait until all details are not there
+        """
+        if check_for_irn and not json_payload.get("Irn"):
             return {'error': [{
                 'code': 'waiting',
                 'message': _("waiting For IRN generation To create E-waybill")}
@@ -182,6 +259,20 @@ class AccountEdiFormat(models.Model):
                 'code': 'required',
                 'message': _("Transportation Mode and Transporter Id is required for E-waybill")}
             ]}
+        return {}
+
+
+    #================================ API methods ===========================
+
+    @api.model
+    def _l10n_in_edi_generate_irn_ewaybill(self, company, json_payload):
+        token = self._l10n_in_edi_get_token(company)
+        if not token:
+            return self._l10n_in_edi_no_config_response()
+        # required details is check here because it's depends on other EDI and post process when goods are shipping
+        check_response = self._l10n_in_edi_ewaybill_after_check(json_payload)
+        if check_response:
+            return check_response
         params = {
             "auth_token": token,
             "json_payload": json_payload,
