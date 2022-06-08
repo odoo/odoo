@@ -47,7 +47,7 @@ export class FollowerListMenu extends Component {
     _onClickAddFollowers(ev) {
         ev.preventDefault();
         this.followerListMenuView.hide();
-        this.followerListMenuView.chatterOwner.thread.promptAddPartnerFollower();
+        this.followerListMenuView.chatterOwner.promptAddPartnerFollower();
     }
 
     /**
