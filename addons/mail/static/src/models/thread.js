@@ -874,12 +874,6 @@ registerModel({
             await this.notifyPinStateToServer();
         },
         /**
-         * Open a dialog to add partners as followers.
-         */
-        promptAddPartnerFollower() {
-            this._promptAddFollower();
-        },
-        /**
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {
@@ -1686,35 +1680,6 @@ registerModel({
                     notifyServer: false,
                 });
             }
-        },
-        /**
-         * @private
-         */
-        _promptAddFollower() {
-            const action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.wizard.invite',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                name: this.env._t("Invite Follower"),
-                target: 'new',
-                context: {
-                    default_res_model: this.model,
-                    default_res_id: this.id,
-                },
-            };
-            this.env.services.action.doAction(
-                action,
-                {
-                    onClose: async () => {
-                        if (!this.exists()) {
-                            return;
-                        }
-                        await this.fetchData(['followers']);
-                        owl.Component.env.bus.trigger('Thread:promptAddFollower-closed');
-                    },
-                }
-            );
         },
         /**
          * @private

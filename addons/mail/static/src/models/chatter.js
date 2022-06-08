@@ -119,6 +119,37 @@ registerModel({
         openAttachmentBoxView() {
             this.update({ attachmentBoxView: insertAndReplace() });
         },
+        /**
+         * Open a dialog to add partners as followers.
+         */
+        promptAddPartnerFollower() {
+            const action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.wizard.invite',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                name: this.env._t("Invite Follower"),
+                target: 'new',
+                context: {
+                    default_res_model: this.thread.model,
+                    default_res_id: this.thread.id,
+                },
+            };
+            this.env.services.action.doAction(
+                action,
+                {
+                    onClose: async () => {
+                        if (!this.exists() && !this.thread) {
+                            return;
+                        }
+                        await this.thread.fetchData(['followers']);
+                        if (this.exists() && this.hasParentReloadOnFollowersUpdate) {
+                            this.reloadParentView();
+                        }
+                    },
+                }
+            );
+        },
         async refresh() {
             const requestData = ['activities', 'followers', 'suggestedRecipients'];
             if (this.hasMessageList) {
@@ -386,6 +417,9 @@ registerModel({
             default: false,
         }),
         hasParentReloadOnAttachmentsChanged: attr({
+            default: false,
+        }),
+        hasParentReloadOnFollowersUpdate: attr({
             default: false,
         }),
         /**
