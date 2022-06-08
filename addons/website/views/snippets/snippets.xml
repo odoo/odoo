@@ -466,9 +466,8 @@
     </div>
 
     <div data-js="layout_column"
-        data-selector="section"
-        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns"
-        data-exclude=".s_masonry_block">
+        data-selector="section.s_features_grid, section.s_color_blocks_2"
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
         <we-select string="Columns" data-no-preview="true">
             <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
             <we-button data-select-count="1">1</we-button>
@@ -478,6 +477,54 @@
             <we-button data-select-count="5">5</we-button>
             <we-button data-select-count="6">6</we-button>
         </we-select>
+    </div>
+
+    <div data-js="layout_column"
+        data-selector="section"
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns"
+        data-exclude=".s_masonry_block, .s_features_grid, .s_color_blocks_2">
+        <we-row>
+            <we-button-group string="Layout" data-no-preview="true">
+                <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
+                <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
+            </we-button-group>
+            <we-select class="o_grid" data-no-preview="true" data-dependencies="normal_mode">
+                <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
+                <we-button data-select-count="1">1</we-button>
+                <we-button data-select-count="2">2</we-button>
+                <we-button data-select-count="3">3</we-button>
+                <we-button data-select-count="4">4</we-button>
+                <we-button data-select-count="5">5</we-button>
+                <we-button data-select-count="6">6</we-button>
+            </we-select>
+        </we-row>
+        <we-button-group class="o_grid o_we_sublevel_1" string="Add Elements" data-no-preview="true" data-dependencies="grid_mode">
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="image" title="Image" data-name="image">Image</we-button>
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="text" title="Text" data-name="text">Text</we-button>
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="button" title="Button" data-name="button">Button</we-button>
+        </we-button-group>
+        <we-row class="o_we_sublevel_1" string="Padding (Y, X)">
+            <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="--grid-item-padding-y" data-unit="px" data-apply-to=".row"/>
+            <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="--grid-item-padding-x" data-unit="px" data-apply-to=".row"/>
+        </we-row>
+    </div>
+
+    <!--  Vertical Alignment -->
+    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+        <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
+            <we-button title="Align Top"
+                       data-select-class="align-items-start"
+                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
+            <we-button title="Align Middle"
+                       data-select-class="align-items-center"
+                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
+            <we-button title="Align Bottom"
+                       data-select-class="align-items-end"
+                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
+            <we-button title="Stretch to Equal Height"
+                       data-select-class="align-items-stretch"
+                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
+        </we-button-group>
     </div>
 
     <!-- Move snippets around -->
@@ -556,6 +603,11 @@
     <div data-js="sizing_x"
         data-selector=".row > div"
         data-drop-near=".row:not(.s_col_no_resize) > div"
+        data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
+
+    <div data-js="sizing_grid"
+        data-selector=".row > div"
+        data-drop-near=".row.o_grid_mode > div"
         data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
 
     <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax</t>
@@ -1148,24 +1200,6 @@
             <we-button data-select-class="mb-4">Large</we-button>
             <we-button data-select-class="mb-5">Extra-Large</we-button>
         </we-select>
-    </div>
-
-    <!--  Vertical Alignment -->
-    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
-        <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-            <we-button title="Align Top"
-                       data-select-class="align-items-start"
-                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
-            <we-button title="Align Middle"
-                       data-select-class="align-items-center"
-                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
-            <we-button title="Align Bottom"
-                       data-select-class="align-items-end"
-                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
-            <we-button title="Stretch to Equal Height"
-                       data-select-class="align-items-stretch"
-                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
-        </we-button-group>
     </div>
 
     <div data-js="ConditionalVisibility" data-selector="section">
