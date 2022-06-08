@@ -1652,7 +1652,7 @@ class PosSession(models.Model):
                 'domain': [('id', '=', self.company_id.id)],
                 'fields': [
                     'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
-                    'country_id', 'state_id', 'tax_calculation_rounding_method'
+                    'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id'
                 ],
             }
         }

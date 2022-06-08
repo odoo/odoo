@@ -211,7 +211,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
 
         setupBarcodeParser() {
-            const barcode_parser = new BarcodeParser({ nomenclature_id: this.env.pos.config.barcode_nomenclature_id });
+            const barcode_parser = new BarcodeParser({ nomenclature_id: this.env.pos.company.nomenclature_id });
             this.env.barcode_reader.set_barcode_parser(barcode_parser);
             return barcode_parser.is_loaded();
         }
