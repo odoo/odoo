@@ -98,9 +98,11 @@ PosLoyalty.exec.finalizeOrder('Cash', '10');
 
 // Promotion: 2 items of shelves, get desk_pad/monitor_stand free
 // This is the 5th order.
-ProductScreen.exec.addOrderline('Wall Shelf Unit', '1');
+ProductScreen.do.clickDisplayedProduct('Wall Shelf Unit');
+ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '1.00');
 PosLoyalty.check.isRewardButtonHighlighted(false);
-ProductScreen.exec.addOrderline('Small Shelf', '1');
+ProductScreen.do.clickDisplayedProduct('Small Shelf');
+ProductScreen.check.selectedOrderlineHas('Small Shelf', '1.00');
 PosLoyalty.check.isRewardButtonHighlighted(true);
 // Click reward product. Should be automatically added as reward.
 ProductScreen.do.clickDisplayedProduct('Desk Pad');
