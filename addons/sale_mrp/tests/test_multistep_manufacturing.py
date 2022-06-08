@@ -149,3 +149,16 @@ class TestMultistepManufacturing(TestMrpCommon):
 
         self.assertEqual(self.sale_order.action_view_mrp_production()['res_id'], mo.id)
         self.assertEqual(mo.action_view_sale_orders()['res_id'], self.sale_order.id)
+
+    def test_pre_and_post_production_pickings_shown_on_so(self):
+        """ Test Pre Production and Post Production Pickings Shown On SO """
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+            warehouse.delivery_steps = 'pick_pack_ship'
+
+        self.sale_order.action_confirm()
+        mo = self.env['mrp.production'].search([('product_id', '=', self.product_manu.id)])
+
+        self.assertEqual(self.sale_order.delivery_count, 3, "There are no manufacturing transfers but still the count is %s" %(mo.mrp_production_child_count))
+        self.assertEqual(self.sale_order.mrp_production_count, 1)

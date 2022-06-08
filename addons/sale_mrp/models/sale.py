@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare
+from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
@@ -12,6 +13,23 @@ class SaleOrder(models.Model):
         "Count of MO generated",
         compute='_compute_mrp_production_count',
         groups='mrp.group_mrp_user')
+
+    @api.depends('picking_ids')
+    def _compute_picking_ids(self):
+        '''Overriding to filter transfers related to sale order '''
+        super()._compute_picking_ids()
+        for order in self:
+            procurement_groups = self.env['procurement.group'].search([('sale_id', '=', order.id)])
+            mrp_procurement_group_ids = set(procurement_groups.stock_move_ids.created_production_id.procurement_group_id.ids) | \
+                                 set(procurement_groups.mrp_production_ids.procurement_group_id.ids)
+            order.delivery_count = len(order.picking_ids.filtered(lambda p: p.group_id.id not in list(mrp_procurement_group_ids)))
+
+    def _get_action_view_picking(self, pickings):
+        ''' Overriding the action to filter transfers related to sale order'''
+        action = super()._get_action_view_picking(pickings)
+        if 'domain' in action:
+            action['domain'] = expression.AND([action['domain'], [('group_id', '=', pickings.sale_id.procurement_group_id.id)]])
+        return action
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_count(self):
