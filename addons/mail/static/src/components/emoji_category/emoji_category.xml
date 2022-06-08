@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiCategory" owl="1">
+        <span class="o_EmojiCategory p-1 fs-2 o_cursor_pointer" t-on-click="props.emojiCategoryView.onClickEmojiCategory" t-attf-class="{{ className }}" t-ref="root">
+            <t t-esc="props.emojiCategoryView.emojiCategory.categoryName"/>
+        </span>
+    </t>
+
+</templates>
