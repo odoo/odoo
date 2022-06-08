@@ -1,11 +1,13 @@
 # # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, date
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
+@tagged('work_entry_multi_contract')
 class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
 
     @classmethod
@@ -118,3 +120,21 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
 
         leave._compute_number_of_hours_display()
         self.assertEqual(leave.number_of_hours_display, 14, "It should count hours according to the future contract.")
+
+    def test_leave_multi_contracts_same_schedule(self):
+        # Allow leaves overlapping multiple contracts if same
+        # resource calendar
+        leave = self.create_leave(datetime(2022, 6, 1, 7, 0, 0), datetime(2022, 6, 30, 18, 0, 0))
+        leave.action_approve()
+        self.contract_cdi.date_end = date(2022, 6, 15)
+
+        new_contract_cdi = self.env['hr.contract'].create({
+            'date_start': date(2022, 6, 16),
+            'name': 'New Contract for Jules',
+            'resource_calendar_id': self.calendar_35h.id,
+            'wage': 5000.0,
+            'employee_id': self.jules_emp.id,
+            'state': 'draft',
+            'kanban_state': 'normal',
+        })
+        new_contract_cdi.state = 'open'
