@@ -196,7 +196,13 @@ class Base(models.AbstractModel):
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
                 locale = get_lang(self.env).code
-                group_by_value = date_utils.start_of(fields.Datetime.to_datetime(group_by_value), group_by_modifier)
+                group_by_value = fields.Datetime.to_datetime(group_by_value)
+                if group_by_modifier != 'week':
+                    # start_of(v, 'week') does not take into account the locale
+                    # to determine the first day of the week; this part is not
+                    # necessary, since the formatting below handles the locale
+                    # as expected, and outputs correct results
+                    group_by_value = date_utils.start_of(group_by_value, group_by_modifier)
                 group_by_value = pytz.timezone('UTC').localize(group_by_value)
                 tz_info = None
                 if field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones:
