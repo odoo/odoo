@@ -35,7 +35,7 @@ class AccountEdiFormat(models.Model):
             if 'consu' in product_types or 'product' in product_types:
                 # depend on E-invoice
                 einvoice_in_edi_format = invoice.journal_id.edi_format_ids.filtered(lambda f: f.code == 'in_einvoice_1_03')
-                return einvoice_in_edi_format._is_required_for_invoice(invoice)
+                return einvoice_in_edi_format and einvoice_in_edi_format._is_required_for_invoice(invoice) or False
             else:
                 return False
         return super()._is_required_for_invoice(invoice)

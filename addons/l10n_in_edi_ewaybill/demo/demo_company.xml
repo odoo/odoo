@@ -14,8 +14,8 @@
     <record id="demo_company_in_ewaybill" model="res.company">
         <field name="name">E-Waybill Company</field>
         <field name="partner_id" ref="partner_demo_company_in_ewaybill"/>
-        <field name="l10n_in_edi_stock_username">05AAACH6188F1ZM</field>
-        <field name="l10n_in_edi_stock_password">abc123@@</field>
+        <field name="l10n_in_edi_ewaybill_username">05AAACH6188F1ZM</field>
+        <field name="l10n_in_edi_ewaybill_password">abc123@@</field>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
@@ -29,6 +29,6 @@
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[ref('l10n_in.indian_chart_template_standard')]"/>
-        <value model="res.company" eval="obj().env.ref('l10n_in_edi_stock.demo_company_in_ewaybill')"/>
+        <value model="res.company" eval="obj().env.ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')"/>
     </function>
 </odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in_edi_ewaybill" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.edi.ewaybill</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_in_edi_irn_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='ewaybill_group']" position="inside">
+                <group string="Transaction Details">
+                    <field name="l10n_in_transaction_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="l10n_in_type_id"
+                        domain="[('parent_type_ids', '=', False),
+                        ('allowed_in_supply_type', 'in', ('in_' in move_type and 'in' or 'out', 'both'))]"
+                        attrs="{'readonly': [('state', '!=', 'draft')]}"
+                        options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}"/>
+                    <field name="l10n_in_subtype_id"
+                        domain="[('parent_type_ids', 'in', (l10n_in_type_id)),
+                        ('allowed_in_supply_type', 'in', ('in_' in move_type and 'in' or 'out', 'both'))]"
+                        attrs="{'readonly': [('state', '!=', 'draft')]}"
+                        options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -534,10 +534,6 @@ class PurchaseOrder(models.Model):
                     break
 
     def action_create_invoice(self):
-        moves = self._create_invoices()
-        return self.action_view_invoice(moves)
-
-    def _create_invoices(self):
         """Create the invoice associated to the PO.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -600,7 +596,8 @@ class PurchaseOrder(models.Model):
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         moves.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_invoice_into_refund_credit_note()
-        return moves
+
+        return self.action_view_invoice(moves)
 
     def _prepare_invoice(self):
         """Prepare the dict of values to create the new invoice for a purchase order.

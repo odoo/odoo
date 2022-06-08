@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Document Type -->
+        <record id="type_tax_invoice" model="l10n.in.ewaybill.type">
+            <field name="name">Tax Invoice</field>
+            <field name="code">INV</field>
+            <field name="allowed_in_supply_type">both</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="type_bill_of_supply" model="l10n.in.ewaybill.type">
+            <field name="name">Bill of Supply</field>
+            <field name="code">BIL</field>
+            <field name="allowed_in_supply_type">both</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="type_bill_of_entry" model="l10n.in.ewaybill.type">
+            <field name="name">Bill of Entry</field>
+            <field name="code">BOE</field>
+            <field name="allowed_in_supply_type">in</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Sub Supply Type -->
+        <record id="type_supply" model="l10n.in.ewaybill.type">
+            <field name="name">Supply</field>
+            <field name="code">1</field>
+            <field name="allowed_in_supply_type">both</field>
+            <field name="active" eval="True"/>
+            <field name="parent_type_ids" eval="[(6,0,[ref('type_tax_invoice'), ref('type_bill_of_supply')])]"/>
+        </record>
+
+        <record id="type_import" model="l10n.in.ewaybill.type">
+            <field name="name">Import</field>
+            <field name="code">2</field>
+            <field name="allowed_in_supply_type">in</field>
+            <field name="active" eval="True"/>
+            <field name="parent_type_ids" eval="[(6,0,[ref('type_bill_of_entry')])]"/>
+        </record>
+
+        <record id="type_export" model="l10n.in.ewaybill.type">
+            <field name="name">Export</field>
+            <field name="code">3</field>
+            <field name="allowed_in_supply_type">out</field>
+            <field name="active" eval="True"/>
+            <field name="parent_type_ids" eval="[(6,0,[ref('type_tax_invoice'), ref('type_bill_of_supply')])]"/>
+        </record>
+
+        <record id="type_skd_ckd_lots" model="l10n.in.ewaybill.type">
+            <field name="name">SKD/CKD/Lots</field>
+            <field name="code">9</field>
+            <field name="allowed_in_supply_type">both</field>
+            <field name="parent_type_ids" eval="[(6,0,[ref('type_tax_invoice'), ref('type_bill_of_supply'), ref('type_bill_of_entry')])]"/>
+        </record>
+
+    </data>
+</odoo>
