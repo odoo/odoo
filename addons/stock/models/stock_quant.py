@@ -67,6 +67,7 @@ class StockQuant(models.Model):
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', required=True, index=True, check_company=True)
+    warehouse_id = fields.Many2one(related='location_id.warehouse_id', store=True)
     storage_category_id = fields.Many2one(related='location_id.storage_category_id', store=True)
     cyclic_inventory_frequency = fields.Integer(related='location_id.cyclic_inventory_frequency')
     lot_id = fields.Many2one(

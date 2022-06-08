@@ -33,6 +33,7 @@
                     <filter name="my_count" string="My Counts" domain="[('user_id', '=', uid)]"/>
                 </group>
                 <group expand='0' string='Group by...'>
+                    <filter string='Warehouse' name="warehousegroup" domain="[]" context="{'group_by': 'warehouse_id'}"/>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Storage Category' name="storagecategorygroup" domain="[]" context="{'group_by': 'storage_category_id'}"/>
@@ -96,6 +97,7 @@
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"
                        readonly="context.get('single_product', False)" force_save="1"
                        options="{'no_create': True}"/>
+                <field name="warehouse_id" optional="hide"/>
                 <field name="product_categ_id" optional="hide"/>
                 <field name="location_id" attrs="{'readonly': [('id', '!=', False)]}"
                        invisible="context.get('hide_location', False)"
@@ -172,6 +174,7 @@
         <field name="code">
             action = model.with_context(
                 search_default_internal_loc=1,
+                search_default_warehousegroup=1,
                 search_default_productgroup=1,
                 search_default_locationgroup=1,
             ).action_view_quants()
@@ -180,7 +183,7 @@
 
     <record model="ir.actions.act_window" id="dashboard_open_quants"> <!-- Used in dashboard -->
         <field name="name">Stock On Hand</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_warehousegroup':1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
         <field name="res_model">stock.quant</field>
     </record>
 
