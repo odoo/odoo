@@ -7,11 +7,13 @@ from odoo.tests.common import tagged, HttpCase
 
 @tagged('post_install', '-at_install', 'knowledge', 'knowledge_tour')
 class TestKnowledgeUI(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestKnowledgeUI, cls).setUpClass()
+        # remove existing articles to ease tour management
+        cls.env['knowledge.article'].search([]).unlink()
 
     def test_knowledge_main_flow(self):
-        # remove existing articles to ease tour management
-        self.env['knowledge.article'].search([]).unlink()
-
         # as the knowledge.article#_resequence method is based on write date
         # force the write_date to be correctly computed
         # otherwise it always returns the same value as we are in a single transaction
@@ -65,3 +67,8 @@ class TestKnowledgeUI(HttpCase):
         self.assertEqual(len(article_favorites), 2)
         self.assertEqual(article_favorites[0].article_id, private_article)
         self.assertEqual(article_favorites[1].article_id, workspace_article)
+
+    def test_knowledge_pick_emoji(self):
+        """This tour will check that the emojis of the form view are properly updated
+           when the user picks an emoji from an emoji picker."""
+        self.start_tour('/web', 'knowledge_pick_emoji_tour', login='admin', step_delay=100)
