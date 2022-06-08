@@ -5,6 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { FormViewDialog } from 'web.view_dialogs';
 import { standaloneAdapter } from 'web.OwlCompatibility';
+import session from 'web.session';
 
 const { Component, useRef } = owl;
 
@@ -70,6 +71,7 @@ export class ComposerSuggestedRecipient extends Component {
                 const adapterParent = standaloneAdapter({ Component });
                 const selectCreateDialog = new FormViewDialog(adapterParent, {
                     context: {
+                        ...session.user_context,
                         active_id: this.composerSuggestedRecipientView.suggestedRecipientInfo.thread.id,
                         active_model: 'mail.compose.message',
                         default_email: this.composerSuggestedRecipientView.suggestedRecipientInfo.email,
