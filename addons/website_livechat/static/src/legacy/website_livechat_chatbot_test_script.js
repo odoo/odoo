@@ -84,6 +84,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         utils.set_cookie('im_livechat_previous_operator_pid', '', -1);
 
         return this._super(...arguments).then(() => {
+            owl.Component.env.messaging.update({ isInPublicLivechat: true });
             this.livechatButton = new LivechatButtonTestChatbot(this, owl.Component.env.messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);
         });
