@@ -4,6 +4,7 @@ import time
 import unittest
 
 from .. import sql_db
+from ..tools import config
 
 
 _logger = logging.getLogger(__name__)
@@ -89,9 +90,14 @@ class OdooTestResult(unittest.result.TestResult):
 
     def stopTest(self, test):
         super().stopTest(test)
-        self.log(logging.DEBUG, '%s Finished (%.3fs, %d queries)',
+        queries = sql_db.sql_counter - self.queries_start
+        if config.options['max_cron_threads'] == 0 and queries:
+            self.log(logging.DEBUG, '%s Finished (%.3fs, %d queries)',
                  self.getDescription(test), time.time() - self.time_start,
-                 sql_db.sql_counter - self.queries_start, test=test)
+                 queries, test=test)
+        else:
+            self.log(logging.DEBUG, '%s Finished (%.3fs)',
+                     self.getDescription(test), time.time() - self.time_start, test=test)
 
     def addError(self, test, err):
         if self._soft_fail:
