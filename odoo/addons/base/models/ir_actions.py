@@ -247,7 +247,7 @@ class IrActionsActWindow(models.Model):
                         ctx = safe_eval(values.get('context', '{}'), eval_ctx)
                     except:
                         ctx = {}
-                    values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
+                    values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', '') or '')
         return result
 
     @api.model_create_multi
