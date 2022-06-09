@@ -2219,6 +2219,26 @@ patch(MockServer.prototype, 'mail', {
     },
 
     /**
+     * @param {integer} id
+     * @param {string[]} [fieldsToFormat]
+     * @returns {Object}
+     */
+    _mockResUsersSettings_ResUsersSettingsFormat(id, fieldsToFormat) {
+        const [settings] = this.getRecords('res.users.settings', [['id', '=', id]]);
+        const ormAutomaticFields = new Set(['create_date', 'create_uid', 'display_name', 'name', 'write_date', 'write_uid', '__last_update']);
+        const filterPredicate = fieldsToFormat ? ([fieldName]) => fieldsToFormat.includes(fieldName) : ([fieldName]) => !ormAutomaticFields.has(fieldName);
+        const res = Object.fromEntries(Object.entries(settings).filter(filterPredicate));
+        if (Object.prototype.hasOwnProperty.call(res, 'user_id')) {
+            res.user_id = [['insert-and-replace', { id: settings.user_id }]];
+        }
+        if (Object.prototype.hasOwnProperty.call(res, 'volume_settings_ids')) {
+            const volumeSettings = this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(settings.volume_settings_ids);
+            res.volume_settings_ids = [['insert', volumeSettings]];
+        }
+        return res;
+    },
+
+    /**
      * Simulates `set_res_users_settings` on `res.users.settings`.
      *
      * @param {integer} id
@@ -2238,7 +2258,21 @@ patch(MockServer.prototype, 'mail', {
         );
         const [relatedUser] = this.pyEnv['res.users'].searchRead([['id', '=', oldSettings.user_id]]);
         const [relatedPartner] = this.pyEnv['res.partner'].searchRead([['id', '=', relatedUser.partner_id]]);
-        this.pyEnv['bus.bus']._sendone(relatedPartner, 'res.users.settings/changed', changedSettings);
+        this.pyEnv['bus.bus']._sendone(relatedPartner, 'res.users.settings/insert', { ...changedSettings, id });
+    },
+
+    _mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(ids) {
+        const volumeSettingsRecords = this.getRecords('res.users.settings.volumes', [['id', 'in', ids]]);
+        return volumeSettingsRecords.map(volumeSettingsRecord => {
+            const [relatedGuest] = this.getRecords('mail.guest', [['id', '=', volumeSettingsRecord.guest_id]]);
+            const [relatedPartner] = this.getRecords('res.partner', [['id', '=', volumeSettingsRecord.partner_id]]);
+            return {
+                guest_id: relatedGuest ? [['insert-and-replace', { id: relatedGuest.id, name: relatedGuest.name }]] : [['clear']],
+                id: volumeSettingsRecord.id,
+                partner_id: relatedPartner ? [['insert-and-replace', { id: relatedPartner.id, name: relatedPartner.name }]] : [['clear']],
+                volume: volumeSettingsRecord.volume,
+            };
+        });
     },
 
     /**
@@ -2472,11 +2506,12 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockResUsers_InitMessaging(ids) {
         const user = this.getRecords('res.users', [['id', 'in', ids]])[0];
+        const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         return {
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
-            current_user_settings: this._mockResUsersSettings_FindOrCreateForUser(user.id),
+            current_user_settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),

@@ -7,19 +7,6 @@ import '@mail/models/messaging_notification_handler';
 patchRecordMethods('MessagingNotificationHandler', {
     /**
      * @override
-     * @param {object} settings
-     * @param {boolean} [settings.is_discuss_sidebar_category_livechat_open]
-    */
-    _handleNotificationResUsersSettings(settings) {
-        if ('is_discuss_sidebar_category_livechat_open' in settings) {
-            this.messaging.discuss.categoryLivechat.update({
-                isServerOpen: settings.is_discuss_sidebar_category_livechat_open,
-            });
-        }
-        this._super(settings);
-    },
-    /**
-     * @override
      */
     _handleNotificationChannelPartnerTypingStatus({ channel_id, is_typing, livechat_username, partner_id, partner_name }) {
         const channel = this.messaging.models['Thread'].findFromIdentifyingData({

@@ -46,8 +46,8 @@ registerModel({
         rtcSessions: many('RtcSession', {
             inverse: 'guest',
         }),
-        volumeSetting: one('VolumeSetting', {
-            inverse: 'guest',
+        volumeSetting: one('res.users.settings.volumes', {
+            inverse: 'guest_id',
         }),
     },
 });

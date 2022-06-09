@@ -2,6 +2,7 @@
 
 import { addFields, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/discuss';
 
@@ -22,6 +23,7 @@ addFields('Discuss', {
      * Discuss sidebar category for `livechat` channel threads.
      */
     categoryLivechat: one('DiscussSidebarCategory', {
+        default: insertAndReplace(),
         inverse: 'discussAsLivechat',
         isCausal: true,
     }),

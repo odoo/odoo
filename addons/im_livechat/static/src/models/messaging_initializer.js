@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patchRecordMethods } from '@mail/model/model_core';
-import { insert, insertAndReplace } from '@mail/model/model_field_command';
+import { insert } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging_initializer';
 
@@ -15,20 +15,6 @@ patchRecordMethods('MessagingInitializer', {
         } else {
             return this._super();
         }
-    },
-    /**
-     * @override
-     * @param {Object} resUsersSettings
-     * @param {boolean} resUsersSettings.is_discuss_sidebar_category_livechat_open
-     */
-    _initResUsersSettings({ is_discuss_sidebar_category_livechat_open }) {
-        this.messaging.discuss.update({
-            categoryLivechat: insertAndReplace({
-                isServerOpen: is_discuss_sidebar_category_livechat_open,
-                serverStateKey: 'is_discuss_sidebar_category_livechat_open',
-            }),
-        });
-        this._super(...arguments);
     },
     /**
      * @override

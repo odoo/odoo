@@ -314,14 +314,15 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    pyEnv['res.users.settings'].create({
+    const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
     });
     const { messaging } = await this.start();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
+            id: resUsersSettingsId1,
             'is_discuss_sidebar_category_channel_open': false,
         });
     });
@@ -342,14 +343,15 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
-    pyEnv['res.users.settings'].create({
+    const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
     const { messaging } = await this.start();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
+            id: resUsersSettingsId1,
             'is_discuss_sidebar_category_channel_open': true,
         });
     });
@@ -682,14 +684,15 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
         channel_type: 'chat',
         public: 'private',
     });
-    pyEnv['res.users.settings'].create({
+    const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
     });
     const { messaging } = await this.start();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
+            id: resUsersSettingsId1,
             'is_discuss_sidebar_category_chat_open': false,
         });
     });
@@ -713,14 +716,15 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
         channel_type: 'chat',
         public: 'private',
     });
-    pyEnv['res.users.settings'].create({
+    const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
     const { messaging } = await this.start();
 
     await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "res.users.settings/changed", {
+        pyEnv['bus.bus']._sendone(pyEnv.currentPartner, 'res.users.settings/insert', {
+            id: resUsersSettingsId1,
             'is_discuss_sidebar_category_chat_open': true,
         });
     });

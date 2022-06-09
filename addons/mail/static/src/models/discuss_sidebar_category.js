@@ -21,7 +21,7 @@ registerModel({
                 {
                     model: 'res.users.settings',
                     method: 'set_res_users_settings',
-                    args: [[this.messaging.currentUser.resUsersSettingsId]],
+                    args: [[this.messaging.currentUser.res_users_settings_id.id]],
                     kwargs: {
                         new_settings: resUsersSettings,
                     },
@@ -147,6 +147,26 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsServerOpen() {
+            // there is no server state for non-users (guests)
+            if (!this.messaging.currentUser) {
+                return clear();
+            }
+            if (!this.messaging.currentUser.res_users_settings_id) {
+                return clear();
+            }
+            if (this.discussAsChannel) {
+                return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_channel_open;
+            }
+            if (this.discussAsChat) {
+                return this.messaging.currentUser.res_users_settings_id.is_discuss_sidebar_category_chat_open;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeName() {
@@ -168,6 +188,19 @@ registerModel({
             }
             if (this.discussAsChat) {
                 return this.env._t("Find or start a conversation...");
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeServerStateKey() {
+            if (this.discussAsChannel) {
+                return 'is_discuss_sidebar_category_channel_open';
+            }
+            if (this.discussAsChat) {
+                return 'is_discuss_sidebar_category_chat_open';
             }
             return clear();
         },
@@ -403,7 +436,10 @@ registerModel({
         /**
          * Boolean that determines the last open state known by the server.
          */
-        isServerOpen: attr(),
+        isServerOpen: attr({
+            compute: '_computeIsServerOpen',
+            default: false,
+        }),
         /**
          * The placeholder text used when a new item is being added in UI.
          */
@@ -414,8 +450,7 @@ registerModel({
          * The key used in the server side for the category state
          */
         serverStateKey: attr({
-            readonly: true,
-            required: true,
+            compute: '_computeServerStateKey',
         }),
         /**
          * Determines the sorting method of channels in this category.
