@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:56+0000\n"
-"PO-Revision-Date: 2022-04-19 13:56+0000\n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-06-09 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -86,6 +86,12 @@ msgstr ""
 msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid " [Scheduled on %s]"
 msgstr ""
 
 #. module: stock
@@ -182,6 +188,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -1009,6 +1016,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__available_quantity
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
 msgstr ""
@@ -1150,6 +1158,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
 #: model_terms:ir.ui.view,arch_db:stock.picking_label_type_form
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 #: model_terms:ir.ui.view,arch_db:stock.view_assign_serial_numbers
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -1485,6 +1494,13 @@ msgid "Conflicts"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__visibility_days
+msgid ""
+"Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
+"The value depends on the type of the route (Buy or Manufacture)"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
 msgid "Consignment"
 msgstr ""
@@ -1670,6 +1686,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__create_uid
@@ -1719,6 +1736,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__create_date
@@ -1904,6 +1922,17 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
 msgid "Days"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
+msgid "Days To Order"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Days to Order"
 msgstr ""
 
 #. module: stock
@@ -2331,6 +2360,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__display_name
@@ -2652,7 +2682,6 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable_config
 msgid "Forecast Description"
 msgstr ""
 
@@ -2762,6 +2791,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__print_format
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__print_format
 msgid "Format"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__free_qty
+msgid "Free Qty"
 msgstr ""
 
 #. module: stock
@@ -2989,6 +3023,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__id
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__id
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__id
@@ -3190,6 +3225,12 @@ msgid "Import"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import Template for Inventory Adjustments"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr ""
@@ -3297,7 +3338,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
-msgid "Internal locations amoung descendants"
+msgid "Internal locations among descendants"
 msgstr ""
 
 #. module: stock
@@ -3647,6 +3688,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info____last_update
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_request_count____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line____last_update
@@ -3696,6 +3738,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__write_uid
@@ -3745,6 +3788,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__write_date
@@ -3797,6 +3841,7 @@ msgid "Lead Days Date"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Lead Time"
 msgstr ""
@@ -3890,6 +3935,7 @@ msgid "Location Name"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
 msgid "Location Stock"
 msgstr ""
@@ -4440,6 +4486,12 @@ msgid "No Message"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
 msgid "No Tracking"
 msgstr ""
@@ -4462,7 +4514,7 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
-msgid "No operations found. Let's create a tranfer !"
+msgid "No operations found. Let's create a transfer !"
 msgstr ""
 
 #. module: stock
@@ -4505,12 +4557,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "No Stock On Hand"
 msgstr ""
 
 #. module: stock
@@ -4610,6 +4656,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
+msgid "Numbers of days  in advance that replenishments demands are created."
 msgstr ""
 
 #. module: stock
@@ -4765,6 +4816,7 @@ msgstr ""
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
 msgid "Order"
 msgstr ""
@@ -5249,7 +5301,9 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid "Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites"
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
 msgstr ""
 
 #. module: stock
@@ -5356,6 +5410,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_id
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__product_id
@@ -5798,6 +5853,12 @@ msgid "Quantity Reserved"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/stock_replenishment_info.py:0
+#, python-format
+msgid "Quantity available too low"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:0
 #, python-format
 msgid "Quantity cannot be negative."
@@ -6067,7 +6128,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_config
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable_config
 msgid "Reordering Rules"
 msgstr ""
 
@@ -6104,6 +6164,11 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Replenishment"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
+msgid "Replenishment Info"
 msgstr ""
 
 #. module: stock
@@ -6245,6 +6310,7 @@ msgid "Resupply From"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__warehouseinfo_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
 msgid "Resupply Routes"
 msgstr ""
@@ -6311,6 +6377,7 @@ msgid "Reverse Transfer"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
 #: model:ir.model.fields,field_description:stock.field_stock_route__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -6357,6 +6424,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__warehouseinfo_ids
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
@@ -6519,6 +6587,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
+msgid "Select Route"
 msgstr ""
 
 #. module: stock
@@ -7167,6 +7240,11 @@ msgid "Stock supplier replenishment information"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_replenishment_option
+msgid "Stock warehouse replenishment option"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__detailed_type__product
 #: model:ir.model.fields.selection,name:stock.selection__product_template__type__product
 msgid "Storable Product"
@@ -7247,6 +7325,7 @@ msgid "Supply Method"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplier_wh_id
 msgid "Supplying Warehouse"
 msgstr ""
@@ -7430,6 +7509,12 @@ msgid "The forecasted stock on the"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid "The inter-warehouse transfers have been generated"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr ""
@@ -7576,11 +7661,14 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "This SN is already in another location."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid "This analysis gives you an overview of the current stock level of your products."
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
 msgstr ""
 
 #. module: stock
@@ -7803,6 +7891,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
 msgstr ""
@@ -8038,6 +8127,7 @@ msgstr ""
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/js/report_stock_reception.js:0
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Unassign"
@@ -8087,6 +8177,11 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
+msgid "Unit of Measure Name"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr ""
@@ -8133,9 +8228,9 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable_config
 msgid "UoM"
 msgstr ""
 
@@ -8282,6 +8377,11 @@ msgid "View and allocate received quantities."
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__visibility_days
+msgid "Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8325,6 +8425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_rule__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__warehouse_id
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
@@ -8344,6 +8445,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_domain_ids
 msgid "Warehouse Domain"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
+msgid "Warehouse Location"
 msgstr ""
 
 #. module: stock
@@ -8385,6 +8491,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__warehouse_ids
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Warehouses"
 msgstr ""
 
@@ -8403,7 +8510,6 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
-#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_quant.py:0
 #: code:addons/stock/models/stock_scrap.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -8416,6 +8522,11 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__warning_message
+msgid "Warning Message"
 msgstr ""
 
 #. module: stock
@@ -8460,6 +8571,16 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
+msgid "Weight"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
+msgid "Weight of the package type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr ""
@@ -8467,6 +8588,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
 msgid "Weighted Product"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids
+msgid "Wh Replenishment Option"
 msgstr ""
 
 #. module: stock
@@ -8545,7 +8671,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
-msgid "When ticked, carrier of shipment will be propgated."
+msgid "When ticked, carrier of shipment will be propagated."
 msgstr ""
 
 #. module: stock
@@ -8688,8 +8814,8 @@ msgstr ""
 #: code:addons/stock/models/res_config_settings.py:0
 #, python-format
 msgid ""
-"You can't desactivate the multi-location if you have more than once "
-"warehouse by company"
+"You can't deactivate the multi-location if you have more than once warehouse"
+" by company"
 msgstr ""
 
 #. module: stock
@@ -8770,6 +8896,22 @@ msgstr ""
 msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_location.py:0
+#, python-format
+msgid ""
+"You cannot set a location as a scrap location when it assigned as a "
+"destination location for a manufacturing type operation."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot set a scrap location as the destination location for a "
+"manufacturing type operation."
 msgstr ""
 
 #. module: stock
@@ -8928,6 +9070,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__zpl
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
 msgid "ZPL Labels"
@@ -8936,12 +9084,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 msgid "ZPL Labels with price"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Your stock is currently empty"
 msgstr ""
 
 #. module: stock
@@ -9085,6 +9227,12 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "to reach the maximum of"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_replenishment_info.py:0
+#, python-format
+msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."
 msgstr ""
 
 #. module: stock
