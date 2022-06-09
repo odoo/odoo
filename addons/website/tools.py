@@ -14,7 +14,7 @@ from odoo.tools.misc import DotDict, frozendict
 
 @contextlib.contextmanager
 def MockRequest(
-        env, *, path='/mockrequest/', routing=True, multilang=True,
+        env, *, path='/mockrequest', routing=True, multilang=True,
         context=frozendict(), cookies=frozendict(), country_code=None,
         website=None, remote_addr=HOST, environ_base=None,
         # website_sale
