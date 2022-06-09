@@ -15,37 +15,13 @@
              t-att-data-feedback-enabled="feedback_enabled"
              t-att-data-feedback-readonly="feedback_readonly"
              t-att-data-hash-token="hash_token"
+             t-att-data-last-action="last_action"
              t-att-data-email="email"
              t-att-data-email-valid="email_valid"
              t-att-data-is-blocklisted="is_blocklisted"
              t-att-data-mailing-id="mailing_id">
             <div class="row">
                 <div class="col-lg-6 offset-lg-3 mt-4">
-                    <div id="o_mailing_subscription_info"
-                         class="mb-4"
-                         role="status">
-                        <t t-if="unsubscribed_name">
-                            <h1 class="o_page_header">Successfully Unsubscribed</h1>
-                            <span t-out="unsubscribed_name"/>
-                        </t>
-                        <div id="o_mailing_subscription_feedback"
-                             t-att-class="'' if feedback_enabled else 'd-none'">
-                            <form action="/mail/mailing/feedback" method="POST"
-                                  class="mt-3">
-                                <p>
-                                    Please let us know why you updated your subscription.
-                                </p>
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <textarea class="form-control" name="feedback" cols="60" rows="3"></textarea>
-                                <div class="d-flex align-items-center mt-2">
-                                    <button type="submit" id="button_feedback"
-                                            class="btn btn-primary text-start me-2">Send</button>
-                                    <div id="o_mailing_subscription_feedback_info" class="d-none"/>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
                     <div id="o_mailing_subscription_form">
                         <form action="/mailing/list/update" method="POST">
                             <h1 class="o_page_header">Mailing Subscriptions</h1>
@@ -140,6 +116,46 @@
                                 <div id="o_mailing_subscription_update_info" class="d-none"/>
                             </div>
                         </form>
+                    </div>
+
+                    <div id="o_mailing_subscription_info"
+                         class="mb-4"
+                         role="status">
+                        <t t-if="unsubscribed_name">
+                            <h1 class="o_page_header">Successfully Unsubscribed</h1>
+                            <span t-out="unsubscribed_name"/>
+                        </t>
+                        <div id="o_mailing_subscription_feedback"
+                             t-att-class="'' if feedback_enabled else 'd-none'">
+                            <form action="/mail/mailing/feedback" method="POST"
+                                  class="mt-3">
+                                <p>
+                                    Please let us know why you updated your subscription.
+                                </p>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <fieldset>
+                                    <div class="form-check"
+                                         t-foreach="opt_out_reasons"
+                                         t-as="opt_out_reason">
+                                        <input class="form-check-input o_mailing_subscription_opt_out_reason"
+                                               type="radio"
+                                               name="opt_out_reason_id"
+                                               t-att-id="'opt_out_reason_id' + str(opt_out_reason.id)"
+                                               t-att-data-is-feedback="opt_out_reason.is_feedback"
+                                               t-att-value="opt_out_reason.id"/>
+                                        <label class="form-check-label"
+                                               t-att-for="'opt_out_reason_id' + str(opt_out_reason.id)"
+                                               t-out="opt_out_reason.name"/>
+                                    </div>
+                                </fieldset>
+                                <textarea class="form-control d-none" name="feedback" cols="60" rows="3"></textarea>
+                                <div class="d-flex align-items-center mt-2">
+                                    <button type="submit" id="button_feedback"
+                                            class="btn btn-primary text-start me-2">Send</button>
+                                    <div id="o_mailing_subscription_feedback_info" class="d-none"/>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

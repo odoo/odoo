@@ -94,8 +94,11 @@ publicWidget.registry.MailingPortalSubscription = publicWidget.Widget.extend({
 
     _onSubscriptionUpdated: function (event) {
         const callKey = event.data.callKey;
-        if (callKey === 'subscription_updated') {
+        if (callKey === 'subscription_updated_optout') {
             this.customerData.feedbackEnabled = true;
+        }
+        else if (callKey === 'subscription_updated') {
+            this.customerData.feedbackEnabled = false;
         }
         this._onActionDone(callKey);
     },
@@ -111,8 +114,8 @@ publicWidget.registry.MailingPortalSubscription = publicWidget.Widget.extend({
             this.formWidget._setReadonly(this.customerData.isBlocklisted);
         }
         if (this.feedbackWidget) {
-            this.feedbackWidget._updateDisplay(true, false);
             this.feedbackWidget._setLastAction(this.lastAction);
+            this.feedbackWidget._updateDisplay(true, false);
         }
     },
 });

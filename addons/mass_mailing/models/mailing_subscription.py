@@ -20,9 +20,12 @@ class MailingSubscription(models.Model):
         string='Opt Out',
         default=False,
         help='The contact has chosen not to receive mails anymore from this list')
-    unsubscription_date = fields.Datetime(
+    opt_out_reason_id = fields.Many2one(
+        'mailing.subscription.optout', string='Reason',
+        ondelete='restrict')
+    opt_out_datetime = fields.Datetime(
         string='Unsubscription Date',
-        compute='_compute_unsubscription_date', readonly=False, store=True)
+        compute='_compute_opt_out_datetime', readonly=False, store=True)
     message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
     is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
 
@@ -32,19 +35,19 @@ class MailingSubscription(models.Model):
     ]
 
     @api.depends('opt_out')
-    def _compute_unsubscription_date(self):
-        self.filtered(lambda sub: not sub.opt_out).unsubscription_date = False
+    def _compute_opt_out_datetime(self):
+        self.filtered(lambda sub: not sub.opt_out).opt_out_datetime = False
         for subscription in self.filtered('opt_out'):
-            subscription.unsubscription_date = self.env.cr.now()
+            subscription.opt_out_datetime = self.env.cr.now()
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('unsubscription_date'):
+            if vals.get('opt_out_datetime') or vals.get('opt_out_reason_id'):
                 vals['opt_out'] = True
         return super().create(vals_list)
 
     def write(self, vals):
-        if vals.get('unsubscription_date'):
+        if vals.get('opt_out_datetime') or vals.get('opt_out_reason_id'):
             vals['opt_out'] = True
         return super().write(vals)

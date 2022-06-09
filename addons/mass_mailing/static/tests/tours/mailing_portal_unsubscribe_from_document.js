@@ -19,6 +19,16 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
             contnet: "Warning will not receive anything anymore",
             trigger: "div#o_mailing_subscription_form_blocklisted p:contains('You will not hear from us anymore.')",
         }, {
+            content: "Feedback textarea not displayed (see data)",
+            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+        }, {
+            content: "Choose 'Other' reason",
+            trigger: "fieldset label:contains('Other')",
+        }, {
+            content: "This should display the Feedback area",
+            trigger: "div#o_mailing_portal_subscription textarea",
+            isCheck: true,
+        }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
             run: "text My feedback",
@@ -62,6 +72,16 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
         }, {
             content: "Warning should contain reference to memberships",
             trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List1')",
+        }, {
+            content: "Feedback textarea not displayed (see data)",
+            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+        }, {
+            content: "Choose 'Other' reason",
+            trigger: "fieldset label:contains('Other')",
+        }, {
+            content: "This should display the Feedback area",
+            trigger: "div#o_mailing_portal_subscription textarea",
+            isCheck: true,
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",

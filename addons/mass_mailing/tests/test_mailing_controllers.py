@@ -95,7 +95,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertTrue(subscription_l1)
         self.assertFalse(subscription_l1.is_blacklisted)
         self.assertFalse(subscription_l1.opt_out)
-        self.assertFalse(subscription_l1.unsubscription_date)
+        self.assertFalse(subscription_l1.opt_out_datetime)
 
         contact_l2 = self.mailing_list_2.contact_ids.filtered(
             lambda contact: contact.email == self.test_email_normalized
@@ -184,10 +184,11 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         Tour effects
           * unsubscribe from mailing based on a document = blocklist;
-          * add feedback (block list) 'My feedback';
+          * add feedback (block list): Other reason, with 'My feedback' feedback;
           * remove email from exclusion list;
           * re-add email to exclusion list;
         """
+        opt_out_reasons = self.env['mailing.subscription.optout'].search([])
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
         test_feedback = "My feedback"
 
@@ -216,29 +217,41 @@ class TestMailingControllers(TestMailingControllersCommon):
                 # status update check
                 self.assertTrue(test_partner.is_blacklisted)
 
-                # partner (document): feedback message added
+                # partner (document): new message for blocklist addition with feedback
                 self.assertEqual(len(test_partner.message_ids), len(previous_messages) + 1)
-                message_feedback = test_partner.message_ids[0]
+                msg_fb = test_partner.message_ids[0]
                 self.assertEqual(
-                    message_feedback.body,
-                    Markup(f'<p>Feedback from {test_email_normalized}: {test_feedback}</p>')
+                    msg_fb.body,
+                    Markup(f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>')
                 )
 
-                # posted messages on exclusion list record: activated, deactivated, activated again
+                # posted messages on exclusion list record: activated, feedback, deactivated, activated again
                 bl_record = self.env['mail.blacklist'].search([('email', '=', test_partner.email_normalized)])
-                self.assertEqual(len(bl_record.message_ids), 4)
-                msg_bl2, msg_unbl, msg_bl, msg_create = bl_record.message_ids
+                self.assertEqual(len(bl_record.message_ids), 5)
+                self.assertEqual(bl_record.opt_out_reason_id, opt_out_reasons[-1])
+                msg_bl2, msg_unbl, msg_fb, msg_bl, msg_create = bl_record.message_ids
                 self.assertEqual(
                     msg_bl2.body,
-                    Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
+                    Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                           f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                           f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
                 )
                 self.assertEqual(
                     msg_unbl.body,
-                    Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
+                    Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                           f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                           f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
                 )
                 self.assertEqual(
+                    msg_fb.body,
+                    Markup(f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>')
+                )
+                self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[-1])])
+                self.assertEqual(
                     msg_bl.body,
-                    Markup(f'<p>Blocklist request from unsubscribe link of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
+                    Markup(f'<p>Blocklist request from unsubscribe link of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                           f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                           f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
                 )
                 self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
 
@@ -248,9 +261,10 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         Tour effects
           * unsubscribe from mailing based on lists = opt-out from lists;
-          * add feedback (opt-out) 'My feedback';'
+          * add feedback (opt-out): Other reason, with 'My feedback' feedback;
           * add email to exclusion list;
         """
+        opt_out_reasons = self.env['mailing.subscription.optout'].search([])
         test_mailing = self.test_mailing_on_lists.with_env(self.env)
         test_feedback = "My feedback"
 
@@ -273,7 +287,8 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # status update check on list 1
         self.assertTrue(subscription_l1.opt_out)
-        self.assertEqual(subscription_l1.unsubscription_date, self._reference_now)
+        self.assertEqual(subscription_l1.opt_out_datetime, self._reference_now)
+        self.assertEqual(subscription_l1.opt_out_reason_id, opt_out_reasons[-1])
         # status update check on list 2: unmodified (was not member, still not member)
         contact_l2 = self.mailing_list_2.contact_ids.filtered(
             lambda contact: contact.email == self.test_email_normalized
@@ -284,7 +299,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         message_feedback = contact_l1.message_ids[0]
         self.assertEqual(
             message_feedback.body,
-            Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback}</p>')
+            Markup(f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>')
         )
         message_unsub = contact_l1.message_ids[1]
         self.assertEqual(
@@ -295,10 +310,13 @@ class TestMailingControllers(TestMailingControllersCommon):
         # posted messages on exclusion list record: activated, deactivated, activated again
         bl_record = self.env['mail.blacklist'].search([('email', '=', contact_l1.email_normalized)])
         self.assertEqual(len(bl_record.message_ids), 2)
+        self.assertFalse(bl_record.opt_out_reason_id)
         msg_bl, msg_create = bl_record.message_ids
         self.assertEqual(
             msg_bl.body,
-            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
         )
         self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
 
@@ -309,17 +327,16 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         Tour effects
           * unsubscribe from mailing based on lists = opt-out from lists;
-          * add feedback (opt-out) 'My feedback';'
+          * add feedback (opt-out): Other reason, with 'My feedback' feedback;
           * add email to exclusion list;
           * remove email from exclusion list;
           * come back to List3;
-          * join List2;
-          * add feedback (opt-out) 'Another feedback';'
+          * join List2 (with no feedback, as no opt-out / block list was done);
           * re-add email to exclusion list;
         """
+        opt_out_reasons = self.env['mailing.subscription.optout'].search([])
         test_mailing = self.test_mailing_on_lists.with_env(self.env)
         test_feedback = "My feedback"
-        test_feedback_2 = "Another feedback"
 
         # fetch contact and its subscription and blacklist status, to see the tour effects
         contact_l1 = self.mailing_list_1.contact_ids.filtered(
@@ -346,60 +363,63 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # status update check on list 1
         self.assertTrue(subscription_l1.opt_out)
-        self.assertEqual(subscription_l1.unsubscription_date, self._reference_now)
+        self.assertEqual(subscription_l1.opt_out_datetime, self._reference_now)
+        self.assertEqual(subscription_l1.opt_out_reason_id, opt_out_reasons[-1])
         # status update check on list 3 (opt-in during test)
         self.assertFalse(subscription_l3.opt_out)
-        self.assertFalse(subscription_l3.unsubscription_date)
+        self.assertFalse(subscription_l3.opt_out_datetime)
 
-        # posted messages on contact record for mailing list 1: last feedback, subscription update, feedback, unsubscription
-        message_feedback_2 = contact_l1.message_ids[0]
-        self.assertEqual(
-            message_feedback_2.body,
-            Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback_2}</p>')
-        )
-        message_update = contact_l1.message_ids[1]
+        # posted messages on contact record for mailing list 1: subscription update, feedback, unsubscription
+        message_update = contact_l1.message_ids[0]
         self.assertEqual(
             message_update.body,
-            Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p><ul><li>{self.mailing_list_2.name}</li></ul>')
+            Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p>'
+                   f'<ul><li>{self.mailing_list_2.name}</li></ul>')
         )
-        message_feedback = contact_l1.message_ids[2]
+        message_feedback = contact_l1.message_ids[1]
         self.assertEqual(
             message_feedback.body,
-            Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback}</p>')
+            Markup(f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>')
         )
-        message_unsub = contact_l1.message_ids[3]
+        message_unsub = contact_l1.message_ids[2]
         self.assertEqual(
             message_unsub.body,
-            Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p><ul><li>{self.mailing_list_1.name}</li></ul>')
+            Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p>'
+                   f'<ul><li>{self.mailing_list_1.name}</li></ul>')
         )
 
-        # posted messages on contact record for mailing list 3: last feedback, subscription
-        message_feedback = contact_l1.message_ids[0]
-        self.assertEqual(
-            message_feedback_2.body,
-            Markup(f'<p>Feedback from {self.test_email_normalized}: {test_feedback_2}</p>')
-        )
-        message_sub = contact_l3.message_ids[1]
+        # posted messages on contact record for mailing list 3: subscription
+        message_sub = contact_l3.message_ids[0]
         self.assertEqual(
             message_sub.body,
-            Markup(f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p><ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>')
+            Markup(f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p>'
+                   f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>')
         )
 
-        # posted messages on exclusion list record: activated, deactivated, activated again
+        # posted messages on exclusion list record: activated, deactivated, activated again, feedback
         bl_record = self.env['mail.blacklist'].search([('email', '=', contact_l1.email_normalized)])
-        self.assertEqual(len(bl_record.message_ids), 4)
-        msg_bl2, msg_unbl, msg_bl, msg_create = bl_record.message_ids
+        self.assertEqual(bl_record.opt_out_reason_id, opt_out_reasons[0])
+        self.assertEqual(len(bl_record.message_ids), 5)
+        msg_fb, msg_bl2, msg_unbl, msg_bl, msg_create = bl_record.message_ids
+        self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])])
+        self.assertFalse(msg_fb.body)
         self.assertEqual(
             msg_bl2.body,
-            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
         )
         self.assertEqual(
             msg_unbl.body,
-            Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+            Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
         )
         self.assertEqual(
             msg_bl.body,
-            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
         )
         self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
 
@@ -407,10 +427,12 @@ class TestMailingControllers(TestMailingControllersCommon):
         """ Test portal unsubscribe using the 'my' mailing-specific portal page.
         It allows to opt-in / opt-out from mailing lists as well as to manage
         blocklist (see tour).
+
         Tour effects
           * opt-in List3 from opt-out, opt-in List2, opt-out List1;
-          * add feedback (as new opt-out) 'My feedback';
+          * add feedback (as new opt-out): Other reason, with 'My feedback' feedback;
           * add email in block list;
+          * add feedback (as block list addition): First reason (hence no feedback);
         """
         test_feedback = "My feedback"
         portal_user = mail_new_test_user(
@@ -418,53 +440,90 @@ class TestMailingControllers(TestMailingControllersCommon):
             email=tools.formataddr(("Déboulonneur", "fleurus@example.com")),
             groups='base.group_portal',
             login='user_portal_fleurus',
-            name='Déboulonneut from Fleurus',
+            name='Déboulonneur User',
             signature='--\nDéboulonneur',
         )
+        _test_email, test_email_normalized = portal_user.email, portal_user.email_normalized
+        opt_out_reasons = self.env['mailing.subscription.optout'].search([])
 
-        for test_user in [portal_user]:  # self.user_marketing
-            with self.subTest(test_user=test_user):
-                _test_email, test_email_normalized = test_user.email, test_user.email_normalized
-                self.authenticate(test_user.login, test_user.login)
+        # launch 'my' mailing' tour
+        self.authenticate(portal_user.login, portal_user.login)
+        with freeze_time(self._reference_now):
+            self.start_tour(
+                "/mailing/my",
+                "mailing_portal_unsubscribe_from_my",
+                login=portal_user.login,
+            )
 
-                # launch 'my' mailing' tour
-                with freeze_time(self._reference_now):
-                    self.start_tour(
-                        "/mailing/my",
-                        "mailing_portal_unsubscribe_from_my",
-                        login=test_user.login,
-                    )
+        # fetch contact and its subscription and blacklist status, to see the tour effects
+        contact_l1 = self.mailing_list_1.contact_ids.filtered(
+            lambda contact: contact.email == test_email_normalized
+        )
+        subscription_l1 = self.mailing_list_1.subscription_ids.filtered(
+            lambda subscription: subscription.contact_id == contact_l1
+        )
+        contact_l2 = self.mailing_list_2.contact_ids.filtered(
+            lambda contact: contact.email == test_email_normalized
+        )
+        subscription_l2 = self.mailing_list_2.subscription_ids.filtered(
+            lambda subscription: subscription.contact_id == contact_l2
+        )
+        contact_l3 = self.mailing_list_3.contact_ids.filtered(
+            lambda contact: contact.email == test_email_normalized
+        )
+        subscription_l3 = self.mailing_list_3.subscription_ids.filtered(
+            lambda subscription: subscription.contact_id == contact_l3
+        )
+        self.assertEqual(contact_l2, contact_l3,
+                        'When creating new membership, should link with first found existing contact')
+        self.assertTrue(contact_l1.is_blacklisted)
+        self.assertTrue(contact_l3.is_blacklisted)
+        self.assertTrue(subscription_l1.opt_out)
+        self.assertEqual(subscription_l1.opt_out_datetime, self._reference_now,
+                         'Subscription: opt-outed during test, datetime should have been set')
+        self.assertEqual(subscription_l1.opt_out_reason_id, opt_out_reasons[-1])
+        self.assertFalse(subscription_l2.opt_out)
+        self.assertFalse(subscription_l2.opt_out_datetime)
+        self.assertFalse(subscription_l2.opt_out_reason_id)
+        self.assertFalse(subscription_l3.opt_out)
+        self.assertFalse(subscription_l3.opt_out_datetime,
+                         'Subscription: opt-in during test, datetime should have been reset')
+        self.assertFalse(subscription_l3.opt_out_reason_id)
+        # message on contact for list 1: opt-out L1, join L2
+        msg_fb, msg_sub, msg_uns = contact_l1.message_ids
+        self.assertEqual(
+            msg_fb.body,
+            Markup(f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>')
+        )
+        self.assertEqual(
+            msg_sub.body,
+            Markup(f'<p>{contact_l1.name} subscribed to the following mailing list(s)</p>'
+                   f'<ul><li>{self.mailing_list_2.name}</li></ul>')
+        )
+        self.assertEqual(
+            msg_uns.body,
+            Markup(f'<p>{contact_l1.name} unsubscribed from the following mailing list(s)</p>'
+                   f'<ul><li>{self.mailing_list_1.name}</li></ul>')
+        )
+        # message on contact for list 2: opt-in L3 and L2
+        msg_fb, msg_sub = contact_l3.message_ids
+        self.assertEqual(
+            msg_fb.body,
+            Markup(f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>')
+        )
+        self.assertEqual(
+            msg_sub.body,
+            Markup(f'<p>{contact_l3.name} subscribed to the following mailing list(s)</p>'
+                   f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>')
+        )
 
-                # fetch contact and its subscription and blacklist status, to see the tour effects
-                contact_l1 = self.mailing_list_1.contact_ids.filtered(
-                    lambda contact: contact.email == test_email_normalized
-                )
-                subscription_l1 = self.mailing_list_1.subscription_ids.filtered(
-                    lambda subscription: subscription.contact_id == contact_l1
-                )
-                contact_l2 = self.mailing_list_2.contact_ids.filtered(
-                    lambda contact: contact.email == test_email_normalized
-                )
-                subscription_l2 = self.mailing_list_3.subscription_ids.filtered(
-                    lambda subscription: subscription.contact_id == contact_l2
-                )
-                contact_l3 = self.mailing_list_3.contact_ids.filtered(
-                    lambda contact: contact.email == test_email_normalized
-                )
-                subscription_l3 = self.mailing_list_3.subscription_ids.filtered(
-                    lambda subscription: subscription.contact_id == contact_l3
-                )
-                self.assertEqual(contact_l2, contact_l3,
-                                'When creating new membership, should link with first found existing contact')
-                self.assertTrue(subscription_l1.opt_out)
-                self.assertFalse(subscription_l2.opt_out)
-                self.assertFalse(subscription_l3.opt_out)
-                for contact in (contact_l1 + contact_l3):
-                    msg_fb = contact.message_ids[0]
-                    self.assertEqual(
-                        msg_fb.body,
-                        Markup(f'<p>Feedback from {contact.email_normalized}: {test_feedback}</p>')
-                    )
+        # block list record created, feedback logged
+        bl_record = self.env['mail.blacklist'].search([('email', '=', contact_l1.email_normalized)])
+        self.assertEqual(bl_record.opt_out_reason_id, opt_out_reasons[0])
+        self.assertEqual(len(bl_record.message_ids), 3)
+        msg_fb, msg_bl, _msg_create = bl_record.message_ids
+        self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])])
+        self.assertEqual(msg_bl.body, Markup('<p>Blocklist request from portal</p>'))
 
     @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
     def test_mailing_view(self):

@@ -4,9 +4,11 @@
 from . import ir_mail_server
 from . import ir_model
 from . import link_tracker
+from . import mail_blacklist
 from . import mailing_subscription  # keep before due to decorated m2m
 from . import mailing_contact
 from . import mailing_list
+from . import mailing_subscription_optout
 from . import mailing_trace
 from . import mailing
 from . import mailing_filter

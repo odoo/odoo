@@ -42,8 +42,17 @@
     <menuitem name="Reporting"
               id="menu_mass_mailing_report"
               sequence="90"
-              parent="mass_mailing_menu_root"
+              parent="mass_mailing_menu_root"/>
+    <menuitem name="Mass Mailing Analysis"
+              id="mailing_menu_report_mailing"
+              sequence="1"
+              parent="menu_mass_mailing_report"
               action="mailing_trace_report_action_mail"/>
+    <menuitem name="Optout"
+              id="mailing_menu_report_subscribe_reason"
+              sequence="2"
+              parent="menu_mass_mailing_report"
+              action="mailing_subscription_action_report_optout"/>
 
     <!-- Configuration -->
     <menuitem name="Configuration"
@@ -82,6 +91,12 @@
               action="mail.mail_blacklist_action"
               parent="mass_mailing_configuration"
               sequence="20"/>
+    <!-- Configuration / Optout reasons -->
+    <menuitem id="mailing_subscription_optout_menu"
+              name="Optout Reasons"
+              action="mailing_subscription_optout_action"
+              sequence="21"
+              parent="mass_mailing_configuration"/>
     <!-- Configuration / Favorite Filters -->
     <menuitem id="mailing_filter_menu_action"
               action="mailing_filter_action"
