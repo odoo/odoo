@@ -434,3 +434,41 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertEqual(self.task1.subtask_effective_hours, 8, 'Hours Spent on Sub-tasks should be 8 hours in Parent Task')
         self.task1.child_ids = [Command.clear()]
+
+    def test_log_timesheet_with_analytic_tags(self):
+        """ Test whether the analytic tag of the project or task is set on the timesheet.
+
+            Test Case:
+            ----------
+                1) Create analytic tags
+                2) Add analytic tag in project
+                3) Create timesheet
+                4) Check the default analytic tag of the project and timesheet
+                5) Add analytic tag in task
+                6) Check the analytic tag of the timesheet and task
+        """
+        Timesheet = self.env['account.analytic.line']
+
+        share_capital_tag, office_furn_tag = self.env['account.analytic.tag'].create([
+            {'name': 'Share capital'},
+            {'name': 'Office Furniture'},
+        ])
+
+        self.project_customer.analytic_tag_ids = [Command.set((share_capital_tag + office_furn_tag).ids)]
+
+        timesheet = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+        })
+        self.assertEqual(timesheet.tag_ids, self.project_customer.analytic_tag_ids)
+
+        self.task2.analytic_tag_ids = [Command.set((share_capital_tag + office_furn_tag).ids)]
+
+        timesheet1 = Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task2.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+        })
+        self.assertEqual(timesheet1.tag_ids, self.task2.analytic_tag_ids)
