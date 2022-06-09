@@ -14,9 +14,6 @@ class MockLinkTracker(common.BaseCase):
     def setUp(self):
         super(MockLinkTracker, self).setUp()
 
-        self._web_base_url = self.env['mail.mail'].get_base_url()
-        self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://test.odoo.com')
-
         def _get_title_from_url(url):
             return "Test_TITLE"
 
@@ -29,11 +26,13 @@ class MockLinkTracker(common.BaseCase):
         html = etree.fromstring(body, parser=etree.HTMLParser())
         return html.xpath("//*[@id='%s']" % anchor_id)[0].attrib.get('href')
 
-    def _get_tracker_from_short_url(self, short_url):
-        code = self.env['link.tracker.code'].sudo().search([
+    def _get_code_from_short_url(self, short_url):
+        return self.env['link.tracker.code'].sudo().search([
             ('code', '=', short_url.split('/r/')[-1])
         ])
-        return code.link_id
+
+    def _get_tracker_from_short_url(self, short_url):
+        return self._get_code_from_short_url(short_url).link_id
 
     def assertLinkShortenedHtml(self, body, link_info, link_params=None):
         """ Find shortened links in an HTML content. Usage :

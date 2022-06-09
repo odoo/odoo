@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import MockLinkTracker
-from odoo.tests import common
+from odoo.addons.link_tracker.tests.common import MockLinkTracker
 from odoo.exceptions import UserError
+from odoo.tests import common, tagged
 
 
+@tagged('link_tracker')
 class TestLinkTracker(common.TransactionCase, MockLinkTracker):
+
+    def setUp(self):
+        super(TestLinkTracker, self).setUp()
+        self._web_base_url = 'https://test.odoo.com'
+        self.env['ir.config_parameter'].sudo().set_param('web.base.url', self._web_base_url)
+
     def test_create(self):
         link_trackers = self.env['link.tracker'].create([
             {
@@ -120,9 +127,9 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
         # URL to the local website -> UTM parameters should be added since we know we handle them
         # even though the parameter "no_external_tracking" is enabled
-        link.url = 'https://test.odoo.com/test?a=example.com'
+        link.url = f'{self._web_base_url}/test?a=example.com'
         self.assertLinkParams(
-            'https://test.odoo.com/test',
+            f'{self._web_base_url}/test',
             link,
             {**expected_utm_params, 'a': 'example.com'}
         )
