@@ -17,7 +17,13 @@ export class WebsiteSwitcherSystray extends Component {
             name: website.name,
             id: website.id,
             callback: () => {
-                this.websiteService.goToWebsite({ websiteId: website.id });
+                if (website.domain && website.domain !== window.location.origin) {
+                    const { location: { pathname, search, hash } } = this.websiteService.contentWindow;
+                    const path = pathname + search + hash;
+                    window.location.href = `${website.domain}/web#action=website.website_preview&path=${encodeURI(path)}&website_id=${website.id}`;
+                } else {
+                    this.websiteService.goToWebsite({ websiteId: website.id });
+                }
             },
         }));
     }

@@ -62,7 +62,11 @@ export class WebsitePreview extends Component {
             this.isWebsitePublisher = await this.user.hasGroup('website.group_website_publisher');
             await this.websiteService.fetchWebsites();
             const encodedPath = encodeURIComponent(this.path);
-            this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+            if (this.websiteDomain && this.websiteDomain !== window.location.origin) {
+                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
+            } else {
+                this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+            }
         });
 
         useEffect(() => {
@@ -112,6 +116,10 @@ export class WebsitePreview extends Component {
             websiteId = this.websiteService.websites[0].id;
         }
         return websiteId;
+    }
+
+    get websiteDomain() {
+        return this.websiteService.websites.find(website => website.id === this.websiteId).domain;
     }
 
     get path() {
