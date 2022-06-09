@@ -283,11 +283,12 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             return is_published
 
     def open_website_url(self):
-        url = url_join(self.website_id.domain, self.website_url) if self.website_id.domain else self.website_url
-        url = self.env['website'].get_client_action_url(url)
+        client_action_url = self.env['website'].get_client_action_url(self.website_url)
+        if self.website_id.domain:
+            client_action_url = url_join(self.website_id.domain, f'{client_action_url}&website_id={self.website_id.id}')
         return {
             'type': 'ir.actions.act_url',
-            'url': url,
+            'url': client_action_url,
             'target': 'self',
         }
 
