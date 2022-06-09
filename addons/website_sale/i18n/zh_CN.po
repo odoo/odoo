@@ -6,6 +6,7 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
@@ -25,7 +26,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "数据已获取"
+msgstr " 数据已获取"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -660,12 +661,17 @@ msgid "Acceptable file size"
 msgstr "允许的容量"
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
+msgstr "产品配件"
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
 "Accessories show up when the customer reviews the cart before payment "
 "(cross-sell strategy)."
-msgstr "当客户在付款前查看购物车时，配件就会出现（交叉销售策略）"
+msgstr "当客户在付款前视图购物车时，配件就会出现（交叉销售策略）"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -774,7 +780,7 @@ msgstr "对销售订单明细行进行手动折扣或显示从价格表计算的
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply specific prices per country, discounts, etc."
-msgstr "应用每个国家的特定价格、折扣等"
+msgstr "应用每个国家的特定价格、折扣等."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1001,7 +1007,7 @@ msgstr "电商品类描述"
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Category:"
-msgstr "类别"
+msgstr "类别:"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1566,7 +1572,7 @@ msgstr "礼物卡"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr "显示产品列表的序列"
+msgstr "显示产品列表的序列."
 
 #. module: website_sale
 #. openerp-web
@@ -1604,7 +1610,7 @@ msgstr "隐藏"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Huge file size. The image should be optimized/reduced."
-msgstr "文件太大。图片将被优化以减少体积"
+msgstr "文件太大。图片将被优化以减少体积."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -1873,6 +1879,8 @@ msgstr "购物车"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
+#, python-format
 msgid "Name"
 msgstr "名称"
 
@@ -1896,6 +1904,7 @@ msgstr "新的！"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr "最新产品"
 
@@ -1989,7 +1998,7 @@ msgstr "商城的列表数量"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__cart_abandoned_delay
 msgid "Number of hours after which the cart is considered abandoned."
-msgstr "将购物车视为被遗弃的小时数"
+msgstr "将购物车视为被遗弃的小时数."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2441,7 +2450,7 @@ msgstr "产品视图"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
 msgid "Product Views History"
-msgstr "产品查看历史"
+msgstr "产品视图历史"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -2476,6 +2485,11 @@ msgstr "产品"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
 msgstr "最近出售的产品"
+
+#. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
+msgstr "最近与产品一起销售的产品"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -2582,11 +2596,13 @@ msgstr "点评的理由"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr "最近售出的产品"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr "最近浏览的产品"
 
@@ -2931,7 +2947,7 @@ msgstr "坐着舒服"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Size"
-msgstr "尺寸："
+msgstr "尺寸"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_x
@@ -3113,7 +3129,7 @@ msgid ""
 "The product will be available in each mentioned eCommerce category. Go to "
 "Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
 "categories."
-msgstr "指定产品将会出现在所有相关电商产品类别中。请访问 商城 > 自定义并启用 '电商产品类别' ，即可查看电商产品类别导航。"
+msgstr "指定产品将会出现在所有相关电商产品类别中。请访问 商城 > 自定义并启用 '电商产品类别' ，即可视图电商产品类别导航。"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -3144,14 +3160,14 @@ msgstr "没有最近确认的订单。"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr "网站上还没有未支付的订单。"
+msgstr "网站上还没有未支付的订单"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There isn't any UTM tag detected in orders"
-msgstr "在订单中没有检测到任何UTM标签。"
+msgstr "在订单中没有检测到任何UTM标签"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3187,7 +3203,7 @@ msgstr "产品尚未发布。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "This promo code is not available."
-msgstr "促销代码无效"
+msgstr "促销代码无效."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3197,7 +3213,7 @@ msgstr "缩略图位置"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
 msgid "Total number of product viewed"
-msgstr "已查看产品总数"
+msgstr "已视图产品总数"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
@@ -3234,7 +3250,7 @@ msgstr "URL"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
-msgstr "产品视频链接"
+msgstr "产品视频链接."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3285,7 +3301,7 @@ msgstr "未缴税的总销售额"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
-msgstr "从本地上传一个文件"
+msgstr "从本地上传一个文件."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3301,13 +3317,13 @@ msgstr "视频 URL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
-msgstr "查看购物车("
+msgstr "视图购物车("
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
-msgstr "查看产品"
+msgstr "视图产品"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
@@ -3338,12 +3354,12 @@ msgstr "访问过的产品"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_graph
 msgid "Visitor Product Views"
-msgstr "访客产品查看"
+msgstr "访客产品视图"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
 msgid "Visitor Product Views History"
-msgstr "访客产品查看历史"
+msgstr "访客产品视图历史"
 
 #. module: website_sale
 #: model:product.product,name:website_sale.product_product_1
@@ -3530,7 +3546,7 @@ msgstr "你没有任何从网站开具结算单的订单"
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart!"
-msgstr "您的购物车中有遗留的商品。"
+msgstr "您的购物车中有遗留的商品!"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -3629,7 +3645,7 @@ msgstr "已找到）"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
-msgstr "小时"
+msgstr "小时."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

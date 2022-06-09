@@ -125,7 +125,7 @@ const Link = Widget.extend({
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
             const value = $option.is('input') ? $option.val() : $option.data('value');
-            let active = false;
+            let active = true;
             if (value) {
                 const subValues = value.split(',');
                 let subActive = true;
@@ -134,8 +134,6 @@ const Link = Widget.extend({
                     subActive = subActive && classPrefix.test(this.data.iniClassName);
                 }
                 active = subActive;
-            } else {
-                active = !this.data.iniClassName || this.data.iniClassName.includes('btn-link') || !this.data.iniClassName.includes('btn-');
             }
             this._setSelectOption($option, active);
         }
@@ -200,7 +198,7 @@ const Link = Widget.extend({
             href: data.url,
             target: data.isNewWindow ? '_blank' : '',
         });
-        if (data.classes) {
+        if (typeof data.classes === "string") {
             data.classes = data.classes.replace(/o_default_snippet_text/, '');
             attrs.class = `${data.classes}`;
         }

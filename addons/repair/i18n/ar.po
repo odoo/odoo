@@ -28,6 +28,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'draft' و 'عرض سعر الإصلاح - %s' % (object.name) أو\n"
+"                'أمر الإصلاح - %s' % (object.name)) "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -50,12 +53,19 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* تُستخدم حالة 'المسودة' عندما يقوم المستخدم بترميز أمر إصلاح جديد غير مؤكد.\n"
+"* تُستخدم حالة 'تم التأكيد' عندما يقوم المستخدم بتأكيد أمر الإصلاح.\n"
+"* تُستخدم حالة 'جاهز للإصلاح' لبدء الإصلاح، وبإمكان المستخدم بدء الإصلاح فقط عندما يتم تأكيد أمر الإصلاح.\n"
+"* تُستخدم حالة 'قيد الإصلاح' عندما تكون عملية الإصلاح جارية.\n"
+"* تُستخدم حالة 'بانتظار الفوترة' لإنشاء الفاتورة قبل أو بعد أن تتم عملية الإصلاح.\n"
+"* تُستخدم حالة 'منتهي' عندما تتم عملية الإصلاح بنجاح.\n"
+"* تُستخدم حالة 'تم الإلغاء' عندما يقوم المستخدم بإلغاء أمر الإصلاح. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": الكمية غير كافية لإصلاحها "
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -80,6 +90,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        مرحباً <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،<br/>\n"
+"        إليك أمر الإصلاح <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            بمبلغ <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br/>\n"
+"        </t>\n"
+"        يمكنك الرد على هذا البريد الإلكتروني إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br/><br/>\n"
+"        شكراً لك، \n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>ميتشل آدمن</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -92,21 +121,23 @@ msgid ""
 "<span class=\"o_stat_text\">1</span>\n"
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">فواتير</span> "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">الإصلاحات</span> "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong>رقم اللوط/الرقم المسلسل:</strong>"
+msgstr "<strong>رقم الدفعة/الرقم التسلسلي: </strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr "</strong>العمليات</strong>"
+msgstr "<strong>العمليات</strong> "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -121,7 +152,7 @@ msgstr "<strong>تاريخ الطباعة:</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr "<strong>المنتج المراد تصليحه:</strong>"
+msgstr "<strong>المنتج المراد إصلاحه:</strong> "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -131,7 +162,7 @@ msgstr "<strong>عنوان الشحن:</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>المجموع بدون الضريبة</strong>"
+msgstr "<strong>المجموع دون الضريبة</strong> "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -151,7 +182,7 @@ msgstr "قد يؤدي ذلك إلى عدم الاتساق في مخزونك. "
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr "إجراء مطلوب"
+msgstr "يتطلب اتخاذ إجراء "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
@@ -181,17 +212,17 @@ msgstr "إضافة"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "إضافة ملاحظات داخلية "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "إضافة ملاحظات عرض السعر "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
 msgid "After Repair"
-msgstr "بعد التصليح"
+msgstr "بعد الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -206,25 +237,25 @@ msgstr "قبل التصليح"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
-msgstr "الغاء"
+msgstr "إلغاء "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel Repair"
-msgstr "إلغاء التصليح"
+msgstr "إلغاء الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__cancel
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 msgid "Cancelled"
-msgstr "ملغي"
+msgstr "تم الإلغاء "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_category_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
 msgid "Category"
-msgstr "فئة"
+msgstr "الفئة "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -232,14 +263,14 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"اختر الشريك الذي سيتم فوترة وتسليم أمر التصليح إليه. يمكنك إيجاد الشريك من "
-"خلال الاسم أو الرقم التعريفي لدافع الضرائب (TIN)، أو البريد الالكتروني، أو "
-"رقم الإشارة الداخلي."
+"اختر الشريك الذي ستتم فوترة وتوصيل أمر الإصلاح إليه. يمكنك إيجاد الشريك من "
+"خلال الاسم أو الرقم التعريفي لدافع الضرائب (TIN)، أو البريد الإلكتروني، أو "
+"المرجع الداخلي. "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
 msgid "Color Index"
-msgstr "معرف اللون"
+msgstr "مؤشر اللون "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__company_id
@@ -247,24 +278,24 @@ msgstr "معرف اللون"
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
-msgstr "شركة"
+msgstr "الشركة "
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
 msgid "Configuration"
-msgstr "إعدادات التكوين"
+msgstr "التهيئة "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr "تأكيد التصليح"
+msgstr "تأكيد الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__confirmed
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Confirmed"
-msgstr "مؤكد"
+msgstr "تم التأكيد "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
@@ -284,8 +315,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
-"لا يمكن العثور على بند قائمة أسعار مطابق لهذا المنتج والكمية.\n"
-"عليك تغيير المنتج، أو الكمية أو قائمة الأسعار."
+"تعذّر إيجاد بند قائمة أسعار مطابق لهذا المنتج والكمية.\n"
+"عليك إما تغيير المنتج، أو الكمية أو قائمة الأسعار. "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -296,12 +327,12 @@ msgstr "إنشاء فاتورة"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr "إنشاء فاتورة جماعية (للتصليح)"
+msgstr "إنشاء فاتورة جماعية (للإصلاح) "
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
 msgid "Create a new tag"
-msgstr "إنشاء وسم جديد"
+msgstr "إنشاء علامة تصنيف جديدة "
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
@@ -350,7 +381,7 @@ msgstr "العنوان الافتراضي"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
 msgid "Delivery Address"
-msgstr "عنوان التسليم"
+msgstr "عنوان التوصيل "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__name
@@ -362,7 +393,7 @@ msgstr "الوصف"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_dest_id
 msgid "Dest. Location"
-msgstr "مكان الوصول"
+msgstr "موقع الوجهة "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__display_name
@@ -372,22 +403,22 @@ msgstr "مكان الوصول"
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "هل تؤكد بأنك ترغب في الإصلاح "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "هل تريد فعلًا إنشاء هذه الفواتير؟"
+msgstr "هل ترغب فعلاً في إنشاء هذه الفاتورة (الفواتير)؟ "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
 msgid "Done"
-msgstr "المنتهية"
+msgstr "منتهي "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__draft
@@ -399,11 +430,13 @@ msgstr "مسودة"
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
+"سوف يتم إلغاء الفواتير في حالة المسودة لهذا الأمر. هل ترغب في تأكيد الإجراء؟"
+" "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
-msgstr "إنهاء التصليح"
+msgstr "إنهاء الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__tracking
@@ -424,17 +457,17 @@ msgstr "رسوم"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
 msgid "Followers"
-msgstr "المتابعون"
+msgstr "المتابعين "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "المتابعون (الشركاء)"
+msgstr "المتابعين (الشركاء) "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icon e.g. fa-tasks"
+msgstr "أيقونة Font awesome مثال fa-tasks "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -444,17 +477,17 @@ msgstr "الأنشطة المستقبلية"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "تجميع حسب"
+msgstr "التجميع حسب "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr "تجميع حسب عنوان فواتير الشريك"
+msgstr "التجميع حسب عنوان فواتير الشريك "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
 msgid "Has Message"
-msgstr "توجد رسالة "
+msgstr "يحتوي على رسالة "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -496,7 +529,7 @@ msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
 msgid "Important repair order"
-msgstr ""
+msgstr "أمر إصلاح مهم "
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -505,9 +538,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
-"في أمر التصليح، يمكنك تفصيل المكونات التي تريد إزالتها،\n"
-"                أو إضافتها أو استبدالها، كما يمكنك تسجيل الوقت المستغرق على العمليات\n"
-"                المختلفة."
+"في أمر الإصلاح، يمكنك تفصيل المكونات التي تقوم بإزالتها،\n"
+"                أو إضافتها أو استبدالها، كما بوسعك تسجيل الوقت المستغرق على العمليات\n"
+"                المختلفة. "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -538,7 +571,7 @@ msgstr "بند الفاتورة"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
 msgid "Invoice Method"
-msgstr "منهجية الفاتورة"
+msgstr "طريقة الفوترة "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
@@ -559,7 +592,7 @@ msgstr "عنوان الشحن والفواتير:"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
-msgstr "أنشأت الفاتورة"
+msgstr "تم إنشاء الفاتورة "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
@@ -628,14 +661,14 @@ msgstr "الأنشطة المتأخرة"
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
-msgstr "المكان"
+msgstr "الموقع "
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_production_lot
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr "اللوط/المسلسل"
+msgstr "رقم الدفعة/الرقم التسلسلي "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
@@ -660,7 +693,7 @@ msgstr "حركة"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
-msgstr "تحرك تم إنشاؤه بواسطه أمر التصليح"
+msgstr "تحرك تم إنشاؤه بواسطه أمر الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
@@ -670,7 +703,7 @@ msgstr "نهاية الوقت المعين للنشاط"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "الحدث التالي في الآجندة"
+msgstr "الفعالية التالية في تقويم الأنشطة "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
@@ -690,7 +723,7 @@ msgstr "نوع النشاط التالي"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
-msgstr "لا يوجد فاتورة"
+msgstr "لا توجد فاتورة "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -702,24 +735,24 @@ msgstr "لا يوجد حساب محدد للمنتج \"%s\"."
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
-msgstr "لم نتمكن من إيجاد أية قوائم أسعار."
+msgstr "لم يتم العثور على أي قوائم أسعار. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
-msgstr "لا يوجد منتج معرف للرسوم."
+msgstr "ليس هناك منتج محدد في الرسوم. "
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على أمر إصلاح. فلنقم بإنشاء واحد! "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
-msgstr "لم نتمكن من إيجاد أية بنود صالحة بقائمة الأسعار."
+msgstr "لم يتم العثور على أي بند صالح لقائمة الأسعار. "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -734,7 +767,7 @@ msgstr "عدد الإجراءات"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
 msgid "Number of errors"
-msgstr "عدد الاخطاء"
+msgstr "عدد الأخطاء "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
@@ -749,13 +782,13 @@ msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
 msgid "Number of unread messages"
-msgstr "عدد الرسائل الجديدة"
+msgstr "عدد الرسائل غير المقروءة "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr "لا يمكن تأكيد أوامر التصليح إلا إذا كانت في حالة المسودة."
+msgstr "لا يمكن تأكيد أوامر الإصلاح إلا إذا كانت في حالة المسودة. "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -773,7 +806,7 @@ msgstr "الأجزاء"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr ""
+msgstr "يرجى تحديد دفتر يومية محاسبي للمبيعات للشركة %s (%s). "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -822,7 +855,7 @@ msgstr "كمية المنتج"
 #: model:ir.model.fields,field_description:repair.field_repair_line__tracking
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "تتبع المنتج "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
@@ -834,12 +867,12 @@ msgstr "وحدة قياس المنتج"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr "المنتج المطلوب تصليحه"
+msgstr "المنتج المطلوب إصلاحه "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr "تنتمي كافة المنتجات التى تم تصليحها لرقم اللوط هذا"
+msgstr "تنتمي كافة المنتجات التى تم إصلاحها إلى رقم الدفعة هذا "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
@@ -880,12 +913,12 @@ msgstr "عروض الأسعار"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr "جاهز للتصليح"
+msgstr "جاهز للإصلاح "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__ready
 msgid "Ready to Repair"
-msgstr "جاهز للتصليح"
+msgstr "جاهز للإصلاح "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__type__remove
@@ -899,55 +932,55 @@ msgstr "إزالة"
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
-msgstr "الاصلاح"
+msgstr "إصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "وصف الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
 msgid "Repair Fee"
-msgstr ""
+msgstr "رسوم الإصلاح "
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr "رسوم التصليح"
+msgstr "رسوم الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
 msgid "Repair Line"
-msgstr "بند أمر التصليح"
+msgstr "بند أمر الإصلاح "
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr "بند أمر التصليح (الأجزاء)"
+msgstr "بند أمر الإصلاح (الأجزاء) "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "ملاحظات الإصلاح "
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
-msgstr "أمر التصليح"
+msgstr "أمر الإصلاح "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
-msgstr "أمر التصليح رقم:"
+msgstr "أمر الإصلاح رقم: "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__repair_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__repair_id
 msgid "Repair Order Reference"
-msgstr "رقم إشارة أمر التصليح"
+msgstr "مرجع أمر الإصلاح "
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
@@ -957,102 +990,102 @@ msgstr "رقم إشارة أمر التصليح"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
-msgstr "أوامر التصليح"
+msgstr "أوامر الإصلاح "
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "علامات تصنيف أوامر الإصلاح "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
-msgstr "عرض سعر التصليح رقم:"
+msgstr "عرض سعر الإصلاح رقم: "
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr ""
+msgstr "عرض سعر الإصلاح: الإرسال عبر البريد الإلكتروني "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
-msgstr "رقم إشارة التصليح"
+msgstr "مرجع الإصلاح "
 
 #. module: repair
 #: model:product.product,name:repair.product_service_order_repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "خدمات الإصلاح "
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr ""
+msgstr "علامات تصنيف الإصلاح "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr "يجب أن يكون أمر التصليح ملغيًا لكي يُعين كمسودة."
+msgstr "يجب أن يكون أمر الإصلاح ملغياً حتى يتم تعيينه كمسودة. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr "يجب تأكيد أمر التصليح قبل بدء عملية التصليح."
+msgstr "يجب تأكيد أمر الإصلاح قبل بدء عملية الإصلاح. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr "يجب تنفيذ أمر التصليح لتتمكن من إنشاء تحركات المنتج."
+msgstr "يجب تنفيذ أمر الإصلاح حتى تتمكن من إنشاء تحركات المنتج. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr "يجب أن يكون أمر التصليح قيد العمل لتتمكن من إنهاءه."
+msgstr "يجب أن يكون أمر الإصلاح قيد التنفيذ حتى تتمكن من إنهائه. "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "عدد أوامر الإصلاح "
 
 #. module: repair
 #: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "أوامر إصلاح %s "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 msgid "Repaired"
-msgstr "تم تصليحه"
+msgstr "تم الإصلاح "
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.menu_repair_order
 #: model:ir.ui.menu,name:repair.repair_menu
 msgid "Repairs"
-msgstr "تعديلات"
+msgstr "الإصلاحات "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr "أمر التصليحات"
+msgstr "أمر الإصلاحات "
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_reporting
 msgid "Reporting"
-msgstr "التقارير"
+msgstr "إعداد التقارير "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__user_id
 msgid "Responsible"
-msgstr "المسئول"
+msgstr "المسؤول "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
@@ -1072,7 +1105,7 @@ msgstr "أمر البيع"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "أمر البيع الذي يأتي منه المنتج المراد إصلاحه. "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1082,7 +1115,7 @@ msgstr "التاريخ المجدول"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr "البحث في أوامر التصليح"
+msgstr "البحث في أوامر الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -1091,9 +1124,9 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
-"سيسمح لك اختيار 'قبل تصليح' أو 'بعد تصليح' بإنشاء فاتورة قبل أو بعد الانتهاء"
-" من التصليح. 'لا يوجد فاتورة' يعني أنك لا تريد إنشاء فواتير لأمر التصليح "
-"هذا."
+"سيتيح لك اختيار 'قبل الإصلاح' أو 'بعد الإصلاح' إنشاء فاتورة قبل أو بعد "
+"الانتهاء من الإصلاح. 'لا توجد فاتورة' يعني أنك لا ترغب في إنشاء فواتير لأمر "
+"الإصلاح هذا. "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1104,12 +1137,12 @@ msgstr "إرسال عرض السعر"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "الرقم التسلسلي مطلوب لبنود العملية مع المنتجات: %s "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr "تعيين كمسودة"
+msgstr "التعيين كمسودة "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1119,12 +1152,12 @@ msgstr "عرض كافة السجلات المُعين لها تاريخ إجرا
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr "مكان المورد"
+msgstr "الموقع المصدر "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Start Repair"
-msgstr "بدء التصليح"
+msgstr "بدء الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__state
@@ -1160,12 +1193,12 @@ msgstr "الإجمالي الفرعي"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__name
 msgid "Tag Name"
-msgstr "اسم الوسم"
+msgstr "اسم علامة التصنيف "
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr "اسم الوسم مستخدم بالفعل!"
+msgstr "اسم علامة التصنيف مستخدم بالفعل! "
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tag
@@ -1173,7 +1206,7 @@ msgstr "اسم الوسم مستخدم بالفعل!"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_search
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
 msgid "Tags"
-msgstr "الوسوم"
+msgstr "علامات التصنيف "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1191,7 +1224,7 @@ msgstr "الضرائب"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
-msgstr "يجب أن يكون اسم أمر التصليح فريدًا!"
+msgstr "يجب أن يكون اسم أمر الإصلاح فريداً! "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1199,7 +1232,7 @@ msgstr "يجب أن يكون اسم أمر التصليح فريدًا!"
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr "فئة وحدة القياس التى اخترتها مختلفة عن وحدة قياس المنتج."
+msgstr "لدى وحدة قياس المنتج التى اخترتها فئة تختلف عن وحدة قياس المنتج. "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1207,22 +1240,22 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
-"تحدد حالة بند أمر التصليح تلقائيًا تبعًا لحالة أمر التصليح المرتبط به."
+"تحدد حالة بند أمر الإصلاح تلقائياً تبعاً لحالة أمر الإصلاح المرتبط به. "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr "هذا هو موقع المنتج المراد تصليحه."
+msgstr "هذا هو موقع المنتج المراد إصلاحه. "
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
-msgstr "مطلوب فوترته"
+msgstr "بانتظار الفوترة "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today Activities"
-msgstr "نشاطات اليوم"
+msgstr "أنشطة اليوم "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_total
@@ -1254,7 +1287,7 @@ msgstr "نوع النشاط الاستثنائي المسجل."
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
 msgid "Under Repair"
-msgstr "قيد التصليح"
+msgstr "قيد الإصلاح "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_unit
@@ -1279,22 +1312,22 @@ msgstr "الوحدات"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
 msgid "Unread Messages"
-msgstr "الرسائل الجديدة"
+msgstr "الرسائل غير المقروءة "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "عدد الرسائل الجديدة"
+msgstr "عداد الرسائل غير المقروءة "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "المبلغ بدون ضرائب"
+msgstr "المبلغ غير الشامل للضريبة "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr "المبلغ بدون ضرائب"
+msgstr "المبلغ غير الشامل للضريبة "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1309,7 +1342,7 @@ msgstr "عاجل"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr "التحذير من كمية تصليح غير كافية"
+msgstr "التحذير من كمية الإصلاح غير الكافية "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1321,17 +1354,17 @@ msgstr "تحذير"
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
-msgstr "انتهاء فترة الضمان"
+msgstr "انتهاء صلاحية الضمان "
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
 msgid "Website Messages"
-msgstr "رسائل الموقع"
+msgstr "رسائل الموقع الإلكتروني "
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
 msgid "Website communication history"
-msgstr "سجل تواصل الموقع"
+msgstr "سجل تواصل الموقع الإلكتروني "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1339,7 +1372,7 @@ msgstr "سجل تواصل الموقع"
 msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
-msgstr ""
+msgstr "لا يمكنك حذف أمر إصلاح بمجرد أن قد تم تأكيده. عليك إلغاؤه أولاً. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1347,7 +1380,7 @@ msgstr ""
 msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
-msgstr ""
+msgstr "لا يمكنك حذف أمر إصلاح مرتبط بفاتورة قت تم ترحيلها من قبل. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1362,14 +1395,14 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
-"يجب اختيار قائمة أسعار فى نموذج التصليح!\n"
-"برجاء تعيين واحدة قبل اختيار المنتج."
+"يجب اختيار قائمة أسعار فى استمارة الإصلاح!\n"
+"يرجى تعيين واحدة قبل اختيار المنتج. "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr "يجب اختيار عنوان للفاتورة في نموذج التصليح."
+msgstr "يجب اختيار عنوان للفاتورة في استمارة الإصلاح. "
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -1386,3 +1419,5 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name }} أوامر الإصلاح (المرجع {{ object.name or 'n/a' "
+"}}) "

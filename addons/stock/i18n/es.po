@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -1039,7 +1039,10 @@ msgid "As soon as possible"
 msgstr "Lo antes posible"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Asignar"
 
@@ -8480,7 +8483,10 @@ msgid "USPS Connector"
 msgstr "Conector con USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "Desasignar"
 
@@ -9460,18 +9466,6 @@ msgstr "Debe proporcionar un número de lote / serie para los productos %s."
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Debe actualizar este documento para que refleje sus términos y condiciones."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"No debe utilizar un traslado interno planificado para mover algunos "
-"productos entre dos almacenes. En su lugar, utilice una transferencia "
-"interna inmediata o la ruta de reabastecimiento."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

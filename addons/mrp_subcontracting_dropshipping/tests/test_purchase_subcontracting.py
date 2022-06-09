@@ -134,3 +134,60 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(move1.product_uom_qty, 1)
         self.assertEqual(move2.product_id, self.comp1)
         self.assertEqual(move2.product_uom_qty, 1)
+
+    def test_dropshipped_component_and_sub_location(self):
+        """
+        Suppose:
+            - a subcontracted product and a component dropshipped to the subcontractor
+            - the location of the subcontractor is a sub-location of the main subcontrating location
+        This test ensures that the PO that brings the component to the subcontractor has a correct
+        destination address
+        """
+        subcontract_location = self.env.company.subcontracting_location_id
+        sub_location = self.env['stock.location'].create({
+            'name': 'Super Location',
+            'location_id': subcontract_location.id,
+        })
+
+        dropship_subcontractor_route = self.env['stock.location.route'].search([('name', '=', 'Dropship Subcontractor on Order')])
+        dropship_subcontractor_route.rule_ids.filtered(lambda rule: rule.location_id == subcontract_location).copy(default={'location_id': sub_location.id})
+        dropship_subcontractor_route.rule_ids.filtered(lambda rule: rule.location_src_id == subcontract_location).copy(default={'location_src_id': sub_location.id})
+
+        subcontractor, vendor = self.env['res.partner'].create([
+            {'name': 'SuperSubcontractor', 'property_stock_subcontractor': sub_location.id},
+            {'name': 'SuperVendor'},
+        ])
+
+        p_finished, p_compo = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': subcontractor.id})],
+        }, {
+            'name': 'Component',
+            'type': 'consu',
+            'seller_ids': [(0, 0, {'name': vendor.id})],
+            'route_ids': [(6, 0, dropship_subcontractor_route.ids)]
+        }])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': p_finished.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'subcontract',
+            'subcontractor_ids': [(6, 0, subcontractor.ids)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': p_compo.id, 'product_qty': 1}),
+            ],
+        })
+
+        subcontract_po = self.env['purchase.order'].create({
+            "partner_id": subcontractor.id,
+            "order_line": [(0, 0, {
+                'product_id': p_finished.id,
+                'name': p_finished.name,
+                'product_qty': 1.0,
+            })],
+        })
+        subcontract_po.button_confirm()
+
+        dropship_po = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
+        self.assertEqual(dropship_po.dest_address_id, subcontractor)

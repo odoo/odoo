@@ -913,7 +913,7 @@ class PosOrderLine(models.Model):
     total_cost = fields.Float(string='Total cost', digits='Product Price', readonly=True)
     is_total_cost_computed = fields.Boolean(help="Allows to know if the total cost has already been computed or not")
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
-    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
+    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True, index=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
@@ -1108,7 +1108,7 @@ class PosOrderLine(models.Model):
                 mls_to_unlink = self.env['stock.move.line']
                 for product, lines in lines_by_tracked_product:
                     lines = self.env['pos.order.line'].concat(*lines)
-                    moves = pickings_to_confirm.move_lines.filtered(lambda m: m.product_id in tracked_lines.product_id)
+                    moves = pickings_to_confirm.move_lines.filtered(lambda m: m.product_id.id == product)
                     mls_to_unlink |= moves.move_line_ids
                     moves._add_mls_related_to_order(lines, are_qties_done=False)
                 mls_to_unlink.unlink()

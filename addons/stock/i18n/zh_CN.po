@@ -12,9 +12,9 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2021
 # xu aaron, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
+# Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1009,7 +1009,10 @@ msgid "As soon as possible"
 msgstr "尽快"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "分配"
 
@@ -2870,7 +2873,7 @@ msgstr "清库存"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "免费使用数量"
+msgstr "释放使用数量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -2968,7 +2971,7 @@ msgstr "分组"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Group by..."
-msgstr "分组"
+msgstr "分组..."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
@@ -3027,7 +3030,7 @@ msgstr "高度(Z)"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_height
 msgid "Height must be positive"
-msgstr "高度必须是正数。"
+msgstr "高度必须是正数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
@@ -4586,7 +4589,7 @@ msgstr "没有库存调拨"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "No Stock On Hand"
-msgstr ""
+msgstr "在手库存"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -5322,7 +5325,7 @@ msgstr "首选路线"
 msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
-msgstr ""
+msgstr "按 CREATE 按钮为库存中的每件产品定义数量，或从电子表格中导入“收藏夹”"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6940,7 +6943,7 @@ msgstr "已签署"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Size"
-msgstr "尺寸："
+msgstr "尺寸"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -7681,7 +7684,7 @@ msgstr "还没有产品调拨"
 msgid ""
 "This analysis gives you an overview of the current stock level of your "
 "products."
-msgstr ""
+msgstr "此分析为您提供了产品当前库存水平的概述。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -7743,7 +7746,7 @@ msgstr "这个位置（如果它是内部的）和它所有的后代，通过typ
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
-msgstr "该位置的使用情况不能更改为查看，因为其包含产品。"
+msgstr "该位置的使用情况不能更改为视图，因为其包含产品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8130,7 +8133,10 @@ msgid "USPS Connector"
 msgstr "USPS 连接器"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "取消分配"
 
@@ -8373,22 +8379,22 @@ msgstr "供应商位置"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "View"
-msgstr "查看"
+msgstr "视图"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "View Diagram"
-msgstr "查看简明线路示意图"
+msgstr "视图简明线路示意图"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "视图位置"
+msgstr "查看位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "View and allocate received quantities."
-msgstr "查看和分配收到的数量。"
+msgstr "视图和分配收到的数量。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
@@ -8463,7 +8469,7 @@ msgstr "仓库管理"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__warehouse_view_ids
 msgid "Warehouse View"
-msgstr "仓库视图位置"
+msgstr "仓库视图"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_warehouse_id
@@ -9008,7 +9014,7 @@ msgid ""
 " - "
 msgstr ""
 "您需要提供产品的批号/序列号： \n"
-"-"
+"- "
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9020,15 +9026,6 @@ msgstr "您需要提供产品%s的批号/序列号。"
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
 msgstr "您应该更新此單據以反映您的 T&amp;C."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr "您不应使用计划的内部转移在两个仓库之间移动某些产品。相反，使用立即内部转移或补给路线。"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -9065,7 +9062,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
-msgstr ""
+msgstr "您的库存目前是空的"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl

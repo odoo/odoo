@@ -3904,3 +3904,34 @@ class TestStockValuation(TransactionCase):
         report_value_2 = report_for_company_2._get_report_values(docids=self.product1.ids)
         self.assertEqual(report_value_1['docs']['value'], "U 50.00")
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
+
+    def test_fifo_and_sml_owned_by_company(self):
+        """
+        When receiving a FIFO product, if the picking is owned by the company,
+        there should be a SVL and an account move linked to the product SM
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'owner_id': self.env.company.partner_id.id,
+        })
+
+        move = self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'name': 'IN 1 @ 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 10,
+        })
+        receipt.action_confirm()
+        move.quantity_done = 1
+        receipt.button_validate()
+
+        self.assertEqual(move.stock_valuation_layer_ids.value, 10)
+        self.assertEqual(move.stock_valuation_layer_ids.account_move_id.amount_total, 10)

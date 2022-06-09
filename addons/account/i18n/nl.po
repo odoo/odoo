@@ -2355,7 +2355,7 @@ msgstr "Bedrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
 msgid "Amount Company Currency Signed"
-msgstr "Bedrag ondertekende valuta van het bedrijf"
+msgstr "Bedrag in bedrijfsvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
@@ -2381,7 +2381,7 @@ msgstr "Verschuldigd bedrag"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual_signed
 msgid "Amount Due Signed"
-msgstr "Verschuldigd bedrag ondertekend"
+msgstr "Openstaand bedrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
@@ -2413,7 +2413,7 @@ msgstr "Bedrag ontvangen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_signed
 msgid "Amount Signed"
-msgstr "Bedrag getekend"
+msgstr "Bedrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -5553,6 +5553,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentatie"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "Land van je boekhouding"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
@@ -12822,7 +12827,7 @@ msgstr "BTW over"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_tax_signed
 msgid "Tax Signed"
-msgstr "BTW getekend"
+msgstr "BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
@@ -13671,10 +13676,10 @@ msgid ""
 " its move lines' balance), expressed in its currency. This is a technical "
 "field use to speedup the application of reconciliation models."
 msgstr ""
-"Het bedrag dat nog moet worden afgeletterd op deze afschriftregel "
-"(ondertekend volgens het saldo van de boekingen), uitgedrukt in zijn valuta."
-" Dit is een technisch veldgebruik om de toepassing van aflettermodellen te "
-"versnellen."
+"Het bedrag dat nog moet worden afgeletterd op deze afschriftregel (met "
+"plus/min teken volgens het saldo van de boekingen), uitgedrukt in zijn "
+"valuta. Dit is een technisch veldgebruik om de toepassing van "
+"aflettermodellen te versnellen."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14800,6 +14805,18 @@ msgstr "Dit kan alleen op dagboek items gebruikt worden"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
+msgstr ""
+"Dit item bevat een of meer btw's die niet compatibel zijn met uw fiscale "
+"land. Controleer het fiscale land van het bedrijf in de instellingen en het "
+"belastingland in de btw-configuratie."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
 "This entry contains some tax from an unallowed country. Please check its "
 "fiscal position and your tax configuration."
 msgstr ""
@@ -14815,6 +14832,17 @@ msgid ""
 msgstr ""
 "Dit bericht is gekopieerd van <a href=# data-oe-model=account.move data-oe-"
 "id=%(id)d>%(title)s</a>"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
+msgstr ""
+"Deze invoer bevat btw's die niet verenigbaar zijn met uw fiscale positie. "
+"Controleer het land dat is ingesteld in fiscale positie en in uw btw-"
+"configuratie."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15104,7 +15132,7 @@ msgstr "Totaal te ontvangen"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
 msgid "Total Signed"
-msgstr "Totaal getekend"
+msgstr "Totaal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -15133,7 +15161,7 @@ msgstr "Totaal in valuta"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_in_currency_signed
 msgid "Total in Currency Signed"
-msgstr "Totaal in ondertekende valuta"
+msgstr "Totaal in valuta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__total_entry_encoding
@@ -15402,7 +15430,7 @@ msgstr "Excl. BTW"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr "Excl. BTW getekend"
+msgstr "Totaal excl. BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
@@ -16068,9 +16096,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Je kunt geen standaard communicatie plaatsen die getoond zal worden op de "
-"klanten factuur, eens bevestigd, om de klant bij te staan als verwijzing "
-"naar dat bijzonder factuur bij het uitvoeren van de betaling."
+"Je kunt hier de standaardcommunicatie instellen die na bevestigen op de "
+"klantfacturen zal verschijnen om de klant te helpen bij het uitvoeren van de"
+" betaling en naar die specifieke factuur te verwijzen."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -17030,3 +17058,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Telling"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+"Een standaard kostenplaats vereist een kostenplaats of een kostenplaatslabel"
+" die wordt gebruikt voor kostenplaatsverdeling."

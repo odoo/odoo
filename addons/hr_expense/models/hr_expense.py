@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from markupsafe import Markup
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero, float_repr
@@ -377,10 +378,10 @@ class HrExpense(models.Model):
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
         alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            return """
+            return Markup("""
 <p>
 Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32">%(email)s</a>.
-</p>""" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
+</p>""") % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
         return ""
 
     # ----------------------------------------

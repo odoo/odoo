@@ -166,7 +166,13 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                         # fix, this solution was chosen: the location is marked
                         # with a "ProcessingInstruction" which will not impact
                         # the "Element" structure of the resulting tree.
-                        if inherit_branding:
+                        # Exception: if we happen to replace a node that already
+                        # has xpath branding (root level nodes), do not mark the
+                        # location of the removal as it will mess up the branding
+                        # of siblings elements coming from other views, after the
+                        # branding is distributed (and those processing instructions
+                        # removed).
+                        if inherit_branding and not node.get('data-oe-xpath'):
                             node.addprevious(etree.ProcessingInstruction('apply-inheritance-specs-node-removal', node.tag))
 
                         for child in spec:

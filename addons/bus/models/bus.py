@@ -84,8 +84,6 @@ class ImBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, options=None):
-        if options is None:
-            options = {}
         # first poll return the notification in the 'buffer'
         if last == 0:
             timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
@@ -108,10 +106,11 @@ class ImBus(models.Model):
 #----------------------------------------------------------
 # Dispatcher
 #----------------------------------------------------------
-class ImDispatch(object):
+class ImDispatch:
     def __init__(self):
         self.channels = {}
         self.started = False
+        self.Event = None
 
     def poll(self, dbname, channels, last, options=None, timeout=None):
         channels = [channel_with_db(dbname, channel) for channel in channels]
@@ -126,7 +125,7 @@ class ImDispatch(object):
             current = threading.current_thread()
             current._daemonic = True
             # rename the thread to avoid tests waiting for a longpolling
-            current.setName("openerp.longpolling.request.%s" % current.ident)
+            current.name = f"openerp.longpolling.request.{current.ident}"
 
         registry = odoo.registry(dbname)
 
@@ -199,22 +198,20 @@ class ImDispatch(object):
         while True:
             try:
                 self.loop()
-            except Exception as e:
+            except Exception:
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
 
     def start(self):
         if odoo.evented:
             # gevent mode
-            import gevent
+            import gevent.event  # pylint: disable=import-outside-toplevel
             self.Event = gevent.event.Event
             gevent.spawn(self.run)
         else:
             # threaded mode
             self.Event = threading.Event
-            t = threading.Thread(name="%s.Bus" % __name__, target=self.run)
-            t.daemon = True
-            t.start()
+            threading.Thread(name=f"{__name__}.Bus", target=self.run, daemon=True).start()
         self.started = True
         return self
 

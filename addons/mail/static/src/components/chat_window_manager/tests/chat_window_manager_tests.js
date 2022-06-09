@@ -5,6 +5,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -1018,7 +1019,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1792,7 +1793,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -1879,9 +1880,8 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
         )
     );
     const messageList = document.querySelector('.o_MessageList');
-    assert.strictEqual(
-        messageList.scrollHeight - messageList.scrollTop,
-        messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "chat window should scroll to the newly posted message just after posting it"
     );
 });
@@ -1948,7 +1948,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });
@@ -2019,7 +2019,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
                 thread &&
                 thread.model === 'mail.channel' &&
                 thread.id === 20 &&
-                scrollTop === messageList.scrollHeight - messageList.clientHeight
+                isScrolledToBottom(messageList)
             );
         },
     });

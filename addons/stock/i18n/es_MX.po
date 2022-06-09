@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9466,18 +9466,6 @@ msgstr "Debe proporcionar un número de lote/de serie para los productos %s."
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Debe actualizar este documento para que refleje sus términos y condiciones."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-"No debe usar un traslado interno planeado para mover algunos productos entre"
-" dos almacenes. En su lugar, utilice un traslado interno inmediato o la ruta"
-" de reabastecimiento."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

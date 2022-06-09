@@ -904,7 +904,7 @@ class AccountBankStatementLine(models.Model):
             st_line_vals_to_write = {}
 
             if 'state' in changed_fields:
-                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state == 'posted' and move.state != 'posted'):
+                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state in ('posted', 'confirm') and move.state != 'posted'):
                     raise UserError(_(
                         "You can't manually change the state of journal entry %s, as it has been created by bank "
                         "statement %s."

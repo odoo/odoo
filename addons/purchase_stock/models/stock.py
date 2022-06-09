@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 from dateutil.relativedelta import relativedelta
 
 
@@ -254,12 +255,12 @@ class Orderpoint(models.Model):
             values['supplierinfo'] = self.supplier_id
         return values
 
-    def _get_replenishment_order_notification(self, written_after):
+    def _get_replenishment_order_notification(self):
         self.ensure_one()
-        order = self.env['purchase.order.line'].search([
-            ('orderpoint_id', 'in', self.ids),
-            ('write_date', '>', written_after)
-        ], limit=1).order_id
+        domain = [('orderpoint_id', 'in', self.ids)]
+        if self.env.context.get('written_date'):
+            domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+        order = self.env['purchase.order.line'].search(domain, limit=1).order_id
         if order:
             action = self.env.ref('purchase.action_rfq_form')
             return {
@@ -275,7 +276,7 @@ class Orderpoint(models.Model):
                     'sticky': False,
                 }
             }
-        return super()._get_replenishment_order_notification(written_after)
+        return super()._get_replenishment_order_notification()
 
     def _prepare_procurement_values(self, date=False, group=False):
         values = super()._prepare_procurement_values(date=date, group=group)

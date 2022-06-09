@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -640,6 +640,9 @@ msgid ""
 "        Accounting reports for Pakistan\n"
 "    "
 msgstr ""
+"\n"
+"        Informes contables para Pakistán\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -1704,6 +1707,11 @@ msgid ""
 "    - extended address fields\n"
 "    "
 msgstr ""
+"\n"
+"    Módulo puente para ampliar la guía de entrega (Complemento XML Carta de Porte)\n"
+"    - bienes exportados (COMEX)\n"
+"    - campos de dirección ampliados\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
@@ -1926,6 +1934,13 @@ msgid ""
 "    guide.\n"
 "    "
 msgstr ""
+"\n"
+"    La guía de entrega (Complemento XML Carta de Porte) es necesaria como prueba\n"
+"    de que está enviando mercancías entre A y B.\n"
+"\n"
+"    Sólo cuando se valida una orden de entrega se puede crear la\n"
+"    guía.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -5077,6 +5092,10 @@ msgid ""
 "=======================================================\n"
 "    "
 msgstr ""
+"\n"
+"Localización de puntos de venta GCC\n"
+"=======================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -5600,6 +5619,10 @@ msgid ""
 "=======================================================\n"
 "    "
 msgstr ""
+"\n"
+"Localización de puntos de venta K.S.A. \n"
+"=======================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
@@ -9912,6 +9935,8 @@ msgid ""
 " This is the base module to manage chart of accounts and localization for "
 "the Pakistan "
 msgstr ""
+" Este es el módulo base para gestionar el plan de cuentas y la localización "
+"de Pakistán"
 
 #. module: base
 #: code:addons/model.py:0
@@ -11278,7 +11303,7 @@ msgstr "Nombre del titular de la cuenta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
 msgid "Account Invoice Expiry"
-msgstr ""
+msgstr "Vencimiento de la factura de la cuenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -11800,7 +11825,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_report_measures
 msgid "Additional Measures in Reporting"
-msgstr ""
+msgstr "Medidas adicionales en los informes"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -13353,7 +13378,7 @@ msgstr "Declaración Intrasat belga"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_report_measures
 msgid "Belgian Payroll - Addition Measures in Reporting"
-msgstr ""
+msgstr "Nómina belga - Medidas de adición en los informes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_holiday_pay_recovery
@@ -19115,7 +19140,7 @@ msgstr "Consejo de Cooperación para los Estados Árabes del Golfo (CCEAG)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
 msgid "Gulf Cooperation Council - Point of Sale"
-msgstr ""
+msgstr "Consejo de Cooperación del Golfo - Punto de venta"
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -20990,7 +21015,7 @@ msgstr "Reino de Arabia Saudita - Nómina con contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
 msgid "K.S.A. - Point of Sale"
-msgstr ""
+msgstr "K.S.A. - Punto de venta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -22606,12 +22631,12 @@ msgstr "México - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock
 msgid "Mexico - Electronic Delivery Guide"
-msgstr ""
+msgstr "México - Guía de entrega electrónica"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended
 msgid "Mexico - Electronic Delivery Guide Comex"
-msgstr ""
+msgstr "México - Guía de entrega electrónica Comex"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -26782,12 +26807,12 @@ msgstr "Pakistán"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pk
 msgid "Pakistan - Accounting"
-msgstr ""
+msgstr "Pakistán - Contabilidad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pk_reports
 msgid "Pakistan - Accounting Reports"
-msgstr ""
+msgstr "Pakistán - Informes contables"
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -30708,7 +30733,7 @@ msgstr "Suecia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se
 msgid "Sweden - Accounting"
-msgstr ""
+msgstr "Suecia - Contabilidad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
@@ -31907,6 +31932,8 @@ msgstr "Solo se puede acceder a este método mediante HTTP"
 msgid ""
 "This module adds an expiry feature to transaction account intrastat codes."
 msgstr ""
+"Este módulo añade una función de caducidad a los códigos intrastat de las "
+"cuentas de transacciones."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -34949,7 +34976,7 @@ msgstr "many2many"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "Los campos many2many no pueden ser evaluados por referencia"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

@@ -39,16 +39,18 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"المشروع الداخلي والمهمة كلاهما مطلوبان لإنشاء جدول زمني للإجازة %s. إذا كنت "
+"لا تريد جدولاً زمنياً، عليك ترك المشروع الداخلي والمهمة فارغين. "
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات "
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الاعدادات"
+msgstr "تهيئة الإعدادات "
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
@@ -68,7 +70,7 @@ msgstr "إنشاء سجل نشاط"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr ""
+msgstr "إجازة عامة "
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -76,6 +78,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"إذا كان محدداً، سوف يتم إنشاء جدول زمني في مشروع الإجازة في الشركة عند تصديق"
+" أيام الإجازة. "
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -117,6 +121,7 @@ msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
 msgstr ""
+"سوف يحتوي المشروع على جدول زمني يتم إنشاؤه عندما يتم تصديق أيام إجازة. "
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -124,20 +129,20 @@ msgstr ""
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
-msgstr "الاجازات"
+msgstr "الإجازات "
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr ""
+msgstr "الإجازة (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "مهمة الإجازة "
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -147,7 +152,7 @@ msgstr "نوع الإجازة "
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Timesheets"
-msgstr "سجلات الأنشطة"
+msgstr "الجداول الزمنية "
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
@@ -156,3 +161,5 @@ msgid ""
 "You cannot delete timesheets linked to time off. Please, cancel the time off"
 " instead."
 msgstr ""
+"لا يمكنك حذف جداول زمنية مرتبطة بأيام إجازة. يرجى إلغاء الإجازة عوضاً عن "
+"ذلك. "

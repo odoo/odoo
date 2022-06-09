@@ -2096,7 +2096,9 @@ class AccountMove(models.Model):
             amls = record.line_ids
             impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id | amls.tax_tag_ids.country_id
             if impacted_countries and impacted_countries != record.tax_country_id:
-                raise ValidationError(_("This entry contains some tax from an unallowed country. Please check its fiscal position and your tax configuration."))
+                if record.fiscal_position_id and impacted_countries != record.fiscal_position_id.country_id:
+                    raise ValidationError(_("This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."))
+                raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -2431,7 +2433,7 @@ class AccountMove(models.Model):
                 values['to_process_lines'].append(('tax', line))
                 currencies.add(line.currency_id)
 
-            elif 'on_payment' in line.tax_ids.mapped('tax_exigibility'):
+            elif 'on_payment' in line.tax_ids.flatten_taxes_hierarchy().mapped('tax_exigibility'):
                 values['to_process_lines'].append(('base', line))
                 currencies.add(line.currency_id)
 
@@ -2793,7 +2795,7 @@ class AccountMove(models.Model):
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
             for move, reverse_move in zip(self, reverse_moves):
                 group = defaultdict(list)
-                for line in move.line_ids + reverse_move.line_ids:
+                for line in (move.line_ids + reverse_move.line_ids).filtered(lambda l: not l.reconciled):
                     group[(line.account_id, line.currency_id)].append(line.id)
                 for (account, dummy), line_ids in group.items():
                     if account.reconcile or account.internal_type == 'liquidity':
