@@ -65,6 +65,7 @@ class AccountMove(models.Model):
 
         for layer in stock_valuation_layers:
             layer.description = layer.description.replace('/', layer.account_move_line_id.move_id.name)
+            layer.stock_valuation_layer_id._validate_accounting_entries()
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         posted._stock_account_anglo_saxon_reconcile_valuation()
