@@ -9,7 +9,7 @@ import { session } from "@web/session";
 const { Component } = owl;
 
 function documentationItem(env) {
-    const documentationURL = "https://www.odoo.com/documentation/master";
+    const documentationURL = "https://www.odoo.com/documentation/saas-15.4";
     return {
         type: "item",
         id: "documentation",
