@@ -104,7 +104,7 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        return stream.get_response(as_attachment=False)
+        return stream.get_response(**send_file_kwargs)
 
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
