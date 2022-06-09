@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-06-09 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,30 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "%(event_name)s (%(count)s seats remaining)"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "%(event_name)s (Sold out)"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid "%(ticket_name)s (%(count)s seats remaining)"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid "%(ticket_name)s (Sold out)"
 msgstr ""
 
 #. module: event
@@ -54,6 +78,20 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid ""
+"- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
+"seats."
 msgstr ""
 
 #. module: event
@@ -151,10 +189,18 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                Registration statistics\n"
+"                            </span>"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
-"                                        <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
+"                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
 
 #. module: event
@@ -655,6 +701,11 @@ msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__address_search
+msgid "Address"
+msgstr ""
+
+#. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Administrator"
 msgstr ""
@@ -685,6 +736,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Archived"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
+msgid "Are sales launched"
 msgstr ""
 
 #. module: event
@@ -804,6 +860,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Campaign"
 msgstr ""
 
@@ -1088,7 +1145,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_id
 #: model:ir.model.fields,field_description:event.field_event_mail__event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__event_id
-#: model_terms:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
@@ -1149,11 +1205,21 @@ msgid "Event Organization"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
+msgid "Event Organizer"
+msgstr ""
+
+#. module: event
 #: model:ir.model,name:event.model_event_registration
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
+msgid "Event Responsible"
 msgstr ""
 
 #. module: event
@@ -1238,8 +1304,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid ""
 "Event Templates combine configurations you use often and are\n"
-"                    usually based on the types of events you organize (e.g. \"Workshop\",\n"
-"                    \"Roadshow\", \"Online Webinar\", etc)."
+"                usually based on the types of events you organize (e.g. \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
 
 #. module: event
@@ -1300,21 +1366,14 @@ msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model_terms:ir.ui.view,arch_db:event.event_event_view_graph
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:event.res_partner_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.act_window,name:event.event_event_action_pivot
-msgid "Events Analysis"
 msgstr ""
 
 #. module: event
@@ -1423,6 +1482,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
+#: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
@@ -1831,6 +1891,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Medium"
 msgstr ""
 
@@ -1914,34 +1975,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 #: model_terms:ir.actions.act_window,help:event.action_registration
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
+#: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
-msgid "No Event data yet!"
-msgstr ""
-
-#. module: event
-#: code:addons/event/models/event_event.py:0
-#, python-format
-msgid ""
-"No more available seats for %s. Raise the limit or remove some other "
-"confirmed registrations first."
-msgstr ""
-
-#. module: event
-#: code:addons/event/models/event_ticket.py:0
-#, python-format
-msgid ""
-"No more available seats for the ticket %s (%s). Raise the limit or remove "
-"some other confirmed registrations first."
-msgstr ""
-
-#. module: event
-#: code:addons/event/models/event_registration.py:0
-#, python-format
-msgid "No more available seats for this ticket"
 msgstr ""
 
 #. module: event
@@ -2037,7 +2072,14 @@ msgid "Online Ticketing"
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "Operation not supported."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Organizer"
 msgstr ""
 
@@ -2180,6 +2222,11 @@ msgid "Registration open"
 msgstr ""
 
 #. module: event
+#: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
+msgid "Registration statistics"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
 msgid "Registrations"
 msgstr ""
@@ -2211,6 +2258,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Responsible"
 msgstr ""
 
@@ -2323,11 +2371,13 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__is_sold_out
 msgid "Sold Out"
 msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_source_id
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Source"
 msgstr ""
 
@@ -2463,15 +2513,16 @@ msgstr ""
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
-msgid "The stop date cannot be earlier than the start date."
+msgid ""
+"The stop date cannot be earlier than the start date. Please check ticket "
+"%(ticket_name)s"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event_registration.py:0
+#: code:addons/event/models/event_event.py:0
+#: code:addons/event/models/event_ticket.py:0
 #, python-format
-msgid ""
-"There are no more available seats for %s. Raise the limit or remove some "
-"other confirmed registrations first."
+msgid "There are not enough seats available for:"
 msgstr ""
 
 #. module: event
@@ -2507,13 +2558,9 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
-msgid "Ticket Instructions"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
-msgid "Ticket Intructions"
+msgid "Ticket Instructions"
 msgstr ""
 
 #. module: event
@@ -2638,11 +2685,6 @@ msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
 
 #. module: event
-#: model_terms:ir.actions.act_window,help:event.event_event_action_pivot
-msgid "Use this report to compare or aggregate event performances."
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
 msgstr ""
@@ -2714,6 +2756,16 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
+msgid "Whether it is possible to sell these tickets"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
+msgid "Whether seats are not available for this ticket."
 msgstr ""
 
 #. module: event
