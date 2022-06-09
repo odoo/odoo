@@ -690,7 +690,7 @@ class PosSession(models.Model):
             account_id = commercial_partner.property_account_receivable_id.id
             receivable_lines = MoveLine.create(vals)
             for receivable_line in receivable_lines:
-                if (not receivable_line.reconciled):
+                if receivable_line._has_residual_to_reconcile():
                     key = (commercial_partner.id, account_id)
                     if key not in invoice_receivable_lines:
                         invoice_receivable_lines[key] = receivable_line

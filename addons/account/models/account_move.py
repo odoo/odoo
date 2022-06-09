@@ -3676,6 +3676,13 @@ class AccountMoveLine(models.Model):
                 qties[aml.product_id] -= qty
         return qties
 
+    def _has_residual_to_reconcile(self):
+        self.ensure_one()
+        residual_is_zero = self.company_currency_id.is_zero(self.amount_residual) \
+            and (not self.currency_id or self.currency_id.is_zero(self.amount_residual_currency))
+
+        return not residual_is_zero
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -3867,11 +3874,8 @@ class AccountMoveLine(models.Model):
                 else:
                     line.amount_residual_currency = 0.0
 
-                line.reconciled = (
-                    line.company_currency_id.is_zero(line.amount_residual)
-                    and (not line.currency_id or line.currency_id.is_zero(line.amount_residual_currency))
+                line.reconciled = not line._has_residual_to_reconcile() \
                     and line.move_id.state not in ('draft', 'cancel')
-                )
             else:
                 # Must not have any reconciliation since the line is not eligible for that.
                 line.amount_residual = 0.0
