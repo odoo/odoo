@@ -55,6 +55,7 @@ import {
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
     rightLeafOnlyNotBlockPath,
+    isBlock,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2198,7 +2199,31 @@ export class OdooEditor extends EventTarget {
         for (const child of [...container.childNodes]) {
             this._cleanForPaste(child);
         }
-        return container.innerHTML;
+        // Force inline nodes at the root of the container into separate P
+        // elements. This is a tradeoff to ensure some features that rely on
+        // nodes having a parent (e.g. convert to list, title, etc.) can work
+        // properly on such nodes without having to actually handle that
+        // particular case in all of those functions. In fact, this case cannot
+        // happen on a new document created using this editor, but will happen
+        // instantly when editing a document that was created from Etherpad.
+        const temporaryContainer = document.createElement('template');
+        let temporaryP = document.createElement('p');
+        for (const child of [...container.childNodes]) {
+            if (isBlock(child)) {
+                if (temporaryP.childNodes.length > 0) {
+                    temporaryContainer.content.appendChild(temporaryP);
+                    temporaryP = document.createElement('p');
+                }
+                temporaryContainer.content.appendChild(child);
+            } else {
+                temporaryP.appendChild(child);
+            }
+
+            if (temporaryP.childNodes.length > 0) {
+                temporaryContainer.content.appendChild(temporaryP);
+            }
+        }
+        return temporaryContainer.innerHTML;
     }
     /**
      * Clean a node for safely pasting. Cleaning an element involves unwrapping
