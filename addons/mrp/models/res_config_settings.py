@@ -27,7 +27,7 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         if not self.group_mrp_workorder_dependencies:
             # Disabling this option should not interfere with currently planned productions
-            self.env['mrp.bom'].search([('allow_operation_dependencies', '=', True)]).allow_operation_dependencies = False
+            self.env['mrp.bom'].sudo().search([('allow_operation_dependencies', '=', True)]).allow_operation_dependencies = False
 
     @api.onchange('use_manufacturing_lead')
     def _onchange_use_manufacturing_lead(self):
