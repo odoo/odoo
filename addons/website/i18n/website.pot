@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:56+0000\n"
-"PO-Revision-Date: 2022-04-19 13:56+0000\n"
+"POT-Creation-Date: 2022-06-09 14:04+0000\n"
+"PO-Revision-Date: 2022-06-09 14:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -680,6 +680,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
+"                                        How to create my Plausible Shared Link"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
 "                                        How to get my Client ID"
 msgstr ""
 
@@ -1296,11 +1303,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
-msgid "A partner is linked to only one visitor."
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "A short description of this great feature."
 msgstr ""
@@ -1380,7 +1382,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Accounts are useable accross all your multiple websites"
+msgid "Accounts are usable across all your multiple websites"
 msgstr ""
 
 #. module: website
@@ -1400,7 +1402,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
-#: model:ir.model.fields,field_description:website.field_website_visitor__active
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Active"
 msgstr ""
@@ -1754,9 +1755,12 @@ msgid "An error occurred while rendering the template"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_google_analytics
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
+#, python-format
 msgid "Analytics"
 msgstr ""
 
@@ -1873,7 +1877,6 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Archived"
 msgstr ""
 
@@ -2256,16 +2259,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "CTA"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_page__cache_key_expr
-msgid "Cache Key Expr"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_page__cache_time
-msgid "Cache Time"
 msgstr ""
 
 #. module: website
@@ -3221,6 +3214,11 @@ msgid "Default"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
 msgid "Default Language"
 msgstr ""
@@ -3984,13 +3982,6 @@ msgid "Explore"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page__cache_key_expr
-msgid ""
-"Expression (tuple) to evaluate the cached key. \n"
-"E.g.: \"(request.params.get(\"currency\"), )\""
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
 msgid "Extension View"
 msgstr ""
@@ -4154,6 +4145,11 @@ msgstr ""
 msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_binary
+msgid "File streaming helper model for controllers"
 msgstr ""
 
 #. module: website
@@ -5720,6 +5716,11 @@ msgid "Let your customers follow <br/>and understand your process."
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Let your customers log in to see their documents"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
@@ -5880,11 +5881,6 @@ msgstr ""
 #: code:addons/website/static/src/xml/theme_preview.xml:0
 #, python-format
 msgid "Main actions"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,help:website.field_website_visitor__parent_id
-msgid "Main identity"
 msgstr ""
 
 #. module: website
@@ -6926,7 +6922,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__parent_id
-#: model:ir.model.fields,field_description:website.field_website_visitor__parent_id
 msgid "Parent"
 msgstr ""
 
@@ -7005,6 +7000,31 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Plain"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_plausible_shared_key
+msgid "Plausible Analytics"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__plausible_shared_key
+msgid "Plausible Shared Key"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__plausible_site
+msgid "Plausible Site"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__plausible_site
+msgid "Plausible Site (e.g. domain.com)"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__plausible_shared_key
+msgid "Plausible auth Key"
 msgstr ""
 
 #. module: website
@@ -7976,6 +7996,11 @@ msgid "Shared Customer Accounts"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Shared Link Auth"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Shoes"
 msgstr ""
@@ -8068,6 +8093,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__connected
 #, python-format
 msgid "Signed In"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Site"
 msgstr ""
 
 #. module: website
@@ -8907,14 +8937,14 @@ msgid "This message has been posted on your website!"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_popup_options
-msgid "This page"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "This operator is not supported"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "This page"
 msgstr ""
 
 #. module: website
@@ -8958,11 +8988,6 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__time_since_last_action
 msgid "Time since last page view. E.g.: 2 minutes ago"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,help:website.field_website_page__cache_time
-msgid "Time to cache the page. (0 = no cache)"
 msgstr ""
 
 #. module: website
@@ -9045,6 +9070,14 @@ msgid ""
 "Google. With the built-in SEO tool, once you define a few keywords, Odoo "
 "will recommend you the best keywords to target. Then adapt your title and "
 "description accordingly to boost your traffic."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"To send invitations in B2B mode, open a contact or select several ones in "
+"list view and click on 'Portal Access Management' option in the dropdown "
+"menu *Action*."
 msgstr ""
 
 #. module: website
@@ -9354,6 +9387,12 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"Use Plausible.io, Simple and privacy-friendly Google Analytics alternative"
 msgstr ""
 
 #. module: website
