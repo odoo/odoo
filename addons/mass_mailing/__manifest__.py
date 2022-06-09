@@ -4,7 +4,7 @@
 {
     'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
-    'version': '2.5',
+    'version': '2.6',
     'sequence': 60,
     'website': 'https://www.odoo.com/app/email-marketing',
     'category': 'Marketing/Email Marketing',
