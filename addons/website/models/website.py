@@ -1313,7 +1313,7 @@ class Website(models.Model):
             router = http.root.get_db_router(request.db).bind('')
             path = router.build(rule.endpoint, args)
             if lang != self.default_lang_id:
-                path = f'/{lang.url_code}{path}'
+                path = f'/{lang.url_code}{path if path != "/" else ""}'
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.environ['REQUEST_URI'], safe='/')
