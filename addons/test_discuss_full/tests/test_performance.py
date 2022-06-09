@@ -802,8 +802,8 @@ class TestDiscussFullPerformance(TransactionCase):
                 'is_discuss_sidebar_category_livechat_open': True,
                 'push_to_talk_key': False,
                 'use_push_to_talk': False,
-                'user_id': (self.users[0].id, 'Ernest Employee'),
+                'user_id': [('insert-and-replace', {'id': self.users[0].id})],
                 'voice_active_duration': 0,
-                'volume_settings': [],
+                'volume_settings_ids': [('insert', [])],
             },
         }

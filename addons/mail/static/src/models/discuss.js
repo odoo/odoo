@@ -364,6 +364,7 @@ registerModel({
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one('DiscussSidebarCategory', {
+            default: insertAndReplace(),
             inverse: 'discussAsChannel',
             isCausal: true,
         }),
@@ -371,6 +372,7 @@ registerModel({
          * Discuss sidebar category for `chat` type channel threads.
          */
         categoryChat: one('DiscussSidebarCategory', {
+            default: insertAndReplace(),
             inverse: 'discussAsChat',
             isCausal: true,
         }),
