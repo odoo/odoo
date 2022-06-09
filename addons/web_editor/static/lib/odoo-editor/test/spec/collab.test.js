@@ -233,7 +233,7 @@ describe('Collaboration', () => {
         it('all client steps should be on the same order', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2', 'c3'],
-                contentBefore: '<x>a[c1}{c1]</x><y>e[c2}{c2]</y><z>i[c3}{c3]</z>',
+                contentBefore: '<p><x>a[c1}{c1]</x><y>e[c2}{c2]</y><z>i[c3}{c3]</z></p>',
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
@@ -255,7 +255,7 @@ describe('Collaboration', () => {
                     mergeClientsSteps(clientInfos);
                     testSameHistory(clientInfos);
                 },
-                contentAfter: '<x>abcd[c1}{c1]</x><y>efgh[c2}{c2]</y><z>ijkl[c3}{c3]</z>',
+                contentAfter: '<p><x>abcd[c1}{c1]</x><y>efgh[c2}{c2]</y><z>ijkl[c3}{c3]</z></p>',
             });
         });
         it('should 2 client insertText in 2 different paragraph', () => {
@@ -301,7 +301,7 @@ describe('Collaboration', () => {
         it('should insertText with client 1 and deleteBackward with client 2', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: 'ab[c1}{c1][c2}{c2]c',
+                contentBefore: '<p>ab[c1}{c1][c2}{c2]c</p>',
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
@@ -314,13 +314,13 @@ describe('Collaboration', () => {
                     mergeClientsSteps(clientInfos);
                     testSameHistory(clientInfos);
                 },
-                contentAfter: 'a[c2}{c2]c[c1}{c1]dc',
+                contentAfter: '<p>a[c2}{c2]c[c1}{c1]dc</p>',
             });
         });
         it('should insertText twice with client 1 and deleteBackward twice with client 2', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: 'ab[c1}{c1][c2}{c2]c',
+                contentBefore: '<p>ab[c1}{c1][c2}{c2]c</p>',
                 afterCreate: clientInfos => {
                     applyConcurentActions(clientInfos, {
                         c1: editor => {
@@ -335,14 +335,14 @@ describe('Collaboration', () => {
                     mergeClientsSteps(clientInfos);
                     testSameHistory(clientInfos);
                 },
-                contentAfter: '[c2}{c2]cd[c1}{c1]ec',
+                contentAfter: '<p>[c2}{c2]cd[c1}{c1]ec</p>',
             });
         });
     });
     it('should reset from snapshot', () => {
         testMultiEditor({
             clientIds: ['c1', 'c2'],
-            contentBefore: 'a[c1}{c1]',
+            contentBefore: '<p>a[c1}{c1]</p>',
             afterCreate: clientInfos => {
                 clientInfos.c1.editor.execCommand('insertText', 'b');
                 clientInfos.c1.editor._historyMakeSnapshot();
@@ -356,16 +356,16 @@ describe('Collaboration', () => {
                 ]);
                 chai.expect(
                     clientInfos.c2.editor._historySteps[0].mutations.map(x => x.id),
-                ).to.deep.equal(['fake_id_1', 'fake_concurent_id_1']);
+                ).to.deep.equal(['fake_id_1']);
             },
-            contentAfter: 'ab[c1}{c1]',
+            contentAfter: '<p>ab[c1}{c1]</p>',
         });
     });
     describe('steps whith no parent in history', () => {
         it('should be able to retreive steps when disconnected from clients that has send step', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2', 'c3'],
-                contentBefore: '<x>a[c1}{c1]</x><y>b[c2}{c2]</y><z>c[c3}{c3]</z>',
+                contentBefore: '<p><x>a[c1}{c1]</x><y>b[c2}{c2]</y><z>c[c3}{c3]</z></p>',
                 afterCreate: clientInfos => {
                     clientInfos.c1.editor.execCommand('insertText', 'd');
                     clientInfos.c2.editor.onExternalHistorySteps([
@@ -384,13 +384,13 @@ describe('Collaboration', () => {
                     ]);
                     testSameHistory(clientInfos);
                 },
-                contentAfter: '<x>ad[c1}{c1]</x><y>be[c2}{c2]</y><z>c[c3}{c3]</z>',
+                contentAfter: '<p><x>ad[c1}{c1]</x><y>be[c2}{c2]</y><z>c[c3}{c3]</z></p>',
             });
         });
         it('should receive steps where parent was not received', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2', 'c3'],
-                contentBefore: '<i>a[c1}{c1]</i><b>b[c2}{c2]</b>',
+                contentBefore: '<p><i>a[c1}{c1]</i><b>b[c2}{c2]</b></p>',
                 afterCreate: clientInfos => {
                     clientInfos.c1.editor.execCommand('insertText', 'c');
                     clientInfos.c2.editor.onExternalHistorySteps([
@@ -425,7 +425,7 @@ describe('Collaboration', () => {
                         clientInfos.c2.editor._historySteps[4],
                     ]);
                 },
-                contentAfter: '<i>ac[c1}{c1]</i><b>bdef[c2}{c2]</b>',
+                contentAfter: '<p><i>ac[c1}{c1]</i><b>bdef[c2}{c2]</b></p>',
             });
         });
     });
@@ -433,7 +433,7 @@ describe('Collaboration', () => {
         it('should sanitize when adding a node', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: '<x>a</x>',
+                contentBefore: '<p><x>a</x></p>',
                 afterCreate: clientInfos => {
                     const script = document.createElement('script');
                     script.innerHTML = 'console.log("xss")';
@@ -445,14 +445,14 @@ describe('Collaboration', () => {
                     ]);
                     window.chai
                         .expect(clientInfos.c2.editor.editable.innerHTML)
-                        .to.equal('<x>a</x>');
+                        .to.equal('<p><x>a</x></p>');
                 },
             });
         });
         it('should sanitize when adding a script as descendant', async () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: '<x>a[c1}{c1][c2}{c2]</x>',
+                contentBefore: '<p>a[c1}{c1][c2}{c2]</p>',
                 afterCreate: clientInfos => {
                     const i = document.createElement('i');
                     i.innerHTML = '<b>b</b><script>alert("c");</script>';
@@ -464,7 +464,7 @@ describe('Collaboration', () => {
                 },
                 afterCursorInserted: clientInfos => {
                     chai.expect(clientInfos.c2.editable.innerHTML).to.equal(
-                        '<x>a[c1}{c1][c2}{c2]</x><i><b>b</b></i>',
+                        '<p>a[c1}{c1][c2}{c2]</p><i><b>b</b></i>',
                     );
                 },
             });
@@ -472,7 +472,7 @@ describe('Collaboration', () => {
         it('should sanitize when changing an attribute', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: '<x>a<img></x>',
+                contentBefore: '<p>a<img></p>',
                 afterCreate: clientInfos => {
                     const img = clientInfos.c1.editable.childNodes[0].childNodes[1];
                     img.setAttribute('class', 'b');
@@ -483,10 +483,10 @@ describe('Collaboration', () => {
                     ]);
                     window.chai
                         .expect(clientInfos.c1.editor.editable.innerHTML)
-                        .to.equal('<x>a<img class="b" onerror="console.log(&quot;xss&quot;)"></x>');
+                        .to.equal('<p>a<img class="b" onerror="console.log(&quot;xss&quot;)"></p>');
                     window.chai
                         .expect(clientInfos.c2.editor.editable.innerHTML)
-                        .to.equal('<x>a<img class="b"></x>');
+                        .to.equal('<p>a<img class="b"></p>');
                 },
             });
         });
@@ -494,7 +494,7 @@ describe('Collaboration', () => {
         it('should sanitize when undo is adding a script node', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: '<x>a</x>',
+                contentBefore: '<p>a</p>',
                 afterCreate: clientInfos => {
                     const script = document.createElement('script');
                     script.innerHTML = 'console.log("xss")';
@@ -513,14 +513,14 @@ describe('Collaboration', () => {
                     clientInfos.c2.editor.historyUndo();
                     window.chai
                         .expect(clientInfos.c2.editor.editable.innerHTML)
-                        .to.equal('<x>a</x>');
+                        .to.equal('<p>a</p>');
                 },
             });
         });
         it('should sanitize when undo is adding a descendant script node', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: '<x>a</x>',
+                contentBefore: '<p>a</p>',
                 afterCreate: clientInfos => {
                     const div = document.createElement('div');
                     div.innerHTML = '<i>b</i><script>console.log("xss")</script>';
@@ -539,14 +539,14 @@ describe('Collaboration', () => {
                     clientInfos.c2.editor.historyUndo();
                     window.chai
                         .expect(clientInfos.c2.editor.editable.innerHTML)
-                        .to.equal('<x>a</x><div><i>b</i></div>');
+                        .to.equal('<p>a</p><div><i>b</i></div>');
                 },
             });
         });
         it('should sanitize when undo is changing an attribute', () => {
             testMultiEditor({
                 clientIds: ['c1', 'c2'],
-                contentBefore: '<x>a<img></x>',
+                contentBefore: '<p>a<img></p>',
                 afterCreate: clientInfos => {
                     const img = clientInfos.c1.editable.childNodes[0].childNodes[1];
                     img.setAttribute('class', 'b');
@@ -566,7 +566,7 @@ describe('Collaboration', () => {
                     clientInfos.c2.editor.historyUndo();
                     window.chai
                         .expect(clientInfos.c2.editor.editable.innerHTML)
-                        .to.equal('<x>a<img class="b"></x>');
+                        .to.equal('<p>a<img class="b"></p>');
                 },
             });
         });
