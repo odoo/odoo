@@ -220,7 +220,7 @@ const FieldHtmlInjector = Widget.extend(WidgetAdapterMixin, {
      *                        (i.e.: @see o_knowledge_behavior_type_... )
      */
     updateBehaviors: function (behaviorsData = []) {
-        if (!behaviorsData.lenth) {
+        if (!behaviorsData.length) {
             // no behaviorsData, recreate the array from the field value.
             this._scanFieldForBehaviors(behaviorsData);
         }
