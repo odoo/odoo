@@ -211,9 +211,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     }
                 }
             } catch (error) {
-                hasError = true;
-
-                if (error.code == 700)
+                if (error.code == 700 || error.code == 701)
                     this.error = true;
 
                 if ('code' in error) {
