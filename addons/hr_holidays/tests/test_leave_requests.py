@@ -184,7 +184,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_employee_is_absent(self):
         """ Only the concerned employee should be considered absent """
-        self.env['hr.leave'].with_user(self.user_employee_id).create({
+        user_employee_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_1.id,
@@ -193,6 +193,13 @@ class TestLeaveRequests(TestHrHolidaysBase):
             'number_of_days': 2,
         })
         (self.employee_emp | self.employee_hrmanager).mapped('is_absent')  # compute in batch
+        self.assertFalse(self.employee_emp.is_absent, "He should not be considered absent")
+        self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
+
+        user_employee_leave.sudo().write({
+            'state': 'validate',
+        })
+        (self.employee_emp | self.employee_hrmanager)._compute_leave_status()
         self.assertTrue(self.employee_emp.is_absent, "He should be considered absent")
         self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
 
