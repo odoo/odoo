@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 14:03+0000\n"
-"PO-Revision-Date: 2022-04-19 14:03+0000\n"
+"POT-Creation-Date: 2022-06-09 14:11+0000\n"
+"PO-Revision-Date: 2022-06-09 14:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -299,10 +299,10 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_sale_renting_sign
+#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
-"            Bridge Sign functionalities with the Rental application\n"
+"            Egyptian Tax Authority Invoice Integration\n"
 "        "
 msgstr ""
 
@@ -466,6 +466,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Automatically create slots for calendar events.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_fsm
+msgid ""
+"\n"
+"        Avoid auto-enabling the documents feature on fsm projects.\n"
 "    "
 msgstr ""
 
@@ -1087,6 +1095,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_eg_edi_eta
+msgid ""
+"\n"
+"       This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.\n"
+"       Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
 msgid ""
 "\n"
@@ -1364,7 +1381,7 @@ msgid ""
 "2FA Invite mail\n"
 "===============\n"
 "Allow the users to invite another user to use Two-Factor authentication\n"
-"by sending an email to the target user. This email redirect him to :\n"
+"by sending an email to the target user. This email redirect them to :\n"
 "- the users security settings if the user is internal.\n"
 "- the portal security settings page if the user is not internal. \n"
 "    "
@@ -1566,6 +1583,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for Kenyan Payroll Rules\n"
+"========================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_hr_payroll_account
 msgid ""
 "\n"
@@ -1656,6 +1682,16 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Italy\n"
+"============================\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ke_reports
+msgid ""
+"\n"
+"Accounting reports for Kenya\n"
 "============================\n"
 "\n"
 "    "
@@ -1855,6 +1891,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_documents_project_sign
+msgid ""
+"\n"
+"Adds an action to sign documents attached to tasks.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
 msgid ""
 "\n"
@@ -1961,6 +2004,13 @@ msgid ""
 "\n"
 "Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.\n"
 "    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_picking
+msgid ""
+"\n"
+"Allows customers to pay for their orders at a shop, instead of paying online.\n"
 msgstr ""
 
 #. module: base
@@ -2087,15 +2137,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_lu_reports_annual_vat
-msgid ""
-"\n"
-"Annual VAT report for Luxembourg\n"
-"============================================\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_website_forum
 msgid ""
 "\n"
@@ -2181,6 +2222,48 @@ msgid ""
 "The annual report must be provided to the Commissioner no later than 28 August after the end of the financial year. Reports can be sent more frequently for those that wish to do so.\n"
 "\n"
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona
+msgid ""
+"\n"
+"Automatic DIMONA declarations\n"
+"=============================\n"
+"\n"
+"Prerequisites:\n"
+"--------------\n"
+"\n"
+"- You need a Belgian Government Compliant Digital Certificate, delivered by Global\n"
+"  Sign. See: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Generate certificate files from your SSL certificate (.pfx file) that are needed to create\n"
+"  a technical user (.cer file) and to authenticate remotely to the ONSS (.pem) file. On a UNIX\n"
+"  system, you may use the following commands:\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Before you can use the social security REST web service, you must create an account\n"
+"  for yourself or for your client and configure the security. (The whole procedure is\n"
+"  available at https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - User account management: Follow the Procedure https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Create a technical user: Your client must now create a technical user in the Access management\n"
+"    online service. The follow this procedure: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activate a web service channel: Once the technical user has been created, your client must\n"
+"    activate the web service channel in Access Management. The following manual explains the\n"
+"    steps to follow to activate the channel: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - At the end of the procedure, you should receive a \"ONSS Expeditor Number\", you may\n"
+"    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
+"\n"
 "    "
 msgstr ""
 
@@ -2966,6 +3049,28 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_hw_l10n_eg_eta
+msgid ""
+"\n"
+"Egypt ETA Hardware Driver\n"
+"=======================\n"
+"\n"
+"This module allows Odoo to digitally sign invoices using an USB key approved by the egyptian government\n"
+"\n"
+"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
+"\n"
+"Requirements per system\n"
+"-----------------------\n"
+"\n"
+"Windows:\n"
+"    - eps2003csp11.dll\n"
+"    \n"
+"Linux/macOS:\n"
+"    - OpenSC\n"
+"\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_edi
 msgid ""
 "\n"
@@ -3638,6 +3743,22 @@ msgid ""
 "\n"
 "K.S.A. POS Localization\n"
 "=======================================================\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
+msgid ""
+"\n"
+"Kenyan Payroll Rules.\n"
+"=====================\n"
+"\n"
+"    * Employee Details\n"
+"    * Employee Contracts\n"
+"    * Allowances/Deductions\n"
+"    * Allow to configure Basic/Gross/Net Salary\n"
+"    * Employee Payslip\n"
+"    * Integrated with Leaves Management\n"
 "    "
 msgstr ""
 
@@ -5073,6 +5194,7 @@ msgid ""
 "    * Finnish chart of account\n"
 "    * Fiscal positions\n"
 "    * Invoice Payment Reference Types (Finnish Standard Reference & Finnish Creditor Reference (RF))\n"
+"    * Finnish Reference format for Sale Orders\n"
 "\n"
 "Set the payment reference type from the Sales Journal.\n"
 "    "
@@ -5220,6 +5342,15 @@ msgid ""
 "produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tw
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Taiwan in Odoo.\n"
+"==============================================================================\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -5404,6 +5535,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_hr_restaurant
+msgid ""
+"\n"
+"This module adapts the behavior of the PoS when the pos_hr and pos_restaurant are installed.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_twitter
 msgid ""
 "\n"
@@ -5542,15 +5680,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_accountant_check_printing
-msgid ""
-"\n"
-"This module adds the possibility to filter by check number in the reconciliation\n"
-"widget.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
 msgid ""
 "\n"
@@ -5685,6 +5814,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_mrp_subonctracting_landed_costs
+msgid ""
+"\n"
+"This module allows users to more easily identify subcontracting orders when applying landed costs,\n"
+"by also displaying the associated picking reference in the search view.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
 msgid ""
 "\n"
@@ -5735,6 +5873,41 @@ msgid ""
 "Manage calls for tenders and blanket orders. Calls for tenders are used to get\n"
 "competing offers from different vendors and select the best ones. Blanket orders\n"
 "are agreements you have with vendors to benefit from a predetermined pricing.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_renting_comparison
+msgid ""
+"\n"
+"This module allows you to sell rental products in your eCommerce Comparison page.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_renting_wishlist
+msgid ""
+"\n"
+"This module allows you to sell rental products in your eCommerce Wishlist.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_renting
+#: model:ir.module.module,description:base.module_website_sale_stock_renting
+msgid ""
+"\n"
+"This module allows you to sell rental products in your eCommerce with\n"
+"appropriate views and selling choices.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_renting_product_configurator
+msgid ""
+"\n"
+"This module allows you to sell rental products with optional products in your eCommerce with\n"
+"appropriate views and selling choices.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -6019,6 +6192,14 @@ msgid ""
 "\n"
 "This module will test the main workflow of Odoo.\n"
 "It will install some main apps and will try to execute the most important actions.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ke
+msgid ""
+"\n"
+"This provides a base chart of accounts and taxes template for use in Odoo.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -6408,6 +6589,43 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_payment_flutterwave
+msgid ""
+"# Flutterwave\n"
+"\n"
+"## Implementation details\n"
+"\n"
+"### Supported features\n"
+"\n"
+"- Payment with redirection flow\n"
+"- [Tokenization](https://developer.flutterwave.com/reference/endpoints/tokenized-charge/)\n"
+"- Several payment methods such as credit cards, M-Pesa, and\n"
+"  [others](https://developer.flutterwave.com/docs/collecting-payments/payment-methods/).\n"
+"- [Webhook](https://developer.flutterwave.com/docs/integration-guides/webhooks/).\n"
+"\n"
+"In addition, Flutterwave also allows to implement refunds and pre-authorizations.\n"
+"\n"
+"### API and gateway\n"
+"\n"
+"We choose to integrate with\n"
+"[Flutterwave standard](https://developer.flutterwave.com/docs/collecting-payments/standard/) as it\n"
+"is the gateway that covers the best our needs, out of the three that Flutterwave offers as of\n"
+"May 2022. See the task's dev notes for the details on the other gateways.\n"
+"\n"
+"The version of the API implemented by this module is v3.\n"
+"\n"
+"## Merge details\n"
+"\n"
+"The first version of the module was specified in task\n"
+"[2759117](https://www.odoo.com/web#id=2759117&model=project.task) and merged with PR\n"
+"odoo/odoo#84820 in `saas-15.4`.\n"
+"\n"
+"## Testing instructions\n"
+"\n"
+"https://developer.flutterwave.com/docs/integration-guides/testing-helpers"
 msgstr ""
 
 #. module: base
@@ -7250,14 +7468,21 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:res.partner.industry,full_name:base.res_partner_industry_A
+msgid "A - AGRICULTURE, FORESTRY AND FISHING"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "A <graph> can only contains <field> nodes, found a <%s>"
 msgstr ""
 
 #. module: base
-#: model:res.partner.industry,full_name:base.res_partner_industry_A
-msgid "A AGRICULTURE, FORESTRY AND FISHING"
+#: model:ir.module.module,summary:base.module_payment_flutterwave
+msgid ""
+"A Nigerian online payments provider covering several African countries and "
+"payment methods."
 msgstr ""
 
 #. module: base
@@ -7381,6 +7606,21 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_appraisals
+msgid ""
+"A user without any rights on Appraisals will be able to see the application,"
+" create and manage appraisals for himself and the people he's manager of."
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_time_off
+msgid ""
+"A user without any rights on Time Off will be able to see the application, "
+"create his own holidays and manage the requests of the users he's manager "
+"of."
 msgstr ""
 
 #. module: base
@@ -7992,6 +8232,11 @@ msgid "Add crm UTM info on social"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_event_sale_dashboard
+msgid "Add dashboard for Event Revenues Report"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add delivery costs to online sales"
 msgstr ""
@@ -8221,14 +8466,14 @@ msgid "Administration"
 msgstr ""
 
 #. module: base
-#: model:res.partner.industry,name:base.res_partner_industry_N
-msgid "Administrative"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
+msgstr ""
+
+#. module: base
+#: model:res.partner.industry,name:base.res_partner_industry_N
+msgid "Administrative/Utilities"
 msgstr ""
 
 #. module: base
@@ -8293,6 +8538,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account_enterprise
 msgid "Advanced features for stock_account"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_mrp_subonctracting_landed_costs
+msgid "Advanced views to manage landed cost for subcontracting orders"
 msgstr ""
 
 #. module: base
@@ -8685,6 +8935,11 @@ msgid "Appointment Lead Generation"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_appointment_sms
+msgid "Appointment SMS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_appointment_full
 #: model:ir.module.module,summary:base.module_test_appointment_full
 msgid "Appointment Testing Module"
@@ -8883,6 +9138,14 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Assign tags to your contacts to organize, filter and track them."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_autocomplete
+#: model:ir.module.module,summary:base.module_website_sale_autocomplete
+msgid ""
+"Assist your users with automatic completion & suggestions when filling their"
+" address during checkout"
 msgstr ""
 
 #. module: base
@@ -9167,13 +9430,18 @@ msgid "Avatax for Subscriptions"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_documents_fsm
+msgid "Avoid auto-enabling the documents feature on fsm projects"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
-msgid "B MINING AND QUARRYING"
+msgid "B - MINING AND QUARRYING"
 msgstr ""
 
 #. module: base
@@ -9531,6 +9799,11 @@ msgid "Belgian Intrastat Declaration"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
+msgid "Belgian Payroll - Attendance"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr ""
@@ -9583,6 +9856,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dimona
+msgid "Belgium - Payroll - Dimona"
 msgstr ""
 
 #. module: base
@@ -9736,6 +10014,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_sale_renting_sign
+msgid "Bridge Sign functionalities with the Rental application"
 msgstr ""
 
 #. module: base
@@ -9956,7 +10239,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
-msgid "C MANUFACTURING"
+msgid "C - MANUFACTURING"
 msgstr ""
 
 #. module: base
@@ -10204,6 +10487,12 @@ msgid "Centralize your address book"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_knowledge
+#: model:ir.module.module,summary:base.module_knowledge
+msgid "Centralize, manage, share and grow your knowledge library"
+msgstr ""
+
+#. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid ""
 "Certain countries apply withholding at source on the amount of invoices, in "
@@ -10292,11 +10581,6 @@ msgid "Check"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_accountant_check_printing
-msgid "Check Printing Accounting"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
 msgstr ""
@@ -10310,11 +10594,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing basic features"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_account_accountant_check_printing
-msgid "Check printing enterprise addons"
 msgstr ""
 
 #. module: base
@@ -11389,6 +11668,16 @@ msgid "Create new lead with using /lead command in the channel"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_work_entry_contract_attendance
+msgid "Create work entries from the employee's attendances"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_work_entry_contract_planning
+msgid "Create work entries from the employee's planning"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Menus"
 msgstr ""
@@ -11821,7 +12110,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_D
-msgid "D ELECTRICITY,GAS,STEAM AND AIR CONDITIONING SUPPLY"
+msgid "D - ELECTRICITY, GAS, STEAM AND AIR CONDITIONING SUPPLY"
 msgstr ""
 
 #. module: base
@@ -11889,6 +12178,11 @@ msgid "Data Cleaning (merge)"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_data_recycle
+msgid "Data Recycle"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_convert
 msgid "Data for xml conversion tests"
 msgstr ""
@@ -11929,8 +12223,8 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid ""
-"Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
-"type incoherence in a previous request"
+"Database fetch misses ids (%(missing)s) and has extra ids (%(extra)s), may "
+"be caused by a type incoherence in a previous request"
 msgstr ""
 
 #. module: base
@@ -12610,6 +12904,11 @@ msgid "Documents - Contracts"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_fsm
+msgid "Documents - FSM"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
 msgstr ""
@@ -12650,27 +12949,15 @@ msgid "Documents - Time Off"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_documents_project_sign
+msgid "Documents Project Sign"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet
 #: model:ir.module.module,shortdesc:base.module_documents_spreadsheet
 #: model:ir.module.module,summary:base.module_documents_spreadsheet
 msgid "Documents Spreadsheet"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_documents_spreadsheet_bundle
-msgid "Documents Spreadsheet Bundle"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_documents_spreadsheet_bundle
-msgid "Documents Spreadsheet bundle of assets"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_documents_spreadsheet_bundle
-msgid ""
-"Documents Spreadsheet bundle of assets. The goal of this module is to "
-"separate from documents_spreadsheet what can and cannot be lazy loaded."
 msgstr ""
 
 #. module: base
@@ -12792,7 +13079,8 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
-msgid "E WATER SUPPLY;SEWERAGE,WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
+msgid ""
+"E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -12907,6 +13195,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg
 msgid "Egypt - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_l10n_eg_eta
+#: model:ir.module.module,summary:base.module_hw_l10n_eg_eta
+msgid "Egypt ETA Hardware Driver"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
+msgid "Egyptian E-Invoice Integration"
 msgstr ""
 
 #. module: base
@@ -13102,6 +13401,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__expiration
 msgid "Enable profiling until"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_appointment_sms
+msgid "Enable sending appointment reminders via SMS to your clients."
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_contracts
+msgid ""
+"Enable the user to see and manage the contracts from Employee application."
 msgstr ""
 
 #. module: base
@@ -13357,6 +13667,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
 msgid "Events Sales"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_event_sale_dashboard
+msgid "Events Sales Dashboard"
 msgstr ""
 
 #. module: base
@@ -13635,7 +13950,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
-msgid "F CONSTRUCTION"
+msgid "F - CONSTRUCTION"
 msgstr ""
 
 #. module: base
@@ -14018,6 +14333,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
 msgid "Filter"
 msgstr ""
@@ -14083,6 +14403,12 @@ msgid "Find free high-resolution images from Unsplash"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_data_recycle
+#: model:ir.module.module,summary:base.module_data_recycle
+msgid "Find old records and archive/delete them"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__finished
 msgid "Finished"
 msgstr ""
@@ -14095,6 +14421,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi_reports
 msgid "Finland - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fi_sale
+msgid "Finland - Sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fi_sale
+msgid "Finland Sale"
 msgstr ""
 
 #. module: base
@@ -14183,7 +14519,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
-msgid "Food"
+msgid "Food/Hospitality"
 msgstr ""
 
 #. module: base
@@ -14395,7 +14731,8 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
-msgid "G WHOLESALE AND RETAIL TRADE;REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
+msgid ""
+"G - WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
 msgstr ""
 
 #. module: base
@@ -14732,6 +15069,11 @@ msgid "Google authentication for incoming mail server"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_autocomplete
+msgid "Google places autocompletion"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
 msgid "Google reCAPTCHA integration"
 msgstr ""
@@ -14892,7 +15234,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_H
-msgid "H TRANSPORTATION AND STORAGE"
+msgid "H - TRANSPORTATION AND STORAGE"
 msgstr ""
 
 #. module: base
@@ -15119,11 +15461,6 @@ msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_attendances
-msgid "Helps you manage the attendances."
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_services_timesheets
 msgid "Helps you manage the timesheets."
 msgstr ""
@@ -15136,26 +15473,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_events
 msgid "Helps you manage your Events."
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_appraisals
-msgid "Helps you manage your appraisals."
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_approvals
-msgid "Helps you manage your approvals."
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_contracts
-msgid "Helps you manage your contracts."
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_employees
-msgid "Helps you manage your employees."
 msgstr ""
 
 #. module: base
@@ -15181,12 +15498,7 @@ msgstr ""
 #: model:ir.module.category,description:base.module_category_marketing_email_marketing
 msgid ""
 "Helps you manage your mass mailing to design\n"
-"professional emails and reuse templates."
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_payroll
-msgid "Helps you manage your payrolls."
+"    professional emails and reuse templates."
 msgstr ""
 
 #. module: base
@@ -15209,18 +15521,8 @@ msgid "Helps you manage your quality alerts and quality checks."
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_recruitment
-msgid "Helps you manage your recruitments."
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,description:base.module_category_marketing_surveys
 msgid "Helps you manage your survey for review of different-different users."
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,description:base.module_category_human_resources_time_off
-msgid "Helps you manage your time off."
 msgstr ""
 
 #. module: base
@@ -15364,7 +15666,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_I
-msgid "I ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
+msgid "I - ACCOMMODATION AND FOOD SERVICE ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -16188,6 +16490,11 @@ msgid "Integrate your POS with a Six payment terminal"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_stripe
+msgid "Integrate your POS with a Stripe payment terminal"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
 msgid "Integrate your POS with an Adyen payment terminal"
 msgstr ""
@@ -16620,7 +16927,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
-msgid "J INFORMATION AND COMMUNICATION"
+msgid "J - INFORMATION AND COMMUNICATION"
 msgstr ""
 
 #. module: base
@@ -16666,7 +16973,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
-msgid "K FINANCIAL AND INSURANCE ACTIVITIES"
+msgid "K - FINANCIAL AND INSURANCE ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -16713,6 +17020,26 @@ msgid "Kenya"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke
+msgid "Kenya - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_reports
+msgid "Kenya - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll
+msgid "Kenya - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
+msgid "Kenya - Payroll with Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__key
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__key
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_show__key
@@ -16733,6 +17060,17 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ki
 msgid "Kiribati"
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_productivity_knowledge
+#: model:ir.module.module,shortdesc:base.module_knowledge
+msgid "Knowledge"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_knowledge
+msgid "Knowledge Website"
 msgstr ""
 
 #. module: base
@@ -16757,7 +17095,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_L
-msgid "L REAL ESTATE ACTIVITIES"
+msgid "L - REAL ESTATE ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -16806,6 +17144,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_landed_costs
 msgid "Landed Costs On MO"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_mrp_subonctracting_landed_costs
+msgid "Landed Costs With Subcontracting order"
 msgstr ""
 
 #. module: base
@@ -17379,6 +17722,11 @@ msgid "Link module between point_of_sale and sale_product_configurator"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_hr_restaurant
+msgid "Link module between pos_hr and pos_restaurant"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "List of contact fields to display in the widget"
@@ -17442,6 +17790,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations
+#: model:ir.module.category,name:base.module_category_localization
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
 msgstr ""
@@ -17508,11 +17857,6 @@ msgid "Luxembourg - Accounting Reports"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_lu_reports_annual_vat
-msgid "Luxembourg - Annual VAT Report"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_hr_payroll
 msgid "Luxembourg - Payroll"
 msgstr ""
@@ -17524,7 +17868,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
-msgid "M PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
+msgid "M - PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -17856,6 +18200,21 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_booth_sale
 msgid "Manage event booths sale"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_attendance
+msgid "Manage extra hours for your hourly paid employees for belgian payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_attendance
+msgid "Manage extra hours for your hourly paid employees using attendance"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_planning
+msgid "Manage extra hours for your hourly paid employees using planning"
 msgstr ""
 
 #. module: base
@@ -18719,7 +19078,6 @@ msgid "Montserrat"
 msgstr ""
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "More languages"
@@ -18794,7 +19152,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
-msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
+msgid "N - ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -19276,7 +19634,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
-msgid "O PUBLIC ADMINISTRATION AND DEFENCE;COMPULSORY SOCIAL SECURITY"
+msgid "O - PUBLIC ADMINISTRATION AND DEFENCE; COMPULSORY SOCIAL SECURITY"
 msgstr ""
 
 #. module: base
@@ -20420,11 +20778,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
-msgid ""
-"Odoo is unable to merge the PDFs attached to the following records:\n"
-"%s\n"
-"\n"
-"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgid "Odoo is unable to merge the generated PDFs."
 msgstr ""
 
 #. module: base
@@ -20477,6 +20831,11 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_picking
+msgid "On site Payment & Picking"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_sale_stock_margin
 msgid ""
 "Once the delivery is validated, update the cost on the SO to have an exact "
@@ -20489,12 +20848,6 @@ msgstr ""
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
-msgstr ""
-
-#. module: base
-#: code:addons/base/models/ir_actions_report.py:0
-#, python-format
-msgid "One of the documents you are trying to merge is encrypted"
 msgstr ""
 
 #. module: base
@@ -21016,7 +21369,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
-msgid "P EDUCATION"
+msgid "P - EDUCATION"
 msgstr ""
 
 #. module: base
@@ -21073,6 +21426,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
 msgid "POS Six"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_stripe
+msgid "POS Stripe"
 msgstr ""
 
 #. module: base
@@ -21381,6 +21739,11 @@ msgid "Payment Acquirer: Buckaroo Implementation"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_flutterwave
+msgid "Payment Acquirer: Flutterwave"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_payment_mollie
 msgid "Payment Acquirer: Mollie Implementation"
 msgstr ""
@@ -21445,6 +21808,16 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_attendance
+msgid "Payroll - Attendance"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_planning
+msgid "Payroll - Planning"
 msgstr ""
 
 #. module: base
@@ -21615,13 +21988,14 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_sales_point_of_sale
-msgid "Point Of Sale"
+#: model:ir.module.module,shortdesc:base.module_pos_hr_restaurant
+msgid "PoS HR Restaurant"
 msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
+#: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
 msgstr ""
@@ -21711,6 +22085,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_relation__name
 msgid "PostgreSQL table name implementing a many2many relation."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_qweb_fields.py:0
+#, python-format
+msgid "Precision Digits"
 msgstr ""
 
 #. module: base
@@ -21811,6 +22191,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron__priority
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__sequence
 msgid "Priority"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_privacy_lookup
+msgid "Privacy"
 msgstr ""
 
 #. module: base
@@ -22257,6 +22642,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_knowledge
+msgid "Publish your articles"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_customer
 msgid "Publish your customer references"
 msgstr ""
@@ -22374,7 +22764,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
-msgid "Q HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
+msgid "Q - HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -22592,7 +22982,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
-msgid "R ARTS, ENTERTAINMENT AND RECREATION"
+msgid "R - ARTS, ENTERTAINMENT AND RECREATION"
 msgstr ""
 
 #. module: base
@@ -23202,7 +23592,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_S
-msgid "S OTHER SERVICE ACTIVITIES"
+msgid "S - OTHER SERVICE ACTIVITIES"
 msgstr ""
 
 #. module: base
@@ -23852,6 +24242,31 @@ msgid "Sell event tickets online"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_renting
+msgid "Sell rental products on your eCommerce"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_sale_renting_product_configurator
+msgid "Sell rental products on your eCommerce and manage Product Configurator"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_sale_stock_renting
+msgid "Sell rental products on your eCommerce and manage stock"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_sale_renting_comparison
+msgid "Sell rental products on your eCommerce from Comparison page"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_sale_renting_wishlist
+msgid "Sell rental products on your eCommerce from Wishlist"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
 msgid "Sell your courses online"
 msgstr ""
@@ -24226,6 +24641,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
 msgid "Sign Employment Contracts"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_documents_project_sign
+msgid "Sign documents attached to tasks"
 msgstr ""
 
 #. module: base
@@ -24982,7 +25402,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_T
 msgid ""
-"T ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS;UNDIFFERENTIATED GOODS- AND "
+"T - ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS; UNDIFFERENTIATED GOODS- AND "
 "SERVICES-PRODUCING ACTIVITIES OF HOUSEHOLDS FOR OWN USE"
 msgstr ""
 
@@ -25038,6 +25458,11 @@ msgid "Taiwan"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tw
+msgid "Taiwan - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__tajawal
 msgid "Tajawal"
 msgstr ""
@@ -25087,6 +25512,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
+#: model:ir.model.fields,field_description:base.field_res_partner__vat
+#: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
 msgstr ""
 
@@ -25203,6 +25630,11 @@ msgid "Test Discuss (full)"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_test_discuss_full_enterprise
+msgid "Test Discuss Full Enterprise"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_crm_full
 msgid "Test Full Crm Flow"
 msgstr ""
@@ -25255,6 +25687,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_test_data_cleaning
 msgid "Test Suite for Data Cleaning"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_discuss_full_enterprise
+msgid "Test Suite for Discuss Enterprise"
 msgstr ""
 
 #. module: base
@@ -25787,7 +26224,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid ""
-"The report's template '%s' is wrong, please contact your administrator. \n"
+"The report's template %r is wrong, please contact your administrator. \n"
 "\n"
 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname."
 msgstr ""
@@ -25867,6 +26304,14 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "The user cannot have more than one user types."
+msgstr ""
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_recruitment
+msgid ""
+"The user interacting with the application as interviewer don't need any "
+"specific access. They'll have access thanks to their interviewer "
+"assignation."
 msgstr ""
 
 #. module: base
@@ -26204,6 +26649,14 @@ msgid ""
 "  * a cohort analysis on attendees;\n"
 "  * a gantt view on events;\n"
 "\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_event_sale_dashboard
+msgid ""
+"This module helps for analyzing revenues from events.\n"
+"For that purpose it adds a dashboard view to the revenues report\n"
 "    "
 msgstr ""
 
@@ -26609,7 +27062,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
-msgid "Transportation"
+msgid "Transportation/Logistics"
 msgstr ""
 
 #. module: base
@@ -26756,7 +27209,7 @@ msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
-msgid "U ACTIVITIES OF EXTRA TERRITORIAL ORGANISATIONS AND BODIES"
+msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr ""
 
 #. module: base
@@ -27193,6 +27646,11 @@ msgid "Use IoT devices in delivery operations"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_appointment_sms
+msgid "Use SMS reminders for appointment meetings"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner__barcode
 msgid "Use a barcode to identify this contact."
 msgstr ""
@@ -27461,12 +27919,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner__vat
-#: model:ir.model.fields,field_description:base.field_res_users__vat
-msgid "VAT/Tax ID"
 msgstr ""
 
 #. module: base
@@ -28141,6 +28593,11 @@ msgid "Work Entries"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_attendance
+msgid "Work Entries - Attendance"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
 msgid "Work Entries - Contract"
 msgstr ""
@@ -28148,6 +28605,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_enterprise
 msgid "Work Entries - Contract Enterprise"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning
+msgid "Work Entries - Planning"
 msgstr ""
 
 #. module: base
@@ -28764,6 +29226,31 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
 msgid "eCommerce Delivery"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_renting
+msgid "eCommerce Rental"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_renting_comparison
+msgid "eCommerce Rental with Comparison"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_renting_product_configurator
+msgid "eCommerce Rental with Product Configurator"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_stock_renting
+msgid "eCommerce Rental with Stock Management"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_renting_wishlist
+msgid "eCommerce Rental with Wishlist"
 msgstr ""
 
 #. module: base

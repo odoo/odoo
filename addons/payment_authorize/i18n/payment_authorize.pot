@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
-"PO-Revision-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-06-09 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -121,6 +121,14 @@ msgstr ""
 msgid ""
 "Could not fetch merchant details:\n"
 "%s"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"Could not retrieve the transaction details. (error code: %s; error_details: "
+"%s)"
 msgstr ""
 
 #. module: payment_authorize
@@ -266,6 +274,13 @@ msgstr ""
 msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The transaction is not in a status to be refunded. (status: %s, details: %s)"
 msgstr ""
 
 #. module: payment_authorize
