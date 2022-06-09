@@ -7,7 +7,7 @@ export const iapNotificationService = {
     dependencies: ["notification"],
 
     start(env, { notification }) {
-        env.bus.on("WEB_CLIENT_READY", null, async () => {
+        env.bus.addEventListener("WEB_CLIENT_READY", async () => {
             const legacyEnv = owl.Component.env;
             legacyEnv.services.bus_service.onNotification(this, (notifications) => {
                 for (const { payload, type } of notifications) {

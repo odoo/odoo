@@ -21,7 +21,7 @@
                 this.targetsCallbacks.set(target, []);
             }
             this.targetsCallbacks.get(target).push({ type, callback: _callback });
-            return this.addEventListener(type, callback);
+            return this.addEventListener(type, _callback);
         }
         off(type, target) {
             if (!target) {

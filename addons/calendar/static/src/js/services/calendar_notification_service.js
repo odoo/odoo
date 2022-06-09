@@ -14,7 +14,7 @@ export const calendarNotificationService = {
         let nextCalendarNotifTimeout = null;
         const displayedNotifications = new Set();
 
-        env.bus.on("WEB_CLIENT_READY", null, async () => {
+        env.bus.addEventListener("WEB_CLIENT_READY", async () => {
             const legacyEnv = Component.env;
             legacyEnv.services.bus_service.onNotification(this, (notifications) => {
                 for (const { payload, type } of notifications) {
