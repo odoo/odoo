@@ -5,6 +5,7 @@ import { _t } from '@web/core/l10n/translation';
 
 import { useWowlService } from '@web/legacy/utils';
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
+import { setEditableWindow } from 'web_editor.utils';
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -82,14 +83,20 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                     this.widget.odooEditor.observerActive();
                 }});
                 this.props.wysiwygReady();
+                // Set utils functions' editable window to the current iframe's window.
+                // This allows those function to access the correct styles definitions,
+                // document element, etc.
+                setEditableWindow(this.websiteService.contentWindow);
             };
 
             initWysiwyg();
 
             return () => {
                 this.$editable.off('click.odoo-website-editor', '*');
+                setEditableWindow(window);
             };
         }, () => []);
+
     }
     /**
      * @override
