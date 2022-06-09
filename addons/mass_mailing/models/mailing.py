@@ -53,7 +53,7 @@ class MassMailing(models.Model):
             })
 
         if 'contact_list_ids' in fields_list and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
-            if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
+            if vals.get('mailing_model_id') == self.env['ir.model']._get_id('mailing.list'):
                 mailing_list = self.env['mailing.list'].search([], limit=2)
                 if len(mailing_list) == 1:
                     vals['contact_list_ids'] = [(6, 0, [mailing_list.id])]
@@ -154,6 +154,9 @@ class MassMailing(models.Model):
     mailing_model_name = fields.Char(
         string='Recipients Model Name',
         related='mailing_model_id.model', readonly=True, related_sudo=True)
+    mailing_on_mailing_list = fields.Boolean(
+        string='Based on Mailing Lists',
+        compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
         compute='_compute_mailing_domain', readonly=False, store=True)
@@ -382,6 +385,12 @@ class MassMailing(models.Model):
     def _compute_mailing_model_real(self):
         for mailing in self:
             mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model == 'mailing.list' else mailing.mailing_model_id.model
+
+    @api.depends('mailing_model_id')
+    def _compute_mailing_on_mailing_list(self):
+        mailing_list_model_id = self.env['ir.model']._get('mailing.list')
+        self.mailing_on_mailing_list = False
+        self.filtered(lambda m: m.mailing_model_id == mailing_list_model_id).mailing_on_mailing_list = True
 
     @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
     def _compute_mailing_domain(self):
