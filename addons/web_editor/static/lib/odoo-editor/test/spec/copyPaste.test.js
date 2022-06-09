@@ -26,70 +26,90 @@ describe('Copy and paste', () => {
     describe('Html Paste cleaning', () => {
         describe('whitelist', async () => {
             it('should keep whitelisted Tags tag', async () => {
+                for (const node of CLIPBOARD_WHITELISTS.nodes) {
+                    if (!['TABLE', 'THEAD', 'TH', 'TBODY', 'TR', 'TD', 'IMG', 'BR', 'LI', '.fa'].includes(node)) {
+                        const isInline = ['I', 'B', 'U', 'EM', 'STRONG', 'IMG', 'BR', 'A'].includes(node)
+                        const html = isInline ? `a<${node.toLowerCase()}>b</${node.toLowerCase()}>c` : `a</p><${node.toLowerCase()}>b</${node.toLowerCase()}><p>c`;
+
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>123[]4</p>',
+                            stepFunction: async editor => {
+                                await pasteHtml(editor, `a<${node.toLowerCase()}>b</${node.toLowerCase()}>c`);
+                            },
+                            contentAfter: '<p>123' + html + '[]4</p>',
+                        });
+                    }
+                }
+
+            });
+            it('should keep whitelisted Tags tag (2)', async () => {
                 const tagsToKeep = [
                     'a<img src="http://www.imgurl.com/img.jpg">d', // img tag
                     'a<br>b' // br tags
                 ];
 
-                for (const node of CLIPBOARD_WHITELISTS.nodes) {
-                    if (!['TABLE', 'THEAD', 'TH', 'TBODY', 'TR', 'TD', 'IMG', 'BR', 'LI', '.fa'].includes(node)) {
-                        tagsToKeep.push(`a<${node.toLowerCase()}>b</${node.toLowerCase()}>c`);
-                    }
-                }
-
                 for (const tagToKeep of tagsToKeep) {
                     await testEditor(BasicEditor, {
-                        contentBefore: '123[]',
+                        contentBefore: '<p>123[]</p>',
                         stepFunction: async editor => {
                             await pasteHtml(editor, tagToKeep);
                         },
-                        contentAfter: '123' + tagToKeep + '[]',
+                        contentAfter: '<p>123' + tagToKeep + '[]</p>',
                     });
                 }
             });
             it('should keep tables Tags tag and add classes', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '123[]',
+                    contentBefore: '<p>123[]</p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, 'a<table><thead><tr><th>h</th></tr></thead><tbody><tr><td>b</td></tr></tbody></table>d');
                     },
-                    contentAfter: '123a<table class="table table-bordered"><thead><tr><th>h</th></tr></thead><tbody><tr><td>b</td></tr></tbody></table>d[]',
+                    contentAfter: '<p>123a</p><table class="table table-bordered"><thead><tr><th>h</th></tr></thead><tbody><tr><td>b</td></tr></tbody></table><p>d[]</p>',
                 });
             });
             it('should not keep span', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '123[]',
+                    contentBefore: '<p>123[]</p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, 'a<span>bc</span>d');
                     },
-                    contentAfter: '123abcd[]',
+                    contentAfter: '<p>123abcd[]</p>',
                 });
             });
             it('should not keep orphan LI', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '123[]',
+                    contentBefore: '<p>123[]</p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, 'a<li>bc</li>d');
                     },
-                    contentAfter: '123a<p>bc</p>d[]',
+                    contentAfter: '<p>123a</p><p>bc</p><p>d[]</p>',
                 });
             });
             it('should keep LI in UL', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '123[]',
+                    contentBefore: '<p>123[]</p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, 'a<ul><li>bc</li></ul>d');
                     },
-                    contentAfter: '123a<ul><li>bc</li></ul>d[]',
+                    contentAfter: '<p>123a</p><ul><li>bc</li></ul><p>d[]</p>',
+                });
+            });
+            it('should keep P and B and not span', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>123[]xx</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, 'a<p>bc</p>d<span>e</span>f<b>g</b>h');
+                    },
+                    contentAfter: '<p>123a</p><p>bc</p><p>def<b>g</b>h[]xx</p>',
                 });
             });
             it('should keep styled span', async () => {
                 await testEditor(BasicEditor, {
-                    contentBefore: '123[]',
+                    contentBefore: '<p>123[]</p>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, 'a<span style="text-decoration: underline">bc</span>d');
                     },
-                    contentAfter: '123a<span style="text-decoration: underline">bc</span>d[]',
+                    contentAfter: '<p>123a<span style="text-decoration: underline">bc</span>d[]</p>',
                 });
             });
         });
