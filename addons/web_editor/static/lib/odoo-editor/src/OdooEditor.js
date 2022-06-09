@@ -49,6 +49,8 @@ import {
     unwrapContents,
     peek,
     rightPos,
+    prepareUpdate,
+    boundariesOut,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1333,7 +1335,9 @@ export class OdooEditor extends EventTarget {
             closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
         let next = nextLeaf(end, this.editable);
         const splitEndTd = closestElement(end, 'td') && end.nextSibling;
+        const restore = prepareUpdate(...boundariesOut(range.startContainer), ...boundariesOut(range.endContainer));
         const contents = range.extractContents();
+        restore();
         setSelection(start, nodeSize(start));
         range = getDeepRange(this.editable, { sel });
         // Restore unremovables removed by extractContents.
