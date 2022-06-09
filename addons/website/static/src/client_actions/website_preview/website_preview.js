@@ -9,7 +9,10 @@ export class WebsitePreview extends Component {
     setup() {
         this.websiteService = useService('website');
 
+        this.iframeFallbackUrl = '/website/iframefallback';
+
         this.iframe = useRef('iframe');
+        this.iframefallback = useRef('iframefallback');
 
         onWillStart(async () => {
             await this.websiteService.fetchWebsites();
@@ -68,6 +71,14 @@ export class WebsitePreview extends Component {
         // the iframe's url (it is clearer for the user).
         this.currentUrl = this.iframe.el.contentDocument.location.href;
         history.replaceState({}, this.props.action.display_name, this.currentUrl);
+
+        // Before leaving the iframe, its content is replicated on an
+        // underlying iframe, to avoid for white flashes (visible on
+        // Chrome Windows/Linux).
+        this.iframe.el.contentWindow.addEventListener('beforeunload', () => {
+            this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+            $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+        });
 
         // The clicks on the iframe are listened, so that links with external
         // redirections can be opened in the top window.
