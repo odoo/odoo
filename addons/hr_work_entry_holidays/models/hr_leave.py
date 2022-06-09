@@ -7,7 +7,7 @@ from datetime import datetime, date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import AND
-
+from odoo.tools import format_date
 
 class HrLeaveType(models.Model):
     _inherit = 'hr.leave.type'
@@ -79,10 +79,25 @@ class HrLeave(models.Model):
         for holiday in self.filtered('employee_id'):
             contracts = holiday._get_overlapping_contracts()
             if len(contracts.resource_calendar_id) > 1:
+                state_labels = {e[0]: e[1] for e in contracts._fields['state']._description_selection(self.env)}
                 raise ValidationError(
-                    _('A leave cannot be set across multiple contracts with different working schedules.') + '\n%s\n%s' % (
-                        ', '.join(contracts.mapped('name')),
-                        holiday.display_name))
+                    _("""A leave cannot be set across multiple contracts with different working schedules.
+
+Please create one time off for each contract.
+
+Time off:
+%s
+
+Contracts:
+%s""",
+                      holiday.display_name,
+                      '\n'.join(_(
+                          "Contract %s from %s to %s, status: %s",
+                          contract.name,
+                          format_date(self.env, contract.date_start),
+                          format_date(self.env, contract.date_start) if contract.date_end else _("undefined"),
+                          state_labels[contract.state]
+                      ) for contract in contracts)))
 
     def _cancel_work_entry_conflict(self):
         """
