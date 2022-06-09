@@ -138,6 +138,7 @@ class Http(models.AbstractModel):
         if getattr(response, 'status_code', 0) != 200 or request.httprequest.headers.get('X-Disable-Tracking') == '1':
             return False
 
+        Website = request.env['website']
         template = False
         if hasattr(response, '_cached_page'):
             website_page, template = response._cached_page, response._cached_template
@@ -146,8 +147,8 @@ class Http(models.AbstractModel):
             website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
             template = response.qcontext.get('response_template')
 
-        view = template and request.env['website'].get_template(template)
-        if view and view.track:
+        view = template and Website.get_template(template)
+        if view and view.id in Website._get_cache_tracked_view_ids():
             request.env['website.visitor']._handle_webpage_dispatch(website_page)
 
         return False

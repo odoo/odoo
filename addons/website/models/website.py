@@ -1083,6 +1083,12 @@ class Website(models.Model):
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
         return view
 
+    @tools.ormcache()
+    def _get_cache_tracked_view_ids(self):
+        return self.env['ir.ui.view'].with_context(active_test=False).sudo().search(
+            [('track', '=', True)]
+        ).ids
+
     @tools.ormcache_context(keys=('website_id',))
     def _cache_customize_show_views(self):
         views = self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('customize_show', '=', True)])
