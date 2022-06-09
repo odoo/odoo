@@ -80,6 +80,24 @@ class TestLangUrl(HttpCase):
             doc = lxml.html.document_fromstring(r.text)
             self.assertEqual(doc.get('lang'), 'fr-FR', "Ensure contactus did not soft crash + loaded in correct lang")
 
+    def test_05_invalid_ipv6_url(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<a id="foo" href="http://]">Invalid IP V6</a>',
+            'key': 'test.invalid_ipv6_view',
+        })
+
+        self.env['website.page'].create({
+            'view_id': view.id,
+            'url': '/page_invalid_ipv6_url',
+            'is_published': True,
+        })
+        r = self.url_open('/page_invalid_ipv6_url')
+        self.assertEqual(r.status_code, 200, 'The page must still load despite the invalid link')
+        doc = lxml.html.document_fromstring(r.text)
+        [anchor] = doc.xpath('//a[@id="foo"]')
+        self.assertEqual(anchor.get('href'), 'http://]', 'The invalid IP URL must be left untouched')
 
 
 @tagged('-at_install', 'post_install')
