@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
-"PO-Revision-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2022-06-09 14:06+0000\n"
+"PO-Revision-Date: 2022-06-09 14:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,11 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>Add Questions to this Survey"
 msgstr ""
 
 #. module: website_slides_survey
@@ -130,6 +135,13 @@ msgid "Add Certification"
 msgstr ""
 
 #. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#, python-format
+msgid "Add Questions to this Survey"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
 msgid "Add a new certification"
 msgstr ""
@@ -152,7 +164,10 @@ msgid "Avg Score (%)"
 msgstr ""
 
 #. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, python-format
 msgid "Begin Certification"
 msgstr ""
 
@@ -215,13 +230,6 @@ msgid "Certification attempts"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
-#: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
-#, python-format
-msgid "Certification created"
-msgstr ""
-
-#. module: website_slides_survey
 #: model:mail.template,name:website_slides_survey.mail_template_user_input_certification_failed
 msgid "Certification failed email"
 msgstr ""
@@ -243,6 +251,20 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_sidebar_done_button
+msgid "Certifications you have passed cannot be marked as not done"
+msgstr ""
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, python-format
+msgid "Congratulations, you passed the Certification!"
 msgstr ""
 
 #. module: website_slides_survey
@@ -277,15 +299,6 @@ msgid "Download certification"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
-#: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
-#, python-format
-msgid ""
-"Follow this link to add questions to your certification. <a href=\"%s\">Edit"
-" certification</a>"
-msgstr ""
-
-#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid "Go back to course"
 msgstr ""
@@ -303,6 +316,11 @@ msgid "Manage Certifications"
 msgstr ""
 
 #. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Mark To Do"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "No certifications yet!"
 msgstr ""
@@ -315,9 +333,9 @@ msgstr ""
 
 #. module: website_slides_survey
 #. openerp-web
-#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
-msgid "Pass Certification"
+msgid "Please select a certification."
 msgstr ""
 
 #. module: website_slides_survey
@@ -378,6 +396,11 @@ msgid "Survey User Input"
 msgstr ""
 
 #. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Take Quiz"
+msgstr ""
+
+#. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -414,6 +437,11 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
+msgid "Title"
 msgstr ""
 
 #. module: website_slides_survey

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-06-09 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -221,13 +221,13 @@ msgid "<span class=\"o_stat_text\">OEE</span>"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "<span class=\"o_stat_text\">Performance</span>"
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span class=\"o_stat_text\">Operations<br/>Performance</span>"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-msgid "<span class=\"o_stat_text\">Routing<br/>Performance</span>"
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "<span class=\"o_stat_text\">Performance</span>"
 msgstr ""
 
 #. module: mrp
@@ -518,6 +518,12 @@ msgid "Allocation Report for Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
+msgid "Allow Work Order Dependencies"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
@@ -651,6 +657,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
 msgid "Attachments Count"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_variant_attributes
+msgid "Attribute Values"
 msgstr ""
 
 #. module: mrp
@@ -834,6 +845,13 @@ msgid "Blocked"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__blocked_by_workorder_ids
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "Blocked By"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__blocked_time
 msgid "Blocked Time"
 msgstr ""
@@ -846,6 +864,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
 msgid "Blocking Reason"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
+msgid "Blocks"
 msgstr ""
 
 #. module: mrp
@@ -985,8 +1009,14 @@ msgid "Cannot delete a manufacturing order in done state."
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__default_capacity
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__capacity
 msgid "Capacity"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_positive_capacity
+msgid "Capacity should be a positive number."
 msgstr ""
 
 #. module: mrp
@@ -1289,6 +1319,14 @@ msgid "Create a new work orders performance"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
+#: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
+msgid ""
+"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
 msgstr ""
@@ -1296,6 +1334,16 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
+msgid ""
+"Create operation level dependencies that will influence both planning and "
+"the status of work orders upon MO confirmation. If this feature is ticked, "
+"and nothing is specified, Odoo will assume that all operations can be "
+"started simultaneously."
 msgstr ""
 
 #. module: mrp
@@ -1322,6 +1370,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__create_uid
@@ -1350,6 +1399,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__create_date
@@ -1421,6 +1471,12 @@ msgid "Date when the MO has been close"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product__days_to_prepare_mo
+#: model:ir.model.fields,field_description:mrp.field_product_template__days_to_prepare_mo
+msgid "Days to prepare Manufacturing Order"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
 msgid "Deadline"
 msgstr ""
@@ -1436,7 +1492,16 @@ msgid "Default Manufacturing Lead Time"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
+msgid ""
+"Default number of pieces that can be produced in parallel. In case the work "
+"center has a capacity of 5 and you have to produce 10 units on your work "
+"order, the usual operation time will be multiplied by 2."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
 
@@ -1547,6 +1612,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__display_name
@@ -1602,6 +1668,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_unbuild__state__draft
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Draft"
 msgstr ""
 
@@ -1993,6 +2060,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__id
@@ -2118,7 +2186,7 @@ msgid "Import Template for Bills of Materials"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
@@ -2214,6 +2282,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_planned
 msgid "Its Operations are Planned"
 msgstr ""
 
@@ -2254,6 +2323,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter____last_update
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type____last_update
@@ -2282,6 +2352,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__write_uid
@@ -2310,6 +2381,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__write_date
@@ -2653,6 +2725,11 @@ msgid "Manufacturing Reference"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
+msgid "Manufacturing Visibility Days"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
@@ -2831,11 +2908,6 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__next_work_order_id
-msgid "Next Work Order"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
@@ -2979,11 +3051,8 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
-msgid ""
-"Number of pieces that can be produced in parallel. In case the work center "
-"has a capacity of 5 and you have to produce 10 units on your work order, the"
-" usual operation time will be multiplied by 2."
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__capacity
+msgid "Number of pieces that can be produced in parallel for this product."
 msgstr ""
 
 #. module: mrp
@@ -3034,8 +3103,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__operation_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Operation"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
+msgid "Operation Dependencies"
 msgstr ""
 
 #. module: mrp
@@ -3093,6 +3169,16 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Operations Search Filters"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
+msgid "Operations that cannot start before this operation is completed."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
+msgid "Operations that need to be completed before this operation can start."
 msgstr ""
 
 #. module: mrp
@@ -3408,6 +3494,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -3422,6 +3509,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Product Attachments"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity_ids
+msgid "Product Capacities"
 msgstr ""
 
 #. module: mrp
@@ -3475,6 +3567,11 @@ msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
+msgid "Product UoM"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
 msgid "Product Variant"
 msgstr ""
@@ -3483,6 +3580,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_product_variant_action
 #: model:ir.ui.menu,name:mrp.product_variant_mrp
 msgid "Product Variants"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_unique_product
+msgid "Product capacity should be unique for each workcenter."
 msgstr ""
 
 #. module: mrp
@@ -3971,6 +4073,13 @@ msgid "Set duration manually"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid ""
+"Set the order that work orders should be processed in. Activate the feature "
+"within each BoM's Miscellaneous tab"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -4090,6 +4199,17 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
 msgid "Source Location"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Specific Capacities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
+msgid ""
+"Specific number of pieces that can be produced in parallel per product."
 msgstr ""
 
 #. module: mrp
@@ -4957,6 +5077,11 @@ msgid "Url"
 msgstr ""
 
 #. module: mrp
+#: model:res.groups,name:mrp.group_mrp_workorder_dependencies
+msgid "Use Operation Dependencies"
+msgstr ""
+
+#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
 msgstr ""
@@ -5006,8 +5131,18 @@ msgid "Very High"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "View WorkOrder"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid "View and allocate manufactured quantities."
+msgid "View and allocate manufactured quantities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
+msgid "Visibility Days applied on the manufacturing routes."
 msgstr ""
 
 #. module: mrp
@@ -5047,6 +5182,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__warehouse_id
 msgid "Warehouse"
 msgstr ""
 
@@ -5058,6 +5194,7 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
@@ -5159,6 +5296,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__name
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__workcenter_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
@@ -5167,6 +5305,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Work Center"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_capacity
+msgid "Work Center Capacity"
 msgstr ""
 
 #. module: mrp
@@ -5221,6 +5364,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__workorder_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Work Order"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
+msgid "Work Order Dependencies"
 msgstr ""
 
 #. module: mrp
@@ -5446,6 +5594,13 @@ msgid "You cannot create a new Bill of Material from here."
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_routing.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot create cyclic dependency."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
@@ -5623,6 +5778,7 @@ msgid "days"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "expected duration"
 msgstr ""
@@ -5648,6 +5804,12 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "merged"
 msgstr ""
 
 #. module: mrp
@@ -5682,6 +5844,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "real duration"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "split"
 msgstr ""
 
 #. module: mrp

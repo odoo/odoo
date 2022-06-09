@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2022-06-09 14:05+0000\n"
+"PO-Revision-Date: 2022-06-09 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,11 @@ msgid ""
 "\"Damien Roberts\" <d.roberts@example.com>\n"
 "\"Rick Sanchez\" <rick_sanchez@example.com>\n"
 "victor_hugo@example.com"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_count
+msgid "# Favorite Filters"
 msgstr ""
 
 #. module: mass_mailing
@@ -156,6 +161,43 @@ msgid "<b>GET $20 OFF</b>"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-secondary\">\n"
+"                                        <i class=\"fa fa-envelope-o\"/> Contacts\n"
+"                                    </span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-secondary\">Blacklist</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-secondary\">Bounce</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-secondary\">Mailings</span>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span class=\"text-secondary\">Opt-Out</span>"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_title
 msgid "<font style=\"font-size: 42px;\">Your Title</font>"
 msgstr ""
@@ -165,6 +207,11 @@ msgstr ""
 msgid ""
 "<font style=\"font-size: 48px;\" class=\"o_default_snippet_text\">A punchy "
 "Headline</font>"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_cover
+msgid "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font>"
 msgstr ""
 
 #. module: mass_mailing
@@ -746,15 +793,15 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid ""
-"Allow the recipient to manage himself his state in the blacklist via the "
-"unsubscription page."
+"Allow the recipient to manage themselves their state in the blacklist via "
+"the unsubscription page."
 msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid ""
-"Allow the recipient to manage himself his state in the blacklist via the "
-"unsubscription page.                                 If the option is "
+"Allow the recipient to manage themselves their state in the blacklist via "
+"the unsubscription page.                                 If the option is "
 "active, the 'Blacklist Me' button is hidden on the unsubscription page."
 "                                 The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
@@ -787,22 +834,22 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "An error occurred. Please try again later or contact us."
 msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "An error occurred. Your changes have not been saved, try again later."
 msgstr ""
@@ -1346,11 +1393,6 @@ msgid "Country"
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_cover
-msgid "Cover image"
-msgstr ""
-
-#. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 #, python-format
@@ -1629,7 +1671,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
-msgid "Don't forget to send your prefered version"
+msgid "Don't forget to send your preferred version"
 msgstr ""
 
 #. module: mass_mailing
@@ -2129,6 +2171,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 #, python-format
 msgid "Import"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "Import Contacts"
 msgstr ""
 
 #. module: mass_mailing
@@ -3113,8 +3160,8 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__opt_out
 msgid ""
-"Opt out flag for a specific mailing list.This field should not be used in a "
-"view without a unique and active mailing list context."
+"Opt out flag for a specific mailing list. This field should not be used in a"
+" view without a unique and active mailing list context."
 msgstr ""
 
 #. module: mass_mailing
@@ -3479,6 +3526,13 @@ msgid "Sample Mail Wizard"
 msgstr ""
 
 #. module: mass_mailing
+#. openerp-web
+#: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
+#, python-format
+msgid "Save as Favorite Filter"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Saved by"
@@ -3621,6 +3675,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "Send Mailing"
 msgstr ""
 
 #. module: mass_mailing
@@ -3962,7 +4021,7 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "Thank you! Your feedback has been sent successfully!"
 msgstr ""
@@ -3996,8 +4055,8 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_list__is_public
 msgid ""
-"The mailing list can be accessible by recipient in the unsubscription page "
-"to allows him to update his subscription preferences."
+"The mailing list can be accessible by recipients in the subscription "
+"management page to allows them to update their preferences."
 msgstr ""
 
 #. module: mass_mailing
@@ -4166,6 +4225,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__total
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Total"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
+msgid "Total <br/>Contacts"
 msgstr ""
 
 #. module: mass_mailing
@@ -4496,6 +4560,14 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_cover
+msgid ""
+"Write one or two paragraphs describing your product, services or a specific "
+"feature.<br/> To be successful your content needs to be useful to your "
+"readers."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 msgid ""
 "Write or paste email addresses in the field below.\n"
@@ -4510,10 +4582,10 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You are not authorized to do this!"
 msgstr ""
@@ -4560,21 +4632,21 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from %s</strong>."
 msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "You have been <strong>successfully unsubscribed</strong>."
 msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid ""
 "You have been successfully <strong>added to our blacklist</strong>. You will"
@@ -4583,7 +4655,7 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid ""
 "You have been successfully <strong>removed from our blacklist</strong>. You "
@@ -4617,13 +4689,8 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_social
-msgid "Your Logo"
-msgstr ""
-
-#. module: mass_mailing
 #. openerp-web
-#: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
+#: code:addons/mass_mailing/static/src/js/mailing_portal.js:0
 #, python-format
 msgid "Your changes have been saved."
 msgstr ""
