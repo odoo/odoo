@@ -116,8 +116,8 @@ class TestMailingListMerge(MassMailCommon):
                 subscription.list_id = self.mailing_list_2
                 subscription.opt_out = False
             contact = contact_form.save()
-        self.assertEqual(contact.subscription_ids[0].unsubscription_date, datetime(2022, 1, 1, 12, 0, 0))
-        self.assertFalse(contact.subscription_ids[1].unsubscription_date)
+        self.assertEqual(contact.subscription_ids[0].opt_out_datetime, datetime(2022, 1, 1, 12, 0, 0))
+        self.assertFalse(contact.subscription_ids[1].opt_out_datetime)
 
     @users('user_marketing')
     def test_mailing_list_contact_copy_in_context_of_mailing_list(self):

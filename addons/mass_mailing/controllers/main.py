@@ -3,10 +3,11 @@
 
 import base64
 
+from datetime import timedelta
 from markupsafe import Markup, escape
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
-from odoo import _, http, tools
+from odoo import _, fields, http, tools
 from odoo.http import request, Response
 from odoo.tools import consteq
 
@@ -59,6 +60,9 @@ class MassMailController(http.Controller):
             [('email_normalized', '=', tools.email_normalize(email))]
         )
 
+    def _fetch_subscription_optouts(self):
+        return request.env['mailing.subscription.optout'].sudo().search([])
+
     def _fetch_user_information(self, email, hash_token):
         if hash_token or request.env.user._is_public():
             return email, hash_token
@@ -94,7 +98,7 @@ class MassMailController(http.Controller):
         except NotFound as e:  # avoid leaking ID existence
             raise Unauthorized() from e
 
-        if mailing_sudo.mailing_model_real == 'mailing.contact':
+        if mailing_sudo.mailing_on_mailing_list:
             return self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email_found, hash_token_found)
         return self._mailing_unsubscribe_from_document(mailing_sudo, document_id, email_found, hash_token_found)
 
@@ -120,6 +124,7 @@ class MassMailController(http.Controller):
                 self._prepare_mailing_subscription_values(
                     mailing, document_id, email, hash_token
                 ),
+                last_action='subscription_updated',
                 unsubscribed_name=lists_unsubscribed_name,
             )
         )
@@ -139,6 +144,7 @@ class MassMailController(http.Controller):
                 self._prepare_mailing_subscription_values(
                     mailing, document_id, email, hash_token
                 ),
+                last_action='blocklist_add',
                 unsubscribed_name=_('You are no longer part of our services and will not be contacted again.'),
             )
         )
@@ -148,6 +154,9 @@ class MassMailController(http.Controller):
         blocklist flows done in portal. """
         mail_blocklist = self._fetch_blocklist_record(email)
         email_normalized = tools.email_normalize(email)
+
+        # fetch optout/blacklist reasons
+        opt_out_reasons = self._fetch_subscription_optouts()
 
         # as there may be several contacts / email -> consider any opt-in overrides
         # opt-out
@@ -177,6 +186,7 @@ class MassMailController(http.Controller):
             # feedback
             'feedback_enabled': True,
             'feedback_readonly': False,
+            'opt_out_reasons': opt_out_reasons,
             # blocklist
             'blocklist_enabled': bool(
                 request.env['ir.config_parameter'].sudo().get_param(
@@ -223,12 +233,22 @@ class MassMailController(http.Controller):
         lists_to_optout._update_subscription_from_email(email_found, opt_out=True)
         lists_to_optin._update_subscription_from_email(email_found, opt_out=False)
 
-        return True
+        return len(lists_to_optout)
 
     @http.route('/mailing/feedback', type='json', auth='public', csrf=True)
     def mailing_send_feedback(self, mailing_id=None, document_id=None,
                               email=None, hash_token=None,
-                              feedback=None, **post):
+                              last_action=None,
+                              opt_out_reason_id=False, feedback=None,
+                              **post):
+        """ Feedback can be given after some actions, notably after opt-outing
+        from mailing lists or adding an email in the blocklist.
+
+        This controller tries to write the customer feedback in the most relevant
+        record. Feedback consists in two parts, the opt-out reason (based on data
+        in 'mailing.subscription.optout' model) and the feedback itself (which
+        is triggered by the optout reason 'is_feedback' fields).
+        """
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
         try:
             mailing_sudo = self._check_mailing_email_token(
@@ -240,17 +260,50 @@ class MassMailController(http.Controller):
         except (NotFound, Unauthorized):
             return 'unauthorized'
 
-        if not mailing_sudo or mailing_sudo.mailing_on_mailing_list:
-            documents_for_post = self._fetch_contacts(email_found)
-        else:
+        if not opt_out_reason_id:
+            return 'error'
+        feedback = feedback.strip() if feedback else ''
+        message = ''
+        if feedback:
+            if not request.env.user._is_public():
+                author_name = f'{request.env.user.name} ({email_found})'
+            else:
+                author_name = email_found
+            message = Markup("<p>%s<br />%s</p>") % (
+                _('Feedback from %(author_name)s', author_name=author_name),
+                feedback
+            )
+
+        # blocklist addition: opt-out and feedback linked to the mail.blacklist records
+        if last_action == 'blocklist_add':
+            mail_blocklist = self._fetch_blocklist_record(email)
+            if mail_blocklist:
+                if message:
+                    mail_blocklist._track_set_log_message(message)
+                mail_blocklist.opt_out_reason_id = opt_out_reason_id
+
+        # opt-outed from mailing lists (either from a mailing or directly from 'my')
+        # -> in that case, update recently-updated subscription records and log on
+        # contacts
+        documents_for_post = []
+        if (last_action in {'subscription_updated', 'subscription_updated_optout'} or
+            (not last_action and (not mailing_sudo or mailing_sudo.mailing_on_mailing_list))):
+            contacts = self._fetch_contacts(email_found)
+            contacts.subscription_ids.filtered(
+                lambda sub: sub.opt_out and sub.opt_out_datetime >= (fields.Datetime.now() - timedelta(minutes=10))
+            ).opt_out_reason_id = opt_out_reason_id
+            if message:
+                documents_for_post = contacts
+        # feedback coming from a mailing, without additional context information: log
+        elif mailing_sudo and message:
             documents_for_post = request.env[mailing_sudo.mailing_model_real].sudo().search(
                 [('id', '=', document_id)
             ])
+
         for document_sudo in documents_for_post:
-            document_sudo.message_post(
-                body=_("Feedback from %(email)s: %(feedback)s", email=email_found, feedback=feedback)
-            )
-        return bool(documents_for_post)
+            document_sudo.message_post(body=message)
+
+        return True
 
     @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
     def mailing_unsubscribe_placeholder_link(self, **post):

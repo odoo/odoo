@@ -42,7 +42,8 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
 
     /*
      * Triggers call to update list subscriptions. Bubble up to let parent
-     * handle returned result if necessary.
+     * handle returned result if necessary. RPC call returns number of optouted
+     * lists, used by parent widget notably to know which feedback to ask.
      */
     _onFormSend: async function (event) {
         event.preventDefault();
@@ -59,13 +60,19 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
                 mailing_id: this.customerData.mailingId,
             }
         ).then((result) => {
-            if (result === true) {
+            const has_error = ['error', 'unauthorized'].includes(result);
+            let callKey;
+            if (has_error) {
+                callKey = 'error';
+            }
+            else {
+                callKey = (parseInt(result) > 0) ? 'subscription_updated_optout': 'subscription_updated';
                 this._updateDisplay(mailingListOptinIds);
             }
-            this._updateInfo(result === true ? 'subscription_updated' : 'error');
+            this._updateInfo(has_error ? 'error' : 'subscription_updated');
             this.trigger_up(
                 'subscription_updated',
-                {'callKey': result === true ? 'subscription_updated' : result},
+                {'callKey': callKey},
             );
         });
     },
@@ -98,9 +105,11 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
         if (isReadonly) {
             formInputNodes.forEach(node => {node.setAttribute('disabled', 'disabled')});
             formButtonNode.setAttribute('disabled', 'disabled');
+            formButtonNode.classList.add('d-none');
         } else {
             formInputNodes.forEach(node => {node.removeAttribute('disabled')});
             formButtonNode.removeAttribute('disabled');
+            formButtonNode.classList.remove('d-none');
         }
     },
 

@@ -24,6 +24,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
         }, {
             content: "Feedback area is not displayed (nothing done, no feedback required)",
             trigger: "div#o_mailing_portal_subscription:not(textarea)",
+            extra_trigger: "div#o_mailing_portal_subscription:not(fieldset)",
         }, {
             content: "List3: come back (choose to opt-in instead of opt-out)",
             trigger: "ul#o_mailing_subscription_form_lists input[title='List3']",
@@ -40,8 +41,21 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
             content: "Confirmation changes are done",
             trigger: "div#o_mailing_subscription_update_info span:contains('Membership updated')",
         }, {
-            content: "Should make feedback area appear",
-            trigger: "div#o_mailing_subscription_info textarea",
+            content: "Should make feedback reasons choice appear (feedback still not displayed, linked to reasons)",
+            trigger: "div#o_mailing_portal_subscription fieldset",
+            extra_trigger: "div#o_mailing_portal_subscription:not(textarea)",
+        }, {
+            content: "Choose first reason, which should not display feedback (see data)",
+            trigger: "fieldset input.o_mailing_subscription_opt_out_reason:first",
+        }, {
+            content: "Feedback textarea not displayed (see data)",
+            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+        }, {
+            content: "Choose 'Other' reason",
+            trigger: "fieldset label:contains('Other')",
+        }, {
+            content: "This should display the Feedback area",
+            trigger: "div#o_mailing_portal_subscription textarea",
             isCheck: true,
         }, {
             content: "Write feedback reason",
@@ -54,22 +68,41 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
             content: "Confirmation feedback is sent",
             trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
         }, {
+            content: "Once sent feedback area is readonly",
+            trigger: "fieldset input.o_mailing_subscription_opt_out_reason[disabled]",
+            extra_trigger: "textarea[disabled]",
+            isCheck: true,
+        }, {
             content: "Now exclude me",
             trigger: "div#button_blocklist_add",
         }, {
             content: "Confirmation exclusion is done",
             trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
         }, {
-            content: "This should disable the 'Update my subscriptions' button",
-            trigger: "button#button_form_send[disabled]",
+            content: "This should disable the 'Update my subscriptions' (Apply changes) button",
+            trigger: "div#o_mailing_subscription_blocklist:not(button#button_form_send)",
             isCheck: true,
-        },  {
+        }, {
+            content: "This should enabled Feedback again",
+            trigger: "div#o_mailing_portal_subscription textarea",
+            isCheck: true,
+        }, {
             content: "Display warning about mailing lists",
             trigger: "div#o_mailing_subscription_form_blocklisted p:contains('You will not receive any news from those mailing lists you are a member of')",
         }, {
             content: "Warning should contain reference to memberships",
             trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List2')",
             extra_trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List3')",
-        },
+        }, {
+            content: "Give a reason for blocklist (first one)",
+            trigger: "fieldset input.o_mailing_subscription_opt_out_reason:first",
+        }, {
+            content: "Hit Send",
+            trigger: "button#button_feedback",
+        }, {
+            content: "Confirmation feedback is sent",
+            trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
+            isCheck: true,
+        }
     ],
 });
