@@ -436,8 +436,8 @@ registerModel({
         user: one('User', {
             inverse: 'partner',
         }),
-        volumeSetting: one('VolumeSetting', {
-            inverse: 'partner',
+        volumeSetting: one('res.users.settings.volumes', {
+            inverse: 'partner_id',
         }),
     },
 });

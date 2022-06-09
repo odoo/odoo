@@ -105,13 +105,7 @@ registerModel({
             });
             // init mail user settings
             if (current_user_settings) {
-                this._initResUsersSettings(current_user_settings);
-            } else {
-                this.messaging.update({
-                    userSetting: insertAndReplace({
-                        id: -1, // fake id for guest
-                    }),
-                });
+                this.messaging.models['res.users.settings'].insert(current_user_settings);
             }
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
@@ -223,46 +217,6 @@ registerModel({
                     message.update({ author: replace(this.messaging.currentPartner) });
                 }
             }));
-        },
-        /**
-         * @param {object} resUsersSettings
-         * @param {integer} resUsersSettings.id
-         * @param {boolean} resUsersSettings.is_discuss_sidebar_category_channel_open
-         * @param {boolean} resUsersSettings.is_discuss_sidebar_category_chat_open
-         * @param {boolean} resUsersSettings.use_push_to_talk
-         * @param {String} resUsersSettings.push_to_talk_key
-         * @param {number} resUsersSettings.voice_active_duration
-         * @param {Object} [resUsersSettings.volume_settings]
-         */
-        _initResUsersSettings({
-            id,
-            is_discuss_sidebar_category_channel_open,
-            is_discuss_sidebar_category_chat_open,
-            use_push_to_talk,
-            push_to_talk_key,
-            voice_active_duration,
-            volume_settings = [],
-        }) {
-            this.messaging.currentUser.update({ resUsersSettingsId: id });
-            this.messaging.update({
-                userSetting: insertAndReplace({
-                    id,
-                    usePushToTalk: use_push_to_talk,
-                    pushToTalkKey: push_to_talk_key,
-                    voiceActiveDuration: voice_active_duration,
-                    volumeSettings: volume_settings,
-                }),
-            });
-            this.messaging.discuss.update({
-                categoryChannel: insertAndReplace({
-                    isServerOpen: is_discuss_sidebar_category_channel_open,
-                    serverStateKey: 'is_discuss_sidebar_category_channel_open',
-                }),
-                categoryChat: insertAndReplace({
-                    isServerOpen: is_discuss_sidebar_category_chat_open,
-                    serverStateKey: 'is_discuss_sidebar_category_chat_open',
-                }),
-            });
         },
         /**
          * @private

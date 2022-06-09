@@ -109,16 +109,16 @@ registerModel({
                             return this.messaging.models['Message'].insert(message.payload);
                         case 'mail.channel.rtc.session/insert':
                             return this.messaging.models['RtcSession'].insert(message.payload);
-                        case 'res.users.settings/changed':
-                            return this._handleNotificationResUsersSettings(message.payload);
                         case 'mail.channel.rtc.session/peer_notification':
                             return this._handleNotificationRtcPeerToPeer(message.payload);
                         case 'mail.channel/rtc_sessions_update':
                             return this._handleNotificationRtcSessionUpdate(message.payload);
                         case 'mail.channel.rtc.session/ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
-                        case 'res.users.settings/volumes_update':
-                            return this._handleNotificationVolumeSettingUpdate(message.payload);
+                        case 'res.users.settings/insert':
+                            return this.messaging.models['res.users.settings'].insert(message.payload);
+                        case 'res.users.settings.volumes/insert':
+                            return this.messaging.models['res.users.settings.volumes'].insert(message.payload);
                         default:
                             return this._handleNotification(message);
                     }
@@ -382,33 +382,6 @@ registerModel({
         },
         /**
          * @private
-         * @param {object} settings
-         * @param {boolean} settings.use_push_to_talk
-         * @param {String} settings.push_to_talk_key
-         * @param {number} settings.voice_active_duration
-         * @param {boolean} [settings.is_discuss_sidebar_category_channel_open]
-         * @param {boolean} [settings.is_discuss_sidebar_category_chat_open]
-         * @param {Object} [payload.volume_settings]
-         */
-        _handleNotificationResUsersSettings(settings) {
-            if ('is_discuss_sidebar_category_channel_open' in settings) {
-                this.messaging.discuss.categoryChannel.update({
-                    isServerOpen: settings.is_discuss_sidebar_category_channel_open,
-                });
-            }
-            if ('is_discuss_sidebar_category_chat_open' in settings) {
-                this.messaging.discuss.categoryChat.update({
-                    isServerOpen: settings.is_discuss_sidebar_category_chat_open,
-                });
-            }
-            this.messaging.userSetting.update({
-                usePushToTalk: settings.use_push_to_talk,
-                pushToTalkKey: settings.push_to_talk_key,
-                voiceActiveDuration: settings.voice_active_duration,
-            });
-        },
-        /**
-         * @private
          * @param {Object} data
          */
         _handleNotificationNeedaction(data) {
@@ -447,16 +420,6 @@ registerModel({
                 sticky,
                 title,
                 type: warning ? 'warning' : 'danger',
-            });
-        },
-        /**
-         * @private
-         * @param {Object} data
-         * @param {Object} [data.volumeSettings]
-         */
-        async _handleNotificationVolumeSettingUpdate({ volumeSettings }) {
-            this.messaging && this.messaging.userSetting.update({
-                volumeSettings: volumeSettings,
             });
         },
         /**
