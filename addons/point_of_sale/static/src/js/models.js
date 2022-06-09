@@ -1005,7 +1005,7 @@ class PosGlobalState extends PosModel {
         const partnerWithUpdatedTotalDue = await this.env.services.rpc({
             model: 'res.partner',
             method: 'search_read',
-            fields: ['total_due'],
+            fields: ['forecasted_total_due'],
             domain: [['id', '=', partner.id]],
         });
         this.db.update_partners(partnerWithUpdatedTotalDue);
