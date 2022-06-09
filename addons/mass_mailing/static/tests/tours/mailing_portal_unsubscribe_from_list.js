@@ -13,6 +13,12 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list', 
             content: "Confirmation unsubscribe is done",
             trigger: "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
         }, {
+            content: "Feedback textarea not displayed (see data)",
+            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+        }, {
+            content: "Choose 'Other' reason",
+            trigger: "fieldset label:contains('Other')",
+        }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
             run: "text My feedback",
@@ -59,6 +65,12 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             content: "List4 is not proposed (not member but not private)",
             trigger: "ul#o_mailing_subscription_form_lists_additional:not(:has(li.list-group-item:contains('List4')))",
         }, {
+            content: "Feedback textarea not displayed (see data)",
+            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+        }, {
+            content: "Choose 'Other' reason",
+            trigger: "fieldset label:contains('Other')",
+        }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
             run: "text My feedback",
@@ -75,8 +87,8 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             content: "Confirmation exclusion is done",
             trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
         }, {
-            content: "This should disable the 'Update my subscriptions' button",
-            trigger: "button#button_form_send[disabled]",
+            content: "This should disable the 'Update my subscriptions' (Apply changes) button",
+            trigger: "div#o_mailing_subscription_blocklist:not(button#button_form_send)",
             isCheck: true,
         }, {
             content: "Revert exclusion list",
@@ -110,12 +122,9 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             content: "No list in proposals",
             trigger: "div#o_mailing_subscription_form_manage:not(:has(ul#o_mailing_subscription_form_lists_additional))",
         }, {
-            content: "Write feedback reason",
-            trigger: "textarea[name='feedback']",
-            run: "text Another feedback",
-        }, {
-            content: "Hit Send",
-            trigger: "button#button_feedback",
+            content: "Feedback area is not displayed (nothing opt-out or no blocklist done, no feedback required)",
+            trigger: "div#o_mailing_portal_subscription:not(textarea)",
+            extra_trigger: "div#o_mailing_portal_subscription:not(fieldset)",
         }, {
             content: "Now exclude me (again)",
             trigger: "div#button_blocklist_add",
@@ -129,7 +138,16 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             content: "Warning should contain reference to memberships",
             trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List2')",
             extra_trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List3')",
+        }, {
+            content: "Give a reason for blocklist (first one)",
+            trigger: "fieldset input.o_mailing_subscription_opt_out_reason:first",
+        }, {
+            content: "Hit Send",
+            trigger: "button#button_feedback",
+        }, {
+            content: "Confirmation feedback is sent",
+            trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
             isCheck: true,
-        },
+        }
     ],
 });
