@@ -10,6 +10,7 @@ from odoo.tools import mute_logger
 
 @tagged('post_install', '-at_install')
 class TestMailingABTesting(MassMailCommon):
+
     def setUp(self):
         super().setUp()
         self.mailing_list = self._create_mailing_list_of_x_contacts(150)
