@@ -585,6 +585,7 @@ registerModel({
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                const chatter = this.chatter;
                 const { threadView = {} } = this;
                 const chatter = this.chatter;
                 const { thread: chatterThread } = this.chatter || {};
@@ -601,8 +602,13 @@ registerModel({
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
                 }
+<<<<<<< HEAD:addons/mail/static/src/models/composer_view.js
                 if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted) {
                     chatter.reloadParentView();
+=======
+                if (chatter && chatter.exists() && chatter.component) {
+                    chatter.component.trigger('o-message-posted');
+>>>>>>> 4ef5329b2c8... temp:addons/mail/static/src/models/composer_view/composer_view.js
                 }
                 if (chatterThread) {
                     if (this.exists()) {
