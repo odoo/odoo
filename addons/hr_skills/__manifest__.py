@@ -19,8 +19,11 @@ This module introduces skills and resumé management for employees.
         'security/ir.model.access.csv',
         'security/hr_skills_security.xml',
         'views/hr_views.xml',
+        'views/hr_employee_skill_log_views.xml',
         'data/hr_resume_data.xml',
+        'data/ir_actions_server_data.xml',
         'report/hr_employee_skill_report_views.xml',
+        'views/hr_department_views.xml',
     ],
     'demo': [
         'data/hr_resume_demo.xml',

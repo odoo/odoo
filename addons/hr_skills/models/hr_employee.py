@@ -27,3 +27,9 @@ class Employee(models.Model):
             })
         self.env['hr.resume.line'].create(resume_lines_values)
         return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'department_id' in vals:
+            self.employee_skill_ids._create_logs()
+        return res
