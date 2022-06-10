@@ -1396,36 +1396,24 @@ class MrpProduction(models.Model):
         return True
 
     def _action_cancel(self):
-        documents_by_production = {}
-        for production in self:
-            documents = defaultdict(list)
-            for move_raw_id in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
-                iterate_key = self._get_document_iterate_key(move_raw_id)
-                if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
-                    for key, value in document.items():
-                        documents[key] += [value]
-            if documents:
-                documents_by_production[production] = documents
-            # log an activity on Parent MO if child MO is cancelled.
-            finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            if finish_moves:
-                production._log_downside_manufactured_quantity({finish_move: (production.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
-
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         (finish_moves | raw_moves)._action_cancel()
-        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-        picking_ids.action_cancel()
 
-        for production, documents in documents_by_production.items():
-            filtered_documents = {}
-            for (parent, responsible), rendering_context in documents.items():
-                if not parent or parent._name == 'stock.picking' and parent.state == 'cancel' or parent == production:
-                    continue
-                filtered_documents[(parent, responsible)] = rendering_context
-            production._log_manufacture_exception(filtered_documents, cancel=True)
+        # Propagate inverse of demand to cancel components supply.
+        procurements = []
+        for move in raw_moves:
+            values = move._prepare_procurement_values()
+            procurements.append(self.env['procurement.group'].Procurement(
+                move.product_id, -move.product_uom_qty, move.product_uom,
+                move.location_id, move.name, move.origin, move.company_id, values))
+
+        if procurements:
+            self.env['procurement.group'].run(procurements)
+
+        # TODO: push inverse of finished move to cancel next moves
+
 
         # In case of a flexible BOM, we don't know from the state of the moves if the MO should
         # remain in progress or done. Indeed, if all moves are done/cancel but the quantity produced
@@ -1878,51 +1866,6 @@ class MrpProduction(models.Model):
             empty_list_help_document_name=_("manufacturing order"),
         )
         return super(MrpProduction, self).get_empty_list_help(help)
-
-    def _log_downside_manufactured_quantity(self, moves_modification, cancel=False):
-
-        def _keys_in_groupby(move):
-            """ group by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id, move.product_id.responsible_id)
-
-        def _render_note_exception_quantity_mo(rendering_context):
-            values = {
-                'production_order': self,
-                'order_exceptions': rendering_context,
-                'impacted_pickings': False,
-                'cancel': cancel
-            }
-            return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
-
-        documents = self.env['stock.picking']._log_activity_get_documents(moves_modification, 'move_dest_ids', 'DOWN', _keys_in_groupby)
-        documents = self.env['stock.picking']._less_quantities_than_expected_add_documents(moves_modification, documents)
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
-
-    def _log_manufacture_exception(self, documents, cancel=False):
-
-        def _render_note_exception_quantity_mo(rendering_context):
-            visited_objects = []
-            order_exceptions = {}
-            for exception in rendering_context:
-                order_exception, visited = exception
-                order_exceptions.update(order_exception)
-                visited_objects += visited
-            visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
-            impacted_object = []
-            if visited_objects and visited_objects._name == 'stock.move':
-                visited_objects |= visited_objects.mapped('move_orig_ids')
-                impacted_object = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
-            values = {
-                'production_order': self,
-                'order_exceptions': order_exceptions,
-                'impacted_object': impacted_object,
-                'cancel': cancel
-            }
-            return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
-
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
 
     def button_unbuild(self):
         self.ensure_one()

@@ -85,25 +85,6 @@ class PurchaseOrder(models.Model):
             self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     # --------------------------------------------------
-    # CRUD
-    # --------------------------------------------------
-
-    def write(self, vals):
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
-        res = super(PurchaseOrder, self).write(vals)
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                to_log = {}
-                for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
-                        to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
-                if to_log:
-                    order._log_decrease_ordered_quantity(to_log)
-        return res
-
-    # --------------------------------------------------
     # Actions
     # --------------------------------------------------
 
@@ -119,16 +100,9 @@ class PurchaseOrder(models.Model):
                     raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (order.name))
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
-            if order.state in ('draft', 'sent', 'to approve', 'purchase'):
+            if order.state == 'purchase':
                 for order_line in order.order_line:
-                    order_line.move_ids._action_cancel()
-                    if order_line.move_dest_ids:
-                        move_dest_ids = order_line.move_dest_ids
-                        if order_line.propagate_cancel:
-                            move_dest_ids._action_cancel()
-                        else:
-                            move_dest_ids.write({'procure_method': 'make_to_stock'})
-                            move_dest_ids._recompute_state()
+                    order_line.with_context(cancel=True)._create_or_update_picking()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
@@ -428,7 +402,7 @@ class PurchaseOrderLine(models.Model):
                 # If the user increased quantity of existing line or created a new line
                 pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 picking = pickings and pickings[0] or False
-                if not picking:
+                if not picking and not self.env.context.get('cancel'):
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
 
@@ -462,42 +436,20 @@ class PurchaseOrderLine(models.Model):
         if self.product_id.type not in ['product', 'consu']:
             return res
 
+        previous_qty = self.id in self.env.context.get('previous_product_qty', {}) and self.env.context['previous_product_qty'][self.id] or 0
+        qty_to_push = self.product_qty - previous_qty
+        if float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
+            return res
+
+        if self.env.context.get('cancel'):
+            qty_to_push = - self.product_qty
+
         price_unit = self._get_stock_move_price_unit()
-        qty = self._get_qty_procurement()
-
-        move_dests = self.move_dest_ids
-        if not move_dests:
-            move_dests = self.move_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier')
-
-        if not move_dests:
-            qty_to_attach = 0
-            qty_to_push = self.product_qty - qty
-        else:
-            move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
-                sum(move_dests.filtered(lambda m: m.state != 'cancel' and not m.location_dest_id.usage == 'supplier').mapped('product_qty')),
-                self.product_uom, rounding_method='HALF-UP')
-            qty_to_attach = move_dests_initial_demand - qty
-            qty_to_push = self.product_qty - move_dests_initial_demand
-
-        if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
-            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
-            res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
-        if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
-            product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
-            extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
-            extra_move_vals['move_dest_ids'] = False  # don't attach
-            res.append(extra_move_vals)
+        product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
+        extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
+        extra_move_vals['move_dest_ids'] = False  # don't attach
+        res.append(extra_move_vals)
         return res
-
-    def _get_qty_procurement(self):
-        self.ensure_one()
-        qty = 0.0
-        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
-        for move in outgoing_moves:
-            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-        for move in incoming_moves:
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-        return qty
 
     def _check_orderpoint_picking_type(self):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id
@@ -520,7 +472,7 @@ class PurchaseOrderLine(models.Model):
             'date_deadline': date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
-            'picking_id': picking.id,
+            'picking_id': picking and picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
             'state': 'draft',

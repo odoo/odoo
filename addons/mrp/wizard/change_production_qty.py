@@ -72,17 +72,7 @@ class ChangeProductionQty(models.TransientModel):
 
             factor = (new_production_qty - qty_produced) / (old_production_qty - qty_produced)
             update_info = production._update_raw_moves(factor)
-            documents = {}
-            for move, old_qty, new_qty in update_info:
-                iterate_key = production._get_document_iterate_key(move)
-                if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP')
-                    for key, value in document.items():
-                        if documents.get(key):
-                            documents[key] += [value]
-                        else:
-                            documents[key] = [value]
-            production._log_manufacture_exception(documents)
+
             self._update_finished_moves(production, new_production_qty - qty_produced, old_production_qty - qty_produced)
             production.write({'product_qty': new_production_qty})
 
