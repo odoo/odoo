@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DebugMenu.SetDefaultFooter" owl="1">
-        <button class="btn btn-secondary" t-on-click="() => this.trigger('dialog-closed')">Close</button>
+        <button class="btn btn-secondary" t-on-click="props.close">Close</button>
         <button class="btn btn-secondary" t-on-click="saveDefault">Save default</button>
     </t>
 
@@ -18,8 +18,7 @@
                 <td class="oe_form_required">
                     <select id="formview_default_fields" class="o_input" t-model="state.fieldToSet">
                         <option value=""/>
-                        <option t-foreach="defaultFields" t-as="field"
-                                t-att-value="field.name">
+                        <option t-foreach="defaultFields" t-as="field" t-att-value="field.name" t-key="field.name">
                             <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
                         </option>
                     </select>
@@ -35,8 +34,7 @@
                 <td>
                     <select id="formview_default_conditions" class="o_input" t-model="state.condition">
                         <option value=""/>
-                        <option t-foreach="conditions" t-as="cond"
-                                t-att-value="cond.name + '=' + cond.value">
+                        <option t-foreach="conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="cond.name">
                             <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
                         </option>
                     </select>
