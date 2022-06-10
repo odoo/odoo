@@ -4,7 +4,7 @@ import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
-    name: 'MediaPreview',
+    name: 'CallDemoView',
     identifyingFields: ['welcomeView'],
     modelMethods: {
         /**
@@ -28,7 +28,7 @@ registerModel({
             if (!this.audioStream) {
                 return;
             }
-            this.messaging.models['MediaPreview'].stopTracksOnMediaStream(this.audioStream);
+            this.messaging.models['CallDemoView'].stopTracksOnMediaStream(this.audioStream);
             this.update({ audioStream: null });
         },
         /**
@@ -39,7 +39,7 @@ registerModel({
             if (!this.videoStream) {
                 return;
             }
-            this.messaging.models['MediaPreview'].stopTracksOnMediaStream(this.videoStream);
+            this.messaging.models['CallDemoView'].stopTracksOnMediaStream(this.videoStream);
             this.update({ videoStream: null });
         },
         /**
@@ -176,7 +176,7 @@ registerModel({
          * States the welcome view containing this media preview.
          */
         welcomeView: one('WelcomeView', {
-            inverse: 'mediaPreview',
+            inverse: 'callDemoView',
             readonly: true,
         }),
     },

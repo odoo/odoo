@@ -93,7 +93,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeMediaPreview() {
+        _computeCallDemoView() {
             return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
                 ? insertAndReplace()
                 : clear();
@@ -182,8 +182,8 @@ registerModel({
         /**
          * States the media preview embedded in this welcome view.
          */
-        mediaPreview: one('MediaPreview', {
-            compute: '_computeMediaPreview',
+        callDemoView: one('CallDemoView', {
+            compute: '_computeCallDemoView',
             inverse: 'welcomeView',
             isCausal: true,
             readonly: true,
