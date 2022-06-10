@@ -295,6 +295,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        component: attr(),
         /**
          * States the OWL component of this chatter top bar.
          */
