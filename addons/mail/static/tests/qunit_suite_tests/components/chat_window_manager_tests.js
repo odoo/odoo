@@ -862,8 +862,8 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     assert.expect(6);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
-    const { click, createMessagingMenuComponent, insertText, messaging } = await start();
+    const mailChannelId = pyEnv['mail.channel'].create();
+    const { click, createMessagingMenuComponent, insertText, openDiscuss, openView } = await start();
     const messagingMenuComponent = await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`);
@@ -905,10 +905,14 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
         "composer should have 2 total attachments after adding 2 attachments"
     );
 
-    await afterNextRender(() => messaging.discuss.open());
+    await openDiscuss();
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
-    await afterNextRender(() => messaging.discuss.close());
+    await openView({
+        res_id: mailChannelId,
+        res_model: 'mail.channel',
+        views: [[false, 'form']],
+    });
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "XDU for the win !",
@@ -934,7 +938,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
+    const { afterEvent, click, createMessagingMenuComponent, openDiscuss, openView } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
@@ -968,12 +972,16 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
         },
     });
 
-    await afterNextRender(() => messaging.discuss.open());
+    await openDiscuss();
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
-        func: () => messaging.discuss.close(),
+        func: () => openView({
+            res_id: mailChannelId1,
+            res_model: 'mail.channel',
+            views: [[false, 'form']],
+        }),
         message: "should wait until channel 20 restored its scroll to 142 after closing discuss",
         predicate: ({ scrollTop, thread }) => {
             return (
@@ -1820,7 +1828,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
             res_id: mailChannelId1,
         });
     }
-    const { afterEvent, click, createMessagingMenuComponent, messaging } = await start();
+    const { afterEvent, click, createMessagingMenuComponent, openDiscuss, openView } = await start();
     await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
     await afterEvent({
@@ -1853,10 +1861,14 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     });
     // fold chat window
     await click('.o_ChatWindow_header');
-    await afterNextRender(() => messaging.discuss.open());
+    await openDiscuss();
     assert.containsNone(document.body, '.o_ChatWindow', "should not have any chat window after opening discuss");
 
-    await afterNextRender(() => messaging.discuss.close());
+    await openView({
+        res_id: mailChannelId1,
+        res_model: 'mail.channel',
+        views: [[false, 'form']],
+    });
     // unfold chat window
     await afterEvent({
         eventName: 'o-component-message-list-scrolled',
