@@ -9,6 +9,23 @@ registerModel({
     identifyingFields: ['callParticipantCardOwner'],
     recordMethods: {
         /**
+         * Plays the video as some browsers may not support or block autoplay.
+         *
+         * @param {Event} ev
+         */
+        async onVideoLoadedMetaData(ev) {
+            try {
+                await ev.target.play();
+            } catch (error) {
+                if (typeof error === 'object' && error.name === 'NotAllowedError') {
+                    // Ignored as some browsers may reject play() calls that do not
+                    // originate from a user input.
+                    return;
+                }
+                throw error;
+            }
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
