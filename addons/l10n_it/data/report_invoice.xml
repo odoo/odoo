@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='note']" position="replace">
+            <p t-if="o.move_type == 'out_invoice' and o.fiscal_position_id.note" name="note">
+                <span t-field="o.fiscal_position_id.note"/>
+            </p>
+        </xpath>
+    </template>
+</odoo>
