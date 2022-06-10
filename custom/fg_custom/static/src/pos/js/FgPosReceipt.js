@@ -33,6 +33,7 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
                 x_ext_order_ref: this.x_ext_order_ref,
                 x_receipt_printed: this.x_receipt_printed,
                 x_receipt_printed_date: this.x_receipt_printed_date,
+                website_order_id: this.website_order_id,
             });
             return json;
         },
@@ -43,6 +44,7 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
              this.x_ext_order_ref = json.x_ext_order_ref;
              this.x_receipt_printed = json.x_receipt_printed;
              this.x_receipt_printed_date = json.x_receipt_printed_date;
+             this.website_order_id = json.website_order_id;
         },
         export_for_printing: function(){
             var receipt = super_ordermodel.export_for_printing.apply(this, arguments);
@@ -51,6 +53,9 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             receipt.x_ext_order_ref= this.x_ext_order_ref;
             receipt.x_receipt_printed= this.x_receipt_printed;
             receipt.x_receipt_printed_date= this.x_receipt_printed_date;
+            receipt.website_order_id= this.website_order_id;
+            console.log('-=====-this----', this)
+            console.log('-=====-receipt----', receipt)
             return receipt;
 
         }
