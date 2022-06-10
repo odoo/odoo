@@ -32,7 +32,7 @@ class MrpProduction(models.Model):
     def _get_default_date_planned_start(self):
         if self.env.context.get('default_date_deadline'):
             return fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
-        return datetime.datetime.now()
+        return fields.Datetime.now()
 
     @api.model
     def _get_default_is_locked(self):
@@ -1074,27 +1074,13 @@ class MrpProduction(models.Model):
     def _update_raw_moves(self, factor):
         self.ensure_one()
         update_info = []
-        moves_to_assign = self.env['stock.move']
-        procurements = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
             new_qty = float_round(old_qty * factor, precision_rounding=move.product_uom.rounding, rounding_method='UP')
             if new_qty > 0:
+                # procurement and assigning is now run in write
                 move.write({'product_uom_qty': new_qty})
-                if move._should_bypass_reservation() \
-                        or move.picking_type_id.reservation_method == 'at_confirm' \
-                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
-                    moves_to_assign |= move
-                if move.procure_method == 'make_to_order':
-                    procurement_qty = new_qty - old_qty
-                    values = move._prepare_procurement_values()
-                    procurements.append(self.env['procurement.group'].Procurement(
-                        move.product_id, procurement_qty, move.product_uom,
-                        move.location_id, move.name, move.origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
-        moves_to_assign._action_assign()
-        if procurements:
-            self.env['procurement.group'].run(procurements)
         return update_info
 
     @api.ondelete(at_uninstall=False)
@@ -1614,7 +1600,7 @@ class MrpProduction(models.Model):
                 move_to_backorder_moves[move] = self.env['stock.move']
                 unit_factor = move.product_uom_qty / initial_qty_by_production[production]
                 initial_move_vals = move.copy_data(move._get_backorder_move_vals())[0]
-                move.with_context(do_not_unreserve=True).product_uom_qty = production.product_qty * unit_factor
+                move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor
 
                 for backorder in production_to_backorders[production]:
                     move_vals = dict(
@@ -2055,6 +2041,7 @@ class MrpProduction(models.Model):
         for move in production.move_raw_ids:
             for field, vals in origs[move.bom_line_id.id].items():
                 move[field] = vals
+
         for move in production.move_finished_ids:
             move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
 
@@ -2069,6 +2056,8 @@ class MrpProduction(models.Model):
             production.state = 'confirmed'
 
         self.with_context(skip_activity=True)._action_cancel()
+        # set the new deadline of origin moves (stock to pre prod)
+        production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_planned_start})
         for p in self:
             p._message_log(body=_('This production has been merge in %s', production.display_name))
 

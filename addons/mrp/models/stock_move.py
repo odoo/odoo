@@ -304,7 +304,34 @@ class StockMove(models.Model):
             # so possibly unlink lines
             move_line_vals = vals.pop('move_line_ids')
             super().write({'move_line_ids': move_line_vals})
+        if 'product_uom_qty' in vals and self.raw_material_production_id.state == 'confirmed' and not self.env.context.get('no_procurement', False):
+            # when updating consumed qty need to update related pickings
+            # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
+            # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
+            self._run_procurement(vals['product_uom_qty'], self.product_uom_qty)
         return super().write(vals)
+
+    def _run_procurement(self, new_qty, old_qty):
+        procurements = []
+        to_assign = self.env['stock.move']
+        self._adjust_procure_method()
+        for move in self:
+            if new_qty > 0:
+                if move._should_bypass_reservation() \
+                        or move.picking_type_id.reservation_method == 'at_confirm' \
+                        or (move.reservation_date and move.reservation_date <= fields.Date.today()):
+                    to_assign |= move
+
+            if move.procure_method == 'make_to_order':
+                procurement_qty = new_qty - old_qty
+                values = move._prepare_procurement_values()
+                procurements.append(self.env['procurement.group'].Procurement(
+                    move.product_id, procurement_qty, move.product_uom,
+                    move.location_id, move.name, move.origin, move.company_id, values))
+
+        to_assign._action_assign()
+        if procurements:
+            self.env['procurement.group'].run(procurements)
 
     def _action_assign(self, force_qty=False):
         res = super(StockMove, self)._action_assign(force_qty=force_qty)
@@ -531,12 +558,16 @@ class StockMove(models.Model):
         else:
             self.quantity_done = new_qty
 
-    def _update_candidate_moves_list(self, candidate_moves_list):
-        super()._update_candidate_moves_list(candidate_moves_list)
+    def _update_candidate_moves_list(self, candidate_moves_set):
+        super()._update_candidate_moves_list(candidate_moves_set)
         for production in self.mapped('raw_material_production_id'):
-            candidate_moves_list.append(production.move_raw_ids)
+            candidate_moves_set.add(production.move_raw_ids)
         for production in self.mapped('production_id'):
-            candidate_moves_list.append(production.move_finished_ids)
+            candidate_moves_set.add(production.move_finished_ids)
+        # this will include sibling pickings as a result of merging MOs
+        for picking in self.move_dest_ids.raw_material_production_id.picking_ids:
+            candidate_moves_set.add(picking.move_ids)
+
 
     def _multi_line_quantity_done_set(self, quantity_done):
         if self.raw_material_production_id:
