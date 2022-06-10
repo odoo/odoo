@@ -619,7 +619,7 @@ class MrpWorkorder(models.Model):
             })
         if self.state == 'progress':
             return True
-        start_date = datetime.now()
+        start_date = fields.Datetime.now()
         vals = {
             'state': 'progress',
             'date_start': start_date,

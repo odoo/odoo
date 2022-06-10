@@ -900,9 +900,9 @@ Please change the quantity done or the rounding precision of your unit of measur
         """Cleanup hook used when merging moves"""
         self.write({'propagate_cancel': False})
 
-    def _update_candidate_moves_list(self, candidate_moves_list):
+    def _update_candidate_moves_list(self, candidate_moves_set):
         for picking in self.mapped('picking_id'):
-            candidate_moves_list.append(picking.move_ids)
+            candidate_moves_set.add(picking.move_ids)
 
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
@@ -912,11 +912,11 @@ Please change the quantity done or the rounding precision of your unit of measur
         """
         distinct_fields = self._prepare_merge_moves_distinct_fields()
 
-        candidate_moves_list = []
+        candidate_moves_set = set()
         if not merge_into:
-            self._update_candidate_moves_list(candidate_moves_list)
+            self._update_candidate_moves_list(candidate_moves_set)
         else:
-            candidate_moves_list.append(merge_into | self)
+            candidate_moves_set.add(merge_into | self)
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
@@ -933,7 +933,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         excluded_fields = self._prepare_merge_negative_moves_excluded_distinct_fields()
         neg_key = itemgetter(*[field for field in distinct_fields if field not in excluded_fields])
 
-        for candidate_moves in candidate_moves_list:
+        for candidate_moves in candidate_moves_set:
             # First step find move to merge.
             candidate_moves = candidate_moves.filtered(lambda m: m.state not in ('done', 'cancel', 'draft')) - neg_qty_moves
             for __, g in groupby(candidate_moves, key=itemgetter(*distinct_fields)):

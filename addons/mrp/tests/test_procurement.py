@@ -751,3 +751,132 @@ class TestProcurement(TestMrpCommon):
             {'product_qty': 1, 'bom_id': bom01.id, 'picking_type_id': manu_operation01.id, 'location_dest_id': stock_location01.id},
             {'product_qty': 2, 'bom_id': bom02.id, 'picking_type_id': manu_operation02.id, 'location_dest_id': stock_location02.id},
         ])
+
+    def test_update_mo_component_qty(self):
+        """ After Confirming MO, updating component qty should run procurement
+            to update orig move qty
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        # 2 steps Manufacture
+        warehouse.write({'manufacture_steps': 'pbm'})
+        mo, *_ = self.generate_mo(qty_final=2, qty_base_1=1, qty_base_2=2)
+        self.assertEqual(mo.state, 'confirmed', 'MO should be confirmed at this point')
+        self.assertEqual(mo.product_qty, 2, 'MO qty to produce should be 2')
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [4, 2], 'Comp2 qty should be 4 and comp1 should be 2')
+        self.assertEqual(mo.picking_ids.move_ids.mapped('product_uom_qty'), [4, 2], 'Comp moves should have same qty as MO')
+        # decrease comp2 qty, should reflect in picking
+        mo.move_raw_ids[0].product_uom_qty = 2
+        self.assertEqual(mo.picking_ids.move_ids[0].product_uom_qty, 2, 'Comp2 move should have same qty as MO')
+
+        # add a third component, should reflect in picking
+        comp3 = self.env['product.product'].create({
+            'name': 'Comp3',
+            'type': 'product'
+        })
+        mo.write({
+            'move_raw_ids': [(0, 0, {
+                'product_id': comp3.id,
+                'product_uom_qty': 3
+            })]
+        })
+        self.assertEqual(len(mo.picking_ids.move_ids), 3, 'Picking should have 3 moves')
+        self.assertEqual(mo.picking_ids.move_ids[2].product_uom_qty, 3, 'Comp3 move should have same qty as MO')
+        # change its qty
+        mo.move_raw_ids[2].product_uom_qty = 4
+        self.assertEqual(mo.picking_ids.move_ids[2].product_uom_qty, 4, 'Comp3 move should have same qty as MO')
+
+        # increase qty to produce
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 4
+        })
+        wiz.change_prod_qty()
+        self.assertEqual(mo.product_qty, 4, 'MO qty to produce should be 4')
+        # each move qty should be doubled
+        self.assertEqual(mo.picking_ids.move_ids.mapped('product_uom_qty'), [4, 4, 8], 'Comps move should have same qty as MO')
+
+    def test_update_merged_mo_component_qty(self):
+        """ After Confirming two MOs merge then and change their component qtys,
+            Procurements should run and any new moves should be merged with old ones
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        # 2 steps Manufacture
+        warehouse.write({'manufacture_steps': 'pbm'})
+
+        super_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+        })
+        comp1 = self.env['product.product'].create({
+            'name': 'Comp1',
+            'type': 'product',
+        })
+        comp2 = self.env['product.product'].create({
+            'name': 'Comp2',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': super_product.id,
+            'product_tmpl_id': super_product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [
+                (0, 0, {'product_id': comp1.id, 'product_qty': 1}),
+                (0, 0, {'product_id': comp2.id, 'product_qty': 2})
+            ]
+        })
+        # MO 1
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = super_product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo_1 = mo_form.save()
+        mo_1.action_confirm()
+
+        # MO 2
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = super_product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo_2 = mo_form.save()
+        mo_2.action_confirm()
+
+        res_mo_id = (mo_1 | mo_2).action_merge()['res_id']
+        mo = self.env['mrp.production'].browse(res_mo_id)
+        self.assertEqual(mo.product_qty, 2, 'Qty to produce should be 2')
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [2, 4], 'Comp1 qty should be 2 and comp2 should be 4')
+        self.assertEqual(mo.picking_ids[0].move_ids.mapped('product_uom_qty'), [1, 2], 'Comp moves should have same qty as old MO')
+        # increase Comp1 qty by 1 in MO
+        mo.move_raw_ids[0].product_uom_qty = 3
+
+        # any required qty is added to first picking by procurement
+        self.assertEqual(mo.picking_ids[0].move_ids[0].product_uom_qty, 2, 'Comp1 qty increase should reflect in picking')
+
+        # add new comp3
+        comp3 = self.env['product.product'].create({
+            'name': 'Comp3',
+            'type': 'product'
+        })
+        mo.write({
+            'move_raw_ids': [(0, 0, {
+                'product_id': comp3.id,
+                'product_uom_qty': 2,
+            })]
+        })
+        self.assertEqual(len(mo.picking_ids[0].move_ids), 3, 'Picking should have 3 moves')
+        self.assertEqual(mo.picking_ids[0].move_ids[2].product_uom_qty, 2, 'Comp3 move should have same qty as MO')
+
+        # increase qty to produce
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 4
+        })
+        wiz.change_prod_qty()
+        self.assertEqual(mo.product_qty, 4, 'MO qty to produce should be 4')
+        # extra quantities are all added to first picking moves
+        # comp1 (2 + 3 extra) = 5
+        # comp2 (2 + 4 extra) = 6
+        # comp3 (2 + 2 extra) = 4
+        self.assertEqual(mo.picking_ids[0].move_ids.mapped('product_uom_qty'), [5, 6, 4], 'Comp qty do not match expected')
