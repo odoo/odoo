@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
-
+from odoo.tools import float_compare
 
 class StockLocationRoute(models.Model):
     _inherit = "stock.location.route"
@@ -19,7 +19,7 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
-        distinct_fields.append('sale_line_id')
+        distinct_fields += ['sale_line_id', 'to_refund']
         return distinct_fields
 
     def _get_related_invoices(self):
@@ -46,6 +46,21 @@ class StockMove(models.Model):
                     'mail.message_origin_link',
                     values={'self': picking_id, 'origin': sale_order_id},
                     subtype_id=self.env.ref('mail.mt_note').id)
+
+    def _action_confirm(self, merge=True, merge_into=False):
+        other_moves = self.filtered(lambda m: not m.to_refund or float_compare(m.product_qty, 0, precision_rounding=m.product_uom.rounding) >= 0)
+        to_refund_moves = self.filtered(lambda m: m.to_refund and float_compare(m.product_qty, 0, precision_rounding=m.product_uom.rounding) < 0)
+        # Moves to be refunded shouldn't be merged with others moves, to avoid mixing of refund/non-refund down the chain.
+        res_refund = super(StockMove, to_refund_moves)._action_confirm(merge=False, merge_into=merge_into)
+        # Other moves are processed like normal.
+        res_others = super(StockMove, other_moves)._action_confirm(merge=merge, merge_into=merge_into)
+        return res_refund + res_others
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        if self.to_refund:
+            res.update({'to_refund': self.to_refund})
+        return res
 
 
 class ProcurementGroup(models.Model):
