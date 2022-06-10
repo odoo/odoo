@@ -585,6 +585,7 @@ registerModel({
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                const chatter = this.chatter;
                 const { threadView = {} } = this;
                 const { thread: chatterThread } = this.chatter || {};
                 const { thread: threadViewThread } = threadView;
@@ -599,6 +600,9 @@ registerModel({
                     // Reset auto scroll to be able to see the newly posted message.
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
+                }
+                if (chatter && chatter.exists() && chatter.component) {
+                    chatter.component.trigger('o-message-posted');
                 }
                 if (chatterThread) {
                     if (this.exists()) {
