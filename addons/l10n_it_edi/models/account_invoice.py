@@ -135,18 +135,13 @@ class AccountMove(models.Model):
                 return 'IT'
             return vat[:2].upper()
 
-        def in_eu(partner):
-            europe = self.env.ref('base.europe', raise_if_not_found=False)
-            country = partner.country_id
-            if not europe or not country or country in europe.country_ids:
-                return True
-            return False
-
         def format_alphanumeric(text_to_convert):
             return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
 
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
+        in_eu = self.env['account.edi.format']._l10n_it_edi_partner_in_eu
+        is_self_invoice = self.env['account.edi.format']._l10n_it_edi_is_self_invoice(self)
         document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
         if self.env['account.edi.format']._l10n_it_is_simplified_document_type(document_type):
             formato_trasmissione = "FSM10"
@@ -167,7 +162,9 @@ class AccountMove(models.Model):
         # Constraints within the edi make local rounding on price included taxes a problem.
         # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
         #   taxable base = sum(taxable base for each unit) + Arrotondamento
-        tax_details = self._prepare_edi_tax_details()
+        tax_details = self._prepare_edi_tax_details(
+            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent > 0
+        )
         for _tax_name, tax_dict in tax_details['tax_details'].items():
             base_amount = tax_dict['base_amount_currency']
             tax_amount = tax_dict['tax_amount_currency']
@@ -178,27 +175,52 @@ class AccountMove(models.Model):
                     tax_dict['rounding'] = base_amount - (tax_amount * 100 / tax_rate)
                     tax_dict['base_amount_currency'] = base_amount - tax_dict['rounding']
 
+        company = self.company_id
+        partner = self.commercial_partner_id
+        buyer = partner if not is_self_invoice else company
+        seller = company if not is_self_invoice else partner
+        codice_destinatario = (
+            (is_self_invoice and company.partner_id.l10n_it_pa_index)
+            or partner.l10n_it_pa_index
+            or (partner.country_id.code == 'IT' and '0000000')
+            or 'XXXXXXX')
+
         # Create file content.
         template_values = {
             'record': self,
+            'company': company,
+            'sender': company,
+            'sender_partner': company.partner_id,
+            'partner': partner,
+            'buyer': buyer,
+            'buyer_partner': partner if not is_self_invoice else company.partner_id,
+            'buyer_is_company': is_self_invoice or partner.is_company,
+            'seller': seller,
+            'seller_partner': company.partner_id if not is_self_invoice else partner,
+            'currency': self.currency_id or self.company_currency_id,
+            'representative': company.l10n_it_tax_representative_partner_id,
+            'codice_destinatario': codice_destinatario,
+            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF01',
+            'is_self_invoice': is_self_invoice,
+            'partner_bank': self.partner_bank_id,
             'format_date': format_date,
             'format_monetary': format_monetary,
             'format_numbers': format_numbers,
             'format_numbers_two': format_numbers_two,
             'format_phone': format_phone,
             'format_alphanumeric': format_alphanumeric,
-            'normalize_codice_fiscale': self.env['res.partner']._l10n_it_normalize_codice_fiscale,
             'discount_type': discount_type,
-            'get_vat_number': get_vat_number,
-            'get_vat_country': get_vat_country,
-            'in_eu': in_eu,
-            'abs': abs,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
             'pdf': pdf,
             'pdf_name': pdf_name,
             'tax_map': tax_map,
             'tax_details': tax_details,
+            'abs': abs,
+            'normalize_codice_fiscale': partner._l10n_it_normalize_codice_fiscale,
+            'get_vat_number': get_vat_number,
+            'get_vat_country': get_vat_country,
+            'in_eu': in_eu
         }
         return template_values
 
