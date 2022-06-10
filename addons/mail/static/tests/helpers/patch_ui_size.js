@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from '@web/core/browser/browser';
-import { getMediaQueryLists, MEDIAS_BREAKPOINTS, SIZES } from '@web/core/ui/ui_service';
+import { MEDIAS_BREAKPOINTS, SIZES, uiService } from '@web/core/ui/ui_service';
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 import config from 'web.config';
@@ -87,15 +87,14 @@ function patchUiSize({ height, size, width }) {
     }
     size = size === undefined ? getSizeFromWidth(width) : size;
     width = width || getWidthFromSize(size);
-    const MEDIAS = getMediaQueryLists();
 
     patchWithCleanup(browser, {
         innerWidth: width,
         innerHeight: height || browser.innerHeight,
     });
-    patchWithCleanup(window.MediaQueryList.prototype, {
-        get matches() {
-            return this.media === MEDIAS[size].media;
+    patchWithCleanup(uiService, {
+        getSize() {
+            return size;
         },
     });
     legacyPatchUiSize(height, size, width);
