@@ -16,7 +16,8 @@
                 <field name="list_price" attrs="{'invisible':[('expense_policy', '!=', 'sales_price')]}"/>
             </xpath>
             <xpath expr="//field[@name='supplier_taxes_id']" position="after">
-                <field name="taxes_id" widget="many2many_tags" attrs="{'invisible':[('expense_policy', '=', 'no')]}"/>
+                <field name="taxes_id" widget="many2many_tags" attrs="{'invisible':[('expense_policy', '=', 'no')]}"
+                       options="{'no_quick_create': True}"/>
             </xpath>
         </field>
     </record>
