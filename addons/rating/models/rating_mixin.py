@@ -29,6 +29,7 @@ class RatingMixin(models.AbstractModel):
     def _compute_rating_last_value(self):
         # Pure SQL instead of calling read_group to allow ordering array_agg
         self.flush_model(['rating_ids'])
+        self.env['rating.rating'].flush_model(['consumed', 'rating'])
         if not self.ids:
             self.rating_last_value = 0
             return
