@@ -216,7 +216,7 @@ SetDefaultDialog.title = _lt("Set Default");
 
 // Form view items
 
-function setDefaults({ action, component, env }) {
+export function setDefaults({ action, component, env }) {
     return {
         type: "item",
         description: env._t("Set Defaults"),
