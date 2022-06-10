@@ -57,6 +57,8 @@ registerModel({
         parentModel: attr(),
         // AKU FIXME: use relation instead
         resModel: attr(),
-        sequence: attr(),
+        sequence: attr({
+            default: 1,
+        }),
     },
 });

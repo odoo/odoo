@@ -77,6 +77,15 @@ export class RelationSet {
                                     }
                                     break;
                                 }
+                                case 'falsy-first': {
+                                    if (!valA) {
+                                        return -1;
+                                    }
+                                    if (!valB) {
+                                        return 1;
+                                    }
+                                    break;
+                                }
                                 case 'case-insensitive-asc': {
                                     if (typeof valA !== 'string' || typeof valB !== 'string') {
                                         break;
