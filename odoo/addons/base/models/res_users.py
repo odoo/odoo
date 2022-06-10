@@ -162,7 +162,8 @@ class Groups(models.Model):
     def _search_full_name(self, operator, operand):
         lst = True
         if isinstance(operand, bool):
-            domains = [[('name', operator, operand)], [('category_id.name', operator, operand)]]
+            category_ids = self.env['ir.module.category'].sudo().search([('name', operator, operand)]).ids
+            domains = [[('name', operator, operand)], [('category_id', 'in', category_ids)]]
             if operator in expression.NEGATIVE_TERM_OPERATORS == (not operand):
                 return expression.AND(domains)
             else:
@@ -176,7 +177,9 @@ class Groups(models.Model):
             group_name = values.pop().strip()
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
-            category_domain = [('category_id.name', operator, lst and [category_name] or category_name)]
+            category_ids = self.env['ir.module.category'].sudo().search(
+                [('name', operator, lst and [category_name] or category_name)]).ids
+            category_domain = [('category_id', 'in', category_ids)]
             if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
                 category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
             if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
