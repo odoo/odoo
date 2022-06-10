@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
-
-    <!-- IVA 22 -->
+    <!-- Vendita .............................................................................. -->
     <record id="22v" model="account.tax.template">
         <field name="description">22v</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
@@ -37,15 +36,153 @@
             }),
         ]"/>
     </record>
+    <record id="10v" model="account.tax.template">
+        <field name="description">10v</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 10% (debito)</field>
+        <field name="sequence">2</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp4')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="5v" model="account.tax.template">
+        <field name="description">5v</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 5% (debito)</field>
+        <field name="sequence">3</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="4v" model="account.tax.template">
+        <field name="description">4v</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 4% (debito)</field>
+        <field name="sequence">4</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp4')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="00v" model="account.tax.template">
+        <field name="description">00v</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Fuori Campo IVA (debito)</field>
+        <field name="sequence">5</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_fuori"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
 
-    <record id="22a" model="account.tax.template">
-        <field name="description">22a</field>
+    <!-- Acquisti Merce ....................................................................... -->
+    <record id="22am" model="account.tax.template">
+        <field name="description">22am</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Iva al 22% (credito)</field>
-        <field name="sequence">2</field>
+        <field name="sequence">6</field>
         <field name="amount">22</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_22"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -73,52 +210,15 @@
             }),
         ]"/>
     </record>
-
-    <!-- IVA 10 -->
-    <record id="10v" model="account.tax.template">
-        <field name="description">10v</field>
-        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
-        <field name="name">Iva al 10% (debito)</field>
-        <field name="sequence">5</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include">False</field>
-        <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_vp2')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2601'),
-                'plus_report_line_ids': [ref('tax_report_line_vp4')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2601'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="10a" model="account.tax.template">
-        <field name="description">10a</field>
+    <record id="10am" model="account.tax.template">
+        <field name="description">10am</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Iva al 10% (credito)</field>
-        <field name="sequence">6</field>
+        <field name="sequence">7</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -146,52 +246,15 @@
             }),
         ]"/>
     </record>
-
-    <!-- IVA 5 -->
-    <record id="5v" model="account.tax.template">
-        <field name="description">5v</field>
-        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
-        <field name="name">Iva al 5% (debito)</field>
-        <field name="sequence">5</field>
-        <field name="amount">5</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include">False</field>
-        <field name="tax_group_id" ref="tax_group_iva_5"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_vp2')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2601'),
-                'plus_report_line_ids': [ref('tax_report_line_vp4')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2601'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="5a" model="account.tax.template">
-        <field name="description">5a</field>
+    <record id="5am" model="account.tax.template">
+        <field name="description">5am</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Iva al 5% (credito)</field>
-        <field name="sequence">6</field>
+        <field name="sequence">8</field>
         <field name="amount">5</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -219,52 +282,15 @@
             }),
         ]"/>
     </record>
-
-    <!-- IVA 4 -->
-    <record id="4v" model="account.tax.template">
-        <field name="description">4v</field>
-        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
-        <field name="name">Iva al 4% (debito)</field>
-        <field name="sequence">17</field>
-        <field name="amount">4</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include">False</field>
-        <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_vp2')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2601'),
-                'plus_report_line_ids': [ref('tax_report_line_vp4')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('2601'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="4a" model="account.tax.template">
-        <field name="description">4a</field>
+    <record id="4am" model="account.tax.template">
+        <field name="description">4am</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Iva al 4% (credito)</field>
-        <field name="sequence">18</field>
+        <field name="sequence">9</field>
         <field name="amount">4</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -292,48 +318,15 @@
             }),
         ]"/>
     </record>
-
-    <!-- IVA 0 -->
-    <record id="00v" model="account.tax.template">
-        <field name="description">00v</field>
-        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
-        <field name="name">Fuori Campo IVA (debito)</field>
-        <field name="sequence">22</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include">False</field>
-        <field name="tax_group_id" ref="tax_group_fuori"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-        ]"/>
-    </record>
-
-    <record id="00a" model="account.tax.template">
-        <field name="description">00a</field>
+    <record id="00am" model="account.tax.template">
+        <field name="description">00am</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Fuori Campo IVA (credito)</field>
-        <field name="sequence">23</field>
+        <field name="sequence">10</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
         <field name="price_include">False</field>
         <field name="tax_group_id" ref="tax_group_fuori"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -359,11 +352,225 @@
         ]"/>
     </record>
 
+    <!-- Acquisti Servizi ..................................................................... -->
+    <record id="22as" model="account.tax.template">
+        <field name="description">22as</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 22% (credito)</field>
+        <field name="sequence">11</field>
+        <field name="amount">22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_22"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+        ]"/>
+    </record>
+    <record id="10as" model="account.tax.template">
+        <field name="description">10as</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 10% (credito)</field>
+        <field name="sequence">12</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+        ]"/>
+    </record>
+    <record id="5as" model="account.tax.template">
+        <field name="description">5as</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 5% (credito)</field>
+        <field name="sequence">13</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+        ]"/>
+    </record>
+    <record id="4as" model="account.tax.template">
+        <field name="description">4as</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Iva al 4% (credito)</field>
+        <field name="sequence">14</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+        ]"/>
+    </record>
+    <record id="00as" model="account.tax.template">
+        <field name="description">00as</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Fuori Campo IVA (credito)</field>
+        <field name="sequence">15</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_fuori"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- Export ............................................................................... -->
+    <record id="00eu" model="account.tax.template">
+        <field name="description">00eu</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Non imponibile - Cessioni Intracomunitarie</field>
+        <field name="sequence">16</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_fuori"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp2')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
+    <!-- No tax ............................................................................... -->
     <record id="00art15v" model="account.tax.template">
         <field name="description">00art15v</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Imponibile Escluso Art.15 (debito)</field>
-        <field name="sequence">22</field>
+        <field name="sequence">17</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -391,12 +598,11 @@
             }),
         ]"/>
     </record>
-
     <record id="00art15a" model="account.tax.template">
         <field name="description">00art15a</field>
         <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
         <field name="name">Imponibile Escluso Art.15 (credito)</field>
-        <field name="sequence">23</field>
+        <field name="sequence">18</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -425,4 +631,487 @@
         ]"/>
     </record>
 
+    <!-- Reverse Charge Servizi ............................................................... -->
+    <record id="22rcs" model="account.tax.template">
+        <field name="description">22rcs</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 22%</field>
+        <field name="sequence">19</field>
+        <field name="amount">22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_22"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="10rcs" model="account.tax.template">
+        <field name="description">10rcs</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 10%</field>
+        <field name="sequence">20</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="5rcs" model="account.tax.template">
+        <field name="description">5rcs</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 5%</field>
+        <field name="sequence">21</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="4rcs" model="account.tax.template">
+        <field name="description">4rcs</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 4%</field>
+        <field name="sequence">22</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="00rcs" model="account.tax.template">
+        <field name="description">00rcs</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 0%</field>
+        <field name="sequence">23</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_fuori"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj3')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+
+    <!-- Reverse Charge Merci ................................................................. -->
+    <record id="22rcm" model="account.tax.template">
+        <field name="description">22rcm</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 22%</field>
+        <field name="sequence">19</field>
+        <field name="amount">22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_22"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="10rcm" model="account.tax.template">
+        <field name="description">10rcm</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 10%</field>
+        <field name="sequence">20</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="5rcm" model="account.tax.template">
+        <field name="description">5rcm</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 5%</field>
+        <field name="sequence">21</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="4rcm" model="account.tax.template">
+        <field name="description">4rcm</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 4%</field>
+        <field name="sequence">22</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
+    <record id="00rcm" model="account.tax.template">
+        <field name="description">00rcm</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">Reverse Charge - IVA 0%</field>
+        <field name="sequence">23</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_fuori"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+                'plus_report_line_ids': [ref('tax_report_line_vp5')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+                'minus_report_line_ids': [ref('tax_report_line_vp4')]
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_vp3'), ref('tax_report_line_vj9')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('1601'),
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('2601'),
+            }),
+        ]"/>
+    </record>
 </odoo>
