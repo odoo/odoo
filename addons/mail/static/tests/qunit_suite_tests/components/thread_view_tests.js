@@ -694,9 +694,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     });
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -919,9 +917,7 @@ QUnit.test("delete all attachments of message without content should no longer d
     // wait for messages of the thread to be loaded
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -972,9 +968,7 @@ QUnit.test('delete all attachments of a message with some text content should st
     // wait for messages of the thread to be loaded
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1305,9 +1299,7 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
     });
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1349,9 +1341,7 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
     });
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1397,9 +1387,7 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
     });
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1454,9 +1442,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     });
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true });
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true }),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
