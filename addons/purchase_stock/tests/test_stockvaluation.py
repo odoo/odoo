@@ -1378,6 +1378,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ('account_id', '=', self.stock_valuation_account.id),
             ('move_id', '=', creditnote_po2.id)])
         self.assertEqual(price_diff_entry.credit, 100)
+        self.assertEqual(self.product1.value_svl, 100)
 
     def test_anglosaxon_valuation(self):
         self.env.company.anglo_saxon_accounting = True
@@ -1402,7 +1403,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         stock_valuation_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
         receipt_aml = stock_valuation_aml[0]
         self.assertEqual(len(stock_valuation_aml), 1, "For now, only one line for the stock valuation account")
-        self.assertAlmostEqual(receipt_aml.debit, 10, "Should be equal to the PO line unit price (10)")
+        self.assertEqual(receipt_aml.debit, 10, "Should be equal to the PO line unit price (10)")
 
         # Create an invoice with a different price
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
@@ -1414,12 +1415,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         invoice = move_form.save()
         invoice.action_post()
 
-        # Check what was posted in the price difference account
+        # Check the difference was posted in the stock valuation account
         stock_valuation_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
         price_diff_aml = stock_valuation_aml - receipt_aml
         self.assertEqual(len(stock_valuation_aml), 2, "A second line should have been generated for the price difference.")
-        self.assertAlmostEqual(price_diff_aml.debit, 5, "Price difference should be equal to 5 (15-10)")
-        self.assertAlmostEqual(
+        self.assertEqual(price_diff_aml.debit, 5, "Price difference should be equal to 5 (15-10)")
+        self.assertEqual(
             sum(stock_valuation_aml.mapped('debit')), 15,
             "Total debit value on stock valuation account should be equal to the invoiced price of the product.")
 
@@ -1428,9 +1429,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(len(input_aml), 3, "Only three lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
         invoice_amls = input_aml.filtered(lambda l: l.move_id == invoice)
         picking_aml = input_aml - invoice_amls
-        self.assertAlmostEqual(sum(invoice_amls.mapped('debit')), 15, "Total debit value on stock input account should be equal to the original PO price of the product.")
-        self.assertAlmostEqual(sum(invoice_amls.mapped('credit')), 5, "Total debit value on stock input account should be equal to the original PO price of the product.")
-        self.assertAlmostEqual(sum(picking_aml.mapped('credit')), 10, "Total credit value on stock input account should be equal to the original PO price of the product.")
+        self.assertEqual(sum(invoice_amls.mapped('debit')), 15, "Total debit value on stock input account should be equal to the original PO price of the product.")
+        self.assertEqual(sum(invoice_amls.mapped('credit')), 5, "Total credit value on stock input account should be equal to the original PO price of the product.")
+        self.assertEqual(sum(picking_aml.mapped('credit')), 10, "Total credit value on stock input account should be equal to the original PO price of the product.")
 
     def test_valuation_from_increasing_tax(self):
         """ Check that a tax without account will increment the stock value.

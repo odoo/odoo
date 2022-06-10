@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.stock_valuation_layer_ids:
                 continue
-            if invoice.move_type == 'in_invoice':
+            if invoice.move_type in ('in_invoice', 'in_refund', 'in_receipt'):
                 valued_lines |= invoice.invoice_line_ids
         if valued_lines:
             stock_valuation_layers |= valued_lines._create_in_invoice_svl()
@@ -64,8 +64,9 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for layer in stock_valuation_layers:
-            layer.description = layer.description.replace('/', layer.account_move_line_id.move_id.name)
-            layer.stock_valuation_layer_id._validate_accounting_entries()
+            # layer.description = layer.description.replace('/', layer.account_move_line_id.move_id.name)
+            # layer.stock_valuation_layer_id._validate_accounting_entries()
+            layer._validate_difference_price_accounting_entries()
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         posted._stock_account_anglo_saxon_reconcile_valuation()
@@ -240,20 +241,50 @@ class AccountMoveLine(models.Model):
         svl_vals_list = []
         for line in self:
             line = line.with_company(line.company_id)
+            move = line.move_id.with_company(line.move_id.company_id)
             po_line = line.purchase_line_id
+
             valued_moves = line._get_valued_in_moves()
+            if move.move_type == 'in_refund':
+                valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_out())
+            else:
+                valued_moves = valued_moves.filtered(lambda stock_move: stock_move._is_in())
             layers = valued_moves.stock_valuation_layer_ids
+            # Retrieves SVL linked to a return.
             uom = line.product_uom_id or line.product_id.uom_id
             if not layers:
                 continue
             # Computes price difference between invoice line and SVL.
-            previous_invoices = (po_line.invoice_lines - self)
-            total_prices = sum(layers.mapped('remaining_value')) - sum(previous_invoices.mapped('price_subtotal'))
-            total_quantity = sum(layers.mapped('quantity')) - sum(previous_invoices.mapped('quantity'))
+            previous_invoices = (po_line.invoice_lines - self).filtered(lambda aml: aml.move_id.move_type == move.move_type)
+            if move.move_type == 'in_refund':
+                total_prices = sum(layers.mapped('value')) - sum(previous_invoices.mapped('price_subtotal'))
+            else:
+                total_prices = sum(layers.mapped('remaining_value')) - sum(previous_invoices.mapped('price_subtotal'))
+            total_quantity = abs(sum(layers.mapped('quantity'))) - sum(previous_invoices.mapped('quantity'))
             if float_is_zero(total_quantity, precision_rounding=uom.rounding):
                 continue
+
+            price_unit = -line.price_unit if move.move_type == 'in_refund' else line.price_unit
+            price_unit = price_unit * (1 - (line.discount or 0.0) / 100.0)
+            if line.tax_ids:
+                if line.discount and line.quantity:
+                    # We do not want to round the price unit since :
+                    # - It does not follow the currency precision
+                    # - It may include a discount
+                    # Since compute_all still rounds the total, we use an ugly workaround:
+                    # multiply then divide the price unit.
+                    price_unit *= line.quantity
+                    price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
+                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
+                    price_unit /= line.quantity
+                else:
+                    price_unit = line.tax_ids.compute_all(
+                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
+
             layers_price_unit = total_prices / total_quantity
-            price_difference = line.price_unit - layers_price_unit
+            layers_price_unit = line.company_id.currency_id._convert(
+                layers_price_unit, po_line.currency_id, line.company_id, fields.Date.context_today(self), round=False)
+            price_difference = price_unit - layers_price_unit
             if float_is_zero(price_difference, precision_rounding=line.currency_id.rounding):
                 continue
             # Don't create value for more quantity than received
@@ -264,6 +295,7 @@ class AccountMoveLine(models.Model):
             svl_vals = line.product_id._prepare_in_svl_vals(quantity, price_difference)
             svl_vals.update(
                 line._prepare_common_svl_vals(),
+                account_move_id=move.id,
                 quantity=0,
                 unit_cost=0,
                 remaining_qty=0,

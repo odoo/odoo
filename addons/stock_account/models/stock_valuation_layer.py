@@ -37,6 +37,26 @@ class StockValuationLayer(models.Model):
             self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
         )
 
+    def _validate_difference_price_accounting_entries(self):
+        # TODO: must compute the `price_total` (like what `_stock_account_prepare_anglo_saxon_in_lines_vals` did).
+        amls_vals = []
+        for svl in self:
+            if not svl.product_id.valuation == 'real_time':
+                continue
+            if svl.currency_id.is_zero(svl.value):
+                continue
+            move = svl.stock_valuation_layer_id.stock_move_id
+            am_vals = move._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            for aml_vals in am_vals[0]['line_ids']:
+                aml_vals[2]['move_id'] = svl.account_move_id.id
+                amls_vals.append(aml_vals[2])
+        if amls_vals:
+            self.env['account.move.line'].sudo().create(amls_vals)
+        for svl in self:
+            # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            if svl.company_id.anglo_saxon_accounting:
+                svl.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=svl.product_id)
+
     def _validate_accounting_entries(self):
         am_vals = []
         for svl in self:

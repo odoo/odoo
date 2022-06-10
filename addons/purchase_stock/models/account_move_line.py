@@ -9,7 +9,8 @@ class AccountMoveLine(models.Model):
 
     def _get_valued_in_moves(self):
         self.ensure_one()
-        return self.purchase_line_id.move_ids.filtered(lambda m: m._is_in())
+        return self.purchase_line_id.move_ids.filtered(
+            lambda m: m.state == 'done' and m.product_qty != 0)
 
     def _is_not_eligible_for_price_difference(self):
         self.ensure_one()
