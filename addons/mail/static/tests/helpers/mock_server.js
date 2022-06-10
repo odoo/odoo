@@ -1933,7 +1933,7 @@ patch(MockServer.prototype, 'mail', {
             ['res_id', 'in', ids],
             ['partner_id', 'in', partner_ids || []],
         ]);
-        this.pyEnv[model].unlink(followers.map(follower => follower.id));
+        this.pyEnv['mail.followers'].unlink(followers.map(follower => follower.id));
     },
     /**
      * Simulates `_message_track` on `mail.thread`
