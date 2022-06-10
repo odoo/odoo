@@ -169,7 +169,8 @@
                                         widget="many2many_tags"
                                         attrs="{'readonly': ['|', ('is_editable', '=', False), ('product_has_cost', '=', True)],
                                                 'invisible': [('product_has_tax', '=', False)]}"
-                                        context="{'default_company_id': company_id, 'default_type_tax_use': 'purchase', 'default_price_include': 1}"/>
+                                        context="{'default_company_id': company_id, 'default_type_tax_use': 'purchase', 'default_price_include': 1}"
+                                        options="{'no_create': True}"/>
                                 </div>
                                 <div class="d-flex pt-2">
                                     <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ml-1 mr-1"> ( </span>
@@ -537,7 +538,9 @@
                             </group>
                             <group string="Accounting">
                                 <field name="property_account_expense_id" groups="account.group_account_readonly"/>
-                                <field name="supplier_taxes_id" domain="[('price_include', '=', True)]" widget="many2many_tags" context="{'default_type_tax_use':'purchase'}"/>
+                                <field name="supplier_taxes_id" domain="[('price_include', '=', True)]" widget="many2many_tags" 
+                                       context="{'default_type_tax_use':'purchase', 'default_price_include': 1}" 
+                                       options="{'no_quick_create': True}"/>
                             </group>
                         </group>
                         <notebook>
