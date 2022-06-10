@@ -47,3 +47,37 @@ class EmployeeSkill(models.Model):
             else:
                 skill_levels = record.skill_type_id.skill_level_ids
                 record.skill_level_id = skill_levels.filtered('default_level') or skill_levels[0] if skill_levels else False
+
+    def _create_logs(self):
+        today = fields.Date.context_today(self)
+        skill_to_create_vals = []
+        for employee_skill in self:
+            existing_log = self.env['hr.employee.skill.log'].search([
+                ('employee_id', '=', employee_skill.employee_id.id),
+                ('department_id', '=', employee_skill.employee_id.department_id.id),
+                ('skill_id', '=', employee_skill.skill_id.id),
+                ('date', '=', today),
+            ])
+            if existing_log:
+                existing_log.write({'skill_level_id': employee_skill.skill_level_id.id})
+            else:
+                skill_to_create_vals.append({
+                    'employee_id': employee_skill.employee_id.id,
+                    'skill_id': employee_skill.skill_id.id,
+                    'skill_level_id': employee_skill.skill_level_id.id,
+                    'department_id': employee_skill.employee_id.department_id.id,
+                    'skill_type_id': employee_skill.skill_type_id.id,
+                })
+        if skill_to_create_vals:
+            self.env['hr.employee.skill.log'].create(skill_to_create_vals)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        employee_skills = super().create(vals_list)
+        employee_skills._create_logs()
+        return employee_skills
+
+    def write(self, vals):
+        res = super().write(vals)
+        self._create_logs()
+        return res
