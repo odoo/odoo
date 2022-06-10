@@ -126,7 +126,7 @@ registerModel({
         async _performUpload({ files }) {
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
-            const chatter = this.chatterOwner; // save before async
+            const chatter = this.chatterOwner || this.attachmentBoxView && this.attachmentBoxView.chatter; // save before async
             const activity = this.activityView && this.activityView.activity; // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
