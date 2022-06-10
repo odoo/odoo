@@ -4,7 +4,7 @@ import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
-    name: 'MediaPreview',
+    name: 'CallDemoView',
     identifyingFields: ['welcomeView'],
     recordMethods: {
         /**
@@ -174,7 +174,7 @@ registerModel({
          * States the welcome view containing this media preview.
          */
         welcomeView: one('WelcomeView', {
-            inverse: 'mediaPreview',
+            inverse: 'callDemoView',
             readonly: true,
         }),
     },
