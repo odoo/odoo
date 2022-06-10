@@ -80,7 +80,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
 
     def check_reconciliation(self, invoice, picking, full_reconcile=True, operation='purchase'):
         interim_account_id = self.company_data['default_account_stock_in'].id if operation == 'purchase' else self.company_data['default_account_stock_out'].id
-        invoice_line = invoice.line_ids.filtered(lambda line: line.account_id.id == interim_account_id and not line.tax_line_id)
+        invoice_line = invoice.line_ids.filtered(lambda line: line.account_id.id == interim_account_id)
 
         stock_moves = picking.move_lines
 
