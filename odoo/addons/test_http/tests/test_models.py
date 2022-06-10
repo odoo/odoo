@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+import html
 from odoo.tests import tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import mute_logger
@@ -63,4 +63,4 @@ class TestHttpModels(TestHttpBase):
         milky_way = self.env.ref('test_http.milky_way')
         res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, 400)
-        self.assertIn("The goa'uld destroyed the gate", res.text)
+        self.assertIn("The goa'uld destroyed the gate", html.unescape(res.text))
