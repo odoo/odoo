@@ -1096,6 +1096,7 @@ class PosOrderLine(models.Model):
                     moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
                     moves.move_line_ids.unlink()
                     moves._add_mls_related_to_order(lines, are_qties_done=False)
+                    moves._recompute_state()
         return True
 
     def _is_product_storable_fifo_avco(self):
