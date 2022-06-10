@@ -26,5 +26,6 @@ E-invoice implementation
     'demo': [
         'data/account_invoice_demo.xml',
     ],
+    'post_init_hook': '_l10n_it_edi_post_init',
     'license': 'LGPL-3',
 }
