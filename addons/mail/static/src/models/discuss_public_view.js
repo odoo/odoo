@@ -44,9 +44,9 @@ registerModel({
                     pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
                 }),
             });
-            if (this.welcomeView.mediaPreview) {
-                this.welcomeView.mediaPreview.enableMicrophone();
-                this.welcomeView.mediaPreview.enableVideo();
+            if (this.welcomeView.callDemoView) {
+                this.welcomeView.callDemoView.enableMicrophone();
+                this.welcomeView.callDemoView.enableVideo();
             }
         },
     },

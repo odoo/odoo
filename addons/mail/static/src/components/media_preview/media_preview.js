@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class MediaPreview extends Component {
+export class CallDemoView extends Component {
 
     /**
      * @override
@@ -17,16 +17,16 @@ export class MediaPreview extends Component {
     }
 
     /**
-     * @returns {MediaPreview}
+     * @returns {CallDemoView}
      */
-    get mediaPreview() {
+    get callDemoView() {
         return this.props.record;
     }
 }
 
-Object.assign(MediaPreview, {
+Object.assign(CallDemoView, {
     props: { record: Object },
-    template: 'mail.MediaPreview',
+    template: 'mail.CallDemoView',
 });
 
-registerMessagingComponent(MediaPreview);
+registerMessagingComponent(CallDemoView);
