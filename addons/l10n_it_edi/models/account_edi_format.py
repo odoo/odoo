@@ -66,10 +66,23 @@ class AccountEdiFormat(models.Model):
 
         return errors
 
+    def _l10n_it_edi_is_self_invoice(self, invoice):
+        """
+            Italian EDI requires Vendor bills coming from EU countries to be sent as self-invoices.
+            We recognize these cases based on the taxes that target the VJ tax grids, which imply
+            the use of VAT External Reverse Charge.
+        """
+        report_lines_xmlids = invoice.line_ids.tax_tag_ids.tax_report_line_ids.mapped(lambda x: x.get_external_id().get(x.id, ''))
+        return (invoice.is_purchase_document()
+                and any([x.startswith("l10n_it.tax_report_line_vj") for x in report_lines_xmlids]))
+
     def _l10n_it_edi_check_ordinary_invoice_configuration(self, invoice):
         errors = []
         seller = invoice.company_id
         buyer = invoice.commercial_partner_id
+        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
+        if is_self_invoice:
+            seller, buyer = buyer, seller
 
         # <1.1.1.1>
         if not seller.country_id:
@@ -82,11 +95,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
-        if not seller.l10n_it_codice_fiscale:
+        if not is_self_invoice and not seller.l10n_it_codice_fiscale:
             errors.append(_("%s must have a codice fiscale number", seller.display_name))
 
         # <1.2.1.8>
-        if not seller.l10n_it_tax_system:
+        if not is_self_invoice and not seller.l10n_it_tax_system:
             errors.append(_("The seller's company must have a tax system."))
 
         # <1.2.2>
@@ -101,17 +114,23 @@ class AccountEdiFormat(models.Model):
         if not seller.country_id:
             errors.append(_("%s must have a country.", seller.display_name))
 
-        if seller.l10n_it_has_tax_representative and not seller.l10n_it_tax_representative_partner_id.vat:
+        if not is_self_invoice and seller.l10n_it_has_tax_representative and not seller.l10n_it_tax_representative_partner_id.vat:
             errors.append(_("Tax representative partner %s of %s must have a tax number.", seller.l10n_it_tax_representative_partner_id.display_name, seller.display_name))
 
         # <1.4.1>
         if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
             errors.append(_("The buyer, %s, or his company must have a VAT number and/or a tax code (Codice Fiscale).", buyer.display_name))
 
+        if is_self_invoice and self._l10n_it_edi_services_or_goods(invoice) == 'both':
+            errors.append(_("Cannot apply Reverse Charge to a bill which contains both services and goods."))
+
+        if is_self_invoice and not buyer.partner_id.l10n_it_pa_index:
+            errors.append(_("Vendor bills sent as self-invoices to the SdI require a valid PA Index (Codice Destinatario) on the company's contact."))
+
         # <2.2.1>
         for invoice_line in invoice.invoice_line_ids:
             if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
-                raise UserError(_("You must select one and only one tax by line."))
+                errors.append(_("In line %s, you must select one and only one tax by line.", invoice_line.name))
 
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
@@ -119,18 +138,51 @@ class AccountEdiFormat(models.Model):
 
         return errors
 
+    def _l10n_it_edi_is_simplified(self, invoice):
+        """
+            Simplified Invoices are a way for the invoice issuer to create an invoice with limited data.
+            Example: a consultant goes to the restaurant and wants the invoice instead of the receipt,
+            to be able to deduct the expense from his Taxes. The Italian State allows the restaurant
+            to issue a Simplified Invoice with the VAT number only, to speed up times, instead of
+            requiring the address and other informations about the buyer.
+            Only invoices under the threshold of 400 Euroes are allowed, to avoid this tool
+            be abused for bigger transactions, that would enable less transparency to tax institutions.
+        """
+        buyer = invoice.commercial_partner_id
+        return all([
+            self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', raise_if_not_found=False),
+            not self._l10n_it_edi_is_self_invoice(invoice),
+            self._l10n_it_edi_check_buyer_invoice_configuration(invoice),
+            not buyer.country_id or buyer.country_id.code == 'IT',
+            buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())),
+            invoice.amount_total <= 400,
+        ])
+
     def _l10n_it_edi_check_simplified_invoice_configuration(self, invoice):
-        errors = self._l10n_it_edi_check_buyer_invoice_configuration(invoice)
-        template = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', raise_if_not_found=False)
+        return [] if self._l10n_it_edi_is_simplified(invoice) else self._l10n_it_edi_check_buyer_invoice_configuration(invoice)
 
-        if errors and template:
-            buyer = invoice.commercial_partner_id
-            if ((not buyer.country_id or buyer.country_id.code == 'IT')
-                and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
-                and invoice.amount_total <= 400):
-                return []
+    def _l10n_it_edi_partner_in_eu(self, partner):
+        europe = self.env.ref('base.europe', raise_if_not_found=False)
+        country = partner.country_id
+        return not europe or not country or country in europe.country_ids
 
-        return errors
+    def _l10n_it_edi_services_or_goods(self, invoice):
+        """
+            Services and goods have different tax grids when VAT is Reverse Charged, and they can't
+            be mixed in the same invoice, because the TipoDocumento depends on which which kind
+            of product is bought and it's unambiguous.
+        """
+        scopes = []
+        for line in invoice.invoice_line_ids.filtered(lambda l: not l.display_type):
+            tax_ids_with_tax_scope = line.tax_ids.filtered(lambda x: x.tax_scope)
+            if tax_ids_with_tax_scope:
+                scopes += tax_ids_with_tax_scope.mapped('tax_scope')
+            else:
+                scopes.append(line.product_id and line.product_id.type or 'consu')
+
+        if set(scopes) == set(['consu', 'service']):
+            return "both"
+        return scopes and scopes.pop()
 
     def _l10n_it_edi_check_buyer_invoice_configuration(self, invoice):
         errors = []
@@ -139,14 +191,14 @@ class AccountEdiFormat(models.Model):
         # <1.4.2>
         if not buyer.street and not buyer.street2:
             errors.append(_("%s must have a street.", buyer.display_name))
+        if not buyer.country_id:
+            errors.append(_("%s must have a country.", buyer.display_name))
         if not buyer.zip:
             errors.append(_("%s must have a post code.", buyer.display_name))
         elif len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
             errors.append(_("%s must have a post code of length 5.", buyer.display_name))
         if not buyer.city:
             errors.append(_("%s must have a city.", buyer.display_name))
-        if not buyer.country_id:
-            errors.append(_("%s must have a country.", buyer.display_name))
 
         if any(line.quantity < 0 for line in invoice.invoice_line_ids):
             errors.append(_("All quantities should be positive."))
@@ -157,21 +209,49 @@ class AccountEdiFormat(models.Model):
 
         return errors
 
-    def _l10n_it_get_document_type(self, invoice):
-        errors_buyer = self._l10n_it_edi_check_buyer_invoice_configuration(invoice)
-        if errors_buyer: # Simplified invoice case
-            if invoice.move_type == 'out_invoice':
-                return 'TD07'
-            elif invoice.move_type == 'out_refund':
-                return 'TD08'
+    def _l10n_it_goods_in_italy(self, invoice):
+        """
+            There is a specific TipoDocumento (Document Type TD19) and tax grid (VJ3) for goods
+            that are phisically in Italy but are in a VAT deposit, meaning that the goods
+            have not passed customs.
+        """
+        report_lines_xmlids = invoice.line_ids.tax_tag_ids.tax_report_line_ids.mapped(lambda x: x.get_external_id().get(x.id, ''))
+        return any([x == "l10n_it.tax_report_line_vj3" for x in report_lines_xmlids])
 
-        if invoice.move_type == 'out_invoice':
-            return 'TD01'
-        elif invoice.move_type == 'out_refund':
-            return 'TD04'
+    def _l10n_it_document_type_mapping(self):
+        return {
+            'TD01': dict(move_type='out_invoice', import_type='in_invoice'),
+            'TD04': dict(move_type='out_refund', import_type='in_refund'),
+            'TD07': dict(move_type='out_invoice', import_type='in_invoice', simplified=True),
+            'TD08': dict(move_type='out_refund', import_type='in_refund', simplified=True),
+            'TD09': dict(move_type='out_invoice', import_type='in_invoice', simplified=True),
+            'TD17': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="service"),
+            'TD18': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
+            'TD19': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+        }
+
+    def _l10n_it_get_document_type(self, invoice):
+        is_simplified = self._l10n_it_edi_is_simplified(invoice)
+        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
+        services_or_goods = self._l10n_it_edi_services_or_goods(invoice)
+        goods_in_italy = services_or_goods == 'consu' and self._l10n_it_goods_in_italy(invoice)
+        partner_in_eu = self._l10n_it_edi_partner_in_eu(invoice.commercial_partner_id)
+        for code, infos in self._l10n_it_document_type_mapping().items():
+            info_services_or_goods = infos.get('services_or_goods', "both")
+            info_partner_in_eu = infos.get('partner_in_eu', False)
+            if all([
+                invoice.move_type == infos.get('move_type', False),
+                is_self_invoice == infos.get('self_invoice', False),
+                is_simplified == infos.get('simplified', False),
+                info_services_or_goods in ("both", services_or_goods),
+                info_partner_in_eu in (False, partner_in_eu),
+                goods_in_italy == infos.get('goods_in_italy', False),
+            ]):
+                return code
+        return None
 
     def _l10n_it_is_simplified_document_type(self, document_type):
-        return document_type in ['TD07', 'TD08', 'TD09']
+        return self._l10n_it_document_type_mapping().get(document_type, {}).get('simplified', False)
 
     # -------------------------------------------------------------------------
     # Export
@@ -187,14 +267,16 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self.code != 'fattura_pa':
             return super()._is_compatible_with_journal(journal)
-        return journal.type == 'sale' and journal.country_code == 'IT'
+        return journal.type in ('sale', 'purchase') and journal.country_code == 'IT'
 
     def _l10n_it_edi_is_required_for_invoice(self, invoice):
         """ Is the edi required for this invoice based on the method (here: PEC mail)
             Deprecated: in future release PEC mail will be removed.
             TO OVERRIDE
         """
-        return invoice.is_sale_document() and invoice.l10n_it_send_state not in ('sent', 'delivered', 'delivered_accepted') and invoice.country_code == 'IT'
+        return ((invoice.is_sale_document() or self._l10n_it_get_document_type(invoice))
+                and invoice.country_code == 'IT'
+                and invoice.l10n_it_send_state not in ('sent', 'delivered', 'delivered_accepted'))
 
     def _is_required_for_invoice(self, invoice):
         # OVERRIDE
@@ -335,12 +417,11 @@ class AccountEdiFormat(models.Model):
             # TD09 == simplified debit note
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
-            move_type = 'in_invoice'
             document_type = elements[0].text if elements else ''
-            if document_type and document_type in ['TD04', 'TD08']:
-                move_type = 'in_refund'
-            elif document_type and document_type not in ['TD01', 'TD07']:
-                _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
+            move_type = self._l10n_it_document_type_mapping().get(document_type, {}).get('import_type', False)
+            if not move_type:
+                move_type = "in_invoice"
+                _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
 
             simplified = self._l10n_it_is_simplified_document_type(document_type)
 
