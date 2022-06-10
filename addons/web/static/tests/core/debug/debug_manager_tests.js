@@ -22,11 +22,13 @@ import {
     getFixture,
     legacyExtraNextTick,
     mount,
+    nextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
 import { editSearchView, editView } from "@web/views/debug_items";
+import { setDefaults } from "@web/legacy/debug_manager";
 
 const { Component, xml } = owl;
 
@@ -504,4 +506,158 @@ QUnit.module("DebugMenu", (hooks) => {
             assert.containsNone(target, ".o_debug_manager .dropdown-item");
         }
     );
+
+    QUnit.test("set defaults: basic rendering", async (assert) => {
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("setDefaults", setDefaults);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        };
+        serverData.views["partner,18,form"] = `
+            <form>
+                <field name="m2o"/>
+                <field name="foo"/>
+                <field name="o2m"/>
+            </form>`;
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 18 }],
+        };
+        serverData.models.partner.fields.m2o.depends = [];
+        serverData.models.partner.fields.foo.depends = [];
+        serverData.models.partner.fields.o2m.depends = [];
+        serverData.models.partner.records = [{ id: 1, display_name: "p1", foo: "hello" }];
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".modal select#formview_default_fields");
+        assert.containsN(target.querySelector(".modal #formview_default_fields"), "option", 2);
+        const options = target.querySelectorAll(".modal #formview_default_fields option");
+        assert.strictEqual(options[0].value, "");
+        assert.strictEqual(options[1].value, "foo");
+    });
+
+    QUnit.test("set defaults: click close", async (assert) => {
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("setDefaults", setDefaults);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        };
+        serverData.views["partner,18,form"] = `
+            <form>
+                <field name="foo"/>
+            </form>`;
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 18 }],
+        };
+        serverData.models.partner.fields.foo.depends = [];
+        serverData.models.partner.records = [{ id: 1, display_name: "p1", foo: "hello" }];
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "set" && args.model === "ir.default") {
+                throw new Error("should not create a default");
+            }
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        assert.containsOnce(target, ".modal");
+
+        await click(target.querySelector(".modal .modal-footer button"));
+        assert.containsNone(target, ".modal");
+    });
+
+    QUnit.test("set defaults: select and save", async (assert) => {
+        assert.expect(3);
+
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("setDefaults", setDefaults);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        };
+        serverData.views["partner,18,form"] = `
+            <form>
+                <field name="foo"/>
+            </form>`;
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 18 }],
+        };
+        serverData.models.partner.fields.foo.depends = [];
+        serverData.models.partner.records = [{ id: 1, display_name: "p1", foo: "hello" }];
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+            if (args.method === "set" && args.model === "ir.default") {
+                assert.deepEqual(args.args, ["partner", "foo", "hello", true, true, false]);
+                return true;
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1234);
+        await click(target.querySelector(".o_debug_manager button"));
+        await click(target.querySelector(".o_debug_manager .dropdown-item"));
+        assert.containsOnce(target, ".modal");
+
+        const select = target.querySelector(".modal #formview_default_fields");
+        select.value = "foo";
+        select.dispatchEvent(new Event("change"));
+        await nextTick();
+        await click(target.querySelectorAll(".modal .modal-footer button")[1]);
+        assert.containsNone(target, ".modal");
+    });
 });
