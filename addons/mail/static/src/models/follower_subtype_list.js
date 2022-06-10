@@ -49,6 +49,12 @@ registerModel({
          */
         _sortFollowerSubtypeViews() {
             return [
+                ['falsy-first', 'subtype.parentModel'],
+                ['case-insensitive-asc', 'subtype.parentModel'],
+                ['falsy-first', 'subtype.resModel'],
+                ['case-insensitive-asc', 'subtype.resModel'],
+                ['smaller-first', 'subtype.isInternal'],
+                ['smaller-first', 'subtype.sequence'],
                 ['smaller-first', 'subtype.id'],
             ];
         },
