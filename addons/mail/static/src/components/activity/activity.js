@@ -109,8 +109,9 @@ export class Activity extends Component {
      * @param {Object} ev.detail
      * @param {mail.attachment} ev.detail.attachment
      */
-    _onAttachmentCreated(ev) {
-        this.activity.markAsDone({ attachments: [ev.detail.attachment] });
+    async _onAttachmentCreated(ev) {
+        await this.activity.markAsDone({ attachments: [ev.detail.attachment] });
+        this.trigger('o-attachments-changed');
     }
 
     /**

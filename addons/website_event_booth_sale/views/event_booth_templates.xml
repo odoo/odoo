@@ -4,11 +4,16 @@
     <template id="event_booth_registration" inherit_id="website_event_booth.event_booth_registration">
         <xpath expr="//h5[@name='booth_category_name']" position="after">
             <t t-if="booth_category.price">
+                <t t-if="(booth_category.price-website.get_current_pricelist().currency_id._convert(booth_category.price_reduce, event.company_id.sudo().currency_id, event.company_id, datetime.date.today())) &gt; 1 and website.get_current_pricelist().discount_policy == 'without_discount'">
+                    <del class="text-danger mr-1"
+                         t-field="booth_category.price"
+                         t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
+                </t>
                 <span t-field="booth_category.price_reduce" class="font-weight-normal text-muted"
-                      t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
                       groups="account.group_show_line_subtotals_tax_excluded"/>
                 <span t-field="booth_category.price_reduce_taxinc" class="font-weight-normal text-muted"
-                      t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
                       groups="account.group_show_line_subtotals_tax_included"/>
             </t>
             <span t-else="" class="font-weight-normal text-muted">Free</span>
