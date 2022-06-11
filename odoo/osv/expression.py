@@ -424,7 +424,7 @@ class expression(object):
         For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
-    def __init__(self, domain, model, alias=None, query=None):
+    def __init__(self, domain, model, alias=None, query=None, having=False):
         """ Initialize expression object and automatically parse the expression
             right after initialization.
 
@@ -432,6 +432,8 @@ class expression(object):
             :param model: root model
             :param alias: alias for the model table if query is provided
             :param query: optional query object holding the final result
+            :param having: indicate if this expression is for HAVING clause (True)
+                    or not (False)
 
             :attr root_model: base model for the query
             :attr expression: the domain to parse, normalized and prepared
@@ -440,6 +442,7 @@ class expression(object):
         """
         self._unaccent_wrapper = get_unaccent_wrapper(model._cr)
         self.root_model = model
+        self.is_having = having
         self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
@@ -994,7 +997,7 @@ class expression(object):
 
     def __leaf_to_sql(self, leaf, model, alias):
         left, operator, right = leaf
-
+        is_having = self.is_having
         # final sanity checks - should never fail
         assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
@@ -1094,6 +1097,8 @@ class expression(object):
 
             unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
             column = '%s.%s' % (table_alias, _quote(left))
+            if self.is_having:
+                column = '%s(%s)'%(model._fields[left].group_operator, column)
             query = f'({unaccent(column + cast)} {sql_operator} {unaccent("%s")})'
 
             if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):

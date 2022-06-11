@@ -2525,7 +2525,7 @@ class BaseModel(metaclass=MetaModel):
         return self.read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def read_group(self, domain, fields, groupby, having=[], offset=0, limit=None, orderby=False, lazy=True):
         """Get the list of records in list view grouped by the given ``groupby`` fields.
 
         :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
@@ -2542,6 +2542,8 @@ class BaseModel(metaclass=MetaModel):
                 or a string 'field:groupby_function'.  Right now, the only functions supported
                 are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
+        :param list having: :ref:`A search domain <reference/orm/domains>`. optional list to
+                make a domain of 'HAVING' clause.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
         :param str orderby: optional ``order by`` specification, for
@@ -2562,7 +2564,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
-        result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        result = self._read_group_raw(domain, fields, groupby, having=having, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
         groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
         dt = [
@@ -2596,7 +2598,7 @@ class BaseModel(metaclass=MetaModel):
         return result
 
     @api.model
-    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def _read_group_raw(self, domain, fields, groupby, having=[], offset=0, limit=None, orderby=False, lazy=True):
         self.check_access_rights('read')
         query = self._where_calc(domain)
         fields = fields or [f.name for f in self._fields.values() if f.store]
@@ -2676,6 +2678,11 @@ class BaseModel(metaclass=MetaModel):
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
+        
+        query_having = self._having_calc(having)
+        having_clause = " AND ".join(query_having._where_clauses)
+        having_clause_params = query_having._where_params
+
         if lazy and (len(groupby_fields) >= 2 or not self._context.get('group_by_no_leaf')):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
         else:
@@ -2690,6 +2697,7 @@ class BaseModel(metaclass=MetaModel):
             FROM %(from)s
             %(where)s
             %(groupby)s
+            %(having)s
             %(orderby)s
             %(limit)s
             %(offset)s
@@ -2700,11 +2708,12 @@ class BaseModel(metaclass=MetaModel):
             'from': from_clause,
             'where': prefix_term('WHERE', where_clause),
             'groupby': prefix_terms('GROUP BY', groupby_terms),
+            'having': prefix_term('HAVING ', having_clause),
             'orderby': prefix_terms('ORDER BY', orderby_terms),
             'limit': prefix_term('LIMIT', int(limit) if limit else None),
             'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
-        self._cr.execute(query, where_clause_params)
+        self._cr.execute(query, where_clause_params+having_clause_params)
         fetched_data = self._cr.dictfetchall()
 
         if not groupby_fields:
@@ -4630,6 +4639,18 @@ class BaseModel(metaclass=MetaModel):
             return expression.expression(domain, self).query
         else:
             return Query(self.env.cr, self._table, self._table_query)
+
+    @api.model
+    def _having_calc(self, domain, active_test=True):
+        """Computes the HAVING clause needed to implement an OpenERP domain.
+        :param domain: the domain to compute
+        :type domain: list
+        :param active_test: whether the default filtering of records with ``active``
+                            field set to ``False`` should be applied.
+        :return: the query expressing the given domain as provided in domain
+        :rtype: osv.query.Query
+        """
+        return expression.expression(domain, self, having=True).query
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
