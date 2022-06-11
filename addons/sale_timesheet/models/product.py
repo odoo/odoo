@@ -103,8 +103,18 @@ class ProductTemplate(models.Model):
             self.service_policy = 'ordered_timesheet'
         elif self.type == 'consu' and not self.invoice_policy and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
+
+        if self.type != 'service':
+            self.service_tracking = 'no'
         return res
 
+    def write(self, values):
+        if 'type' in values and values['type'] != 'service':
+            values.update({
+                'service_tracking': 'no',
+                'project_id': False
+            })
+        return super(ProductTemplate, self).write(values)
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -118,3 +128,18 @@ class ProductProduct(models.Model):
             self.project_template_id = False
         elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super(ProductProduct, self)._onchange_type()
+        if self.type != 'service':
+            self.service_tracking = 'no'
+        return res
+
+    def write(self, values):
+        if 'type' in values and values['type'] != 'service':
+            values.update({
+                'service_tracking': 'no',
+                'project_id': False
+            })
+        return super(ProductProduct, self).write(values)
