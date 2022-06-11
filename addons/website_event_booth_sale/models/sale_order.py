@@ -40,7 +40,16 @@ class SaleOrder(models.Model):
         if not event_booth_pending_ids:
             return values
 
+<<<<<<< HEAD
         booths = self.env['event.booth'].browse(event_booth_pending_ids)
+=======
+            values.update(
+                event_id=booths.event_id.id,
+                discount=discount,
+                price_unit=price_unit,
+                name=booths._get_booth_multiline_description(),
+            )
+>>>>>>> d3558012c1a... temp
 
         values['event_id'] = booths.event_id.id
         values['event_booth_registration_ids'] = [
