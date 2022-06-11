@@ -84,7 +84,7 @@ class SaleOrder(models.Model):
                 event_id=booths.event_id.id,
                 discount=discount,
                 price_unit=price_unit,
-                name=booths._get_booth_multiline_description,
+                name=booths._get_booth_multiline_description(),
             )
 
         return values
