@@ -56,12 +56,12 @@ msgstr "<i class=\"fa fa-info-circle mr-1\" title=\"Hint\"/>"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
-msgstr ""
+msgstr "Puantaj türünün izin türleriyle ilişkilendirilmesine izin verin."
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
 msgid "Compensatory Time Off"
-msgstr ""
+msgstr "Telafi İzni"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
@@ -135,7 +135,7 @@ msgstr "Oluşturma Tarihi"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
 msgid "Generic Time Off"
-msgstr ""
+msgstr "Genel İzin"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
@@ -166,10 +166,9 @@ msgid ""
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
-"İş girdilerini yeniden oluşturmak için, sihirbaza bir staff_id, bir "
-"date_from ve bir date_to sağlamanız gerekir. Buna ek olarak, date_from ve "
-"date_to ile tanımlanan zaman aralığı, herhangi bir doğrulanmış çalışma "
-"girişi içermemelidir."
+"Puantajları yeniden oluşturmak için, sihirbaza bir staff_id, bir date_from "
+"ve bir date_to sağlamanız gerekir. Buna ek olarak, date_from ve date_to ile "
+"tanımlanan zaman aralığı, herhangi bir doğrulanmış puantaj içermemelidir."
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
@@ -199,12 +198,12 @@ msgstr "Son tarih"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
 msgid "Legal Leaves 2022"
-msgstr ""
+msgstr "Yasal İzinler 2022"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
-msgstr ""
+msgstr "Uzun Süreli İzin"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -238,6 +237,9 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
+"Başlangıç tarihi >= '%(earliest_available_date)s' ve bitiş tarihi <= "
+"'%(latest_available_date)s' olmalıdır, bu da oluşturulan puantaj zaman "
+"aralığına karşılık gelir."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
@@ -272,9 +274,9 @@ msgstr "Puantaj Kayıtları"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
 msgid "Work Entries Within Interval"
-msgstr "Aralık İçerisindeki İş Girişleri"
+msgstr "Aralık İçerisindeki Puantaj Kayıtları"
 
 #. module: hr_work_entry_contract
 #: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
-msgstr "İşe Giriş Yenileme"
+msgstr "Puantaj Yenileme"

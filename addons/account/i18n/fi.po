@@ -27,7 +27,6 @@
 # artol <arto.leskinen@tek.fi>, 2021
 # Miku Laitinen <miku.laitinen@gmail.com>, 2021
 # Sanna Edelman <direct@generare.com>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2021
 # Marko Happonen <marko.happonen@sprintit.fi>, 2021
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2021
@@ -35,12 +34,13 @@
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2021
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Pekka Ikonen, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Joakim Weckman, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Joakim Weckman, 2022\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2022\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +126,7 @@ msgstr "%(action)s päiväkirjalle %(journal)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "%<span class=\"px-3\"/>("
-msgstr ""
+msgstr "%<span class=\"px-3\"/>("
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -489,8 +489,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_bills_count’,’&gt;’, 1)]}”>Ostolasku</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_bills_count’,’&lt;=‘, 1)]}”>Ostolaskut</span>"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Ostolasku</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Ostolaskut</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -498,8 +498,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Statement</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Statements</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_statements_count’,’&gt;’, 1)]}”>Tiliote</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_statements_count’,’&lt;=‘, 1)]}”>Tiliotteet</span>"
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Tiliote</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Tiliotteet</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -572,9 +572,9 @@ msgid ""
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> or "
 "</span>"
 msgstr ""
-"<span class=“o_form_label mx-3 oe_edit_only” attrs=“{‘invisible’: [‘|’, "
-"(‘state’, ‘!=‘, ‘draft’), (‘invoice_payment_term_id’, ‘!=‘, False)]}”> tai "
-"</span>"
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', "
+"False)]}\">tai</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -587,6 +587,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('amount_type','!=','percentage')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('amount_type','!=','percentage')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -595,6 +597,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('amount_type','=','fixed')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('amount_type','=','fixed')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -602,6 +606,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('value','!=','percent')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('value','!=','percent')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -691,6 +697,9 @@ msgid ""
 "                                        Balance\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Saldo\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -751,6 +760,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">19,250.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -847,7 +858,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>5.00</span>"
-msgstr ""
+msgstr "<span>5.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -870,7 +881,7 @@ msgstr "<span>Ale%</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Draft</span>"
-msgstr ""
+msgstr "<span>Luonnos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -921,7 +932,7 @@ msgstr "<span>Raportointi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
-msgstr ""
+msgstr "<span>Vero 0%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -3857,12 +3868,12 @@ msgstr "Yritys"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "Yrityksen Pankkitili"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Yrityksen Maa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__currency_id
@@ -4739,7 +4750,7 @@ msgstr "Asiakas/Toimittaja"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Customer:"
-msgstr ""
+msgstr "Asiakas:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_customer
@@ -8515,7 +8526,7 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
-"Tämän rivin kohdistusnumero, ‘P’, jos se täsmäytetään vain osittain, tai "
+"Tämän rivin kohdistusnumero, 'P', jos se täsmäytetään vain osittain, tai "
 "täydellisen täsmäytyksen nimi, jos sellainen on olemassa."
 
 #. module: account
@@ -12685,7 +12696,7 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Veroraporttirivit, joiden ‘+’ -tunniste määritetään tapahtumariveille tällä "
+"Veroraporttirivit, joiden '+' -tunniste määritetään tapahtumariveille tällä "
 "jakorivillä"
 
 #. module: account
@@ -12694,7 +12705,7 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Veroraporttirivit, joiden ‘-’ -tunniste määritetään tapahtumariveille tällä "
+"Veroraporttirivit, joiden '-' -tunniste määritetään tapahtumariveille tällä "
 "jakorivillä"
 
 #. module: account
