@@ -2947,6 +2947,10 @@ class AccountMove(models.Model):
                 move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
+    def _post_check_localization(self):
+        """Individual checks on accounting localizations can be placed here.
+        """
+        return
 
     def post(self):
         warnings.warn(
@@ -3024,6 +3028,9 @@ class AccountMove(models.Model):
 
             # When the accounting date is prior to a lock date, change it automatically upon posting.
             move._post_check_lock_date()
+
+            # Other localization checks
+            move._post_check_localization()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.mapped('line_ids').create_analytic_lines()
