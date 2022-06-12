@@ -14,6 +14,7 @@
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # marcescu, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,13 +22,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -148,7 +149,7 @@ msgstr "Jornada predeterminada"
 #: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
 #: model:ir.model.fields,help:resource.field_resource_test__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr "Define la planificación del recurso."
+msgstr "Define la planificación del recurso"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -188,7 +189,7 @@ msgstr "Fecha final"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
 msgid "Even week"
-msgstr ""
+msgstr "Incluso semana"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
@@ -216,7 +217,7 @@ msgstr "Viernes por la mañana"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
-"Da la secuencia de esta línea cuando se muestra el calendario de recursos"
+"Da la secuencia de esta línea cuando se muestra el calendario de recursos."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -257,7 +258,7 @@ msgid ""
 "the time off is only for this resource"
 msgstr ""
 "Si está vacío, son ausencias genéricas para la empresa. Si un recurso está "
-"configurado, la ausencia es solo para este recurso."
+"configurado, la ausencia es solo para este recurso"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -359,7 +360,7 @@ msgstr "Nombre"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
 msgid "Odd week"
-msgstr ""
+msgstr "Semana impar"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
@@ -528,7 +529,7 @@ msgstr "Cambiar a calendario de 2 semanas"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
 msgid "Technical field for UX purpose."
-msgstr "Campo técnico para propósitos de usabilidad"
+msgstr "Campo técnico para propósitos de usabilidad."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
@@ -546,6 +547,8 @@ msgstr "El factor de eficiencia no puede ser igual a 0."
 #, python-format
 msgid "The start date of the time off must be earlier end date."
 msgstr ""
+"La fecha de inicio del tiempo libre debe ser anterior a la fecha de "
+"finalización."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -669,7 +672,7 @@ msgstr "Miércoles por la mañana"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Even/Odd"
-msgstr ""
+msgstr "Semana par/impar"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -741,7 +744,7 @@ msgstr "Tiempos de Trabajo"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
-msgstr "No puede eliminar secciones entre semanas"
+msgstr "No puede eliminar secciones entre semanas."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

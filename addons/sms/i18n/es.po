@@ -16,10 +16,10 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2019
 # Francis Peña <francisca.e@gmx.com>, 2019
 # VivianMontana23 <vivianpvm@gmail.com>, 2020
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # marcescu, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,13 +27,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -63,7 +63,7 @@ msgstr "%s caracteres, cabe en %s SMS (%s) "
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
-msgstr "%sDestinatarios inválidos"
+msgstr "%s destinatarios inválidos"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -71,7 +71,7 @@ msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this SMS again to the recipients you did not select."
 msgstr ""
-"<span class=\"fa fa-info-circle\"/>Precaución: no será posible enviar este "
+"<span class=\"fa fa-info-circle\"/> Precaución: no será posible enviar este "
 "SMS nuevamente a los destinatarios que no seleccionó."
 
 #. module: sms
@@ -81,7 +81,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Agregar</span>\n"
-"<span class=\"o_stat_text\">Acción de contexto</span>"
+"                                <span class=\"o_stat_text\">Acción de contexto</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -90,7 +90,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Eliminar</span>\n"
-"<span class=\"o_stat_text\">Acción de contexto</span>"
+"                                <span class=\"o_stat_text\">Acción de contexto</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -98,6 +98,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
+"False)]}\">No hay registros</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -143,7 +145,7 @@ msgid ""
 "Are you sure you want to discard %s SMS delivery failures. You won't be able"
 " to re-send these SMS later!"
 msgstr ""
-"¿Está seguro de que desea descartar los %s errores de entrega de SMS? ¡No "
+"¿Está seguro de que desea descartar los %s errores de entrega de SMS?. ¡No "
 "podrás volver a enviar estos SMS más tarde!"
 
 #. module: sms
@@ -260,7 +262,7 @@ msgstr "Cliente: SMS automatizado"
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear ${object.display_name} this is an automated SMS."
-msgstr ""
+msgstr "Estimado ${object.display_name}, este es un SMS automatizado."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__null_value
@@ -368,7 +370,7 @@ msgstr "Campo"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Field holding number"
-msgstr ""
+msgstr "Número de retención de campo"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
@@ -488,7 +490,7 @@ msgstr "Crédito insuficiente"
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid number"
-msgstr ""
+msgstr "Número invalido"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -568,8 +570,9 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
-"Tipo de mensaje: email para mensajes de correo, notification para mensajes "
-"de sistema, comment para otros tipos de mensaje como respuestas de usuarios."
+"Tipo de mensaje: correo electrónico para mensajes de correo, notification "
+"para mensajes de sistema, comment para otros tipos de mensaje como "
+"respuestas de usuarios"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
@@ -581,7 +584,7 @@ msgstr "Numero faltante"
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Missing number"
-msgstr ""
+msgstr "Numero faltante"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__model
@@ -917,7 +920,7 @@ msgstr "Enviar a números"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
 msgid "Sending Failures"
-msgstr "Fallos de envío "
+msgstr "Fallos de envío"
 
 #. module: sms
 #: code:addons/sms/models/ir_actions.py:0
@@ -1036,6 +1039,8 @@ msgid ""
 "UX field computing the number of recipients in mass mode based on given "
 "active domain"
 msgstr ""
+"Campo UX que calcula la cantidad de destinatarios en modo masivo según el "
+"dominio activo dado"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
@@ -1043,6 +1048,8 @@ msgid ""
 "UX field computing the number of recipients in mass mode without active "
 "domain"
 msgstr ""
+"Campo UX que calcula el número de destinatarios en modo masivo sin dominio "
+"activo"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1066,6 +1073,9 @@ msgid ""
 " detect the language of your recipient by a placeholder expression (e.g. "
 "${object.partner_id.lang})"
 msgstr ""
+"Use este campo para forzar un idioma específico (código ISO) o detectar "
+"dinámicamente el idioma de su destinatario mediante una expresión de "
+"marcador de posición (por ejemplo, ${object.partner_id.lang})"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
@@ -1120,7 +1130,7 @@ msgstr "es válido."
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or ${object.partner_id.lang}"
-msgstr ""
+msgstr "por ej. en_US o ${object.partner_id.lang}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1129,7 +1139,7 @@ msgid ""
 "                                and"
 msgstr ""
 "los destinatarios son válidos\n"
-"                                 y"
+"                                y"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
