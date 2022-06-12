@@ -2525,7 +2525,7 @@ class BaseModel(metaclass=MetaModel):
         return self.read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     @api.model
-    def read_group(self, domain, fields, groupby, having=[], offset=0, limit=None, orderby=False, lazy=True):
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True, having=None):
         """Get the list of records in list view grouped by the given ``groupby`` fields.
 
         :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
@@ -2542,8 +2542,6 @@ class BaseModel(metaclass=MetaModel):
                 or a string 'field:groupby_function'.  Right now, the only functions supported
                 are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
-        :param list having: :ref:`A search domain <reference/orm/domains>`. optional list to
-                make a domain of 'HAVING' clause.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
         :param str orderby: optional ``order by`` specification, for
@@ -2553,6 +2551,8 @@ class BaseModel(metaclass=MetaModel):
         :param bool lazy: if true, the results are only grouped by the first groupby and the
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
                 done in one call.
+        :param list having: :ref:`A search domain <reference/orm/domains>`. optional list to
+                make a domain of 'HAVING' clause.
         :return: list of dictionaries(one dictionary for each record) containing:
 
                     * the values of fields grouped by the fields in ``groupby`` argument
@@ -2564,7 +2564,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
-        result = self._read_group_raw(domain, fields, groupby, having=having, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy, having=having)
 
         groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
         dt = [
@@ -2598,7 +2598,7 @@ class BaseModel(metaclass=MetaModel):
         return result
 
     @api.model
-    def _read_group_raw(self, domain, fields, groupby, having=[], offset=0, limit=None, orderby=False, lazy=True):
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True, having=None):
         self.check_access_rights('read')
         query = self._where_calc(domain)
         fields = fields or [f.name for f in self._fields.values() if f.store]
@@ -2678,7 +2678,7 @@ class BaseModel(metaclass=MetaModel):
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
-        
+
         query_having = self._having_calc(having)
         having_clause = " AND ".join(query_having._where_clauses)
         having_clause_params = query_having._where_params
@@ -4650,7 +4650,7 @@ class BaseModel(metaclass=MetaModel):
         :return: the query expressing the given domain as provided in domain
         :rtype: osv.query.Query
         """
-        return expression.expression(domain, self, having=True).query
+        return expression.expression(domain or [], self, having=True).query
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
