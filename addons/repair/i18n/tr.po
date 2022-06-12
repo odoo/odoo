@@ -69,6 +69,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* 'Taslak' durumu, bir kullanıcı yeni ve onaylanmamış bir onarım siparişini kodlarken kullanılır.\n"
+"* 'Onaylandı' durumu, bir kullanıcı onarım siparişini onayladığında kullanılır.\n"
+"* 'Onarıma Hazır' durumu onarıma başlamak için kullanılır, kullanıcı ancak onarım siparişi onaylandıktan sonra onarıma başlayabilir.\n"
+"* Onarım devam ederken 'Onarım Altında' durumu kullanılır.\n"
+"* 'Faturalandırılacak' durumu, onarım yapılmadan önce veya sonra fatura oluşturmak için kullanılır.\n"
+"* Onarım tamamlandığında 'Bitti' durumu ayarlanır.\n"
+"* Kullanıcı onarım siparişini iptal ettiğinde 'İptal edildi' durumu kullanılır."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -99,6 +106,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Merhaba <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Onarım siparişiniz <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            Tutarı <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br/>\n"
+"        </t>\n"
+"        Herhangi bir sorunuz varsa bu e-postayı yanıtlayabilirsiniz.\n"
+"        <br/><br/>\n"
+"        Teşekkürler,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -117,7 +143,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Onarımlar</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1022,7 +1048,7 @@ msgstr "Onarım Teklif #:"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr ""
+msgstr "Onarım Teklifi: E-posta ile gönder"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1068,7 +1094,7 @@ msgstr "Onarım siparişi sayısı"
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "%snin onarım siparişleri"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1171,6 +1197,7 @@ msgstr "Teklifi Gönder"
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
 msgstr ""
+"Ürünlerin bulunduğu operasyon hatları için seri numarası gereklidir: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1454,3 +1481,5 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name }} Onarım Siparişleri (Referans {{ object.name or "
+"'n/a' }})"
