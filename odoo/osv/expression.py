@@ -971,7 +971,6 @@ class expression(object):
 
     def __leaf_to_sql(self, leaf, model, alias):
         left, operator, right = leaf
-        is_having = self.is_having
         # final sanity checks - should never fail
         assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
