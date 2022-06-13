@@ -29,6 +29,7 @@ export class PartnerImStatusIcon extends Component {
         if (!this.props.hasOpenChat) {
             return;
         }
+        ev.stopPropagation();
         this.partner.openChat();
     }
 
