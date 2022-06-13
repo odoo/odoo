@@ -3567,6 +3567,7 @@ class AccountMoveLine(models.Model):
     matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', string='Matched Credits',
         help='Credit journal items that are matched with this journal item.', readonly=True)
     matching_number = fields.Char(string="Matching #", compute='_compute_matching_number', store=True, help="Matching number for this line, 'P' if it is only partially reconcile, or the name of the full reconcile if it exists.")
+    is_account_reconcile = fields.Boolean(related='account_id.reconcile', string='Account Reconcile', help='Technical field for the matching link widget')
 
     # ==== Analytic fields ====
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
@@ -5812,13 +5813,22 @@ class AccountMoveLine(models.Model):
         return action
 
     def open_move(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'view_mode': 'form',
-            'res_id': self.move_id.id,
-            'views': [(False, 'form')],
-        }
+        if self.payment_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.payment',
+                'view_mode': 'form',
+                'res_id': self.payment_id.id,
+                'views': [(False, 'form')],
+            }
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move',
+                'view_mode': 'form',
+                'res_id': self.move_id.id,
+                'views': [(False, 'form')],
+            }
 
 
     def action_automatic_entry(self):
