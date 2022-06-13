@@ -43,8 +43,8 @@
                     </t>
                     <div class="flex-grow-1"/>
                         <div class="o_ChatterTopbar_rightSection flex-grow-1 flex-shrink-0 justify-content-end d-flex">
-                            <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments btn btn-link" type="button" t-att-disabled="chatterTopbar.chatter.isDisabled" t-on-click="chatterTopbar.chatter.onClickButtonAttachments" title="Show Attachments">
-                                <i class="fa fa-paperclip"/>
+                            <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments btn btn-link" type="button" t-att-disabled="chatterTopbar.chatter.isDisabled" t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'" t-on-click="chatterTopbar.chatter.onClickButtonAttachments" title="Show Attachments">
+                                <i class="fa fa-paperclip" role="img" aria-label="Attachments"/>
                                 <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
                                     <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount pl-1" t-esc="chatterTopbar.attachmentButtonText"/>
                                 </t>
