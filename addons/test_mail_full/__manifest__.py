@@ -16,7 +16,7 @@ real applications. """,
         'mail_bot',
         # 'snailmail',
         'mass_mailing',
-        'mass_mailing_sms',
+        'mass_mailing_sms',  # adds portal
         'phone_validation',
         'sms',
     ],
