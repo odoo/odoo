@@ -300,6 +300,7 @@ class TestSurveyCommon(SurveyCase):
             'survey_id': self.survey.id,
             'sequence': 1,
             'is_page': True,
+            'question_type': False,
         })
         self.question_ft = self.env['survey.question'].with_user(self.survey_manager).create({
             'title': 'Test Free Text',
