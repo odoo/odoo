@@ -20,6 +20,7 @@ import { registry } from "@web/core/registry";
 import { FilterMenu } from "@web/search/filter_menu/filter_menu";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
+import testUtils from "web.test_utils";
 
 const { Component, xml } = owl;
 
@@ -2328,9 +2329,8 @@ QUnit.module("Search", (hooks) => {
 
         await doAction(webclient, 1, { viewType: "form" });
 
-        await click(target, "[name=company_id] .o_input");
-        await click(target, "[name=company_id] .o_input");
-        await click(document, ".o_m2o_dropdown_option");
+        await testUtils.fields.many2one.clickOpenDropdown("company_id");
+        await testUtils.fields.many2one.clickItem("company_id", "Search");
         await legacyExtraNextTick();
 
         assert.containsOnce(document.body, ".modal .o_list_view");
