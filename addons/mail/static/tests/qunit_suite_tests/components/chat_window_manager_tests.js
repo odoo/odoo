@@ -10,7 +10,6 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { file, dom } from 'web.test_utils';
 const { createFile, inputFiles } = file;
 const { triggerEvent } = dom;
@@ -206,13 +205,14 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
      * Enough space for 3 visible chat windows:
      *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
      */
-    assert.expect(11);
+    assert.expect(12);
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Partner 131" });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    pyEnv['mail.channel'].create([
+    const [, mailChannelId2] = pyEnv['mail.channel'].create([
         {
+            name: 'channel-1',
             channel_last_seen_partner_ids: [
                 [0, 0, {
                     is_minimized: true,
@@ -221,9 +221,10 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
             ],
         },
         {
+            name: 'channel-2',
             channel_last_seen_partner_ids: [
                 [0, 0, {
-                    is_minimized: true,
+                    is_minimized: false,
                     partner_id: pyEnv.currentPartnerId,
                 }],
             ],
@@ -231,7 +232,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     ]);
     const imSearchDef = makeDeferred();
     patchUiSize({ width: 1920 });
-    const { click, createMessagingMenuComponent } = await start({
+    const { click, createMessagingMenuComponent, insertText, messaging } = await start({
         mockRPC(route, args) {
             if (args.method === 'im_search') {
                 imSearchDef.resolve();
@@ -242,8 +243,8 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     assert.containsN(
         document.body,
         '.o_ChatWindow',
-        2,
-        "should have 2 chat windows initially"
+        1,
+        "should have 1 chat window initially"
     );
     assert.containsNone(
         document.body,
@@ -262,8 +263,8 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     assert.containsN(
         document.body,
         '.o_ChatWindow',
-        3,
-        "should have 3 chat window after opening 'new message' chat window",
+        2,
+        "should have 2 chat windows after opening 'new message' chat window",
     );
     assert.containsOnce(
         document.body,
@@ -271,24 +272,33 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
         "'new message' chat window should have new message form input"
     );
     assert.hasClass(
-        document.querySelector('.o_ChatWindow[data-visible-index="2"]'),
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
         'o-new-message',
         "'new message' chat window should be the last chat window initially",
     );
 
-    await click('.o_ChatWindow[data-visible-index="2"] .o_ChatWindowHeader_commandShiftNext');
+    // open channel-2
+    await click(`.o_MessagingMenu_toggler`);
+    await click(`.o_NotificationListItem[data-thread-local-id="${
+        messaging.models['Thread'].findFromIdentifyingData({
+            id: mailChannelId2,
+            model: 'mail.channel',
+        }).localId
+    }"]`);
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        3,
+        "should have 3 chat windows after opening chat window of 'channel-2'",
+    );
     assert.hasClass(
         document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
         'o-new-message',
-        "'new message' chat window should have moved to the middle after clicking shift previous",
+        "'new message' chat window should be in the middle after opening chat window of 'channel-2'",
     );
 
     // search for a user in "new message" autocomplete
-    document.execCommand('insertText', false, "131");
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
-        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    await insertText('.o_ChatWindow_newMessageFormInput', "131");
     // Wait for search RPC to be resolved. The following await lines are
     // necessary because autocomplete is an external lib therefore it is not
     // possible to use `afterNextRender`.
@@ -1119,208 +1129,6 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
             }"]
         `).classList.contains('o-focused'),
         "chat window of chat should no longer have focus"
-    );
-});
-
-QUnit.test('open 2 chat windows: check shift operations are available', async function (assert) {
-    assert.expect(9);
-
-    const pyEnv = await startServer();
-    pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
-    const { click, createMessagingMenuComponent } = await start();
-    await createMessagingMenuComponent();
-
-    await click('.o_MessagingMenu_toggler');
-    await afterNextRender(() => {
-        document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_NotificationList_preview')[0].click();
-    });
-    await click('.o_MessagingMenu_toggler');
-    await afterNextRender(() => {
-        document.querySelectorAll('.o_MessagingMenu_dropdownMenu .o_NotificationList_preview')[1].click();
-    });
-    assert.containsN(
-        document.body,
-        '.o_ChatWindow',
-        2,
-        "should have opened 2 chat windows"
-    );
-    assert.containsOnce(
-        document.querySelectorAll('.o_ChatWindow')[0],
-        '.o_ChatWindowHeader_commandShiftPrev',
-        "first chat window should be allowed to shift left"
-    );
-    assert.containsNone(
-        document.querySelectorAll('.o_ChatWindow')[0],
-        '.o_ChatWindowHeader_commandShiftNext',
-        "first chat window should not be allowed to shift right"
-    );
-    assert.containsNone(
-        document.querySelectorAll('.o_ChatWindow')[1],
-        '.o_ChatWindowHeader_commandShiftPrev',
-        "second chat window should not be allowed to shift left"
-    );
-    assert.containsOnce(
-        document.querySelectorAll('.o_ChatWindow')[1],
-        '.o_ChatWindowHeader_commandShiftNext',
-        "second chat window should be allowed to shift right"
-    );
-
-    const initialFirstChatWindowThreadLocalId =
-        document.querySelectorAll('.o_ChatWindow')[0].dataset.threadLocalId;
-    const initialSecondChatWindowThreadLocalId =
-        document.querySelectorAll('.o_ChatWindow')[1].dataset.threadLocalId;
-    await afterNextRender(() => {
-        document.querySelectorAll('.o_ChatWindow')[0]
-            .querySelector(':scope .o_ChatWindowHeader_commandShiftPrev')
-            .click();
-    });
-    assert.strictEqual(
-        document.querySelectorAll('.o_ChatWindow')[0].dataset.threadLocalId,
-        initialSecondChatWindowThreadLocalId,
-        "First chat window should be second after it has been shift left"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_ChatWindow')[1].dataset.threadLocalId,
-        initialFirstChatWindowThreadLocalId,
-        "Second chat window should be first after the first has been shifted left"
-    );
-
-    await afterNextRender(() => {
-        document.querySelectorAll('.o_ChatWindow')[1]
-            .querySelector(':scope .o_ChatWindowHeader_commandShiftNext')
-            .click();
-    });
-    assert.strictEqual(
-        document.querySelectorAll('.o_ChatWindow')[0].dataset.threadLocalId,
-        initialFirstChatWindowThreadLocalId,
-        "First chat window should be back at first place after being shifted left then right"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_ChatWindow')[1].dataset.threadLocalId,
-        initialSecondChatWindowThreadLocalId,
-        "Second chat window should be back at second place after first one has been shifted left then right"
-    );
-});
-
-QUnit.test('open 2 folded chat windows: check shift operations are available', async function (assert) {
-    /**
-     * computation uses following info:
-     * ([mocked] global window width: 900px)
-     * (others: @see `mail/static/src/models/chat_window_manager.js:visual`)
-     *
-     * - chat window width: 325px
-     * - start/end/between gap width: 10px/10px/5px
-     * - global width: 900px
-     *
-     * 2 visible chat windows + hidden menu:
-     *  10 + 325 + 5 + 325 + 10 = 675 < 900
-     */
-    assert.expect(13);
-
-    const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
-    const channel = {
-        channel_last_seen_partner_ids: [
-            [0, 0, {
-                fold_state: 'folded',
-                is_minimized: true,
-                partner_id: pyEnv.currentPartnerId,
-            }],
-        ],
-        channel_type: "channel",
-    };
-    const chat = {
-        channel_last_seen_partner_ids: [
-            [0, 0, {
-                fold_state: 'folded',
-                is_minimized: true,
-                partner_id: pyEnv.currentPartnerId,
-            }],
-            [0, 0, { partner_id: resPartnerId1 }],
-        ],
-        channel_type: "chat",
-    };
-    pyEnv['mail.channel'].create([channel, chat]);
-    patchUiSize({ width: 900 });
-    const { click } = await start();
-
-    assert.containsN(
-        document.body,
-        '.o_ChatWindow',
-        2,
-        "should have opened 2 chat windows initially"
-    );
-    assert.hasClass(
-        document.querySelector('.o_ChatWindow[data-visible-index="0"]'),
-        'o-folded',
-        "first chat window should be folded"
-    );
-    assert.hasClass(
-        document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
-        'o-folded',
-        "second chat window should be folded"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatWindow .o_ChatWindowHeader_commandShiftPrev',
-        "there should be only one chat window allowed to shift left even if folded"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatWindow .o_ChatWindowHeader_commandShiftNext',
-        "there should be only one chat window allowed to shift right even if folded"
-    );
-
-    const initialFirstChatWindowThreadLocalId =
-        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId;
-    const initialSecondChatWindowThreadLocalId =
-        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId;
-    await click('.o_ChatWindowHeader_commandShiftPrev');
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
-        initialSecondChatWindowThreadLocalId,
-        "First chat window should be second after it has been shift left"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
-        initialFirstChatWindowThreadLocalId,
-        "Second chat window should be first after the first has been shifted left"
-    );
-
-    await click('.o_ChatWindowHeader_commandShiftPrev');
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
-        initialFirstChatWindowThreadLocalId,
-        "First chat window should be back at first place"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
-        initialSecondChatWindowThreadLocalId,
-        "Second chat window should be back at second place"
-    );
-
-    await click('.o_ChatWindowHeader_commandShiftNext');
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
-        initialSecondChatWindowThreadLocalId,
-        "First chat window should be second after it has been shift right"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
-        initialFirstChatWindowThreadLocalId,
-        "Second chat window should be first after the first has been shifted right"
-    );
-
-    await click('.o_ChatWindowHeader_commandShiftNext');
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
-        initialFirstChatWindowThreadLocalId,
-        "First chat window should be back at first place"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
-        initialSecondChatWindowThreadLocalId,
-        "Second chat window should be back at second place"
     );
 });
 
@@ -2156,89 +1964,6 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
 });
 
-QUnit.test('Textual representations of shift previous/next operations are correctly mapped to left/right in LTR locale', async function (assert) {
-    assert.expect(2);
-
-    const pyEnv = await startServer();
-    pyEnv['mail.channel'].create([
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-        },
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-        },
-    ]);
-    await start();
-
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindowHeader_commandShiftPrev').title,
-        "Shift left",
-        "shift previous operation should be have 'Shift left' as title in LTR locale"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindowHeader_commandShiftNext').title,
-        "Shift right",
-        "shift next operation should have 'Shift right' as title in LTR locale"
-    );
-});
-
-QUnit.test('Textual representations of shift previous/next operations are correctly mapped to right/left in RTL locale', async function (assert) {
-    assert.expect(2);
-
-    const pyEnv = await startServer();
-    pyEnv['mail.channel'].create([
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-        },
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-        },
-    ]);
-    await start({
-        services: {
-            localization: makeFakeLocalizationService({
-                dateFormat: '%m/%d/%Y',
-                timeFormat: '%H:%M:%S',
-                direction: 'rtl',
-                grouping: [],
-                thousandsSep: ',',
-                decimalPoint: '.',
-            }),
-        },
-    });
-
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindowHeader_commandShiftPrev').title,
-        "Shift right",
-        "shift previous operation should have 'Shift right' as title in RTL locale"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_ChatWindowHeader_commandShiftNext').title,
-        "Shift left",
-        "shift next operation should have 'Shift left' as title in RTL locale"
-    );
-});
-
 QUnit.test('chat window should open when receiving a new DM', async function (assert) {
     assert.expect(1);
 
@@ -2376,162 +2101,6 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
         "should not have any chat window hidden menu in mobile (transition from desktop having 2 visible chat windows)",
     );
 });
-
-QUnit.skip('chat window scroll position should remain the same after switching previous', async function (assert) {
-    assert.expect(2);
-
-    const pyEnv = await startServer();
-
-    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    fold_state: 'open',
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-            channel_type: "chat",
-            uuid: 'channel-10-uuid',
-        },
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    fold_state: 'open',
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-            channel_type: "chat",
-            uuid: 'channel-10-uuid',
-        }
-    ]);
-
-    for (let i = 0; i < 10; i++) {
-        pyEnv['mail.message'].create({
-            body: "not empty",
-            model: "mail.channel",
-            res_id: mailChannelId1,
-        });
-    }
-    for (let i = 0; i < 10; i++) {
-        pyEnv['mail.message'].create({
-            body: "not empty",
-            model: "mail.channel",
-            res_id: mailChannelId2,
-        });
-    }
-    const { afterEvent, createMessagingMenuComponent, messaging } = await start();
-    await createMessagingMenuComponent();
-
-    const thread1LocalId = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    }).localId;
-    const thread2LocalId = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId2,
-        model: 'mail.channel',
-    }).localId;
-    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop = 100;
-    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop = 110;
-
-    await afterEvent({
-        eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_ChatWindowHeader_commandShiftPrev').click(),
-        message: "Should wait until the scroll is adjusted after a command shift.",
-        predicate: ({ hint }) => {
-            return hint.type === 'adjust-scroll';
-        },
-    });
-    assert.strictEqual(
-        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop,
-        110,
-        "Scroll position should remain the same after a chat window shift"
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop,
-        100,
-        "Scroll position should remain the same after a chat window shift"
-    );
-});
-
-QUnit.skip('chat window scroll position should remain the same after switching next', async function (assert) {
-    assert.expect(2);
-
-    const pyEnv = await startServer();
-    const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    fold_state: 'open',
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-            channel_type: "chat",
-            uuid: 'channel-10-uuid',
-        },
-        {
-            channel_last_seen_partner_ids: [
-                [0, 0, {
-                    fold_state: 'open',
-                    is_minimized: true,
-                    partner_id: pyEnv.currentPartnerId,
-                }],
-            ],
-            channel_type: "chat",
-            uuid: 'channel-10-uuid',
-        }
-    ]);
-
-    for (let i = 0; i < 10; i++) {
-        pyEnv['mail.message'].create({
-            body: "not empty",
-            model: "mail.channel",
-            res_id: mailChannelId1,
-        });
-    }
-    for (let i = 0; i < 10; i++) {
-        pyEnv['mail.message'].create({
-            body: "not empty",
-            model: "mail.channel",
-            res_id: mailChannelId2,
-        });
-    }
-    const { afterEvent, createMessagingMenuComponent, messaging } = await start();
-    await createMessagingMenuComponent();
-
-    const thread1LocalId = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    }).localId;
-    const thread2LocalId = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId2,
-        model: 'mail.channel',
-    }).localId;
-    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop = 100;
-    document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop = 110;
-
-    await afterEvent({
-        eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_ChatWindowHeader_commandShiftNext').click(),
-        message: "Should wait until the scroll is adjusted after a command shift.",
-        predicate: ({ hint }) => {
-            return hint.type === 'adjust-scroll';
-        },
-    });
-    assert.strictEqual(
-        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread2LocalId}"] .o_ThreadView_messageList`).scrollTop,
-        110,
-        "Scroll position should remain the same after a chat window shift"
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_ChatWindow[data-thread-local-id="${thread1LocalId}"] .o_ThreadView_messageList`).scrollTop,
-        100,
-        "Scroll position should remain the same after a chat window shift"
-    );
-});
-
 
 });
 });

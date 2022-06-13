@@ -14,8 +14,6 @@ registerModel({
         onClick(ev) {
             if (
                 isEventHandled(ev, 'ChatWindow.onClickCommand') ||
-                isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext') ||
-                isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev') ||
                 isEventHandled(ev, 'ChatWindow.onClickHideMemberList') ||
                 isEventHandled(ev, 'ChatWindow.onClickShowMemberList')
             ) {

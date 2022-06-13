@@ -224,20 +224,6 @@ registerModel({
             await this.thread.toggleCall();
         },
         /**
-         * @param {MouseEvent} ev
-         */
-        onClickShiftNext(ev) {
-            markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
-            this.shiftNext();
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickShiftPrev(ev) {
-            markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
-            this.shiftPrev();
-        },
-        /**
          * Handles click on the "add users" button.
          *
          * @param {MouseEvent} ev
@@ -342,18 +328,6 @@ registerModel({
             );
         },
         /**
-         * Swap this chat window with the previous one.
-         */
-        shiftPrev() {
-            this.manager.shiftPrev(this);
-        },
-        /**
-         * Swap this chat window with the next one.
-         */
-        shiftNext() {
-            this.manager.shiftNext(this);
-        },
-        /**
          * @param {Object} [param0={}]
          * @param {boolean} [param0.notifyServer]
          */
@@ -421,35 +395,6 @@ registerModel({
          */
         _computeHasNewMessageForm() {
             return this.isVisible && !this.isFolded && !this.thread;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasShiftPrev() {
-            if (!this.manager) {
-                return false;
-            }
-            const allVisible = this.manager.allOrderedVisible;
-            const index = allVisible.findIndex(visible => visible === this);
-            if (index === -1) {
-                return false;
-            }
-            return index < allVisible.length - 1;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasShiftNext() {
-            if (!this.manager) {
-                return false;
-            }
-            const index = this.manager.allOrderedVisible.findIndex(visible => visible === this);
-            if (index === -1) {
-                return false;
-            }
-            return index > 0;
         },
         /**
          * @private
@@ -525,26 +470,6 @@ registerModel({
          */
         _computeNewMessageFormInputPlaceholder() {
             return this.env._t("Search user...");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeShiftNextText() {
-            if (this.messaging.locale.textDirection === 'rtl') {
-                return this.env._t("Shift left");
-            }
-            return this.env._t("Shift right");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeShiftPrevText() {
-            if (this.messaging.locale.textDirection === 'rtl') {
-                return this.env._t("Shift right");
-            }
-            return this.env._t("Shift left");
         },
         /**
          * @private
@@ -675,14 +600,6 @@ registerModel({
         hasNewMessageForm: attr({
             compute: '_computeHasNewMessageForm',
         }),
-        hasShiftPrev: attr({
-            compute: '_computeHasShiftPrev',
-            default: false,
-        }),
-        hasShiftNext: attr({
-            compute: '_computeHasShiftNext',
-            default: false,
-        }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
@@ -755,12 +672,6 @@ registerModel({
          */
         newMessageFormInputPlaceholder: attr({
             compute: '_computeNewMessageFormInputPlaceholder',
-        }),
-        shiftNextText: attr({
-            compute: '_computeShiftNextText',
-        }),
-        shiftPrevText: attr({
-            compute: '_computeShiftPrevText',
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
