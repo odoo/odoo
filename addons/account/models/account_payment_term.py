@@ -31,23 +31,33 @@ class AccountPaymentTerm(models.Model):
             if len(lines) > 1:
                 raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
-    def compute(self, value, date_ref=False, currency=None):
+    def compute(self, company_value, foreign_value, date_ref, currency):
+        """Get the distribution of this payment term.
+
+        :param company_value (float): the amount to pay in the company's currency
+        :param foreign_value (float): the amount to pay in the document's currency
+        :param date_ref (datetime.date): the reference date
+        :param currency (Model<res.currency>): the document's currency
+        :return (list<tuple<datetime.date,tuple<float,float>>>): the amount in the company's currency and
+            the document's currency, respectively for each required payment date
+        """
         self.ensure_one()
         date_ref = date_ref or fields.Date.context_today(self)
-        amount = value
-        sign = value < 0 and -1 or 1
+        company_amount = company_value
+        foreign_amount = foreign_value
+        sign = company_value < 0 and -1 or 1
         result = []
-        if not currency and self.env.context.get('currency_id'):
-            currency = self.env['res.currency'].browse(self.env.context['currency_id'])
-        elif not currency:
-            currency = self.env.company.currency_id
+        company_currency = self.env.company.currency_id
         for line in self.line_ids:
             if line.value == 'fixed':
-                amt = sign * currency.round(line.value_amount)
+                company_amt = sign * company_currency.round(line.value_amount)
+                foreign_amt = sign * currency.round(line.value_amount)
             elif line.value == 'percent':
-                amt = currency.round(value * (line.value_amount / 100.0))
+                company_amt = company_currency.round(company_value * (line.value_amount / 100.0))
+                foreign_amt = currency.round(foreign_value * (line.value_amount / 100.0))
             elif line.value == 'balance':
-                amt = currency.round(amount)
+                company_amt = company_currency.round(company_amount)
+                foreign_amt = currency.round(foreign_amount)
             next_date = fields.Date.from_string(date_ref)
             if line.option == 'day_after_invoice_date':
                 next_date += relativedelta(days=line.days)
@@ -61,13 +71,16 @@ class AccountPaymentTerm(models.Model):
                 next_date += relativedelta(day=line.days, months=1)
             elif line.option == 'day_current_month':
                 next_date += relativedelta(day=line.days, months=0)
-            result.append((fields.Date.to_string(next_date), amt))
-            amount -= amt
-        amount = sum(amt for _, amt in result)
-        dist = currency.round(value - amount)
-        if dist:
+            result.append((fields.Date.to_date(next_date), (company_amt, foreign_amt)))
+            company_amount -= company_amt
+            foreign_amt -= foreign_amount
+        company_amount = sum(company_amt for _, (company_amt, _) in result)
+        company_dist = company_currency.round(company_value - company_amount)
+        foreign_amount = sum(foreign_amt for _, (_, foreign_amt) in result)
+        foreign_dist = currency.round(foreign_value - foreign_amount)
+        if company_dist or foreign_dist:
             last_date = result and result[-1][0] or fields.Date.context_today(self)
-            result.append((last_date, dist))
+            result.append((last_date, (company_dist, foreign_dist)))
         return result
 
     @api.ondelete(at_uninstall=False)

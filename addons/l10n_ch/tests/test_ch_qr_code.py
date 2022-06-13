@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -35,7 +36,11 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
             'payment_reference': "Papa a vu le fifi de lolo",
             'invoice_line_ids': [
-                (0, 0, {'quantity': 1, 'price_unit': 100})
+                Command.create({
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [],
+                })
             ],
         })
 
@@ -55,19 +60,19 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
 
         # First check with a regular IBAN
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a Swiss QR-code for partners without a complete Swiss address."):
-            self.ch_qr_invoice.generate_qr_code()
+            self.ch_qr_invoice._generate_qr_code()
 
         # Setting the address should make it work
         self._assign_partner_address(self.ch_qr_invoice.company_id.partner_id)
         self._assign_partner_address(self.ch_qr_invoice.partner_id)
 
-        self.ch_qr_invoice.generate_qr_code()
+        self.ch_qr_invoice._generate_qr_code()
 
         # Now, check with a QR-IBAN as the payment account
         self.ch_qr_invoice.partner_bank_id = self.swiss_qr_iban
 
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a Swiss QR-cde for a QR-IBAN without giving it a valid QR-reference as payment reference."):
-            self.ch_qr_invoice.generate_qr_code()
+            self.ch_qr_invoice._generate_qr_code()
 
         # Assigning a QR reference should fix it
         self.ch_qr_invoice.payment_reference = '210000000003139471430009017'
@@ -78,5 +83,5 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         """
         self._assign_partner_address(self.ch_qr_invoice.company_id.partner_id)
         self._assign_partner_address(self.ch_qr_invoice.partner_id)
-        self.ch_qr_invoice.generate_qr_code()
+        self.ch_qr_invoice._generate_qr_code()
         self.assertEqual(self.ch_qr_invoice.qr_code_method, 'ch_qr', "Swiss QR-code generator should have been chosen for this invoice.")

@@ -53,6 +53,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             ],
         })
         move.action_post()
+        self.env['account.move.line'].flush_model()
 
         self.assertRecordValues(move.line_ids, [
             {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},

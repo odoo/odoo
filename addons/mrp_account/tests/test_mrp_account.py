@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.addons.stock_account.tests.test_account_move import TestAccountMove
+from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
 
 
@@ -190,7 +190,7 @@ class TestMrpAccount(TestMrpCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestMrpAccountMove(TestAccountMove):
+class TestMrpAccountMove(TestAccountMoveStockCommon):
 
     @classmethod
     def setUpClass(cls):

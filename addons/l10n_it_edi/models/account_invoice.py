@@ -2,22 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import zipfile
-import io
 import logging
 import re
 
-from datetime import date, datetime
-from lxml import etree
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.tests.common import Form
-
-
-_logger = logging.getLogger(__name__)
 
 DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 

@@ -20,10 +20,14 @@ class AccountPaymentRegister(models.TransientModel):
     group_payment = fields.Boolean(string="Group Payments", store=True, readonly=False,
         compute='_compute_group_payment',
         help="Only one payment will be created by partner (bank), instead of one per billy.")
-    currency_id = fields.Many2one('res.currency', string='Currency', store=True, readonly=False,
-        compute='_compute_currency_id')
-    journal_id = fields.Many2one('account.journal', store=True, readonly=False,
-        compute='_compute_journal_id',
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Currency',
+        compute='_compute_currency_id', store=True, readonly=False, precompute=True,
+        help="The payment's currency.")
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        compute='_compute_journal_id', store=True, readonly=False, precompute=True,
         domain="[('id', 'in', available_journal_ids)]")
     available_journal_ids = fields.Many2many(
         comodel_name='account.journal',
@@ -228,20 +232,53 @@ class AccountPaymentRegister(models.TransientModel):
             raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
         batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
+        banks_per_partner = defaultdict(lambda: {'inbound': set(), 'outbound': set()})
         for line in lines:
             batch_key = self._get_line_batch_key(line)
-            serialized_key = '-'.join(str(v) for v in batch_key.values())
-            vals = batches[serialized_key]
+            vals = batches[frozendict(batch_key)]
             vals['payment_values'] = batch_key
             vals['lines'] += line
+            banks_per_partner[batch_key['partner_id']]['inbound' if line.balance > 0.0 else 'outbound'].add(
+                batch_key['partner_bank_id']
+            )
+
+        partner_unique_inbound = {p for p, b in banks_per_partner.items() if len(b['inbound']) == 1}
+        partner_unique_outbound = {p for p, b in banks_per_partner.items() if len(b['outbound']) == 1}
 
         # Compute 'payment_type'.
-        for vals in batches.values():
+        batch_vals = []
+        seen_keys = set()
+        for i, key in enumerate(list(batches)):
+            if key in seen_keys:
+                continue
+            vals = batches[key]
             lines = vals['lines']
+            merge = (
+                self.group_payment
+                and batch_key['partner_id'] in partner_unique_inbound
+                and batch_key['partner_id'] in partner_unique_outbound
+            )
+            if merge:
+                for other_key in list(batches)[i+1:]:
+                    if other_key in seen_keys:
+                        continue
+                    other_vals = batches[other_key]
+                    if all(
+                        other_vals['payment_values'][k] == v
+                        for k, v in vals['payment_values'].items()
+                        if k not in ('partner_bank_id', 'payment_type')
+                    ):
+                        # add the lines in this batch and mark as seen
+                        lines += other_vals['lines']
+                        seen_keys.add(other_key)
             balance = sum(lines.mapped('balance'))
             vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
-
-        return list(batches.values())
+            if merge:
+                partner_banks = banks_per_partner[batch_key['partner_id']]
+                vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                vals['lines'] = lines
+            batch_vals.append(vals)
+        return batch_vals
 
     @api.model
     def _get_wizard_values_from_batch(self, batch_result):

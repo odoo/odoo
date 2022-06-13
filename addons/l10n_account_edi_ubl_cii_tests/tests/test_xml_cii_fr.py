@@ -95,7 +95,7 @@ class TestCIIFR(TestUBLCommon):
             'move_type': 'out_invoice',
             'journal_id': self.journal.id,
             'partner_id': self.partner_1.id,
-            'partner_bank_id': acc_bank,
+            'partner_bank_id': acc_bank.id,
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': self.currency_data['currency'].id,
@@ -142,7 +142,7 @@ class TestCIIFR(TestUBLCommon):
                 },
             ],
         )
-        xml_etree, xml_filename = self._assert_invoice_attachment(
+        attachment = self._assert_invoice_attachment(
             invoice,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
@@ -157,8 +157,8 @@ class TestCIIFR(TestUBLCommon):
             ''',
             expected_file='from_odoo/facturx_out_invoice.xml',
         )
-        self.assertEqual(xml_filename, "factur-x.xml")
-        self._assert_imported_invoice_from_etree(invoice, xml_etree, xml_filename)
+        self.assertEqual(attachment.name, "factur-x.xml")
+        self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
         refund = self._generate_move(
@@ -190,7 +190,7 @@ class TestCIIFR(TestUBLCommon):
                 },
             ],
         )
-        xml_etree, xml_filename = self._assert_invoice_attachment(
+        attachment = self._assert_invoice_attachment(
             refund,
             xpaths='''
                 <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
@@ -202,8 +202,8 @@ class TestCIIFR(TestUBLCommon):
             ''',
             expected_file='from_odoo/facturx_out_refund.xml'
         )
-        self.assertEqual(xml_filename, "factur-x.xml")
-        self._assert_imported_invoice_from_etree(refund, xml_etree, xml_filename)
+        self.assertEqual(attachment.name, "factur-x.xml")
+        self._assert_imported_invoice_from_etree(refund, attachment)
 
     ####################################################
     # Test import

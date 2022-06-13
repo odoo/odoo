@@ -7,6 +7,7 @@ from . import demo
 from . import wizard
 from . import report
 from . import populate
+from . import tools
 
 from odoo import api, SUPERUSER_ID
 

@@ -71,7 +71,7 @@ class AccountMove(models.Model):
     def _get_concept(self):
         """ Method to get the concept of the invoice considering the type of the products on the invoice """
         self.ensure_one()
-        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
+        invoice_lines = self.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))
         product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
         consumable = set(['consu', 'product'])
         service = set(['service'])
@@ -251,9 +251,9 @@ class AccountMove(models.Model):
         """ Method used to prepare data to present amounts and taxes related amounts when creating an
         electronic invoice for argentinean and the txt files for digital VAT books. Only take into account the argentinean taxes """
         self.ensure_one()
-        amount_field = company_currency and 'balance' or 'price_subtotal'
+        amount_field = company_currency and 'balance' or 'amount_currency'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
-        sign = -1 if (company_currency and self.is_inbound()) else 1
+        sign = -1 if self.is_inbound() else 1
 
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
         sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
@@ -295,11 +295,11 @@ class AccountMove(models.Model):
         vat_taxable = self.env['account.move.line']
         # get all invoice lines that are vat taxable
         for line in self.line_ids:
-            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line['price_subtotal']:
+            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line['amount_currency']:
                 vat_taxable |= line
         for tax_group in vat_taxable.mapped('tax_group_id'):
             base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code)).mapped('price_subtotal'))
-            imp = sum(vat_taxable.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code).mapped('price_subtotal'))
+            imp = abs(sum(vat_taxable.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code).mapped('amount_currency')))
             res += [{'Id': tax_group.l10n_ar_vat_afip_code,
                      'BaseImp': sign * base_imp,
                      'Importe': sign * imp}]
@@ -320,8 +320,8 @@ class AccountMove(models.Model):
     def _l10n_ar_get_invoice_totals_for_report(self):
         self.ensure_one()
         include_vat = self._l10n_ar_include_vat()
-        base_lines = self.line_ids.filtered(lambda x: not x.display_type and not x.exclude_from_invoice_tab)
-        tax_lines = self.line_ids.filtered(lambda x: not x.display_type and x.tax_repartition_line_id)
+        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
 
         # Base lines.
         base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
@@ -340,7 +340,7 @@ class AccountMove(models.Model):
                 if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
             ]
 
-        return self.env['account.tax']._prepare_tax_totals_json(
+        return self.env['account.tax']._prepare_tax_totals(
             base_line_vals_list,
             self.currency_id,
             tax_lines=tax_line_vals_list,

@@ -144,7 +144,7 @@
         </DatiGenerali>
         <DatiBeniServizi>
             <t t-set="line_counter" t-value="0"/>
-            <t t-foreach="record.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
+            <t t-foreach="record.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section'))" t-as="line">
                 <t t-set="line_counter" t-value="line_counter + 1"/>
                 <t t-set="taxes" t-value="line.tax_ids.compute_all(line.price_unit)"/>
                 <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
@@ -172,7 +172,7 @@
                 <DettaglioPagamento>
                     <ModalitaPagamento>MP05</ModalitaPagamento>
                     <DataScadenzaPagamento t-esc="format_date(payment.date_maturity)"/>
-                    <ImportoPagamento t-esc="format_monetary(abs(payment.price_total), currency)"/>
+                    <ImportoPagamento t-esc="format_monetary(abs(payment.amount_currency), currency)"/>
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-esc="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
                     <IBAN t-if="partner_bank.acc_type == 'iban'" t-esc="partner_bank.sanitized_acc_number"/>
                     <BIC t-elif="partner_bank.acc_type == 'bank' and partner_bank.bank_id.bic" t-esc="partner_bank.bank_id.bic"/>

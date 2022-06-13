@@ -43,22 +43,22 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         self.sepa_qr_invoice.qr_code_method = 'sct_qr'
 
         # Using a SEPA IBAN should work
-        self.sepa_qr_invoice.generate_qr_code()
+        self.sepa_qr_invoice._generate_qr_code()
 
         # Using a non-SEPA IBAN shouldn't
         self.sepa_qr_invoice.partner_bank_id = self.acc_non_sepa_iban
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a SEPA QR-code for IBAN of countries outside SEPA zone."):
-            self.sepa_qr_invoice.generate_qr_code()
+            self.sepa_qr_invoice._generate_qr_code()
 
         # Changing the currency should break it as well
         self.sepa_qr_invoice.partner_bank_id = self.acc_sepa_iban
         self.sepa_qr_invoice.currency_id = self.env.ref('base.USD').id
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a SEPA QR-code for another currency as EUR."):
-            self.sepa_qr_invoice.generate_qr_code()
+            self.sepa_qr_invoice._generate_qr_code()
 
     def test_sepa_qr_code_detection(self):
         """ Checks SEPA QR-code auto-detection when no specific QR-method
         is given to the invoice.
         """
-        self.sepa_qr_invoice.generate_qr_code()
+        self.sepa_qr_invoice._generate_qr_code()
         self.assertEqual(self.sepa_qr_invoice.qr_code_method, 'sct_qr', "SEPA QR-code generator should have been chosen for this invoice.")

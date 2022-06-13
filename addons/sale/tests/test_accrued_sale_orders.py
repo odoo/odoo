@@ -74,7 +74,8 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
 
         # delivered products invoiced, nothing to invoice left
         self.sale_order._create_invoices().action_post()
-        self.wizard.create_entries()
+        with self.assertRaises(UserError):
+            self.wizard.create_entries()
         self.assertTrue(self.wizard.display_amount)
 
     def test_multi_currency_accrued_order(self):

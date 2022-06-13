@@ -106,8 +106,10 @@ class AccountMove(models.Model):
                     # shift the decimal part using a fixed quantity to avoid rounding issues
                     prec = 1e+6
                     price_unit *= prec
-                    price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
-                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
+                    price_unit = line.tax_ids.with_context(round=False).compute_all(
+                        price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund',
+                        fixed_multiplicator=move.direction_sign,
+                    )['total_excluded']
                     price_unit /= prec
 
                 price_unit_val_dif = price_unit - valuation_price_unit
@@ -132,13 +134,17 @@ class AccountMove(models.Model):
                         'quantity': line.quantity,
                         'price_unit': price_unit_val_dif,
                         'price_subtotal': line.quantity * price_unit_val_dif,
+                        'amount_currency': line.quantity * price_unit_val_dif * line.move_id.direction_sign,
+                        'balance': line.currency_id._convert(
+                            line.quantity * price_unit_val_dif * line.move_id.direction_sign,
+                            line.company_currency_id,
+                            line.company_id, fields.Date.today(),
+                        ),
                         'account_id': debit_pdiff_account.id,
                         'analytic_account_id': line.analytic_account_id.id,
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                        'exclude_from_invoice_tab': True,
-                        'is_anglo_saxon_line': True,
+                        'display_type': 'cogs',
                     }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
 
                     # Correct the amount of the current line.
@@ -152,13 +158,17 @@ class AccountMove(models.Model):
                         'quantity': line.quantity,
                         'price_unit': -price_unit_val_dif,
                         'price_subtotal': line.quantity * -price_unit_val_dif,
+                        'amount_currency': line.quantity * -price_unit_val_dif * line.move_id.direction_sign,
+                        'balance': line.currency_id._convert(
+                            line.quantity * -price_unit_val_dif * line.move_id.direction_sign,
+                            line.company_currency_id,
+                            line.company_id, fields.Date.today(),
+                        ),
                         'account_id': line.account_id.id,
                         'analytic_account_id': line.analytic_account_id.id,
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                        'exclude_from_invoice_tab': True,
-                        'is_anglo_saxon_line': True,
+                        'display_type': 'cogs',
                     }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
         return lines_vals_list
 

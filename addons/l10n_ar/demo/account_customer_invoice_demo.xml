@@ -271,26 +271,6 @@
         ]"/>
     </record>
 
-    <function model="account.move.line" name="_onchange_product_id" context="{'check_move_validity': False}">
-        <value model="account.move.line" eval="obj().search([('move_id', 'in', [ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('demo_invoice_4'), ref('demo_invoice_5'), ref('demo_invoice_6'), ref('demo_invoice_7'), ref('demo_invoice_8'), ref('demo_invoice_10'), ref('demo_invoice_11'), ref('demo_invoice_12'), ref('demo_invoice_13'), ref('demo_invoice_14'), ref('demo_invoice_15'), ref('demo_invoice_16'), ref('demo_invoice_17'), ref('demo_invoice_18'), ref('demo_invoice_19')])]).ids"/>
-    </function>
-
-    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_invoice_6')]"/>
-    </function>
-    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_invoice_7')]"/>
-    </function>
-    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_invoice_14')]"/>
-    </function>
-    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_invoice_15')]"/>
-    </function>
-    <function model="account.move" name="_onchange_partner_id" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_invoice_16')]"/>
-    </function>
-
     <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
         <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', ref('product.product_product_2'))]"/>
         <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '06')], limit=1).id)]}"/>
@@ -304,11 +284,6 @@
     <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
         <value model="account.move.line" search="[('move_id', '=', ref('demo_invoice_19')), ('product_id', '=', ref('product.product_product_25'))]"/>
         <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '99')], limit=1).id)]}"/>
-    </function>
-
-    <function model="account.move" name="_recompute_dynamic_lines" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('demo_invoice_4'), ref('demo_invoice_5'), ref('demo_invoice_6'), ref('demo_invoice_7'), ref('demo_invoice_8'), ref('demo_invoice_10'), ref('demo_invoice_11'), ref('demo_invoice_12'), ref('demo_invoice_13'), ref('demo_invoice_14'), ref('demo_invoice_15'), ref('demo_invoice_16'), ref('demo_invoice_17'), ref('demo_invoice_18'), ref('demo_invoice_19')]"/>
-        <value eval="True"/>
     </function>
 
     <function model="account.move" name="action_post">

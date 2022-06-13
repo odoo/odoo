@@ -23,6 +23,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
                 'name': 'product test 1',
                 'discount': 10.00,
                 'price_unit': 2.27,
+                'tax_ids': [],
             })]
         })
         refund = self.env['account.move'].create({
@@ -36,6 +37,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
                 'quantity': 1.0,
                 'name': 'product test 1',
                 'price_unit': 13.3,
+                'tax_ids': [],
             })]
         })
 

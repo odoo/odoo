@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from stdnum import luhn
 
 
@@ -61,13 +61,17 @@ class AccountMove(models.Model):
             self.payment_reference = self.partner_id.l10n_se_default_vendor_payment_ref
         return super(AccountMove, self)._onchange_partner_id()
 
-    @api.onchange('payment_reference')
-    def _onchange_payment_reference(self):
-        """ If Vendor Bill and Payment Reference is changed check validation. """
-        if self.partner_id and self.move_type == 'in_invoice' and self.partner_id.l10n_se_check_vendor_ocr:
-            reference = self.payment_reference
-            try:
-                luhn.validate(reference)
-            except: 
-                return {'warning': {'title': _('Warning'), 'message': _('Vendor require OCR Number as payment reference. Payment reference isn\'t a valid OCR Number.')}}
-        return super(AccountMove, self)._onchange_payment_reference()
+    @api.constrains('payment_reference', 'state')
+    def _l10n_se_check_payment_reference(self):
+        for invoice in self:
+            if (
+                (invoice.payment_reference or invoice.state == 'posted')
+                and invoice.partner_id
+                and invoice.move_type == 'in_invoice'
+                and invoice.partner_id.l10n_se_check_vendor_ocr
+                and invoice.country_code == 'SE'
+            ):
+                try:
+                    luhn.validate(invoice.payment_reference)
+                except Exception:
+                    raise ValidationError(_("Vendor require OCR Number as payment reference. Payment reference isn't a valid OCR Number."))

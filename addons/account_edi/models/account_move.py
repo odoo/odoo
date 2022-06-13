@@ -298,7 +298,7 @@ class AccountMove(models.Model):
             return invoice_lines_tax_values_dict
 
         # Compute the taxes values for each invoice line.
-        invoice_lines = self.invoice_line_ids.filtered(lambda line: not line.display_type)
+        invoice_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
         if filter_invl_to_apply:
             invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
 
@@ -434,7 +434,7 @@ class AccountMove(models.Model):
         }
 
         # Invoice lines details.
-        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: not line.display_type), start=1):
+        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type == 'product'), start=1):
             line_vals = line._prepare_edi_vals_to_export()
             line_vals['index'] = index
             res['invoice_line_vals_list'].append(line_vals)

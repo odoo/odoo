@@ -3,6 +3,7 @@
 
 import time
 from datetime import datetime
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
@@ -600,6 +601,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'purchase_line_id': po.order_line.id,
                 'quantity': 1.0,
                 'account_id': self.stock_input_account.id,
+                'tax_ids': [],
             })]
         })
 
@@ -734,6 +736,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'purchase_line_id': line_product_average.id,
                     'quantity': 1.0,
                     'account_id': self.stock_input_account.id,
+                    'tax_ids': [],
                 }),
                 (0, 0, {
                     'name': product_standard.name,
@@ -743,6 +746,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'purchase_line_id': line_product_standard.id,
                     'quantity': 1.0,
                     'account_id': self.stock_input_account.id,
+                    'tax_ids': [],
                 })
             ]
         })
@@ -907,6 +911,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'purchase_line_id': line_product_avg.id,
                     'quantity': 1.0,
                     'account_id': self.stock_input_account.id,
+                    'tax_ids': [],
                 })
             ]
         })
@@ -938,7 +943,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         company = self.env.user.company_id
         company.anglo_saxon_accounting = True
         company.currency_id = self.usd_currency
-        exchange_diff_journal = company.currency_exchange_journal_id.exists()
 
         date_po = '2019-01-01'
         date_delivery = '2019-01-08'
@@ -959,144 +963,122 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
         self.env['res.currency.rate'].search([]).unlink()
-        self.env['res.currency.rate'].create({
+        self.env['res.currency.rate'].create([{
             'name': date_po,
             'rate': 1.0,
             'currency_id': self.usd_currency.id,
             'company_id': company.id,
-        })
-        self.env['res.currency.rate'].create({
+        }, {
             'name': date_po,
             'rate': 1.5,
             'currency_id': self.eur_currency.id,
             'company_id': company.id,
-        })
-
-        self.env['res.currency.rate'].create({
+        }, {
             'name': date_delivery,
             'rate': 0.7,
             'currency_id': self.eur_currency.id,
             'company_id': company.id,
-        })
-        self.env['res.currency.rate'].create({
+        }, {
             'name': date_delivery1,
             'rate': 0.8,
             'currency_id': self.eur_currency.id,
             'company_id': company.id,
-        })
-
-        self.env['res.currency.rate'].create({
+        }, {
             'name': date_invoice,
             'rate': 2,
             'currency_id': self.eur_currency.id,
             'company_id': company.id,
-        })
-        self.env['res.currency.rate'].create({
+        }, {
             'name': date_invoice1,
             'rate': 2.2,
             'currency_id': self.eur_currency.id,
             'company_id': company.id,
-        })
+        }])
 
-        # To allow testing validation of PO and Delivery
-        today = date_po
-        def _today(*args, **kwargs):
-            return datetime.strptime(today, "%Y-%m-%d").date()
-        def _now(*args, **kwargs):
-            return datetime.strptime(today + ' 01:00:00', "%Y-%m-%d %H:%M:%S")
-
-        patchers = [
-            patch('odoo.fields.Date.context_today', _today),
-            patch('odoo.fields.Datetime.now', _now),
-        ]
-
-        for p in patchers:
-            p.start()
 
         # Proceed
-        po = self.env['purchase.order'].create({
-            'currency_id': self.eur_currency.id,
-            'partner_id': self.partner_id.id,
-            'date_order': date_po,
-            'order_line': [
-                (0, 0, {
-                    'name': product_avg.name,
-                    'product_id': product_avg.id,
-                    'product_qty': 10.0,
-                    'product_uom': product_avg.uom_po_id.id,
-                    'price_unit': 30.0,
-                    'date_planned': date_po,
-                })
-            ],
-        })
-        po.button_confirm()
+        with freeze_time(date_po):
+            po = self.env['purchase.order'].create({
+                'currency_id': self.eur_currency.id,
+                'partner_id': self.partner_id.id,
+                'date_order': date_po,
+                'order_line': [
+                    (0, 0, {
+                        'name': product_avg.name,
+                        'product_id': product_avg.id,
+                        'product_qty': 10.0,
+                        'product_uom': product_avg.uom_po_id.id,
+                        'price_unit': 30.0,
+                        'date_planned': date_po,
+                    })
+                ],
+            })
+            po.button_confirm()
 
         line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
 
-        today = date_delivery
-        picking = po.picking_ids
-        (picking.move_ids
-            .filtered(lambda l: l.purchase_line_id == line_product_avg)
-            .write({'quantity_done': 5.0}))
+        with freeze_time(date_delivery):
+            picking = po.picking_ids
+            (picking.move_ids
+                .filtered(lambda l: l.purchase_line_id == line_product_avg)
+                .write({'quantity_done': 5.0}))
 
-        picking.button_validate()
-        picking._action_done()  # Create Backorder
+            picking.button_validate()
+            picking._action_done()  # Create Backorder
         # 5 Units received at rate 0.7 = 42.86
         self.assertAlmostEqual(product_avg.standard_price, 42.86)
 
-        today = date_invoice
-        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
-            'move_type': 'in_invoice',
-            'invoice_date': date_invoice,
-            'date': date_invoice,
-            'currency_id': self.eur_currency.id,
-            'partner_id': self.partner_id.id,
-            'invoice_line_ids': [
-                (0, 0, {
-                    'name': product_avg.name,
-                    'price_unit': 20.0,
-                    'product_id': product_avg.id,
-                    'purchase_line_id': line_product_avg.id,
-                    'quantity': 5.0,
-                    'account_id': self.stock_input_account.id,
-                })
-            ]
-        })
+        with freeze_time(date_invoice):
+            inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+                'move_type': 'in_invoice',
+                'invoice_date': date_invoice,
+                'date': date_invoice,
+                'currency_id': self.eur_currency.id,
+                'partner_id': self.partner_id.id,
+                'invoice_line_ids': [
+                    (0, 0, {
+                        'name': product_avg.name,
+                        'price_unit': 20.0,
+                        'product_id': product_avg.id,
+                        'purchase_line_id': line_product_avg.id,
+                        'quantity': 5.0,
+                        'account_id': self.stock_input_account.id,
+                        'tax_ids': [],
+                    })
+                ]
+            })
 
-        inv.action_post()
+            inv.action_post()
 
-        today = date_delivery1
-        backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
-        (backorder_picking.move_ids
-            .filtered(lambda l: l.purchase_line_id == line_product_avg)
-            .write({'quantity_done': 5.0}))
-        backorder_picking.button_validate()
+        with freeze_time(date_delivery1):
+            backorder_picking = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+            (backorder_picking.move_ids
+                .filtered(lambda l: l.purchase_line_id == line_product_avg)
+                .write({'quantity_done': 5.0}))
+            backorder_picking.button_validate()
         # 5 Units received at rate 0.7 (42.86) + 5 Units received at rate 0.8 (37.50) = 40.18
         self.assertAlmostEqual(product_avg.standard_price, 40.18)
 
-        today = date_invoice1
-        inv1 = self.env['account.move'].with_context(default_move_type='in_invoice').create({
-            'move_type': 'in_invoice',
-            'invoice_date': date_invoice1,
-            'date': date_invoice1,
-            'currency_id': self.eur_currency.id,
-            'partner_id': self.partner_id.id,
-            'invoice_line_ids': [
-                (0, 0, {
-                    'name': product_avg.name,
-                    'price_unit': 40.0,
-                    'product_id': product_avg.id,
-                    'purchase_line_id': line_product_avg.id,
-                    'quantity': 5.0,
-                    'account_id': self.stock_input_account.id,
-                })
-            ]
-        })
-
-        inv1.action_post()
-
-        for p in patchers:
-            p.stop()
+        with freeze_time(date_invoice1):
+            inv1 = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+                'move_type': 'in_invoice',
+                'invoice_date': date_invoice1,
+                'date': date_invoice1,
+                'currency_id': self.eur_currency.id,
+                'partner_id': self.partner_id.id,
+                'invoice_line_ids': [
+                    (0, 0, {
+                        'name': product_avg.name,
+                        'price_unit': 40.0,
+                        'product_id': product_avg.id,
+                        'purchase_line_id': line_product_avg.id,
+                        'quantity': 5.0,
+                        'account_id': self.stock_input_account.id,
+                        'tax_ids': [],
+                    })
+                ]
+            })
+            inv1.action_post()
 
         ##########################
         #       Invoice 0        #
@@ -1105,9 +1087,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertRecordValues(inv.line_ids, [
             # pylint: disable=C0326
             {'balance': 50.0,   'amount_currency': 100.0,   'account_id': self.stock_input_account.id},
-            {'balance': -50.0,  'amount_currency': -100.0,  'account_id': self.company_data['default_account_payable'].id},
             {'balance': -25.0,  'amount_currency': -50.0,   'account_id': self.price_diff_account.id},
             {'balance': 25.0,   'amount_currency': 50.0,    'account_id': self.stock_input_account.id},
+            {'balance': -50.0,  'amount_currency': -100.0,  'account_id': self.company_data['default_account_payable'].id},
         ])
 
         self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids, [

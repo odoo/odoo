@@ -1642,6 +1642,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'debit': 1200.0,
                     'credit': 0.0,
                     'amount_currency': 3600.0,
+                    'currency_id': self.currency_data['currency'].id,
                     'account_id': self.company_data['default_account_receivable'].id,
                 }),
                 (0, 0, {
@@ -1712,6 +1713,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1385.92,
+                'tax_ids': [],
             })],
         })
         refund1.action_post()
@@ -1726,6 +1728,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 839.40,
+                'tax_ids': [],
             })],
         })
         inv1.action_post()
@@ -1740,6 +1743,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1935.72,
+                'tax_ids': [],
             })],
         })
         inv2.action_post()
@@ -1983,6 +1987,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1385.92,
+                'tax_ids': [],
             })],
         })
         refund1.action_post()
@@ -1997,6 +2002,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 839.40,
+                'tax_ids': [],
             })],
         })
         inv1.action_post()
@@ -2011,6 +2017,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1935.72,
+                'tax_ids': [],
             })],
         })
         inv2.action_post()
@@ -2354,7 +2361,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         - Check there is no rounding issue when making the percentage.
         - Check there is no lost cents when the journal entry is fully reconciled.
         '''
-        cash_basis_move = self.env['account.move'].create({
+        self.cash_basis_tax_tiny_amount.amount = 0.01
+        cash_basis_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -2403,6 +2411,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
             ]
         })
+        cash_basis_move.line_ids.flush_model()
 
         payment_move = self.env['account.move'].create({
             'move_type': 'entry',
@@ -2561,7 +2570,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         currency_id = self.currency_data['currency'].id
         taxes = self.cash_basis_tax_a_third_amount + self.cash_basis_tax_tiny_amount
 
-        cash_basis_move = self.env['account.move'].create({
+        cash_basis_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -2921,7 +2930,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }, rate2016=0.5, rate2017=0.66666666666666)['currency'].id
 
         # Rate 2/1 in 2016.
-        caba_inv = self.env['account.move'].create({
+        caba_inv = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -3010,7 +3019,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }, rate2016=0.5, rate2017=0.66666666666666)['currency'].id
 
         # Rate 2/1 in 2016.
-        caba_inv = self.env['account.move'].create({
+        caba_inv = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -3206,7 +3215,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.cash_basis_transfer_account.reconcile = True
         self.cash_basis_tax_a_third_amount.cash_basis_transition_account_id = self.tax_account_1
 
-        invoice_move = self.env['account.move'].create({
+        invoice_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -3235,7 +3244,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
-        payment_move = self.env['account.move'].create({
+        payment_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -3319,30 +3328,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'invoice_date': '2016-01-01',
             'date': '2016-01-01',
             'line_ids': [
-                # Base Tax line
-                (0, 0, {
-                    'debit': 100.0,
-                    'credit': 0.0,
+                Command.create({
+                    'price_unit': 100.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
                 }),
-
-                # Tax line
-                (0, 0, {
-                    'debit': 33.33,
-                    'credit': 0.0,
-                    'account_id': self.cash_basis_transfer_account.id,
-                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.refund_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
-                }),
-
-                # Receivable line
-                (0, 0, {
-                    'debit': 0.0,
-                    'credit': 133.33,
-                    'account_id': self.extra_receivable_account_1.id,
-                }),
             ]
         })
+        refund_move.line_ids.filtered(lambda l: l.display_type == 'payment_term').account_id = self.extra_receivable_account_1
 
         (invoice_move + refund_move).action_post()
 
@@ -3383,7 +3376,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         base_tags = self.tax_tags[0] + self.tax_tags[4]
 
         # An invoice with 2 taxes:
-        invoice_move = self.env['account.move'].create({
+        invoice_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'move_type': 'entry',
             'date': '2016-01-01',
             'line_ids': [
@@ -3775,7 +3768,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
 
         # line with analytic account, will generate 2 lines in CABA move
-        invoice = self.env['account.move'].create({
+        invoice = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'partner_id': self.partner_a.id,
             'invoice_date': fields.Date.from_string('2019-01-01'),
             'move_type': 'entry',
@@ -3784,7 +3777,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 Command.create({
                     'debit': 0.0,
                     'credit': 3000.0,
-                    'amount_currency': 3000.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': [Command.set(tax_group.ids)],
                 }),

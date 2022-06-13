@@ -16,7 +16,6 @@ class LegacyTaxGroupComponent extends LegacyComponent {
     setup() {
         this.inputTax = useRef('taxValueInput');
         this.state = useState({value: 'readonly'});
-        this.allowTaxEdition = this.props.mode === 'edit' ? this.props.allowTaxEdition : false;
         onPatched(this.onPatched);
         onWillUpdateProps(this.onWillUpdateProps);
     }
@@ -31,8 +30,12 @@ class LegacyTaxGroupComponent extends LegacyComponent {
 
     onPatched() {
         if (this.state.value === 'edit') {
+            let newValue = this.props.taxGroup.tax_group_amount;
+            let currency = session.get_currency(this.props.record.data.currency_id.data.id);
+
+            newValue = fieldUtils.format.float(newValue, null, {digits: currency.digits});
             this.inputTax.el.focus(); // Focus the input
-            this.inputTax.el.value = this.props.taxGroup.tax_group_amount;
+            this.inputTax.el.value = newValue;
         }
     }
 
@@ -96,7 +99,7 @@ class LegacyTaxGroupComponent extends LegacyComponent {
         });
     }
 }
-LegacyTaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record', 'onChangeTaxGroup', 'mode'];
+LegacyTaxGroupComponent.props = ['taxGroup', 'readonly', 'record', 'onChangeTaxGroup'];
 LegacyTaxGroupComponent.template = 'account.LegacyTaxGroupComponent';
 
 /**
@@ -109,14 +112,16 @@ LegacyTaxGroupComponent.template = 'account.LegacyTaxGroupComponent';
 class LegacyTaxTotalsComponent extends AbstractFieldOwl {
     setup() {
         super.setup();
-        this.totals = useState({value: this.value ? JSON.parse(this.value) : null});
-        this.allowTaxEdition = this.nodeOptions['allowTaxEdition'];
+        this.totals = useState({value: this.value ? this.value : null});
+        this._computeTotalsFormat()
+        this.readonly = this.mode == 'readonly' || this.record.evalModifiers(this.attrs.modifiers).readonly;
         onWillUpdateProps(this.onWillUpdateProps);
     }
 
     onWillUpdateProps(nextProps) {
         // We only reformat tax groups if there are changed
-        this.totals.value = JSON.parse(nextProps.record.data[this.props.fieldName]);
+        this.totals.value = nextProps.record.data[this.props.fieldName];
+        this._computeTotalsFormat()
     }
 
     _onKeydown(ev) {
@@ -138,10 +143,51 @@ class LegacyTaxTotalsComponent extends AbstractFieldOwl {
      * an event to notify the ORM of a change.
      */
     _onChangeTaxValueByTaxGroup(ev) {
+        this._computeTotalsFormat();
         this.trigger('field-changed', {
             dataPointID: this.record.id,
-            changes: { tax_totals_json: JSON.stringify(this.totals.value) }
+            changes: { tax_totals: this.totals.value }
         })
+    }
+
+    _format(amount) {
+        if (this.props.record.data.currency_id.data) {
+            const currency = session.get_currency(this.props.record.data.currency_id.data.id);
+            return fieldUtils.format.monetary(amount, null, {currency: currency});
+        }
+        return fieldUtils.format.monetary(amount);
+    }
+
+    _computeTotalsFormat() {
+        let amount_untaxed = this.totals.value.amount_untaxed;
+        let amount_tax = 0;
+        let subtotals = [];
+        for (let subtotal_title of this.totals.value.subtotals_order) {
+            let amount_total = amount_untaxed - amount_tax;
+            subtotals.push({
+                'name': subtotal_title,
+                'amount': amount_total,
+                'formatted_amount': this._format(amount_total),
+            });
+            for (let group_name of Object.keys(this.totals.value.groups_by_subtotal)) {
+                let group = this.totals.value.groups_by_subtotal[group_name];
+                for (let i in group) {
+                    amount_tax = amount_tax + group[i].tax_group_amount;
+                    console.log(amount_tax);
+                }
+            }
+        }
+        this.totals.value.subtotals = subtotals;
+        let amount_total = amount_untaxed + amount_tax;
+        this.totals.value.amount_total = amount_total;
+        this.totals.value.formatted_amount_total = this._format(amount_total);
+        for (let group_name of Object.keys(this.totals.value.groups_by_subtotal)) {
+            let group = this.totals.value.groups_by_subtotal[group_name];
+            for (let i in group) {
+                group[i].formatted_tax_group_amount = this._format(group[i].tax_group_amount);
+                group[i].formatted_tax_group_base_amount = this._format(group[i].tax_group_base_amount);
+            }
+        }
     }
 }
 

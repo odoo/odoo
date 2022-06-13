@@ -23,7 +23,7 @@ class UtmCampaign(models.Model):
             campaign.quotation_count = data_map.get(campaign.id, 0)
 
     def _compute_sale_invoiced_amount(self):
-        self.env['account.move.line'].flush_model(['balance', 'move_id', 'account_id', 'exclude_from_invoice_tab'])
+        self.env['account.move.line'].flush_model(['balance', 'move_id', 'account_id', 'display_type'])
         self.env['account.move'].flush_model(['state', 'campaign_id', 'move_type'])
         query = """SELECT move.campaign_id, -SUM(line.balance) as price_subtotal
                     FROM account_move_line line
@@ -32,7 +32,7 @@ class UtmCampaign(models.Model):
                         AND move.campaign_id IN %s
                         AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                         AND line.account_id IS NOT NULL
-                        AND NOT line.exclude_from_invoice_tab
+                        AND line.display_type = 'product'
                     GROUP BY move.campaign_id
                     """
 

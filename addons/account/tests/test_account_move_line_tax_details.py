@@ -11,15 +11,16 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
     def _dispatch_move_lines(self, moves):
         base_lines = moves.line_ids\
             .filtered(lambda x: x.tax_ids and not x.tax_line_id)\
-            .sorted(lambda x: (x.move_id, x.id, -abs(x.amount_currency)))
+            .sorted(lambda x: (x.move_id.id, x.id, -abs(x.amount_currency)))
         tax_lines = moves.line_ids\
             .filtered(lambda x: x.tax_line_id)\
-            .sorted(lambda x: (x.move_id, x.tax_line_id, x.tax_ids, x.tax_repartition_line_id))
+            .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
         return base_lines, tax_lines
 
     def _get_tax_details(self, fallback=False, extra_domain=None):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
         tax_details_query, tax_details_params = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
+        self.env['account.move.line'].flush_model()
         self.cr.execute(tax_details_query, tax_details_params)
         tax_details_res = self.cr.dictfetchall()
         return sorted(tax_details_res, key=lambda x: (x['base_line_id'], abs(x['base_amount']), abs(x['tax_amount'])))
@@ -98,61 +99,61 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTaxDetailsValues(tax_details, [
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[2].id,
+                'tax_line_id': tax_lines[3].id,
                 'base_amount': -200.0,
                 'tax_amount': -10.0,
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -200.0,
                 'tax_amount': -20.0,
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[2].id,
+                'tax_line_id': tax_lines[3].id,
                 'base_amount': -1000.0,
                 'tax_amount': -50.0,
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -1000.0,
                 'tax_amount': -100.0,
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[0].id,
+                'tax_line_id': tax_lines[1].id,
                 'base_amount': -1000.0,
                 'tax_amount': -200.0,
             },
             {
                 'base_line_id': base_lines[1].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -1000.0,
                 'tax_amount': -100.0,
             },
             {
                 'base_line_id': base_lines[2].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -1000.0,
                 'tax_amount': -100.0,
             },
             {
                 'base_line_id': base_lines[3].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -400.0,
                 'tax_amount': -40.0,
             },
             {
                 'base_line_id': base_lines[3].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -2000.0,
                 'tax_amount': -200.0,
             },
             {
                 'base_line_id': base_lines[3].id,
-                'tax_line_id': tax_lines[3].id,
+                'tax_line_id': tax_lines[0].id,
                 'base_amount': -2000.0,
                 'tax_amount': -400.0,
             },
@@ -185,7 +186,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[3].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -200.0,
                 'tax_amount': -20.0,
             },
@@ -197,43 +198,43 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[3].id,
+                'tax_line_id': tax_lines[2].id,
                 'base_amount': -1000.0,
                 'tax_amount': -100.0,
             },
             {
                 'base_line_id': base_lines[0].id,
-                'tax_line_id': tax_lines[2].id,
+                'tax_line_id': tax_lines[1].id,
                 'base_amount': -1000.0,
                 'tax_amount': -200.0,
             },
             {
                 'base_line_id': base_lines[1].id,
-                'tax_line_id': tax_lines[0].id,
+                'tax_line_id': tax_lines[3].id,
                 'base_amount': -1000.0,
                 'tax_amount': -100.0,
             },
             {
                 'base_line_id': base_lines[2].id,
-                'tax_line_id': tax_lines[0].id,
+                'tax_line_id': tax_lines[3].id,
                 'base_amount': -1000.0,
                 'tax_amount': -100.0,
             },
             {
                 'base_line_id': base_lines[3].id,
-                'tax_line_id': tax_lines[0].id,
+                'tax_line_id': tax_lines[3].id,
                 'base_amount': -400.0,
                 'tax_amount': -40.0,
             },
             {
                 'base_line_id': base_lines[3].id,
-                'tax_line_id': tax_lines[0].id,
+                'tax_line_id': tax_lines[3].id,
                 'base_amount': -2000.0,
                 'tax_amount': -200.0,
             },
             {
                 'base_line_id': base_lines[3].id,
-                'tax_line_id': tax_lines[1].id,
+                'tax_line_id': tax_lines[0].id,
                 'base_amount': -2000.0,
                 'tax_amount': -400.0,
             },
@@ -275,19 +276,19 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             [
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[1].id,
-                    'base_amount': -100.0,
-                    'tax_amount': -10.0,
-                },
-                {
-                    'base_line_id': base_lines[0].id,
                     'tax_line_id': tax_lines[2].id,
                     'base_amount': -100.0,
                     'tax_amount': -10.0,
                 },
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[2].id,
+                    'tax_line_id': tax_lines[3].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+                {
+                    'base_line_id': base_lines[0].id,
+                    'tax_line_id': tax_lines[3].id,
                     'base_amount': -110.0,
                     'tax_amount': -11.0,
                 },
@@ -299,31 +300,31 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                 },
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[1].id,
+                    'tax_line_id': tax_lines[2].id,
                     'base_amount': -1000.0,
                     'tax_amount': -100.0,
                 },
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[2].id,
-                    'base_amount': -1000.0,
-                    'tax_amount': -100.0,
-                },
-                {
-                    'base_line_id': base_lines[1].id,
-                    'tax_line_id': tax_lines[2].id,
-                    'base_amount': -100.0,
-                    'tax_amount': -10.0,
-                },
-                {
-                    'base_line_id': base_lines[1].id,
-                    'tax_line_id': tax_lines[2].id,
+                    'tax_line_id': tax_lines[3].id,
                     'base_amount': -1000.0,
                     'tax_amount': -100.0,
                 },
                 {
                     'base_line_id': base_lines[1].id,
                     'tax_line_id': tax_lines[3].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+                {
+                    'base_line_id': base_lines[1].id,
+                    'tax_line_id': tax_lines[3].id,
+                    'base_amount': -1000.0,
+                    'tax_amount': -100.0,
+                },
+                {
+                    'base_line_id': base_lines[1].id,
+                    'tax_line_id': tax_lines[1].id,
                     'base_amount': -1000.0,
                     'tax_amount': -100.0,
                 },
@@ -425,25 +426,25 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             [
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[1].id,
+                    'tax_line_id': tax_lines[2].id,
                     'base_amount': -10.0,
                     'tax_amount': -2.0,
                 },
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[0].id,
+                    'tax_line_id': tax_lines[1].id,
                     'base_amount': -100.0,
                     'tax_amount': -10.0,
                 },
                 {
                     'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[1].id,
+                    'tax_line_id': tax_lines[2].id,
                     'base_amount': -100.0,
                     'tax_amount': -20.0,
                 },
                 {
                     'base_line_id': base_lines[1].id,
-                    'tax_line_id': tax_lines[2].id,
+                    'tax_line_id': tax_lines[0].id,
                     'base_amount': -100.0,
                     'tax_amount': -10.0,
                 },
@@ -514,25 +515,25 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                 },
                 {
                     'base_line_id': base_lines[1].id,
-                    'tax_line_id': tax_lines[1].id,
-                    'base_amount': -100.0,
-                    'tax_amount': -10.0,
-                },
-                {
-                    'base_line_id': base_lines[2].id,
-                    'tax_line_id': tax_lines[1].id,
-                    'base_amount': -42.0,
-                    'tax_amount': -4.2,
-                },
-                {
-                    'base_line_id': base_lines[2].id,
-                    'tax_line_id': tax_lines[1].id,
+                    'tax_line_id': tax_lines[2].id,
                     'base_amount': -100.0,
                     'tax_amount': -10.0,
                 },
                 {
                     'base_line_id': base_lines[2].id,
                     'tax_line_id': tax_lines[2].id,
+                    'base_amount': -42.0,
+                    'tax_amount': -4.2,
+                },
+                {
+                    'base_line_id': base_lines[2].id,
+                    'tax_line_id': tax_lines[2].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+                {
+                    'base_line_id': base_lines[2].id,
+                    'tax_line_id': tax_lines[1].id,
                     'base_amount': -100.0,
                     'tax_amount': -42.0,
                 },
@@ -862,7 +863,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         })
         tax_rep = percent_tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
 
-        move = self.env['account.move'].create({
+        move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'date': '2019-01-01',
             'line_ids': [
                 # Base lines
@@ -946,7 +947,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         })
         tax_rep = percent_tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
 
-        move = self.env['account.move'].create({
+        move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
             'date': '2019-01-01',
             'line_ids': [
                 # Base lines

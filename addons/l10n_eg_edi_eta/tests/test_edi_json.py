@@ -85,11 +85,13 @@ class TestEdiJson(TestEGEdiCommon):
                         'product_id': self.product_a.id,
                         'price_unit': 100.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                        'tax_ids': [],
                     },
                     {
                         'product_id': self.product_a.id,
                         'price_unit': 200.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                        'tax_ids': [],
                     },
                 ],
             )

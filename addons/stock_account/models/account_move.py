@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
@@ -15,15 +15,7 @@ class AccountMove(models.Model):
 
     def _get_lines_onchange_currency(self):
         # OVERRIDE
-        return self.line_ids.filtered(lambda l: not l.is_anglo_saxon_line)
-
-    def _reverse_move_vals(self, default_values, cancel=True):
-        # OVERRIDE
-        # Don't keep anglo-saxon lines if not cancelling an existing invoice.
-        move_vals = super(AccountMove, self)._reverse_move_vals(default_values, cancel=cancel)
-        if not cancel:
-            move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
-        return move_vals
+        return self.line_ids.filtered(lambda l: l.display_type != 'cogs')
 
     def copy_data(self, default=None):
         # OVERRIDE
@@ -34,7 +26,7 @@ class AccountMove(models.Model):
             for copy_vals in res:
                 if 'line_ids' in copy_vals:
                     copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
-                                             if line_vals[0] != 0 or not line_vals[2].get('is_anglo_saxon_line')]
+                                             if line_vals[0] != 0 or line_vals[2].get('display_type') != 'cogs']
 
         return res
 
@@ -59,7 +51,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
+        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
     def button_cancel(self):
@@ -69,7 +61,7 @@ class AccountMove(models.Model):
         # Unlink the COGS lines generated during the 'post' method.
         # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
         # However, since it can be called in RPC, better be safe.
-        self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
+        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
     # -------------------------------------------------------------------------
@@ -128,7 +120,7 @@ class AccountMove(models.Model):
                 # Compute accounting fields.
                 sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
-                balance = sign * line.quantity * price_unit
+                amount_currency = sign * line.quantity * price_unit
 
                 # Add interim account line.
                 lines_vals_list.append({
@@ -139,11 +131,10 @@ class AccountMove(models.Model):
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': price_unit,
-                    'debit': balance < 0.0 and -balance or 0.0,
-                    'credit': balance > 0.0 and balance or 0.0,
+                    'amount_currency': -amount_currency,
                     'account_id': debit_interim_account.id,
-                    'exclude_from_invoice_tab': True,
-                    'is_anglo_saxon_line': True,
+                    'display_type': 'cogs',
+                    'tax_ids': [],
                 })
 
                 # Add expense account line.
@@ -155,13 +146,12 @@ class AccountMove(models.Model):
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
                     'price_unit': -price_unit,
-                    'debit': balance > 0.0 and balance or 0.0,
-                    'credit': balance < 0.0 and -balance or 0.0,
+                    'amount_currency': amount_currency,
                     'account_id': credit_expense_account.id,
                     'analytic_account_id': line.analytic_account_id.id,
                     'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                    'exclude_from_invoice_tab': True,
-                    'is_anglo_saxon_line': True,
+                    'display_type': 'cogs',
+                    'tax_ids': [],
                 })
         return lines_vals_list
 
@@ -218,21 +208,19 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    is_anglo_saxon_line = fields.Boolean()
-
-    def _get_computed_account(self):
-        # OVERRIDE to use the stock input account by default on vendor bills when dealing
-        # with anglo-saxon accounting.
-        self.ensure_one()
-        self = self.with_company(self.move_id.journal_id.company_id)
-        if self.product_id.type == 'product' \
-            and self.move_id.company_id.anglo_saxon_accounting \
-            and self.move_id.is_purchase_document():
-            fiscal_position = self.move_id.fiscal_position_id
-            accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+    def _compute_account_id(self):
+        super()._compute_account_id()
+        input_lines = self.filtered(lambda line: (
+            line.product_id.type == 'product'
+            and line.move_id.company_id.anglo_saxon_accounting
+            and line.move_id.is_purchase_document()
+        ))
+        for line in input_lines:
+            line = line.with_company(line.move_id.journal_id.company_id)
+            fiscal_position = line.move_id.fiscal_position_id
+            accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             if accounts['stock_input']:
-                return accounts['stock_input']
-        return super(AccountMoveLine, self)._get_computed_account()
+                line.account_id = accounts['stock_input']
 
     def _eligible_for_cogs(self):
         self.ensure_one()
@@ -242,8 +230,12 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        original_line = self.move_id.reversed_entry_id.line_ids.filtered(lambda l: l.is_anglo_saxon_line
+        original_line = self.move_id.reversed_entry_id.line_ids.filtered(lambda l: l.display_type == 'cogs'
             and l.product_id == self.product_id and l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
         original_line = original_line and original_line[0]
         return original_line.price_unit if original_line \
             else self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+
+    @api.onchange('product_id')
+    def _inverse_product_id(self):
+        super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
