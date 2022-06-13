@@ -334,7 +334,9 @@ class ChatbotScriptStep(models.Model):
         if mail_channel.livechat_channel_id:
             human_operator = mail_channel.livechat_channel_id._get_random_operator()
 
-        if human_operator:
+        # handle edge case where we found yourself as available operator -> don't do anything
+        # it will act as if no-one is available (which is fine)
+        if human_operator and human_operator != self.env.user:
             mail_channel.sudo().add_members(
                 human_operator.partner_id.ids,
                 open_chat_window=True,
