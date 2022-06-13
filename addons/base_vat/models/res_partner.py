@@ -579,6 +579,11 @@ class ResPartner(models.Model):
             return len(vat) == 11 and vat.isdigit()
         return check_func(vat)
 
+    def format_vat_eu(self, vat):
+        # Foreign companies that trade with non-enterprises in the EU
+        # may have a VATIN starting with "EU" instead of a country code.
+        return vat
+
     def format_vat_ch(self, vat):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
