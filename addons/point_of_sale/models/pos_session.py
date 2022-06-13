@@ -1415,13 +1415,12 @@ class PosSession(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.move.line',
             'view_mode': 'tree',
-            'view_id':self.env.ref('account.view_move_line_tree_grouped').id,
+            'view_id':self.env.ref('account.view_move_line_tree').id,
             'domain': [('id', 'in', all_related_moves.mapped('line_ids').ids)],
             'context': {
                 'journal_type':'general',
                 'search_default_group_by_move': 1,
                 'group_by':'move_id', 'search_default_posted':1,
-                'name_groupby':1,
             },
         }
 

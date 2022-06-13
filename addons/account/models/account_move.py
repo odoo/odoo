@@ -2223,15 +2223,7 @@ class AccountMove(models.Model):
     def name_get(self):
         result = []
         for move in self:
-            if self._context.get('name_groupby'):
-                name = '**%s**, %s' % (format_date(self.env, move.date), move._get_move_display_name())
-                if move.ref:
-                    name += '     (%s)' % move.ref
-                if move.partner_id.name:
-                    name += ' - %s' % move.partner_id.name
-            else:
-                name = move._get_move_display_name(show_ref=True)
-            result.append((move.id, name))
+            result.append((move.id, move._get_move_display_name(show_ref=True)))
         return result
 
     # -------------------------------------------------------------------------
@@ -3525,7 +3517,7 @@ class AccountMoveLine(models.Model):
         index=True, required=True, readonly=True, auto_join=True, ondelete="cascade",
         check_company=True,
         help="The move of this entry line.")
-    move_name = fields.Char(string='Number', related='move_id.name', store=True, index='trigram')
+    move_name = fields.Char(string='Number', related='move_id.name', store=True, index='btree')
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index='trigram', readonly=True)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
@@ -3534,6 +3526,7 @@ class AccountMoveLine(models.Model):
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
+    is_same_currency = fields.Boolean(compute='_compute_same_currency')
     is_storno = fields.Boolean(
         related='move_id.is_storno',
         string='Company Storno Accounting',
@@ -3640,6 +3633,7 @@ class AccountMoveLine(models.Model):
     matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', string='Matched Credits',
         help='Credit journal items that are matched with this journal item.', readonly=True)
     matching_number = fields.Char(string="Matching #", compute='_compute_matching_number', store=True, help="Matching number for this line, 'P' if it is only partially reconcile, or the name of the full reconcile if it exists.")
+    is_account_reconcile = fields.Boolean(related='account_id.reconcile', string='Account Reconcile', help='Technical field for the matching link widget')
 
     # ==== Analytic fields ====
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
@@ -4387,6 +4381,11 @@ class AccountMoveLine(models.Model):
                     audit_str += tag.name + ': ' + formatLang(self.env, tag_amount, currency_obj=currency)
 
             record.tax_audit = audit_str
+
+    @api.depends('currency_id', 'company_currency_id')
+    def _compute_same_currency(self):
+        for record in self:
+            record.is_same_currency = record.currency_id == record.company_currency_id
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -5884,13 +5883,22 @@ class AccountMoveLine(models.Model):
         return action
 
     def open_move(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'view_mode': 'form',
-            'res_id': self.move_id.id,
-            'views': [(False, 'form')],
-        }
+        if self.payment_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.payment',
+                'view_mode': 'form',
+                'res_id': self.payment_id.id,
+                'views': [(False, 'form')],
+            }
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move',
+                'view_mode': 'form',
+                'res_id': self.move_id.id,
+                'views': [(False, 'form')],
+            }
 
 
     def action_automatic_entry(self):
