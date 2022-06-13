@@ -2,13 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from datetime import datetime
 from OpenSSL import crypto
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.serialization import pkcs12
-from odoo import api, models
-from pytz import timezone
+from odoo import models
 
 
 class Certificate(models.Model):
@@ -17,12 +15,6 @@ class Certificate(models.Model):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
-
-    @api.model
-    def _get_es_current_datetime(self):
-        """Get the current datetime with the Basque timezone. """
-        # oVERRIDE
-        return datetime.now(timezone('Europe/Madrid'))
 
     def _get_key_pair(self):
         self.ensure_one()

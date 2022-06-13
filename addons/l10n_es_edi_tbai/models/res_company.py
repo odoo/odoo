@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 from odoo import api, fields, models
 
 
@@ -25,7 +23,7 @@ class ResCompany(models.Model):
         comodel_name='ir.sequence',
         string='TicketBai account.move chain sequence',
         readonly=True,
-        copy=False
+        copy=False,
     )
 
     # === CERTIFICATES ===
@@ -64,7 +62,13 @@ class ResCompany(models.Model):
         return self.l10n_es_tbai_chain_sequence_id.next_by_id()
 
     def get_l10n_es_tbai_last_posted_invoice(self):
+        """
+        Returns the last invoice posted to this company's chain.
+        That invoice may have been received by the govt or not (eg. in case of a timeout).
+        Only upon confirmed reception/refusal of that invoice can another one be posted.
+        """
         return self.env['account.move'].search(
-            [('l10n_es_tbai_chain_index', '!=', 0)],
+            [('l10n_es_tbai_chain_index', '!=', 0),
+             ('company_id', '=', self.id)],
             limit=1, order='l10n_es_tbai_chain_index desc'
         )

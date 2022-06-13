@@ -14,7 +14,7 @@ from odoo.tools.xml_utils import _check_with_xsd
 
 class L10nEsTbaiXmlUtils():
     """Utility Methods for Bask Country's TicketBAI XML-related stuff."""
-    # TODO merge in base https://github.com/odoo/odoo/pull/86085
+    # TODO merge in base
 
     NS_MAP = {"ds": "http://www.w3.org/2000/09/xmldsig#"}
 

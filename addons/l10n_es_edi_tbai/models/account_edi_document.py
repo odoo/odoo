@@ -11,7 +11,7 @@ class AccountEdiDocument(models.Model):
         If there is a job to process that may already be part of the chain (posted invoice that timeout'ed),
         Re-places it at the beginning of the list.
         """
-        # OVERRIDE
+        # EXTENDS account_edi
         jobs = super()._prepare_jobs()
         if len(jobs) > 1:
             move_first_index = 0

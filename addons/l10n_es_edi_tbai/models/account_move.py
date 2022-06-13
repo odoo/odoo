@@ -93,7 +93,7 @@ class AccountMove(models.Model):
     )
 
     # -------------------------------------------------------------------------
-    # COMPUTE METHODS
+    # COMPUTE & API-DECORATED METHODS
     # -------------------------------------------------------------------------
 
     @api.depends('move_type', 'company_id')
@@ -105,7 +105,10 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_es_tbai_is_required', 'edi_document_ids.state')
     def _compute_l10n_es_tbai_is_in_chain(self):
-        # Note that cancelled invoices remain part of the chain
+        """
+        True iff invoice has been posted to the chain and confirmed by govt.
+        Note that cancelled invoices remain part of the chain.
+        """
         for move in self:
             tbai_doc_ids = move.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')
             move.l10n_es_tbai_is_in_chain = move.l10n_es_tbai_is_required \
@@ -182,6 +185,28 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_es_tbai_qr_escaped = url_quote(move.l10n_es_tbai_qr)
 
+    @api.constrains('l10n_es_tbai_refund_reason', 'partner_id', 'move_type')
+    def _check_l10n_es_tbai_refund_reason_allowed(self):
+        if self.move_type == 'out_refund':
+            if not self.l10n_es_tbai_refund_reason:
+                raise ValidationError(_('Refund reason must be specified (TicketBAI)'))
+            if self._is_l10n_es_tbai_simplified():
+                if self.l10n_es_tbai_refund_reason != 'R5':
+                    raise ValidationError(_('Refund reason must be R5 for simplified invoices (TicketBAI)'))
+            else:
+                if self.l10n_es_tbai_refund_reason == 'R5':
+                    raise ValidationError(_('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)'))
+
+    @api.ondelete(at_uninstall=False)
+    def _l10n_es_tbai_unlink_except_in_chain(self):
+        # Prevent deleting moves that are part of the TicketBAI chain
+        if not self._context.get('force_delete') and any(m.l10n_es_tbai_chain_index for m in self):
+            raise UserError(_('You cannot delete a move that has a TicketBAI chain id.'))
+
+    # -------------------------------------------------------------------------
+    # HELPER METHODS
+    # -------------------------------------------------------------------------
+
     def _l10n_es_edi_tbai_crc8(self, data):
         crc = 0x0
         for c in data:
@@ -239,21 +264,3 @@ class AccountMove(models.Model):
 
     def _is_l10n_es_tbai_simplified(self):
         return self.commercial_partner_id == self.env.ref("l10n_es_edi_sii.partner_simplified")
-
-    @api.constrains('l10n_es_tbai_refund_reason', 'partner_id', 'move_type')
-    def _check_l10n_es_tbai_refund_reason_allowed(self):
-        if self.move_type == 'out_refund':
-            if not self.l10n_es_tbai_refund_reason:
-                raise ValidationError(_('Refund reason must be specified (TicketBAI)'))
-            if self._is_l10n_es_tbai_simplified():
-                if self.l10n_es_tbai_refund_reason != 'R5':
-                    raise ValidationError(_('Refund reason must be R5 for simplified invoices (TicketBAI)'))
-            else:
-                if self.l10n_es_tbai_refund_reason == 'R5':
-                    raise ValidationError(_('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)'))
-
-    @api.ondelete(at_uninstall=False)
-    def _l10n_es_tbai_unlink_except_in_chain(self):
-        # Prevent deleting moves that are part of the TicketBAI chain
-        if not self._context.get('force_delete') and any(m.l10n_es_tbai_chain_index for m in self):
-            raise UserError(_('You cannot delete a move that has a TicketBAI chain id.'))

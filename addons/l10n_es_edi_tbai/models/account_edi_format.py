@@ -21,11 +21,11 @@ class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
     # -------------------------------------------------------------------------
-    # EDI OVERRIDDEN METHODS
+    # OVERRIDES & EXTENSIONS
     # -------------------------------------------------------------------------
 
     def _is_required_for_invoice(self, invoice):
-        # OVERRIDE
+        # EXTENDS account_edi
         if self.code != 'es_tbai':
             return super()._is_required_for_invoice(invoice)
 
@@ -33,24 +33,24 @@ class AccountEdiFormat(models.Model):
         return invoice.l10n_es_tbai_is_required and invoice.move_type in ('out_invoice', 'out_refund')
 
     def _needs_web_services(self):
-        # OVERRIDE
+        # EXTENDS account_edi
         return self.code == 'es_tbai' or super()._needs_web_services()
 
     def _is_compatible_with_journal(self, journal):
-        # OVERRIDE
+        # EXTENDS account_edi
         if self.code != 'es_tbai':
             return super()._is_compatible_with_journal(journal)
 
         return journal.country_code == 'ES'
 
     def _get_invoice_edi_content(self, invoice):
-        # OVERRIDE
+        # EXTENDS account_edi
         if self.code != 'es_tbai':
             return super()._get_invoice_edi_content(invoice)
         return self._get_l10n_es_tbai_invoice_xml(invoice)
 
     def _check_move_configuration(self, invoice):
-        # OVERRIDE
+        # EXTENDS account_edi
         if self.code != 'es_tbai':
             return super()._check_move_configuration(invoice)
         # Ensure a certificate is available.
@@ -72,7 +72,7 @@ class AccountEdiFormat(models.Model):
         return None
 
     def _post_invoice_edi(self, invoice):
-        # OVERRIDE
+        # EXTENDS account_edi
         if self.code != 'es_tbai':
             return super()._post_invoice_edi(invoice)
 
@@ -122,7 +122,7 @@ class AccountEdiFormat(models.Model):
         return res
 
     def _cancel_invoice_edi(self, invoice):
-        # OVERRIDE
+        # EXTENDS account_edi
         if self.code != 'es_tbai':
             return super()._cancel_invoice_edi(invoice)
 
@@ -160,7 +160,7 @@ class AccountEdiFormat(models.Model):
         return res
 
     # -------------------------------------------------------------------------
-    # TBAI XML VERIFY
+    # XML DOCUMENT
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_verify_xml(self, xml, xsd_id):
@@ -174,10 +174,6 @@ class AccountEdiFormat(models.Model):
                     'blocking_level': 'error',
                 }
         return {}
-
-    # -------------------------------------------------------------------------
-    # TBAI XML BUILD
-    # -------------------------------------------------------------------------
 
     def _get_l10n_es_tbai_invoice_xml(self, invoice, cancel=False):
         # If peviously generated XML was posted and not rejected (success or timeout), reuse it
@@ -378,7 +374,7 @@ class AccountEdiFormat(models.Model):
         return xml_root
 
     # -------------------------------------------------------------------------
-    # TBAI SERVER CALLS
+    # WEB SERVICE CALLS
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_post_to_web_service(self, invoice, invoice_xml, cancel=False):
