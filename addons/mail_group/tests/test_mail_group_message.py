@@ -8,6 +8,42 @@ from odoo.tools import mute_logger
 
 
 class TestMailGroupMessage(TestMailListCommon):
+
+    def test_batch_send(self):
+        """Test that when someone sends an email to a large group that it is
+        delivered exactly to those people"""
+        self.test_group.write({
+            'access_mode': 'members',
+            'alias_contact': 'followers',
+            'moderation': False,
+        })
+        self.test_group.member_ids.unlink()
+
+        for num in range(42):
+            self.env['mail.group.member'].create({
+                'email': f'emu-{num}@example.com',
+                'mail_group_id': self.test_group.id,
+            })
+
+        self.assertEqual(len(self.test_group.member_ids), 42)
+
+        # force a batch split with a low limit
+        self.env['ir.config_parameter'].sudo().set_param('mail.session.batch.size', 10)
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, self.test_group.member_ids[0].email,
+                self.test_group.alias_id.display_name,
+                subject='Never Surrender', msg_id='<glory.to.the.hypnotoad@localhost>', target_model='mail.group')
+
+        message = self.env['mail.group.message'].search([('mail_message_id.message_id', '=', '<glory.to.the.hypnotoad@localhost>')])
+        self.assertEqual(message.subject, 'Never Surrender', 'Should have created a <mail.group.message>')
+
+        mails = self.env['mail.mail'].search([('mail_message_id', '=', message.mail_message_id.id)])
+
+        # 42 -1 as the sender doesn't get an email
+        self.assertEqual(len(mails), 41, 'Should have send one and only one email per recipient')
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message')
     def test_email_duplicated(self):
         """ Test gateway does not accept two times same incoming email """
