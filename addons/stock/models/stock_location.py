@@ -70,6 +70,8 @@ class Location(models.Model):
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
+    replenish_location = fields.Boolean('Replenish Location', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
+                                        help='Activate this function to get all quantities to replenish at this particular location')
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Removal Strategy',
         help="Defines the default method used for suggesting the exact location (shelf) "
@@ -166,6 +168,21 @@ class Location(models.Model):
     def _onchange_usage(self):
         if self.usage not in ('internal', 'inventory'):
             self.scrap_location = False
+
+    @api.depends('usage')
+    def _compute_replenish_location(self):
+        for loc in self:
+            if loc.usage != 'internal':
+                loc.replenish_location = False
+
+    @api.constrains('replenish_location', 'location_id', 'usage')
+    def _check_replenish_location(self):
+        for loc in self:
+            if loc.replenish_location:
+                # cannot have parent/child location set as replenish as well
+                replenish_wh_location = self.search([('id', '!=', loc.id), ('replenish_location', '=', True), '|', ('location_id', 'child_of', loc.id), ('location_id', 'parent_of', loc.id)], limit=1)
+                if replenish_wh_location:
+                    raise ValidationError(_('Another parent/sub replenish location %s exists, if you wish to change it, uncheck it first', replenish_wh_location.name))
 
     @api.constrains('scrap_location')
     def _check_scrap_location(self):
