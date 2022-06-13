@@ -1,14 +1,13 @@
-odoo.define('website.widgets.media', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {ImageWidget} = require('wysiwyg.widgets.media');
+import { patch } from '@web/core/utils/patch';
+import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
 
-ImageWidget.include({
-    _getAttachmentsDomain() {
-        const domain = this._super(...arguments);
+patch(ImageSelector.prototype, 'media_dialog_website', {
+    get attachmentsDomain() {
+        const domain = this._super();
         domain.push('|', ['url', '=', false], '!', ['url', '=like', '/web/image/website.%']);
         domain.push(['key', '=', false]);
         return domain;
     }
-});
 });

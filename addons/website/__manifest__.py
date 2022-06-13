@@ -183,6 +183,7 @@
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
+            'website/static/src/components/media_dialog/image_selector.js',
             'website/static/src/systray_items/*.js',
             'website/static/src/systray_items/*.scss',
             'website/static/src/js/new_content_form.js',
@@ -229,7 +230,6 @@
             'website/static/src/snippets/s_process_steps/options.js',
             'website/static/src/js/editor/wysiwyg.js',
             'website/static/src/js/editor/widget_link.js',
-            'website/static/src/components/media_dialog/image_selector.js',
             'website/static/src/js/widgets/link_popover_widget.js',
         ],
         'website.assets_editor_frontend': [
