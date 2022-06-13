@@ -54,7 +54,7 @@ class WebsiteHrRecruitment(http.Controller):
             if country.id == -1:
                 jobs = [j for j in jobs if not j.address_id]
             else:
-                jobs = [j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id]
+                jobs = [j for j in jobs if not j.address_id or j.address_id.country_id and j.address_id.country_id.id == country.id]
             offices = set(j.address_id for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
         else:
             offices = set(j.address_id for j in jobs)
@@ -66,7 +66,7 @@ class WebsiteHrRecruitment(http.Controller):
         if department:
             jobs = [j for j in jobs if j.department_id and j.department_id.id == department.id]
         if office_id != -1 and office_id in [x.id for x in offices]:
-            jobs = [j for j in jobs if j.address_id and j.address_id.id == office_id]
+            jobs = [j for j in jobs if not j.address_id or j.address_id.id == office_id]
         elif office_id != -1:
             office_id = False
 
