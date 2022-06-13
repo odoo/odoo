@@ -137,8 +137,13 @@ function clickOnEdit(position = "bottom") {
 function clickOnSnippet(snippet, position = "bottom") {
     const snippetClass = snippet.id || snippet;
     return {
+<<<<<<< HEAD
         trigger: `iframe #wrapwrap .${snippetClass}`,
         extra_trigger: "iframe body.editor_enable",
+=======
+        trigger: snippet.id ? `#wrapwrap .${snippet.id}` : snippet,
+        extra_trigger: "body.editor_enable #oe_snippets.o_loaded",
+>>>>>>> b7b68be6a31... temp
         content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
         run: "click",
