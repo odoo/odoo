@@ -321,7 +321,6 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
             items: 'li',
             listType: 'ul',
             toleranceElement: '> div',
-            forcePlaceholderSize: true,
             opacity: 0.6,
             placeholder: 'bg-info',
             tolerance: 'pointer',
@@ -330,7 +329,8 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
             cancel: '.readonly',
             isAllowed: (placeholder, placeholderParent, currentItem) => {
                 if (placeholder[0].closest('section[data-section="shared"]') &&
-                    !placeholder[0].closest('.o_article')) {
+                    !placeholder[0].closest('.o_article') &&
+                    currentItem.data('nestedSortableItem').offsetParent[0].parentElement.getAttribute('data-section') !== "shared") {
                     return false;
                 }
                 return true;
