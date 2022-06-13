@@ -612,6 +612,10 @@ var KanbanActivity = BasicActivity.extend({
      */
     _renderDropdown: function () {
         var self = this;
+        this.$el.dropdown({
+            boundary: 'viewport',
+            flip: false,
+        });
         this.$('.o_activity')
             .toggleClass('dropdown-menu-right', config.device.isMobile)
             .html(QWeb.render('mail.KanbanActivityLoading'));
