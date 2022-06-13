@@ -6,6 +6,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -qq \
+    && apt-get upgrade -y\
     && apt-get install -y locales -qq \
     && locale-gen en_US.UTF-8 \
     && dpkg-reconfigure locales \
