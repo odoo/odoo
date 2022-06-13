@@ -302,3 +302,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_18_website_snippets_menu_tabs(self):
         self.start_tour("/?enable_editor=1", "website_snippets_menu_tabs", login="admin")
+
+    def test_19_website_page_options(self):
+        self.start_tour("/web", "website_page_options", login="admin")
