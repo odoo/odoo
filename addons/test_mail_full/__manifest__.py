@@ -19,7 +19,7 @@ real applications. """,
         'rating',
         # 'snailmail',
         'mass_mailing',
-        'mass_mailing_sms',
+        'mass_mailing_sms',  # adds portal
         'phone_validation',
         'sms',
     ],
