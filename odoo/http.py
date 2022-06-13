@@ -1477,8 +1477,7 @@ class Request:
         request to ``_serve_ir_http``.
         """
         try:
-            self.registry = Registry(self.db)
-            self.registry.check_signaling()
+            self.registry = Registry(self.db).check_signaling()
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
             # psycopg2 error or attribute error while constructing
             # the registry. That means either
