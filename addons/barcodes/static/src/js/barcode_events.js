@@ -61,6 +61,7 @@ var BarcodeEvents = core.Class.extend({
         });
         // Avoid to show autocomplete for a non appearing input
         this.$barcodeInput.attr('autocomplete', 'off');
+        this.$barcodeInput[0].dataset.allowHotkeys = true;
 
         this.__blurBarcodeInput = _.debounce(this._blurBarcodeInput, this.inputTimeOut);
         this.__listenBarcodeScanner = this._listenBarcodeScanner.bind(this);
@@ -83,7 +84,7 @@ var BarcodeEvents = core.Class.extend({
      * @param  {jQuery.Event} e keydown event
      */
     _listenBarcodeScanner: function (e) {
-µ        // Don't catch keypresses which could have a UX purpose (like shortcuts)
+        // Don't catch keypresses which could have a UX purpose (like shortcuts)
         if (e.ctrlKey || e.metaKey || e.altKey) {
             return;
         }

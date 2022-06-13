@@ -39,6 +39,8 @@ QUnit.test("register / unregister", async (assert) => {
     triggerHotkey(key);
     await nextTick();
 
+    debugger;
+
     let removeHotkey = hotkey.add(key, () => assert.step(key));
     await nextTick();
 
