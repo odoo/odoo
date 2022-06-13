@@ -52,7 +52,11 @@ const validElements = [
     { tagName: "DIV", attr: "class", value: "tooltip fade bs-tooltip-auto" },
     { tagName: "DIV", attr: "class", value: "tooltip fade bs-tooltip-auto show" },
     { tagName: "DIV", attr: "class", value: "tooltip tooltip-field-info fade bs-tooltip-auto" },
-    { tagName: "DIV", attr: "class", value: "tooltip tooltip-field-info fade bs-tooltip-auto show" },
+    {
+        tagName: "DIV",
+        attr: "class",
+        value: "tooltip tooltip-field-info fade bs-tooltip-auto show",
+    },
     { tagName: "SPAN", attr: "class", value: "select2-hidden-accessible" },
 
     // Due to a Document Kanban bug (already present in 12.0)
@@ -67,6 +71,8 @@ const validElements = [
         attr: "class",
         value: "ui-menu ui-widget ui-widget-content ui-autocomplete dropdown-menu ui-front", // many2ones
     },
+    // barcode input. ideally, should be removed after each test, but not possible now
+    { tagName: "INPUT", attr: "name", value: "barcode", keep: true },
 ];
 
 /**
