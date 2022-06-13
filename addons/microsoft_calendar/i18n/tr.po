@@ -14,6 +14,7 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgstr "%s - At time of event"
 #: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "&nbsp;Outlook"
-msgstr ""
+msgstr "&nbsp;Outlook"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -81,6 +82,8 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
+"Outlook Senkronizasyonu'nu kullanabilmeniz için önce bir yöneticinin "
+"yapılandırması gerekir!"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
@@ -91,6 +94,10 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
+"Belirteç oluşturulurken bir hata oluştu. Yetkilendirme kodunuz geçersiz "
+"olabilir veya süresi dolmuş olabilir [%s]. Microsoft Azure portalında "
+"Müşteri Kimliğinizi ve sırrınızı kontrol etmeli veya takvim "
+"senkronizasyonunuzu durdurup yeniden başlatmayı denemelisiniz."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -169,17 +176,17 @@ msgstr "Sil"
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr "Delete from Odoo"
+msgstr "Odoo'dan sil"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr "Delete from both"
+msgstr "İkisinden de sil"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_microsoft
 msgid "Delete from the current Microsoft Calendar account"
-msgstr "Delete from the current Microsoft Calendar account"
+msgstr "Geçerli Microsoft Takvim hesabından sil"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
@@ -189,7 +196,7 @@ msgstr "Görünüm Adı"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr "Event Recurrence Rule"
+msgstr "Olay Tekrarlama Kuralı"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -199,6 +206,9 @@ msgid ""
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
+"Odoo ve Outlook Calendar arasında doğru bir senkronizasyon için tüm katılımcıların bir e-posta adresine sahip olması gerekir. Ancak bazı olaylar bu koşula uymaz. Etkinlikler yanlış olduğu sürece takvimler senkronize edilmeyecektir.\n"
+"Etkinlikleri/katılımcıları güncelleyin veya şu etkinlikleri %sarşivleyin:\n"
+"%s"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -309,7 +319,7 @@ msgstr "Bildirimler"
 #: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -319,14 +329,14 @@ msgstr "Outlook Takvim"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
-msgstr ""
+msgstr "Outlook Senkronizasyonu durduruldu"
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
 #: model:ir.cron,cron_name:microsoft_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:microsoft_calendar.ir_cron_sync_all_cals
 msgid "Outlook: synchronization"
-msgstr ""
+msgstr "Outlook: senkronizasyon"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -343,12 +353,12 @@ msgstr "Token Yenile"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Reset Account"
-msgstr "Reset Account"
+msgstr "Hesabı Sıfırla"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
 msgid "Reset Outlook Calendar Account"
-msgstr ""
+msgstr "Outlook Takvim Hesabını Sıfırla"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -380,19 +390,21 @@ msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
 " you want to do it now?"
 msgstr ""
+"Outlook Senkronizasyonu'nu kullanabilmeniz için önce yapılandırılması "
+"gerekiyor, şimdi yapmak istiyor musunuz?"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Outlook Calendar service is not configured."
-msgstr ""
+msgstr "Outlook Takvim hizmetinin hesabı yapılandırılmamış."
 
 #. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
-msgstr ""
+msgstr "Outlook takvimi ile senkronizasyon başarıyla durduruldu."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -412,7 +424,7 @@ msgstr "Kullanıcı"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "User Token"
-msgstr ""
+msgstr "Kullanıcı Token"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -432,6 +444,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"
 " you sure you want to continue?"
 msgstr ""
+"Takviminizin Outlook ile senkronizasyonunu durdurmak üzeresiniz. Devam etmek"
+" istediğine emin misin?"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -440,3 +454,4 @@ msgstr ""
 msgid ""
 "You will be redirected to Outlook to authorize the access to your calendar."
 msgstr ""
+"Takviminize erişim yetkisi vermek için Outlook'a yönlendirileceksiniz."

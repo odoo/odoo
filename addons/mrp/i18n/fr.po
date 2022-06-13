@@ -3,7 +3,6 @@
 # 	* mrp
 # 
 # Translators:
-# Alexandra Jubert <aju@odoo.com>, 2021
 # sakodoo <sak@odoo.com>, 2021
 # RHTodoo, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
@@ -11,6 +10,7 @@
 # Martin Trigaux, 2021
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Alexandra Jubert <aju@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -3324,7 +3324,7 @@ msgstr "Plan"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
-msgstr "Planifiez des ordres"
+msgstr "Planifier commandes"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4477,6 +4477,12 @@ msgid ""
 msgstr ""
 "L'unité de mesure choisie est d'une autre catégorie que celle du formulaire "
 "de l'article."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

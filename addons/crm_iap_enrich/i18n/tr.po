@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Halil, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Halil, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +27,9 @@ msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
 msgstr ""
-"<span> No company data found based on the email address or email address is "
-"one of an email provider. No credit was consumed. </span>"
+"<span> E-posta adresine veya e-posta adresine dayalı olarak hiçbir şirket "
+"verisi bulunamadı, bir e-posta sağlayıcısından biri değildir. Kredi "
+"kullanılmadı. </span>"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
@@ -36,18 +37,20 @@ msgid ""
 "<span>Enrichment could not be done because the email address does not look "
 "valid.</span>"
 msgstr ""
+"<span>E-posta adresi geçerli görünmediğinden zenginleştirme "
+"yapılamadı.</span>"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
 msgid "Allow manual enrich"
-msgstr "Allow manual enrich"
+msgstr "manuel zenginleştirmeye izin ver"
 
 #. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr "CRM: enrich leads (IAP)"
+msgstr "CRM: adayları zenginleştirin (IAP)"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_res_config_settings
@@ -58,12 +61,12 @@ msgstr "Yapılandırma Ayarları"
 #: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich"
-msgstr "Enrich"
+msgstr "Zenginleştirme"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
 msgid "Enrich lead with company data"
-msgstr "Potansiyel müşteriyi şirket verileriyle zenginleştirin"
+msgstr "Adayı şirket verileriyle zenginleştirin"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
@@ -73,29 +76,29 @@ msgstr "Şirket verileriyle fırsatı zenginleştirin"
 #. module: crm_iap_enrich
 #: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
 msgid "Enrichment done"
-msgstr "Enrichment done"
+msgstr "Zenginleştirme yapıldı"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
 msgid "IAP account"
-msgstr "IAP account"
+msgstr "IAP hesabı"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment (based on email address)"
-msgstr ""
+msgstr "Aday Zenginleştirme (e-posta adresine göre)"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
 msgid "Lead enriched (based on email address)"
-msgstr ""
+msgstr "Aday zenginleştirilmiş (e-posta adresine göre)"
 
 #. module: crm_iap_enrich
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr "Lead enriched based on email address"
+msgstr "E-posta adresine göre zenginleştirilmiş aday"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_crm_lead
@@ -108,15 +111,15 @@ msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
 msgstr ""
-"Whether IAP service for lead enrichment based on email has been performed on"
-" this lead."
+"E-postaya dayalı aday zenginleştirme için IAP hizmetinin bu aday üzerinde "
+"gerçekleştirilip gerçekleştirilmediği."
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
 msgid "Your balance for Lead Enrichment is insufficient. Please go to your"
-msgstr "Your balance for Lead Enrichment is insufficient. Please go to your"
+msgstr "Aday Zenginleştirme bakiyeniz yetersiz. lütfen yanına git"
 
 #. module: crm_iap_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_credit
 msgid "to buy credits."
-msgstr "to buy credits."
+msgstr "kredi satın almak için."

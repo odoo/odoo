@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo import models, _
+from odoo import fields, models, _
 
 
 class SaleOrder(models.Model):
@@ -42,10 +42,49 @@ class SaleOrder(models.Model):
                     event_booth_registrations_command = new_registrations_commands
                 values['event_booth_registration_ids'] = event_booth_registrations_command
 
+            discount = 0
+            order = self.env['sale.order'].sudo().browse(order_id)
+            booth_currency = booths.product_id.currency_id
+            pricelist_currency = order.pricelist_id.currency_id
+            price_reduce = sum(booth.booth_category_id.price_reduce for booth in booths)
+            if booth_currency != pricelist_currency:
+                price_reduce = booth_currency._convert(
+                    price_reduce,
+                    pricelist_currency,
+                    order.company_id,
+                    order.date_order or fields.Datetime.now()
+                )
+            if order.pricelist_id.discount_policy == 'without_discount':
+                price = sum(booth.booth_category_id.price for booth in booths)
+                if price != 0:
+                    if booth_currency != pricelist_currency:
+                        price = booth_currency._convert(
+                            price,
+                            pricelist_currency,
+                            order.company_id,
+                            order.date_order or fields.Datetime.now()
+                        )
+                    discount = (price - price_reduce) / price * 100
+                    price_unit = price
+                    if discount < 0:
+                        discount = 0
+                        price_unit = price_reduce
+                else:
+                    price_unit = price_reduce
+
+            else:
+                price_unit = price_reduce
+
+            if order.pricelist_id and order.partner_id:
+                order_line = order._cart_find_product_line(booths.product_id.id)
+                if order_line:
+                    price_unit = self.env['account.tax']._fix_tax_included_price_company(price_unit, booths.product_id.taxes_id, order_line[0].tax_id, self.company_id)
+
             values.update(
                 event_id=booths.event_id.id,
-                price_unit=sum(booth.booth_category_id.price_reduce for booth in booths),
-                name=booths._get_booth_multiline_description,
+                discount=discount,
+                price_unit=price_unit,
+                name=booths._get_booth_multiline_description(),
             )
 
         return values

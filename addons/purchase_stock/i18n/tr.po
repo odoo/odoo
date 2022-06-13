@@ -126,10 +126,10 @@ msgid ""
 "average value, therefore only use this as an aggregated value with "
 "group_operator=avg"
 msgstr ""
-"Amount of time between expected and effective receipt date. Due to a hack "
-"needed to calculate this,               every record will show the same "
-"average value, therefore only use this as an aggregated value with "
-"group_operator=avg"
+"Beklenen ve geçerli giriş tarihi arasındaki süre. Bunu hesaplamak için "
+"gereken bir hack nedeniyle, her kayıt aynı ortalama değeri gösterecektir, bu"
+" nedenle bunu yalnızca group_operator=avg ile toplu bir değer olarak "
+"kullanın."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
@@ -280,6 +280,9 @@ msgid ""
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
+"%s Ürünü için, işlem türünün (%s) deposu, yeniden sıralama kuralının (%s) "
+"konumu (%s) ile tutarsız. İşlem türünü değiştirin veya teklif talebini iptal"
+" edin."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -308,7 +311,7 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr ""
+msgstr "Gelen Sevkiyat Sayısı"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -388,7 +391,7 @@ msgstr "Min. Envanter Kuralı"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected request creation date by"
-msgstr ""
+msgstr "Beklenen istek oluşturma tarihini şu tarihe kadar ilerlet:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -594,6 +597,8 @@ msgid ""
 "Schedule automatically generated request for quotations earlier to avoid "
 "delays"
 msgstr ""
+"Gecikmeleri önlemek için otomatik olarak oluşturulan teklif talebini daha "
+"erken planlayın"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -603,7 +608,7 @@ msgstr "Tedarikçi Olarak Ayarla"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
 msgid "Show Set Supplier Button"
-msgstr ""
+msgstr "Tedarikçi Ayarla Düğmesini Göster"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -649,7 +654,7 @@ msgstr "Tedarikçi Fiyat Listesi"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
 msgid "Supplierinfo"
-msgstr ""
+msgstr "Tedarikçi bilgisi"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -716,12 +721,14 @@ msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
 msgstr ""
+"Bu tarihler, halihazırda doğrulanmış olan %s makbuzunda uygun şekilde "
+"değiştirilemedi."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr ""
+msgstr "Bu tarihler, %s makbuzunda buna göre güncellenmiştir."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
