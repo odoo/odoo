@@ -16,11 +16,11 @@ from odoo.exceptions import AccessError, MissingError, UserError
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
     record = request.env[res_model].browse(res_id).sudo()
-    if token:  # Token Case: token is the global one of the document
+    if _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
+        return consteq(_hash, record._sign_token(pid))
+    elif token:  # Token Case: token is the global one of the document
         token_field = request.env[res_model]._mail_post_token_field
         return (token and record and consteq(record[token_field], token))
-    elif _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
-        return consteq(_hash, record._sign_token(pid))
     else:
         raise Forbidden()
 
@@ -65,8 +65,11 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
     # deduce author of message
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
 
+    # Signed Token Case: author_id is forced
+    if _hash and pid:
+        author_id = pid
     # Token Case: author is document customer (if not logged) or itself even if user has not the access
-    if token:
+    elif token:
         if request.env.user._is_public():
             # TODO : After adding the pid and sign_token in access_url when send invoice by email, remove this line
             # TODO : Author must be Public User (to rename to 'Anonymous')
@@ -74,9 +77,6 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
         else:
             if not author_id:
                 raise NotFound()
-    # Signed Token Case: author_id is forced
-    elif _hash and pid:
-        author_id = pid
 
     email_from = None
     if author_id and 'email_from' not in kw:
@@ -102,7 +102,7 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
 class PortalChatter(http.Controller):
 
     def _portal_post_filter_params(self):
-        return ['token', 'hash', 'pid']
+        return ['token', 'pid']
 
     def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
         if len(attachment_tokens) != len(attachment_ids):
@@ -142,6 +142,7 @@ class PortalChatter(http.Controller):
                 'attachment_ids': attachment_ids,
             }
             post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
+            post_values['_hash'] = kw.get('hash')
             message = _message_post_helper(**post_values)
 
         return request.redirect(url)
