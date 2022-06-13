@@ -150,99 +150,39 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" edit="false" multi_edit="1" sample="1">
+                <tree string="Journal Items" create="false" edit="false" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="date" readonly="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="journal_id" options='{"no_open":True}'/>
-                    <field name="move_id" optional="show"/>
+                    <field name="journal_id" options='{"no_open":True}' optional="hide"/>
+                    <field name="move_name" string="Journal Entry" optional="show" widget="open_move_widget"/>
                     <field name="account_id" options="{'no_open': True}" groups="account.group_account_readonly"/>
-                    <field name="partner_id" optional="show"/>
-                    <field name="statement_id" invisible="1"/>
-                    <field name="ref" optional="show"/>
+                    <field name="partner_id" optional="hide" attrs="{'readonly':[('account_internal_type','in', ('payable','receivable'))]}"/>
+                    <field name="ref" optional="hide"/>
+                    <field name="product_id" optional="hide"/>
                     <field name="name" optional="show"/>
-                    <field name="analytic_account_id" groups="account.group_account_readonly" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" optional="hide" readonly="1"/>
-                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show" readonly="1"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" optional="show" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
+                    <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
+                    <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Currency" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="amount_currency" groups="base.group_multi_currency" optional="hide" readonly="1"/>
-                    <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
+                    <field name="date_maturity" optional="hide"/>
+                    <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
+                    <field name="cumulated_balance" optional="hide"/>
+                    <field name="matching_number" optional="show"/>
+
+                    <field name="parent_state" invisible="1"/>
+                    <field name="account_internal_type" invisible="1"/>
+                    <field name="statement_id" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="reconciled" invisible="1"/>
-                    <field name="date_maturity" optional="hide"/>
-                    <field name="company_currency_id" invisible="1"/>
-                    <field name="parent_state" invisible="1"/>
-                    <field name="tax_line_id" optional="hide" readonly="1"/>
-                    <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
-                    <field name="matching_number" optional="show"/>
-                    <field name="product_id" optional="hide"/>
-                    <button name="open_move" title="Open Journal Entry" type="object" icon="fa-edit"/>
-                    <groupby name="move_id">
-                        <field name="state" invisible="1"/>
-                        <field name="move_type" invisible="1"/>
-                        <field name="statement_id" invisible="1"/>
-                        <field name="payment_id" invisible="1"/>
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit" attrs="{'invisible': ['&amp;', ('move_type', '=', 'entry'), '|', ('statement_id', '!=', False), ('payment_id', '!=', False)]}"/>
-                        <button name="open_bank_statement_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('statement_id', '=', False)]}"/>
-                        <button name="open_payment_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"/>
-                    </groupby>
-                    <groupby name="account_id">
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
-                    </groupby>
+                    <field name="is_same_currency" invisible="1"/>
+                    
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
-                    </groupby>
-                    <groupby name="journal_id">
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
-                    </groupby>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_move_line_tree_grouped" model="ir.ui.view">
-            <field name="name">account.move.line.tree.grouped</field>
-            <field name="model">account.move.line</field>
-            <field eval="1" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" expand="context.get('expand', False)" multi_edit="1">
-                    <field name="date" optional="show" readonly="1"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
-                    <field name="journal_id" options="{'no_open': True, 'no_create': True}" optional="hide"/>
-                    <field name="move_id" optional="show"/>
-                    <field name="account_id" optional="show" options="{'no_open': True, 'no_create': True}"
-                           domain="[('company_id', '=', company_id)]"
-                           groups="account.group_account_readonly"/>
-                    <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" optional="hide"/>
-                    <field name="ref" optional="hide"/>
-                    <field name="name"/>
-                    <field name="reconciled" invisible="1"/>
-                    <field name="reconcile_model_id" invisible="1"/>
-                    <field name="date_maturity" optional="hide"/>
-                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                    <field name="analytic_tag_ids" optional="hide" readonly="1" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
-                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency" optional="show"/>
-                    <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
-                    <field name="debit" sum="Total Debit" readonly="1"/>
-                    <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
-                    <field name="matching_number" string="Matching" optional="show"/>
-                    <field name="company_currency_id" invisible="1"/>
-                    <field name="parent_state" invisible="1"/>
-                    <field name="tax_ids" widget="many2many_tags" width="0.5" optional="hide" readonly="1"/>
-                    <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide" string="Tax Grids"
-                           options="{'no_open': True, 'no_create': True}"
-                           domain="[('applicability', '=', 'taxes')]"/>
-                    <field name="product_id" optional="hide"/>
-                    <groupby name="move_id">
-                        <field name="state" invisible="1"/>
-                        <field name="move_type" invisible="1"/>
-                        <field name="statement_id" invisible="1"/>
-                        <field name="payment_id" invisible="1"/>
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit" attrs="{'invisible': ['&amp;', ('move_type', '=', 'entry'), '|', ('statement_id', '!=', False), ('payment_id', '!=', False)]}"/>
-                        <button name="open_bank_statement_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('statement_id', '=', False)]}"/>
-                        <button name="open_payment_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"/>
                     </groupby>
                 </tree>
             </field>
@@ -252,11 +192,10 @@
             <field name="name">account.move.line.tree.grouped.sales.purchase</field>
             <field name="model">account.move.line</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="tax_ids" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="move_name" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tax_tag_ids" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
@@ -265,11 +204,10 @@
             <field name="name">account.move.line.tree.grouped.bank.cash</field>
             <field name="model">account.move.line</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="ref" position="attributes"><attribute name="optional">show</attribute></field>
+                <field name="move_name" position="attributes"><attribute name="optional">hide</attribute></field>
             </field>
         </record>
 
@@ -277,10 +215,10 @@
             <field name="name">account.move.line.tree.grouped.misc</field>
             <field name="model">account.move.line</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
+                <field name="move_name" position="attributes"><attribute name="optional">hide</attribute></field>
             </field>
         </record>
 
@@ -288,15 +226,11 @@
             <field name="name">account.move.line.tree.grouped.misc</field>
             <field name="model">account.move.line</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
-                <field name="account_id" position="attributes">
-                    <attribute name="optional">hide</attribute>
-                </field>
+                <field name="account_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="balance" position="after">
-                    <field name="cumulated_balance" optional="show"/>
-                </field>
+                <field name="cumulated_balance" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
 
@@ -305,14 +239,12 @@
             <field name="name">account.move.line.tree.grouped.partner</field>
             <field name="model">account.move.line</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="date_maturity" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="balance" position="after">
-                    <field name="cumulated_balance" optional="show"/>
-                </field>
+                <field name="cumulated_balance" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
         </record>
 
@@ -322,15 +254,12 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
-                <field name="move_id" position="replace"/>
+                <field name="move_name" position="replace"/>
                 <field name="matching_number" position="replace">
                     <field name="tax_line_id" string="Tax"/>
                     <field name="tax_base_amount" sum="Total Base Amount"/>
                     <field name="tax_audit"/>
-                    <field name="move_id"/>
-                </field>
-                <field name="date_maturity" position="attributes">
-                    <attribute name="optional">hide</attribute>
+                    <field name="move_name"/>
                 </field>
                 <field name="analytic_account_id" position="attributes">
                     <attribute name="optional">hide</attribute>
@@ -344,7 +273,7 @@
                 <field name="journal_id" position="attributes">
                     <attribute name="optional">show</attribute>
                 </field>
-                <field name="move_id" position="attributes">
+                <field name="move_name" position="attributes">
                     <attribute name="optional">hide</attribute>
                 </field>
             </field>
@@ -398,8 +327,9 @@
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable'), ('account_id.non_trade', '=', False)]" help="From Trade Payable accounts" name="trade_payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable'), ('account_id.non_trade', '=', False)]" help="From Trade Receivable accounts" name="trade_receivable"/>
-                    <filter string="Non Trade Payable" domain="[('account_id.internal_type', '=', 'payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable"/>
-                    <filter string="Non Trade Receivable" domain="[('account_id.internal_type', '=', 'receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable"/>
+                    <filter string="Non Trade Payable" domain="[('account_id.internal_type', '=', 'payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable" invisible="1"/>
+                    <filter string="Non Trade Receivable" domain="[('account_id.internal_type', '=', 'receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable" invisible="1"/>
+                    <filter string="P&amp;L Accounts" domain="[('account_id.internal_group', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
                     <separator/>
@@ -407,15 +337,13 @@
                     <separator/>
                     <filter string="Report Analytic Accounts" name="analytic_accounts" domain="[('analytic_account_id', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group expand="0" string="Group By">
-                        <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_id'}"/>
-                        <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
-                        <filter string="Tax Tags" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
+                        <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_name'}"/>
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                         <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
-                        <filter string="Tax Grid" name="group_by_tax_grid" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
+                        <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
                     </group>
                 </search>
@@ -1453,11 +1381,11 @@
         </record>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'name_groupby':1, 'create':0}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'create':0}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
-            <field name="view_id" ref="view_move_line_tree_grouped"/>
+            <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
@@ -1466,12 +1394,12 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
-            <field name="view_id" ref="view_move_line_tree_grouped"/>
+            <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_sales" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'sales', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_sales':1, 'name_groupby':1, 'expand': 1}</field>
+            <field name="context">{'journal_type':'sales', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_sales':1, 'expand': 1}</field>
             <field name="name">Sales</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1480,7 +1408,7 @@
         </record>
 
         <record id="action_account_moves_journal_purchase" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'purchase', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_purchases':1, 'name_groupby':1, 'expand': 1}</field>
+            <field name="context">{'journal_type':'purchase', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_purchases':1, 'expand': 1}</field>
             <field name="name">Purchases</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1489,7 +1417,7 @@
         </record>
 
         <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'name_groupby':1, 'expand': 1}</field>
+            <field name="context">{'journal_type':'bank', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_bank':1, 'search_default_cash':1, 'expand': 1}</field>
             <field name="name">Bank and Cash</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
@@ -1498,7 +1426,7 @@
         </record>
 
         <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_misc_filter':1, 'name_groupby':1, 'expand': 1}</field>
+            <field name="context">{'journal_type':'general', 'search_default_group_by_move': 1, 'search_default_posted':1, 'search_default_misc_filter':1, 'expand': 1}</field>
             <field name="name">Miscellaneous</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
