@@ -141,7 +141,27 @@ odoo.define('web.searchUtils', function (require) {
             addParam: { years: -2 }, granularity: 'year',
         },
     };
-    const PERIOD_OPTIONS = Object.assign({}, MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS);
+    const DAY_OPTIONS = {
+        today: {
+            id: 'today', groupNumber: 3, description: _lt('Today'),
+            addParam: {}, granularity: "day",
+        },
+        yesterday: {
+            id: 'yesterday', groupNumber: 3, description: _lt('Yesterday'),
+            addParam: { days: -1 }, granularity: 'day',
+        },
+    };
+    const TO_DATE_OPTIONS = {
+        month_to_date: {
+            id: 'month_to_date', groupNumber: 4, description: _lt('Month to Date'),
+            addParam: {}, granularity: "month,day",
+        },
+        year_to_date: {
+            id: 'year_to_date', groupNumber: 4, description: _lt('Year to Date'),
+            addParam: {}, granularity: 'year,day',
+        },
+    };
+    const PERIOD_OPTIONS = Object.assign({}, DAY_OPTIONS, TO_DATE_OPTIONS, MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS);
 
     // GroupBy menu parameters
     const GROUPABLE_TYPES = [
@@ -226,7 +246,9 @@ odoo.define('web.searchUtils', function (require) {
         const yearOptions = selectedOptions.year;
         const otherOptions = [
             ...(selectedOptions.quarter || []),
-            ...(selectedOptions.month || [])
+            ...(selectedOptions.month || []),
+            ...(selectedOptions.day || []),
+            ...(selectedOptions.toDate || [])
         ];
 
         sortPeriodOptions(yearOptions);
@@ -292,11 +314,22 @@ odoo.define('web.searchUtils', function (require) {
         setParam,
         addParam,
     }) {
+        let leftBound;
+        let rightBound;
         const date = referenceMoment.clone().set(setParam).add(addParam || {});
+        // Check for To Date Options
+        if (granularity.includes(",")) {
+            let granularities = granularity.split(",");
+            let startGranularity = granularities[0];
+            let endGranularity = granularities[1];
+            leftBound = date.clone().locale('en').startOf(startGranularity);
+            rightBound = date.clone().locale('en').endOf(endGranularity);
 
-        // compute domain
-        let leftBound = date.clone().locale('en').startOf(granularity);
-        let rightBound = date.clone().locale('en').endOf(granularity);
+        } else {
+            // compute domain
+            leftBound = date.clone().locale('en').startOf(granularity);
+            rightBound = date.clone().locale('en').endOf(granularity);
+        }
         if (fieldType === 'date') {
             leftBound = leftBound.format('YYYY-MM-DD');
             rightBound = rightBound.format('YYYY-MM-DD');
@@ -317,9 +350,12 @@ odoo.define('web.searchUtils', function (require) {
             descriptions[method](date.format("MMMM"));
         } else if (granularity === "quarter") {
             descriptions[method](QUARTERS[date.quarter()].description);
+        } else if (granularity === "day") {
+            descriptions[method](date.format("MM/DD"));
+        } else if (granularity.includes(",")) {
+            descriptions[method](granularity.startsWith("month") ? "MTD " + date.format("MMMM") : "YTD")
         }
         const description = descriptions.join(" ");
-
         return { domain, description, };
     }
 
@@ -469,8 +505,15 @@ odoo.define('web.searchUtils', function (require) {
             const option = PERIOD_OPTIONS[optionId];
             const setParam = getSetParam(option, referenceMoment);
             const granularity = option.granularity;
+            // Handle To Date Cases
             if (!selectedOptions[granularity]) {
-                selectedOptions[granularity] = [];
+                if (granularity.includes(",")) {
+                    selectedOptions["toDate"] = [];
+                    selectedOptions["toDate"].push({ granularity, setParam });
+                    continue;
+                } else {
+                    selectedOptions[granularity] = [];
+                }
             }
             selectedOptions[granularity].push({ granularity, setParam });
         }
@@ -490,7 +533,13 @@ odoo.define('web.searchUtils', function (require) {
         }
         const date = referenceMoment.clone().add(periodOption.addParam);
         const setParam = {};
-        setParam[periodOption.granularity] = date[periodOption.granularity]();
+        // Handle To Date Granularities
+        if (periodOption.granularity.includes(",")) {
+            let granularity = periodOption.granularity.split(",")[0];
+            setParam[periodOption.granularity] = date[granularity]();
+        } else {
+            setParam[periodOption.granularity] = date[periodOption.granularity]();
+        }
         return setParam;
     }
 

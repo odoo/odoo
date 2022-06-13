@@ -93,7 +93,29 @@ export const YEAR_OPTIONS = {
     },
 };
 
-export const PERIOD_OPTIONS = Object.assign({}, MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS);
+export const DAY_OPTIONS = {
+    today: {
+        id: 'today', groupNumber: 3, description: _lt('Today'),
+        plusParam: {}, granularity: "day",
+    },
+    yesterday: {
+        id: 'yesterday', groupNumber: 3, description: _lt('Yesterday'),
+        plusParam: { days: -1 }, granularity: 'day',
+    },
+};
+
+export const TO_DATE_OPTIONS = {
+    month_to_date: {
+        id: 'month_to_date', groupNumber: 4, description: _lt('Month to Date'),
+        plusParam: {}, granularity: "month,day",
+    },
+    year_to_date: {
+        id: 'year_to_date', groupNumber: 4, description: _lt('Year to Date'),
+        plusParam: {}, granularity: 'year,day',
+    },
+};
+
+export const PERIOD_OPTIONS = Object.assign({}, DAY_OPTIONS, TO_DATE_OPTIONS, MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS);
 
 export const DEFAULT_INTERVAL = "month";
 
@@ -156,7 +178,12 @@ export function constructDateDomain(
         selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds);
     }
     const yearOptions = selectedOptions.year;
-    const otherOptions = [...(selectedOptions.quarter || []), ...(selectedOptions.month || [])];
+    const otherOptions = [
+    ...(selectedOptions.quarter || []),
+    ...(selectedOptions.month || []),
+    ...(selectedOptions.day || []),
+    ...(selectedOptions.toDate || []),
+     ];
     sortPeriodOptions(yearOptions);
     sortPeriodOptions(otherOptions);
     const ranges = [];
@@ -210,13 +237,28 @@ export function constructDateRange(params) {
         setParam.month = QUARTERS[setParam.quarter].coveredMonths[0];
         delete setParam.quarter;
     }
-    const date = referenceMoment
-        .set(setParam)
-        .plus(plusParam || {})
-        .setZone("utc", { keepLocalTime: true });
-    // compute domain
-    let leftDate = date.startOf(granularity);
-    let rightDate = date.endOf(granularity);
+    let leftDate;
+    let rightDate;
+    let date;
+    // Check for To Date Options
+    if (granularity.includes(",")) {
+        let granularities = granularity.split(",");
+        let startGranularity = granularities[0];
+        let endGranularity = granularities[1];
+        date = referenceMoment
+            .plus(plusParam || {})
+            .setZone("utc", { keepLocalTime: true });
+        leftDate = date.startOf(startGranularity);
+        rightDate = date.endOf(endGranularity);
+    } else {
+        date = referenceMoment
+            .set(setParam)
+            .plus(plusParam || {})
+            .setZone("utc", { keepLocalTime: true });
+        // compute domain
+        leftDate = date.startOf(granularity);
+        rightDate = date.endOf(granularity);
+    }
     let leftBound;
     let rightBound;
     if (fieldType === "date") {
@@ -235,6 +277,10 @@ export function constructDateRange(params) {
     } else if (granularity === "quarter") {
         const quarter = date.quarter;
         descriptions[method](QUARTERS[quarter].description.toString());
+    } else if (granularity === "day") {
+        descriptions[method](date.toLocaleString({ month: 'long', day: 'numeric'}));
+    } else if (granularity.includes(",")) {
+        descriptions[method](granularity.startsWith("month") ? "MTD " + date.toFormat("MMMM") : "YTD")
     }
     const description = descriptions.join(" ");
     return { domain, description };
@@ -340,6 +386,17 @@ export function getPeriodOptions(referenceMoment) {
                 description = date.toFormat(option.format);
                 defaultYear = date.year;
                 break;
+            case "day":
+                description = option.description.toString();
+                defaultYear = referenceMoment.set(option.setParam).year;
+                break;
+            case "month,day":
+                description = option.description.toString();
+                defaultYear = referenceMoment.set(option.setParam).year;
+                break;
+            case "year,day":
+                description = option.description.toString();
+                defaultYear = referenceMoment.set(option.setParam).year;
         }
         const setParam = getSetParam(option, referenceMoment);
         options.push({ id, groupNumber, description, defaultYear, setParam });
@@ -382,7 +439,13 @@ export function getSelectedOptions(referenceMoment, selectedOptionIds) {
         const setParam = getSetParam(option, referenceMoment);
         const granularity = option.granularity;
         if (!selectedOptions[granularity]) {
-            selectedOptions[granularity] = [];
+            if (granularity.includes(",")) {
+                selectedOptions["toDate"] = [];
+                selectedOptions["toDate"].push({ granularity, setParam});
+                continue;
+            } else {
+                selectedOptions[granularity] = [];
+            }
         }
         selectedOptions[granularity].push({ granularity, setParam });
     }
@@ -397,9 +460,15 @@ export function getSetParam(periodOption, referenceMoment) {
     if (periodOption.granularity === "quarter") {
         return periodOption.setParam;
     }
+    let setParam = {};
     const date = referenceMoment.plus(periodOption.plusParam);
     const granularity = periodOption.granularity;
-    const setParam = { [granularity]: date[granularity] };
+    if (granularity.includes(",")) {
+        let startGranularity = granularity.split(",")[0];
+        setParam = { [granularity]: date[startGranularity] };
+    } else {
+        setParam = { [granularity]: date[granularity] };
+    }
     return setParam;
 }
 
