@@ -348,3 +348,11 @@ class AccountMove(models.Model):
             i -= 5
 
         return spaced_qrr_ref
+
+    @api.model
+    def space_scor_reference(self, iso11649_ref):
+        """ Makes the provided SCOR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+
+        return ' '.join(iso11649_ref[i:i + 4] for i in range(0, len(iso11649_ref), 4))
