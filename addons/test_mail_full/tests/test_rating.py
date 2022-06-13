@@ -124,9 +124,9 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
             partners = self.env['res.partner'].create([
                 {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
             # 3713 requests if only test_mail_full is installed
-            # 5513 runbot community
-            # 6313 runbot enterprise
-            with self.assertQueryCount(__system__=6313):
+            # 4511 runbot community
+            # 4911 runbot enterprise
+            with self.assertQueryCount(__system__=4911):
                 record_ratings = self.env['mail.test.rating'].create([{
                     'customer_id': partners[idx].id,
                     'name': 'Test Rating',
@@ -144,7 +144,7 @@ class TestRatingFlow(TestMailFullCommon, TestMailFullRecipients):
             new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
             new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
             new_ratings.flush_model(['write_date'])
-            with self.assertQueryCount(__system__=2):
+            with self.assertQueryCount(__system__=1):
                 record_ratings._compute_rating_last_value()
                 vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]
                 self.assertTrue(all(vals), "The last rating is kept.")
