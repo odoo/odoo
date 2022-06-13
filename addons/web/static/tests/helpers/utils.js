@@ -265,14 +265,26 @@ export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
         event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
     }
     const target = findElement(el, selector);
+    if (!target) {
+        throw new Error(`Can't find a target to trigger ${eventType} event`);
+    }
+    const isVisible =
+        target === document ||
+        target === window ||
+        target.offsetWidth > 0 ||
+        target.offsetHeight > 0;
+    if (!isVisible) {
+        throw new Error(`Called triggerEvent ${eventType} on invisible target`);
+    }
     target.dispatchEvent(event);
     await nextTick();
 }
 
 export async function triggerEvents(el, querySelector, events) {
     for (let e = 0; e < events.length; e++) {
-        await triggerEvent(el, querySelector, events[e]);
+        triggerEvent(el, querySelector, events[e]);
     }
+    await nextTick();
 }
 
 /**
