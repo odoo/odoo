@@ -8,7 +8,7 @@
             </td>
 
             <td>
-                <t t-if="allowTaxEdition">
+                <t t-if="!props.readonly">
                     <t t-if="['edit', 'disable'].includes(state.value)">
                         <span class="o_tax_group_edit_input">
                             <input
@@ -24,14 +24,14 @@
                         <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
                             <i class="fa fa-pencil"/>
                             <span class="o_tax_group_amount_value">
-                                <t t-esc="props.taxGroup.formatted_tax_group_amount"/>
+                                <t t-out="props.taxGroup.formatted_tax_group_amount"/>
                             </span>
                         </span>
                     </t>
                 </t>
                 <t t-else="">
                     <span class="o_tax_group_amount_value">
-                        <t t-esc="props.taxGroup.formatted_tax_group_amount" style="white-space: nowrap;"/>
+                        <t t-out="props.taxGroup.formatted_tax_group_amount" style="white-space: nowrap;"/>
                     </span>
                 </t>
             </td>
@@ -48,7 +48,7 @@
                         </td>
 
                         <td>
-                            <span t-att-name="subtotal['name']" style="white-space: nowrap; font-weight: bold;" t-esc="subtotal['formatted_amount']"/>
+                            <span t-att-name="subtotal['name']" style="white-space: nowrap; font-weight: bold;" t-out="subtotal['formatted_amount']"/>
                         </td>
                     </tr>
 
@@ -56,8 +56,7 @@
                         <TaxGroupComponent
                             currency="currency"
                             taxGroup="taxGroup"
-                            isReadonly="props.readonly"
-                            allowTaxEdition="allowTaxEdition"
+                            readonly="props.readonly"
                             onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"
                             invalidate="invalidate"
                         />
@@ -74,7 +73,7 @@
                         <span
                             name="amount_total"
                             t-att-class="Object.keys(totals.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
-                            t-esc="totals.formatted_amount_total"
+                            t-out="totals.formatted_amount_total"
                             style="white-space: nowrap; font-weight: bold; font-size: 1.3em;"
                         />
                     </td>

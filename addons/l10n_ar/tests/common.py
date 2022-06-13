@@ -322,6 +322,9 @@ class TestAr(AccountTestInvoicingCommon):
         invoice_user_id = self.env.user
         incoterm = self.env.ref("account.incoterm_EXW")
 
+        decimal_price = self.env.ref('product.decimal_price')
+        decimal_price.digits = 4
+
         invoices_to_create = {
             'test_invoice_1': {
                 "ref": "test_invoice_1: Invoice to gritti support service, vat 21",
@@ -656,8 +659,8 @@ class TestAr(AccountTestInvoicingCommon):
                 invoice_form.currency_id = data.get('currency')
             for line in data.get('lines', [{}]):
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
-                    if line.get('display_type'):
-                        invoice_line_form.display_type = line.get('display_type')
+                    invoice_line_form.display_type = line.get('display_type', 'product')
+                    if line.get('display_type') in ('line_note', 'line_section'):
                         invoice_line_form.name = line.get('name', 'not invoice line')
                     else:
                         invoice_line_form.product_id = line.get('product', self.product_iva_21)

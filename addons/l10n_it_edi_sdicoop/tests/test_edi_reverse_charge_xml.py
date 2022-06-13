@@ -6,11 +6,11 @@ from lxml import etree
 
 from odoo import fields
 from odoo.tests import tagged
-from odoo.addons.l10n_it_edi_sdicoop.tests.test_edi_xml import TestItEdi
+from odoo.addons.l10n_it_edi_sdicoop.tests.test_edi_xml import TestItEdiCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdiReverseCharge(TestItEdi):
+class TestItEdiReverseCharge(TestItEdiCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -120,6 +120,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'company_id': cls.company.id,
             'move_type': 'out_invoice',
             'invoice_date': fields.Date.from_string('2022-03-24'),
+            'invoice_date_due': fields.Date.from_string('2022-03-24'),
             'partner_id': cls.french_partner.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': product_lines(
@@ -133,6 +134,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'company_id': cls.company.id,
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2022-03-24'),
+            'invoice_date_due': fields.Date.from_string('2022-03-24'),
             'partner_id': cls.french_partner.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': product_lines(

@@ -12,15 +12,6 @@ class AccountPayment(models.Model):
     _order = "date desc, name desc"
     _check_company_auto = True
 
-    def _get_default_journal(self):
-        ''' Retrieve the default journal for the account.payment.
-        /!\ This method will not override the method in 'account.move' because the ORM
-        doesn't allow overriding methods using _inherits. Then, this method will be called
-        manually in 'create' and 'new'.
-        :return: An account.journal record.
-        '''
-        return self.env['account.move']._search_default_journal(('bank', 'cash'))
-
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
@@ -86,8 +77,10 @@ class AccountPayment(models.Model):
     ], default='customer', tracking=True, required=True)
     payment_reference = fields.Char(string="Payment Reference", copy=False, tracking=True,
         help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
-    currency_id = fields.Many2one('res.currency', string='Currency', store=True, readonly=False,
-        compute='_compute_currency_id',
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Currency',
+        compute='_compute_currency_id', store=True, readonly=False, precompute=True,
         help="The payment's currency.")
     partner_id = fields.Many2one(
         comodel_name='res.partner',
@@ -516,12 +509,12 @@ class AccountPayment(models.Model):
             else:
                 pay.outstanding_account_id = False
 
-    @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer')
+    @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer', 'destination_journal_id')
     def _compute_destination_account_id(self):
         self.destination_account_id = False
         for pay in self:
             if pay.is_internal_transfer:
-                pay.destination_account_id = pay.journal_id.company_id.transfer_account_id
+                pay.destination_account_id = pay.destination_journal_id.company_id.transfer_account_id
             elif pay.partner_type == 'customer':
                 # Receive money from invoice or send money to refund it.
                 if pay.partner_id:
@@ -673,10 +666,6 @@ class AccountPayment(models.Model):
         if not self.move_id:
             self.name = False
 
-    @api.onchange('journal_id')
-    def _onchange_journal(self):
-        self.move_id._onchange_journal()
-
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
@@ -694,9 +683,17 @@ class AccountPayment(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
+    def new(self, values=None, origin=None, ref=None):
+        self = self.with_context(is_payment=True)
+        payment = super().new(values, origin, ref)
+        if not payment.journal_id:  # might not be computed because declared by inheritance
+            payment.move_id._compute_journal_id()
+        return payment
+
     @api.model_create_multi
     def create(self, vals_list):
         # OVERRIDE
+        self = self.with_context(is_payment=True)
         write_off_line_vals_list = []
 
         for vals in vals_list:
@@ -706,18 +703,6 @@ class AccountPayment(models.Model):
 
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
-
-            # Force the computation of 'journal_id' since this field is set on account.move but must have the
-            # bank/cash type.
-            if 'journal_id' not in vals:
-                vals['journal_id'] = self._get_default_journal().id
-
-            # Since 'currency_id' is a computed editable field, it will be computed later.
-            # Prevent the account.move to call the _get_default_currency method that could raise
-            # the 'Please define an accounting miscellaneous journal in your company' error.
-            if 'currency_id' not in vals:
-                journal = self.env['account.journal'].browse(vals['journal_id'])
-                vals['currency_id'] = journal.currency_id.id or journal.company_id.currency_id.id
 
         payments = super().create(vals_list)
 
@@ -1076,3 +1061,11 @@ class AccountPayment(models.Model):
             'res_id': self.destination_journal_id.id,
         }
         return action
+
+# For optimization purpose, creating the reverse relation of m2o in _inherits saves
+# a lot of SQL queries
+class AccountMove(models.Model):
+    _name = "account.move"
+    _inherit = ['account.move']
+
+    payment_ids = fields.One2many('account.payment', 'move_id', string='Payments')

@@ -268,13 +268,25 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
         move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
         move = move_form.save()
-        amls = move.line_ids.filtered(lambda l: l.account_internal_group == 'expense')
 
-        self.assertEqual(move.amount_total, 1500)
-        self.assertEqual(move.currency_id, usd)
-        self.assertEqual(len(amls), 2)
-        self.assertEqual(amls[0].amount_currency, 1000)
-        self.assertEqual(amls[1].amount_currency, 500)
+        self.assertInvoiceValues(move, [
+            {
+                'display_type': 'product',
+                'amount_currency': 1000,
+                'balance': 1000,
+            }, {
+                'display_type': 'product',
+                'amount_currency': 500,
+                'balance': 500,
+            }, {
+                'display_type': 'payment_term',
+                'amount_currency': -1500,
+                'balance': -1500,
+            },
+        ], {
+            'amount_total': 1500,
+            'currency_id': usd.id,
+        })
 
     def test_product_price_decimal_accuracy(self):
         self.env.ref('product.decimal_price').digits = 3

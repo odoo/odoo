@@ -538,7 +538,7 @@
                                 </t>
                             </tr>
 
-                            <tr t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')" 
+                            <tr t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')"
                                 class="is-subtotal text-end">
                                 <td colspan="99">
                                     <strong class="mr16">Subtotal</strong>
@@ -591,7 +591,7 @@
 
     <template id="sale_order_portal_content_totals_table">
         <table class="table table-sm">
-            <t t-set="tax_totals" t-value="json.loads(sale_order.tax_totals_json)"/>
+            <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
             <t t-call="account.document_tax_totals"/>
         </table>
     </template>

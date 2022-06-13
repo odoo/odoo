@@ -164,14 +164,14 @@
                             <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
                                 <table class="table table-sm" style="page-break-inside: avoid;">
 
-                                        <!--Tax totals-->
-                                        <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
-                                        <t t-call="account.document_tax_totals"/>
+                                    <!--Tax totals-->
+                                    <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                    <t t-call="account.document_tax_totals"/>
 
                                     <!--Payments-->
                                     <t t-if="print_with_payments">
                                         <t t-if="o.payment_state != 'invoicing_legacy'">
-                                            <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                            <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
                                             <t t-foreach="payments_vals" t-as="payment_vals">
                                                 <tr t-if="payment_vals['is_exchange'] == 0">
                                                     <td>

@@ -86,7 +86,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
 
         valuation_line = stock_moves.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
 
-        if invoice.is_purchase_document() and any(l.is_anglo_saxon_line for l in invoice_line):
+        if invoice.is_purchase_document() and any(l.display_type == 'cogs' for l in invoice_line):
             self.assertEqual(len(invoice_line), 2, "Only two line2 should have been written by invoice in stock input account")
             self.assertTrue(valuation_line.reconciled or invoice_line[0].reconciled or invoice_line[1].reconciled, "The valuation and invoice line should have been reconciled together.")
         else:

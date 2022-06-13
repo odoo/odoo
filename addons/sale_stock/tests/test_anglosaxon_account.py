@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.sale_stock.tests.test_anglo_saxon_valuation_reconciliation import TestValuationReconciliation
+from odoo.addons.sale_stock.tests.test_anglo_saxon_valuation_reconciliation import TestValuationReconciliationCommon
 from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonAccounting(TestValuationReconciliation):
+class TestAngloSaxonAccounting(TestValuationReconciliationCommon):
 
     def test_cogs_should_use_price_from_the_right_company(self):
         """
@@ -29,7 +29,7 @@ class TestAngloSaxonAccounting(TestValuationReconciliation):
         company_a_invoice.with_context(allowed_company_ids=companies_with_b_first.ids).action_post()
 
         # check cost used for anglo_saxon_line is from company A
-        anglo_saxon_lines = company_a_invoice.line_ids.filtered('is_anglo_saxon_line')
+        anglo_saxon_lines = company_a_invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(anglo_saxon_lines, [
             {'debit': 0.0, 'credit': company_a_standard_price},
             {'debit': company_a_standard_price, 'credit': 0.0},

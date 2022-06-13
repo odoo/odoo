@@ -326,7 +326,7 @@ class AccountTax(models.Model):
             total_factor = sum(tax_repartition_lines.mapped('factor'))
             tax.real_amount = tax.amount * total_factor
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, fixed_multiplicator=1):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
         """
@@ -342,9 +342,9 @@ class AccountTax(models.Model):
             # When the price unit is equal to 0, the sign of the quantity is absorbed in base_amount then
             # a "else" case is needed.
             if base_amount:
-                return math.copysign(quantity, base_amount) * self.amount
+                return math.copysign(quantity, base_amount) * self.amount * abs(fixed_multiplicator)
             else:
-                return quantity * self.amount
+                return quantity * self.amount * abs(fixed_multiplicator)
 
         price_include = self._context.get('force_price_include', self.price_include)
 
@@ -408,27 +408,46 @@ class AccountTax(models.Model):
         rep_lines = self.mapped(is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids')
         return rep_lines.filtered(lambda x: x.repartition_type == repartition_type).mapped('tag_ids')
 
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False):
-        """ Returns all information required to apply taxes (in self + their children in case of a tax group).
-            We consider the sequence of the parent for group of taxes.
-                Eg. considering letters as taxes and alphabetic order as sequence :
-                [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, fixed_multiplicator=1):
+        """Compute all information required to apply taxes (in self + their children in case of a tax group).
+        We consider the sequence of the parent for group of taxes.
+            Eg. considering letters as taxes and alphabetic order as sequence :
+            [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
 
-            'handle_price_include' is used when we need to ignore all tax included in price. If False, it means the
+
+
+        :param price_unit: The unit price of the line to compute taxes on.
+        :param currency: The optional currency in which the price_unit is expressed.
+        :param quantity: The optional quantity of the product to compute taxes on.
+        :param product: The optional product to compute taxes on.
+            Used to get the tags to apply on the lines.
+        :param partner: The optional partner compute taxes on.
+            Used to retrieve the lang to build strings and for potential extensions.
+        :param is_refund: The optional boolean indicating if this is a refund.
+        :param handle_price_include: Used when we need to ignore all tax included in price. If False, it means the
             amount passed to this method will be considered as the base of all computations.
-
-        RETURN: {
+        :param include_caba_tags: The optional boolean indicating if CABA tags need to be taken into account.
+        :param fixed_multiplicator: The amount to multiply fixed amount taxes by.
+        :return: {
             'total_excluded': 0.0,    # Total without taxes
             'total_included': 0.0,    # Total with taxes
             'total_void'    : 0.0,    # Total with those taxes, that don't have an account set
+            'base_tags: : list<int>,  # Tags to apply on the base line
             'taxes': [{               # One dict for each tax in self and their children
                 'id': int,
                 'name': str,
                 'amount': float,
+                'base': float,
                 'sequence': int,
                 'account_id': int,
                 'refund_account_id': int,
-                'analytic': boolean,
+                'analytic': bool,
+                'price_include': bool,
+                'tax_exigibility': str,
+                'tax_repartition_line_id': int,
+                'group': recordset,
+                'tag_ids': list<int>,
+                'tax_ids': list<int>,
             }],
         } """
         if not self:
@@ -520,10 +539,9 @@ class AccountTax(models.Model):
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
         if currency.is_zero(base):
-            sign = self._context.get('force_sign', 1)
+            sign = -1 if fixed_multiplicator < 0 else 1
         elif base < 0:
             sign = -1
-        if base < 0:
             base = -base
 
         # Store the totals to reach when using price_include taxes (only the last price included in row)
@@ -553,10 +571,10 @@ class AccountTax(models.Model):
                     elif tax.amount_type == 'division':
                         incl_division_amount += tax.amount * sum_repartition_factor
                     elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor
+                        incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
                     else:
                         # tax.amount_type == other (python)
-                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
+                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, fixed_multiplicator) * sum_repartition_factor
                         incl_fixed_amount += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
@@ -606,7 +624,7 @@ class AccountTax(models.Model):
                 cumulated_tax_included_amount = 0
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
-                    tax_base_amount, sign * price_unit, quantity, product, partner)
+                    tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
 
             # Round the tax_amount multiplied by the computed repartition lines factor.
             tax_amount = round(tax_amount, precision_rounding=prec)
@@ -988,7 +1006,7 @@ class AccountTax(models.Model):
             })
         return tax_group_vals_list
 
-    def _prepare_tax_totals_json(self, base_lines, currency, tax_lines=None):
+    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None):
         """ Compute the tax totals details for the business documents.
         :param base_lines:  A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
         :param currency:    The currency set on the business document.
@@ -1004,8 +1022,6 @@ class AccountTax(models.Model):
                                                 partner's locale.
                 'formatted_amount_untaxed':     Same as amount_untaxed, but as a string formatted accordingly with
                                                 partner's locale.
-                'allow_tax_edition':            True if the user should have the ability to manually edit the tax amounts
-                                                by group to fix rounding errors.
                 'groups_by_subtotals':          A dictionary formed liked {'subtotal': groups_data}
                                                 Where total_type is a subtotal name defined on a tax group, or the
                                                 default one: 'Untaxed Amount'.
@@ -1029,6 +1045,8 @@ class AccountTax(models.Model):
                         'formatted_amount':                 Same as amount, but as a string formatted accordingly with
                                                             partner's locale.
                     }
+                'subtotals_order':              A list of keys of `groups_by_subtotals` defining the order in which it needs
+                                                to be displayed
             }
         """
         vals_list = []
@@ -1137,7 +1155,7 @@ class AccountTax(models.Model):
             'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
             'groups_by_subtotal': groups_by_subtotal,
             'subtotals': subtotals,
-            'allow_tax_edition': False,
+            'subtotals_order': sorted(subtotal_order.keys(), key=lambda k: subtotal_order[k]),
         }
 
     @api.model
@@ -1184,6 +1202,14 @@ class AccountTaxRepartitionLine(models.Model):
         check_company=True,
         help="The tax set to apply this distribution on refund invoices. Mutually exclusive with invoice_tax_id")
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')
+    document_type = fields.Selection(
+        selection=[
+            ('invoice', 'Invoice'),
+            ('refund', 'Refund'),
+        ],
+        compute='_compute_document_type',
+        help="The type of documnet on which the repartition line should be applied",
+    )
     company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this distribution line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1,
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
@@ -1222,6 +1248,11 @@ class AccountTaxRepartitionLine(models.Model):
     def _compute_tax_id(self):
         for record in self:
             record.tax_id = record.invoice_tax_id or record.refund_tax_id
+
+    @api.depends('invoice_tax_id', 'refund_tax_id')
+    def _compute_document_type(self):
+        for record in self:
+            record.document_type = 'invoice' if record.invoice_tax_id else 'refund'
 
     @api.onchange('repartition_type')
     def _onchange_repartition_type(self):

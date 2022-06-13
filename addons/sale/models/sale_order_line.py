@@ -1025,7 +1025,7 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         res = {
-            'display_type': self.display_type,
+            'display_type': self.display_type or 'product',
             'sequence': self.sequence,
             'name': self.name,
             'product_id': self.product_id.id,

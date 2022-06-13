@@ -284,7 +284,7 @@ class AccountBankStatement(models.Model):
             statement.all_lines_reconciled = all(st_line.is_reconciled for st_line in statement.line_ids)
 
     @api.onchange('journal_id')
-    def onchange_journal_id(self):
+    def _onchange_journal_id(self):
         for st_line in self.line_ids:
             st_line.journal_id = self.journal_id
             st_line.currency_id = self.journal_id.currency_id or self.company_id.currency_id
@@ -788,6 +788,7 @@ class AccountBankStatementLine(models.Model):
             journal = statement.journal_id
             # Ensure the journal is the same as the statement one.
             vals['journal_id'] = journal.id
+            vals['company_id'] = journal.company_id.id
             vals['currency_id'] = (journal.currency_id or journal.company_id.currency_id).id
             if 'date' not in vals:
                 vals['date'] = statement.date
@@ -928,8 +929,9 @@ class AccountBankStatementLine(models.Model):
 
         for st_line in self.with_context(skip_account_move_synchronization=True):
             liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
-            company_currency = st_line.journal_id.company_id.currency_id
-            journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency else False
+            journal = st_line.statement_id.journal_id
+            company_currency = journal.company_id.currency_id
+            journal_currency = journal.currency_id if journal.currency_id != company_currency else False
 
             line_vals_list = self._prepare_move_line_default_vals()
             line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
@@ -946,6 +948,8 @@ class AccountBankStatementLine(models.Model):
                 'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
                 'line_ids': line_ids_commands,
             }
+            if st_line.move_id.journal_id != journal:
+                st_line_vals['journal_id'] = journal.id
             if st_line.move_id.partner_id != st_line.partner_id:
                 st_line_vals['partner_id'] = st_line.partner_id.id
             st_line.move_id.write(st_line_vals)
@@ -1099,3 +1103,11 @@ class AccountBankStatementLine(models.Model):
                 'to_check': False,
                 'line_ids': [(5, 0)] + [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })
+
+# For optimization purpose, creating the reverse relation of m2o in _inherits saves
+# a lot of SQL queries
+class AccountMove(models.Model):
+    _name = "account.move"
+    _inherit = ['account.move']
+
+    statement_line_ids = fields.One2many('account.bank.statement.line', 'move_id', string='Statements')

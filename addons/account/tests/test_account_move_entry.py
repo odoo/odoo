@@ -295,7 +295,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
                     (0, None, {
                         'name': 'revenue line 2',
                         'account_id': self.company_data['default_account_revenue'].id,
-                        'debit': 1000.0,
+                        'debit': 100.0,
                         'credit': 0.0,
                         'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
                     }),
@@ -404,7 +404,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # You can remove journal items if the related journal entry is still balanced.
-        self.test_move.line_ids.unlink()
+        self.test_move.line_ids.filtered(lambda l: not l.tax_repartition_line_id).balance = 0
+        self.test_move.line_ids[0].unlink()
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
@@ -454,23 +455,25 @@ class TestAccountMove(AccountTestInvoicingCommon):
             [
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': -1200.0,
+                    'amount_currency': 1200.0,
                     'debit': 0.0,
-                    'credit': 400.0,
+                    'credit': 0.0,
                 },
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': 1200.0,
-                    'debit': 400.0,
+                    'amount_currency': -1200.0,
+                    'debit': 0.0,
                     'credit': 0.0,
                 },
             ],
         )
 
-        # === Change the date to change the currency conversion's rate ===
-
+        # Balance and amount currency are totally independant in journal entries if the line has a foreign currency
         with Form(move) as move_form:
-            move_form.date = fields.Date.from_string('2017-01-01')
+            with move_form.line_ids.edit(0) as line_form:
+                line_form.debit = 200
+            with move_form.line_ids.edit(1) as line_form:
+                line_form.credit = 200
 
         self.assertRecordValues(
             move.line_ids.sorted('debit'),
@@ -479,12 +482,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
                     'currency_id': self.currency_data['currency'].id,
                     'amount_currency': -1200.0,
                     'debit': 0.0,
-                    'credit': 600.0,
+                    'credit': 200.0,
                 },
                 {
                     'currency_id': self.currency_data['currency'].id,
                     'amount_currency': 1200.0,
-                    'debit': 600.0,
+                    'debit': 200.0,
                     'credit': 0.0,
                 },
             ],
@@ -527,8 +530,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
             debit_line.tax_ids.clear()
             debit_line.tax_ids.add(self.included_percent_tax)
 
-            self.assertTrue(debit_line.recompute_tax_line)
-
         # Create a third account.move.line with credit amount.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'credit_line_1'
@@ -544,24 +545,30 @@ class TestAccountMove(AccountTestInvoicingCommon):
         ])
 
     def test_misc_prevent_unlink_posted_items(self):
+        def unlink_posted_items():
+            self.test_move.line_ids.filtered(lambda l: not l.tax_repartition_line_id).balance = 0
+            self.test_move.line_ids[0].unlink()
+
         # You cannot remove journal items if the related journal entry is posted.
         self.test_move.action_post()
         with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.line_ids.unlink()
+            unlink_posted_items()
 
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
-        self.test_move.line_ids.unlink()
+        unlink_posted_items()
 
     def test_account_move_inactive_currency_raise_error_on_post(self):
         """ Ensure a move cannot be posted when using an inactive currency """
         move = self.env['account.move'].create({
-            'move_type': 'in_invoice',
+            'move_type': 'entry',
             'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'date': fields.Date.from_string('2019-01-01'),
             'currency_id': self.currency_data['currency'].id,
-            'invoice_payment_term_id': self.pay_terms_a.id,
-            'invoice_line_ids': [{}]
+            'line_ids': [
+                (0, None, self.entry_line_vals_1),
+                (0, None, self.entry_line_vals_2),
+            ],
         })
 
         move.currency_id.active = False
@@ -597,6 +604,19 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
         reversal = move_reversal.reverse_moves()
         reversed_move = self.env['account.move'].browse(reversal['res_id'])
+        self.assertRecordValues(reversed_move.line_ids, [
+            {
+                **self.entry_line_vals_1,
+                'debit': 0.0,
+                'credit': 500.0,
+            }, {
+                **self.entry_line_vals_2,
+                'debit': 500.0,
+                'credit': 0.0,
+            }
+        ])
+
+        reversed_move.is_storno = True
 
         self.assertRecordValues(reversed_move.line_ids, [
             {
@@ -784,10 +804,16 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
     def test_misc_prevent_edit_tax_on_posted_moves(self):
         # You cannot remove journal items if the related journal entry is posted.
+        def edit_tax_on_posted_moves():
+            self.test_move.line_ids.filtered(lambda l: l.tax_ids).write({
+                'balance': 1000.0,
+                'tax_ids': False,
+            })
+
         self.test_move.action_post()
         with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
              self.cr.savepoint():
-            self.test_move.line_ids.filtered(lambda l: l.tax_ids).tax_ids = False
+            edit_tax_on_posted_moves()
 
         with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
              self.cr.savepoint():
@@ -795,4 +821,4 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
-        self.assertTrue(self.test_move.line_ids.unlink())
+        edit_tax_on_posted_moves()

@@ -39,7 +39,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
     _render: function() {
         this.viewAlreadyOpened = false;
         var self = this;
-        var info = JSON.parse(this.value);
+        var info = this.value;
         if (!info) {
             this.$el.html('');
             return;
@@ -114,7 +114,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
         this._rpc({
                 model: 'account.move',
                 method: 'js_assign_outstanding_line',
-                args: [JSON.parse(this.value).move_id, id],
+                args: [this.value.move_id, id],
             }).then(function () {
                 self.trigger_up('reload');
             });

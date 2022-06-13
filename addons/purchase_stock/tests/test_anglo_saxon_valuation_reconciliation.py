@@ -179,7 +179,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         # Check the price difference amount.
         price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
         self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
-        self.assertAlmostEqual(price_diff_line.price_total, -6100.446)
+        self.assertAlmostEqual(price_diff_line.amount_currency, -6100.446)
 
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
@@ -207,7 +207,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
         self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
         self.assertAlmostEqual(price_diff_line.price_unit, 0.0001)
-        self.assertAlmostEqual(price_diff_line.price_total, 100.0)
+        self.assertAlmostEqual(price_diff_line.amount_currency, 100.0)
 
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)

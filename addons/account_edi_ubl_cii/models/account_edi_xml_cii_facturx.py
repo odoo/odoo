@@ -201,7 +201,7 @@ class AccountEdiXmlCII(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_fill_invoice_form(self, journal, tree, invoice_form, qty_factor):
+    def _import_fill_invoice_form(self, journal, tree, invoice, qty_factor):
 
         def _find_value(xpath, element=tree):
             return self.env['account.edi.format']._find_value(xpath, element, tree.nsmap)
@@ -213,26 +213,26 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # ==== partner_id ====
 
-        partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-        invoice_form.partner_id = self.env['account.edi.format']._retrieve_partner(
+        partner_type = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
+        invoice.partner_id = self.env['account.edi.format']._retrieve_partner(
             name=_find_value(f"//ram:{partner_type}/ram:Name"),
             mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
             vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
         )
-        if not invoice_form.partner_id:
+        if not invoice.partner_id:
             logs.append(_("Could not retrieve the vendor."))
 
         # ==== currency_id ====
 
         currency_code_node = tree.find('.//{*}InvoiceCurrencyCode')
-        if currency_code_node is not None and self.env.user.has_group('base.group_multi_currency'):
+        if currency_code_node is not None:
             currency = self.env['res.currency'].with_context(active_test=False).search([
                 ('name', '=', currency_code_node.text),
             ], limit=1)
             if currency:
                 if not currency.active:
                     logs.append(_("The currency '%s' is not active.", currency.name))
-                invoice_form.currency_id = currency
+                invoice.currency_id = currency
             else:
                 logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option and "
                               "activate the currency ?", currency_code_node.text))
@@ -241,7 +241,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         ref_node = tree.find('./{*}ExchangedDocument/{*}ID')
         if ref_node is not None:
-            invoice_form.ref = ref_node.text
+            invoice.ref = ref_node.text
 
         # === Note/narration ====
 
@@ -254,13 +254,13 @@ class AccountEdiXmlCII(models.AbstractModel):
         if payment_terms_node is not None:
             narration += payment_terms_node.text + "\n"
 
-        invoice_form.narration = narration
+        invoice.narration = narration
 
         # ==== payment_reference ====
 
         payment_reference_node = tree.find('.//{*}BuyerOrderReferencedDocument/{*}IssuerAssignedID')
         if payment_reference_node is not None:
-            invoice_form.payment_reference = payment_reference_node.text
+            invoice.payment_reference = payment_reference_node.text
 
         # ==== invoice_date ====
 
@@ -268,7 +268,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         if invoice_date_node is not None:
             date_str = invoice_date_node.text
             date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
-            invoice_form.invoice_date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+            invoice.invoice_date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         # ==== invoice_date_due ====
 
@@ -276,31 +276,30 @@ class AccountEdiXmlCII(models.AbstractModel):
         if invoice_date_due_node is not None:
             date_str = invoice_date_due_node.text
             date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
-            invoice_form.invoice_date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+            invoice.invoice_date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         # ==== invoice_line_ids: AllowanceCharge (document level) ====
 
-        logs += self._import_fill_invoice_allowance_charge(tree, invoice_form, journal, qty_factor)
+        logs += self._import_fill_invoice_allowance_charge(tree, invoice, journal, qty_factor)
 
         # ==== Down Payment (prepaid amount) ====
 
         prepaid_node = tree.find('.//{*}ApplicableHeaderTradeSettlement/'
                                  '{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}TotalPrepaidAmount')
-        self._import_fill_invoice_down_payment(invoice_form, prepaid_node, qty_factor)
+        self._import_fill_invoice_down_payment(invoice, prepaid_node, qty_factor)
 
         # ==== invoice_line_ids ====
 
         line_nodes = tree.findall('./{*}SupplyChainTradeTransaction/{*}IncludedSupplyChainTradeLineItem')
         if line_nodes is not None:
-            for i, invl_el in enumerate(line_nodes):
-                with invoice_form.invoice_line_ids.new() as invoice_line_form:
-                    invoice_line_form.sequence = i
-                    invl_logs = self._import_fill_invoice_line_form(journal, invl_el, invoice_form, invoice_line_form, qty_factor)
-                    logs += invl_logs
+            for invl_el in line_nodes:
+                invoice_line = invoice.invoice_line_ids.create({'move_id': invoice.id})
+                invl_logs = self._import_fill_invoice_line_form(journal, invl_el, invoice, invoice_line, qty_factor)
+                logs += invl_logs
 
-        return invoice_form, logs
+        return logs
 
-    def _import_fill_invoice_line_form(self, journal, tree, invoice_form, invoice_line_form, qty_factor):
+    def _import_fill_invoice_line_form(self, journal, tree, invoice_form, invoice_line, qty_factor):
         logs = []
 
         def _find_value(xpath, element=tree):
@@ -309,8 +308,8 @@ class AccountEdiXmlCII(models.AbstractModel):
         # Product.
         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree)
         if name:
-            invoice_line_form.name = name
-        invoice_line_form.product_id = self.env['account.edi.format']._retrieve_product(
+            invoice_line.name = name
+        invoice_line.product_id = self.env['account.edi.format']._retrieve_product(
             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', tree),
             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree),
             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', tree)
@@ -330,15 +329,15 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_amount': './{*}ActualAmount',  # below allowance_charge node
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
+        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
 
-        if not invoice_line_form.product_uom_id:
+        if not invoice_line.product_uom_id:
             logs.append(
                 _("Could not retrieve the unit of measure for line with label '%s'. Did you install the inventory "
-                  "app and enabled the 'Units of Measure' option ?", invoice_line_form.name))
+                  "app and enabled the 'Units of Measure' option ?", invoice_line.name))
 
         # Taxes
-        taxes = []
+        taxes = self.env['account.tax']
         tax_nodes = tree.findall('.//{*}ApplicableTradeTax/{*}RateApplicablePercent')
         for tax_node in tax_nodes:
             tax = self.env['account.tax'].search([
@@ -348,13 +347,11 @@ class AccountEdiXmlCII(models.AbstractModel):
                 ('type_tax_use', '=', 'purchase'),
             ], limit=1)
             if tax:
-                taxes.append(tax)
+                taxes += tax
             else:
-                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line_form.name))
+                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line.name))
 
-        invoice_line_form.tax_ids.clear()
-        for tax in taxes:
-            invoice_line_form.tax_ids.add(tax)
+        invoice_line.tax_ids = taxes
         return logs
 
     # -------------------------------------------------------------------------

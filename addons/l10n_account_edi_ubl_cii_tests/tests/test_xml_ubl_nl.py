@@ -114,7 +114,7 @@ class TestUBLNL(TestUBLCommon):
                 },
             ],
         )
-        xml_etree, xml_filename = self._assert_invoice_attachment(
+        attachment = self._assert_invoice_attachment(
             invoice,
             xpaths='''
                 <xpath expr="./*[local-name()='ID']" position="replace">
@@ -135,8 +135,8 @@ class TestUBLNL(TestUBLCommon):
             ''',
             expected_file='from_odoo/nlcius_out_invoice.xml',
         )
-        self.assertEqual(xml_filename[-10:], "nlcius.xml")
-        self._assert_imported_invoice_from_etree(invoice, xml_etree, xml_filename)
+        self.assertEqual(attachment.name[-10:], "nlcius.xml")
+        self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
         refund = self._generate_move(
@@ -168,7 +168,7 @@ class TestUBLNL(TestUBLCommon):
                 },
             ],
         )
-        xml_etree, xml_filename = self._assert_invoice_attachment(
+        attachment = self._assert_invoice_attachment(
             refund,
             xpaths='''
                 <xpath expr="./*[local-name()='ID']" position="replace">
@@ -189,8 +189,8 @@ class TestUBLNL(TestUBLCommon):
             ''',
             expected_file='from_odoo/nlcius_out_refund.xml',
         )
-        self.assertEqual(xml_filename[-10:], "nlcius.xml")
-        self._assert_imported_invoice_from_etree(refund, xml_etree, xml_filename)
+        self.assertEqual(attachment.name[-10:], "nlcius.xml")
+        self._assert_imported_invoice_from_etree(refund, attachment)
 
     ####################################################
     # Test import
