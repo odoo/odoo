@@ -537,6 +537,19 @@ registerModel({
             return clear();
         },
         /**
+         * @private
+         * @returns {string}
+         */
+        _computeMessageTypeText() {
+            if (this.message_type === 'notification') {
+                return this.env._t("System notification");
+            }
+            if (!this.is_discussion && !this.is_notification) {
+                return this.env._t("Note");
+            }
+            return this.env._t("Message");
+        },
+        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -809,6 +822,9 @@ registerModel({
         messageReactionGroups: many('MessageReactionGroup', {
             inverse: 'message',
             isCausal: true,
+        }),
+        messageTypeText: attr({
+            compute: '_computeMessageTypeText',
         }),
         message_type: attr(),
         /**

@@ -22,7 +22,7 @@
                     'bg-200': !messageView.message.isDiscussionOrNotification and messageView.isActive and !messageView.isSelected,
                     'bg-400': messageView.isSelected and !(messageView.message.isHighlighted or messageView.isHighlighted),
                     'opacity-50': (messageView.threadView and messageView.threadView.replyingToMessageView) and !messageView.isSelected,
-                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-local-id="messageView.message.localId"
+                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" role="group" t-att-aria-label="messageView.message.messageTypeText" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-local-id="messageView.message.localId"
                 t-ref="root"
             >
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" record="messageView.messageInReplyToView"/>
@@ -34,7 +34,7 @@
                     <div class="o_Message_sidebar d-flex justify-content-center flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': messageView.isSquashed }">
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative mx-1">
-                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_Message_authorRedirect o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''" alt="Avatar"/>
+                                <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_Message_authorRedirect o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" role="button" tabindex="0" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''" t-att-alt="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''"/>
                                 <t t-if="messageView.message.author and messageView.message.author.im_status">
                                     <PartnerImStatusIcon
                                         className="'o_Message_partnerImStatusIcon d-flex align-items-center justify-content-center'"
@@ -66,7 +66,7 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_header d-flex flex-wrap align-items-baseline ml-2">
                                 <t t-if="messageView.message.author">
-                                    <strong class="o_Message_authorName o_Message_authorRedirect o_redirect o_cursor_pointer text-truncate" t-on-click="messageView.onClickAuthorName" title="Open profile">
+                                    <strong class="o_Message_authorName o_Message_authorRedirect o_redirect o_cursor_pointer text-truncate" role="link" tabindex="0" t-on-click="messageView.onClickAuthorName" title="Open profile">
                                         <t t-if="messageView.message.originThread">
                                             <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
                                         </t>
@@ -112,8 +112,8 @@
                                 </t>
                                 <t t-if="messageView.threadView and messageView.message.originThread and messageView.message.originThread === messageView.threadView.thread and messageView.message.notifications.length > 0">
                                     <t t-if="messageView.message.failureNotifications.length > 0">
-                                        <span class="o_Message_notificationIconClickable o-error o_cursor_pointer text-danger" t-on-click="messageView.onClickFailure">
-                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
+                                        <span class="o_Message_notificationIconClickable o-error o_cursor_pointer text-danger" role="button" tabindex="0" t-on-click="messageView.onClickFailure">
+                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
                                         </span>
                                     </t>
                                     <t t-else="">
