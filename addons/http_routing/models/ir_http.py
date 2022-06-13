@@ -297,8 +297,14 @@ class IrHttp(models.AbstractModel):
         lang = user_context.get('lang')
         translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
 
+        translationURL = '/website/translations'
+        if getattr(request, 'lang', False):
+            # avoid 303 redirect in case we are on translated version
+            lang_code = request.lang._get_cached('url_code')
+            translationURL = url_lang(translationURL, lang_code)
+
         session_info.update({
-            'translationURL': '/website/translations',
+            'translationURL': translationURL,
             'cache_hashes': {
                 'translations': translation_hash,
             },
