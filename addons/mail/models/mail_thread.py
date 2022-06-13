@@ -1250,6 +1250,14 @@ class MailThread(models.AbstractModel):
             body = etree.tostring(root, pretty_print=False, encoding='unicode')
         return {'body': body, 'attachments': attachments}
 
+    def _part_get_content_decoded(self, part):
+        try:
+            return part.get_content(errors='strict')
+        except TypeError: # no "errors" argument on the underlyding content manager
+            return tools.ustr(part.get_content())
+        except UnicodeDecodeError:
+            return part.get_payload(decode=True).decode(errors='replace')
+
     def _message_parse_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
@@ -1265,7 +1273,7 @@ class MailThread(models.AbstractModel):
         #   type="text/html"
         if message.get_content_maintype() == 'text':
             encoding = message.get_content_charset()
-            body = message.get_content()
+            body = self._part_get_content_decoded(message)
             body = tools.ustr(body, encoding, errors='replace')
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
@@ -1288,22 +1296,21 @@ class MailThread(models.AbstractModel):
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
                     inner_cid = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, part.get_content(), {'cid': inner_cid}))
+                    attachments.append(self._Attachment(filename, self._part_get_content_decoded(part), {'cid': inner_cid}))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', self._part_get_content_decoded(part), {}))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = tools.append_content_to_html(body, tools.ustr(part.get_content(),
-                                                                         encoding, errors='replace'), preserve=True)
+                    body = tools.append_content_to_html(body, self._part_get_content_decoded(part), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
                     append_content = not alternative or (html and mixed)
-                    html = tools.ustr(part.get_content(), encoding, errors='replace')
+                    html = self._part_get_content_decoded(part)
                     if not append_content:
                         body = html
                     else:
@@ -1312,7 +1319,7 @@ class MailThread(models.AbstractModel):
                     body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', self._part_get_content_decoded(part), {}))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
