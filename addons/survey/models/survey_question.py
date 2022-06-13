@@ -45,13 +45,6 @@ class SurveyQuestion(models.Model):
     _rec_name = 'title'
     _order = 'sequence,id'
 
-    @api.model
-    def default_get(self, fields):
-        defaults = super(SurveyQuestion, self).default_get(fields)
-        if (not fields or 'question_type' in fields):
-            defaults['question_type'] = False if defaults.get('is_page') else 'simple_choice'
-        return defaults
-
     # question generic data
     title = fields.Char('Title', required=True, translate=True)
     description = fields.Html(
@@ -169,6 +162,20 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
 
+    # -------------------------------------------------------------------------
+    # CONSTRAINT METHODS
+    # -------------------------------------------------------------------------
+
+    @api.constrains("is_page")
+    def _check_question_type_for_pages(self):
+        invalid_pages = self.filtered(lambda question: question.is_page and question.question_type)
+        if invalid_pages:
+            raise ValidationError(_("Question type should be empty for these pages: %s", ', '.join(invalid_pages.mapped('title'))))
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
     @api.depends('question_type')
     def _compute_question_placeholder(self):
         for question in self:
@@ -206,9 +213,9 @@ class SurveyQuestion(models.Model):
 
     @api.depends('is_page')
     def _compute_question_type(self):
-        for question in self:
-            if not question.question_type or question.is_page:
-                question.question_type = False
+        pages = self.filtered(lambda question: question.is_page)
+        pages.question_type = False
+        (self - pages).filtered(lambda question: not question.question_type).question_type = 'simple_choice'
 
     @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
     def _compute_question_ids(self):

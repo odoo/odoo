@@ -70,6 +70,7 @@ class TestUi(TestUICommon):
                     'title': 'Furniture',
                     'sequence': 1,
                     'is_page': True,
+                    'question_type': False,
                     'description': "&lt;p&gt;Test your furniture knowledge!&lt;/p&gt",
                 }), (0, 0, {
                     'title': 'What type of wood is the best for furniture?',
