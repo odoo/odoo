@@ -171,7 +171,9 @@
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_publisher">
             <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
-                <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
+                <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
+                so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
+                <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
     </xpath>
