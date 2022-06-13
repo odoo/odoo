@@ -55,18 +55,6 @@
                             <i class="fa fa-users"/>
                         </div>
                     </t>
-                    <t t-if="chatWindow.hasShiftPrev">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftPrev o_cursor_pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindow.onClickShiftPrev" t-att-title="chatWindow.shiftPrevText">
-                            <!-- this is reversed automatically when language is rtl -->
-                            <i class="fa fa-angle-left"/>
-                        </div>
-                    </t>
-                    <t t-if="chatWindow.hasShiftNext">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShiftNext o_cursor_pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}" t-on-click="chatWindow.onClickShiftNext" t-att-title="chatWindow.shiftNextText">
-                            <!-- this is reversed automatically when language is rtl -->
-                            <i class="fa fa-angle-right"/>
-                        </div>
-                    </t>
                     <t t-if="chatWindow.isExpandable">
                         <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandExpand o_cursor_pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" t-on-click="chatWindow.onClickExpand" title="Open in Discuss">
                             <i class="fa fa-expand"/>
