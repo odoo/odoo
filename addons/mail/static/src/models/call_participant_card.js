@@ -262,7 +262,7 @@ registerModel({
             inverse: 'participantCards',
         }),
         /**
-         * The call view for which this card is the spotlight.
+         * The call view for which this card is the main card.
          */
         callViewOfMainCard: one('CallView', {
             inverse: 'mainParticipantCard',
