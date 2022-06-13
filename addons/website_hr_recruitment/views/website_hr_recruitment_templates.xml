@@ -96,31 +96,34 @@
                     </nav>
                 </div>
             </section>
-            <!-- Job name -->
-            <section class="pb32">
-                <div class="container">
-                    <div class="mt32">
-                        <div class="float-right">
-                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-right">Apply Now!</a>
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <!-- Job name -->
+                    <section class="pb32">
+                        <div class="container">
+                            <div class="mt32">
+                                <h1 t-field="job.name"/>
+                            </div>
                         </div>
-                        <h1 t-field="job.name"/>
+                    </section>
+
+                    <div t-field="job.website_description"/>
+                </div>
+                <div class="col-md-2 pb32 pt32 o_sticky_apply_now" id="sticky_apply_now">
+                    <div class="text-center">
+                        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg mb32">Apply Now!</a>
+                        <h3 t-field="job.name"/>
                         <h5 class="font-weight-light" t-field="job.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["city"],
                             "no_tag_br": True
                         }'/>
+                        <div class="d-flex align-items-baseline">
+                            <i class="fa fa-fw fa-users mr4" title="Department" role="img" aria-label="Department"/>
+                            <h5 class="font-weight-light text-left" t-field="job.department_id"/>
+                        </div>
                     </div>
                 </div>
-            </section>
-
-            <div t-field="job.website_description"/>
-
-            <div class="oe_structure">
-                <section class="o_job_bottom_bar mt32 mb32">
-                    <div class="text-center">
-                        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
-                    </div>
-                </section>
             </div>
         </div>
     </t>
@@ -381,13 +384,6 @@
                         <li>Create content that will help our users on a daily basis</li>
                         <li>Real responsibilities and challenges in a fast evolving company</li>
                     </ul>
-                </div>
-                <div class="col-lg-3 offset-lg-1 pb40">
-                    <div>
-                        <h5>Our Product</h5>
-                        <p>Discover our products.</p>
-                        <p><a href="/" class="btn btn-primary" target="_blank"><small><b>READ</b></small></a></p>
-                    </div>
                 </div>
             </div>
         </div>
