@@ -266,7 +266,7 @@
             <t t-set="MAX_ICONS" t-value="3"/>
             <!-- === Icons === -->
             <!-- Only shown if in the first 3 icons -->
-            <t t-foreach="acquirer.payment_icon_ids" t-as="icon">
+            <t t-foreach="acquirer.payment_icon_ids.filtered(lambda r: r.image_payment_form)" t-as="icon">
                 <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
                     <span t-esc="icon.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
