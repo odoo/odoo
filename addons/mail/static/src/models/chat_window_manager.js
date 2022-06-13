@@ -137,56 +137,6 @@ registerModel({
             }
         },
         /**
-         * Shift provided chat window to previous visible index, which swap visible order of this
-         * chat window and the preceding visible one
-         *
-         * @param {ChatWindow} chatWindow
-         */
-        shiftPrev(chatWindow) {
-            const chatWindows = this.allOrdered;
-            const index = chatWindows.findIndex(cw => cw === chatWindow);
-            if (index === chatWindows.length - 1) {
-                // already first one
-                return;
-            }
-            const otherChatWindow = chatWindows[index + 1];
-            const _newOrdered = [...this.allOrdered];
-            _newOrdered[index] = otherChatWindow;
-            _newOrdered[index + 1] = chatWindow;
-            this.update({ allOrdered: replace(_newOrdered) });
-            chatWindow.focus();
-            for (const loopedChatWindow of [chatWindow, otherChatWindow]) {
-                if (loopedChatWindow.threadView) {
-                    loopedChatWindow.threadView.addComponentHint('adjust-scroll');
-                }
-            }
-        },
-        /**
-         * Shift provided chat window to next visible index, which swap visible order of this
-         * chat window and the following visible one.
-         *
-         * @param {ChatWindow} chatWindow
-         */
-        shiftNext(chatWindow) {
-            const chatWindows = this.allOrdered;
-            const index = chatWindows.findIndex(cw => cw === chatWindow);
-            if (index === 0) {
-                // already last one
-                return;
-            }
-            const otherChatWindow = chatWindows[index - 1];
-            const _newOrdered = [...this.allOrdered];
-            _newOrdered[index] = otherChatWindow;
-            _newOrdered[index - 1] = chatWindow;
-            this.update({ allOrdered: replace(_newOrdered) });
-            chatWindow.focus();
-            for (const loopedChatWindow of [chatWindow, otherChatWindow]) {
-                if (loopedChatWindow.threadView) {
-                    loopedChatWindow.threadView.addComponentHint('adjust-scroll');
-                }
-            }
-        },
-        /**
          * @param {ChatWindow} chatWindow1
          * @param {ChatWindow} chatWindow2
          */
