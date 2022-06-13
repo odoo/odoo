@@ -61,6 +61,38 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         self.company_data['default_journal_misc'].account_control_ids |= self.company_data['default_account_expense']
         self.env['account.move'].create(move_vals)
 
+    def test_default_account_type_control_create_journal_entry(self):
+        move_vals = {
+            'line_ids': [
+                (0, 0, {
+                    'name': 'debit',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                }),
+                (0, 0, {
+                    'name': 'credit',
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                }),
+            ],
+        }
+
+        # Set the 'default_account_id' on the journal and make sure it will not raise an error,
+        # even if it is not explicitly included in the 'type_control_ids'.
+        self.company_data['default_journal_misc'].default_account_id = self.company_data['default_account_expense'].id
+
+        # Should fail because 'default_account_revenue' type is not allowed.
+        self.company_data['default_journal_misc'].type_control_ids |= self.company_data['default_account_receivable'].user_type_id
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.env['account.move'].create(move_vals)
+
+        # Should pass because both account types are allowed.
+        # 'default_account_revenue' explicitly and 'default_account_expense' implicitly.
+        self.company_data['default_journal_misc'].type_control_ids |= self.company_data['default_account_revenue'].user_type_id
+        self.env['account.move'].create(move_vals)
+
     def test_account_control_existing_journal_entry(self):
         self.env['account.move'].create({
             'line_ids': [
