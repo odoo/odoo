@@ -22,12 +22,13 @@
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2021
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2021
 # Yedigen, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Desausoi Laurent, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
+"Last-Translator: Desausoi Laurent, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -319,7 +320,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'teklif' if object.state in ('draft', 'sent') else 'sipariş'\"/>\n"
 "        Merhaba,\n"
 "        <br/><br/>\n"
 "        Sizin\n"
@@ -1336,7 +1337,7 @@ msgstr "Tekliflerinizi ve siparişlerinizi özelleştirin."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Ekspres Bağlayıcı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1564,6 +1565,12 @@ msgstr "Peşinat: %s"
 #, python-format
 msgid "Down Payments"
 msgstr "Peşinat Ödemeleri"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed

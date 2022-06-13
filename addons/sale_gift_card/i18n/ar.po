@@ -49,11 +49,36 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                إليك بطاقة اهدايا الخاصة بك!\n"
+"            </div>\n"
+"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                <img src=\"/gift_card/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                    <strong t-out=\"format_amount(object.initial_amount, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                    <strong>رمز بطاقة الهدايا</strong>\n"
+"                </p>\n"
+"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"            </div>\n"
+"            <div style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">انتهاء الصلاحية <t t-out=\"format_date(object.expired_date) or ''\">05/05/2021</t></h3>\n"
+"            </div>\n"
+"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                    <a t-attf-href=\"{{ object.buy_line_id.order_id.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">استخدمها الآن!</a>\n"
+"                </span>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
 msgid "<span class=\"fa fa-clipboard\"/> Copy"
-msgstr ""
+msgstr "<span class=\"fa fa-clipboard\"/> نسخة "
 
 #. module: sale_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_sale_order_line__generated_gift_card_ids
@@ -63,7 +88,7 @@ msgstr "بطاقة الهدايا المشتراة "
 #. module: sale_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_gift_card__buy_line_id
 msgid "Buy Line"
-msgstr ""
+msgstr "شراء البند "
 
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.used_gift_card
@@ -78,12 +103,12 @@ msgstr "تم الخصم من بطاقة الهدايا هذه "
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.used_gift_card
 msgid "Expired Date:"
-msgstr ""
+msgstr "تاريخ انتهاء الصلاحية: "
 
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
 msgid "Gift #"
-msgstr ""
+msgstr "رقم الهدية "
 
 #. module: sale_gift_card
 #: model:ir.model,name:sale_gift_card.model_gift_card
@@ -94,7 +119,7 @@ msgstr "بطاقة الهدايا "
 #. module: sale_gift_card
 #: model_terms:ir.ui.view,arch_db:sale_gift_card.sale_purchased_gift_card
 msgid "Gift Card Code"
-msgstr ""
+msgstr "كود بطاقة الهدايا "
 
 #. module: sale_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_sale_order__gift_card_count
@@ -105,18 +130,18 @@ msgstr "عدد بطاقات الهدايا "
 #: code:addons/sale_gift_card/models/sale_order.py:0
 #, python-format
 msgid "Gift Card already used."
-msgstr ""
+msgstr "تم استخدام بطاقة الهدايا بالفعل. "
 
 #. module: sale_gift_card
 #: code:addons/sale_gift_card/models/sale_order.py:0
 #, python-format
 msgid "Gift Card are restricted for another user."
-msgstr ""
+msgstr "بطاقة الهدايا مقيدة لمستخدم آخر. "
 
 #. module: sale_gift_card
 #: model:mail.template,name:sale_gift_card.mail_template_gift_card
 msgid "Gift Card: Send by Email"
-msgstr ""
+msgstr "بطاقة الهدايا: الإرسال عبر البريد الإلكتروني "
 
 #. module: sale_gift_card
 #: model:ir.actions.act_window,name:sale_gift_card.gift_card_sale_order_action
@@ -128,17 +153,17 @@ msgstr "بطاقات الهدايا "
 #: code:addons/sale_gift_card/models/sale_order.py:0
 #, python-format
 msgid "Invalid or Expired Gift Card."
-msgstr ""
+msgstr "البطاقات غير الصالحة أو منتهية الصلاحية. "
 
 #. module: sale_gift_card
 #: model:ir.model.fields,field_description:sale_gift_card.field_gift_card__redeem_line_ids
 msgid "Redeems"
-msgstr ""
+msgstr "الاستحقاقات "
 
 #. module: sale_gift_card
 #: model:ir.model.fields,help:sale_gift_card.field_gift_card__buy_line_id
 msgid "Sale Order line where this gift card has been bought."
-msgstr ""
+msgstr "بند طلب البيع الذي قد تم شراء بطاقة الهدايا هذه منه. "
 
 #. module: sale_gift_card
 #: model:ir.model,name:sale_gift_card.model_sale_order
@@ -156,8 +181,10 @@ msgid ""
 "You will find below your gift cards code. An email has been sent with it. "
 "You can use it starting right now."
 msgstr ""
+"ستجد أدناه كود بطاقة الهدايا. لقد تم إرسال بريد إلكتروني بشأنه. بمقدورك "
+"استخدامه منذ الآن. "
 
 #. module: sale_gift_card
 #: model:mail.template,subject:sale_gift_card.mail_template_gift_card
 msgid "Your Gift Card"
-msgstr ""
+msgstr "بطاقة الهدايا الخاصة بك "
