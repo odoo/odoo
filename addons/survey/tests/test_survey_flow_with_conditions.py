@@ -23,6 +23,7 @@ class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
                 'survey_id': survey.id,
                 'sequence': 1,
                 'is_page': True,
+                'question_type': False,
             })
 
             q01 = self._add_question(

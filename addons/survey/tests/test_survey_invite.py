@@ -30,13 +30,13 @@ class TestSurveyInvite(common.TestSurveyCommon):
             # no page
             self.env['survey.survey'].create({'title': 'Test survey'}),
             # no questions
-            self.env['survey.survey'].create({'title': 'Test survey', 'question_and_page_ids': [(0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1})]}),
+            self.env['survey.survey'].create({'title': 'Test survey', 'question_and_page_ids': [(0, 0, {'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1})]}),
             # closed
             self.env['survey.survey'].with_user(self.survey_manager).create({
                 'title': 'S0',
                 'active': False,
                 'question_and_page_ids': [
-                    (0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1}),
+                    (0, 0, {'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1}),
                     (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'text_box'})
                 ]
             })
