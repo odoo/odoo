@@ -31,6 +31,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
             # First page is about customer data
             page_0 = self.env['survey.question'].create({
                 'is_page': True,
+                'question_type': False,
                 'sequence': 1,
                 'title': 'Page1: Your Data',
                 'survey_id': survey.id,
@@ -47,6 +48,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
             # Second page is about tarte al djotte
             page_1 = self.env['survey.question'].create({
                 'is_page': True,
+                'question_type': False,
                 'sequence': 4,
                 'title': 'Page2: Tarte Al Djotte',
                 'survey_id': survey.id,

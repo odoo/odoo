@@ -13,6 +13,7 @@ class TestSurveyComputePagesQuestions(common.TestSurveyCommon):
 
             page_0 = self.env['survey.question'].create({
                 'is_page': True,
+                'question_type': False,
                 'sequence': 1,
                 'title': 'P1',
                 'survey_id': survey.id
@@ -25,6 +26,7 @@ class TestSurveyComputePagesQuestions(common.TestSurveyCommon):
 
             page_1 = self.env['survey.question'].create({
                 'is_page': True,
+                'question_type': False,
                 'sequence': 7,
                 'title': 'P2',
                 'survey_id': survey.id,
