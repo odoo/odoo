@@ -72,6 +72,7 @@
         </template>
 
         <template id="template_invoice_factura">
+            <t t-set="is_simplified" t-value="invoice._is_l10n_es_tbai_simplified()"/>
             <CabeceraFactura>
                 <SerieFactura t-out="invoice.l10n_es_tbai_sequence"/>
                 <NumFactura t-out="invoice.l10n_es_tbai_number"/>
@@ -115,32 +116,31 @@
                         <ImporteTotal t-out="float_repr(line.price_total * (-1 if is_refund else 1))"/>
                     </IDDetalleFactura>
                 </DetallesFactura>
-                <ImporteTotalFactura t-out="float_repr(invoice_details['ImporteTotal'])"/>
+                <ImporteTotalFactura t-out="float_repr(amount_total)"/>
                 <!-- <RetencionSoportada/> TODO (potentially has to be computed/decided manually) -->
                 <!-- <BaseImponibleACoste/> TODO (only applicable with ClaveRegimenIvaOpTrascendencia 06) -->
                 <Claves>
-                    <IDClave>
-                        <ClaveRegimenIvaOpTrascendencia t-out="invoice_details['ClaveRegimenEspecialOTrascendencia']"/>
-                        <!-- TODO there can be multiple (up to three) keys, all for specific use cases.
-                        Only 01 (regimen general) and 02 (exportaciones) implemented for now (and they're mutually exclusive). -->
+                    <IDClave t-foreach="regime_key" t-as="key">
+                        <ClaveRegimenIvaOpTrascendencia t-out="key"/>
                     </IDClave>
                 </Claves>
             </DatosFactura>
             <TipoDesglose t-if="is_emission">
-                <DesgloseFactura t-if="invoice_details['TipoDesglose'].get('DesgloseFactura')">
+                <DesgloseFactura t-if="invoice_info.get('DesgloseFactura')">
                     <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
-                        <t t-set="desglose" t-value="invoice_details['TipoDesglose']['DesgloseFactura']"/>
+                        <t t-set="desglose" t-value="invoice_info['DesgloseFactura']"/>
                     </t>
                 </DesgloseFactura>
                 <DesgloseTipoOperacion t-else="">
-                    <PrestacionServicios t-if="invoice_details['TipoDesglose']['DesgloseTipoOperacion'].get('PrestacionServicios')">
+                    <t t-set="invoice_info" t-value="invoice_info['DesgloseTipoOperacion']"/>
+                    <PrestacionServicios t-if="invoice_info.get('PrestacionServicios')">
                         <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
-                            <t t-set="desglose" t-value="invoice_details['TipoDesglose']['DesgloseTipoOperacion']['PrestacionServicios']"/>
+                            <t t-set="desglose" t-value="invoice_info['PrestacionServicios']"/>
                         </t>
                     </PrestacionServicios>
-                    <Entrega t-if="invoice_details['TipoDesglose']['DesgloseTipoOperacion'].get('Entrega')">
+                    <Entrega t-if="invoice_info.get('Entrega')">
                         <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
-                            <t t-set="desglose" t-value="invoice_details['TipoDesglose']['DesgloseTipoOperacion']['Entrega']"/>
+                            <t t-set="desglose" t-value="invoice_info['Entrega']"/>
                         </t>
                     </Entrega>
                 </DesgloseTipoOperacion>

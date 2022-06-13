@@ -282,7 +282,6 @@ class AccountEdiFormat(models.Model):
         # Credit notes (factura rectificativa)
         # TODO values below would have to be adapted for in_invoices (Bizkaia LROE)
         values['is_refund'] = invoice.move_type == 'out_refund'
-        values['is_simplified'] = invoice._is_l10n_es_tbai_simplified()
         if values['is_refund']:
             values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason
             values['credit_note_invoice'] = invoice.reversed_entry_id
@@ -293,11 +292,29 @@ class AccountEdiFormat(models.Model):
             'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250],  # only keep characters allowed in description
         } for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type)]
 
-        # Tax codes & tax details (claves régimen & desglose)
-        # TODO ClaveRegimenEspecialOTrascendencia: there's 15 more codes to implement, also there can be up to 3 in total
-        # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
+        # Tax details (desglose)
         edi_format_sii = self.env['account.edi.format']
-        values['invoice_details'] = edi_format_sii._l10n_es_edi_get_invoices_info(invoice)[0]['FacturaExpedida']
+        inv_info = edi_format_sii._l10n_es_edi_get_invoices_info(invoice)[0]['FacturaExpedida']
+        values['amount_total'] = inv_info['ImporteTotal']
+        values['invoice_info'] = inv_info['TipoDesglose']
+
+        # Regime codes (ClaveRegimenEspecialOTrascendencia)
+        # TODO there's 11 more codes to implement, also there can be up to 3 in total
+        # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
+        values['regime_key'] = [inv_info['ClaveRegimenEspecialOTrascendencia']]
+        summary = inv_info['TipoDesglose']
+        inv_details = summary.get('DesgloseTipoOperacion') or summary.get('DesgloseFactura')
+
+        if invoice._is_l10n_es_tbai_simplified():
+            values['regime_key'].append(52)  # code for simplified invoices
+        elif any(filter(
+                lambda l: any(filter(
+                    lambda d: d.get('TipoRecargoEquivalencia'),
+                    l.get('Sujeta', {}).get('NoExenta', {}).get('DesgloseIVA', {}).get('DetalleIVA', {})
+                )),
+                (inv_details, inv_details.get("PrestacionServicios", {}), inv_details.get("Entrega", {}))
+        )):
+            values['regime_key'].append(51)  # code for invoices with "recargo" taxes TODO wrong condition ?
 
         return values
 
