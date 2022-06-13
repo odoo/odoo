@@ -27,7 +27,7 @@ class ResPartner(models.Model):
 
     @api.onchange('property_product_pricelist')
     def _onchange_property_product_pricelist(self):
-        open_order = self.env['sale.order'].search([
+        open_order = self.env['sale.order'].sudo().search([
             ('partner_id', '=', self._origin.id),
             ('pricelist_id', '=', self._origin.property_product_pricelist.id),
             ('pricelist_id', '!=', self.property_product_pricelist.id),
