@@ -1,117 +1,90 @@
-odoo.define('sale.dashboard_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var KanbanView = require('web.KanbanView');
-var testUtils = require('web.test_utils');
+import { click, getFixture } from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 
-var createView = testUtils.createView;
+const serviceRegistry = registry.category("services");
 
-QUnit.module('Sales Team Dashboard', {
-    beforeEach: function () {
-        this.data = {
-            'crm.team': {
-                fields: {
-                    foo: {string: "Foo", type: 'char'},
-                    invoiced: {string: "Invoiced", type: 'integer'},
-                    invoiced_target: {string: "Invoiced_target", type: 'integer'},
+let serverData;
+let target;
+
+QUnit.module("Sales Team Dashboard", {
+    beforeEach() {
+        target = getFixture();
+        serverData = {
+            models: {
+                "crm.team": {
+                    fields: {
+                        foo: { string: "Foo", type: "char" },
+                        invoiced: { string: "Invoiced", type: "integer" },
+                        invoiced_target: { string: "Invoiced_target", type: "integer" },
+                    },
+                    records: [{ id: 1, foo: "yop", invoiced: 0, invoiced_target: 0 }],
                 },
-                records: [
-                    {id: 1, foo: "yop"},
-                ],
             },
         };
-    }
+
+        setupViewRegistries();
+    },
 });
 
-QUnit.test('edit target with several o_kanban_primary_bottom divs [REQUIRE FOCUS]', async function (assert) {
-    assert.expect(7);
+QUnit.test("edit target with several o_kanban_primary_bottom divs", async (assert) => {
+    assert.expect(4);
 
-    var kanban = await createView({
-        View: KanbanView,
-        model: 'crm.team',
-        data: this.data,
-        arch: '<kanban>' +
-                '<field name="invoiced_target"/>' +
-                '<templates>' +
-                    '<t t-name="kanban-box">' +
-                        '<div class="container o_kanban_card_content">' +
-                            `<field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/> ` +
-                            '<div class="col-12 o_kanban_primary_bottom"/>' +
-                            '<div class="col-12 o_kanban_primary_bottom bottom_block"/>' +
-                        '</div>' +
-                    '</t>' +
-                '</templates>' +
-              '</kanban>',
-        mockRPC: function (route, args) {
-            if (args.method === 'write') {
-                assert.strictEqual(args.args[1].invoiced_target, 123,
-                    "new value is correctly saved");
+    const fakeActionService = {
+        start: () => ({
+            async doAction(action) {
+                assert.deepEqual(
+                    action,
+                    {
+                        res_model: "crm.team",
+                        target: "current",
+                        type: "ir.actions.act_window",
+                        method: "get_formview_action",
+                    },
+                    "should trigger do_action with the correct args"
+                );
+                return true;
+            },
+        }),
+    };
+    serviceRegistry.add("action", fakeActionService, { force: true });
+
+    await makeView({
+        serverData,
+        type: "kanban",
+        resModel: "crm.team",
+        arch: /* xml */`
+            <kanban>
+                <field name="invoiced_target"/>
+                <templates>
+                    <div t-name="kanban-box" class="container o_kanban_card_content">
+                        <field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/>
+                        <div class="col-12 o_kanban_primary_bottom"/>
+                        <div class="col-12 o_kanban_primary_bottom bottom_block"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resId: 1,
+        async mockRPC(route, { method, model }) {
+            if (route === "/web/dataset/call_kw/crm.team/get_formview_action") {
+                return {
+                    method,
+                    res_model: model,
+                    target: "current",
+                    type: "ir.actions.act_window",
+                };
             }
-            if (args.method === 'read') { // Read happens after the write
-                assert.deepEqual(args.args[1], ['invoiced_target', 'invoiced', 'display_name'],
-                    'the read (after write) should ask for invoiced_target');
-            }
-            return this._super.apply(this, arguments);
         },
     });
 
-    assert.containsOnce(kanban, '.o_legacy_kanban_view .o_progressbar:contains(Click to define an invoicing target)')
-    assert.containsN(kanban, '.o_kanban_primary_bottom', 2,
-        "should have two divs with classname 'o_kanban_primary_bottom'");
+    assert.containsOnce(
+        target,
+        ".o_field_sales_team_progressbar:contains(Click to define an invoicing target)"
+    );
+    assert.containsN(target, ".o_kanban_primary_bottom", 2);
+    assert.containsNone(target, ".o_progressbar input");
 
-    assert.containsNone(kanban, '.o_progressbar input')
-    await testUtils.dom.click(kanban.$('.o_progressbar a'));
-    assert.containsOnce(kanban, '.o_progressbar input')
-
-    kanban.$('.o_progressbar input').focus();
-    kanban.$('.o_progressbar input').val('123');
-    kanban.$('.o_progressbar input').trigger('blur');
-    await testUtils.nextTick();
-    assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), "0 / 123");
-
-    kanban.destroy();
-});
-
-QUnit.test('edit target supports push Enter', async function (assert) {
-    assert.expect(3);
-
-    var kanban = await createView({
-        View: KanbanView,
-        model: 'crm.team',
-        data: this.data,
-        arch: '<kanban>' +
-                '<field name="invoiced_target"/>' +
-                '<templates>' +
-                    '<t t-name="kanban-box">' +
-                        '<div class="container o_kanban_card_content">' +
-                            `<field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/> ` +
-                            '<div class="col-12 o_kanban_primary_bottom"/>' +
-                            '<div class="col-12 o_kanban_primary_bottom bottom_block"/>' +
-                        '</div>' +
-                    '</t>' +
-                '</templates>' +
-              '</kanban>',
-        mockRPC: function (route, args) {
-            if (args.method === 'write') {
-                assert.strictEqual(args.args[1].invoiced_target, 123,
-                    "new value is correctly saved");
-            }
-            if (args.method === 'read') { // Read happens after the write
-                assert.deepEqual(args.args[1], ['invoiced_target', 'invoiced', 'display_name'],
-                    'the read (after write) should ask for invoiced_target');
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
-
-    await testUtils.dom.click(kanban.$('.o_progressbar a'));
-    kanban.$('.o_progressbar input').focus();
-    kanban.$('.o_progressbar input').val('123');
-    kanban.$('.o_progressbar input').trigger($.Event('keyup', {which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER}));
-    await testUtils.nextTick();
-    assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), "0 / 123");
-    
-    kanban.destroy();
-});
-
+    await click(target, ".sale_progressbar_form_link"); // should trigger a do_action
 });
