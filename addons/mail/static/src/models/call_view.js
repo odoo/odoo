@@ -311,7 +311,7 @@ registerModel({
     },
     fields: {
         /**
-         * The rtc session that is the focus/spotlight of the viewer.
+         * The rtc session that is the main card of the view.
          */
         activeRtcSession: one('RtcSession'),
         /**
@@ -362,7 +362,7 @@ registerModel({
             compute: '_computeLayoutSettingsTitle',
         }),
         /**
-         * If set, the card to be displayed as the "main/spotlight" card.
+         * If set, the card to be displayed as the main card.
          */
         mainParticipantCard: one('CallParticipantCard', {
             compute: '_computeMainParticipantCard',

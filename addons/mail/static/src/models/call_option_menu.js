@@ -56,13 +56,6 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
-        onClickLayout(ev) {
-            this.callActionListView.callView.toggleLayoutMenu();
-            this.component.trigger('o-popover-close');
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
         onClickOptions(ev) {
             this.messaging.userSetting.callSettingsMenu.toggle();
             this.component.trigger('o-popover-close');
