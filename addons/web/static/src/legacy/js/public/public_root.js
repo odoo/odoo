@@ -297,6 +297,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         ev.data.callback({
             model: m[1],
             id: m[2] | 0,
+            viewid: parseInt(document.documentElement.dataset.viewid),
         });
     },
     /**
