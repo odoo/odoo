@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { ProgressBarField } from "./progress_bar_field";
 
-class KanbanProgressBarField extends ProgressBarField {
+export class KanbanProgressBarField extends ProgressBarField {
     onClick() {
         if (this.props.isEditable && !this.props.record.isReadonly(this.props.name)) {
             this.state.isEditing = true;

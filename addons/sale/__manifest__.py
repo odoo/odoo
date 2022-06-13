@@ -60,7 +60,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'web.assets_backend': [
             'sale/static/src/scss/sale_onboarding.scss',
             'sale/static/src/scss/product_configurator.scss',
-            'sale/static/src/js/sale.js',
+            'sale/static/src/js/sale_progressbar_field.js',
             'sale/static/src/js/tours/sale.js',
             'sale/static/src/js/sale_order_line_mixin.js',
             'sale/static/src/js/product_configurator_widget.js',
@@ -82,6 +82,9 @@ This module contains all the common features of Sales Management and eCommerce.
         ],
         'web.report_assets_common': [
             'sale/static/src/scss/sale_report.scss',
+        ],
+        'web.assets_qweb': [
+            'sale/static/src/xml/**/*',
         ],
     },
     'post_init_hook': '_synchronize_cron',
