@@ -2840,8 +2840,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         moves' date should be earliest of today and first end of month
         (or year based on  sequence period) after the lock date
         """
-        # Make the tax account reconcilable
-        # self.tax_account_1.reconcile = True
+        self.env.company.tax_exigibility = True
 
         # Create an invoice with a CABA tax using the same tax account and pay half of it
         caba_inv = self.init_invoice('out_invoice', amounts=[130], post=True, invoice_date='2022-01-15',
@@ -2876,8 +2875,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         exchange moves' date should be earliest of today and first end of month
         (or year based on sequence period) after the lock date
         """
-        # Make the tax account reconcilable
-        # self.tax_account_1.reconcile = True
+        self.env.company.tax_exigibility = True
 
         # Create an invoice with a CABA tax using the same tax account and pay half of it
         tax = self.cash_basis_tax_a_third_amount.copy({
@@ -2886,8 +2884,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'price_include': True,
         })
 
-        self.currency_data['rates'][-1].copy({'name': '2022-01-01', 'rate': 1.1})
-        self.currency_data['rates'][-1].copy({'name': '2022-03-01', 'rate': 1.2})
+        self.currency_data['rates'][-1].copy({'name': '2022-01-01', 'rate': 0.5})
+        self.currency_data['rates'][-1].copy({'name': '2022-03-01', 'rate': 1})
+        self.currency_data['rates'][-1].copy({'name': '2022-04-01', 'rate': 2})
+
+        self.currency_data_2['rates'][-1].copy({'name': '2022-01-01', 'rate': 2})
+        self.currency_data_2['rates'][-1].copy({'name': '2022-03-01', 'rate': 4})
+        self.currency_data_2['rates'][-1].copy({'name': '2022-04-01', 'rate': 8})
 
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
         invoice_form.partner_id = self.partner_a
@@ -2907,12 +2910,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
 
         payment = self.env['account.payment'].create({
-            'amount': 115.0,
+            'amount': 920.0,
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
             'journal_id': self.company_data['default_journal_bank'].id,
             'date': fields.Date.from_string('2022-03-03'),
+            'currency_id': self.currency_data_2['currency'].id,
         })
 
         payment.action_post()
@@ -2926,9 +2930,20 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             lambda line: line.account_id.internal_type == 'receivable')
 
         reconcile = receivable_lines.reconcile()
+        self.assertTrue('full_reconcile' in reconcile)
 
-        self.assertRecordValues(reconcile['tax_cash_basis_moves'], [{'date': fields.Date.from_string('2022-04-30')}])
+        exchange_move = reconcile['full_reconcile'].exchange_move_id
+        caba_move = reconcile['tax_cash_basis_moves']
+
+        self.assertRecordValues(caba_move, [{'date': fields.Date.from_string('2022-04-30')}])
+        self.assertRecordValues(exchange_move, [{'date': fields.Date.from_string('2022-04-30')}])
+
+        self.company_data['company'].tax_lock_date = fields.Date.from_string("2022-04-30")
         receivable_lines[0].remove_move_reconcile()
+
         reversed_caba_move = self.env['account.move'].search(
-            [('reversed_entry_id', 'in', reconcile['tax_cash_basis_moves'].ids)])
-        self.assertRecordValues(reversed_caba_move, [{'date': fields.Date.from_string('2022-04-30')}])
+            [('reversed_entry_id', 'in', caba_move.ids)])
+        reversed_exchange_move = self.env['account.move'].search(
+            [('reversed_entry_id', 'in', exchange_move.ids)])
+        self.assertRecordValues(reversed_caba_move, [{'date': fields.Date.from_string('2022-05-31')}])
+        self.assertRecordValues(reversed_exchange_move, [{'date': fields.Date.from_string('2022-05-31')}])
