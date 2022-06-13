@@ -237,6 +237,11 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotEndScript() {
+        if (this.messaging.livechatButtonView.chatbotCurrentStep &&  this.messaging.livechatButtonView.chatbotCurrentStep.conversation_closed) {
+            // don't touch anything if the user has closed the conversation, let the chat window
+            // handle the display
+            return;
+        }
         this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field').addClass('d-none');
         this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').show();
         this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_restart').one('click',
@@ -421,7 +426,9 @@ const QWeb = core.qweb;
     },
     /**
      * Helper method that checks if the script should be ended or not.
-     * There are 2 use cases where we want to end the script:
+     * If the user has closed the conversation -> script has ended.
+     *
+     * Otherwise, there are 2 use cases where we want to end the script:
      *
      * If the current step is the last one AND the conversation was not taken over by a human operator
      *   1. AND we expect a user input (or we are on a selection)
@@ -432,6 +439,9 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotShouldEndScript() {
+        if (this.messaging.livechatButtonView.chatbotCurrentStep.conversation_closed) {
+            return true;
+        }
         if (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_is_last &&
             (this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_step_type !== 'forward_operator' ||
              !this.messaging.livechatButtonView.chatbotCurrentStep.chatbot_operator_found)
@@ -568,6 +578,10 @@ const QWeb = core.qweb;
      _askFeedback() {
         this._super(...arguments);
 
+        if (this.messaging.livechatButtonView.chatbotCurrentStep) {
+            this.messaging.livechatButtonView.chatbotCurrentStep.conversation_closed = true;
+            this._chatbotSaveSession();
+        }
         this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').hide();
         this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field')
