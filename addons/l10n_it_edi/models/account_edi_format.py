@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, _
-from odoo.tests.common import Form
-from odoo.exceptions import UserError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from odoo.osv.expression import OR, AND
 
@@ -11,7 +9,6 @@ from lxml import etree
 from datetime import datetime
 import re
 import logging
-import json
 
 
 _logger = logging.getLogger(__name__)
@@ -129,7 +126,7 @@ class AccountEdiFormat(models.Model):
 
         # <2.2.1>
         for invoice_line in invoice.invoice_line_ids:
-            if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
+            if invoice_line.display_type not in ('line_note', 'line_section') and len(invoice_line.tax_ids) != 1:
                 errors.append(_("In line %s, you must select one and only one tax by line.", invoice_line.name))
 
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
@@ -173,7 +170,7 @@ class AccountEdiFormat(models.Model):
             of product is bought and it's unambiguous.
         """
         scopes = []
-        for line in invoice.invoice_line_ids.filtered(lambda l: not l.display_type):
+        for line in invoice.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
             tax_ids_with_tax_scope = line.tax_ids.filtered(lambda x: x.tax_scope)
             if tax_ids_with_tax_scope:
                 scopes += tax_ids_with_tax_scope.mapped('tax_scope')
@@ -432,7 +429,7 @@ class AccountEdiFormat(models.Model):
                                  .with_context(default_move_type=move_type)
 
             # move could be a single record (editing) or be empty (new).
-            with Form(invoice_ctx) as invoice_form:
+            with invoice_ctx._get_edi_creation() as invoice_form:
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
@@ -471,7 +468,7 @@ class AccountEdiFormat(models.Model):
 
                 # Currency. <2.1.1.2>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa')
-                if elements and self.env.user.has_group('base.group_multi_currency'):
+                if elements:
                     currency_str = elements[0].text
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
                     if currency != self.env.company.currency_id and currency.active:
@@ -572,7 +569,8 @@ class AccountEdiFormat(models.Model):
 
                 if elements:
                     for element in elements:
-                        with invoice_form.invoice_line_ids.new() as invoice_line_form:
+                        invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
+                        if invoice_line_form:
 
                             # Sequence.
                             line_elements = element.xpath('.//NumeroLinea')
@@ -638,7 +636,7 @@ class AccountEdiFormat(models.Model):
                                             percentage = round(tax_amount / price_subtotal * 100)
 
                             natura_element = element.xpath('.//Natura')
-                            invoice_line_form.tax_ids.clear()
+                            invoice_line_form.tax_ids = []
                             if percentage is not None:
                                 if natura_element and natura_element[0].text:
                                     l10n_it_kind_exoneration = natura_element[0].text
@@ -659,7 +657,7 @@ class AccountEdiFormat(models.Model):
                                     l10n_it_kind_exoneration = ''
 
                                 if tax:
-                                    invoice_line_form.tax_ids.add(tax)
+                                    invoice_line_form.tax_ids += tax
                                 else:
                                     if l10n_it_kind_exoneration:
                                         message_to_log.append(_("Tax not found with percentage: %s and exoneration %s for the article: %s") % (
@@ -701,7 +699,7 @@ class AccountEdiFormat(models.Model):
                 # Global discount summarized in 1 amount
                 discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
                 if discount_elements:
-                    taxable_amount = float(json.loads(invoice_form.tax_totals_json)['amount_untaxed'])
+                    taxable_amount = float(invoice_form.tax_totals['amount_untaxed'])
                     discounted_amount = taxable_amount
                     for discount_element in discount_elements:
                         discount_type = discount_element.xpath('.//Tipo')
@@ -725,7 +723,7 @@ class AccountEdiFormat(models.Model):
                         invoice_line_global_discount.name = 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE'
                         invoice_line_global_discount.price_unit = general_discount
 
-            new_invoice = invoice_form.save()
+            new_invoice = invoice_form
             new_invoice.l10n_it_send_state = "other"
 
             elements = body_tree.xpath('.//Allegati')

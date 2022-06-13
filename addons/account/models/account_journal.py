@@ -389,7 +389,7 @@ class AccountJournal(models.Model):
             WHERE aml.journal_id in (%s)
             AND EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.journal_id = aml.journal_id)
             AND NOT EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.account_id = aml.account_id AND rel.journal_id = aml.journal_id)
-            AND aml.display_type IS NULL
+            AND aml.display_type NOT IN ('line_section', 'line_note')
         """, tuple(self.ids))
         if self._cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
@@ -690,18 +690,19 @@ class AccountJournal(models.Model):
             raise UserError(_("No attachment was provided"))
 
         invoices = self.env['account.move']
-        for attachment in attachments:
-            attachment.write({'res_model': 'mail.compose.message'})
-            decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
-            invoice = False
-            for decoder in sorted(decoders, key=lambda d: d[0]):
-                invoice = decoder[1](attachment)
-                if invoice:
-                    break
-            if not invoice:
-                invoice = self.env['account.move'].create({})
-            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
-            invoices += invoice
+        with invoices._disable_discount_precision():
+            for attachment in attachments:
+                attachment.write({'res_model': 'mail.compose.message'})
+                decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
+                invoice = False
+                for decoder in sorted(decoders, key=lambda d: d[0]):
+                    invoice = decoder[1](attachment)
+                    if invoice:
+                        break
+                if not invoice:
+                    invoice = self.env['account.move'].create({})
+                invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+                invoices += invoice
 
         action_vals = {
             'name': _('Generated Documents'),

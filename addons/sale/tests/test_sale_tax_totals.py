@@ -17,7 +17,7 @@ class SaleTestTaxTotals(TestTaxTotals):
 
     def _create_document_for_tax_totals_test(self, lines_data):
         # Overridden in order to run the inherited tests with sale.order's
-        # tax_totals_json field instead of account.move's
+        # tax_totals field instead of account.move's
 
         lines_vals = [
             (0, 0, {

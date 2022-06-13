@@ -14,7 +14,7 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdi(AccountEdiTestCommon):
+class TestItEdiCommon(AccountEdiTestCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -144,6 +144,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.price_included_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
@@ -167,6 +168,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.partial_discount_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
@@ -190,6 +192,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.full_discount_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
@@ -204,6 +207,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.non_latin_and_latin_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
@@ -225,6 +229,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.below_400_codice_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_no_address_codice.id,
             'invoice_line_ids': [
                 (0, 0, {
@@ -242,6 +247,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.total_400_VAT_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_no_address_VAT.id,
             'invoice_line_ids': [
                 (0, 0, {
@@ -253,6 +259,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.more_400_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_no_address_codice.id,
             'invoice_line_ids': [
                 (0, 0, {
@@ -264,6 +271,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.non_domestic_simplified_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.american_partner.id,
             'invoice_line_ids': [
                 (0, 0, {
@@ -275,6 +283,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.pa_partner_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_b.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
@@ -294,6 +303,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.zero_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
             'partner_id': cls.italian_partner_a.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': [
@@ -330,6 +340,9 @@ class TestItEdi(AccountEdiTestCommon):
         with tools.file_open(path, mode='rb') as test_file:
             return test_file.read()
 
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestItEdi(TestItEdiCommon):
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
             equal to taxable base * tax rate (there is a constraint in the edi where taxable base * tax rate = tax amount, but also
@@ -350,7 +363,7 @@ class TestItEdi(AccountEdiTestCommon):
         # The tax amount of the price included tax should be:
         #   per line: 800.40 - (800.40 / (100 + 22) * 100) = 144.33
         #   tax amount: 144.33 * 2 = 288.66
-        self.assertEqual(price_included_tax_line.price_total, 288.66)
+        self.assertEqual(price_included_tax_line.amount_currency, -288.66)
 
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),

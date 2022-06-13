@@ -260,7 +260,7 @@
                                groups="account.group_show_line_subtotals_tax_included"/>
 
                             <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                                <t t-if="not line.display_type" name="account_invoice_line_accountable">
+                                <t t-if="line.display_type not in ('line_note', 'line_section')" name="account_invoice_line_accountable">
                                     <td name="account_invoice_line_name">
                                         <t t-set="translation_name" t-value="line.with_context(lang='ar_001').product_id.name"/>
                                         <t t-if="line.product_id">
@@ -346,7 +346,7 @@
                                         <span t-field="o.amount_untaxed"/>
                                     </td>
                                 </tr>
-                                <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+                                <t t-set="tax_totals" t-value="o.tax_totals"/>
                                 <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                                     <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
                                     <t t-call="account.tax_groups_totals"/>
@@ -366,7 +366,7 @@
 
                                 <t t-if="print_with_payments">
                                     <t t-if="o.payment_state != 'invoicing_legacy'">
-                                        <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                        <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
                                         <t t-foreach="payments_vals" t-as="payment_vals">
                                             <tr class="border-black o_total">
                                                 <td>

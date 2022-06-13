@@ -76,7 +76,7 @@ class TestUBLBE(TestUBLCommon):
             'move_type': 'out_invoice',
             'journal_id': cls.journal.id,
             'partner_id': cls.partner_1.id,
-            'partner_bank_id': cls.acc_bank,
+            'partner_bank_id': cls.acc_bank.id,
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': cls.currency_data['currency'].id,
@@ -135,7 +135,7 @@ class TestUBLBE(TestUBLCommon):
                 },
             ],
         )
-        xml_etree, xml_filename = self._assert_invoice_attachment(
+        attachment = self._assert_invoice_attachment(
             invoice,
             xpaths='''
                 <xpath expr="./*[local-name()='ID']" position="replace">
@@ -156,8 +156,8 @@ class TestUBLBE(TestUBLCommon):
             ''',
             expected_file='from_odoo/bis3_out_invoice.xml',
         )
-        self.assertEqual(xml_filename[-12:], "ubl_bis3.xml")  # ensure we test the right format !
-        self._assert_imported_invoice_from_etree(invoice, xml_etree, xml_filename)
+        self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")  # ensure we test the right format !
+        self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
         refund = self._generate_move(
@@ -189,7 +189,7 @@ class TestUBLBE(TestUBLCommon):
                 },
             ],
         )
-        xml_etree, xml_filename = self._assert_invoice_attachment(
+        attachment = self._assert_invoice_attachment(
             refund,
             xpaths='''
                 <xpath expr="./*[local-name()='ID']" position="replace">
@@ -210,8 +210,8 @@ class TestUBLBE(TestUBLCommon):
             ''',
             expected_file='from_odoo/bis3_out_refund.xml',
         )
-        self.assertEqual(xml_filename[-12:], "ubl_bis3.xml")
-        self._assert_imported_invoice_from_etree(refund, xml_etree, xml_filename)
+        self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
+        self._assert_imported_invoice_from_etree(refund, attachment)
 
     ####################################################
     # Test import

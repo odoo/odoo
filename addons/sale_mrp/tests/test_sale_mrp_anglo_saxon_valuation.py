@@ -206,8 +206,8 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         def check_cogs_entry_values(invoice, expected_value):
             aml = invoice.line_ids
-            aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
-            aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
+            aml_expense = aml.filtered(lambda l: l.display_type == 'cogs' and l.debit > 0)
+            aml_output = aml.filtered(lambda l: l.display_type == 'cogs' and l.credit > 0)
             self.assertEqual(aml_expense.debit, expected_value, "Cost of Good Sold entry missing or mismatching for variant")
             self.assertEqual(aml_output.credit, expected_value, "Cost of Good Sold entry missing or mismatching for variant")
 

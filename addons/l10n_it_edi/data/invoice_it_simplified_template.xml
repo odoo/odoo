@@ -87,7 +87,7 @@
                         </DatiFatturaRettificata>
                     </DatiGenerali>
                     <!-- Invoice lines. -->
-                    <t t-foreach="record.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
+                    <t t-foreach="record.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section'))" t-as="line">
                         <t t-call="l10n_it_edi.account_invoice_line_it_simplified_FatturaPA"/>
                     </t>
                     <Allegati t-if="pdf">

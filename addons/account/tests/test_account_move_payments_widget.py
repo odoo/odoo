@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -157,7 +158,11 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'invoice_date': '2016-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 300})],
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 300,
+                'tax_ids': [],
+            })],
         })
         out_invoice.action_post()
 
@@ -185,7 +190,11 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 300})],
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 300,
+                'tax_ids': [],
+            })],
         })
         out_invoice.action_post()
 

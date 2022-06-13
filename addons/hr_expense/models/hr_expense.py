@@ -8,7 +8,6 @@ from odoo.tools import float_round
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero, float_repr, float_compare, is_html_empty
 from odoo.tools.misc import clean_context, format_date
-from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
 class HrExpense(models.Model):
@@ -560,54 +559,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
     # Business
     # ----------------------------------------
 
-    def _prepare_move_values(self):
-        """
-        This function prepares move values related to an expense
-        """
-        self.ensure_one()
-        journal = self.sheet_id.bank_journal_id if self.payment_mode == 'company_account' else self.sheet_id.journal_id
-        account_date = self.sheet_id.accounting_date or self.date
-        move_values = {
-            'journal_id': journal.id,
-            'company_id': self.sheet_id.company_id.id,
-            'date': account_date,
-            'ref': self.sheet_id.name,
-            # force the name to the default value, to avoid an eventual 'default_name' in the context
-            # to set it to '' which cause no number to be given to the account.move when posted.
-            'name': '/',
-        }
-        return move_values
-
-    def _get_account_move_by_sheet(self):
-        """ Return a mapping between the expense sheet of current expense and its account move
-            :returns dict where key is a sheet id, and value is an account move record
-        """
-        move_grouped_by_sheet = {}
-        for expense in self:
-            # create the move that will contain the accounting entries
-            if expense.sheet_id.id not in move_grouped_by_sheet:
-                move_vals = expense._prepare_move_values()
-                move = self.env['account.move'].with_context(default_journal_id=move_vals['journal_id']).create(move_vals)
-                move_grouped_by_sheet[expense.sheet_id.id] = move
-            else:
-                move = move_grouped_by_sheet[expense.sheet_id.id]
-        return move_grouped_by_sheet
-
-    def _get_expense_account_source(self):
-        self.ensure_one()
-        if self.account_id:
-            account = self.account_id
-        elif self.product_id:
-            account = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()['expense']
-            if not account:
-                raise UserError(
-                    _("No Expense account found for the product %s (or for its category), please configure one.") % (self.product_id.name))
-        else:
-            account = self.env['ir.property'].with_company(self.company_id)._get('property_account_expense_categ_id', 'product.category')
-            if not account:
-                raise UserError(_('Please configure Default Expense account for Category expense: `property_account_expense_categ_id`.'))
-        return account
-
     def _get_expense_account_destination(self):
         self.ensure_one()
         account_dest = self.env['account.account']
@@ -624,126 +575,52 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
         return account_dest.id
 
-    def _get_account_move_line_values(self):
-        move_line_values_by_expense = {}
-        for expense in self:
-            move_line_name = expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64]
-            account_src = expense._get_expense_account_source()
-            account_dst = expense._get_expense_account_destination()
-            account_date = expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense)
-
-            company_currency = expense.company_id.currency_id
-
-            move_line_values = []
-            unit_amount = expense.total_amount
-            quantity = 1
-
-            taxes = expense._get_taxes(price=unit_amount, quantity=quantity)
-            total_amount = 0.0
-            total_amount_currency = 0.0
-            partner_id = expense.employee_id.sudo().address_home_id.commercial_partner_id.id
-
-            # source move line
-            balance = expense.currency_id._convert(taxes['total_excluded'], company_currency, expense.company_id, account_date)
-            amount_currency = taxes['total_excluded']
-            move_line_src = {
-                'name': move_line_name,
-                'quantity': expense.quantity or 1,
-                'debit': balance if balance > 0 else 0,
-                'credit': -balance if balance < 0 else 0,
-                'amount_currency': amount_currency,
-                'account_id': account_src.id,
-                'product_id': expense.product_id.id,
-                'product_uom_id': expense.product_uom_id.id,
-                'analytic_account_id': expense.analytic_account_id.id,
-                'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)],
-                'expense_id': expense.id,
-                'partner_id': partner_id,
-                'tax_ids': [(6, 0, expense.tax_ids.ids)],
-                'tax_tag_ids': [(6, 0, taxes['base_tags'])],
-                'currency_id': expense.currency_id.id,
-            }
-            move_line_values.append(move_line_src)
-            total_amount -= balance
-            total_amount_currency -= move_line_src['amount_currency']
-
-            # taxes move lines
-            for tax in taxes['taxes']:
-                balance = expense.currency_id._convert(tax['amount'], company_currency, expense.company_id, account_date)
-                amount_currency = tax['amount']
-
-                if tax['tax_repartition_line_id']:
-                    rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
-                    base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
-                    base_amount = expense.currency_id._convert(base_amount, company_currency, expense.company_id, account_date)
-                else:
-                    base_amount = None
-
-                move_line_tax_values = {
-                    'name': tax['name'],
-                    'quantity': 1,
-                    'debit': balance if balance > 0 else 0,
-                    'credit': -balance if balance < 0 else 0,
-                    'amount_currency': amount_currency,
-                    'account_id': tax['account_id'] or move_line_src['account_id'],
-                    'tax_repartition_line_id': tax['tax_repartition_line_id'],
-                    'tax_tag_ids': tax['tag_ids'],
-                    'tax_base_amount': base_amount,
-                    'expense_id': expense.id,
-                    'partner_id': partner_id,
-                    'currency_id': expense.currency_id.id,
-                    'analytic_account_id': expense.analytic_account_id.id if tax['analytic'] else False,
-                    'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)] if tax['analytic'] else False,
-                }
-                total_amount -= balance
-                total_amount_currency -= move_line_tax_values['amount_currency']
-                move_line_values.append(move_line_tax_values)
-
-            # destination move line
-            move_line_dst = {
-                'name': move_line_name,
-                'debit': total_amount > 0 and total_amount,
-                'credit': total_amount < 0 and -total_amount,
-                'account_id': account_dst,
-                'date_maturity': account_date,
-                'amount_currency': total_amount_currency,
-                'currency_id': expense.currency_id.id,
-                'expense_id': expense.id,
-                'partner_id': partner_id,
-                'exclude_from_invoice_tab': True,
-            }
-            move_line_values.append(move_line_dst)
-
-            move_line_values_by_expense[expense.id] = move_line_values
-        return move_line_values_by_expense
-
     def action_move_create(self):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
-        move_group_by_sheet = self._get_account_move_by_sheet()
-
-        move_line_values_by_expense = self._get_account_move_line_values()
+        moves = self.env['account.move'].create([
+            {
+                'journal_id': (
+                    sheet.bank_journal_id
+                    if sheet.payment_mode == 'company_account' else
+                    sheet.journal_id
+                ).id,
+                'move_type': 'in_receipt',
+                'company_id': sheet.company_id.id,
+                'date': sheet.accounting_date or fields.Date.context_today(sheet),
+                'invoice_date': sheet.accounting_date or fields.Date.context_today(sheet),
+                'ref': sheet.name,
+                # force the name to the default value, to avoid an eventual 'default_name' in the context
+                # to set it to '' which cause no number to be given to the account.move when posted.
+                'name': '/',
+                'expense_sheet_id': [Command.set(sheet.ids)],
+                'line_ids':[
+                    Command.create({
+                        'name': expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64],
+                        'quantity': expense.quantity or 1,
+                        'price_unit': expense.total_amount,
+                        'product_id': expense.product_id.id,
+                        'product_uom_id': expense.product_uom_id.id,
+                        'analytic_account_id': expense.analytic_account_id.id,
+                        'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)],
+                        'expense_id': expense.id,
+                        'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
+                        'tax_ids': [(6, 0, expense.tax_ids.ids)],
+                        'currency_id': expense.currency_id.id,
+                    })
+                    for expense in sheet.expense_line_ids
+                ]
+            }
+            for sheet in self.sheet_id
+        ])
+        moves._post()
 
         for expense in self:
-            # get the account move of the related sheet
-            move = move_group_by_sheet[expense.sheet_id.id]
-
-            # get move line values
-            move_line_values = move_line_values_by_expense.get(expense.id)
-
-            # link move lines to move, and move to expense sheet
-            move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
-            expense.sheet_id.write({'account_move_id': move.id})
-
             if expense.payment_mode == 'company_account':
                 expense.sheet_id.paid_expense_sheets()
 
-        # post the moves
-        for move in move_group_by_sheet.values():
-            move._post()
-
-        return move_group_by_sheet
+        return {move.expense_sheet_id.id: move for move in moves}
 
     def refuse_expense(self, reason):
         self.write({'is_refused': True})
@@ -981,7 +858,9 @@ class HrExpenseSheet(models.Model):
         ('done', 'Done'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True)
-    payment_state = fields.Selection(selection=PAYMENT_STATE_SELECTION, string="Payment Status",
+    payment_state = fields.Selection(
+        selection=lambda self: self.env["account.move"]._fields["payment_state"].selection,
+        string="Payment Status",
         store=True, readonly=True, copy=False, tracking=True, compute='_compute_payment_state')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())
     address_id = fields.Many2one('res.partner', compute='_compute_from_employee_id', store=True, readonly=False, copy=True, string="Employee Home Address", check_company=True)

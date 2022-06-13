@@ -80,8 +80,8 @@ class AccountChartTemplate(models.Model):
                 'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': ref('product.product_delivery_01'), 'price_unit': 10.0, 'quantity': 1}),
-                    Command.create({'product_id': ref('product.product_order_01'), 'price_unit': 4.0, 'quantity': 5}),
+                    Command.create({'product_id': ref('product.product_delivery_01').id, 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': ref('product.product_order_01').id, 'price_unit': 4.0, 'quantity': 5}),
                 ],
             },
             f'{cid}_demo_invoice_extract': {
@@ -310,27 +310,12 @@ class AccountChartTemplate(models.Model):
     def _post_create_demo_data(self, created):
         cid = self.env.company.id
         if created._name == 'account.move':
-            created = created.with_context(check_move_validity=False)
-            # We need to recompute some onchanges. Invoice lines VS journal items are already
-            # synchronized in the create, but the onchange were not applied on the invoice lines.
-            for move in created:
-                move._onchange_partner_id()
-
-            created.line_ids._onchange_product_id()
-            created.line_ids._onchange_account_id()
-            created.line_ids._onchange_price_subtotal()
-
-            created._recompute_dynamic_lines(
-                recompute_all_taxes=True,
-                recompute_tax_base_amount=True,
-            )
-
             # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
             # any lines yet
             for move in created - self.env.ref(f'account.{cid}_demo_invoice_extract'):
                 try:
                     move.action_post()
-                except (UserError, ValidationError):
+                except Exception:
                     _logger.exception('Error while posting demo data')
         elif created._name == 'account.bank.statement':
             created.button_post()

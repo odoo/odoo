@@ -3,6 +3,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account_check_printing.models.account_payment import INV_LINES_PER_STUB
 from odoo.tests import tagged
 from odoo.tools.misc import NON_BREAKING_SPACE
+from odoo import Command
 
 import math
 
@@ -34,7 +35,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': []
+            })]
         } for i in range(nb_invoices_to_test)])
         in_invoices.action_post()
 
@@ -75,7 +80,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': []
+            })]
         } for i in range(nb_invoices_to_test)])
         out_refunds.action_post()
 
@@ -108,7 +117,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '2016-01-01',
             'invoice_date': '2016-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': []
+            })]
         })
         invoice.action_post()
 
@@ -147,7 +160,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 100.0})]
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': []
+            })]
         } for i in range(nb_invoices_to_test)])
         in_invoices.action_post()
 

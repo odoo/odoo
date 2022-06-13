@@ -111,7 +111,7 @@ class PurchaseOrder(models.Model):
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
-    tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
+    tax_totals = fields.Binary(compute='_compute_tax_totals')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
@@ -190,13 +190,13 @@ class PurchaseOrder(models.Model):
         return result
 
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
-    def  _compute_tax_totals_json(self):
+    def  _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals_json = json.dumps(self.env['account.tax']._prepare_tax_totals_json(
+            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id,
-            ))
+            )
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -612,9 +612,6 @@ class PurchaseOrder(models.Model):
         """
         self.ensure_one()
         move_type = self._context.get('default_move_type', 'in_invoice')
-        journal = self.env['account.move'].with_context(default_move_type=move_type)._get_default_journal()
-        if not journal:
-            raise UserError(_('Please define an accounting purchase journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
         partner_invoice = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice'])
         partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
@@ -1354,9 +1351,8 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         aml_currency = move and move.currency_id or self.currency_id
         date = move and move.date or fields.Date.today()
-        res = {
-            'display_type': self.display_type,
-            'sequence': self.sequence,
+        return {
+            'display_type': self.display_type or 'product',
             'name': '%s: %s' % (self.order_id.name, self.name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
@@ -1367,21 +1363,6 @@ class PurchaseOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'purchase_line_id': self.id,
         }
-        if not move:
-            return res
-
-        if self.currency_id == move.company_id.currency_id:
-            currency = False
-        else:
-            currency = move.currency_id
-
-        res.update({
-            'move_id': move.id,
-            'currency_id': currency and currency.id or False,
-            'date_maturity': move.invoice_date_due,
-            'partner_id': move.partner_id.id,
-        })
-        return res
 
     @api.model
     def _prepare_add_missing_fields(self, values):

@@ -282,7 +282,7 @@ class account_journal(models.Model):
                 WHERE st_line_move.journal_id IN %s
                 AND st.state = 'posted'
                 AND NOT st_line.is_reconciled
-                AND NOT st_line_move.to_check
+                AND st_line_move.to_check IS NOT TRUE
             ''', [tuple(self.ids)])
             number_to_reconcile = self.env.cr.fetchone()[0]
 

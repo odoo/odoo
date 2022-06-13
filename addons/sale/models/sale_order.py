@@ -5,8 +5,6 @@ from datetime import timedelta
 from itertools import groupby
 from markupsafe import Markup
 
-import json
-
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
@@ -278,7 +276,7 @@ class SaleOrder(models.Model):
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id')   # used to filter available taxes depending on the fiscal country and position
-    tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
+    tax_totals = fields.Binary(compute='_compute_tax_totals')
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
 
@@ -569,13 +567,13 @@ class SaleOrder(models.Model):
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(order, updated_credit)
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
-    def _compute_tax_totals_json(self):
+    def _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals_json = json.dumps(self.env['account.tax']._prepare_tax_totals_json(
+            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id,
-            ))
+            )
 
     @api.depends('state')
     def _compute_type_name(self):
@@ -913,9 +911,6 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
-        if not journal:
-            raise UserError(_('Please define an accounting sales journal for the company %s (%s).', self.company_id.name, self.company_id.id))
 
         invoice_vals = {
             'ref': self.client_order_ref or '',
@@ -931,8 +926,6 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.partner_invoice_id)).id,
-            'partner_bank_id': self.company_id.partner_id.bank_ids.filtered(lambda bank: bank.company_id.id in (self.company_id.id, False))[:1].id,
-            'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'payment_reference': self.reference,

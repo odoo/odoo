@@ -94,11 +94,25 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self._validate_additional_landed_cost_lines(stock_landed_cost, valid_vals)
         # Validate the landed cost.
         stock_landed_cost.button_validate()
-        self.assertTrue(stock_landed_cost.account_move_id, 'Landed costs should be available account move lines')
-        account_entry = self.env['account.move.line'].read_group(
-            [('move_id', '=', stock_landed_cost.account_move_id.id)], ['debit', 'credit', 'move_id'], ['move_id'])[0]
-        self.assertEqual(account_entry['debit'], account_entry['credit'], 'Debit and credit are not equal')
-        self.assertEqual(account_entry['debit'], 430.0, 'Wrong Account Entry')
+
+        self.assertRecordValues(stock_landed_cost.account_move_id.line_ids, [
+            {'name': 'equal split - Refrigerator', 'balance': 5},
+            {'name': 'equal split - Refrigerator', 'balance': -5},
+            {'name': 'split by quantity - Refrigerator', 'balance': 50},
+            {'name': 'split by quantity - Refrigerator', 'balance': -50},
+            {'name': 'split by weight - Refrigerator', 'balance': 50},
+            {'name': 'split by weight - Refrigerator', 'balance': -50},
+            {'name': 'split by volume - Refrigerator', 'balance': 5},
+            {'name': 'split by volume - Refrigerator', 'balance': -5},
+            {'name': 'equal split - Microwave Oven', 'balance': 5},
+            {'name': 'equal split - Microwave Oven', 'balance': -5},
+            {'name': 'split by quantity - Microwave Oven', 'balance': 100},
+            {'name': 'split by quantity - Microwave Oven', 'balance': -100},
+            {'name': 'split by weight - Microwave Oven', 'balance': 200},
+            {'name': 'split by weight - Microwave Oven', 'balance': -200},
+            {'name': 'split by volume - Microwave Oven', 'balance': 15},
+            {'name': 'split by volume - Microwave Oven', 'balance': -15},
+        ])
 
     def test_00_landed_costs_on_incoming_shipment_without_real_time(self):
         chart_of_accounts = self.env.company.chart_template_id
@@ -230,8 +244,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(stock_negative_landed_cost.state, 'done', 'Negative landed costs should be in done state')
         self.assertTrue(stock_negative_landed_cost.account_move_id, 'Landed costs should be available account move lines')
         account_entry = self.env['account.move.line'].read_group(
-            [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], ['debit', 'credit', 'move_id'], ['move_id'])[0]
-        self.assertEqual(account_entry['debit'], account_entry['credit'], 'Debit and credit are not equal')
+            [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], ['balance', 'move_id'], ['move_id'])[0]
+        self.assertEqual(account_entry['balance'], 0, 'Move is not balanced')
         move_lines = [
             {'name': 'split by volume - Microwave Oven',                    'debit': 3.75,  'credit': 0.0},
             {'name': 'split by volume - Microwave Oven',                    'debit': 0.0,   'credit': 3.75},

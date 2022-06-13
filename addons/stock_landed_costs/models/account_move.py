@@ -53,23 +53,21 @@ class AccountMoveLine(models.Model):
     product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     is_landed_costs_line = fields.Boolean()
 
-    @api.onchange('is_landed_costs_line')
-    def _onchange_is_landed_costs_line(self):
-        """Mark an invoice line as a landed cost line and adapt `self.account_id`. The default
-        value can be set according to `self.product_id.landed_cost_ok`."""
-        if self.product_id:
-            accounts = self.product_id.product_tmpl_id._get_product_accounts()
-            if self.product_type != 'service':
-                self.account_id = accounts['expense']
-                self.is_landed_costs_line = False
-            elif self.is_landed_costs_line and self.move_id.company_id.anglo_saxon_accounting:
-                self.account_id = accounts['stock_input']
-            else:
-                self.account_id = accounts['expense']
+    @api.depends('is_landed_costs_line')
+    def _compute_account_id(self):
+        landed_costs_lines = self.filtered(lambda l: l.is_landed_costs_line and l.move_id.company_id.anglo_saxon_accounting)
+        for line in landed_costs_lines:
+            line.account_id = line.product_id.product_tmpl_id._get_product_accounts()['stock_input']
+        super(AccountMoveLine, self - landed_costs_lines)._compute_account_id()
 
     @api.onchange('product_id')
-    def _onchange_is_landed_costs_line_product(self):
+    def _onchange_product_id_landed_costs(self):
         if self.product_id.landed_cost_ok:
             self.is_landed_costs_line = True
         else:
+            self.is_landed_costs_line = False
+
+    @api.onchange('is_landed_costs_line')
+    def _onchange_is_landed_costs_line(self):
+        if self.is_landed_costs_line and self.product_id and self.product_type != 'service':
             self.is_landed_costs_line = False

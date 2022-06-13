@@ -146,7 +146,7 @@
                     <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
                         <table class="table table-sm">
                             <!-- Tax totals -->
-                            <t t-set="tax_totals" t-value="json.loads(doc.tax_totals_json)"/>
+                            <t t-set="tax_totals" t-value="doc.tax_totals"/>
                             <t t-call="account.document_tax_totals"/>
                         </table>
                     </div>

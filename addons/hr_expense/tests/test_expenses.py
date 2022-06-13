@@ -202,7 +202,7 @@ class TestExpenses(TestExpenseCommon):
                 'debit': 652.17,
                 'credit': 0.0,
                 'amount_currency': 1304.348, # untaxed amount
-                'account_id': self.company_data['default_account_expense'].id,
+                'account_id': self.product_b.property_account_expense_id.id,
                 'product_id': self.product_b.id,
                 'currency_id': self.currency_data['currency'].id,
                 'tax_line_id': False,
@@ -240,17 +240,6 @@ class TestExpenses(TestExpenseCommon):
     def test_account_entry_multi_currency(self):
         """ Checking accounting move entries and analytic entries when submitting expense. With
             multi-currency. And taxes. """
-
-        # Clean-up the rates
-        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.company.id])
-        self.env['res.currency.rate'].search([]).unlink()
-        self.env['res.currency.rate'].create({
-            'currency_id': self.env.ref('base.EUR').id,
-            'company_id': self.env.company.id,
-            'rate': 2.0,
-            'name': '2010-01-01',
-        })
-
         expense = self.env['hr.expense.sheet'].create({
             'name': 'Expense for Dick Tracy',
             'employee_id': self.expense_employee.id,
@@ -270,7 +259,7 @@ class TestExpenses(TestExpenseCommon):
             'tax_ids': [(6, 0, tax.ids)],
             'sheet_id': expense.id,
             'analytic_account_id': self.analytic_account_1.id,
-            'currency_id': self.env.ref('base.EUR').id,
+            'currency_id': self.currency_data['currency'].id,
         })
 
         # State should default to draft
@@ -284,27 +273,39 @@ class TestExpenses(TestExpenseCommon):
         # Create Expense Entries
         expense.action_sheet_move_create()
         self.assertEqual(expense.state, 'post', 'Expense is not in Waiting Payment state')
-        self.assertTrue(expense.account_move_id.id, 'Expense Journal Entry is not created')
 
         # Should get this result [(0.0, 350.0, -700.0), (318.18, 0.0, 636.36), (31.82, 0.0, 63.64)]
-        for line in expense.account_move_id.line_ids:
-            if line.credit:
-                self.assertAlmostEqual(line.credit, 350.0)
-                self.assertAlmostEqual(line.amount_currency, -700.0)
-                self.assertEqual(len(line.analytic_line_ids), 0, "The credit move line should not have analytic lines")
-                self.assertFalse(line.product_id, "Product of credit move line should be false")
-            else:
-                if not line.tax_line_id == tax:
-                    self.assertAlmostEqual(line.debit, 318.18)
-                    self.assertAlmostEqual(line.amount_currency, 636.36)
-                    self.assertEqual(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
-                    self.assertEqual(line.product_id, self.product_a, "Product of debit move line should be the one from the expense")
-                else:
-                    self.assertEqual(line.tax_base_amount, 318.18)
-                    self.assertAlmostEqual(line.debit, 31.82)
-                    self.assertAlmostEqual(line.amount_currency, 63.64)
-                    self.assertEqual(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
-                    self.assertFalse(line.product_id, "Product of tax move line should be false")
+        analytic_line = expense.account_move_id.line_ids.analytic_line_ids
+        self.assertEqual(len(analytic_line), 1)
+        self.assertInvoiceValues(expense.account_move_id, [
+            {
+                'balance': 318.18,
+                'amount_currency': 636.364,
+                'product_id': self.product_a.id,
+                'price_unit': 700.0,
+                'price_subtotal': 636.364,
+                'price_total': 700.0,
+                'analytic_line_ids': analytic_line.ids,
+            }, {
+                'balance': 31.82,
+                'amount_currency': 63.636,
+                'product_id': False,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'analytic_line_ids': [],
+            }, {
+                'balance': -350.0,
+                'amount_currency': -700.0,
+                'product_id': False,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'analytic_line_ids': [],
+            },
+        ], {
+            'amount_total': 700.0,
+        })
 
     def test_expenses_with_tax_and_lockdate(self):
         ''' Test creating a journal entry for multiple expenses using taxes. A lock date is set in order to trigger
@@ -388,8 +389,7 @@ class TestExpenses(TestExpenseCommon):
         wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
-
-        move = self.env['account.payment'].browse(action['res_id']).move_id
+        move = self.env['account.payment'].search(action['domain']).move_id
         move.button_cancel()
         self.assertEqual(sheet.state, 'done', 'Sheet state must not change when the payment linked to that sheet is canceled')
 

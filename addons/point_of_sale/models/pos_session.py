@@ -342,7 +342,8 @@ class PosSession(models.Model):
 
             try:
                 balance = sum(self.move_id.line_ids.mapped('balance'))
-                self.move_id._check_balanced()
+                with self.move_id._check_balanced({'records': self.move_id.sudo()}):
+                    pass
             except UserError:
                 # Creating the account move is just part of a big database transaction
                 # when closing a session. There are other database changes that will happen
@@ -636,11 +637,8 @@ class PosSession(models.Model):
             - creating and validating account.bank.statement for cash payments
             - reconciling cash receivable lines, invoice receivable lines and stock output lines
         """
-        journal = self.config_id.journal_id
-        # Passing default_journal_id for the calculation of default currency of account move
-        # See _get_default_currency in the account/account_move.py.
-        account_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
-            'journal_id': journal.id,
+        account_move = self.env['account.move'].create({
+            'journal_id': self.config_id.journal_id.id,
             'date': fields.Date.context_today(self),
             'ref': self.name,
         })
@@ -805,7 +803,7 @@ class PosSession(models.Model):
                         stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     else:
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-        MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+        MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
         data.update({
             'taxes':                               taxes,
@@ -1151,7 +1149,7 @@ class PosSession(models.Model):
         # may arise in 'Round Globally'.
         check_refund = lambda x: x.qty * x.price_unit < 0
         is_refund = check_refund(order_line)
-        tax_data = tax_ids.with_context(force_sign=sign).compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
+        tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund, fixed_multiplicator=sign)
         taxes = tax_data['taxes']
         # For Cash based taxes, use the account from the repartition line immediately as it has been paid already
         for tax in taxes:

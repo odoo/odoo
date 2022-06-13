@@ -300,13 +300,13 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         with move_form.line_ids.edit(1) as line_form:
             line_form.currency_id = self.company_data['currency']
             line_form.amount_currency = -75.0
-            line_form.account_id = self.company_data['default_account_receivable']
             line_form.partner_id = self.partner_b
+            line_form.account_id = self.company_data['default_account_receivable']
         with move_form.line_ids.new() as line_form:
             line_form.currency_id = self.company_data['currency']
             line_form.amount_currency = -25.0
-            line_form.account_id = self.company_data['default_account_revenue']
             line_form.partner_id = self.partner_b
+            line_form.account_id = self.company_data['default_account_revenue']
         move_form.save()
 
         self.assertRecordValues(payment, [{

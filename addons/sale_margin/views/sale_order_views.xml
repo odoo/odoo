@@ -6,7 +6,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='tax_totals_json']" position="after">
+            <xpath expr="//field[@name='tax_totals']" position="after">
                 <label for="margin" groups="base.group_user"/>
                 <div class="text-nowrap" groups="base.group_user">
                     <field name="margin" class="oe_inline"/>

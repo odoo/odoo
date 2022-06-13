@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -52,7 +53,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
         })
         cls.out_invoice_2 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -60,7 +61,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
         })
         cls.out_invoice_3 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -68,7 +69,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 24.02})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 24.02, 'tax_ids': []})],
         })
         cls.out_invoice_4 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -76,7 +77,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 23.98})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 23.98, 'tax_ids': []})],
         })
         (cls.out_invoice_1 + cls.out_invoice_2 + cls.out_invoice_3 + cls.out_invoice_4).action_post()
 
@@ -86,22 +87,23 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
         })
         cls.in_invoice_2 = cls.env['account.move'].create({
             'move_type': 'in_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
         })
         cls.in_invoice_3 = cls.env['account.move'].create({
             'move_type': 'in_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_b.id,
+            'invoice_payment_term_id': False,
             'currency_id': cls.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 3000.0})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 3000.0, 'tax_ids': []})],
         })
         (cls.in_invoice_1 + cls.in_invoice_2 + cls.in_invoice_3).action_post()
 
@@ -111,7 +113,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1600.0})],
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1600.0, 'tax_ids': []})],
         })
         cls.in_refund_1.action_post()
 
@@ -1030,7 +1032,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2016-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.currency_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1200.0})],
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_a.id,
+                'price_unit': 1200.0,
+                'tax_ids': [],
+            })],
         })
         invoice.action_post()
 
@@ -1064,7 +1070,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_date': '2016-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.company_data['currency'].id,
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 400.0})],
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 400.0,
+                'tax_ids': [],
+            })],
         })
         invoice.action_post()
 

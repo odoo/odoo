@@ -677,8 +677,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.invoice = move_form.save()
         self.invoice.action_post()
         aml = self.invoice.line_ids
-        aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
-        aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
+        aml_expense = aml.filtered(lambda l: l.display_type == 'cogs' and l.debit > 0)
+        aml_output = aml.filtered(lambda l: l.display_type == 'cogs' and l.credit > 0)
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")

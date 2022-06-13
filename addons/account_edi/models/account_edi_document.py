@@ -189,6 +189,7 @@ class AccountEdiDocument(models.Model):
 
         edi_format = documents.edi_format_id
         state = documents[0].state
+        documents.move_id.line_ids.flush_recordset()  # manual flush for tax details
         if doc_type == 'invoice':
             if state == 'to_send':
                 invoices = documents.move_id

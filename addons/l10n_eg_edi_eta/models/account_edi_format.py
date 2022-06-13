@@ -229,7 +229,7 @@ class AccountEdiFormat(models.Model):
             'discount_total': 0.0,
             'total_price_subtotal_before_discount' : 0.0,
         }
-        for line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+        for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
             line_tax_details = tax_data.get(line, {})
             price_unit = self._l10n_eg_edi_round(abs((line.balance / line.quantity) / (1 - (line.discount / 100.0)))) if line.quantity and line.discount != 100.0 else line.price_unit
             price_subtotal_before_discount = self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100)))) if line.discount != 100.0 else price_unit * line.quantity
@@ -327,11 +327,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Please add all the required fields in the branch details"))
         if not self._l10n_eg_validate_info_address(invoice.partner_id, invoice=invoice):
             errors.append(_("Please add all the required fields in the customer details"))
-        if not all(aml.product_uom_id.l10n_eg_unit_code_id.code for aml in invoice.invoice_line_ids.filtered(lambda x: not x.display_type)):
+        if not all(aml.product_uom_id.l10n_eg_unit_code_id.code for aml in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))):
             errors.append(_("Please make sure the invoice lines UoM codes are all set up correctly"))
-        if not all(tax.l10n_eg_eta_code for tax in invoice.invoice_line_ids.filtered(lambda x: not x.display_type).tax_ids):
+        if not all(tax.l10n_eg_eta_code for tax in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')).tax_ids):
             errors.append(_("Please make sure the invoice lines taxes all have the correct ETA tax code"))
-        if not all(aml.product_id.l10n_eg_eta_code or aml.product_id.barcode for aml in invoice.invoice_line_ids.filtered(lambda x: not x.display_type)):
+        if not all(aml.product_id.l10n_eg_eta_code or aml.product_id.barcode for aml in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section'))):
             errors.append(_("Please make sure the EGS/GS1 Barcode is set correctly on all products"))
         return errors
 

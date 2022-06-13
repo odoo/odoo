@@ -64,7 +64,7 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
-        for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type or line.is_rounding_line)):
+        for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:
@@ -352,7 +352,7 @@ class AccountEdiFormat(models.Model):
         sign = invoice.is_inbound() and -1 or 1
         is_intra_state = invoice.l10n_in_state_id == invoice.company_id.state_id
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
-        lines = invoice.invoice_line_ids.filtered(lambda line: not (line.display_type or line.is_rounding_line))
+        lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
         invoice_line_tax_details = tax_details.get("invoice_line_tax_details")
         json_payload = {
             "Version": "1.1",
@@ -386,7 +386,7 @@ class AccountEdiFormat(models.Model):
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)) * sign,
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
-                    sum(line.balance for line in invoice.invoice_line_ids if line.is_rounding_line)),
+                    sum(line.balance for line in invoice.invoice_line_ids if line.display_type == 'rounding')),
                 "TotInvVal": self._l10n_in_round_value(
                     (tax_details.get("base_amount") + tax_details.get("tax_amount")) * sign),
             },
@@ -449,7 +449,7 @@ class AccountEdiFormat(models.Model):
             }
 
         def l10n_in_filter_to_apply(tax_values):
-            if tax_values["base_line_id"].is_rounding_line:
+            if tax_values["base_line_id"].display_type == 'rounding':
                 return False
             return True
 

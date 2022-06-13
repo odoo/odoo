@@ -2,8 +2,6 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
-import json
-
 
 @tagged('post_install', '-at_install')
 class TestTaxTotals(AccountTestInvoicingCommon):
@@ -41,7 +39,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
         subtotals_keys_to_ignore = {'formatted_amount'}
 
-        to_compare = json.loads(document.tax_totals_json)
+        to_compare = document.tax_totals
 
         for key in main_keys_to_ignore:
             del to_compare[key]
@@ -58,7 +56,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertEqual(to_compare, expected_values)
 
     def _create_document_for_tax_totals_test(self, lines_data):
-        """ Creates and returns a new record of a model defining a tax_totals_json
+        """ Creates and returns a new record of a model defining a tax_totals
         field and using the related widget.
 
         By default, this function creates an invoice, but it is overridden in sale
@@ -74,6 +72,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         invoice_lines_vals = [
             (0, 0, {
                 'name': 'line',
+                'display_type': 'product',
                 'account_id': self.company_data['default_account_revenue'].id,
                 'price_unit': amount,
                 'tax_ids': [(6, 0, taxes.ids)],
@@ -111,7 +110,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3600,
             'amount_untaxed': 3000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -134,18 +132,18 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 3000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
         # Same but both are sharing the same tax group.
 
         tax_20.tax_group_id = self.tax_group1
-        document.invalidate_model(['tax_totals_json'])
+        document.invalidate_model(['tax_totals'])
 
         self.assertTaxTotals(document, {
             'amount_total': 3600,
             'amount_untaxed': 3000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -161,7 +159,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 3000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
     def test_zero_tax_lines(self):
@@ -178,7 +177,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 1000,
             'amount_untaxed': 1000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -194,7 +192,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 1000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
     def test_tax_affect_base_1(self):
@@ -223,7 +222,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -246,18 +244,18 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 3000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
         # Same but both are sharing the same tax group.
 
         tax_20.tax_group_id = self.tax_group1
-        document.invalidate_model(['tax_totals_json'])
+        document.invalidate_model(['tax_totals'])
 
         self.assertTaxTotals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -273,7 +271,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 3000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
     def test_tax_affect_base_2(self):
@@ -308,7 +307,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -331,18 +329,18 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 2000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
         # Same but both are sharing the same tax group.
 
         tax_30.tax_group_id = self.tax_group1
-        document.invalidate_model(['tax_totals_json'])
+        document.invalidate_model(['tax_totals'])
 
         self.assertTaxTotals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -358,7 +356,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'name': "Untaxed Amount",
                     'amount': 2000,
                 }
-            ]
+            ],
+            'subtotals_order': ["Untaxed Amount"],
         })
 
     def test_subtotals_basic(self):
@@ -393,7 +392,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 2846,
             'amount_untaxed': 2300,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
@@ -436,6 +434,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'amount': 2546,
                 },
             ],
+            'subtotals_order': ["Untaxed Amount", "PRE GROUP 1", "PRE GROUP 2"],
         })
 
     def test_after_total_mix(self):
@@ -478,7 +477,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         self.assertTaxTotals(document, {
             'amount_total': 1867,
             'amount_untaxed': 1500,
-            'allow_tax_edition': False,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
 
@@ -531,4 +529,5 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'amount': 1942,
                 },
             ],
+            'subtotals_order': ["Untaxed Amount", "PRE GROUP 1", "PRE GROUP 2"],
         })

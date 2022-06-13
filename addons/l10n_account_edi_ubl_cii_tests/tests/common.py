@@ -69,16 +69,13 @@ class TestUBLCommon(AccountEdiTestCommon):
     # -------------------------------------------------------------------------
 
     @freeze_time('2017-01-01')
-    def _assert_imported_invoice_from_etree(self, invoice, xml_etree, xml_filename):
+    def _assert_imported_invoice_from_etree(self, invoice, attachment):
         """
         Create an account.move directly from an xml file, asserts the invoice obtained is the same as the expected
         invoice.
         """
-        new_invoice = self.edi_format._create_invoice_from_xml_tree(
-            xml_filename,
-            xml_etree,
-            self.company_data['default_journal_purchase'],
-        )
+        self.company_data['default_journal_purchase'].create_document_from_attachment(attachment.ids)
+        new_invoice = self.env['account.move'].search([], order='id desc', limit=1)
 
         self.assertTrue(new_invoice)
         self.assert_same_invoice(invoice, new_invoice)
@@ -181,4 +178,4 @@ class TestUBLCommon(AccountEdiTestCommon):
             modified_etree,
         )
 
-        return xml_etree, xml_filename
+        return attachment

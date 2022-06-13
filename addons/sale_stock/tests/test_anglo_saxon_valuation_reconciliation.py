@@ -5,7 +5,7 @@ from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestValuationReconciliation(ValuationReconciliationTestCommon):
+class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -67,6 +67,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         move1.move_line_ids.qty_done = 11
         move1._action_done()
 
+
+@tagged('post_install', '-at_install')
+class TestValuationReconciliation(TestValuationReconciliationCommon):
     def test_shipment_invoice(self):
         """ Tests the case into which we send the goods to the customer before
         making the invoice

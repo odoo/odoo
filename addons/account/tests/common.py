@@ -422,9 +422,8 @@ class AccountTestInvoicingCommon(TransactionCase):
 
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
-            return lines.sorted(lambda line: (line.exclude_from_invoice_tab, not bool(line.tax_line_id), line.name or '', line.balance))
+            return lines.sorted(lambda line: (line.sequence, not bool(line.tax_line_id), line.name or '', line.balance))
         self.assertRecordValues(sort_lines(move.line_ids.sorted()), expected_lines_values)
-        self.assertRecordValues(sort_lines(move.invoice_line_ids.sorted()), expected_lines_values[:len(move.invoice_line_ids)])
         self.assertRecordValues(move, [expected_move_values])
 
     def assert_invoice_outstanding_to_reconcile_widget(self, invoice, expected_amounts):
@@ -433,7 +432,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         :param expected_amounts:    A map <move_id> -> <amount>
         """
         invoice.invalidate_recordset(['invoice_outstanding_credits_debits_widget'])
-        widget_vals = json.loads(invoice.invoice_outstanding_credits_debits_widget)
+        widget_vals = invoice.invoice_outstanding_credits_debits_widget
 
         if widget_vals:
             current_amounts = {vals['move_id']: vals['amount'] for vals in widget_vals['content']}
@@ -447,14 +446,13 @@ class AccountTestInvoicingCommon(TransactionCase):
         :param expected_amounts:    A map <move_id> -> <amount>
         """
         invoice.invalidate_recordset(['invoice_payments_widget'])
-        widget_vals = json.loads(invoice.invoice_payments_widget)
+        widget_vals = invoice.invoice_payments_widget
 
         if widget_vals:
             current_amounts = {vals['move_id']: vals['amount'] for vals in widget_vals['content']}
         else:
             current_amounts = {}
-        formatted_expected_amounts = {k: invoice.currency_id.round(v) for k, v in expected_amounts.items()}
-        self.assertDictEqual(current_amounts, formatted_expected_amounts)
+        self.assertDictEqual(current_amounts, expected_amounts)
 
     ####################################################
     # Xml Comparison

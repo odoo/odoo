@@ -64,11 +64,11 @@ class AccountMove(models.Model):
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi != '08'):
-            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type) \
-                    and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type):
+            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product') \
+                    and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
                 raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi == '08'):
-            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type):
+            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
                 raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
     @api.constrains('l10n_id_tax_number')
@@ -180,7 +180,7 @@ class AccountMove(models.Model):
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
-            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and not x.display_type)
+            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and x.display_type == 'product')
             eTax['FG_UANG_MUKA'] = 0
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))
@@ -190,7 +190,7 @@ class AccountMove(models.Model):
             # HOW TO ADD 2 line to 1 line for free product
             free, sales = [], []
 
-            for line in move.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab and not l.display_type):
+            for line in move.line_ids.filtered(lambda l: l.display_type == 'product'):
                 # *invoice_line_unit_price is price unit use for harga_satuan's column
                 # *invoice_line_quantity is quantity use for jumlah_barang's column
                 # *invoice_line_total_price is bruto price use for harga_total's column

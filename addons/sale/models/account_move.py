@@ -25,20 +25,6 @@ class AccountMove(models.Model):
     source_id = fields.Many2one(ondelete='set null')
     sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
 
-    fiscal_position_id = fields.Many2one(
-        compute='_compute_fiscal_position_id', store=True)
-
-
-    @api.depends('partner_shipping_id', 'company_id')
-    def _compute_fiscal_position_id(self):
-        # Trigger the change of fiscal position when the shipping address is modified.
-        for move in self:
-            fiscal_position = self.env['account.fiscal.position']\
-                .with_company(move.company_id)\
-                ._get_fiscal_position(move.partner_id, delivery=move.partner_shipping_id)
-            if fiscal_position:
-                move.fiscal_position_id = fiscal_position
-
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
         res = super(AccountMove, self).unlink()
@@ -104,9 +90,9 @@ class AccountMove(models.Model):
                 invoice.js_assign_outstanding_line(line.id)
         return posted
 
-    def action_invoice_paid(self):
+    def _invoice_paid_hook(self):
         # OVERRIDE
-        res = super(AccountMove, self).action_invoice_paid()
+        res = super(AccountMove, self)._invoice_paid_hook()
         todo = set()
         for invoice in self.filtered(lambda move: move.is_invoice()):
             for line in invoice.invoice_line_ids:
@@ -115,11 +101,6 @@ class AccountMove(models.Model):
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid", name))
         return res
-
-    def _get_invoice_delivery_partner_id(self):
-        # OVERRIDE
-        self.ensure_one()
-        return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
 
     def _action_invoice_ready_to_be_sent(self):
         # OVERRIDE

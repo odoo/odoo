@@ -31,12 +31,12 @@ class AccountPartialReconcile(models.Model):
     debit_currency_id = fields.Many2one(
         comodel_name='res.currency',
         store=True,
-        compute='_compute_debit_currency_id',
+        related='debit_move_id.currency_id', precompute=True,
         string="Currency of the debit journal item.")
     credit_currency_id = fields.Many2one(
         comodel_name='res.currency',
         store=True,
-        compute='_compute_credit_currency_id',
+        related='credit_move_id.currency_id', precompute=True,
         string="Currency of the credit journal item.")
 
     # ==== Amount fields ====
@@ -81,18 +81,6 @@ class AccountPartialReconcile(models.Model):
                 partial.debit_move_id.date,
                 partial.credit_move_id.date
             )
-
-    @api.depends('debit_move_id')
-    def _compute_debit_currency_id(self):
-        for partial in self:
-            partial.debit_currency_id = partial.debit_move_id.currency_id \
-                                        or partial.debit_move_id.company_currency_id
-
-    @api.depends('credit_move_id')
-    def _compute_credit_currency_id(self):
-        for partial in self:
-            partial.credit_currency_id = partial.credit_move_id.currency_id \
-                                        or partial.credit_move_id.company_currency_id
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -244,7 +232,7 @@ class AccountPartialReconcile(models.Model):
         '''
         account = base_line.company_id.account_cash_basis_base_account_id or base_line.account_id
         tax_ids = base_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
-        is_refund = base_line.belongs_to_refund()
+        is_refund = base_line.is_refund
         tax_tags = tax_ids.get_tax_tags(is_refund, 'base')
         product_tags = base_line.tax_tag_ids.filtered(lambda x: x.applicability == 'products')
         all_tags = tax_tags + product_tags
@@ -259,7 +247,6 @@ class AccountPartialReconcile(models.Model):
             'account_id': account.id,
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
-            'tax_tag_invert': base_line.tax_tag_invert,
         }
 
     @api.model

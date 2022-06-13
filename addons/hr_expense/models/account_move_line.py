@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools.misc import frozendict
 
 
 class AccountMoveLine(models.Model):
@@ -25,3 +26,23 @@ class AccountMoveLine(models.Model):
         if self.expense_id:
             attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expense_id.id)])
         return attachment_domains
+
+    def _compute_tax_key(self):
+        super()._compute_tax_key()
+        for line in self:
+            if line.expense_id:
+                line.tax_key = frozendict(**line.tax_key, expense_id=line.expense_id.id)
+
+    def _compute_all_tax(self):
+        super()._compute_all_tax()
+        for line in self:
+            if line.expense_id:
+                for key in list(line.compute_all_tax.keys()):
+                    new_key = frozendict(**key, expense_id=line.expense_id.id)
+                    line.compute_all_tax[new_key] = line.compute_all_tax.pop(key)
+
+    def _compute_term_key(self):
+        super()._compute_term_key()
+        for line in self:
+            if line.expense_id:
+                line.term_key = line.term_key and frozendict(**line.term_key, expense_id=line.expense_id.id)

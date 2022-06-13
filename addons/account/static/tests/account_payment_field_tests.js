@@ -16,8 +16,8 @@ QUnit.module('account', {
                 },
                 records: [{
                     id: 1,
-                    payments_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 555.0, "name": "Customer Payment: INV/2017/0004", "date": "2017-04-25", "position": "before", "ref": "BNK1/2017/0003 (INV/2017/0004)", "payment_id": 22, "move_id": 10, "partial_id": 38, "journal_name": "Bank"}], "outstanding": false, "title": "Less Payment"}',
-                    outstanding_credits_debits_widget: '{"content": [{"digits": [69, 2], "currency": "$", "amount": 100.0, "journal_name": "INV/2017/0004", "position": "before", "id": 20}], "move_id": 4, "outstanding": true, "title": "Outstanding credits"}',
+                    payments_widget: {"content": [{"digits": [69, 2], "currency": "$", "amount": 555.0, "name": "Customer Payment: INV/2017/0004", "date": "2017-04-25", "position": "before", "ref": "BNK1/2017/0003 (INV/2017/0004)", "payment_id": 22, "move_id": 10, "partial_id": 38, "journal_name": "Bank"}], "outstanding": false, "title": "Less Payment"},
+                    outstanding_credits_debits_widget: {"content": [{"digits": [69, 2], "currency": "$", "amount": 100.0, "journal_name": "INV/2017/0004", "position": "before", "id": 20}], "move_id": 4, "outstanding": true, "title": "Outstanding credits"},
                 }]
             },
         };

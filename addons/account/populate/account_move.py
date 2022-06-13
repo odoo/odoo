@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Classes defining the populate factory for Journal Entries, Invoices and related models."""
-from odoo import models, fields
+from odoo import models, fields, Command
 from odoo.tools import populate
 
 import logging
@@ -26,42 +26,53 @@ class AccountMove(models.Model):
         'large': 500000,
     }
 
-    _populate_dependencies = ['res.partner', 'account.journal']
+    _populate_dependencies = ['res.partner', 'account.journal', 'product.product']
 
     def _populate_factories(self):
         @lru_cache()
-        def search_account_ids(company_id, types=None, group=None):
-            """Search all the accounts of a certain type and group for a company.
+        def search_accounts(company_id, types=None):
+            """Search all the accounts of a certain type for a company.
 
-            This method is cached, only one search is done per tuple(company_id, type, group).
+            This method is cached, only one search is done per tuple(company_id, type).
             :param company_id (int): the company to search accounts for.
             :param type (str): the type to filter on. If not set, do not filter. Valid values are:
                                payable, receivable, liquidity, other, False.
-            :param group (str): the group to filter on. If not set, do not filter. Valid values are:
-                                asset, liability, equity, off_balance, False.
             :return (Model<account.account>): the recordset of accounts found.
             """
-            domain = [('company_id', '=', company_id)]
+            domain = [('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]
             if types:
                 domain += [('account_type', 'in', types)]
-            if group:
-                domain += [('internal_group', '=', group)]
             return self.env['account.account'].search(domain)
 
         @lru_cache()
-        def search_journal_ids(company_id, journal_type):
+        def search_journals(company_id, journal_type, currency_id):
             """Search all the journal of a certain type for a company.
 
             This method is cached, only one search is done per tuple(company_id, journal_type).
             :param company_id (int): the company to search journals for.
             :param journal_type (str): the journal type to filter on.
                                        Valid values are sale, purchase, cash, bank and general.
+            :param currency_id (int): the currency to search journals for.
             :return (list<int>): the ids of the journals of a company and a certain type
             """
             return self.env['account.journal'].search([
                 ('company_id', '=', company_id),
+                ('currency_id', 'in', (False, currency_id)),
                 ('type', '=', journal_type),
             ]).ids
+
+        @lru_cache()
+        def search_products(company_id):
+            """Search all the products a company has access to.
+
+            This method is cached, only one search is done per company_id.
+            :param company_id (int): the company to search products for.
+            :return (Model<product.product>): all the products te company has access to
+            """
+            return self.env['product.product'].search([
+                ('company_id', 'in', (False, company_id)),
+                ('id', 'in', self.env.registry.populated_models['product.product']),
+            ])
 
         @lru_cache()
         def search_partner_ids(company_id):
@@ -95,78 +106,56 @@ class AccountMove(models.Model):
             :param values (dict): the values already selected for the record.
             :return list: list of ORM create commands for the field line_ids
             """
-            def get_line(account, label, balance=None, balance_sign=False, exclude_from_invoice_tab=False):
-                company_currency = account.company_id.currency_id
-                currency = self.env['res.currency'].browse(currency_id)
-                balance = balance or balance_sign * round(random.uniform(0, 1000))
-                amount_currency = company_currency._convert(balance, currency, account.company_id, date)
-                return (0, 0, {
+            def get_entry_line(label, balance=None):
+                account = random.choice(accounts)
+                currency = account.currency_id != account.company_id.currency_id and account.currency_id or random.choice(currencies)
+                balance = balance or round(random.uniform(-10000, 10000))
+                return Command.create({
                     'name': 'label_%s' % label,
-                    'debit': balance > 0 and balance or 0,
-                    'credit': balance < 0 and -balance or 0,
+                    'balance': balance,
                     'account_id': account.id,
                     'partner_id': partner_id,
-                    'currency_id': currency_id,
-                    'amount_currency': amount_currency,
-                    'exclude_from_invoice_tab': exclude_from_invoice_tab,
+                    'currency_id': currency.id,
+                    'amount_currency': account.company_id.currency_id._convert(balance, currency, account.company_id, date),
                 })
+
+            def get_invoice_line():
+                return Command.create({
+                    'product_id': random.choice(products).id,
+                    'account_id': random.choice(accounts).id,
+                    'price_unit': round(random.uniform(0, 10000)),
+                    'quantity': round(random.uniform(0, 100)),
+                })
+
             move_type = values['move_type']
             date = values['date']
             company_id = values['company_id']
-            currency_id = values['currency_id']
             partner_id = values['partner_id']
 
-            other_type = (
-                'asset_current',
-                'asset_non_current',
-                'asset_prepayments',
-                'asset_fixed',
-                'liability_current',
-                'liability_non_current',
-                'equity',
-                'equity_unaffected',
-                'income',
-                'income_other',
-                'expense',
-                'expense_depreciation',
-                'expense_direct_cost',
-                'off_balance',
-            )
             # Determine the right sets of accounts depending on the move_type
             if move_type in self.get_sale_types(include_receipts=True):
-                account_ids = search_account_ids(company_id, other_type, 'income')
-                balance_account_ids = search_account_ids(company_id, ('asset_receivable',), 'asset')
+                accounts = search_accounts(company_id, ('income',))
             elif move_type in self.get_purchase_types(include_receipts=True):
-                account_ids = search_account_ids(company_id, other_type, 'expense')
-                balance_account_ids = search_account_ids(company_id, ('liability_payable',), 'liability')
+                accounts = search_accounts(company_id, ('expense',))
             else:
-                account_ids = search_account_ids(company_id, other_type, 'asset')
-                balance_account_ids = account_ids
+                accounts = search_accounts(company_id)
 
-            # Determine the right balance sign depending on the move_type
-            if move_type in self.get_inbound_types(include_receipts=True):
-                balance_sign = -1
-            elif move_type in self.get_outbound_types(include_receipts=True):
-                balance_sign = 1
+            products = search_products(company_id)
+
+            if move_type == 'entry':
+                # Add a random number of lines (between 1 and 20)
+                lines = [get_entry_line(
+                    label=i,
+                ) for i in range(random.randint(1, 20))]
+
+                # Add a last line containing the balance.
+                # For invoices, etc., it will be on the receivable/payable account.
+                lines += [get_entry_line(
+                    balance=-sum(vals['balance'] for _command, _id, vals in lines),
+                    label='balance',
+                )]
             else:
-                # balance sign will be alternating each line
-                balance_sign = False
-
-            # Add a random number of lines (between 1 and 20)
-            lines = [get_line(
-                account=random.choice(account_ids),
-                label=i,
-                balance_sign=balance_sign or (i % 2) or -1,  # even -> negative, odd -> positive if balance_sign=False
-            ) for i in range(random.randint(1, 20))]
-
-            # Add a last line containing the balance.
-            # For invoices, etc., it will be on the receivable/payable account.
-            lines += [get_line(
-                account=random.choice(balance_account_ids),
-                balance=sum(l[2]['credit'] - l[2]['debit'] for l in lines),
-                label='balance',
-                exclude_from_invoice_tab=move_type in self.get_invoice_types(include_receipts=True),
-            )]
+                lines = [get_invoice_line() for _i in range(random.randint(1, 20))]
 
             return lines
 
@@ -179,13 +168,14 @@ class AccountMove(models.Model):
             """
             move_type = values['move_type']
             company_id = values['company_id']
+            currency_id = values['company_id']
             if move_type in self.get_sale_types(include_receipts=True):
                 journal_type = 'sale'
             elif move_type in self.get_purchase_types(include_receipts=True):
                 journal_type = 'purchase'
             else:
                 journal_type = 'general'
-            journal = search_journal_ids(company_id, journal_type)
+            journal = search_journals(company_id, journal_type, currency_id)
             return random.choice(journal)
 
         def get_partner(random, values, **kwargs):
@@ -214,6 +204,9 @@ class AccountMove(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+        currencies = self.env['res.currency'].search([
+            ('active', '=', True),
+        ])
 
         return [
             ('move_type', populate.randomize(
@@ -221,9 +214,7 @@ class AccountMove(models.Model):
                 [0.2, 0.3, 0.3, 0.07, 0.07, 0.03, 0.03],
             )),
             ('company_id', populate.randomize(company_ids.ids)),
-            ('currency_id', populate.randomize(self.env['res.currency'].search([
-                ('active', '=', True),
-            ]).ids)),
+            ('currency_id', populate.randomize(currencies.ids)),
             ('journal_id', populate.compute(get_journal)),
             ('date', populate.randdatetime(relative_before=relativedelta(years=-4), relative_after=relativedelta(years=1))),
             ('invoice_date', populate.compute(get_invoice_date)),

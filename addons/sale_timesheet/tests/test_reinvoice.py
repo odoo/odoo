@@ -84,11 +84,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
 
         move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_cost']
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
@@ -119,11 +119,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         # create second invoice lines and validate it
         move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
             line_form.quantity = 2.0
             line_form.analytic_account_id = self.analytic_account
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_cost']
             line_form.quantity = 2.0
             line_form.analytic_account_id = self.analytic_account
@@ -176,11 +176,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         # create invoice lines and validate it
         move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_sales_price']
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account
@@ -211,11 +211,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
         # create second invoice lines and validate it
         move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
             line_form.quantity = 2.0
             line_form.analytic_account_id = self.analytic_account
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_sales_price']
             line_form.quantity = 2.0
             line_form.analytic_account_id = self.analytic_account
@@ -249,7 +249,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         # create invoice lines and validate it
         move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
-        with move_form.line_ids.new() as line_form:
+        with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_no']
             line_form.quantity = 3.0
             line_form.analytic_account_id = self.analytic_account

@@ -23,7 +23,7 @@ class AccountMove(models.Model):
             return {}
         line_count = 0
         invoice_line_pickings = {}
-        for line in self.invoice_line_ids.filtered(lambda l: not l.display_type):
+        for line in self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
             line_count += 1
             done_moves_related = line.sale_line_ids.mapped('move_ids').filtered(lambda m: m.state == 'done' and m.location_dest_id.usage == 'customer')
             if len(done_moves_related) <= 1:

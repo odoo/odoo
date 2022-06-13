@@ -116,10 +116,10 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (100, self.percent_tax_2),
         ])
         invoice.action_post()
-        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
-            {'name': self.percent_tax_1.name,       'tax_base_amount': 100, 'price_unit': 21, 'tax_ids': []},
-            {'name': self.percent_tax_1_incl.name,  'tax_base_amount': 100, 'price_unit': 21, 'tax_ids': []},
-            {'name': self.percent_tax_2.name,       'tax_base_amount': 100, 'price_unit': 12, 'tax_ids': []},
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: x.name), [
+            {'name': self.percent_tax_2.name,       'tax_base_amount': 100, 'balance': -12, 'tax_ids': []},
+            {'name': self.percent_tax_1.name,       'tax_base_amount': 100, 'balance': -21, 'tax_ids': []},
+            {'name': self.percent_tax_1_incl.name,  'tax_base_amount': 100, 'balance': -21, 'tax_ids': []},
         ])
 
     def test_affecting_base_amount(self):
@@ -141,9 +141,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (100, self.percent_tax_2),
         ])
         invoice.action_post()
-        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: x.price_unit), [
-            {'name': self.percent_tax_1_incl.name,      'tax_base_amount': 100, 'price_unit': 21,      'tax_ids': [self.percent_tax_2.id]},
-            {'name': self.percent_tax_2.name,           'tax_base_amount': 221, 'price_unit': 26.52,   'tax_ids': []},
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id').sorted(lambda x: -x.balance), [
+            {'name': self.percent_tax_1_incl.name,      'tax_base_amount': 100, 'balance': -21,      'tax_ids': [self.percent_tax_2.id]},
+            {'name': self.percent_tax_2.name,           'tax_base_amount': 221, 'balance': -26.52,   'tax_ids': []},
         ])
 
     def test_group_of_taxes(self):
@@ -296,7 +296,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         }])
         # change price unit, everything should change as well
         with Form(invoice) as invoice_form:
-            with invoice_form.line_ids.edit(0) as line_edit:
+            with invoice_form.invoice_line_ids.edit(0) as line_edit:
                 line_edit.price_unit = 200
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
@@ -353,7 +353,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(sale_tax)
 
-            self.assertTrue(credit_line.recompute_tax_line)
 
         # Balance the journal entry.
         with move_form.line_ids.new() as credit_line:
@@ -381,8 +380,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.credit = 1000.0
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(sale_tax)
-
-            self.assertTrue(credit_line.recompute_tax_line)
 
         # Balance the journal entry.
         with move_form.line_ids.new() as debit_line:
@@ -446,8 +443,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(purch_tax)
 
-            self.assertTrue(credit_line.recompute_tax_line)
-
         # Balance the journal entry.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
@@ -474,8 +469,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.credit = 1000.0
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(purch_tax)
-
-            self.assertTrue(credit_line.recompute_tax_line)
 
         # Balance the journal entry.
         with move_form.line_ids.new() as debit_line:
@@ -694,11 +687,11 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 567.38,      # 155.32 * 1 / (1 / 0.273748)
-            'balance': -119.16,             # tax_base_amount * 0.21
+            'balance': -119.15,             # tax_base_amount * 0.21
         }])
 
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: not l.name), [{
-            'balance': 686.54
+            'balance': 686.53,
         }])
 
         with Form(invoice) as invoice_form:
@@ -706,9 +699,9 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 567.38,
-            'balance': -119.16,
+            'balance': -119.15,
         }])
 
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable'), [{
-            'balance': 686.54
+            'balance': 686.53
         }])
