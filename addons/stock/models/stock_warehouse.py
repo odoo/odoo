@@ -601,6 +601,7 @@ class Warehouse(models.Model):
                 'name': _('Stock'),
                 'active': True,
                 'usage': 'internal',
+                'replenish_location': True,
                 'barcode': self._valid_barcode(code + '-STOCK', company_id)
             },
             'wh_input_stock_loc_id': {

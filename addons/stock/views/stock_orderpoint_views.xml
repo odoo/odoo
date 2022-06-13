@@ -92,6 +92,10 @@
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'product_category_id'}"/>
                 </group>
+                <searchpanel>
+                    <field name="location_id" string="Locations" groups="stock.group_stock_multi_locations" enable_counters="1"/>
+                    <field name="trigger" string="Trigger" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -211,8 +215,8 @@
             action = model.with_context(
                 search_default_filter_to_reorder=True,
                 search_default_filter_not_snoozed=True,
-                search_default_filter_creation_trigger=True,
-                default_trigger='manual'
+                default_trigger='manual',
+                searchpanel_default_trigger='manual'
             ).action_open_orderpoints()
         </field>
     </record>
