@@ -18,6 +18,7 @@ from odoo.tools import email_normalize, hmac, generate_tracking_message_id
 
 _logger = logging.getLogger(__name__)
 
+# TODO remove me master
 GROUP_SEND_BATCH_SIZE = 500
 
 
@@ -407,7 +408,6 @@ class MailGroup(models.Model):
         base_url = self.get_base_url()
         body = self.env['mail.render.mixin']._replace_local_links(message.body)
         access_token = self._generate_group_access_token()
-        mail_values = []
 
         # Email added in a dict to be sure to send only once the email to each address
         member_emails = {
@@ -415,7 +415,9 @@ class MailGroup(models.Model):
             for member in self.member_ids
         }
 
-        for batch_email_member in tools.split_every(GROUP_SEND_BATCH_SIZE, member_emails.items()):
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size', GROUP_SEND_BATCH_SIZE))
+        for batch_email_member in tools.split_every(batch_size, member_emails.items()):
+            mail_values = []
             for email_member_normalized, email_member in batch_email_member:
                 if email_member_normalized == message.email_from_normalized:
                     # Do not send the email to his author
