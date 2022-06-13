@@ -15,6 +15,8 @@ from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
+from odoo.exceptions import UserError
+
 try:
     from fontTools.ttLib import TTFont
 except ImportError:
@@ -94,7 +96,14 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     :return (BytesIO):              The modified PDF stream.
     """
 
-    old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
+    try:
+        old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
+        old_pdf.getNumPages()
+    except Exception:
+        # Import is done here to prevent circular import issues.
+        from odoo.tools.translate import _
+        raise UserError(_("Error when reading the original PDF for: %r.\nPlease make sure the file is valid.", text[:100]))
+
     packet = io.BytesIO()
     can = canvas.Canvas(packet)
     odoo_logo = Image.open(file_open('base/static/img/main_partner-image.png', mode='rb'))
