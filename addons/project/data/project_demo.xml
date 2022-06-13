@@ -50,6 +50,42 @@
             <field name="name">Renovations</field>
         </record>
 
+        <!-- Analytic Tags -->
+        <record id="tag_analysis" model="account.analytic.tag">
+            <field name="name">Analysis</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="tag_design" model="account.analytic.tag">
+            <field name="name">Design</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="tag_training" model="account.analytic.tag">
+            <field name="name">Training</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="tag_research" model="account.analytic.tag">
+            <field name="name">Research</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="tag_development" model="account.analytic.tag">
+            <field name="name">Development</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="tag_modification" model="account.analytic.tag">
+            <field name="name">Modification</field>
+            <field name="color">6</field>
+        </record>
+
+        <record id="tag_decoration" model="account.analytic.tag">
+            <field name="name">Decoration</field>
+            <field name="color">7</field>
+        </record>
+
         <!-- Stage templates -->
         <record id="project.project_project_stage_2" model="project.project.stage">
             <field name="mail_template_id" ref="project.project_done_email_template"/>
@@ -93,6 +129,7 @@
             <field name="tag_ids" eval="[Command.link(ref('project.project_tags_05'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
             <field name="analytic_account_id" ref="project.analytic_office_design"/>
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_design'))]"/>
         </record>
         <record id="project_1_follower_admin" model="mail.followers">
             <field name="res_model">project.project</field>
@@ -109,6 +146,7 @@
             <field name="tag_ids" eval="[Command.link(ref('project.project_tags_04'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
             <field name="analytic_account_id" ref="project.analytic_research_development"/>
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_research')), Command.link(ref('tag_development'))]"/>
         </record>
         <record id="project_2_activity_1" model="mail.activity">
             <field name="res_id" ref="project_project_2"/>
@@ -356,6 +394,7 @@
             <field name="tag_ids" eval="[Command.set([ref('project_tags_00')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_2" />
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_modification'))]"/>
         </record>
         <record id="project_1_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -449,6 +488,7 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="color">11</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_modification'))]"/>
         </record>
         <record id="project_1_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -489,6 +529,7 @@
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
             <field name="color">9</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_modification'))]"/>
         </record>
         <record id="project_1_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -660,6 +701,7 @@
             <field name="parent_id" ref="project.project_1_task_12"/>
             <field name="name">Preparation</field>
             <field name="stage_id" ref="project_stage_1"/>
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_analysis'))]"/>
         </record>
         <record id="project_1_task_15" model="project.task">
             <field name="sequence">30</field>
@@ -683,6 +725,7 @@
             <field name="name">Customer analysis + Architecture</field>
             <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_analysis')), Command.link(ref('tag_design'))]"/>
         </record>
         <record id="project_2_task_1_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
