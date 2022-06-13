@@ -4884,7 +4884,7 @@ class AccountMoveLine(models.Model):
             if not journal.company_id.income_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Gain Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
 
-            exchange_diff_move_vals['date'] = max(exchange_diff_move_vals['date'], company._get_user_fiscal_lock_date())
+            exchange_diff_move_vals['date'] = max(exchange_diff_move_vals['date'], company._get_user_fiscal_lock_date() + timedelta(days=1))
 
             exchange_move = self.env['account.move'].create(exchange_diff_move_vals)
             exchange_move.line_ids.write({'tax_exigible': True}) # Enforce exigibility in case some cash basis adjustments were made in this exchange difference
