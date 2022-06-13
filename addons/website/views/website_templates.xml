@@ -53,7 +53,7 @@
     </xpath>
 
     <xpath expr="//head" position="attributes">
-        <attribute name="t-cache">main_object if main_object and main_object._name == 'website.page' and not (editable or translatable) else None</attribute>
+        <attribute name="t-cache">('assets' in request.session.debug, main_object) if main_object and main_object._name == 'website.page' and not (editable or translatable) else None</attribute>
     </xpath>
     <xpath expr="//head/*[1]" position="before">
         <t t-if="not title">
