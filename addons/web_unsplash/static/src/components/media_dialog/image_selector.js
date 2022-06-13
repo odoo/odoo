@@ -1,269 +1,262 @@
-odoo.define('web_unsplash.image_widgets', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var UnsplashAPI = require('unsplash.api');
-var widgetsMedia = require('wysiwyg.widgets.media');
-const {_t} = require('web.core');
+import { patch } from 'web.utils';
+import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
+import { ImageSelector } from '@web_editor/components/media_dialog/image_selector';
+import { useService } from '@web/core/utils/hooks';
+import { uploadService, AUTOCLOSE_DELAY } from '@web_editor/components/upload_progress_toast/upload_service';
 
-var unsplashAPI = null;
+const { useState, Component } = owl;
 
-// Prevent base class from treating unsplash images like regular attachments
-const originalEvents = widgetsMedia.ImageWidget.prototype.events;
-const clickHandler = originalEvents['click .o_existing_attachment_cell'];
-if (!clickHandler) {
-    throw new Error(`Couldn't find a handler for o_existing_attachment_cell clicks.
-The unsplash image widget needs to prevent this handler from executing on unsplash attachments.`);
-}
-_.extend(originalEvents, {
-    'click .o_existing_attachment_cell:not(.o_unsplash_attachment_cell)': clickHandler,
-});
-delete originalEvents['click .o_existing_attachment_cell'];
+class UnsplashCredentials extends Component {
+    setup() {
+        this.state = useState({
+            key: '',
+            appId: '',
+            hasKeyError: this.props.hasCredentialsError,
+            hasAppIdError: this.props.hasCredentialsError,
+        });
+    }
 
-widgetsMedia.ImageWidget.include({
-    xmlDependencies: widgetsMedia.ImageWidget.prototype.xmlDependencies.concat(
-        ['/web_unsplash/static/src/components/media_dialog/image_selector.xml']
-    ),
-    events: _.extend({}, widgetsMedia.ImageWidget.prototype.events, {
-        'click .o_unsplash_attachment_cell[data-imgid]': '_onUnsplashImgClick',
-        'click button.save_unsplash': '_onSaveUnsplashCredentials',
-    }),
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-
-        this._unsplash = {
-            selectedImages: {},
-            isMaxed: false,
-            query: false,
-            error: false,
-            records: [],
-        };
-
-        // TODO improve this
-        //
-        // This is a `hack` to prevent the UnsplashAPI to be destroyed every
-        // time the media dialog is closed. Indeed, UnsplashAPI has a cache
-        // system to recude unsplash call, it is then better to keep its state
-        // to take advantage from it from one media dialog call to another.
-        //
-        // Unsplash API will either be (it's still being discussed):
-        //  * a service (ideally coming with an improvement to not auto load
-        //    the service)
-        //  * initialized in the website_root (trigger_up)
-        if (unsplashAPI === null) {
-            this.unsplashAPI = new UnsplashAPI(this);
-            unsplashAPI = this.unsplashAPI;
+    submitCredentials() {
+        if (this.state.key === '') {
+            this.state.hasKeyError = true;
+        } else if (this.state.appId === '') {
+            this.state.hasAppIdError = true;
         } else {
-            this.unsplashAPI = unsplashAPI;
-            this.unsplashAPI.setParent(this);
+            this.props.submitCredentials(this.state.key, this.state.appId);
         }
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        // TODO See `hack` explained in `init`. This prevent the media dialog destroy
-        //      to destroy unsplashAPI when destroying the children
-        this.unsplashAPI.setParent(undefined);
-        this._super.apply(this, arguments);
-    },
+    }
+}
+UnsplashCredentials.template = 'web_unsplash.UnsplashCredentials';
 
-    // --------------------------------------------------------------------------
-    // Public
-    // --------------------------------------------------------------------------
+class UnsplashError extends Component {}
+UnsplashError.template = 'web_unsplash.UnsplashError';
+UnsplashError.components = {
+    UnsplashCredentials,
+};
 
-    /**
-     * @override
-     */
-    _save: async function () {
-        const _super = this._super;
-        const selectedImages = this._unsplash.selectedImages;
-        const imagesCount = Object.keys(selectedImages).length;
-        if (imagesCount) {
-            this.saved = true;
-            await this._setUpProgressToast([{
-                name: imagesCount > 1 ?
-                    _.str.sprintf(_t("Uploading %s '%s' images."), imagesCount, this._unsplash.query) :
-                    _.str.sprintf(_t("Uploading '%s' image."), this._unsplash.query),
-                size: null,
-            }]);
-            const images = await this.uploader.rpcShowProgress({
-                route: '/web_unsplash/attachment/add',
-                params: {
-                    unsplashurls: selectedImages,
-                    res_model: this.options.res_model,
-                    res_id: this.options.res_id,
-                    query: this._unsplash.query,
-                },
-            }, 0);
-            this.uploader.close(3000);
-            this.attachments.push(...images);
-            this.selectedAttachments.push(...images);
-        }
-        return _super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    search: async function (needle) {
-        var self = this;
-        await this._super(...arguments);
+patch(ImageSelector.prototype, 'image_selector_unsplash', {
+    setup() {
+        this._super();
+        this.unsplash = useService('unsplash');
 
-        this._unsplash.query = needle;
-        if (!needle) {
-            this._unsplash.records = [];
-            return;
-        }
+        this.state.unsplashRecords = [];
+        this.state.isFetchingUnsplash = false;
+        this.state.isMaxed = false;
+        this.state.unsplashError = null;
 
-        await this.unsplashAPI.getImages(needle, this.numberOfAttachmentsToDisplay).then(function (res) {
-            self._unsplash.isMaxed = res.isMaxed;
-            self._unsplash.records = res.images;
-            self._unsplash.error = false;
-        }, function (err) {
-            self._unsplash.error = err;
-        });
-    },
-    /**
-     * @override
-     */
-    hasContent() {
-        if (this.searchService === 'all') {
-            return this._super(...arguments) || (this.unsplashRecords && this.unsplashRecords.length);
-        } else if (this.searchService === 'unsplash') {
-            return (this.unsplashRecords && this.unsplashRecords.length);
-        }
-        return this._super(...arguments);
+        this.errorMessages = {
+            'key_not_found': {
+                title: this.env._t("Setup Unsplash to access royalty free photos."),
+                subtitle: "",
+            },
+            401: {
+                title: this.env._t("Unauthorized Key"),
+                subtitle: this.env._t("Please check your Unsplash access key and application ID."),
+            },
+            403: {
+                title: this.env._t("Search is temporarily unavailable"),
+                subtitle: this.env._t("The max number of searches is exceeded. Please retry in an hour or extend to a better account."),
+            },
+        };
     },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _highlightSelected: function () {
-        this._super.apply(this, arguments);
-
-        const $select = this.$('.o_unsplash_attachment_cell[data-imgid]').filter((i, el) => {
-            return $(el).data('imgid') in this._unsplash.selectedImages;
-        }).addClass('o_we_attachment_selected');
-        return $select;
+    get canLoadMore() {
+        if (this.state.searchService === 'all') {
+            return this._super() || this.state.needle && !this.state.isMaxed && !this.state.unsplashError;
+        } else if (this.state.searchService === 'unsplash') {
+            return this.state.needle && !this.state.isMaxed && !this.state.unsplashError;
+        }
+        return this._super();
     },
-    /**
-     * @private
-     */
-    _loadMoreImages: function (forceSearch) {
-        if (!this.$('.o_we_search').val()) {
-            return this._super(forceSearch);
-        }
-        this.numberOfAttachmentsToDisplay += 10;
-        this.search(this.$('.o_we_search').val()).then(() => this._renderThumbnails());
-    },
-    /**
-     * @override
-     */
-    _renderThumbnails: function () {
-        this._super(...arguments);
-        this.$('.unsplash_error').empty();
-        if (!['all', 'unsplash'].includes(this.searchService)) {
-            return;
-        }
-        if (this._unsplash.query && this._unsplash.error) {
-            this.$('.unsplash_error').html(
-                core.qweb.render('web_unsplash.dialog.error.content', {
-                    status: this._unsplash.error,
-                })
-            );
-            return;
-        }
 
-        if (['all', 'unsplash'].includes(this.searchService) && this._unsplash.query && !this._unsplash.isMaxed) {
-            this.$('.o_load_more').removeClass('d-none');
-            this.$('.o_load_done_msg').addClass('d-none');
+    get hasContent() {
+        if (this.state.searchService === 'all') {
+            return this._super() || !!this.state.unsplashRecords.length;
+        } else if (this.state.searchService === 'unsplash') {
+            return !!this.state.unsplashRecords.length;
         }
+        return this._super();
     },
-    /**
-     * @override
-     */
-    _renderExisting: function (attachments) {
-        this.unsplashRecords = this._unsplash.records.map(record => {
-            const url = new URL(record.urls.regular);
-            // In small windows, row height could get quite a bit larger than the min, so we keep some leeway.
-            url.searchParams.set('h', 2 * this.MIN_ROW_HEIGHT);
-            url.searchParams.delete('w');
-            return Object.assign({}, record, {
-                url: url.toString(),
+
+    get errorTitle() {
+        if (this.errorMessages[this.state.unsplashError]) {
+            return this.errorMessages[this.state.unsplashError].title;
+        }
+        return this.env._t("Something went wrong");
+    },
+
+    get errorSubtitle() {
+        if (this.errorMessages[this.state.unsplashError]) {
+            return this.errorMessages[this.state.unsplashError].subtitle;
+        }
+        return this.env._t("Please check your internet connection or contact administrator.");
+    },
+
+    get selectedRecordIds() {
+        return this.props.selectedMedia[this.props.id].filter(media => media.mediaType === 'unsplashRecord').map(({ id }) => id);
+    },
+
+    // It seems that setters are mandatory when patching a component that
+    // extends another component.
+    set canLoadMore(_) {},
+    set hasContent(_) {},
+    set isFetching(_) {},
+    set selectedMediaIds(_) {},
+    set attachmentsDomain(_) {},
+    set errorTitle(_) {},
+    set errorSubtitle(_) {},
+    set selectedRecordIds(_) {},
+
+    async fetchUnsplashRecords(offset) {
+        this.state.isFetchingUnsplash = true;
+        if (!this.state.needle) {
+            return { records: [], isMaxed: false };
+        }
+        try {
+            const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY);
+            this.state.isFetchingUnsplash = false;
+            this.state.unsplashError = false;
+            const records = images.map(record => {
+                const url = new URL(record.urls.regular);
+                // In small windows, row height could get quite a bit larger than the min, so we keep some leeway.
+                url.searchParams.set('h', 2 * this.MIN_ROW_HEIGHT);
+                url.searchParams.delete('w');
+                return Object.assign({}, record, {
+                    url: url.toString(),
+                });
             });
-        });
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _selectAttachement: function (attachment, save) {
-        if (!this.options.multiImages) {
-            this._unsplash.selectedImages = {};
+            return { isMaxed, records };
+        } catch (e) {
+            this.state.isFetchingUnsplash = false;
+            this.state.unsplashError = e;
+            return { records: [], isMaxed: false };
         }
-        this._super(...arguments);
     },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    async loadMore(...args) {
+        await this._super(...args);
+        const { records, isMaxed } = await this.fetchUnsplashRecords(this.state.unsplashRecords.length);
+        this.state.unsplashRecords.push(...records);
+        this.state.isMaxed = isMaxed;
+    },
 
-    /**
-     * @private
-     */
-    _onSaveUnsplashCredentials: function () {
-        var self = this;
-        var key = this.$('#accessKeyInput').val().trim();
-        var appId = this.$('#appIdInput').val().trim();
+    async search(...args) {
+        await this._super(...args);
+        await this.searchUnsplash();
+    },
 
-        this.$('#accessKeyInput').toggleClass('is-invalid', !key);
-        this.$('#appIdInput').toggleClass('is-invalid', !appId);
+    async searchUnsplash() {
+        if (!this.state.needle) {
+            this.state.unsplashError = false;
+            this.state.unsplashRecords = [];
+            this.state.isMaxed = false;
+        }
+        const { records, isMaxed } = await this.fetchUnsplashRecords(0);
+        this.state.unsplashRecords = records;
+        this.state.isMaxed = isMaxed;
+    },
 
-        if (key && appId) {
-            if (!this.$el.find('.is-invalid').length) {
-                this._rpc({
-                    route: '/web_unsplash/save_unsplash',
-                    params: {key: key, appId: appId},
-                }).then(function () {
-                    self.unsplashAPI.clientId = key;
-                    self._unsplash.error = false;
-                    self.search(self._unsplash.query).then(() => self._renderThumbnails());
+    async onClickRecord(media) {
+        this.props.selectMedia({ ...media, mediaType: 'unsplashRecord', query: this.state.needle });
+        if (!this.props.multiSelect) {
+            await this.props.save();
+        }
+    },
+
+    async submitCredentials(key, appId) {
+        this.state.unsplashError = null;
+        await this.rpc('/web_unsplash/save_unsplash', { key, appId });
+        await this.searchUnsplash();
+    },
+});
+ImageSelector.components = {
+    ...ImageSelector.components,
+    UnsplashError,
+};
+
+patch(MediaDialog.prototype, 'media_dialog_unsplash', {
+    setup() {
+        this._super();
+
+        this.uploadService = useService('upload');
+    },
+
+    async save() {
+        const _super = this._super.bind(this);
+        const selectedImages = this.selectedMedia[TABS.IMAGES.id];
+        if (selectedImages) {
+            const unsplashRecords = selectedImages.filter(media => media.mediaType === 'unsplashRecord');
+            if (unsplashRecords.length) {
+                await this.uploadService.uploadUnsplashRecords(unsplashRecords, { resModel: this.props.resModel, resId: this.props.resId }, (attachments) => {
+                    this.selectedMedia[TABS.IMAGES.id] = this.selectedMedia[TABS.IMAGES.id].filter(media => media.mediaType !== 'unsplashRecord');
+                    this.selectedMedia[TABS.IMAGES.id] = this.selectedMedia[TABS.IMAGES.id].concat(attachments.map(attachment => ({...attachment, mediaType: 'attachment'})));
                 });
             }
         }
-    },
-    /**
-     * @private
-     */
-    _onUnsplashImgClick: function (ev) {
-        if (this.saved) {
-            // already saved, probably a double click. Ignore.
-            return;
-        }
-        const {imgid, url, downloadUrl, description} = ev.currentTarget.dataset;
-        if (!this.options.multiImages) {
-            this._unsplash.selectedImages = {};
-            this.selectedAttachments = [];
-        }
-        if (imgid in this._unsplash.selectedImages) {
-            delete this._unsplash.selectedImages[imgid];
-        } else {
-            const _1920Url = new URL(url);
-            _1920Url.searchParams.set('w', '1920');
-            this._unsplash.selectedImages[imgid] = {url: _1920Url.href, download_url: downloadUrl, description: description};
-        }
-        this._highlightSelected();
-        if (!this.options.multiImages) {
-            this.trigger_up('save_request');
-        }
+        return _super(...arguments);
     },
 });
+
+patch(uploadService, 'upload_service_unsplash', {
+    start(env, { rpc }) {
+        const service = this._super(...arguments);
+        return {
+            ...service,
+            async uploadUnsplashRecords(records, { resModel, resId }, onUploaded) {
+                service.incrementId();
+                const file = service.addFile({
+                    id: service.fileId,
+                    name: records.length > 1 ?
+                    _.str.sprintf(env._t("Uploading %s '%s' images."), records.length, records[0].query) :
+                    _.str.sprintf(env._t("Uploading '%s' image."), records[0].query),
+                    size: null,
+                    progress: 0,
+                });
+
+                try {
+                    const urls = {};
+                    for (const record of records) {
+                        const _1920Url = new URL(record.urls.regular);
+                        _1920Url.searchParams.set('w', '1920');
+                        urls[record.id] = {
+                            url: _1920Url.href,
+                            download_url: record.links.download_location,
+                            description: record.alt_description,
+                        };
+                    }
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', ev => {
+                        const rpcComplete = ev.loaded / ev.total * 100;
+                        file.progress = rpcComplete;
+                    });
+                    xhr.upload.addEventListener('load', function () {
+                        // Don't show yet success as backend code only starts now
+                        file.progress = 100;
+                    });
+                    const attachments = await rpc('/web_unsplash/attachment/add', {
+                        'res_id': resId,
+                        'res_model': resModel,
+                        'unsplashurls': urls,
+                        'query': records[0].query,
+                    }, {xhr});
+
+                    if (attachments.error) {
+                        file.hasError = true;
+                        file.errorMessage = attachments.error;
+                    } else {
+                        file.uploaded = true;
+                        await onUploaded(attachments);
+                    }
+                    setTimeout(() => service.deleteFile(file.id), AUTOCLOSE_DELAY);
+                } catch (error) {
+                    file.hasError = true;
+                    setTimeout(() => service.deleteFile(file.id), AUTOCLOSE_DELAY);
+                    throw error;
+                }
+            }
+        };
+    }
 });

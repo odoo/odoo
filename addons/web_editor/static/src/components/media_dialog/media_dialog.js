@@ -1,307 +1,156 @@
-odoo.define('wysiwyg.widgets.MediaDialog', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var MediaModules = require('wysiwyg.widgets.media');
-var Dialog = require('wysiwyg.widgets.Dialog');
+import { useService } from '@web/core/utils/hooks';
+import { Dialog } from '@web/core/dialog/dialog';
+import { ImageSelector } from './image_selector';
+import { DocumentSelector } from './document_selector';
+import { IconSelector } from './icon_selector';
+import { VideoSelector } from './video_selector';
 
-var _t = core._t;
+const { useState } = owl;
 
-/**
- * Lets the user select a media. The media can be existing or newly uploaded.
- *
- * The media can be one of the following types: image, document, video or
- * font awesome icon (only existing icons).
- *
- * The user may change a media into another one depending on the given options.
- */
-var MediaDialog = Dialog.extend({
-    template: 'wysiwyg.widgets.media',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/wysiwyg.xml']
-    ),
-    events: _.extend({}, Dialog.prototype.events, {
-        'click #editor-media-image-tab': '_onClickImageTab',
-        'click #editor-media-document-tab': '_onClickDocumentTab',
-        'click #editor-media-icon-tab': '_onClickIconTab',
-        'click #editor-media-video-tab': '_onClickVideoTab',
-    }),
-    custom_events: _.extend({}, Dialog.prototype.custom_events || {}, {
-        save_request: '_onSaveRequest',
-        show_parent_dialog_request: '_onShowRequest',
-        hide_parent_dialog_request: '_onHideRequest',
-    }),
+export const TABS = {
+    IMAGES: {
+        id: 'IMAGES',
+        title: "Images",
+        Component: ImageSelector,
+    },
+    DOCUMENTS: {
+        id: 'DOCUMENTS',
+        title: "Documents",
+        Component: DocumentSelector,
+    },
+    ICONS: {
+        id: 'ICONS',
+        title: "Icons",
+        Component: IconSelector,
+    },
+    VIDEOS: {
+        id: 'VIDEOS',
+        title: "Videos",
+        Component: VideoSelector,
+    },
+};
 
-    /**
-     * @constructor
-     * @param {Element} media
-     */
-    init: function (parent, options, media) {
-        var $media = $(media);
-        media = $media[0];
-        this.media = media;
+export class MediaDialog extends Dialog {
+    setup() {
+        super.setup();
+        this.size = 'modal-xl';
+        this.contentClass = 'o_select_media_dialog';
+        this.title = this.env._t("Select a media");
 
-        options = _.extend({}, options);
-        var onlyImages = options.onlyImages || this.multiImages || (media && ($media.parent().data('oeField') === 'image' || $media.parent().data('oeType') === 'image'));
-        options.noDocuments = onlyImages || options.noDocuments;
-        options.noIcons = onlyImages || options.noIcons;
-        options.noVideos = onlyImages || options.noVideos;
+        this.rpc = useService('rpc');
+        this.orm = useService('orm');
 
-        this._super(parent, _.extend({}, {
-            title: _t("Select a Media"),
-            save_text: _t("Add"),
-        }, options));
+        this.tabs = [];
+        this.selectedMedia = useState({});
 
-        if (!options.noImages) {
-            this.imageWidget = this.getImageWidget(media, options);
+        this.addTabs();
+
+        this.state = useState({
+            activeTab: this.initialActiveTab,
+        });
+    }
+
+    get initialActiveTab() {
+        if (this.props.activeTab) {
+            return this.props.activeTab;
         }
-        if (!options.noDocuments) {
-            this.documentWidget = this.getDocumentWidget(media, options);
-        }
-        if (!options.noIcons) {
-            this.iconWidget = this.getIconWidget(media, options);
-        }
-        if (!options.noVideos) {
-            this.videoWidget = this.getVideoWidget(media, options);
-        }
-
-        if (this.imageWidget && $media.is('img')) {
-            this.activeWidget = this.imageWidget;
-        } else if (this.documentWidget && $media.is('a.o_image')) {
-            this.activeWidget = this.documentWidget;
-        } else if (this.videoWidget && $media.is('.media_iframe_video, .o_bg_video_iframe')) {
-            this.activeWidget = this.videoWidget;
-        } else if (this.iconWidget && $media.is('span, i')) {
-            this.activeWidget = this.iconWidget;
-        } else {
-            this.activeWidget = [this.imageWidget, this.documentWidget, this.videoWidget, this.iconWidget].find(w => !!w);
-        }
-        this.initiallyActiveWidget = this.activeWidget;
-    },
-    /**
-     * Adds the appropriate class to the current modal and appends the media
-     * widgets to their respective tabs.
-     *
-     * @override
-     */
-    start: function () {
-        var promises = [this._super.apply(this, arguments)];
-        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
-
-        if (this.imageWidget) {
-            promises.push(this.imageWidget.appendTo(this.$("#editor-media-image")));
-        }
-        if (this.documentWidget) {
-            promises.push(this.documentWidget.appendTo(this.$("#editor-media-document")));
-        }
-        if (this.iconWidget) {
-            promises.push(this.iconWidget.appendTo(this.$("#editor-media-icon")));
-        }
-        if (this.videoWidget) {
-            promises.push(this.videoWidget.appendTo(this.$("#editor-media-video")));
-        }
-
-        this.opened(() => this.$('input.o_we_search:visible:first').focus());
-
-        return Promise.all(promises);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @param {Object} media
-     * @param {Object} options
-     * @returns {ImageWidget}
-     */
-    getImageWidget: function (media, options) {
-        return new MediaModules.ImageWidget(this, media, options);
-    },
-
-    /**
-     * @param {Object} media
-     * @param {Object} options
-     * @returns {DocumentWidget}
-     */
-    getDocumentWidget: function (media, options) {
-        return new MediaModules.DocumentWidget(this, media, options);
-    },
-
-    /**
-     * @param {Object} media
-     * @param {Object} options
-     * @returns {IconWidget}
-     */
-    getIconWidget: function (media, options) {
-        return new MediaModules.IconWidget(this, media, options);
-    },
-
-    /**
-     * @param {Object} media
-     * @param {Object} options
-     * @returns {VideoWidget}
-     */
-    getVideoWidget: function (media, options) {
-        return new MediaModules.VideoWidget(this, media, options);
-    },
-
-    /**
-     * Returns whether the document widget is currently active.
-     *
-     * @returns {boolean}
-     */
-    isDocumentActive: function () {
-        return this.activeWidget === this.documentWidget;
-    },
-    /**
-     * Returns whether the icon widget is currently active.
-     *
-     * @returns {boolean}
-     */
-    isIconActive: function () {
-        return this.activeWidget === this.iconWidget;
-    },
-    /**
-     * Returns whether the image widget is currently active.
-     *
-     * @returns {boolean}
-     */
-    isImageActive: function () {
-        return this.activeWidget === this.imageWidget;
-    },
-    /**
-     * Returns whether the video widget is currently active.
-     *
-     * @returns {boolean}
-     */
-    isVideoActive: function () {
-        return this.activeWidget === this.videoWidget;
-    },
-    /**
-     * Saves the currently selected media from the currently active widget.
-     *
-     * The save event data `final_data` will be one Element in general, but it
-     * will be an Array of Element if `multiImages` is set.
-     *
-     * @override
-     */
-    save: function () {
-        var self = this;
-        var _super = this._super;
-        var args = arguments;
-        return this.activeWidget.save().then(function (data) {
-            if (self.activeWidget !== self.initiallyActiveWidget) {
-                self._clearWidgets();
+        if (this.props.media) {
+            const correspondingTab = Object.keys(TABS).find(id => TABS[id].Component.tagNames.includes(this.props.media.tagName));
+            if (correspondingTab) {
+                return correspondingTab;
             }
-            // Restore classes if the media was replaced (when changing type)
-            if (self.media !== data) {
-                var oldClasses = self.media && _.toArray(self.media.classList);
-                if (oldClasses) {
-                    data.className = _.union(_.toArray(data.classList), oldClasses).join(' ');
+        }
+        return this.tabs[0].id;
+    }
+
+    addTab(tab, additionalProps = {}) {
+        this.selectedMedia[tab.id] = [];
+        this.tabs.push({
+            ...tab,
+            props: {
+                ...tab.props,
+                ...additionalProps,
+                id: tab.id,
+                resModel: this.props.resModel,
+                resId: this.props.resId,
+                media: this.props.media,
+                selectedMedia: this.selectedMedia,
+                selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
+                save: this.save.bind(this),
+            },
+        });
+    }
+
+    addTabs() {
+        const onlyImages = this.props.onlyImages || this.props.multiImages || (this.props.media && this.props.media.parentElement && (this.props.media.parentElement.dataset.oeField === 'image' || this.props.media.parentElement.dataset.oeType === 'image'));
+        const noDocuments = onlyImages || this.props.noDocuments;
+        const noIcons = onlyImages || this.props.noIcons;
+        const noVideos = onlyImages || this.props.noVideos;
+
+        if (!this.props.noImages) {
+            this.addTab(TABS.IMAGES, {
+                useMediaLibrary: this.props.useMediaLibrary,
+                multiSelect: this.props.multiImages
+            });
+        }
+        if (!noDocuments) {
+            this.addTab(TABS.DOCUMENTS);
+        }
+        if (!noIcons) {
+            const fonts = TABS.ICONS.Component.initFonts();
+            this.addTab(TABS.ICONS, {
+                fonts,
+            });
+
+            if (this.props.media && TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)) {
+                const classes = this.props.media.className.split(/\s+/);
+                const mediaFont = fonts.find(font => classes.includes(font.base));
+                if (mediaFont) {
+                    const selectedIcon = mediaFont.icons.find(icon => icon.names.some(name => classes.includes(name)));
+                    if (selectedIcon) {
+                        this.selectMedia(selectedIcon, TABS.ICONS.id);
+                    }
                 }
             }
-            self.final_data = data;
-            _super.apply(self, args);
-            $(data).trigger('content_changed');
-        });
-    },
+        }
+        if (!noVideos) {
+            this.addTab(TABS.VIDEOS, {
+                vimeoPreviewIds: this.props.vimeoPreviewIds,
+                isForBgVideo: this.props.isForBgVideo,
+            });
+        }
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Call clear on all the widgets except the activeWidget.
-     * We clear because every widgets are modifying the "media" element.
-     * All widget have the responsibility to clear a previous element that
-     * was created from them.
-     */
-    _clearWidgets: function () {
-        [   this.imageWidget,
-            this.documentWidget,
-            this.iconWidget,
-            this.videoWidget
-        ].forEach( (widget) => {
-            if (widget !== this.activeWidget) {
-                widget && widget.clear();
+    selectMedia(media, tabId, multiSelect) {
+        if (multiSelect) {
+            const isMediaSelected = this.selectedMedia[tabId].map(({ id }) => id).includes(media.id);
+            if (!isMediaSelected) {
+                this.selectedMedia[tabId].push(media);
+            } else {
+                this.selectedMedia[tabId] = this.selectedMedia[tabId].filter(m => m.id !== media.id);
             }
-        });
-    },
+        } else {
+            this.selectedMedia[tabId] = [media];
+        }
+    }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Sets the document widget as the active widget.
-     *
-     * @private
-     */
-    _onClickDocumentTab: function () {
-        this.activeWidget = this.documentWidget;
-    },
-    /**
-     * Sets the icon widget as the active widget.
-     *
-     * @private
-     */
-    _onClickIconTab: function () {
-        this.activeWidget = this.iconWidget;
-    },
-    /**
-     * Sets the image widget as the active widget.
-     *
-     * @private
-     */
-    _onClickImageTab: function () {
-        this.activeWidget = this.imageWidget;
-    },
-    /**
-     * Sets the video widget as the active widget.
-     *
-     * @private
-     */
-    _onClickVideoTab: function () {
-        this.activeWidget = this.videoWidget;
-    },
-    /**
-     * Handles hide request from child widgets.
-     *
-     * This is for usability, to allow hiding the modal for example when another
-     * smaller modal would be displayed on top.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onHideRequest: function (ev) {
-        this.$modal.addClass('d-none');
-    },
-    /**
-     * Handles save request from the child widgets.
-     *
-     * This is for usability, to allow the user to save from other ways than
-     * click on the modal button, such as double clicking a media to select it.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSaveRequest: function (ev) {
-        ev.stopPropagation();
-        this.save();
-    },
-    /**
-     * Handles show request from the child widgets.
-     *
-     * This is for usability, it is the counterpart of @see _onHideRequest.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onShowRequest: function (ev) {
-        this.$modal.removeClass('d-none');
-    },
-});
-
-return MediaDialog;
-});
+    async save() {
+        const selectedMedia = this.selectedMedia[this.state.activeTab];
+        if (selectedMedia.length) {
+            const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia);
+            if (this.props.multiImages) {
+                this.props.save(elements);
+            } else {
+                this.props.save(elements[0]);
+            }
+        }
+        this.close();
+    }
+}
+MediaDialog.bodyTemplate = 'web_editor.MediaDialogBody';
+MediaDialog.footerTemplate = 'web_editor.MediaDialogFooter';
+MediaDialog.components = {
+    ...Object.keys(TABS).map(key => TABS[key].Component),
+};
