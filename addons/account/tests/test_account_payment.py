@@ -200,10 +200,14 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
     def test_payment_move_sync_onchange(self):
 
-        pay_form = Form(self.env['account.payment'].with_context(default_journal_id=self.company_data['default_journal_bank'].id))
+        pay_form = Form(self.env['account.payment'].with_context(
+            default_journal_id=self.company_data['default_journal_bank'].id,
+            # The `partner_type` is set through the window action context in the web client
+            # the field is otherwise invisible in the form.
+            default_partner_type='customer',
+        ))
         pay_form.amount = 50.0
         pay_form.payment_type = 'inbound'
-        pay_form.partner_type = 'customer'
         pay_form.partner_id = self.partner_a
         payment = pay_form.save()
 
@@ -246,8 +250,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         # ==== Check editing the account.payment ====
 
+        # `partner_type` on payment is always invisible. It's supposed to be set through a context `default_` key
+        # In this case the goal of the test is to take an existing customer payment and change it to a supplier payment,
+        # which is not supposed to be possible through the web interface.
+        # So, change the payment partner_type beforehand rather than in the form view.
+        payment.partner_type = 'supplier'
         pay_form = Form(payment)
-        pay_form.partner_type = 'supplier'
         pay_form.currency_id = self.currency_data['currency']
         pay_form.partner_id = self.partner_a
         payment = pay_form.save()

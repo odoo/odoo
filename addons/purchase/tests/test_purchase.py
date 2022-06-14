@@ -179,6 +179,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
         """
+        # Required for `product_packaging_qty` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
         packaging_single = self.env['product.packaging'].create({
             'name': "I'm a packaging",
             'product_id': self.product_a.id,

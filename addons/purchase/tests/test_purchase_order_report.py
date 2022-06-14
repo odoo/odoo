@@ -41,7 +41,39 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         f = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         f.invoice_date = f.date
         f.partner_id = po.partner_id
-        f.purchase_id = po
+        # <field name="invoice_vendor_bill_id" position="after">
+        #     <field name="purchase_id" invisible="1"/>
+        #     <label for="purchase_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
+        #             attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}" />
+        #     <field name="purchase_vendor_bill_id" nolabel="1"
+        #             attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}"
+        #             class="oe_edit_only"
+        #             domain="partner_id and [('company_id', '=', company_id), ('partner_id.commercial_partner_id', '=', commercial_partner_id)] or [('company_id', '=', company_id)]"
+        #             placeholder="Select a purchase order or an old bill"
+        #             context="{'show_total_amount': True}"
+        #             options="{'no_create': True, 'no_open': True}"/>
+        # </field>
+        # @api.onchange('purchase_vendor_bill_id', 'purchase_id')
+        # def _onchange_purchase_auto_complete(self):
+        #     ...
+        #     elif self.purchase_vendor_bill_id.purchase_order_id:
+        #         self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
+        #     self.purchase_vendor_bill_id = False
+        # purchase_vendor_bill_id = fields.Many2one('purchase.bill.union'
+        # class PurchaseBillUnion(models.Model):
+        #     _name = 'purchase.bill.union'
+        #     ...
+        #     def init(self):
+        #         self.env.cr.execute("""
+        #                 ...
+        #                 SELECT
+        #                     -id, name, ...
+        #                     id as purchase_order_id
+        #                 FROM purchase_order
+        #                 ...
+        #             )""")
+        #     ...
+        f.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
         invoice = f.save()
         invoice.action_post()
         po.flush_model()

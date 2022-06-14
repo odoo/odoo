@@ -72,8 +72,10 @@ class TestProjectSubtasks(TestProjectCommon):
         """
         form_views = self.env['ir.ui.view'].search([('model', '=', 'project.task'), ('type', '=', 'form')])
         for form_view in form_views:
-            with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view=form_view) as task_form:
-                task_form.name = 'Test Task 1'
+            task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id, 'default_name': 'Test Task 1'}), view=form_view)
+            # Some views have the `name` field invisible
+            # As the goal is simply to test the default project field and not the name, we can skip setting the name
+            # in the view and set it using `default_name` instead
             task = task_form.save()
 
             self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project, form_view name : %s." % form_view.name)
@@ -148,27 +150,29 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(self.task_1.child_ids.display_project_id, self.project_goats, "Display Project of the task should be well assigned")
         self.assertEqual(self.task_1.child_ids.project_id, self.project_goats, "Changing display project id on a subtask should change project id")
 
-        # 6)
-        with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
-            subtask_form.parent_id = self.env['project.task']
-        orphan_subtask = subtask_form.save()
+        # Debug mode required for `parent_id` to be visible in the view
+        with self.debug_mode():
+            # 6)
+            with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
+                subtask_form.parent_id = self.env['project.task']
+            orphan_subtask = subtask_form.save()
 
-        self.assertEqual(orphan_subtask.display_project_id, self.project_goats, "Display Project of the task should be well assigned")
-        self.assertEqual(orphan_subtask.project_id, self.project_goats, "Changing display project id on a subtask should change project id")
-        self.assertFalse(orphan_subtask.parent_id, "Parent should be false")
+            self.assertEqual(orphan_subtask.display_project_id, self.project_goats, "Display Project of the task should be well assigned")
+            self.assertEqual(orphan_subtask.project_id, self.project_goats, "Changing display project id on a subtask should change project id")
+            self.assertFalse(orphan_subtask.parent_id, "Parent should be false")
 
-        # 7)
-        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
-            with task_form.child_ids.new() as subtask_form:
-                subtask_form.name = 'Test Subtask 1'
-                subtask_form.display_project_id = self.project_goats
-        with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
-            subtask_form.display_project_id = self.env['project.project']
-            subtask_form.parent_id = self.env['project.task']
-        orphan_subtask = subtask_form.save()
+            # 7)
+            with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+                with task_form.child_ids.new() as subtask_form:
+                    subtask_form.name = 'Test Subtask 1'
+                    subtask_form.display_project_id = self.project_goats
+            with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
+                subtask_form.display_project_id = self.env['project.project']
+                subtask_form.parent_id = self.env['project.task']
+            orphan_subtask = subtask_form.save()
 
-        self.assertEqual(orphan_subtask.project_id, self.project_pigs, "Removing parent should not change project")
-        self.assertEqual(orphan_subtask.display_project_id, self.project_pigs, "Removing parent should make the display project set as project.")
+            self.assertEqual(orphan_subtask.project_id, self.project_pigs, "Removing parent should not change project")
+            self.assertEqual(orphan_subtask.display_project_id, self.project_pigs, "Removing parent should make the display project set as project.")
 
     def test_subtask_stage(self):
         """

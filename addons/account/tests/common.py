@@ -385,7 +385,14 @@ class AccountTestInvoicingCommon(TransactionCase):
                     .with_company(company or cls.env.company) \
                     .with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
-        move_form.date = move_form.invoice_date
+        # According to the state or type of the invoice, the date field is sometimes visible or not
+        # Besides, the date field can be put multiple times in the view
+        # "invisible": "['|', ('state', '!=', 'draft'), ('auto_post', '!=', 'at_date')]"
+        # "invisible": ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', 'no'), ('auto_post', '=', 'at_date')]
+        # "invisible": "['&', ('move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('quick_edit_mode', '=', False)]"
+        # :TestAccountMoveOutInvoiceOnchanges, :TestAccountMoveOutRefundOnchanges, .test_00_debit_note_out_invoice, :TestAccountEdi
+        if not move_form._get_modifier('date', 'invisible'):
+            move_form.date = move_form.invoice_date
         move_form.partner_id = partner or cls.partner_a
 
         for product in (products or []):

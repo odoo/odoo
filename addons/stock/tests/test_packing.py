@@ -459,9 +459,17 @@ class TestPacking(TestPackingCommon):
 
         # Cancels the internal transfer and creates a new one.
         internal_transfer.action_cancel()
-        internal_form = Form(self.env['stock.picking'])
+        # @api.depends('picking_type_id.show_operations')
+        # def _compute_show_operations(self):
+        #     ...
+        #     if self.env.context.get('force_detailed_view'):
+        #         picking.show_operations = True
+        internal_form = Form(self.env['stock.picking'].with_context(force_detailed_view=True))
         internal_form.picking_type_id = self.warehouse.int_type_id
-        internal_form.location_id = self.warehouse.wh_input_stock_loc_id
+        # The test specifically removes the ability to see the location fields
+        # grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        # self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        # Hence, `internal_form.location_id` shouldn't be changed
         with internal_form.package_level_ids_details.new() as pack_line:
             pack_line.package_id = receipt_package.package_id
         internal_transfer = internal_form.save()
@@ -598,9 +606,17 @@ class TestPacking(TestPackingCommon):
 
         # Cancels the internal transfer and creates a new one.
         internal_transfer.action_cancel()
-        internal_form = Form(self.env['stock.picking'])
+        # @api.depends('picking_type_id.show_operations')
+        # def _compute_show_operations(self):
+        #     ...
+        #     if self.env.context.get('force_detailed_view'):
+        #         picking.show_operations = True
+        internal_form = Form(self.env['stock.picking'].with_context(force_detailed_view=True))
         internal_form.picking_type_id = self.warehouse.int_type_id
-        internal_form.location_id = self.warehouse.wh_input_stock_loc_id
+        # The test specifically removes the ability to see the location fields
+        # grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        # self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        # Hence, `internal_form.location_id` shouldn't be changed
         with internal_form.package_level_ids_details.new() as pack_line:
             pack_line.package_id = receipt_package.package_id
         internal_transfer = internal_form.save()
@@ -736,6 +752,11 @@ class TestPacking(TestPackingCommon):
         self.warehouse.delivery_steps = 'ship_only'
         package = self.env["stock.quant.package"].create({"name": "Src Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+        # Required for `package_level_ids_details` to be visible in the view
+        # <page string="Detailed Operations" attrs="{'invisible': [('show_operations', '=', False)]}">
+        # <field name="package_level_ids_details"
+        #   attrs="{'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', False)]}"
+        self.warehouse.out_type_id.show_operations = True
         self.warehouse.out_type_id.show_entire_packs = True
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
@@ -791,7 +812,12 @@ class TestPacking(TestPackingCommon):
                 move.product_id = self.productA
                 move.product_uom_qty = 75
         picking.action_assign()
-        with Form(picking) as picking_form:
+        # @api.depends('picking_type_id.show_operations')
+        # def _compute_show_operations(self):
+        #     ...
+        #     if self.env.context.get('force_detailed_view'):
+        #         picking.show_operations = True
+        with Form(picking.with_context(force_detailed_view=True)) as picking_form:
             with picking_form.package_level_ids_details.new() as package_level:
                 package_level.package_id = package
         with Form(picking) as picking_form:
@@ -873,6 +899,12 @@ class TestPacking(TestPackingCommon):
         picking.action_put_in_pack()
         picking.button_validate()
 
+        # Required for `package_level_ids_details` to be visible in the view
+        # <page string="Detailed Operations" attrs="{'invisible': [('show_operations', '=', False)]}">
+        # <field name="package_level_ids_details"
+        #   attrs="{'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', False)]}"
+        delivery_type.show_operations = True
+        delivery_type.show_entire_packs = True
         picking, _, _ = create_picking(delivery_type, delivery_type.default_location_src_id, self.customer_location)
         packB = picking.package_level_ids[1]
         with Form(picking) as picking_form:
@@ -938,6 +970,8 @@ class TestPacking(TestPackingCommon):
         self.productA.weight = 1.0
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        # Required for `result_package_id` to be visible in the view
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
 
         package_type = self.env['stock.package.type'].create({
             'name': "Super Pallet",
@@ -1049,6 +1083,8 @@ class TestPacking(TestPackingCommon):
         self.productB.weight = 1.0
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        # Required for `result_package_id` to be visible in the view
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
 
         package_type = self.env['stock.package.type'].create({
             'name': "Super Pallet",

@@ -134,6 +134,11 @@ class TestMrpMulticompany(common.TransactionCase):
         })
         mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
         mo_form.product_id = product
+        # The mo must be confirmed, no longer in draft, in order for `lot_producing_id` to be visible in the view
+        # <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo_form = Form(mo)
         mo_form.lot_producing_id = lot_b
         mo = mo_form.save()
         with self.assertRaises(UserError):

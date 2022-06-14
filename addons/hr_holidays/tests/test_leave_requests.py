@@ -271,6 +271,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form.holiday_status_id = self.holidays_type_1
         leave_form.request_date_from = date(2019, 5, 6)
         leave_form.request_date_to = date(2019, 5, 6)
+        # TODO: The test is wrong by modifying `date_from` and `date_to`, which are invisible
+        # It should edit only `request_date_from` and `request_date_to` instead
+        # And there is really a bug. Using the web client, when you put your PC in Auckland timezone,
+        # and the admin preferences in Auckland Timezone
+        # and create a time off for the current day, the computation is completely wrong
+        # and compute the date to before the date from *-)
+        # For instance, for a time-off from 06/16/2022 to 06/16/2022 (1 day) it computes
+        # 06/16/2022 08:00:00 as date_from and 06/15/2022 17:00:00 as date_to
+        # Bug reported to the rd-fun-vidange channel to the dev who introduced the bug
+        # https://discord.com/channels/678381219515465750/687337760452902925/986918361768263710
+        leave_form._view['modifiers']['date_from']['invisible'] = False
+        leave_form._view['modifiers']['date_to']['invisible'] = False
         leave_form.date_from = datetime(2019, 5, 6, 0, 0, 0)
         leave_form.date_to = datetime(2019, 5, 6, 23, 59, 59)
         leave = leave_form.save()

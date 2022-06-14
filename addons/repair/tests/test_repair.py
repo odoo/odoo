@@ -326,6 +326,8 @@ class TestRepair(AccountTestInvoicingCommon):
         """Tests functionality of creating a repair directly from a return picking,
         i.e. repair can be made and defaults to appropriate return values. """
         # test return
+        # Required for `location_dest_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.stock_warehouse.return_type_id
         picking_form.partner_id = self.res_partner_1

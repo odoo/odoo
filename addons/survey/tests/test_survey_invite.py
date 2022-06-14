@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from lxml import etree
 
 from odoo import fields
 from odoo.addons.survey.tests import common
@@ -17,6 +18,16 @@ class TestSurveyInvite(common.TestSurveyCommon):
         res = super(TestSurveyInvite, self).setUp()
         # by default signup not allowed
         self.env["ir.config_parameter"].set_param('auth_signup.invitation_scope', 'b2b')
+        view = self.env.ref('survey.survey_invite_view_form').sudo()
+        tree = etree.fromstring(view.arch)
+        # Remove the invisible on `emails` to be able to test the onchange `_onchange_emails`
+        # which raises an error when attempting to change `emails`
+        # while the survey is set with `users_login_required` to True
+        # By default, `<field name="emails"/>` is invisible when `survey_users_login_required` is True,
+        # making it normally impossible to change by the user in the web client by default.
+        # For tests `test_survey_invite_authentication_nosignup` and `test_survey_invite_token_internal`
+        tree.xpath('//field[@name="emails"]')[0].attrib.pop('attrs')
+        view.arch = etree.tostring(tree)
         return res
 
     @users('survey_manager')

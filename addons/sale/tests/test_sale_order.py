@@ -583,6 +583,8 @@ class TestSaleOrder(TestSaleCommon):
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
         """
+        # Required for `product_packaging_qty` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
         partner = self.env['res.partner'].create({'name': "I'm a partner"})
         product_tmpl = self.env['product.template'].create({'name': "I'm a product"})
         product = product_tmpl.product_variant_id
@@ -768,6 +770,8 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
     def test_discount_and_amount_undiscounted(self):
+        # Required for `discount` to be visible in the view
+        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
         """When adding a discount on a SO line, this test ensures that amount undiscounted is
         consistent with the used tax"""
         sale_order = self.env['sale.order'].create({
