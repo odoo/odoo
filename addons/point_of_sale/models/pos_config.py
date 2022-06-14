@@ -99,7 +99,7 @@ class PosConfig(models.Model):
 
     def _compute_customer_html(self):
         for config in self:
-            config.customer_facing_display_html = self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
+            config.customer_facing_display_html = self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html', {'company': self.company_id})
 
     name = fields.Char(string='Point of Sale', index=True, required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
