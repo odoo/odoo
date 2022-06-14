@@ -145,6 +145,25 @@ class TestKnowledgeArticleSequence(KnowledgeCommon):
         self.assertSortedSequence(article_children[2] + article_children[3] + article_children[1] + article_children[0])
 
     @users('employee')
+    def test_resequence_with_move_noparent(self):
+        """ Test move resetting parent_id should also compute sequence """
+        article_private = self.article_private.with_env(self.env)
+        article_private_child = self.article_children[0].with_env(self.env)
+        article_private2 = self.article_private2.with_env(self.env)
+        article_root_noise = self.article_root_noise.with_env(self.env)
+
+        self.assertEqual(article_private_child.sequence, 0)
+        article_private_child.move_to(parent_id=False)
+        self.assertEqual(article_private_child.sequence, 6)
+        self.assertSortedSequence(article_root_noise + article_private + article_private2 + article_private_child)
+        article_private_child.move_to(
+            parent_id=False,
+            before_article_id=self.article_root_noise[0].id
+        )
+        self.assertEqual(article_private_child.sequence, 1)
+        self.assertSortedSequence(article_private_child + article_root_noise + article_private + article_private2)
+
+    @users('employee')
     def test_resequence_with_parent(self):
         """Checking the sequence of the articles"""
         existing_private = self.article_private.with_env(self.env)

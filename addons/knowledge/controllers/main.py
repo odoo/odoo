@@ -95,8 +95,7 @@ class KnowledgeController(http.Controller):
 
     def _get_root_articles(self, limit=None):
         """ Meant to be overriden by website_knowledge to search in sudo with adapted domain."""
-        _order = 'sequence' if limit is not None else None
-        return request.env["knowledge.article"].search([("parent_id", "=", False)], limit=limit, order=_order)
+        return request.env["knowledge.article"].search([("parent_id", "=", False)], limit=limit, order='sequence, id')
 
     def _prepare_articles_tree_html(self, template, active_article, unfolded_articles=False):
         """ Prepares all the info needed to render the article tree view side panel
