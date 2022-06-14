@@ -992,6 +992,35 @@ class MailCommon(common.TransactionCase, MailCase):
         return cls.user_portal
 
     @classmethod
+    def _create_records_for_batch(cls, model, count, additional_values=None):
+        additional_values = additional_values or {}
+        records = cls.env[model]
+        partners = cls.env['res.partner']
+        country_id = cls.env.ref('base.be').id
+
+        base_values = [
+            {'name': 'Test_%s' % idx,
+             **additional_values,
+            } for idx in range(count)
+        ]
+
+        if 'customer_id' in cls.env[model]:
+            partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
+                'name': 'Partner_%s' % idx,
+                'email': '_test_partner_%s@example.com' % idx,
+                'country_id': country_id,
+                'mobile': '047500%02d%02d' % (idx, idx)
+            } for idx in range(count)])
+            for values, partner in zip(base_values, partners):
+                values['customer_id'] = partner.id
+
+        records = cls.env[model].with_context(**cls._test_context).create(base_values)
+
+        cls.records = cls._reset_mail_context(records)
+        cls.partners = partners
+        return cls.records, cls.partners
+
+    @classmethod
     def _activate_multi_company(cls):
         """ Create another company, add it to admin and create an user that
         belongs to that new company. It allows to test flows with users from
