@@ -33,12 +33,17 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
             getTable(order) {
                 return `${order.getTable().floor.name} (${order.getTable().name})`;
             }
-            get _searchFields() {
+            //@override
+            _getSearchFields() {
                 if (!this.env.pos.config.iface_floorplan) {
-                    return super._searchFields;
+                    return super._getSearchFields();
                 }
-                return Object.assign({}, super._searchFields, {
-                    Table: (order) => `${order.getTable().floor.name} (${order.getTable().name})`,
+                return Object.assign({}, super._getSearchFields(), {
+                    TABLE: {
+                        repr: this.getTable.bind(this),
+                        displayName: this.env._t('Table'),
+                        modelField: 'table_id.name',
+                    }
                 });
             }
             async _setOrder(order) {
