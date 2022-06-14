@@ -53,17 +53,16 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
         autoOpenDiscuss: true,
     });
 
-    const channelItemAvatar = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"] .o_DiscussSidebarCategoryItem_image
-    `);
+    const channelLocalId = messaging.models['Thread'].findFromIdentifyingData({
+        id: mailChannelId1,
+        model: 'mail.channel',
+    }).localId;
 
     assert.strictEqual(
-        channelItemAvatar.dataset.src,
+        document.querySelector(`
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+            channelLocalId
+        }"] .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=101010`,
     );
 
@@ -78,7 +77,10 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     const newCacheKey = result[0]['avatarCacheKey'];
 
     assert.strictEqual(
-        channelItemAvatar.dataset.src,
+        document.querySelector(`
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+            channelLocalId
+        }"] .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=${newCacheKey}`,
     );
 });
