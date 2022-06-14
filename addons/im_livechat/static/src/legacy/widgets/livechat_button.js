@@ -221,12 +221,12 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _openChat: _.debounce(function () {
-        if (this._openingChat) {
+        if (this.messaging.livechatButtonView.isOpeningChat) {
             return;
         }
         const cookie = utils.get_cookie('im_livechat_session');
         let def;
-        this._openingChat = true;
+        this.messaging.livechatButtonView.update({ isOpeningChat: true });
         clearTimeout(this._autoPopupTimeout);
         if (cookie) {
             def = Promise.resolve(JSON.parse(cookie));
@@ -280,9 +280,9 @@ const LivechatButton = Widget.extend({
                 });
             }
         }).then(() => {
-            this._openingChat = false;
+            this.messaging.livechatButtonView.update({ isOpeningChat: false });
         }).guardedCatch(() => {
-            this._openingChat = false;
+            this.messaging.livechatButtonView.update({ isOpeningChat: false });
         });
     }, 200, true),
     /**
