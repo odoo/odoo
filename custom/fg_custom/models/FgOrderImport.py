@@ -25,9 +25,9 @@ class PosOrderInherit(models.Model):
     x_receipt_printed = fields.Boolean("Is Receipt Printed")
     x_receipt_printed_date = fields.Date("OR Printed Date")
 
-
     x_receipt_printed_date = fields.Date("OR Printed Date")
 
+    website_order_id = fields.Char("Website Order ID")
 
 class FgImportOrders(models.TransientModel):
     _name = 'fg.custom.import.order'
