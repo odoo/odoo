@@ -27,7 +27,7 @@
                             'o-isSidebar': callView.hasSidebar and callView.mainParticipantCard,
                         }"
                         t-ref="tileContainer"
-                        t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
+                        t-attf-style="--height:{{callView.tileHeight}}px; --width:{{callView.tileWidth}}px;"
                     >
                         <t t-foreach="callView.tileParticipantCards" t-as="participantCard" t-key="'grid_tile_'+participantCard.localId">
                             <t t-if="!callView.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
