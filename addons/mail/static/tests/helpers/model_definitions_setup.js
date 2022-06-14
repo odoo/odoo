@@ -15,7 +15,7 @@ import {
 addModelNamesToFetch([
     'ir.attachment', 'ir.model', 'ir.model.fields', 'mail.activity', 'mail.activity.type',
     'mail.channel', 'mail.channel.partner', 'mail.followers', 'mail.message', 'mail.message.subtype',
-    'mail.notification', 'mail.shortcode', 'mail.template', 'mail.tracking.value',
+    'mail.notification', 'mail.shortcode', 'mail.template', 'mail.tracking.value', 'mail.guest',
     'res.company', 'res.country', 'res.partner', 'res.users', 'res.users.settings', 'res.groups'
 ]);
 

@@ -70,8 +70,13 @@ patch(MockServer.prototype, 'mail', {
     async _performRPC(route, args) {
         // routes
         if (route === '/longpolling/im_status') {
-            const { partner_ids } = args;
-            return this.pyEnv['res.partner'].searchRead([['id', 'in', partner_ids]], { context: { 'active_test': false }, fields: ['im_status'] });
+            const { partner_ids, guest_ids } = args;
+            const partnersImStatus = this.pyEnv['res.partner'].searchRead([['id', 'in', partner_ids]], { context: { 'active_test': false }, fields: ['im_status'] });
+            const guestImStatus = this.pyEnv['mail.guest'].searchRead([['id', 'in', guest_ids]], { context: { 'active_test': false }, fields: ['im_status'] });
+            return {
+                partners: partnersImStatus,
+                guests: guestImStatus,
+            };
         }
         if (route === '/mail/message/post') {
             if (args.thread_model === 'mail.channel') {

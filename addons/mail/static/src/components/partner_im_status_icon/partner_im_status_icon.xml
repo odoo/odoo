@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.PartnerImStatusIcon" owl="1">
-        <t t-if="partner">
+        <t t-if="partner and partner.im_status">
             <span class="o_PartnerImStatusIcon d-flex flex-column fa-stack"
                 t-att-class="{
                     'o-away': partner.im_status === 'away',

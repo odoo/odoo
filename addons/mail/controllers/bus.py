@@ -70,3 +70,12 @@ class MailChatController(BusController):
             return []
         else:
             return channel._channel_fetch_message(last_id, limit)
+
+    @route('/longpolling/im_status', type="json", auth="user")
+    def im_status(self, partner_ids, guest_ids):
+        partners_im_status = super().im_status(partner_ids)
+        guest_im_status = request.env['mail.guest'].sudo().with_context(active_test=False).search([('id', 'in', guest_ids)]).read(['im_status'])
+        return {
+            'partners': partners_im_status,
+            'guests': guest_im_status,
+        }
