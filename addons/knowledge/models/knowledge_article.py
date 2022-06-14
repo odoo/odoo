@@ -608,14 +608,16 @@ class Article(models.Model):
     def write(self, vals):
         # Move under a parent is considered as a write on it (permissions, ...)
         _resequence = False
-        if vals.get('parent_id'):
-            parent = self.browse(vals['parent_id'])
-            try:
-                parent.check_access_rights('write')
-                parent.check_access_rule('write')
-            except AccessError:
-                raise AccessError(_("You cannot move an article under %(parent_name)s as you cannot write on it",
-                                    parent_name=parent.display_name))
+        if 'parent_id' in vals:
+            parent = self.env['knowledge.article']
+            if vals.get('parent_id'):
+                parent = self.browse(vals['parent_id'])
+                try:
+                    parent.check_access_rights('write')
+                    parent.check_access_rule('write')
+                except AccessError:
+                    raise AccessError(_("You cannot move an article under %(parent_name)s as you cannot write on it",
+                                        parent_name=parent.display_name))
             if 'sequence' not in vals:
                 max_sequence = self._get_max_sequence_inside_parents(parent.ids).get(parent.id, -1)
                 vals['sequence'] = max_sequence + 1
@@ -744,7 +746,7 @@ class Article(models.Model):
         :param bool is_private: set as private;
         """
         self.ensure_one()
-        parent = self.browse(parent_id)
+        parent = self.browse(parent_id) if parent_id else self.env['knowledge.article']
         before_article = self.browse(before_article_id)
 
         values = {'parent_id': parent_id}
@@ -838,8 +840,12 @@ class Article(models.Model):
     @api.model
     def _get_max_sequence_inside_parents(self, parent_ids):
         max_sequence_by_parent = {}
+        if parent_ids:
+            domain = [('parent_id', 'in', parent_ids)]
+        else:
+            domain = [('parent_id', '=', False)]
         rg_results = self.env['knowledge.article'].sudo().read_group(
-            [('parent_id', 'in', parent_ids)],
+            domain,
             ['sequence:max'],
             ['parent_id']
         )
