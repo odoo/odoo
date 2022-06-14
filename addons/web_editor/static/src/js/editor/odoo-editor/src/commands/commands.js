@@ -310,26 +310,35 @@ function hasColor(element, mode) {
  * @returns {Element[]} the elements on which the style was changed.
  */
 export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
-    getDeepRange(editor.editable, { splitText: true, select: true });
-    const sel = editor.document.getSelection();
-    const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
-    const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
-    const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
-    const [
-        normalizedStartContainer,
-        normalizedStartOffset
-    ] = getNormalizedCursorPosition(startContainer, startOffset);
-    const [
-        normalizedEndContainer,
-        normalizedEndOffset
-    ] = getNormalizedCursorPosition(endContainer, endOffset);
-    const selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
-        const atLeastOneCharFromNodeInSelection = !(
-            (node === normalizedEndContainer && normalizedEndOffset === 0) ||
-            (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
-        );
-        return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
-    });
+    let selectedTextNodes, direction, startContainer, startOffset, endContainer, endOffset;
+    if (editor.editable.querySelector('.o_selected_td')) {
+        const selectedNodes = getSelectedNodes(editor.editable);
+        selectedTextNodes = selectedNodes.filter(node => node.nodeType === Node.TEXT_NODE);
+        direction = DIRECTIONS.RIGHT;
+        [startContainer, startOffset] = [selectedNodes[0], 0];
+        [endContainer, endOffset] = [selectedNodes[selectedNodes.length - 1], selectedNodes[selectedNodes.length - 1].childNodes.length];
+    } else {
+        getDeepRange(editor.editable, { splitText: true, select: true });
+        const sel = editor.document.getSelection();
+        const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
+        const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
+        direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
+        const [
+            normalizedStartContainer,
+            normalizedStartOffset
+        ] = getNormalizedCursorPosition(startContainer, startOffset);
+        const [
+            normalizedEndContainer,
+            normalizedEndOffset
+        ] = getNormalizedCursorPosition(endContainer, endOffset);
+        selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
+            const atLeastOneCharFromNodeInSelection = !(
+                (node === normalizedEndContainer && normalizedEndOffset === 0) ||
+                (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
+            );
+            return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
+        });
+    }
     const textNodesToFormat = selectedTextNodes.filter(node => {
         let isApplied;
         if (Array.isArray(style) && style[style[0]]) {
@@ -376,8 +385,16 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
             textNode.parentElement.tagName === 'A'
         ) {
             const newParent = document.createElement('span');
-            textNode.after(newParent);
-            newParent.appendChild(textNode);
+            textNode.before(newParent);
+            // Group selected text node siblings:
+            const newChildren = [textNode];
+            let currentTextNode = textNode.nextSibling;
+            while (currentTextNode && textNodesToFormat.includes(currentTextNode)) {
+                newChildren.push(currentTextNode);
+                textNodesToFormat.splice(textNodesToFormat.indexOf(currentTextNode), 1);
+                currentTextNode = currentTextNode.nextSibling;
+            }
+            newParent.append(...newChildren);
         }
         applyStyle(textNode.parentElement);
         changedElements.push(textNode.parentElement);
@@ -422,9 +439,10 @@ const styles = {
 };
 
 export function toggleFormat(editor, format) {
+    const selectedTableCells = editor.editable.querySelectorAll('.o_selected_td');
     const selection = editor.document.getSelection();
-    if (!selection.rangeCount) return;
-    const wasCollapsed = selection.getRangeAt(0).collapsed;
+    if (!selection.rangeCount && !selectedTableCells.length) return;
+    const wasCollapsed = selection.getRangeAt(0).collapsed && !selectedTableCells.length;
     let zws;
     if (wasCollapsed) {
         if (selection.anchorNode.nodeType === Node.TEXT_NODE && selection.anchorNode.textContent === '\u200b') {
