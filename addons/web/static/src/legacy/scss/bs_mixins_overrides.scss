@@ -60,7 +60,7 @@ $o-color-extras-nesting-selector: '&' !default;
     }
     a#{$parent},
     button#{$parent} {
-        @include hover-focus {
+        &:hover, &:focus {
             @include o-bg-color(darken($color, 10%), $text-color, false);
         }
     }
