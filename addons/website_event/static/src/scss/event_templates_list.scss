@@ -10,7 +10,7 @@
     border: $border-width solid $border-color;
     border-radius: 50%;
     text-align: center;
-    @include hover-focus {
+    &:hover, &:focus {
         background-color: gray('300');
     }
 }
@@ -22,7 +22,7 @@
         header {
             a {
                 transition: all .25s ease-in-out;
-                @include hover-focus {
+                &:hover, &:focus {
                     transform: scale(1.05);
                 }
             }
