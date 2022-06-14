@@ -1343,7 +1343,7 @@ span.list-inline-item.o_add_language:last-child {
             color: rgba(color-yiq($-footer-color), 0.5);
         }
 
-        @include hover-focus {
+        &:hover, &:focus {
             @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
             text-decoration: none;
         }

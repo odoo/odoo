@@ -40,7 +40,7 @@
   }
 
   a#{$parent}, button#{$parent} {
-    @include hover-focus() {
+    &:hover, &:focus {
       color: darken($color-value, $-hover) !important;
     }
   }
@@ -55,7 +55,7 @@
     }
 
     a#{$parent}.fa-circle, button#{$parent}.fa-circle {
-      @include hover-focus() {
+      &:hover, &:focus {
         color: darken($color, $-hover) !important;
       }
     }
