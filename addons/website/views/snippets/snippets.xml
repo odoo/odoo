@@ -1250,49 +1250,121 @@
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
          data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize">
-        <we-select string="Animate" data-dependencies="!image_transform_opt" data-is-animation-type-selection="true">
-            <we-button data-select-class="" data-name="no_animation_opt">No Animation</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_fade_in">Fade In</we-button>
-            <we-button data-select-class="o_anim_fade_in_down">Fade In-Down</we-button>
-            <we-button data-select-class="o_anim_fade_in_left">Fade In-Left</we-button>
-            <we-button data-select-class="o_anim_fade_in_right">Fade In-Right</we-button>
-            <we-button data-select-class="o_anim_fade_in_up">Fade In-Up</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_bounce_in">Bounce In</we-button>
-            <we-button data-select-class="o_anim_bounce_in_down">Bounce In-Down</we-button>
-            <we-button data-select-class="o_anim_bounce_in_left">Bounce In-Left</we-button>
-            <we-button data-select-class="o_anim_bounce_in_right">Bounce In-Right</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_rotate_in">Rotate In</we-button>
-            <we-button data-select-class="o_anim_rotate_in_down_left">Rotate In-Down-Left</we-button>
-            <we-button data-select-class="o_anim_rotate_in_down_right">Rotate In-Down-Right</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_zoom_out">Zoom Out</we-button>
-            <we-button data-select-class="o_anim_zoom_in">Zoom In</we-button>
-            <we-button data-select-class="o_anim_zoom_in_down">Zoom In-Down</we-button>
-            <we-button data-select-class="o_anim_zoom_in_left">Zoom In-Left</we-button>
-            <we-button data-select-class="o_anim_zoom_in_right">Zoom In-Right</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_flash">Flash</we-button>
-            <we-button data-select-class="o_anim_pulse">Pulse</we-button>
-            <we-button data-select-class="o_anim_shake">Shake</we-button>
-            <we-button data-select-class="o_anim_tada">Tada</we-button>
-            <we-divider/>
-            <we-button data-select-class="o_anim_flip_in_x">Flip-In-X</we-button>
-            <we-button data-select-class="o_anim_flip_in_y">Flip-In-Y</we-button>
+        <!-- Animation mode -->
+        <we-row string="Animation">
+            <we-select data-dependencies="!image_transform_opt"
+                       data-is-animation-type-selection="true" data-no-preview="true">
+                <we-button data-animation-mode=""
+                           data-select-class=""
+                           data-name="no_animation_opt">None</we-button>
+                <we-button data-animation-mode="onAppearance"
+                           data-force-animation="true"
+                           data-select-class="o_animate"
+                           data-name="animation_on_appearance_opt">On Appearance</we-button>
+                <we-button data-animation-mode="onScroll"
+                           data-select-class="o_animate o_animate_on_scroll"
+                           data-force-animation="true"
+                           data-name="animation_on_scroll_opt">On Scroll</we-button>
+            </we-select>
+            <we-button-group data-dependencies="animation_on_scroll_opt"
+                             data-no-preview="true" data-force-animation="true">
+                <we-button data-select-class="">In</we-button>
+                <we-button data-select-class="o_animate_out">Out</we-button>
+            </we-button-group>
+        </we-row>
+        <!-- Effect -->
+        <we-select string="Effect" class="o_we_sublevel_1" data-dependencies="!no_animation_opt"
+                   data-name="animation_effect_opt">
+            <we-button data-select-class=""
+                       data-name="o_anim_no_effect_opt"
+                       data-dependencies="no_animation_opt">None</we-button>
+            <we-button data-select-class="o_anim_fade_in"
+                       data-trigger="animation_direction_in_place_opt">Fade</we-button>
+            <we-button data-select-class="o_anim_slide_in"
+                       data-name="o_anim_slide_in_opt"
+                       data-trigger="animation_direction_from_right_opt">Slide</we-button>
+            <we-button data-select-class="o_anim_bounce_in"
+                       data-trigger="animation_direction_in_place_opt">Bounce</we-button>
+            <we-button data-select-class="o_anim_rotate_in"
+                       data-name="o_anim_rotate_opt"
+                       data-trigger="animation_direction_in_place_opt">Rotate</we-button>
+            <we-button data-select-class="o_anim_zoom_out"
+                       data-trigger="animation_direction_in_place_opt">Zoom Out</we-button>
+            <we-button data-select-class="o_anim_zoom_in"
+                       data-trigger="animation_direction_in_place_opt">Zoom In</we-button>
+            <we-button data-select-class="o_anim_flash"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Flash</we-button>
+            <we-button data-select-class="o_anim_pulse"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Pulse</we-button>
+            <we-button data-select-class="o_anim_shake"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Shake</we-button>
+            <we-button data-select-class="o_anim_tada"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Tada</we-button>
+            <we-button data-select-class="o_anim_flip_in_x"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Flip-In-X</we-button>
+            <we-button data-select-class="o_anim_flip_in_y"
+                       data-dependencies="animation_on_appearance_opt"
+                       data-trigger="animation_direction_in_place_opt">Flip-In-Y</we-button>
         </we-select>
-        <we-select string="Launch" class="o_we_sublevel_1"
-                   data-dependencies="!no_animation_opt" data-name="animation_launch_opt">
+        <!-- Direction -->
+        <we-select string="Direction" class="o_we_sublevel_1"
+                   data-dependencies="!no_animation_opt" data-name="animation_direction_opt"
+                   data-force-animation="true">
+            <we-button data-select-class=""
+                       data-name="animation_direction_in_place_opt"
+                       data-dependencies="!o_anim_slide_in_opt">In Place</we-button>
+            <we-button data-select-class="o_anim_from_right"
+                       data-name="animation_direction_from_right_opt"
+                       data-dependencies="!o_anim_rotate_opt">From Right</we-button>
+            <we-button data-select-class="o_anim_from_left"
+                       data-dependencies="!o_anim_rotate_opt">From Left</we-button>
+            <we-button data-select-class="o_anim_from_bottom"
+                       data-dependencies="!o_anim_rotate_opt">From Bottom</we-button>
+            <we-button data-select-class="o_anim_from_top"
+                       data-dependencies="!o_anim_rotate_opt">From Top</we-button>
+            <we-button data-select-class="o_anim_from_top_right"
+                       data-dependencies="o_anim_rotate_opt">From Top Right</we-button>
+            <we-button data-select-class="o_anim_from_top_left"
+                       data-dependencies="o_anim_rotate_opt">From Top Left</we-button>
+            <we-button data-select-class="o_anim_from_bottom_right"
+                       data-dependencies="o_anim_rotate_opt">From Bottom Right</we-button>
+            <we-button data-select-class="o_anim_from_bottom_left"
+                       data-dependencies="o_anim_rotate_opt">From Bottom Left</we-button>
+        </we-select>
+        <!-- Trigger -->
+        <we-select string="Trigger" class="o_we_sublevel_1"
+                   data-dependencies="animation_on_appearance_opt" data-name="animation_trigger_opt">
             <we-button data-select-class="">First Time Only</we-button>
             <we-button data-select-class="o_animate_both_scroll">Every Time</we-button>
         </we-select>
-        <we-input string="Duration" class="o_we_sublevel_1 o_we_small_input"
-                  data-dependencies="!no_animation_opt"
-                  data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
-        <we-input string="Delay" class="o_we_sublevel_1 o_we_small_input"
-                  data-dependencies="!no_animation_opt"
+        <!-- Intensity -->
+        <we-range string="Intensity" class="o_we_sublevel_1"
+                  data-name="animation_intensity_opt" data-dependencies="!no_animation_opt"
+                  data-animation-intensity="" data-min="1" data-max="100" data-step="1"
+                  data-display-range-value="true" data-no-preview="true"/>
+        <!-- Scroll Zone -->
+        <we-row string="Scroll Zone" class="o_we_sublevel_1">
+            <we-input data-unit="%" data-step="1" data-dependencies="animation_on_scroll_opt"
+                      data-no-preview="true" data-select-data-attribute=""
+                      data-attribute-name="scrollZoneStart" data-force-animation="true"/>
+            <span class="mx-2">to</span>
+            <we-input data-unit="%" data-step="1" data-dependencies="animation_on_scroll_opt"
+                      data-no-preview="true" data-select-data-attribute=""
+                      data-attribute-name="scrollZoneEnd" data-force-animation="true"/>
+        </we-row>
+        <!-- Start After -->
+        <we-input string="Start After" class="o_we_sublevel_1 o_we_small_input"
+                  data-dependencies="animation_on_appearance_opt" data-name="animation_delay_opt"
                   data-select-style="0s" data-css-property="animation-delay" data-unit="s"/>
+        <!-- Duration -->
+        <we-input string="Duration" class="o_we_sublevel_1 o_we_small_input"
+                  data-dependencies="animation_on_appearance_opt"
+                  data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
     </div>
 
     <!-- Theme options -->

@@ -3066,8 +3066,12 @@ options.registry.WebsiteAnimate = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
+        // Animations for which the "On Scroll" and "Direction" options are not
+        // available.
+        this.limitedAnimations = ['o_anim_flash', 'o_anim_pulse', 'o_anim_shake', 'o_anim_tada', 'o_anim_flip_in_x', 'o_anim_flip_in_y'];
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
+        this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
     },
     /**
      * @override
@@ -3097,6 +3101,16 @@ options.registry.WebsiteAnimate = options.Class.extend({
             this.$optionsSection.append(this.$el);
         }
     },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        if (this.$target[0].closest('.o_animate')) {
+            // As images may have been added in an animated element, we must
+            // remove the lazy loading on them.
+            this._toggleImagesLazyLoading(false);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -3107,10 +3121,72 @@ options.registry.WebsiteAnimate = options.Class.extend({
      */
     async selectClass(previewMode, widgetValue, params) {
         await this._super(...arguments);
-        if (params.isAnimationTypeSelection) {
+        if (params.forceAnimation && params.name !== 'o_anim_no_effect_opt' && previewMode !== 'reset') {
             this._forceAnimation();
-            this.$target.toggleClass('o_animate_preview o_animate', !!widgetValue);
         }
+        if (params.isAnimationTypeSelection) {
+            this.$target[0].classList.toggle('o_animate_preview', !!widgetValue);
+        }
+    },
+    /**
+     * @override
+     */
+    async selectDataAttribute(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (params.forceAnimation) {
+            this._forceAnimation();
+        }
+    },
+    /**
+     * Sets the animation mode.
+     *
+     * @see this.selectClass for parameters
+     */
+    animationMode(previewMode, widgetValue, params) {
+        const targetClassList = this.$target[0].classList;
+        this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
+        targetClassList.remove('o_animating', 'o_animate_both_scroll', 'o_visible', 'o_animated', 'o_animate_out');
+        this.$target[0].style.animationDelay = '';
+        this.$target[0].style.animationPlayState = '';
+        this.$target[0].style.animationName = '';
+        this.$target[0].style.visibility = '';
+        if (widgetValue === 'onScroll') {
+            this.$target[0].dataset.scrollZoneStart = 0;
+            this.$target[0].dataset.scrollZoneEnd = 100;
+        } else {
+            delete this.$target[0].dataset.scrollZoneStart;
+            delete this.$target[0].dataset.scrollZoneEnd;
+        }
+        if (!params.activeValue && widgetValue) {
+            // If "Animation" was on "None" and it is no longer, it is set to
+            // "fade_in" by default.
+            targetClassList.add('o_anim_fade_in');
+            this._toggleImagesLazyLoading(false);
+        }
+        if (!widgetValue) {
+            const possibleEffects = this._requestUserValueWidgets('animation_effect_opt')[0].getMethodsParams('selectClass').possibleValues;
+            const possibleDirections = this._requestUserValueWidgets('animation_direction_opt')[0].getMethodsParams('selectClass').possibleValues;
+            const possibleEffectsAndDirections = possibleEffects.concat(possibleDirections);
+            // Remove the classes added by "Effect" and "Direction" options if
+            // "Animation" is "None".
+            for (const targetClass of targetClassList.value.split(/\s+/g)) {
+                if (possibleEffectsAndDirections.indexOf(targetClass) >= 0) {
+                    targetClassList.remove(targetClass);
+                }
+            }
+            this.$target[0].style.setProperty('--wanim-intensity', '');
+            this.$target[0].style.animationDuration = '';
+            this._toggleImagesLazyLoading(true);
+        }
+    },
+    /**
+     * Sets the animation intensity.
+     *
+     * @see this.selectClass for parameters
+     */
+    animationIntensity(previewMode, widgetValue, params) {
+        this.$target[0].style.setProperty('--wanim-intensity', widgetValue);
+        this._forceAnimation();
     },
 
     //--------------------------------------------------------------------------
@@ -3120,28 +3196,60 @@ options.registry.WebsiteAnimate = options.Class.extend({
     /**
      * @private
      */
-    _forceAnimation() {
-        const $scrollingElement = $().getScrollingElement();
+    async _forceAnimation() {
         this.$target.css('animation-name', 'dummy');
-        // Trigger a DOM reflow.
-        void this.$target[0].offsetWidth;
-        this.$target.addClass('o_animating');
-        $scrollingElement[0].classList.add('o_wanim_overflow_xy_hidden');
-        this.$target.css('animation-name', '');
-        this.$target.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
-            $scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
-            this.$target.removeClass('o_animating');
-        });
+
+        if (this.$target[0].classList.contains('o_animate_on_scroll')) {
+            // Trigger a DOM reflow.
+            void this.$target[0].offsetWidth;
+            this.$target.css('animation-name', '');
+            this.ownerDocument.defaultView.dispatchEvent(new Event('resize'));
+        } else {
+            // Trigger a DOM reflow (Needed to prevent the animation from
+            // being launched twice when previewing the "Intensity" option).
+            await new Promise(resolve => setTimeout(resolve));
+            this.$target.addClass('o_animating');
+            this.trigger_up('cover_update', {
+                overlayVisible: true,
+            });
+            this.$scrollingElement[0].classList.add('o_wanim_overflow_xy_hidden');
+            this.$target.css('animation-name', '');
+            this.$target.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', () => {
+                this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
+                this.$target.removeClass('o_animating');
+            });
+        }
     },
     /**
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'no_animation_opt') {
-            return !this.isAnimatedText;
-        }
-        if (widgetName === 'animation_launch_opt') {
-            return !this.$target[0].closest('.dropdown');
+        switch (widgetName) {
+            case 'no_animation_opt': {
+                return !this.isAnimatedText;
+            }
+            case 'animation_trigger_opt': {
+                return !this.$target[0].closest('.dropdown');
+            }
+            case 'animation_on_scroll_opt':
+            case 'animation_direction_opt': {
+                return !this.limitedAnimations.some(className => this.$target[0].classList.contains(className));
+            }
+            case 'animation_intensity_opt': {
+                const possibleDirections = this._requestUserValueWidgets('animation_direction_opt')[0].getMethodsParams('selectClass').possibleValues;
+                if (this.$target[0].classList.contains('o_anim_fade_in')) {
+                    for (const targetClass of this.$target[0].classList) {
+                        // Show "Intensity" if "Fade in" + direction is not
+                        // "In Place" ...
+                        if (possibleDirections.indexOf(targetClass) >= 0) {
+                            return true;
+                        }
+                    }
+                    // ... but hide if "Fade in" + "In Place" direction.
+                    return false;
+                }
+                return true;
+            }
         }
         return this._super(...arguments);
     },
@@ -3153,6 +3261,37 @@ options.registry.WebsiteAnimate = options.Class.extend({
             return isImageSupportedForStyle(this.$target[0]);
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'animationIntensity') {
+            return window.getComputedStyle(this.$target[0]).getPropertyValue('--wanim-intensity');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Removes or adds the lazy loading on images because animated images can
+     * appear before or after their parents and cause bugs in the animations.
+     * To put "lazy" back on the "loading" attribute, we simply remove the
+     * attribute as it is automatically added on page load.
+     *
+     * @private
+     * @param {Boolean} lazy
+     */
+    _toggleImagesLazyLoading(lazy) {
+        const imgEls = this.$target[0].matches('img')
+            ? [this.$target[0]]
+            : this.$target[0].querySelectorAll('img');
+        for (const imgEl of imgEls) {
+            if (lazy) {
+                // Let the automatic system add the loading attribute
+                imgEl.removeAttribute('loading');
+            } else {
+                imgEl.loading = 'eager';
+            }
+        }
     },
 });
 
