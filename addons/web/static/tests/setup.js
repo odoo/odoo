@@ -206,6 +206,31 @@ function patchSessionInfo() {
     });
 }
 
+/**
+ * Remove all given attributes from the templates and replace them by
+ * data attributes (e.g. `src` to `data-src`, `alt` to `data-alt`).
+ *
+ * @param {string[]} attrs Attributes to replace by data-attributes.
+ * @param {Document} templates Document containing the templates to
+ * process.
+ */
+function removeUnwantedAttrsFromTemplates(templates, attrs) {
+    function replaceAttr(attrName, prefix, element) {
+        const attrKey = `${prefix}${attrName}`;
+        const attrValue = element.getAttribute(attrKey);
+        element.removeAttribute(attrKey);
+        element.setAttribute(`${prefix}data-${attrName}`, attrValue);
+    }
+    const attrPrefixes = ['', 't-att-', 't-attf-'];
+    for (const attrName of attrs) {
+        for (const prefix of attrPrefixes) {
+            for (const element of templates.querySelectorAll(`*[${prefix}${attrName}]`)) {
+                replaceAttr(attrName, prefix, element);
+            }
+        }
+    }
+}
+
 export async function setupTests() {
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
@@ -221,6 +246,13 @@ export async function setupTests() {
     const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;
     const templates = await loadFile(templatesUrl);
     window.__OWL_TEMPLATES__ = processTemplates(templates);
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll programatically and the time
+    // we assert for the scroll position. The src attribute is removed
+    // as well to make sure images won't trigger a GET request on the
+    // server.
+    removeUnwantedAttrsFromTemplates(window.__OWL_TEMPLATES__, ['alt', 'src']);
+    session.owlTemplates = window.__OWL_TEMPLATES__;
     await Promise.all([whenReady(), legacyProm]);
 
     // make sure images do not trigger a GET on the server
