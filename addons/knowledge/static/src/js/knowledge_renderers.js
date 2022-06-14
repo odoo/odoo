@@ -274,33 +274,6 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         emojis.text(emoji || '');
     },
     /**
-     * Enables the user to resize the aside block.
-     * Note: When the user grabs the resizer, a new listener will be attached
-     * to the document. The listener will be removed as soon as the user releases
-     * the resizer to free some resources.
-     */
-    _setResizeListener: function () {
-        /**
-         * @param {PointerEvent} event
-         */
-        const onPointerMove = _.throttle(event => {
-            event.preventDefault();
-            this.el.style.setProperty('--default-sidebar-size', `${event.pageX}px`);
-        }, 100);
-        /**
-         * @param {PointerEvent} event
-         */
-        const onPointerUp = event => {
-            $(document).off('pointermove', onPointerMove);
-        };
-        const $resizer = this.$('.o_knowledge_article_form_resizer');
-        $resizer.on('pointerdown', event => {
-            event.preventDefault();
-            $(document).on('pointermove', onPointerMove);
-            $(document).one('pointerup', onPointerUp);
-        });
-    },
-    /**
      * Initializes the drag-and-drop behavior of the tree listing all articles.
      * Once this function is called, the user will be able to move an article
      * in the tree hierarchy by dragging an article around.

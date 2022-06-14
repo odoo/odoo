@@ -11,10 +11,10 @@
 
     <template id="knowledge_article_view_frontend" name="Knowledge Portal">
         <t t-call="knowledge.layout">
-            <div class="container-fluid h-100 o_knowledge_form_view" t-att-data-article-id="article.id if article else False">
-                <div class="row h-100">
-                    <div t-att-class="'p-0 overflow-auto' + (' col-sm-2' if show_sidebar else ' d-none')">
-                        <div t-att-class="'o_knowledge_aside border-bottom border-right flex-column h-100 w-100' + (' d-flex' if show_sidebar else ' d-none')">
+            <div class="container-fluid h-100 o_knowledge_form_view p-0 d-none" t-att-data-article-id="article.id if article else False">
+                <div class="d-sm-flex h-100">
+                    <aside t-att-class="'o_knowledge_aside' + (' flex-shrink-0 p-0' if show_sidebar else ' d-none')">
+                        <div class="d-flex flex-column h-100">
                             <div class="p-3">
                                 <input type="text" class="form-control knowledge_search_bar" placeholder="Search an Article..."/>
                             </div>
@@ -29,8 +29,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div t-att-class="('col-sm-10' if show_sidebar else 'col-sm-12') + ' p-0 overflow-auto'">
+                    </aside>
+                    <div class="flex-grow-1 position-relative">
+                        <div class="o_knowledge_article_form_resizer d-none d-sm-block" />
                         <div class="d-flex flex-column h-100">
                             <!-- Article header -->
                             <div class="o_knowledge_header d-sm-flex flex-row justify-content-between border-bottom">
@@ -79,6 +80,9 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="o_knowledge_article_form_resizer d-print-none d-none d-sm-block px-3 opacity-75 opacity-100-hover">
+                            <span class="bg-300 pl-1"/>
                         </div>
                     </div>
                 </div>

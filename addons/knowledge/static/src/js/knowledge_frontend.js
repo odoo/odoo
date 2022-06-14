@@ -21,6 +21,8 @@ publicWidget.registry.KnowledgeWidget = publicWidget.Widget.extend(KnowledgeTree
         return this._super.apply(this, arguments).then(() => {
             const id = this.$el.data('article-id');
             this._renderTree(id, '/knowledge/tree_panel/portal');
+            this._setResizeListener();
+            this.$el.removeClass('d-none');
         });
     },
 

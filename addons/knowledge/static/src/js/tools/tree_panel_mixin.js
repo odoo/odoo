@@ -39,6 +39,39 @@ export default {
     },
 
     /**
+     * Enables the user to resize the aside block.
+     * Note: When the user grabs the resizer, a new listener will be attached
+     * to the document. The listener will be removed as soon as the user releases
+     * the resizer to free some resources.
+     */
+    _setResizeListener: function () {
+        // Initialise to previously scrolled value
+        if (localStorage.getItem('sidebarSize')) {
+            this.el.style.setProperty('--default-sidebar-size', `${localStorage.getItem('sidebarSize')}px`);
+        }
+        /**
+         * @param {PointerEvent} event
+         */
+        const onPointerMove = _.throttle(event => {
+            event.preventDefault();
+            this.el.style.setProperty('--default-sidebar-size', `${event.pageX}px`);
+        }, 100);
+        /**
+         * @param {PointerEvent} event
+         */
+        const onPointerUp = event => {
+            $(document).off('pointermove', onPointerMove);
+            localStorage.setItem('sidebarSize', event.pageX);
+        };
+        const $resizer = this.$('.o_knowledge_article_form_resizer');
+        $resizer.on('pointerdown', event => {
+            event.preventDefault();
+            $(document).on('pointermove', onPointerMove);
+            $(document).one('pointerup', onPointerUp);
+        });
+    },
+
+    /**
      * Initializes the drag-and-drop behavior of the favorite.
      * Once this function is called, the user will be able to reorder their favorites.
      * When a favorite is reordered, the script will send an rpc call to the server
