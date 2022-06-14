@@ -984,7 +984,7 @@
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="kanban_state" required="0" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1" class="d-flex justify-content-center"/>
-                                    <field name="stage_id" optional="show"/>
+                                    <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link pull-right"/>
                                 </tree>
                             </field>
