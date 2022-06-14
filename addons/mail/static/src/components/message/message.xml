@@ -35,7 +35,7 @@
                         <t t-if="!messageView.isSquashed">
                             <div class="o_Message_authorAvatarContainer o_Message_sidebarItem position-relative mx-1">
                                 <img class="o_Message_authorAvatar w-100 h-100 rounded-circle" t-att-class="{ 'o_Message_authorRedirect o_cursor_pointer': messageView.hasAuthorOpenChat, o_redirect: messageView.hasAuthorOpenChat }" t-att-src="messageView.message.avatarUrl" role="button" tabindex="0" t-on-click="messageView.onClickAuthorAvatar" t-att-title="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''" t-att-alt="messageView.hasAuthorOpenChat ? messageView.authorAvatarTitleText : ''"/>
-                                <t t-if="messageView.message.author and messageView.message.author.im_status">
+                                <t t-if="messageView.message.author or messageView.message.guestAuthor">
                                     <PartnerImStatusIcon
                                         className="'o_Message_partnerImStatusIcon d-flex align-items-center justify-content-center'"
                                         classNameObj="{
@@ -46,7 +46,7 @@
                                             'text-100': !messageView.message.isDiscussionOrNotification and !messageView.isSelected,
                                         }"
                                         hasOpenChat="messageView.hasAuthorOpenChat"
-                                        partner="messageView.message.author"
+                                        partner="messageView.message.author or messageView.message.guestAuthor"
                                     />
                                 </t>
                             </div>

@@ -212,16 +212,21 @@ registerModel({
                     partnerIds.push(partner.id);
                 }
             }
-            if (partnerIds.length === 0) {
-                return;
+            const guestIds = [];
+            for (const guest of this.models['Guest'].all()) {
+                guestIds.push(guest.id);
             }
-            const dataList = await this.messaging.rpc({
-                route: '/longpolling/im_status',
-                params: {
-                    partner_ids: partnerIds,
-                },
-            }, { shadow: true });
-            this.models['Partner'].insert(dataList);
+            if (partnerIds.length !== 0 || guestIds.length !== 0) {
+                const dataList = await this.messaging.rpc({
+                    route: '/longpolling/im_status',
+                    params: {
+                        partner_ids: partnerIds,
+                        guest_ids: guestIds,
+                    },
+                }, { shadow: true });
+                this.models['Partner'].insert(dataList.partners);
+                this.models['Guest'].insert(dataList.guests);
+            }
         },
         /**
          * @private

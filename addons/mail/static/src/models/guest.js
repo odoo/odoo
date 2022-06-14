@@ -42,6 +42,7 @@ registerModel({
             required: true,
             readonly: true,
         }),
+        im_status: attr(),
         name: attr(),
         rtcSessions: many('RtcSession', {
             inverse: 'guest',
