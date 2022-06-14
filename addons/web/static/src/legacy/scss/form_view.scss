@@ -274,7 +274,7 @@ $o-form-label-margin-right: 0px;
                     pointer-events: none;
 
                     &:not(.btn-primary) {
-                        @include plain-hover-focus() {
+                        &, &:hover, &:focus {
                             color: $text-muted;
                         }
                     }

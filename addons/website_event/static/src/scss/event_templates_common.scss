@@ -56,7 +56,7 @@
             border: $border-width solid gray('400');
             @include o-bg-color(gray('white'), $with-extras: false);
             @include border-radius($dropdown-border-radius);
-            @include hover-focus {
+            &:hover, &:focus {
                 border-color: theme-color('primary');
                 color: theme-color('primary');
                 text-decoration: none;
