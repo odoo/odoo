@@ -407,7 +407,7 @@ class MailActivityMixin(models.AbstractModel):
             activity_type = activity_type_id and self.env['mail.activity.type'].sudo().browse(activity_type_id)
 
         model_id = self.env['ir.model']._get(self._name).id
-        activities = self.env['mail.activity']
+        create_vals_list = []
         for record in self:
             create_vals = {
                 'activity_type_id': activity_type and activity_type.id,
@@ -421,8 +421,8 @@ class MailActivityMixin(models.AbstractModel):
             create_vals.update(act_values)
             if not create_vals.get('user_id'):
                 create_vals['user_id'] = activity_type.default_user_id.id or self.env.uid
-            activities |= self.env['mail.activity'].create(create_vals)
-        return activities
+            create_vals_list.append(create_vals)
+        return self.env['mail.activity'].create(create_vals_list)
 
     def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
         """ Helper method: Schedule an activity on each record of the current record set.
