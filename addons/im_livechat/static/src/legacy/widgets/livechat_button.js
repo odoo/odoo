@@ -35,7 +35,6 @@ const LivechatButton = Widget.extend({
             default_username: _t("Visitor"),
         });
 
-        this._history = null;
         // livechat model
         this._livechat = null;
         this._messages = [];
@@ -45,8 +44,12 @@ const LivechatButton = Widget.extend({
         const cookie = utils.get_cookie('im_livechat_session');
         if (cookie) {
             const channel = JSON.parse(cookie);
-            this._history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
-            this._history.reverse().forEach(message => { message.body = utils.Markup(message.body); });
+            const history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
+            history.reverse();
+            this.messaging.livechatButtonView.update({ history });
+            for (const message of this.messaging.livechatButtonView.history) {
+                message.body = utils.Markup(message.body);
+            }
         } else {
             const result = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
             if (!result.available_for_me) {
@@ -58,8 +61,10 @@ const LivechatButton = Widget.extend({
     },
     start() {
         this.$el.text(this.messaging.livechatButtonView.buttonText);
-        if (this._history) {
-            this._history.forEach(m => this._addMessage(m));
+        if (this.messaging.livechatButtonView.history) {
+            for (const m of this.messaging.livechatButtonView.history) {
+                this._addMessage(m);
+            }
             this._openChat();
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
             const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
@@ -258,7 +263,7 @@ const LivechatButton = Widget.extend({
                     data: livechatData
                 });
                 return this._openChatWindow().then(() => {
-                    if (!this._history) {
+                    if (!this.messaging.livechatButtonView.history) {
                         this._sendWelcomeMessage();
                     }
                     this._renderMessages();

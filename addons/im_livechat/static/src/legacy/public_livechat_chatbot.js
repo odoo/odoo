@@ -7,6 +7,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
+import { clear } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -57,14 +58,14 @@ const QWeb = core.qweb;
         if (this._rule && !!this._rule.chatbot) {
             this.messaging.livechatButtonView.update({ isChatbot: true });
             this.chatbotState = 'init';
-        } else if (this._history !== null && this._history.length === 0) {
+        } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length === 0) {
             this._livechatInit = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
 
             if (this._livechatInit.rule.chatbot) {
                 this.messaging.livechatButtonView.update({ isChatbot: true });
                 this.chatbotState = 'welcome';
             }
-        } else if (this._history !== null && this._history.length !== 0) {
+        } else if (this.messaging.livechatButtonView.history !== null && this.messaging.livechatButtonView.history.length !== 0) {
             const sessionCookie = utils.get_cookie('im_livechat_session');
             if (sessionCookie) {
                 const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
@@ -90,7 +91,7 @@ const QWeb = core.qweb;
             // -> initialize necessary state
             // -> batch welcome message (see '_sendWelcomeChatbotMessage')
             utils.set_cookie('im_livechat_auto_popup', '', -1);
-            this._history = null;
+            this.messaging.livechatButtonView.update({ history: clear() });
             this._rule = this._livechatInit.rule;
             this._chatbot = this._livechatInit.rule.chatbot;
             this.messaging.livechatButtonView.update({ isChatbot: true });

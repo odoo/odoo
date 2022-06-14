@@ -55,6 +55,9 @@ registerModel({
         defaultMessage: attr({
             compute: '_computeDefaultMessage',
         }),
+        history: attr({
+            default: null,
+        }),
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
             default: '',
