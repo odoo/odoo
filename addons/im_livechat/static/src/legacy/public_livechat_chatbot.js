@@ -125,7 +125,7 @@ const QWeb = core.qweb;
     _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
         this._addMessage(message, options);
-        if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
+        if (this.messaging.livechatButtonView.chatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.isAtBottom()) {
             this._livechat.incrementUnreadCounter();
         }
 
@@ -208,7 +208,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotDisableInput(disableText) {
-        this._chatWindow.$('.o_composer_text_field')
+        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field')
             .prop('disabled', true)
             .addClass('text-center font-italic bg-200')
             .val(disableText);
@@ -218,7 +218,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotEnableInput() {
-        const $composerTextField = this._chatWindow.$('.o_composer_text_field');
+        const $composerTextField = this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field');
         $composerTextField
             .prop('disabled', false)
             .removeClass('text-center font-italic bg-200')
@@ -241,9 +241,9 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotEndScript() {
-        this._chatWindow.$('.o_composer_text_field').addClass('d-none');
-        this._chatWindow.$('.o_livechat_chatbot_end').show();
-        this._chatWindow.$('.o_livechat_chatbot_restart').one('click',
+        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field').addClass('d-none');
+        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').show();
+        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_restart').one('click',
             this._onChatbotRestartScript.bind(this));
 
     },
@@ -327,7 +327,7 @@ const QWeb = core.qweb;
 
             if (triggerNextStep) {
                 let nextStepDelay = this._chatbotMessageDelay;
-                if (this._chatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
+                if (this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
                     // special case where we already have a "is typing" message displayed
                     // can happen when the previous step did not trigger any message posted from the bot
                     // e.g: previous step was "forward_operator" and no-one is available
@@ -343,7 +343,7 @@ const QWeb = core.qweb;
         }
 
         if (!this._chatbotDisplayRestartButton()) {
-            this._chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         }
      },
      /**
@@ -408,7 +408,7 @@ const QWeb = core.qweb;
         this._chatbotDisableInput('');
 
         this.isTypingTimeout = setTimeout(() => {
-            this._chatWindow.$('.o_mail_thread_content').append(
+            this.messaging.livechatButtonView.chatWindow.$('.o_mail_thread_content').append(
                 $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
                     'chatbotImageSrc': `/im_livechat/operator/${this._livechat.getOperatorPID()[0]}/avatar`,
                     'chatbotName': this._chatbot.chatbot_name,
@@ -416,7 +416,7 @@ const QWeb = core.qweb;
                 }))
             );
 
-            this._chatWindow.scrollToBottom();
+            this.messaging.livechatButtonView.chatWindow.scrollToBottom();
         }, this._chatbotMessageDelay / 3);
     },
     /**
@@ -564,9 +564,9 @@ const QWeb = core.qweb;
      _askFeedback() {
         this._super(...arguments);
 
-        this._chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        this._chatWindow.$('.o_livechat_chatbot_end').hide();
-        this._chatWindow.$('.o_composer_text_field')
+        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').hide();
+        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field')
             .removeClass('d-none')
             .val('');
      },
@@ -584,8 +584,8 @@ const QWeb = core.qweb;
     _openChatWindow() {
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
-                if (this._chatWindow) {
-                    this._chatWindow.scrollToBottom();
+                if (this.messaging.livechatButtonView.chatWindow) {
+                    this.messaging.livechatButtonView.chatWindow.scrollToBottom();
                 }
             });
 
@@ -615,11 +615,11 @@ const QWeb = core.qweb;
 
         const self = this;
 
-        this._chatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
+        this.messaging.livechatButtonView.chatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
             $(this).on('click', self._onChatbotOptionClicked.bind(self));
         });
 
-        this._chatWindow.$('.o_livechat_chatbot_main_restart').on('click',
+        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').on('click',
             this._onChatbotRestartScript.bind(this));
 
         if (this._messages.length !== 0) {
@@ -769,8 +769,8 @@ const QWeb = core.qweb;
      * @private
      */
     async _onChatbotRestartScript(ev) {
-        this._chatWindow.$('.o_composer_text_field').removeClass('d-none');
-        this._chatWindow.$('.o_livechat_chatbot_end').hide();
+        this.messaging.livechatButtonView.chatWindow.$('.o_composer_text_field').removeClass('d-none');
+        this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_end').hide();
 
         if (this.nextStepTimeout) {
             clearTimeout(this.nextStepTimeout);
