@@ -7,18 +7,6 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     @api.model
-    def _fill_missing_values(self, vals):
-        super()._fill_missing_values(vals)
-
-        if vals.get('type') != 'purchase':
-            return
-
-        company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
-        if company.country_id.code == "NL" and not vals.get('type_control_ids', [(6, 0, [])])[0][2]:
-            type_control_ids = self.env.ref('account.data_account_type_direct_costs').ids
-            vals['type_control_ids'] = [(6, 0, type_control_ids)]
-
-    @api.model
     def _prepare_liquidity_account_vals(self, company, code, vals):
         # OVERRIDE
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)
