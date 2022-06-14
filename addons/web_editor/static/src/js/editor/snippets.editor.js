@@ -664,7 +664,7 @@ var SnippetEditor = Widget.extend({
      */
     toggleOverlayVisibility: function (show) {
         if (this.$el && !this.scrollingTimeout) {
-            this.$el.toggleClass('o_overlay_hidden', !show && this.isShown());
+            this.$el.toggleClass('o_overlay_hidden', (!show || this.$target[0].matches('.o_animating:not(.o_animate_on_scroll)')) && this.isShown());
         }
     },
     /**
