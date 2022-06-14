@@ -32,17 +32,12 @@ const LivechatButton = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
         this.options = _.defaults(this.messaging.publicLivechatOptions || {}, {
-            input_placeholder: _t("Ask something ..."),
             default_username: _t("Visitor"),
-            button_text: _t("Chat with one of our collaborators"),
-            default_message: _t("How may I help you?"),
         });
 
         this._history = null;
         // livechat model
         this._livechat = null;
-        // livechat window
-        this._chatWindow = null;
         this._messages = [];
         this._serverURL = this.messaging.publicLivechatServerUrl;
     },
@@ -62,15 +57,16 @@ const LivechatButton = Widget.extend({
         return this._loadQWebTemplate();
     },
     start() {
-        this.$el.text(this.options.button_text);
+        this.$el.text(this.messaging.livechatButtonView.buttonText);
         if (this._history) {
             this._history.forEach(m => this._addMessage(m));
             this._openChat();
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
             const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
-                this._autoPopupTimeout =
-                    setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000);
+                this.messaging.livechatButtonView.update({
+                    autoOpenChatTimeout: setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000),
+                });
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
@@ -127,10 +123,10 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _askFeedback() {
-        this._chatWindow.$('.o_thread_composer input').prop('disabled', true);
+        this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
         const feedback = new Feedback(this, this._livechat);
-        this._chatWindow.replaceContentWith(feedback);
+        this.messaging.livechatButtonView.chatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
         feedback.on('feedback_sent', this, this._closeChat);
@@ -139,7 +135,7 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _closeChat() {
-        this._chatWindow.destroy();
+        this.messaging.livechatButtonView.chatWindow.destroy();
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
     /**
@@ -190,7 +186,7 @@ const LivechatButton = Widget.extend({
                 }
                 notificationData.body = utils.Markup(notificationData.body);
                 this._addMessage(notificationData);
-                if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
+                if (this.messaging.livechatButtonView.chatWindow.isFolded() || !this.messaging.livechatButtonView.chatWindow.isAtBottom()) {
                     this._livechat.incrementUnreadCounter();
                 }
                 this._renderMessages();
@@ -221,13 +217,14 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _openChat: _.debounce(function () {
-        if (this._openingChat) {
+        if (this.messaging.livechatButtonView.isOpeningChat) {
             return;
         }
         const cookie = utils.get_cookie('im_livechat_session');
         let def;
         this._openingChat = true;
-        clearTimeout(this._autoPopupTimeout);
+        this.messaging.livechatButtonView.update({ isOpeningChat: true });
+        clearTimeout(this.messaging.livechatButtonView.autoOpenChatTimeout);
         if (cookie) {
             def = Promise.resolve(JSON.parse(cookie));
         } else {
@@ -280,9 +277,9 @@ const LivechatButton = Widget.extend({
                 });
             }
         }).then(() => {
-            this._openingChat = false;
+            this.messaging.livechatButtonView.update({ isOpeningChat: false });
         }).guardedCatch(() => {
-            this._openingChat = false;
+            this.messaging.livechatButtonView.update({ isOpeningChat: false });
         });
     }, 200, true),
     /**
@@ -311,14 +308,16 @@ const LivechatButton = Widget.extend({
         const options = {
             displayStars: false,
             headerBackgroundColor: this.options.header_background_color,
-            placeholder: this.options.input_placeholder || "",
+            placeholder: this.messaging.livechatButtonView.inputPlaceholder,
             titleColor: this.options.title_color,
         };
-        this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
-        return this._chatWindow.appendTo($('body')).then(() => {
+        this.messaging.livechatButtonView.update({
+            chatWindow: new WebsiteLivechatWindow(this, this._livechat, options),
+        });
+        return this.messaging.livechatButtonView.chatWindow.appendTo($('body')).then(() => {
             const cssProps = { bottom: 0 };
             cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
-            this._chatWindow.$el.css(cssProps);
+            this.messaging.livechatButtonView.chatWindow.$el.css(cssProps);
             this.$el.hide();
         });
     },
@@ -336,11 +335,11 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
+        const shouldScroll = !this.messaging.livechatButtonView.chatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.isAtBottom();
         this._livechat.setMessages(this._messages);
-        this._chatWindow.render();
+        this.messaging.livechatButtonView.chatWindow.render();
         if (shouldScroll) {
-            this._chatWindow.scrollToBottom();
+            this.messaging.livechatButtonView.chatWindow.scrollToBottom();
         }
     },
     /**
@@ -372,19 +371,19 @@ const LivechatButton = Widget.extend({
                     }
                     this._closeChat();
                 }
-                this._chatWindow.scrollToBottom();
+                this.messaging.livechatButtonView.chatWindow.scrollToBottom();
             });
     },
     /**
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.options.default_message) {
+        if (this.messaging.livechatButtonView.defaultMessage) {
             this._addMessage({
                 id: '_welcome',
                 attachment_ids: [],
                 author_id: this._livechat.getOperatorPID(),
-                body: this.options.default_message,
+                body: this.messaging.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
                 res_id: this._livechat.getID(),
@@ -402,12 +401,12 @@ const LivechatButton = Widget.extend({
      */
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
-        const isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
+        const isComposerDisabled = this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled');
         const shouldAskFeedback = !isComposerDisabled && this._messages.find(function (message) {
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {
-            this._chatWindow.toggleFold(false);
+            this.messaging.livechatButtonView.chatWindow.toggleFold(false);
             this._askFeedback();
         } else {
             this._closeChat();
@@ -450,7 +449,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners(ev) {
         ev.stopPropagation();
-        this._chatWindow.renderHeader();
+        this.messaging.livechatButtonView.chatWindow.renderHeader();
     },
     /**
      * @private
@@ -458,7 +457,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
-        this._chatWindow.renderHeader();
+        this.messaging.livechatButtonView.chatWindow.renderHeader();
     },
     /**
      * @private

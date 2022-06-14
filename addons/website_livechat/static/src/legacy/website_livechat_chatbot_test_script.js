@@ -28,10 +28,8 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         this._chatbotCurrentStep = this._chatbot.chatbot_welcome_steps[
             this._chatbot.chatbot_welcome_steps.length - 1];
         this._channelData = chatbotData.channel;
-        this._isChatbot = true;
+        this.messaging.livechatButtonView.update({ isChatbot: true });
         this._serverURL = chatbotData.serverUrl;
-
-        this.options.input_placeholder = '';
     },
 
     /**
@@ -66,7 +64,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             this.call('bus_service', 'addChannel', this._livechat.getUUID());
             this.call('bus_service', 'startPolling');
             utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
-            this._openingChat = false;
+            this.messaging.livechatButtonView.update({ isOpeningChat: false });
         });
     },
 });
