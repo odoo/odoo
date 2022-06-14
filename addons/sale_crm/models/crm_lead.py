@@ -84,7 +84,7 @@ class CrmLead(models.Model):
             'default_tag_ids': [(6, 0, self.tag_ids.ids)]
         }
         if self.team_id:
-            quotation_context['default_team_id'] = self.team_id.id,
+            quotation_context['default_team_id'] = self.team_id.id
         if self.user_id:
             quotation_context['default_user_id'] = self.user_id.id
         return quotation_context
