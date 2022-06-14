@@ -12,7 +12,7 @@ from odoo.http import request
 from odoo.service import security
 from odoo.tools import ustr
 from odoo.tools.translate import _
-from .utils import ensure_db, _get_login_redirect_url
+from .utils import ensure_db, _get_login_redirect_url, is_user_internal
 
 
 _logger = logging.getLogger(__name__)
@@ -22,12 +22,15 @@ _logger = logging.getLogger(__name__)
 SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
                           'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
                           'password', 'confirm_password', 'city', 'country_id', 'lang'}
+LOGIN_SUCCESSFUL_PARAMS = set()
 
 
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
+        if request.session.uid and not is_user_internal(request.session.uid):
+            return request.redirect_query('/web/login_successful', query=request.params)
         return request.redirect_query('/web', query=request.params)
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
@@ -42,6 +45,8 @@ class Home(http.Controller):
             return request.redirect(kw.get('redirect'), 303)
         if not security.check_session(request.session, request.env):
             raise http.SessionExpiredException("Session expired")
+        if not is_user_internal(request.session.uid):
+            return request.redirect('/web/login_successful', 303)
 
         # Side-effect, refresh the session lifetime
         request.session.touch()
@@ -116,6 +121,12 @@ class Home(http.Controller):
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
+
+    @http.route('/web/login_successful', type='http', auth='user', website=True, sitemap=False)
+    def login_successful_external_user(self, **kwargs):
+        """Landing page after successful login for external users (unused when portal is installed)."""
+        valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
+        return request.render('web.login_successful', valid_values)
 
     @http.route('/web/become', type='http', auth='user', sitemap=False)
     def switch_to_admin(self):

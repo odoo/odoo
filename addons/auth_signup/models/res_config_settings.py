@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
             ('b2c', 'Free sign up'),
         ],
         string='Customer Account',
-        default='b2b',
+        default='b2c',
         config_parameter='auth_signup.invitation_scope')
     auth_signup_template_user_id = fields.Many2one(
         'res.users',

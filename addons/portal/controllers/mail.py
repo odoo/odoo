@@ -173,7 +173,7 @@ class PortalChatter(http.Controller):
             'options': {
                 'message_count': message_data['message_count'],
                 'is_user_public': is_user_public,
-                'is_user_employee': request.env.user.has_group('base.group_user'),
+                'is_user_employee': request.env.user._is_internal(),
                 'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
                 'display_composer': display_composer,
                 'partner_id': request.env.user.partner_id.id

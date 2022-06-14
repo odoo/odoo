@@ -185,8 +185,9 @@ def _get_login_redirect_url(uid, redirect=None):
     """ Decide if user requires a specific post-login redirect, e.g. for 2FA, or if they are
     fully logged and can proceed to the requested URL
     """
-    if request.session.uid: # fully logged
-        return redirect or '/web'
+    if request.session.uid:  # fully logged
+        return redirect or ('/web' if is_user_internal(request.session.uid)
+                            else '/web/login_successful')
 
     # partial session (MFA)
     url = request.env(user=uid)['res.users'].browse(uid)._mfa_url()
@@ -197,6 +198,10 @@ def _get_login_redirect_url(uid, redirect=None):
     qs = parsed.decode_query()
     qs['redirect'] = redirect
     return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+
+
+def is_user_internal(uid):
+    return request.env['res.users'].browse(uid)._is_internal()
 
 
 def _local_web_translations(trans_file):

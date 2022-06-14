@@ -100,7 +100,7 @@ class PortalWizardUser(models.TransientModel):
         for portal_wizard_user in self:
             user = portal_wizard_user.user_id
 
-            if user and user.has_group('base.group_user'):
+            if user and user._is_internal():
                 portal_wizard_user.is_internal = True
                 portal_wizard_user.is_portal = False
             elif user and user.has_group('base.group_portal'):
