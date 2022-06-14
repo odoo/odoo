@@ -23,6 +23,32 @@ const modelDefinitionsPromise = new Promise(resolve => {
     QUnit.begin(() => resolve(getModelDefinitions()));
 });
 
+QUnit.begin(() => {
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll to the bottom of a thread
+    // and the time we assert for the scroll position. The src attribute
+    // can also cause issues: the mutationObserver is async and there is
+    // no guarantee that the src is already replaced when asserting
+    // during tests.
+    function replaceAttr(altKey, element) {
+        const attrValue = element.getAttribute(altKey);
+        const attrName = altKey.split('-').at(-1);
+        element.removeAttribute(altKey);
+        const altPosition = altKey.indexOf(attrName);
+        element.setAttribute(
+            `${altKey.substr(0, altPosition)}data-${attrName}`,
+            attrValue
+        );
+    }
+    const templates = window.__OWL_TEMPLATES__;
+    const attrToRemove = ['alt', 't-att-alt', 't-attf-alt', 'src', 't-att-src', 't-attf-src'];
+    for (const key of attrToRemove) {
+        for (const element of templates.querySelectorAll(`img[${key}]`)) {
+            replaceAttr(key, element);
+        }
+    }
+});
+
 //------------------------------------------------------------------------------
 // Private
 //------------------------------------------------------------------------------
@@ -575,6 +601,7 @@ async function start(param0 = {}) {
     } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
     const target = param0['target'] || getFixture();
+    target.classList.add('o_web_client');
     param0['target'] = target;
     if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
         throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
