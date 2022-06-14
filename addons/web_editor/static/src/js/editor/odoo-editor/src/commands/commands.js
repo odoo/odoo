@@ -778,13 +778,20 @@ export const editorCommands = {
      * @param {Element} [element]
      */
     applyColor: (editor, color, mode, element) => {
-        if (element) {
+        const selectedTds = editor.editable.querySelectorAll('td.o_selected_td');
+        let coloredTds = [];
+        if (selectedTds.length) {
+            for (const td of selectedTds) {
+                colorElement(td, color, mode);
+            }
+            coloredTds = [...selectedTds];
+        } else if (element) {
             colorElement(element, color, mode);
             return [element];
         }
         const selection = editor.document.getSelection();
         let wasCollapsed = false;
-        if (selection.getRangeAt(0).collapsed) {
+        if (selection.getRangeAt(0).collapsed && !selectedTds.length) {
             insertAndSelectZws(selection);
             wasCollapsed = true;
         }
@@ -792,7 +799,7 @@ export const editorCommands = {
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
-        const selectedNodes = getSelectedNodes(editor.editable);
+        const selectedNodes = getSelectedNodes(editor.editable).filter(node => !closestElement(node, 'table.o_selected_table'));
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font');
             const children = font && descendants(font);
@@ -850,7 +857,7 @@ export const editorCommands = {
             newSelection.removeAllRanges();
             newSelection.addRange(range);
         }
-        return fonts;
+        return [...fonts, ...coloredTds];
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
