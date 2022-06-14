@@ -54,7 +54,8 @@ registerModel({
                 !isEventHandled(ev, 'Message.ClickFailure') &&
                 !isEventHandled(ev, 'MessageActionList.Click') &&
                 !isEventHandled(ev, 'MessageReactionGroup.Click') &&
-                !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo')
+                !isEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo') &&
+                !isEventHandled(ev, 'PartnerImStatusIcon.Click')
             ) {
                 if (this.messagingAsClickedMessageView) {
                     this.messaging.update({ clickedMessageView: clear() });

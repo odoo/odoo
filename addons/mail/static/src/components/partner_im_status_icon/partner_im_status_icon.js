@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { markEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 
@@ -26,6 +27,7 @@ export class PartnerImStatusIcon extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
+        markEventHandled(ev, 'PartnerImStatusIcon.Click');
         if (!this.props.hasOpenChat) {
             return;
         }
