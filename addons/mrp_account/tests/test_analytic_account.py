@@ -107,6 +107,8 @@ class TestAnalyticAccount(TransactionCase):
         """Test when workcenter and MO are using the same analytic account, no
         duplicated lines will be post.
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         # set wc analytic account to be the same of the one on the bom
         self.workcenter.costs_hour_account_id = self.analytic_account
 
@@ -147,6 +149,8 @@ class TestAnalyticAccount(TransactionCase):
         """Test when workcenter and MO are using the same analytic account, no
         duplicated lines will be post.
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         # set wc analytic account to be different from the one on the bom
         wc_analytic_account = self.env['account.analytic.account'].create({'name': 'wc_analytic_account'})
         self.workcenter.costs_hour_account_id = wc_analytic_account

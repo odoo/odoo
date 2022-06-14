@@ -111,9 +111,9 @@ class TestHrLeaveStressDays(TransactionCase):
 
         with self.assertRaises(ValidationError), Form(self.env['hr.leave'].with_user(self.employee_user.id).with_context(default_employee_id=self.employee_emp.id)) as leave_form:
             leave_form.holiday_status_id = self.leave_type
-            leave_form.date_from = datetime(2021, 11, 1)
-            leave_form.date_to = datetime(2021, 11, 1)
+            leave_form.request_date_from = datetime(2021, 11, 1)
+            leave_form.request_date_to = datetime(2021, 11, 1)
             self.assertFalse(leave_form.has_stress_day)
 
-            leave_form.date_to = datetime(2021, 11, 5)
+            leave_form.request_date_to = datetime(2021, 11, 5)
             self.assertTrue(leave_form.has_stress_day)

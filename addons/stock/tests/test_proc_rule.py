@@ -110,6 +110,8 @@ class TestProcRule(TransactionCase):
         self.assertEqual(move_dest.date_deadline, new_deadline, msg='deadline date should be unchanged')
 
     def test_reordering_rule_1(self):
+        # Required for `location_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.product
@@ -156,6 +158,9 @@ class TestProcRule(TransactionCase):
         reordering rule (RR). Add extra product to already confirmed picking => automatically
         run another RR
         """
+        # Required for `location_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',
             'type': 'product',

@@ -122,8 +122,10 @@ class TestMailingListMerge(MassMailCommon):
             active_model='mailing.list'
         ))
         merge_form.new_list_name = False
-        merge_form.dest_list_id = self.mailing_list_3
         merge_form.merge_options = 'existing'
+        # Need to set `merge_options` before `dest_lid_id` so `dest_list_id` is visible
+        # `'invisible': [('merge_options', '=', 'new')]`
+        merge_form.dest_list_id = self.mailing_list_3
         merge_form.archive_src_lists = False
         result_list = merge_form.save().action_mailing_lists_merge()
 

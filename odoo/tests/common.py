@@ -52,6 +52,7 @@ from odoo import api
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
 from odoo.modules.registry import Registry
+from odoo.osv import expression
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
@@ -437,6 +438,23 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             # back
             self.uid = old_uid
             self.env = self.env(user=self.uid)
+
+    @contextmanager
+    def debug_mode(self):
+        """ Enable the effects of group 'base.group_no_one'; mainly useful with :class:`Form`. """
+        origin_user_has_groups = BaseModel.user_has_groups
+
+        def user_has_groups(self, groups):
+            group_set = set(groups.split(','))
+            if '!base.group_no_one' in group_set:
+                return False
+            elif 'base.group_no_one' in group_set:
+                group_set.remove('base.group_no_one')
+                return not group_set or origin_user_has_groups(self, ','.join(group_set))
+            return origin_user_has_groups(self, groups)
+
+        with patch('odoo.models.BaseModel.user_has_groups', user_has_groups):
+            yield
 
     @contextmanager
     def _assertRaises(self, exception, *, msg=None):
@@ -1935,19 +1953,46 @@ class Form(object):
         * pre-processed modifiers (map of modifier name to json-loaded domain)
         * pre-processed onchanges list
         """
+        inherited_modifiers = ['invisible']
         fvg['fields'].setdefault('id', {'type': 'id'})
         # pre-resolve modifiers & bind to arch toplevel
-        modifiers = fvg['modifiers'] = {'id': {'required': False, 'readonly': True}}
+        modifiers = fvg['modifiers'] = {'id': {'required': [FALSE_LEAF], 'readonly': [TRUE_LEAF]}}
         contexts = fvg['contexts'] = {}
         order = fvg['fields_ordered'] = []
-        for f in fvg['tree'].xpath('.//field[count(ancestor::field) = %s]' % fvg['tree'].xpath('count(ancestor::field)')):
+        field_level = fvg['tree'].xpath('count(ancestor::field)')
+        for f in fvg['tree'].xpath('.//field[count(ancestor::field) = %s]' % field_level):
             fname = f.get('name')
             order.append(fname)
 
-            modifiers[fname] = {
-                modifier: bool(domain) if isinstance(domain, int) else normalize_domain(domain)
+            node_modifiers = {
+                modifier: ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
             }
+
+            for a in f.xpath('ancestor::*[@modifiers][count(ancestor::field) = %s]' % field_level):
+                ancestor_modifiers = json.loads(a.get('modifiers'))
+                for modifier in inherited_modifiers:
+                    if modifier in ancestor_modifiers:
+                        domain = ancestor_modifiers[modifier]
+                        ancestor_domain = ([TRUE_LEAF] if domain else [FALSE_LEAF]) if isinstance(domain, int) else normalize_domain(domain)
+                        node_domain = node_modifiers.get(modifier, [])
+                        # Combine the field modifiers with his ancestor modifiers with an OR connector
+                        # e.g. A field is invisible if its own invisible modifier is True
+                        # OR if one of its ancestor invisible modifier is True
+                        node_modifiers[modifier] = expression.OR([ancestor_domain, node_domain])
+
+            if fname in modifiers:
+                # The field is multiple times in the view, combine the modifier domains with an AND connector
+                # e.g. a field is invisible if all occurences of the field are invisible in the view.
+                # e.g. a field is readonly if all occurences of the field are readonly in the view.
+                for modifier in set(node_modifiers.keys()).union(modifiers[fname].keys()):
+                    modifiers[fname][modifier] = expression.AND([
+                        modifiers[fname].get(modifier, [FALSE_LEAF]),
+                        node_modifiers.get(modifier, [FALSE_LEAF]),
+                    ])
+            else:
+                modifiers[fname] = node_modifiers
+
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
@@ -2096,9 +2141,10 @@ class Form(object):
         assert descr['type'] not in ('many2many', 'one2many'), \
             "Can't set an o2m or m2m field, manipulate the corresponding proxies"
 
-        # TODO: consider invisible to be the same as readonly?
         assert not self._get_modifier(field, 'readonly'), \
             "can't write on readonly field {}".format(field)
+        assert not self._get_modifier(field, 'invisible'), \
+            "can't write on invisible field {}".format(field)
 
         if descr['type'] == 'many2one':
             assert isinstance(value, BaseModel) and value._name == descr['relation']
@@ -2491,6 +2537,8 @@ class X2MProxy(object):
     def _assert_editable(self):
         assert not self._parent._get_modifier(self._field, 'readonly'),\
             'field %s is not editable' % self._field
+        assert not self._parent._get_modifier(self._field, 'invisible'),\
+            'field %s is not visible' % self._field
 
 class O2MProxy(X2MProxy):
     """ O2MProxy()

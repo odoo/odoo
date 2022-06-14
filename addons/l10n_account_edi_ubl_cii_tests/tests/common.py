@@ -17,6 +17,9 @@ class TestUBLCommon(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref=None, edi_format_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
+        # Required for `product_uom_id` to be visible in the form views
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+
         # Ensure the testing currency is using a valid ISO code.
         real_usd = cls.env.ref('base.USD')
         real_usd.name = 'FUSD'

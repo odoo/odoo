@@ -3536,6 +3536,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """ Test the CABA entries generated from an invoice with almost
         equal lines, different only on analytic accounting
         """
+        # Required for `analytic_account_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
         # Make the tax account reconcilable
         self.tax_account_1.reconcile = True
 

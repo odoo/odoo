@@ -339,6 +339,8 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_update_quantity_4(self):
         """ Workcenter 1 has 10' start time and 5' stop time """
+        # Required for `workerorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
@@ -517,6 +519,11 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(production.move_raw_ids.mapped('manual_consumption'), [False, True, True])
 
+        # <field name="qty_producing" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+        production.action_confirm()
+        production.action_assign()
+        production.is_locked = False
+
         # test no updating
         production_form = Form(production)
         production_form.qty_producing = 5
@@ -689,6 +696,11 @@ class TestMrpOrder(TestMrpCommon):
 
         self.stock_shelf_2 = self.stock_location_14
         mo, _, p_final, p1, p2 = self.generate_mo(tracking_base_1='lot', qty_base_1=10, qty_final=1)
+
+        # Required for `lot_producing_id` to be visible in the view
+        # <field name="lot_producing_id" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
+        p_final.tracking = 'lot'
+
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
         first_lot_for_p1 = self.env['stock.lot'].create({
@@ -999,6 +1011,8 @@ class TestMrpOrder(TestMrpCommon):
         byproduct3 none   1.0 dozen
         Check qty producing update and moves finished values.
         """
+        # Required for `byproduct_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
         dozen = self.env.ref('uom.product_uom_dozen')
         self.byproduct1 = self.env['product.product'].create({
             'name': 'Byproduct 1',
@@ -2368,6 +2382,8 @@ class TestMrpOrder(TestMrpCommon):
         Create a second one in 10 minutes (expected should NOT go from 15 to 12.5, it should go from 15 to 10)
         """
         # First production, the default is 60 and there is 0 productions of that operation
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         production_form = Form(self.env['mrp.production'])
         production_form.bom_id = self.bom_4
         production = production_form.save()
@@ -2375,6 +2391,8 @@ class TestMrpOrder(TestMrpCommon):
         production.action_confirm()
         production.button_plan()
         # Production planned, time to start, I produce all the 1 product
+        # 'invisible': [('state', '=', 'draft')]
+        production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
             wo.duration = 15 # in 15 minutes
@@ -2390,6 +2408,8 @@ class TestMrpOrder(TestMrpCommon):
         production.action_confirm()
         production.button_plan()
         # Production planned, time to start, I produce all the 1 product
+        # 'invisible': [('state', '=', 'draft')]
+        production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
             wo.duration = 10  # In 10 minutes this time
@@ -2410,6 +2430,8 @@ class TestMrpOrder(TestMrpCommon):
         Test that when tracking the 2 last production, if we make one with under capacity, and one with normal capacity,
         the two are equivalent (1 done with capacity 2 in 10mn = 2 done with capacity 2 in 10mn)
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         production_form = Form(self.env['mrp.production'])
         production_form.bom_id = self.bom_5
         production = production_form.save()
@@ -2417,6 +2439,8 @@ class TestMrpOrder(TestMrpCommon):
         production.button_plan()
 
         # Production planned, time to start, I produce all the 1 product
+        # 'invisible': [('state', '=', 'draft')]
+        production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
             wo.duration = 10  # in 10 minutes
@@ -2434,6 +2458,8 @@ class TestMrpOrder(TestMrpCommon):
         production.action_confirm()
         production.button_plan()
         # Production planned, time to start, I produce all the 2 product
+        # 'invisible': [('state', '=', 'draft')]
+        production_form = Form(production)
         production_form.qty_producing = 2
         with production_form.workorder_ids.edit(0) as wo:
             wo.duration = 10  # In 10 minutes this time
@@ -2457,6 +2483,8 @@ class TestMrpOrder(TestMrpCommon):
         5 -> 30mn
         ...
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         production_form = Form(self.env['mrp.production'])
         production_form.bom_id = self.bom_6
         production = production_form.save()
@@ -2464,6 +2492,8 @@ class TestMrpOrder(TestMrpCommon):
         production.button_plan()
 
         # Production planned, time to start, I produce all the 1 product
+        # 'invisible': [('state', '=', 'draft')]
+        production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
             wo.duration = 10  # in 10 minutes
@@ -2760,6 +2790,8 @@ class TestMrpOrder(TestMrpCommon):
         """
             Check that the work order is started only once when clicking the start button several times.
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         production_form = Form(self.env['mrp.production'])
         production_form.bom_id = self.bom_2
         production_form.product_qty = 1
@@ -2869,6 +2901,8 @@ class TestMrpOrder(TestMrpCommon):
         -> The user replans one of the WO: the warnings should disappear and the
         WO should be postponed.
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         mos = self.env['mrp.production']
         for _ in range(2):
             mo_form = Form(self.env['mrp.production'])
@@ -2899,6 +2933,8 @@ class TestMrpOrder(TestMrpCommon):
         -> The user replans one of the WO: the warnings should disappear and the
         WO should be postponed.
         """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         mos = self.env['mrp.production']
         for _ in range(2):
             mo_form = Form(self.env['mrp.production'])

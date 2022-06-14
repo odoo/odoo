@@ -449,6 +449,8 @@ class TestCreatePicking(common.TestProductCommon):
             'Delivery deadline date should be changed.')
 
     def test_07_differed_schedule_date(self):
+        # Required for `reception_steps` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
         warehouse = self.env['stock.warehouse'].search([], limit=1)
 
         with Form(warehouse) as w:

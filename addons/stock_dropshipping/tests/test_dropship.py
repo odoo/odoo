@@ -67,6 +67,8 @@ class TestDropship(common.TransactionCase):
         self.assertAlmostEqual(pol2.product_qty, sol2.product_uom_qty)
 
     def test_00_dropship(self):
+        # Required for `route_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
         # Create a vendor
         supplier_dropship = self.env['res.partner'].create({'name': 'Vendor of Dropshipping test'})

@@ -436,6 +436,12 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         with Form(self.env['project.project'].with_context({'tracking_disable': True})) as project_form:
             project_form.name = 'Test Billable Project'
             project_form.allow_billable = True
+            # `sale_line_employee_ids` is not visible if `partner_id` is not set
+            # As the behavior of the test is to check the partner on the project
+            # is set to the partner of the order line, temporary make the field visible
+            # even if it's not the case in the reality, in the web client
+            # {'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}
+            project_form._view['modifiers']['sale_line_employee_ids']['invisible'] = False
             with project_form.sale_line_employee_ids.new() as mapping_form:
                 mapping_form.employee_id = self.employee_manager
                 mapping_form.sale_line_id = self.so.order_line[:1]

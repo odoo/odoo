@@ -11,6 +11,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # Required for `uom_id` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        # Required for `manufacture_steps` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('stock.group_adv_location')
         # Create warehouse
         cls.customer_location = cls.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         warehouse_form = Form(cls.env['stock.warehouse'])

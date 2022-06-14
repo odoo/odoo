@@ -10,6 +10,8 @@ from odoo.tests import tagged, common, Form
 class TestLifoPrice(ValuationReconciliationTestCommon):
 
     def test_lifoprice(self):
+        # Required for `uom_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
 
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
@@ -27,7 +29,18 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         product_form.name = 'LIFO Ice Cream'
         product_form.detailed_type = 'product'
         product_form.categ_id = product_category_001
-        product_form.list_price = 100.0
+        # <field name="list_price" position="attributes">
+        #     <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+        #     <attribute name="invisible">1</attribute>
+        # </field>
+        # <field name="list_price" position="after">
+        #     <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+        # </field>
+        # @api.onchange('lst_price')
+        # def _set_product_lst_price(self):
+        #     ...
+        #         product.write({'list_price': value})
+        product_form.lst_price = 100.0
         product_form.uom_id = self.env.ref('uom.product_uom_kgm')
         product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
         # these are not available (visible) in either product or variant
@@ -78,9 +91,17 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
 
         # Let us send some goods
         self.company_data['default_warehouse'].out_type_id.show_operations = False
-        out_form = Form(self.env['stock.picking'])
+        # <field name="immediate_transfer" invisible="1"/>
+        # def _get_action(self, action_xmlid):
+        #     ...
+        #     context = {
+        #         ...
+        #         'default_immediate_transfer': default_immediate_tranfer,
+        #         ...
+        #     }
+        #     ...
+        out_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
         out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
-        out_form.immediate_transfer = True
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0

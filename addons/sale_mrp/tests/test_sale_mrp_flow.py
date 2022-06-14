@@ -15,6 +15,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        # Required for `uom_id` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
         # Useful models
@@ -213,7 +215,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         """
         for comp in components:
             f = Form(self.env['stock.move'])
-            f.name = 'Test Receipt Components'
+            # <field name="name" invisible="1"/>
             f.location_id = self.env.ref('stock.stock_location_suppliers')
             f.location_dest_id = warehouse.lot_stock_id
             f.product_id = comp
