@@ -650,7 +650,7 @@ const QWeb = core.qweb;
         }
 
         return superMethod.apply(this, superArguments).then(() => {
-            if (this._isChatbotRedirecting) {
+            if (this.messaging.livechatButtonView.isChatbotRedirecting) {
                 return;
             }
 
@@ -814,7 +814,7 @@ const QWeb = core.qweb;
         const selectedAnswer = $target.data('chatbotStepAnswerId');
 
         const redirectLink = $target.data('chatbotStepRedirectLink');
-        this._isChatbotRedirecting = !!redirectLink;
+        this.messaging.livechatButtonView.update({ isChatbotRedirecting: !!redirectLink });
 
         await this._sendMessage({
             content: $target.text().trim(),
