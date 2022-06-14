@@ -9,7 +9,7 @@ registerModel({
     identifyingFields: [[
         'attachmentCardOwnerAsAttachmentDeleteConfirm',
         'attachmentImageOwnerAsAttachmentDeleteConfirm',
-        'attachmentListOwnerAsAttachmentView',
+        'attachmentListOwnerAsAttachmentViewer',
         'followerOwnerAsSubtypeList',
         'messageActionListOwnerAsDeleteConfirm',
     ]],
@@ -49,7 +49,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeAttachmentViewer() {
-            if (this.attachmentListOwnerAsAttachmentView) {
+            if (this.attachmentListOwnerAsAttachmentViewer) {
                 return insertAndReplace();
             }
             return clear();
@@ -200,8 +200,8 @@ registerModel({
             inverse: 'attachmentDeleteConfirmDialog',
             readonly: true,
         }),
-        attachmentListOwnerAsAttachmentView: one('AttachmentList', {
-            inverse: 'attachmentListViewDialog',
+        attachmentListOwnerAsAttachmentViewer: one('AttachmentList', {
+            inverse: 'attachmentViewerDialog',
             readonly: true,
         }),
         attachmentViewer: one('AttachmentViewer', {

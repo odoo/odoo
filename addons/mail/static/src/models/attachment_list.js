@@ -96,8 +96,8 @@ registerModel({
             inverse: 'attachmentList',
             isCausal: true,
         }),
-        attachmentListViewDialog: one('Dialog', {
-            inverse: 'attachmentListOwnerAsAttachmentView',
+        attachmentViewerDialog: one('Dialog', {
+            inverse: 'attachmentListOwnerAsAttachmentViewer',
             isCausal: true,
         }),
         /**

@@ -16,7 +16,7 @@ registerModel({
                 return;
             }
             this.attachmentList.update({
-                attachmentListViewDialog: insertAndReplace(),
+                attachmentViewerDialog: insertAndReplace(),
                 selectedAttachment: replace(this.attachment),
             });
         },

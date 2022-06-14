@@ -26,10 +26,10 @@ registerModel({
          * Display the next attachment in the list of attachments.
          */
         next() {
-            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentView) {
+            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentViewer) {
                 return;
             }
-            this.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
+            this.dialogOwner.attachmentListOwnerAsAttachmentViewer.selectNextAttachment();
         },
         /**
          * Called when clicking on mask of attachment viewer.
@@ -143,10 +143,10 @@ registerModel({
          * Display the previous attachment in the list of attachments.
          */
         previous() {
-            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentView) {
+            if (!this.dialogOwner || !this.dialogOwner.attachmentListOwnerAsAttachmentViewer) {
                 return;
             }
-            this.dialogOwner.attachmentListOwnerAsAttachmentView.selectPreviousAttachment();
+            this.dialogOwner.attachmentListOwnerAsAttachmentViewer.selectPreviousAttachment();
         },
         /**
          * Prompt the browser print of this attachment.
@@ -225,7 +225,7 @@ registerModel({
             related: 'attachmentList.selectedAttachment',
         }),
         attachmentList: one('AttachmentList', {
-            related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
+            related: 'dialogOwner.attachmentListOwnerAsAttachmentViewer',
             required: true,
         }),
         attachments: many('Attachment', {
