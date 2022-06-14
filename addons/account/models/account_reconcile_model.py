@@ -69,8 +69,6 @@ class AccountReconcileModelLine(models.Model):
     * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)""")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', check_company=True)
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', check_company=True,
-                                        relation='account_reconcile_model_analytic_tag_rel')
 
     @api.onchange('tax_ids')
     def _onchange_tax_ids(self):
@@ -135,7 +133,6 @@ class AccountReconcileModelLine(models.Model):
             'account_id': self.account_id.id,
             'partner_id': partner.id,
             'analytic_account_id': self.analytic_account_id.id,
-            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
             'tax_ids': [Command.set(taxes.ids)],
             'reconcile_model_id': self.model_id.id,
         }
@@ -467,7 +464,6 @@ class AccountReconcileModel(models.Model):
                 'debit': balance > 0 and balance or 0,
                 'credit': balance < 0 and -balance or 0,
                 'analytic_account_id': tax.analytic and base_line_dict['analytic_account_id'],
-                'analytic_tag_ids': tax.analytic and base_line_dict['analytic_tag_ids'],
                 'tax_repartition_line_id': tax_res['tax_repartition_line_id'],
                 'tax_ids': [(6, 0, tax_res['tax_ids'])],
                 'tax_tag_ids': [(6, 0, tax_res['tag_ids'])],
@@ -517,7 +513,6 @@ class AccountReconcileModel(models.Model):
                 'account_id': line.account_id.id,
                 'currency_id': currency.id,
                 'analytic_account_id': line.analytic_account_id.id,
-                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
                 'journal_id': line.journal_id.id,
                 'tax_ids': [],

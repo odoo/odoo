@@ -25,7 +25,6 @@
                             <field name="force_tax_included"
                                    attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
                             <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting"/>
-                            <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             <field name="company_id" invisible="1"/>
                         </group>
                         <group>
@@ -245,10 +244,6 @@
                                                        optional="hide"/>
                                                 <field name="analytic_account_id"
                                                        groups="analytic.group_analytic_accounting"
-                                                       optional="hide"/>
-                                                <field name="analytic_tag_ids"
-                                                       widget="many2many_tags"
-                                                       groups="analytic.group_analytic_tags"
                                                        optional="hide"/>
                                                 <field name="force_tax_included"
                                                        widget="boolean_toggle"

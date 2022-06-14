@@ -3797,8 +3797,6 @@ class AccountMoveLine(models.Model):
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account',
         index='btree_not_null', compute="_compute_analytic_account_id", store=True, readonly=False, check_company=True, copy=True)
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
-        compute="_compute_analytic_tag_ids", store=True, readonly=False, check_company=True, copy=True)
 
     # ==== Onchange / display purpose fields ====
     recompute_tax_line = fields.Boolean(store=False, readonly=True,
@@ -3999,21 +3997,6 @@ class AccountMoveLine(models.Model):
                 )
                 if rec:
                     record.analytic_account_id = rec.analytic_id
-
-    @api.depends('product_id', 'account_id', 'partner_id', 'date')
-    def _compute_analytic_tag_ids(self):
-        for record in self:
-            if not record.exclude_from_invoice_tab or not record.move_id.is_invoice(include_receipts=True):
-                rec = self.env['account.analytic.default'].account_get(
-                    product_id=record.product_id.id,
-                    partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
-                    account_id=record.account_id.id,
-                    user_id=record.env.uid,
-                    date=record.date,
-                    company_id=record.move_id.company_id.id
-                )
-                if rec:
-                    record.analytic_tag_ids = rec.analytic_tag_ids
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
@@ -4261,7 +4244,7 @@ class AccountMoveLine(models.Model):
             if not line.tax_repartition_line_id:
                 line.recompute_tax_line = True
 
-    @api.onchange('analytic_account_id', 'analytic_tag_ids')
+    @api.onchange('analytic_account_id')
     def _onchange_mark_recompute_taxes_analytic(self):
         ''' Trigger tax recomputation only when some taxes with analytics
         '''
@@ -5872,7 +5855,6 @@ class AccountMoveLine(models.Model):
             discount=self.discount if is_invoice else 0.0,
             account=self.account_id,
             analytic_account=self.analytic_account_id,
-            analytic_tags=self.analytic_tag_ids,
             price_subtotal=sign * self.amount_currency,
             is_refund=is_refund,
         )
@@ -5896,13 +5878,8 @@ class AccountMoveLine(models.Model):
             group_tax=self.group_tax_id,
             account=self.account_id,
             analytic_account=self.analytic_account_id,
-            analytic_tags=self.analytic_tag_ids,
             tax_amount=sign * self.amount_currency,
         )
-
-    def _get_analytic_tag_ids(self):
-        self.ensure_one()
-        return self.analytic_tag_ids.filtered(lambda r: not r.active_analytic_distribution).ids
 
     def create_analytic_lines(self):
         """ Create analytic items upon validation of an account.move.line having an analytic account or an analytic distribution.
@@ -5910,9 +5887,6 @@ class AccountMoveLine(models.Model):
         lines_to_create_analytic_entries = self.env['account.move.line']
         analytic_line_vals = []
         for obj_line in self:
-            for tag in obj_line.analytic_tag_ids.filtered('active_analytic_distribution'):
-                for distribution in tag.analytic_distribution_ids:
-                    analytic_line_vals.append(obj_line._prepare_analytic_distribution_line(distribution))
             if obj_line.analytic_account_id:
                 lines_to_create_analytic_entries |= obj_line
 
@@ -5941,8 +5915,7 @@ class AccountMoveLine(models.Model):
                 'name': default_name,
                 'date': move_line.date,
                 'account_id': move_line.analytic_account_id.id,
-                'group_id': move_line.analytic_account_id.group_id.id,
-                'tag_ids': [(6, 0, move_line._get_analytic_tag_ids())],
+                'plan_id': move_line.analytic_account_id.plan_id.id,
                 'unit_amount': move_line.quantity,
                 'product_id': move_line.product_id and move_line.product_id.id or False,
                 'product_uom_id': move_line.product_uom_id and move_line.product_uom_id.id or False,
@@ -5968,9 +5941,8 @@ class AccountMoveLine(models.Model):
             'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
-            'group_id': distribution.account_id.group_id.id,
+            'plan_id': distribution.account_id.plan_id.id,
             'partner_id': self.partner_id.id,
-            'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
@@ -6026,9 +5998,6 @@ class AccountMoveLine(models.Model):
 
         if context.get('account_ids'):
             domain += [('account_id', 'in', context['account_ids'].ids)]
-
-        if context.get('analytic_tag_ids'):
-            domain += [('analytic_tag_ids', 'in', context['analytic_tag_ids'].ids)]
 
         if context.get('analytic_account_ids'):
             domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]

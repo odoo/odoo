@@ -700,7 +700,7 @@ class AccountTax(models.Model):
     def _convert_to_tax_base_line_dict(
             self, base_line,
             partner=None, currency=None, product=None, taxes=None, price_unit=None, quantity=None,
-            discount=None, account=None, analytic_account=None, analytic_tags=None, price_subtotal=None,
+            discount=None, account=None, analytic_account=None, price_subtotal=None,
             is_refund=False,
             handle_price_include=None,
             extra_context=None,
@@ -716,7 +716,6 @@ class AccountTax(models.Model):
             'discount': discount or 0.0,
             'account': account or self.env['account.account'],
             'analytic_account': analytic_account or self.env['account.analytic.account'],
-            'analytic_tags': analytic_tags or self.env['account.analytic.tag'],
             'price_subtotal': price_subtotal or 0.0,
             'is_refund': is_refund,
             'handle_price_include': handle_price_include,
@@ -727,7 +726,7 @@ class AccountTax(models.Model):
     def _convert_to_tax_line_dict(
             self, tax_line,
             partner=None, currency=None, taxes=None, tax_tags=None, tax_repartition_line=None,
-            group_tax=None, account=None, analytic_account=None, analytic_tags=None, tax_amount=None,
+            group_tax=None, account=None, analytic_account=None, tax_amount=None,
     ):
         return {
             'record': tax_line,
@@ -739,7 +738,6 @@ class AccountTax(models.Model):
             'group_tax': group_tax or self.env['account.tax'],
             'account': account or self.env['account.account'],
             'analytic_account': analytic_account or self.env['account.analytic.account'],
-            'analytic_tags': analytic_tags or self.env['account.analytic.tag'],
             'tax_amount': tax_amount or 0.0,
         }
 
@@ -763,7 +761,6 @@ class AccountTax(models.Model):
             'tax_ids': [Command.set(tax_vals['tax_ids'])],
             'tax_tag_ids': [Command.set(tax_vals['tag_ids'])],
             'tax_id': tax_vals['group'].id if tax_vals['group'] else tax_vals['id'],
-            'analytic_tag_ids': [Command.set(line_vals['analytic_tags'].ids if tax_vals['analytic'] else [])],
             'analytic_account_id': line_vals['analytic_account'].id if tax_vals['analytic'] else False,
         }
 
@@ -785,7 +782,6 @@ class AccountTax(models.Model):
             'tax_ids': [Command.set(line_vals['taxes'].ids)],
             'tax_tag_ids': [Command.set(line_vals['tax_tags'].ids)],
             'tax_id': (line_vals['group_tax'] or tax).id,
-            'analytic_tag_ids': [Command.set(line_vals['analytic_tags'].ids if tax.analytic else [])],
             'analytic_account_id': line_vals['analytic_account'].id if tax.analytic else False,
         }
 

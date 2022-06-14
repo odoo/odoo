@@ -34,7 +34,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='tag_ids']" position="after">
+                    <xpath expr="//field[@name='amount']" position="after">
                         <field name="ref"/>
                         <field name="partner_id"/>
                     </xpath>

@@ -216,10 +216,6 @@ class AccountAnalyticLine(models.Model):
             task_analytic_account_id = task._get_task_analytic_account_id()
             vals['account_id'] = task_analytic_account_id.id
             vals['company_id'] = task_analytic_account_id.company_id.id or task.company_id.id
-            if vals.get('tag_ids'):
-                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in task.analytic_tag_ids]
-            else:
-                vals['tag_ids'] = [Command.set(task.analytic_tag_ids.ids)]
             if not task_analytic_account_id.active:
                 raise UserError(_('You cannot add timesheets to a project or a task linked to an inactive analytic account.'))
         # project implies analytic account
@@ -227,10 +223,6 @@ class AccountAnalyticLine(models.Model):
             project = self.env['project.project'].browse(vals.get('project_id'))
             vals['account_id'] = project.analytic_account_id.id
             vals['company_id'] = project.analytic_account_id.company_id.id or project.company_id.id
-            if vals.get('tag_ids'):
-                vals['tag_ids'] += [Command.link(tag_id.id) for tag_id in project.analytic_tag_ids]
-            else:
-                vals['tag_ids'] = [Command.set(project.analytic_tag_ids.ids)]
             if not project.analytic_account_id.active:
                 raise UserError(_('You cannot add timesheets to a project linked to an inactive analytic account.'))
         # employee implies user

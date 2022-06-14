@@ -13,7 +13,6 @@ class AccountAnalyticDefault(models.Model):
 
     sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of analytic distribution")
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     product_id = fields.Many2one('product.product', string='Product', ondelete='cascade', help="Select a product which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)")
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='cascade', help="Select a partner which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)")
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', help="Select an accounting account which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this account, it will automatically take this as an analytic account)")
@@ -22,13 +21,12 @@ class AccountAnalyticDefault(models.Model):
     date_start = fields.Date(string='Start Date', help="Default start date for this Analytic Account.")
     date_stop = fields.Date(string='End Date', help="Default end date for this Analytic Account.")
 
-    @api.constrains('analytic_id', 'analytic_tag_ids')
-    def _check_account_or_tags(self):
+    @api.constrains('analytic_id')
+    def _check_account(self):
         if any(not default.analytic_id
-               and not any(tag.analytic_distribution_ids for tag in default.analytic_tag_ids)
                for default in self
                ):
-            raise ValidationError(_('An analytic default requires an analytic account or an analytic tag used for analytic distribution.'))
+            raise ValidationError(_('An analytic default requires an analytic account used for analytic distribution.'))
 
     @api.model
     def account_get(self, product_id=None, partner_id=None, account_id=None, user_id=None, date=None, company_id=None):

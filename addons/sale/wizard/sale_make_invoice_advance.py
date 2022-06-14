@@ -96,7 +96,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'product_uom_id': so_line.product_uom.id,
                 'tax_ids': [(6, 0, so_line.tax_id.ids)],
                 'sale_line_ids': [(6, 0, [so_line.id])],
-                'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
                 'analytic_account_id': order.analytic_account_id.id or False,
             })],
         }
@@ -136,7 +135,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
-    def _prepare_so_line(self, order, analytic_tag_ids, tax_ids, amount):
+    def _prepare_so_line(self, order, tax_ids, amount):
         context = {'lang': order.partner_id.lang}
         so_values = {
             'name': _('Down Payment: %s') % (time.strftime('%m %Y'),),
@@ -146,7 +145,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'discount': 0.0,
             'product_uom': self.product_id.uom_id.id,
             'product_id': self.product_id.id,
-            'analytic_tag_ids': analytic_tag_ids,
             'tax_id': [(6, 0, tax_ids)],
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
@@ -175,11 +173,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
                 taxes = self.product_id.taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
                 tax_ids = order.fiscal_position_id.map_tax(taxes).ids
-                analytic_tag_ids = []
-                for line in order.order_line:
-                    analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
 
-                so_line_values = self._prepare_so_line(order, analytic_tag_ids, tax_ids, amount)
+                so_line_values = self._prepare_so_line(order, tax_ids, amount)
                 so_line = sale_line_obj.create(so_line_values)
                 invoices += self._create_invoice(order, so_line, amount)
             return invoices

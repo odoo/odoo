@@ -1284,11 +1284,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
-
-        analytic_tag = self.env['account.analytic.tag'].create({
-            'name': 'test_analytic_tag',
-        })
 
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
@@ -1299,7 +1294,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
         move_form.save()
 
         # The tax is not flagged as an analytic one. It should change nothing on the taxes.
@@ -1307,34 +1301,28 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
             },
             {
                 **self.product_line_vals_2,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.tax_line_vals_1,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.tax_line_vals_2,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.term_line_vals_1,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
         move_form.save()
 
         # Enable the analytic
@@ -1343,7 +1331,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
         move_form.save()
 
         # The tax is flagged as an analytic one.
@@ -1352,12 +1339,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
             },
             {
                 **self.product_line_vals_2,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.tax_line_vals_1,
@@ -1367,7 +1352,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': -150.0,
                 'credit': 150.0,
                 'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
             },
             {
                 **self.tax_line_vals_1,
@@ -1377,24 +1361,20 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': -30.0,
                 'credit': 30.0,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.tax_line_vals_2,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.term_line_vals_1,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
         move_form.save()
 
         # The tax line has been removed.
@@ -1402,27 +1382,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.product_line_vals_2,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.tax_line_vals_1,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.tax_line_vals_2,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
             {
                 **self.term_line_vals_1,
                 'analytic_account_id': False,
-                'analytic_tag_ids': [],
             },
         ], self.move_vals)
 

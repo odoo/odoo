@@ -296,7 +296,6 @@ class Project(models.Model):
         help="Analytic account to which this project is linked for financial management. "
              "Use an analytic account to record cost and revenue on your project.")
     analytic_account_balance = fields.Monetary(related="analytic_account_id.balance")
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
@@ -1297,8 +1296,6 @@ class Task(models.Model):
              "If empty, the analytic account of the project will be used.")
     is_analytic_account_id_changed = fields.Boolean('Is Analytic Account Manually Changed', compute='_compute_is_analytic_account_id_changed', store=True)
     project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string="Analytic Tags",
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True)
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -1809,8 +1806,6 @@ class Task(models.Model):
             project = self.env['project.project'].browse(vals.get('project_id'))
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
-            if project.analytic_tag_ids:
-                vals['analytic_tag_ids'] = [Command.set(project.analytic_tag_ids.ids)]
         else:
             vals['user_ids'] = [Command.link(self.env.user.id)]
 

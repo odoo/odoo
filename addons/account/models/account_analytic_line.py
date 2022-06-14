@@ -128,32 +128,6 @@ class AccountAnalyticApplicability(models.Model):
     ], required=True, string="Applicability")
 
 
-
-class AccountAnalyticTag(models.Model):
-    _inherit = 'account.analytic.tag'
-
-    @api.constrains('company_id')
-    def _check_company_consistency(self):
-        analytic_tags = self.filtered('company_id')
-
-        if not analytic_tags:
-            return
-
-        self.flush_recordset(['company_id'])
-        self.env['account.move.line'].flush_model(['company_id'])
-        self._cr.execute('''
-            SELECT line.id
-            FROM account_analytic_tag_account_move_line_rel tag_rel
-            JOIN account_analytic_tag tag ON tag.id = tag_rel.account_analytic_tag_id
-            JOIN account_move_line line ON line.id = tag_rel.account_move_line_id
-            WHERE tag_rel.account_analytic_tag_id IN %s
-            AND line.company_id != tag.company_id
-        ''', [tuple(analytic_tags.ids)])
-
-        if self._cr.fetchone():
-            raise UserError(_("You can't set a different company on your analytic tags since there are some journal items linked to it."))
-
-
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
