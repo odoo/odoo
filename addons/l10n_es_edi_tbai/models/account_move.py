@@ -187,15 +187,16 @@ class AccountMove(models.Model):
 
     @api.constrains('l10n_es_tbai_refund_reason', 'partner_id', 'move_type')
     def _check_l10n_es_tbai_refund_reason_allowed(self):
-        if self.move_type == 'out_refund':
-            if not self.l10n_es_tbai_refund_reason:
-                raise ValidationError(_('Refund reason must be specified (TicketBAI)'))
-            if self._is_l10n_es_tbai_simplified():
-                if self.l10n_es_tbai_refund_reason != 'R5':
-                    raise ValidationError(_('Refund reason must be R5 for simplified invoices (TicketBAI)'))
-            else:
-                if self.l10n_es_tbai_refund_reason == 'R5':
-                    raise ValidationError(_('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)'))
+        for move in self:
+            if move.move_type == 'out_refund':
+                if not move.l10n_es_tbai_refund_reason:
+                    raise ValidationError(_('Refund reason must be specified (TicketBAI)'))
+                if move._is_l10n_es_tbai_simplified():
+                    if move.l10n_es_tbai_refund_reason != 'R5':
+                        raise ValidationError(_('Refund reason must be R5 for simplified invoices (TicketBAI)'))
+                else:
+                    if move.l10n_es_tbai_refund_reason == 'R5':
+                        raise ValidationError(_('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)'))
 
     @api.depends('state', 'edi_document_ids.state')
     def _compute_show_reset_to_draft_button(self):
