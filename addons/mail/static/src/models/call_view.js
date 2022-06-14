@@ -366,7 +366,7 @@ registerModel({
          */
         mainParticipantCard: one('CallParticipantCard', {
             compute: '_computeMainParticipantCard',
-            inverse: 'callViewOfMainCard',
+            inverse: 'callViewAsMainCard',
             isCausal: true,
         }),
         /**
@@ -418,7 +418,7 @@ registerModel({
          */
         tileParticipantCards: many('CallParticipantCard', {
             compute: '_computeTileParticipantCards',
-            inverse: 'callViewOfTile',
+            inverse: 'callViewAsTile',
             isCausal: true,
         }),
         tileWidth: attr({
