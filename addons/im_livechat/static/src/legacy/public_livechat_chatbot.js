@@ -52,17 +52,16 @@ const QWeb = core.qweb;
     async willStart() {
         const superResult = await this._super(...arguments);
 
-        this._isChatbot = false;
         this.chatbotState = null;
 
         if (this._rule && !!this._rule.chatbot) {
-            this._isChatbot = true;
+            this.messaging.livechatButtonView.update({ isChatbot: true });
             this.chatbotState = 'init';
         } else if (this._history !== null && this._history.length === 0) {
             this._livechatInit = await session.rpc('/im_livechat/init', {channel_id: this.options.channel_id});
 
             if (this._livechatInit.rule.chatbot) {
-                this._isChatbot = true;
+                this.messaging.livechatButtonView.update({ isChatbot: true });
                 this.chatbotState = 'welcome';
             }
         } else if (this._history !== null && this._history.length !== 0) {
@@ -70,13 +69,13 @@ const QWeb = core.qweb;
             if (sessionCookie) {
                 const sessionKey = 'im_livechat.chatbot.state.uuid_' + JSON.parse(sessionCookie).uuid;
                 if (localStorage.getItem(sessionKey)) {
-                    this._isChatbot = true;
+                    this.messaging.livechatButtonView.update({ isChatbot: true });
                     this.chatbotState = 'restore_session';
                 }
             }
         }
 
-        if (this._isChatbot) {
+        if (this.messaging.livechatButtonView.isChatbot) {
             // void the default livechat placeholder in the user input
             // as we use it for specific things (e.g: showing "please select an option above")
             this.options.input_placeholder = '';
@@ -100,7 +99,7 @@ const QWeb = core.qweb;
             this._history = null;
             this._rule = this._livechatInit.rule;
             this._chatbot = this._livechatInit.rule.chatbot;
-            this._isChatbot = true;
+            this.messaging.livechatButtonView.update({ isChatbot: true });
             this._chatbotBatchWelcomeMessages = true;
         } else if (this.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
@@ -256,7 +255,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotDisplayRestartButton() {
-        return this._isChatbot && (!this._chatbotCurrentStep ||
+        return this.messaging.livechatButtonView.isChatbot && (!this._chatbotCurrentStep ||
             (this._chatbotCurrentStep.chatbot_step_type !== 'forward_operator' ||
              !this._chatbotCurrentStep.chatbot_operator_found));
     },
@@ -374,7 +373,7 @@ const QWeb = core.qweb;
 
         if (chatbotState) {
             chatbotState = JSON.parse(chatbotState);
-            this._isChatbot = true;
+            this.messaging.livechatButtonView.update({ isChatbot: true });
             this._chatbot = chatbotState._chatbot;
             this._chatbotCurrentStep = chatbotState._chatbotCurrentStep;
         }
@@ -601,7 +600,7 @@ const QWeb = core.qweb;
     _prepareGetSessionParameters() {
         const parameters = this._super(...arguments);
 
-        if (this._isChatbot) {
+        if (this.messaging.livechatButtonView.isChatbot) {
             parameters.chatbot_script_id = this._chatbot.chatbot_script_id;
         }
 
@@ -652,7 +651,7 @@ const QWeb = core.qweb;
         const superArguments = arguments;
         const superMethod = this._super;
 
-        if (this._isChatbot && this._chatbotCurrentStep) {
+        if (this.messaging.livechatButtonView.isChatbot && this._chatbotCurrentStep) {
             await this._chatbotPostWelcomeMessages();
         }
 
@@ -661,7 +660,7 @@ const QWeb = core.qweb;
                 return;
             }
 
-            if (this._isChatbot && this._chatbotCurrentStep) {
+            if (this.messaging.livechatButtonView.isChatbot && this._chatbotCurrentStep) {
                 if (this._chatbotCurrentStep.chatbot_step_type === 'forward_operator' &&
                     this._chatbotCurrentStep.chatbot_operator_found) {
                     return;  // operator has taken over the conversation, let them speak
@@ -684,7 +683,7 @@ const QWeb = core.qweb;
      * @private
      */
     _sendWelcomeMessage() {
-        if (this._isChatbot) {
+        if (this.messaging.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
                 this._chatbotBatchWelcomeMessages ? 0 : this._chatbotMessageDelay,
