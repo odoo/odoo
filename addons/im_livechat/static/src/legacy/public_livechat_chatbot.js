@@ -179,8 +179,10 @@ const QWeb = core.qweb;
         });
 
         const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage._id);
-        this._messages = this._messages.filter((message) => {
-            !welcomeMessagesIds.includes(message._id);
+        this.messaging.livechatButtonView.update({
+            messages: this.messaging.livechatButtonView.messages.filter((message) => {
+                !welcomeMessagesIds.includes(message._id);
+            }),
         });
 
         postedWelcomeMessages.reverse();
@@ -432,10 +434,12 @@ const QWeb = core.qweb;
                 && !this._chatbotCurrentStep.is_email_valid) {
                 // email is not (yet) valid, let the user answer / try again
                 return false;
-            } else if ((this._chatbotIsExpectingUserInput() ||
-                        this._chatbotCurrentStep.chatbot_step_type === 'question_selection') &&
-                       this._messages.length !== 0) {
-                const lastMessage = this._messages[this._messages.length - 1];
+            } else if (
+                (this._chatbotIsExpectingUserInput() ||
+                this._chatbotCurrentStep.chatbot_step_type === 'question_selection') &&
+                this.messaging.livechatButtonView.messages.length !== 0
+            ) {
+                const lastMessage = this.messaging.livechatButtonView.messages[this.messaging.livechatButtonView.messages.length - 1];
                 if (lastMessage.getAuthorID() !== this._livechat.getOperatorPID()[0]) {
                     // we are on the last step of the script, expect a user input and the user has
                     // already answered
@@ -523,13 +527,13 @@ const QWeb = core.qweb;
         return nextStep;
     },
     /**
-     * Returns the 'this._messages' filtered on our special 'welcome' ones.
+     * Returns the 'this.messaging.livechatButtonView.messages' filtered on our special 'welcome' ones.
      * See '_sendWelcomeChatbotMessage'.
      *
      * @private
      */
     _getWelcomeMessages() {
-        return this._messages.filter((message) => {
+        return this.messaging.livechatButtonView.messages.filter((message) => {
             return message._id && typeof message._id === 'string' && message._id.startsWith('_welcome_');
         });
     },
@@ -539,7 +543,7 @@ const QWeb = core.qweb;
      * @private
      */
     _isLastMessageFromCustomer() {
-        const lastMessage = this._messages.length !== 0 ? this._messages[this._messages.length - 1] : null;
+        const lastMessage = this.messaging.livechatButtonView.messages.length !== 0 ? this.messaging.livechatButtonView.messages[this.messaging.livechatButtonView.messages.length - 1] : null;
         return lastMessage && lastMessage.getAuthorID() !== this._livechat.getOperatorPID()[0];
     },
 
@@ -582,7 +586,7 @@ const QWeb = core.qweb;
                 }
             });
 
-            if (this._chatbotCurrentStep && this._messages && this._messages.length !== 0) {
+            if (this._chatbotCurrentStep && this.messaging.livechatButtonView.messages && this.messaging.livechatButtonView.messages.length !== 0) {
                 this._chatbotProcessStep();
             }
         });
@@ -615,8 +619,8 @@ const QWeb = core.qweb;
         this.messaging.livechatButtonView.chatWindow.$('.o_livechat_chatbot_main_restart').on('click',
             this._onChatbotRestartScript.bind(this));
 
-        if (this._messages.length !== 0) {
-            const lastMessage = this._messages[this._messages.length - 1];
+        if (this.messaging.livechatButtonView.messages.length !== 0) {
+            const lastMessage = this.messaging.livechatButtonView.messages[this.messaging.livechatButtonView.messages.length - 1];
             const stepAnswers = lastMessage.getChatbotStepAnswers();
             if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.getChatbotStepAnswerId()) {
                 this._chatbotDisableInput(_t('Select an option above'));
@@ -797,7 +801,7 @@ const QWeb = core.qweb;
 
     /**
      * Saves the selected chatbot.script.answer onto our chatbot.message.
-     * Will update the state of the related message (in this._messages) to set the selected option
+     * Will update the state of the related message (in this.messaging.livechatButtonView.messages) to set the selected option
      * as well which will in turn adapt the display to not show options anymore.
      *
      * This method also handles an optional redirection link placed on the chatbot.script.answer and
@@ -821,7 +825,7 @@ const QWeb = core.qweb;
         });
 
         let stepMessage = null;
-        this._messages.forEach((message) => {
+        for (const message of this.messaging.livechatButtonView.messages) {
             // we do NOT want to use a 'find' here because we want the LAST message that respects
             // this condition.
             // indeed, if you restart the script, you can have multiple messages with the same step id,
@@ -831,7 +835,7 @@ const QWeb = core.qweb;
             if (message.getChatbotStepId() === stepId) {
                 stepMessage = message;
             }
-        });
+        }
         const messageId = stepMessage.getID();
         stepMessage.setChatbotStepAnswerId(selectedAnswer);
         this._chatbotCurrentStep['chatbot_selected_answer_id'] = selectedAnswer;

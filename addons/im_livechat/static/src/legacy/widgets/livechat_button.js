@@ -13,6 +13,8 @@ import WebsiteLivechat from '@im_livechat/legacy/models/website_livechat';
 import WebsiteLivechatMessage from '@im_livechat/legacy/models/website_livechat_message';
 import WebsiteLivechatWindow from '@im_livechat/legacy/models/website_livechat_window';
 
+import { clear } from '@mail/model/model_field_command';
+
 const _t = core._t;
 const QWeb = core.qweb;
 
@@ -38,7 +40,6 @@ const LivechatButton = Widget.extend({
         this._history = null;
         // livechat model
         this._livechat = null;
-        this._messages = [];
         this._serverURL = this.messaging.publicLivechatServerUrl;
     },
     async willStart() {
@@ -102,7 +103,7 @@ const LivechatButton = Widget.extend({
         });
         const message = new WebsiteLivechatMessage(this, data, options);
 
-        const hasAlreadyMessage = _.some(this._messages, function (msg) {
+        const hasAlreadyMessage = _.some(this.messaging.livechatButtonView.messages, function (msg) {
             return message.getID() === msg.getID();
         });
         if (hasAlreadyMessage) {
@@ -114,9 +115,13 @@ const LivechatButton = Widget.extend({
         }
 
         if (options && options.prepend) {
-            this._messages.unshift(message);
+            this.messaging.livechatButtonView.update({
+                messages: [message, ...this.messaging.livechatButtonView.messages],
+            });
         } else {
-            this._messages.push(message);
+            this.messaging.livechatButtonView.update({
+                messages: [...this.messaging.livechatButtonView.messages, message],
+            });
         }
     },
     /**
@@ -181,7 +186,7 @@ const LivechatButton = Widget.extend({
                 }
                 const notificationData = payload.message;
                 // If message from notif is already in chatter messages, stop handling
-                if (this._messages.some(message => message.getID() === notificationData.id)) {
+                if (this.messaging.livechatButtonView.messages.some(message => message.getID() === notificationData.id)) {
                     return;
                 }
                 notificationData.body = utils.Markup(notificationData.body);
@@ -193,7 +198,7 @@ const LivechatButton = Widget.extend({
                 return;
             }
             case 'mail.message/insert': {
-                const message = this._messages.find(message => message._id === payload.id);
+                const message = this.messaging.livechatButtonView.messages.find(message => message._id === payload.id);
                 if (!message) {
                     return;
                 }
@@ -228,7 +233,8 @@ const LivechatButton = Widget.extend({
         if (cookie) {
             def = Promise.resolve(JSON.parse(cookie));
         } else {
-            this._messages = []; // re-initialize messages cache
+            // re-initialize messages cache
+            this.messaging.livechatButtonView.update({ messages: clear() });
             def = session.rpc(
                 '/im_livechat/get_session',
                 this._prepareGetSessionParameters(),
@@ -336,7 +342,7 @@ const LivechatButton = Widget.extend({
      */
      _renderMessages() {
         const shouldScroll = !this.messaging.livechatButtonView.chatWindow.isFolded() && this.messaging.livechatButtonView.chatWindow.isAtBottom();
-        this._livechat.setMessages(this._messages);
+        this._livechat.setMessages(this.messaging.livechatButtonView.messages);
         this.messaging.livechatButtonView.chatWindow.render();
         if (shouldScroll) {
             this.messaging.livechatButtonView.chatWindow.scrollToBottom();
@@ -402,7 +408,7 @@ const LivechatButton = Widget.extend({
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
         const isComposerDisabled = this.messaging.livechatButtonView.chatWindow.$('.o_thread_composer input').prop('disabled');
-        const shouldAskFeedback = !isComposerDisabled && this._messages.find(function (message) {
+        const shouldAskFeedback = !isComposerDisabled && this.messaging.livechatButtonView.messages.find(function (message) {
             return message.getID() !== '_welcome';
         });
         if (shouldAskFeedback) {

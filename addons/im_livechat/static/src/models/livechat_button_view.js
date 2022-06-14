@@ -65,5 +65,8 @@ registerModel({
         isOpeningChat: attr({
             default: false,
         }),
+        messages: attr({
+            default: [],
+        }),
     },
 });

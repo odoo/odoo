@@ -3,6 +3,8 @@
 import tour from "web_tour.tour";
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
+import { clear } from '@mail/model/model_field_command';
+
 LivechatButton.include({
     /**
      * Let us make it a bit faster than the default delay (3500ms).
@@ -23,7 +25,7 @@ LivechatButton.include({
      * the thread and making it hard to write proper jQuery selectors in the tour.
      */
     _onChatbotRestartScript: function () {
-        this._messages = [];
+        this.messaging.livechatButtonView.update({ messages: clear() });
         this._renderMessages();
 
         this._super(...arguments);
