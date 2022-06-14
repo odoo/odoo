@@ -17,6 +17,10 @@ export class CallSystrayMenuContainer extends Component {
         super.setup();
     }
 
+    get messaging() {
+        return this.env.services.messaging.modelManager.messaging;
+    }
+
 }
 
 Object.assign(CallSystrayMenuContainer, {
