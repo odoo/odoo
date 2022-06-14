@@ -46,6 +46,20 @@ class TestPartner(TestCrmCommon):
 
         # test form tool
         partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
+        # `parent_id` is invisible when `is_company` is True (`company_type == 'company'`)
+        # and parent_id is not set
+        # So, set a temporary `parent_id` before setting the contact as company
+        # to make `parent_id` visible in the interface while being a company
+        # <field name="parent_id"
+        #     attrs="{
+        #         'invisible': [
+        #             '|',
+        #             '&amp;', ('is_company','=', True),('parent_id', '=', False),
+        #             ('company_name', '!=', False),('company_name', '!=', '')
+        #         ]
+        #     }"
+        # />
+        partner_form.parent_id = contact_company_1
         partner_form.company_type = 'company'
         partner_form.parent_id = contact_company
         partner_form.name = 'Mom Corp'

@@ -465,6 +465,9 @@ class TestProjectrecurrence(TransactionCase):
             tasks = self.env['project.task'].search(domain)
             return tasks, len(tasks), len(tasks.filtered('parent_id'))
 
+        # Required for `child_ids` to be visible in the view
+        # {'invisible': [('allow_subtasks', '=', False)]}
+        self.project_recurring.allow_subtasks = True
         parent_task = self.env['project.task'].create({
             'name': 'Parent Task',
             'project_id': self.project_recurring.id
@@ -558,6 +561,9 @@ class TestProjectrecurrence(TransactionCase):
             return len(tasks), len(tasks.filtered('parent_id'))
 
         # Phase 0 : Initialize test case
+        # Required for `child_ids` to be visible in the view
+        # {'invisible': [('allow_subtasks', '=', False)]}
+        self.project_recurring.allow_subtasks = True
         parent_task = self.env['project.task'].create({
             'name': 'Parent Task',
             'project_id': self.project_recurring.id

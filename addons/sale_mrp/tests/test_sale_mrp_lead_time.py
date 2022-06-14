@@ -17,7 +17,9 @@ class TestSaleMrpLeadTime(TestStockCommon):
         cls.env.ref('stock.route_warehouse0_mto').active = True
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
         with Form(cls.product_1) as p1:
-            p1.type = 'product'
+            # `type` is invisible in the view,
+            # and it's a compute field based on `detailed_type` which is the field visible in the view
+            p1.detailed_type = 'product'
             p1.produce_delay = 5.0
             p1.sale_delay = 5.0
             p1.route_ids.clear()
@@ -26,7 +28,9 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Update the product_2 with type
         with Form(cls.product_2) as p2:
-            p2.type = 'consu'
+            # `type` is invisible in the view,
+            # and it's a compute field based on `detailed_type` which is the field visible in the view
+            p2.detailed_type = 'consu'
 
         # Create Bill of materials for product_1
         with Form(cls.env['mrp.bom']) as bom:

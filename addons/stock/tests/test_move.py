@@ -1176,6 +1176,8 @@ class StockMove(TransactionCase):
         """Receive a package. Test the package will be move to a child location
         with correct storage category.
         """
+        # Required for `result_package_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category"
@@ -1240,6 +1242,8 @@ class StockMove(TransactionCase):
         """Receive package with same package type twice. Check putaway rule can
         be applied on the first one but not the second one due to no space.
         """
+        # Required for `result_package_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category"
@@ -1341,6 +1345,8 @@ class StockMove(TransactionCase):
         only accept new product when empty. Check putaway rule can be applied on
         the first one but not the second one.
         """
+        # Required for `result_package_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",
@@ -1443,6 +1449,8 @@ class StockMove(TransactionCase):
         accept same product. Check putaway rule can be applied on the first one
         but not the second one.
         """
+        # Required for `result_package_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",

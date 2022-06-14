@@ -277,7 +277,9 @@ class TestUsers2(TransactionCase):
         user_groups_ids = [str(group_id) for group_id in sorted(user_groups.ids)]
         group_field_name = f"sel_groups_{'_'.join(user_groups_ids)}"
 
-        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        # <group col="4" attrs="{'invisible': [('sel_groups_1_9_10', '!=', 1)]}" groups="base.group_no_one" class="o_label_nowrap">
+        with self.debug_mode():
+            user_form = Form(self.env['res.users'], view='base.view_users_form')
         user_form.name = "Test"
         user_form.login = "Test"
         self.assertFalse(user_form.share)

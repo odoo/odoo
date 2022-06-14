@@ -121,7 +121,12 @@ class TestPartner(TransactionCase):
             self.env['res.partner'].with_context(default_lang='de_DE'),
             'base.view_partner_form'
         )
-        partner_form.is_company = True
+        # <field name="is_company" invisible="1"/>
+        # <field name="company_type" widget="radio" options="{'horizontal': true}"/>
+        # @api.onchange('company_type')
+        # def onchange_company_type(self):
+        #     self.is_company = (self.company_type == 'company')
+        partner_form.company_type = 'company'
         partner_form.name = "Test Company"
         self.assertEqual(partner_form.lang, 'de_DE', "New partner's lang should take default from context")
         with partner_form.child_ids.new() as child:

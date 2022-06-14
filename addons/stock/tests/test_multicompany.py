@@ -22,14 +22,20 @@ class TestMultiCompany(TransactionCase):
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
-            'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
+            'groups_id': [(6, 0, [
+                group_user.id,
+                group_stock_manager.id,
+            ])],
             'company_id': cls.company_a.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
         cls.user_b = cls.env['res.users'].create({
             'name': 'user company b with access to company a',
             'login': 'user b',
-            'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
+            'groups_id': [(6, 0, [
+                group_user.id,
+                group_stock_manager.id,
+            ])],
             'company_id': cls.company_b.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
@@ -218,6 +224,8 @@ class TestMultiCompany(TransactionCase):
     def test_orderpoint_1(self):
         """As a user of company A, create an orderpoint for company B. Check itsn't possible to
         use a warehouse of companny A"""
+        # Required for `warehouse_id` and `location_id` to be visible in the view
+        self.user_a.groups_id += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
             'type': 'product',
             'name': 'shared product',
@@ -237,6 +245,8 @@ class TestMultiCompany(TransactionCase):
         """As a user of Company A, check it is not possible to change the company on an existing
         orderpoint to Company B.
         """
+        # Required for `warehouse_id` and `location_id` to be visible in the view
+        self.user_a.groups_id += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
             'type': 'product',
             'name': 'shared product',

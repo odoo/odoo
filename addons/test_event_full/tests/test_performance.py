@@ -109,14 +109,17 @@ class TestEventPerformance(EventPerformanceCase):
         # no type, no website
         with freeze_time(self.reference_now), self.assertQueryCount(event_user=206):  # tef only: 179? - com runbot: 160
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
-            with Form(self.env['event.event']) as event_form:
-                event_form.name = 'Test Event'
-                event_form.date_begin = self.reference_now + timedelta(days=1)
-                event_form.date_end = self.reference_now + timedelta(days=5)
-                event_form.website_menu = False
-                if has_social:
-                    event_form.social_menu = False
-            _event = event_form.save()
+            # Require for `website_menu` to be visible
+            # <div name="event_menu_configuration" groups="base.group_no_one">
+            with self.debug_mode():
+                with Form(self.env['event.event']) as event_form:
+                    event_form.name = 'Test Event'
+                    event_form.date_begin = self.reference_now + timedelta(days=1)
+                    event_form.date_end = self.reference_now + timedelta(days=5)
+                    event_form.website_menu = False
+                    if has_social:
+                        event_form.social_menu = False
+                _event = event_form.save()
 
     @users('event_user')
     @warmup
@@ -127,14 +130,17 @@ class TestEventPerformance(EventPerformanceCase):
         # no type, website
         with freeze_time(self.reference_now), self.assertQueryCount(event_user=671):  # tef only: 638? - com runbot: 571 - ent runbot: 671
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
-            with Form(self.env['event.event']) as event_form:
-                event_form.name = 'Test Event'
-                event_form.date_begin = self.reference_now + timedelta(days=1)
-                event_form.date_end = self.reference_now + timedelta(days=5)
-                event_form.website_menu = True
-                if has_social:
-                    event_form.social_menu = False
-            _event = event_form.save()
+            # Require for `website_menu` to be visible
+            # <div name="event_menu_configuration" groups="base.group_no_one">
+            with self.debug_mode():
+                with Form(self.env['event.event']) as event_form:
+                    event_form.name = 'Test Event'
+                    event_form.date_begin = self.reference_now + timedelta(days=1)
+                    event_form.date_end = self.reference_now + timedelta(days=5)
+                    event_form.website_menu = True
+                    if has_social:
+                        event_form.social_menu = False
+                _event = event_form.save()
 
     @users('event_user')
     @warmup
@@ -146,13 +152,16 @@ class TestEventPerformance(EventPerformanceCase):
         # type and website
         with freeze_time(self.reference_now), self.assertQueryCount(event_user=700):  # tef only: 601 - com runbot: 604 - ent runbot: 700
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
-            with Form(self.env['event.event']) as event_form:
-                event_form.name = 'Test Event'
-                event_form.date_begin = self.reference_now + timedelta(days=1)
-                event_form.date_end = self.reference_now + timedelta(days=5)
-                event_form.event_type_id = event_type
-                if has_social:
-                    event_form.social_menu = False
+            # Require for `website_menu` to be visible
+            # <div name="event_menu_configuration" groups="base.group_no_one">
+            with self.debug_mode():
+                with Form(self.env['event.event']) as event_form:
+                    event_form.name = 'Test Event'
+                    event_form.date_begin = self.reference_now + timedelta(days=1)
+                    event_form.date_end = self.reference_now + timedelta(days=5)
+                    event_form.event_type_id = event_type
+                    if has_social:
+                        event_form.social_menu = False
 
     @users('event_user')
     @warmup

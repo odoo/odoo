@@ -19,6 +19,8 @@ class TestBomPrice(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # Required for `product_uom_id ` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
         cls.Product = cls.env['product.product']
         cls.Bom = cls.env['mrp.bom']
 

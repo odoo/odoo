@@ -73,7 +73,6 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         with Form(self.invoice) as move_form:
             move_form.invoice_payment_term_id = pay_term
             move_form.invoice_date = invoice_date
-            move_form.date = invoice_date
         self.assertEqual(
             self.invoice.line_ids.filtered(
                 lambda l: l.account_id == self.company_data['default_account_receivable']

@@ -66,7 +66,7 @@ class TestMrpCommon(common2.TestStockCommon):
             login='hilda',
             email='h.h@example.com',
             notification_type='inbox',
-            groups='mrp.group_mrp_user, stock.group_stock_user, mrp.group_mrp_byproducts',
+            groups='mrp.group_mrp_user, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
         )
         cls.user_mrp_manager = mail_new_test_user(
             cls.env,
@@ -74,8 +74,11 @@ class TestMrpCommon(common2.TestStockCommon):
             login='gary',
             email='g.g@example.com',
             notification_type='inbox',
-            groups='mrp.group_mrp_manager, stock.group_stock_user, mrp.group_mrp_byproducts',
+            groups='mrp.group_mrp_manager, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
         )
+        # Required for `product_uom_id` to be visible in the view
+        # This class is used by a lot of tests which sets `product_uom_id` on `mrp.production`
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',

@@ -7,6 +7,10 @@ from odoo.tests import common, Form
 class TestProcurementException(common.TransactionCase):
 
     def test_00_procurement_exception(self):
+        # Required for `partner_invoice_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('account.group_delivery_invoice_address')
+        # Required for `route_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
         res_partner_2 = self.env['res.partner'].create({'name': 'My Test Partner'})
         res_partner_address = self.env['res.partner'].create({
@@ -17,7 +21,18 @@ class TestProcurementException(common.TransactionCase):
         # I create a product with no supplier define for it.
         product_form = Form(self.env['product.product'])
         product_form.name = 'product with no seller'
-        product_form.list_price = 20.00
+        # <field name="list_price" position="attributes">
+        #     <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+        #     <attribute name="invisible">1</attribute>
+        # </field>
+        # <field name="list_price" position="after">
+        #     <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+        # </field>
+        # @api.onchange('lst_price')
+        # def _set_product_lst_price(self):
+        #     ...
+        #         product.write({'list_price': value})
+        product_form.lst_price = 20.00
         product_form.categ_id = self.env.ref('product.product_category_1')
         product_with_no_seller = product_form.save()
 
