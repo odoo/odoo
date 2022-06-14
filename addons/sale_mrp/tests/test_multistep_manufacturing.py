@@ -11,6 +11,11 @@ class TestMultistepManufacturing(TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        # Required for `uom_id ` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        # Required for `manufacture_steps` to be visible in the view
+        cls.env.user.groups_id += cls.env.ref('stock.group_adv_location')
+
         cls.env.ref('stock.route_warehouse0_mto').active = True
         cls.MrpProduction = cls.env['mrp.production']
         # Create warehouse

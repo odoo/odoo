@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import contextmanager
+from lxml import etree
 
 from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import AccessError, UserError
@@ -257,10 +258,24 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
                 # set parent on existing orphan task; the onchange will set the correct company and subtask project
                 self.task_2.write({'project_id': False})
-                with Form(self.task_2) as task_form:
-                    task_form.name = 'Test Task 2 becomes child of Task 1 (other company)'
-                    task_form.parent_id = self.task_1
-                task = task_form.save()
+                # For `parent_id` to  be visible in the view, you need
+                # 1. The debug mode
+                # 2. `allow_subtasks` to be true
+                # <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                # `allow_subtasks` is a related to `allow_subtasks` on the project
+                # as the point of the test is to test the behavior of the task `_compute_project_id` when there is no project,
+                # `allow_subtasks` is by default invisible, and you shouldn't therefore be able to change it.
+                # So, to make it visible, temporary modify the view to make it visible even when `allow_subtasks` is `False`.
+                view = self.env.ref('project.view_task_form2').sudo()
+                tree = etree.fromstring(view.arch)
+                for node in tree.xpath('//field[@name="parent_id"][@attrs]'):
+                    node.attrib.pop('attrs')
+                view.arch = etree.tostring(tree)
+                with self.debug_mode():
+                    with Form(self.task_2) as task_form:
+                        task_form.name = 'Test Task 2 becomes child of Task 1 (other company)'
+                        task_form.parent_id = self.task_1
+                    task = task_form.save()
 
                 self.assertEqual(task.company_id, task.project_id.company_id, "The company of the orphan subtask should be the one from its project.")
 
@@ -268,13 +283,28 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         # set up default subtask project
         self.project_company_a.write({'allow_subtasks': True})
 
+        # For `parent_id` to  be visible in the view, you need
+        # 1. The debug mode
+        # 2. `allow_subtasks` to be true
+        # <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+        # `allow_subtasks` is a related to `allow_subtasks` on the project
+        # as the point of the test is to test the behavior of the task `_compute_project_id` when there is no project,
+        # `allow_subtasks` is by default invisible, and you shouldn't therefore be able to change it.
+        # So, to make it visible, temporary modify the view to make it visible even when `allow_subtasks` is `False`.
+        view = self.env.ref('project.view_task_form2').sudo()
+        tree = etree.fromstring(view.arch)
+        for node in tree.xpath('//field[@name="parent_id"][@attrs]'):
+            node.attrib.pop('attrs')
+        view.arch = etree.tostring(tree)
+
         with self.sudo('employee-a'):
             with self.allow_companies([self.company_a.id, self.company_b.id]):
-                with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
-                    task_form.name = 'Test Subtask in company B'
-                    task_form.parent_id = self.task_1
+                with self.debug_mode():
+                    with Form(self.env['project.task'].with_context({'tracking_disable': True})) as task_form:
+                        task_form.name = 'Test Subtask in company B'
+                        task_form.parent_id = self.task_1
 
-                task = task_form.save()
+                    task = task_form.save()
 
                 self.assertEqual(task.project_id, self.task_1.project_id, "The default project of a subtask should be the default subtask project of the project from the mother task")
                 self.assertEqual(task.company_id, task.project_id.company_id, "The company of the orphan subtask should be the one from its project.")

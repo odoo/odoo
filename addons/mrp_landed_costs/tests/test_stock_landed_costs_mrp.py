@@ -160,6 +160,9 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         man_order = man_order_form.save()
         man_order.action_confirm()
         # produce product
+        # To edit `qty_producing`, the mo must no be draft. It's not thanks to the above `action_confirm()`
+        # but the values of the form do not update automatically, it must be reloaded.
+        man_order_form = Form(man_order)
         man_order_form.qty_producing = 1
         man_order_form.save()
         man_order.button_mark_done()

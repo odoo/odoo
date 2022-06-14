@@ -208,10 +208,9 @@ class TestActivityFlow(TestActivityCommon):
             'summary': 'Email Summary',
         })
         call_activity_type = ActivityType.create({'name': 'call'})
-        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'))) as ActivityForm:
-            ActivityForm.res_model_id = self.env['ir.model']._get('mail.test.activity')
-            ActivityForm.res_id = self.test_record.id
-
+        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'), default_res_id=self.test_record.id)) as ActivityForm:
+            # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
+            # they must be set using defaults, see `action_feedback_schedule_next`
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
             self.assertEqual(ActivityForm.summary, False)

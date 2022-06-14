@@ -1453,6 +1453,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
 
     def test_out_invoice_line_onchange_cash_rounding_1(self):
+        # Required for `invoice_cash_rounding_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
         # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
@@ -1977,7 +1979,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         a custom reversal date.
         '''
         move_form = Form(self.invoice)
-        move_form.date = '2016-01-01'
+        # `date` is invisible in the view, the date of the invoice should be set using `invoice_date` instead
+        move_form.invoice_date = '2016-01-01'
         move_form.currency_id = self.currency_data['currency']
         move_form.save()
 
@@ -3459,6 +3462,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.partner_id = self.partner_a
 
         # Quick edit total amount not activated yet
+        # As quick edit total is not yet activated, it's invisible by default in the view
+        move_form._view['modifiers']['quick_edit_total_amount']['invisible'] = False
         move_form.quick_edit_total_amount = 100.0
         invoice = move_form.save()
         self.assertEqual(invoice.amount_total, 0.0)

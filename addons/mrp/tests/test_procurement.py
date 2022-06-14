@@ -681,6 +681,8 @@ class TestProcurement(TestMrpCommon):
         This test ensures that, when running the scheduler, the generated MOs are based
         on the correct BoMs
         """
+        # Required for `picking_type_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
         warehouse = self.env.ref('stock.warehouse0')
 
         stock_location01 = warehouse.lot_stock_id

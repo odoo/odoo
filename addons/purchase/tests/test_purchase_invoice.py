@@ -304,6 +304,8 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         """ Tests whether, when an analytic account rule is set, and user changes manually the analytic account on
         the po, it is the same that is mentioned in the bill.
         """
+        # Required for `analytic.group_analytic_accounting` to be visible in the view
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
         analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
         analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual'})
 

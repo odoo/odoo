@@ -1011,6 +1011,8 @@ class TestAngloSaxonAccounting(TestStockValuationCommon):
         """
         When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
         """
+        # Required for `account_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
         self.product1.categ_id.property_cost_method = 'average'
 
         self._make_in_move(self.product1, 2, unit_cost=10)

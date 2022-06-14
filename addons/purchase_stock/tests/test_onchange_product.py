@@ -27,6 +27,8 @@ class TestOnchangeProductId(TransactionCase):
         cls.supplierinfo_model = cls.env["product.supplierinfo"]
 
     def test_onchange_product_id(self):
+        # Required for `product_uom` to be visible in the view
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
 
         uom_id = self.product_uom_model.search([('name', '=', 'Units')])[0]
 

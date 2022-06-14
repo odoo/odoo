@@ -444,6 +444,8 @@ class TestSaleToInvoice(TestSaleCommon):
         """ Tests whether, when an analytic account rule is set and the so has an analytic account,
         the default analytic acount doesn't replace the one from the so in the invoice.
         """
+        # Required for `analytic_account_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
         analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
         analytic_account_so = self.env['account.analytic.account'].create({'name': 'so'})
 

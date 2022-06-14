@@ -496,6 +496,8 @@ class TestBoM(TestMrpCommon):
             'name': 'Deserts Table'
         })
 
+        # Required to display `operation_ids` in the form view
+        self.env.user.groups_id += self.env.ref("mrp.group_mrp_routings")
         with Form(bom_crumble) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = butter
@@ -660,6 +662,8 @@ class TestBoM(TestMrpCommon):
             'name': 'Deserts Table'
         })
 
+        # Required to display `operation_ids` in the form view
+        self.env.user.groups_id += self.env.ref("mrp.group_mrp_routings")
         with Form(bom_drawer) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = screw

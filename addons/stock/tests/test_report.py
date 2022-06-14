@@ -1181,10 +1181,14 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_by_date
         delivery_form.scheduled_date = datetime.now() + timedelta(days=5)
-        delivery_form.priority = '1'
         with delivery_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
+        delivery_by_date_priority = delivery_form.save()
+        # <field name="priority" attrs="{'invisible': [('name','=','/')]}"/>
+        # The priority field is not visible until the name is set,
+        # which is done after a first save / the `create`
+        delivery_form.priority = '1'
         delivery_by_date_priority = delivery_form.save()
         delivery_by_date_priority.action_confirm()
 

@@ -382,7 +382,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_id
-        move_form.purchase_id = po1
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po1.id)
         invoice_po1 = move_form.save()
         invoice_po1.action_post()
 
@@ -408,7 +408,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_id
-        move_form.purchase_id = po2
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice_po2 = move_form.save()
         invoice_po2.action_post()
 
@@ -433,6 +433,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
         move_form.invoice_date = move_form.date
         move_form.partner_id = self.partner_id
+
+        # Not supposed to see/change the purchase order of a refund invoice by default
+        # <field name="purchase_id" invisible="1"/>
+        # <label for="purchase_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
+        #         attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}" />
+        # <field name="purchase_vendor_bill_id" nolabel="1"
+        #         attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}"
+        move_form._view['modifiers']['purchase_id']['invisible'] = False
         move_form.purchase_id = po2
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 10
@@ -468,7 +476,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.invoice_date = move_form.date
         move_form.partner_id = order.partner_id
-        move_form.purchase_id = order
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 15.0
         invoice = move_form.save()
@@ -1164,7 +1172,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.invoice_date = invoice_form.date
-        invoice_form.purchase_id = order
+        invoice_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
             line_form.discount = 10.0
@@ -1211,7 +1219,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.invoice_date = invoice_form.date
-        invoice_form.purchase_id = order
+        invoice_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
             line_form.discount = 10.0
@@ -1258,7 +1266,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         invoice_form.invoice_date = invoice_form.date
-        invoice_form.purchase_id = order
+        invoice_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
             line_form.discount = 10.0

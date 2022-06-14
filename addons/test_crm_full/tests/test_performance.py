@@ -91,9 +91,12 @@ class TestCrmPerformance(CrmPerformanceCase):
         """ Test a single lead creation using Form with a partner """
         with freeze_time(self.reference_now), self.assertQueryCount(user_sales_leads=189):  # tcf only: 180 - com runbot: 172
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
-            with Form(self.env['crm.lead']) as lead_form:
-                lead_form.partner_id = self.partners[0]
-                lead_form.name = 'Test Lead'
+            with self.debug_mode():
+                # {'invisible': ['|', ('type', '=', 'opportunity'), ('is_partner_visible', '=', False)]}
+                # lead.is_partner_visible = bool(lead.type == 'opportunity' or lead.partner_id or is_debug_mode)
+                with Form(self.env['crm.lead']) as lead_form:
+                    lead_form.partner_id = self.partners[0]
+                    lead_form.name = 'Test Lead'
 
             _lead = lead_form.save()
 

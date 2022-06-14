@@ -144,6 +144,10 @@ class TestProjectSharing(TestProjectSharingCommon):
             3.2) Create a sub-task
             3.3) Create a second sub-task
         """
+        # 0) Allow to create subtasks in the project tasks
+        # Required for `child_ids` to be visible in the view
+        # {'invisible': [('allow_subtasks', '=', False)]}
+        self.project_cows.allow_subtasks = True
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
             with self.get_project_sharing_form_view(self.task_cow.with_context({'tracking_disable': True, 'default_project_id': self.project_cows.id}), self.user_portal) as form:
