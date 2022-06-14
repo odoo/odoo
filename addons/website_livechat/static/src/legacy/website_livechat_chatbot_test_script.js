@@ -29,7 +29,6 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             this._chatbot.chatbot_welcome_steps.length - 1];
         this._channelData = chatbotData.channel;
         this.messaging.livechatButtonView.update({ isChatbot: true });
-        this._serverURL = this.messaging.publicLivechatServerUrlChatbot;
     },
 
     /**

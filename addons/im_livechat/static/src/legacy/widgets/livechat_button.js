@@ -39,7 +39,6 @@ const LivechatButton = Widget.extend({
         // livechat model
         this._livechat = null;
         this._messages = [];
-        this._serverURL = this.messaging.publicLivechatServerUrl;
     },
     async willStart() {
         const cookie = utils.get_cookie('im_livechat_session');
@@ -98,7 +97,7 @@ const LivechatButton = Widget.extend({
      */
     _addMessage(data, options) {
         options = Object.assign({}, this.options, options, {
-            serverURL: this._serverURL,
+            serverURL: this.messaging.livechatButtonView.serverURL,
         });
         const message = new WebsiteLivechatMessage(this, data, options);
 

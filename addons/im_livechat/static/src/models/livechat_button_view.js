@@ -42,6 +42,16 @@ registerModel({
             }
             return this.env._t("Ask something ...");
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeServerUrl() {
+            if (this.isChatbot) {
+                return this.messaging.publicLivechatServerUrlChatbot;
+            }
+            return this.messaging.publicLivechatServerUrl;
+        },
     },
     fields: {
         autoOpenChatTimeout: attr(),
@@ -64,6 +74,9 @@ registerModel({
         }),
         isOpeningChat: attr({
             default: false,
+        }),
+        serverUrl: attr({
+            compute: '_computeServerUrl',
         }),
     },
 });
