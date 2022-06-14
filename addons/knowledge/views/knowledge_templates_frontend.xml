@@ -90,7 +90,7 @@
         <t t-call="knowledge.knowledge_article_tree_favorites" />
         <t t-set="visible_articles" t-value="(workspace_articles | shared_articles)"/>
         <section t-if="visible_articles">
-            <div class="h4 mb-0">Shared with you</div>
+            <div class="o_section_header mb-0">Shared with you</div>
             <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
                 <t t-call="knowledge.articles_template">
                     <t t-set="articles" t-value="visible_articles"/>

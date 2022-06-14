@@ -328,6 +328,9 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
             helper: 'clone',
             cursor: 'grabbing',
             cancel: '.readonly',
+            start: () => {
+                this.trigger_up('drag');
+            },
             /**
              * @param {Event} event
              * @param {Object} ui
@@ -341,6 +344,7 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
 
                 const data = {
                     article_id: $li.data('article-id'),
+                    article_name: $li.find(".o_article_name").first().text().trim(),
                     oldCategory: $li.data('category'),
                     newCategory: $section.data('section')
                 };
@@ -360,16 +364,13 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
                         if (typeof id !== 'undefined') {
                             const $parent = this.$(`.o_article[data-article-id="${id}"]`);
                             if (!$parent.children('ul').is(':parent')) {
-                                const $caret = $parent.find('> .o_article_handle > .o_article_caret');
-                                $caret.remove();
+                                $parent.find('> .o_article_handle > .o_article_caret').addClass("invisible");
+                                $parent.removeClass("o_article_has_child");
                             }
                         }
                         if ($parent.length > 0) {
-                            const $handle = $parent.children('.o_article_handle:first');
-                            if ($handle.children('.o_article_caret').length === 0) {
-                                const $caret = $(QWeb.render('knowledge.knowledge_article_caret', {}));
-                                $handle.prepend($caret);
-                            }
+                            $parent.find('> .o_article_handle > .o_article_caret').removeClass("invisible");
+                            $parent.addClass("o_article_has_child");
                         }
                         $li.data('parent-id', $parent.data('article-id'));
                         $li.attr('data-parent-id', $parent.data('article-id'));

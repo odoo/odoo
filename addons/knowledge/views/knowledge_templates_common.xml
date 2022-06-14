@@ -20,15 +20,14 @@
             <t t-set="readonly" t-value="portal_readonly_mode or not article.user_has_write_access"/>
             <t t-set="favorite" t-value="favorites.filtered(lambda f: f.article_id == article) if favorites else False"/>
             <!-- readonly is used to for the drag and drop cancel.-->
-            <li t-attf-class="o_article #{ 'readonly' if readonly else '' }" t-attf-id="article_#{article.id}"
+            <li t-attf-class="o_article #{'readonly' if readonly else '' } #{'o_article_has_child' if article.child_ids else ''}" t-attf-id="article_#{article.id}"
                 t-att-data-article-id="article.id" t-att-data-parent-id="article.parent_id.id"
                 t-att-data-favorite-article-id="favorite.id if favorite else False"
                 t-att-data-category="article.category">
                 <t t-set="isActive" t-value="article.id == active_article.id if active_article else False"/>
                 <div t-attf-class="#{ '' if readonly else 'o_article_handle' } d-flex align-items-center #{ 'o_article_active font-weight-bold' if isActive else 'text-muted' }">
-                    <button t-if="not hideChildren and article.child_ids" class="o_article_caret btn btn-link text-muted p-0" type="button">
-                        <i t-if="article.child_ids" t-att-class="'align-self-center fa fa-fw fa-caret-' + ('down' if article.id in unfolded_articles else 'right')"/>
-                        <i t-else="" class="pl-3 align-self-center"/>
+                    <button t-if="not hideChildren" t-attf-class="o_article_caret btn btn-link text-muted p-0 border-0 #{'' if article.child_ids else 'invisible'}" type="button">
+                        <i t-att-class="'align-self-center fa fa-fw fa-caret-' + ('down' if article.id in unfolded_articles else 'right')"/>
                     </button>
                     <t t-call="knowledge.articles_template_name"/>
                 </div>

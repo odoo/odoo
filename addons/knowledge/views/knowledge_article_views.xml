@@ -33,15 +33,15 @@
                             </div>
                         </div>
                     </aside>
-                    <div class="flex-grow-1 position-relative">
+                    <div class="flex-grow-1 position-relative min-w-0">
                         <div class="o_knowledge_article_form_resizer d-none d-sm-block" />
                         <div class="d-flex flex-column h-100">
                             <!-- Article header -->
                             <div class="o_knowledge_header d-sm-flex border-bottom justify-content-between d-print-none">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center min-w-0">
                                     <!-- Breadcrumbs -->
-                                    <ol class="breadcrumb align-items-center p-3" role="navigation">
-                                        <li class="breadcrumb-item d-flex align-items-center">
+                                    <ol class="breadcrumb align-items-center p-3 min-w-0" role="navigation">
+                                        <li class="breadcrumb-item d-flex align-items-center overflow-hidden">
                                             <div class="o_knowledge_icon pr-1" attrs="{'invisible': [('icon', '=', False)]}">
                                                 <div class="o_article_emoji_dropdown dropdown">
                                                     <a href="#" class="o_article_editable_emoji o_article_emoji dropdown-toggle o-no-caret"
@@ -53,8 +53,11 @@
                                                         aria-labelledby="o_article_emoji" />
                                                 </div>
                                             </div>
-                                            <field attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}"
-                                                   class="o_breadcrumb_article_name o_input" name="name"/>
+                                            <div class="position-relative">
+                                                <span class="o_breadcrumb_article_name_container px-1"/>
+                                                <field attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_has_write_access', '=', False)]}"
+                                                   class="o_breadcrumb_article_name o_input px-1" name="name"/>
+                                            </div>
                                         </li>
                                     </ol>
                                     <i class="fa fa-star o_toggle_favorite o_cursor_pointer"
@@ -103,27 +106,27 @@
                                             </a>
                                             <div class="o_knowledge_more_options_panel dropdown-menu" role="menu">
                                                 <a class="dropdown-item btn-duplicate" href="#" role="button">
-                                                    <i class="fa fa-fw fa-copy"/> Duplicate
+                                                    <i class="fa fa-fw fa-lg fa-copy"/> Duplicate
                                                 </a>
                                                 <div attrs="{'invisible': [('user_has_write_access', '=', False)]}">
                                                     <a class="dropdown-item btn-move" href="#" role="button">
-                                                        <i class="fa fa-fw fa-angle-double-right"/> Move To
+                                                        <i class="fa fa-fw fa-lg fa-angle-double-right"/> Move To
                                                     </a>
                                                     <button class="dropdown-item btn-lock" href="#" type="object" name="action_set_lock"
                                                         attrs="{'invisible': [('is_locked', '=', True)]}">
-                                                        <i class="fa fa-fw fa-lock"/> Lock
+                                                        <i class="fa fa-fw fa-lg fa-lock"/> Lock
                                                     </button>
                                                     <button class="dropdown-item btn-lock" href="#" type="object" name="action_set_unlock"
                                                         attrs="{'invisible': [('is_locked', '=', False)]}">
-                                                        <i class="fa fa-fw fa-unlock"/> Unlock
+                                                        <i class="fa fa-fw fa-lg fa-unlock"/> Unlock
                                                     </button>
                                                     <button class="dropdown-item" type="object" name="action_article_archive"
                                                             attrs="{'invisible': [('active', '=', False)]}">
-                                                        <i class="fa fa-fw fa-archive"/> Archive
+                                                        <i class="fa fa-fw fa-lg fa-archive"/> Archive
                                                     </button>
                                                     <button class="dropdown-item" type="object" name="action_unarchive"
                                                             attrs="{'invisible': [('active', '=', True)]}">
-                                                        <i class="fa fa-fw fa-archive"/> Unarchive
+                                                        <i class="fa fa-fw fa-lg fa-archive"/> Unarchive
                                                     </button>
                                                     <div class="dropdown-divider"/>
                                                     <div class="px-3">

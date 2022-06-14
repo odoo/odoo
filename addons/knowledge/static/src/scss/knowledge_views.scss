@@ -1,6 +1,6 @@
 .o_knowledge_form_view {
     --default-sidebar-size: 300px;
-    --sidebar-size: clamp(300px, var(--default-sidebar-size), 50vw);
+    --sidebar-size: clamp(200px, var(--default-sidebar-size), var(--breakpoint-sm));
 
     $o-knowledge-bg--active: #cceaf9; // TMP -> should match $o-searchpanel-active-bg
 
@@ -10,6 +10,20 @@
 
     // = Navbar
     // --------------------------------------------------------------------------
+    .o_breadcrumb_article_name_container,
+    span.o_breadcrumb_article_name {
+        white-space: pre;
+    }
+
+    input.o_breadcrumb_article_name {
+        position: absolute;
+        inset: 0;
+    }
+
+    .min-w-0 {
+        min-width: 0;
+    }
+
     .o_breadcrumb_article_name:not(:focus) {
         --o-input-border-color: transparent;
     }
@@ -76,9 +90,15 @@
 
             &:before {
                 @include o-position-absolute($top: 1em, $left: 0);
-                width: .6em;
+                width: 1.8em;
                 height: 1px;
                 margin: auto;
+            }
+
+            &.o_article_has_child:before {
+                @include o-position-absolute($top: 1em, $left: 0);
+                width: .6em;
+                height: 1px;
             }
 
             &:after {
@@ -109,7 +129,7 @@
     // --------------------------------------------------------------------------
     .o_knowledge_article_form_resizer {
         // Use '$spacers' measures to match surrounding elements padding
-        $-resizer-spacing: map-get($spacers, 3);
+        $-resizer-spacing: map-get($spacers, 1);
         $-resizer-line-width: map-get($spacers, 1);
 
         @include o-position-absolute(0, auto, 0, $-resizer-spacing * -1);

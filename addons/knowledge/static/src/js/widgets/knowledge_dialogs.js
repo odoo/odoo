@@ -27,7 +27,7 @@ const MoveArticleToDialog = Dialog.extend({
         this.props = props;
         // Set template variables:
         const { state } = props;
-        this.article_name = state.data.display_name;
+        this.article_name = state.data.name;
     },
 
     /**

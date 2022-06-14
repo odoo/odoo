@@ -50,6 +50,17 @@
         width: var(--sidebar-size);
         transition: width 0.15s linear;
 
+        // Force same style in portal and website
+        font-size: 1rem;
+
+        .o_section_header {
+            font-size: 1.3125rem;
+        }
+
+        .knowledge_search_bar {
+            font-size: 0.875rem;
+        }
+
         li {
             padding: 0.2em 0;
             position: relative;
@@ -71,9 +82,15 @@
 
             &:before {
                 @include o-position-absolute($top: 1em, $left: 0);
-                width: .6em;
+                width: 1.8em;
                 height: 1px;
                 margin: auto;
+            }
+
+            &.o_article_has_child:before {
+                @include o-position-absolute($top: 1em, $left: 0);
+                width: .6em;
+                height: 1px;
             }
 
             &:after {

@@ -16,7 +16,7 @@
             <t t-set="published_articles" t-value="all_articles.filtered(lambda a: a.website_published)"/>
             <t t-set="visible_articles" t-value="all_articles.filtered(lambda a: not a.website_published)"/>
             <section t-if="published_articles">
-                <div class="h4 mb-0">Public articles</div>
+                <div class="o_section_header mb-0">Public articles</div>
                 <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
                     <t t-call="knowledge.articles_template">
                         <t t-set="articles" t-value="published_articles"/>
@@ -24,7 +24,7 @@
                 </ul>
             </section>
             <section t-if="visible_articles">
-                <div class="h4 mb-0">Shared with you</div>
+                <div class="o_section_header mb-0">Shared with you</div>
                 <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
                     <t t-call="knowledge.articles_template">
                         <t t-set="articles" t-value="visible_articles"/>

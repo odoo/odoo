@@ -15,9 +15,8 @@ const KnowledgeArticleFormController = FormController.extend({
         'click .o_knowledge_add_cover': '_onAddCover',
         'click #knowledge_search_bar': '_onSearch',
         'click .o_breadcrumb_article_name': '_onArticleBreadcrumbClick',
-        'change .o_breadcrumb_article_name': '_onRename',
         'click i.o_toggle_favorite': '_onToggleFavorite',
-        'input .o_breadcrumb_article_name': '_adjustInputSize',
+        'input .o_breadcrumb_article_name': '_onChangeName',
     }),
     custom_events: Object.assign({}, FormController.prototype.custom_events, {
         create: '_onCreate',
@@ -26,6 +25,7 @@ const KnowledgeArticleFormController = FormController.extend({
         open_move_to_modal: '_onOpenMoveToModal',
         reload_tree: '_onReloadTree',
         emoji_click: '_onEmojiClick',
+        drag: '_onDrag',
     }),
     /**
      * Register the fact that the current @see FormController is one from
@@ -58,7 +58,9 @@ const KnowledgeArticleFormController = FormController.extend({
         if (params && params.keepChanges) {
             return this.renderer.updateChatter();
         } else {
-            return this._super.apply(this, arguments);
+            return this._super.apply(this, arguments).then(() => {
+                this._adjustInputSize();
+            });
         }
     },
     /**
@@ -86,24 +88,22 @@ const KnowledgeArticleFormController = FormController.extend({
                 const { id } = this.getState();
                 this.renderer._setEmoji(id, unicode);
             });
+            const $nameInput = this.$(".o_breadcrumb_article_name");
+            if ($nameInput.is("input")) {
+                this._adjustInputSize();
+            }
         });
     },
 
     // Listeners:
 
-    /**
-     * @param {Event} event
-     */
-    _adjustInputSize: function (event) {
-        event.target.setAttribute('size', event.target.value.length);
-    },
-    _onAddCover: async function() {
+    _onAddCover: async function () {
         if (this.mode === 'readonly') {
             await this._setMode('edit');
         }
         this.$('.o_input_file').click();
     },
-    _onAddRandomIcon: function() {
+    _onAddRandomIcon: function () {
         this.trigger_up('field_changed', {
             dataPointID: this.handle,
             changes: {
@@ -117,27 +117,45 @@ const KnowledgeArticleFormController = FormController.extend({
      * body of the article and set it as the name of the article.
      * @param {Event} event
      */
-    _onArticleBreadcrumbClick: async function (event) {
-        const name = event.currentTarget.value;
+    _onArticleBreadcrumbClick: function (event) {
+        const name = $(event.currentTarget).val();
         if (name === _t('New Article')) {
-            const $articleTitle = this.$('.o_knowledge_editor h1');
-            if ($articleTitle.text().length !== 0) {
-                this.$('.o_breadcrumb_article_name').val($articleTitle.text());
+            const defaultTitle = this._getTitle(); 
+            if (name !== defaultTitle) {
                 this.trigger_up('field_changed', {
                     dataPointID: this.handle,
                     changes: {
-                        'name': $articleTitle.text(),
+                        name: defaultTitle
                     }
                 });
-                this._rename(await this._getId(), $articleTitle.text());
             }
         }
+    },
+    /**
+     * @param {Event} event
+     */
+    _onChangeName: function (event) {
+        this._adjustInputSize();
     },
     /**
      * @param {OdooEvent} event
      */
     _onCreate: async function (event) {
         await this._create(event.data);
+    },
+    /**
+     * @param {OdooEvent} event
+     */
+    _onDrag: function (event) {
+        const $nameInput = this.$(".o_breadcrumb_article_name");
+        if ($nameInput.is(":focus")) {
+            this.trigger_up('field_changed', {
+                dataPointID: this.handle,
+                changes: {
+                    name: $nameInput.val()
+                }
+            });
+        }
     },
     /**
      * @param {OdooEvent} event
@@ -178,6 +196,14 @@ const KnowledgeArticleFormController = FormController.extend({
      * @param {Event} event
      */
     _onFieldChanged: async function (event) {
+        var changedFields = event.data.changes;
+        if ('name' in changedFields) {
+            if (changedFields.name === '') {
+                const name = this._getTitle();
+                changedFields.name = name;
+            }
+            this._rename(changedFields.name);
+        }
         this._super(...arguments);
         const { changes } = event.data;
         for (const field of this._getFieldsToForceSave()) {
@@ -202,20 +228,6 @@ const KnowledgeArticleFormController = FormController.extend({
         }
     },
     /**
-     * When the user clicks on a field in readonly mode, a new 'quick_edit' event
-     * will be triggered. To prevent the view from switching to the edit mode when
-     * the article is locked, we will overwrite the `_onQuickEdit` handler. This
-     * function will now ignore the event if the article is locked.
-     * @override
-     */
-    _onQuickEdit: function () {
-        const { data } = this.model.get(this.handle);
-        if (data.is_locked) {
-            return;
-        }
-        this._super.apply(this, arguments);
-    },
-    /**
      * @param {Event} event
      */
     _onMove: function (event) {
@@ -234,7 +246,10 @@ const KnowledgeArticleFormController = FormController.extend({
              * @param {String} value
              */
             onSave: async value => {
-                const params = { article_id: id };
+                const params = {
+                    article_id: id,
+                    article_name: state.data.name
+                };
                 if (typeof value === 'number') {
                     params.target_parent_id = value;
                 } else {
@@ -253,24 +268,25 @@ const KnowledgeArticleFormController = FormController.extend({
         dialog.open();
     },
     /**
+     * When the user clicks on a field in readonly mode, a new 'quick_edit' event
+     * will be triggered. To prevent the view from switching to the edit mode when
+     * the article is locked, we will overwrite the `_onQuickEdit` handler. This
+     * function will now ignore the event if the article is locked.
+     * @override
+     */
+    _onQuickEdit: function () {
+        const { data } = this.model.get(this.handle);
+        if (data.is_locked) {
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
      * @param {Event} event
      */
     _onReloadTree: function (event) {
         // TODO JBN: Create a widget for the tree and reload it without reloading the whole view.
         this.reload();
-    },
-    /**
-     * Callback function called when the user renames the active article.
-     * The function will update the name of the articles in the aside block.
-     * @param {Event} event
-     */
-    _onRename: async function (event) {
-        var name = event.currentTarget.value;
-        if (name.length === 0) {
-            name = _t('New Article');
-        }
-        const id = await this._getId();
-        await this._rename(id, name);
     },
     /**
      * @param {Event} event
@@ -307,6 +323,13 @@ const KnowledgeArticleFormController = FormController.extend({
     // API calls:
 
     /**
+     * Match the name input length to the article name's length
+     */
+    _adjustInputSize: function () {
+        const $name = this.$(".o_breadcrumb_article_name");
+        this.$(".o_breadcrumb_article_name_container").text($name.val());
+     },
+    /**
      * @param {Object} data
      * @param {integer} data.article_id
      * @param {String} data.oldCategory
@@ -331,13 +354,21 @@ const KnowledgeArticleFormController = FormController.extend({
         } else {
             let message, confirmation_message;
             if (data.newCategory === 'workspace') {
-                message = _t("Are you sure you want to move this article to the Workspace? It will be shared with all internal users.");
+                message = _.str.sprintf(
+                    _t('Are you sure you want to move "%s" to the Workspace? It will be shared with all internal users.'),
+                    data.article_name
+                );
                 confirmation_message = _t("Move to Workspace");
             } else if (data.newCategory === 'private') {
-                message = _t("Are you sure you want to move this to private? Only you will be able to access it.");
+                message = _.str.sprintf(
+                    _t('Are you sure you want to set "%s" as Private? Only you will be able to access it.'),
+                    data.article_name
+                );
                 confirmation_message = _t("Set as Private");
             }
             Dialog.confirm(this, message, {
+                title: confirmation_message,
+                dialogClass: 'text-break',
                 cancel_callback: data.onReject,
                 buttons: [{
                     text: confirmation_message,
@@ -397,6 +428,16 @@ const KnowledgeArticleFormController = FormController.extend({
         return state.id;
     },
     /**
+     * @return {string} - first title in the body, "New Article" if not found
+     */
+    _getTitle: function () {
+        const articleTitle = this.$('.o_knowledge_editor h1').first().text().trim();
+        if (articleTitle.length !== 0) {
+            return articleTitle;
+        }
+        return _t("New Article");
+    },
+    /**
      * @param {Object} data
      * @param {integer} data.article_id
      * @param {Function} data.onSuccess
@@ -421,12 +462,23 @@ const KnowledgeArticleFormController = FormController.extend({
         })
     },
     /**
-     * @param {integer} id - Target id
-     * @param {string} name - Target Name
+     * @param {string} name - article name
      */
-    _rename: async function (id, name) {
+    _rename: async function (name) {
+        const id = await this._getId();
         this.$(`.o_knowledge_tree .o_article[data-article-id="${id}"] > .o_article_handle > .o_article_name`).text(name);
-        this.$(`.o_breadcrumb_article_name`).val(name);
+        this.$('.o_breadcrumb_article_name').val(name);
+        this._adjustInputSize();
+    },
+    /**
+     * When the user enters the edit mode, change the size of the name input
+     * to show it entirely
+     * @override
+     */
+    _setEditMode: function () {
+        this._super.apply(this, arguments).then(() => {
+            this._adjustInputSize();
+        });
     },
     /**
      * @param {integer} id - article id
