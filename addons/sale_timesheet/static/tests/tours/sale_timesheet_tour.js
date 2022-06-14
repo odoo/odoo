@@ -246,18 +246,12 @@ tour.register('sale_timesheet_tour', {
     trigger: '.dropdown-item[data-menu-xmlid="project.menu_projects"]',
     content: 'Select Projects',
 }, {
-    // an invisible element cannot be used as a trigger so this small hack is mandatory for the next step
-    trigger: 'div.o_kanban_primary_left :contains("Project for Freeman")',
-    content: 'Open the project dropdown',
-    run: function () {
-        $('.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban').css('visibility', 'visible');
-    },
-}, {
-    trigger: '.oe_kanban_global_click :contains("Project for Freeman") .o_dropdown_kanban',
+    trigger: '.oe_kanban_global_click :contains("Project for Freeman") button.o_dropdown_kanban',
     content: 'Open the project dropdown',
 }, {
     trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Edit")',
     content: 'Start editing the project',
+    timer: 300,
 }, {
     trigger: 'div.o_notebook_headers',
     content: 'Click on Invoicing tab to configure the invoicing of this project.',

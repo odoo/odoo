@@ -797,7 +797,12 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project" js_class="project_project_kanban" sample="1">
+                <kanban
+                    class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors"
+                    on_create="project.open_create_project"
+                    action="action_view_tasks" type="object"
+                    sample="1"
+                >
                     <field name="display_name"/>
                     <field name="partner_id"/>
                     <field name="commercial_partner_id"/>
@@ -907,7 +912,7 @@
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
                                                     <span class="o_value"><t t-esc="record.task_count.value"/></span>
-                                                    <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                                    <span class="o_label ms-1"><t t-esc="record.label_tasks.value"/></span>
                                                 </div>
                                             </a>
                                             <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"
