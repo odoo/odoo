@@ -11,15 +11,21 @@ odoo.define('fg_custom.FgChannelButton', function (require) {
             super(...arguments);
             useListener('click', this.onClick);
         }
+
         async onClick() {
             const { confirmed, payload } = await this.showPopup('FgChannelPopup');
             var x_ext_source = '';
+            var website_order_id = '';
             if(payload!=null){
                  x_ext_source  = payload.x_ext_source;
+                 website_order_id  = payload.website_order_id;
             }
             if (confirmed) {
                 const order = this.env.pos.get_order();
                 order.x_ext_source = x_ext_source;
+                if(x_ext_source == 'Website'){
+                    order.website_order_id = website_order_id;
+                }
                 order.trigger('change', order); // needed so that export_to_JSON gets triggered
                 this.render();
                 if(x_ext_source!=''){
@@ -27,7 +33,6 @@ odoo.define('fg_custom.FgChannelButton', function (require) {
                 }else{
                     document.getElementById('channelDiv').innerHTML  = 'Select Channel';
                 }
-
             }
         }
     }

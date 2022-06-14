@@ -142,7 +142,8 @@ class PosOrder(models.Model):
             'x_ext_source': order.x_ext_source,
             'x_ext_order_ref': order.x_ext_order_ref,
             'x_receipt_printed': order.x_receipt_printed,
-            'x_receipt_printed_date': order.x_receipt_printed_date
+            'x_receipt_printed_date': order.x_receipt_printed_date,
+            'website_order_id': order.website_order_id
         })
         return fields
 
@@ -153,7 +154,8 @@ class PosOrder(models.Model):
             'x_ext_source': order.get('x_ext_source', False),
             'x_ext_order_ref': order.get('x_ext_order_ref', False),
             'x_receipt_printed': order.get('x_receipt_printed', False),
-            'x_receipt_printed_date': order.get('x_receipt_printed_date', False)
+            'x_receipt_printed_date': order.get('x_receipt_printed_date', False),
+            'website_order_id': order.get('website_order_id', False)
         })
         return fields
 

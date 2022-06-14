@@ -6,6 +6,7 @@ from odoo import models, fields, api, _
 
 class FgMessageWizard(models.TransientModel):
     _name = 'fg.message.wizard'
+    _description = 'FgMessage Wizard'
 
     message = fields.Text('Message', required=True)
 
