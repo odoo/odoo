@@ -56,7 +56,7 @@ QUnit.test('rating value displayed on the thread needaction preview', async func
         "should contain the correct rating image"
     );
     assert.strictEqual(
-        $('.o_ThreadNeedactionPreview_ratingImage').attr('alt'),
+        $('.o_ThreadNeedactionPreview_ratingImage').attr('data-alt'),
         "top",
         "should contain the correct rating text"
     );
