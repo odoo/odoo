@@ -1,12 +1,15 @@
 /** @odoo-module **/
 
-import { throttle } from '@web/core/utils/timing';
+import { debounce } from '@web/core/utils/timing';
 
-const { Component, xml } = owl;
+const { Component, onWillUnmount, xml } = owl;
 
 export class SearchMedia extends Component {
     setup() {
-        this.search = throttle((ev) => this.props.search(ev.target.value), 1000);
+        this.search = debounce((ev) => this.props.search(ev.target.value), 1000);
+        onWillUnmount(() => {
+            this.search.cancel();
+        });
     }
 }
 SearchMedia.template = xml`

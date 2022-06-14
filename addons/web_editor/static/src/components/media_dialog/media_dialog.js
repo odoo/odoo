@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
 import { useService } from '@web/core/utils/hooks';
+import { useWowlService } from '@web/legacy/utils';
 import { Dialog } from '@web/core/dialog/dialog';
 import { ImageSelector } from './image_selector';
 import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
 
-const { useState } = owl;
+const { Component, useState, onRendered, xml } = owl;
 
 export const TABS = {
     IMAGES: {
@@ -44,6 +45,8 @@ export class MediaDialog extends Dialog {
 
         this.tabs = [];
         this.selectedMedia = useState({});
+
+        this.initialIconClasses = [];
 
         this.addTabs();
 
@@ -110,6 +113,7 @@ export class MediaDialog extends Dialog {
                 if (mediaFont) {
                     const selectedIcon = mediaFont.icons.find(icon => icon.names.some(name => classes.includes(name)));
                     if (selectedIcon) {
+                        this.initialIconClasses.push(...selectedIcon.names);
                         this.selectMedia(selectedIcon, TABS.ICONS.id);
                     }
                 }
@@ -139,7 +143,29 @@ export class MediaDialog extends Dialog {
     async save() {
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         if (selectedMedia.length) {
-            const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia);
+            const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm });
+            elements.forEach(element => {
+                if (this.props.media) {
+                    element.classList.add(...this.props.media.classList);
+                    const style = this.props.media.getAttribute('style');
+                    if (style) {
+                        element.setAttribute('style', style);
+                    }
+                    if (this.props.media.dataset.shape) {
+                        element.dataset.shape = this.props.media.dataset.shape;
+                    }
+                    if (this.props.media.dataset.shapeColors) {
+                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                    }
+                }
+                element.classList.add(...TABS[this.state.activeTab].Component.mediaSpecificClasses);
+                for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
+                    element.classList.remove(...TABS[otherTab].Component.mediaSpecificClasses);
+                }
+                element.classList.remove(...this.initialIconClasses);
+                element.classList.remove('o_modified_image_to_save');
+                element.classList.remove('oe_edited_link');
+            });
             if (this.props.multiImages) {
                 this.props.save(elements);
             } else {
@@ -151,6 +177,29 @@ export class MediaDialog extends Dialog {
 }
 MediaDialog.bodyTemplate = 'web_editor.MediaDialogBody';
 MediaDialog.footerTemplate = 'web_editor.MediaDialogFooter';
+MediaDialog.defaultProps = {
+    useMediaLibrary: true,
+};
 MediaDialog.components = {
     ...Object.keys(TABS).map(key => TABS[key].Component),
 };
+
+export class MediaDialogWrapper extends Component {
+    setup() {
+        this.dialogs = useWowlService('dialog');
+
+        onRendered(() => {
+            this.dialogs.add(MediaDialog, {
+                ...this.props,
+                close: () => {
+                    if (this.props.close) {
+                        this.props.close();
+                    }
+                    this.destroy();
+
+                },
+            });
+        });
+    }
+}
+MediaDialogWrapper.template = xml``;

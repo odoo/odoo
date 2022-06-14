@@ -3,7 +3,6 @@ odoo.define('wysiwyg.widgets', function (require) {
 
 var Dialog = require('wysiwyg.widgets.Dialog');
 var AltDialog = require('wysiwyg.widgets.AltDialog');
-var MediaDialog = require('wysiwyg.widgets.MediaDialog');
 var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 var LinkTools = require('wysiwyg.widgets.LinkTools');
 var ImageCropWidget = require('wysiwyg.widgets.ImageCropWidget');
@@ -15,7 +14,6 @@ var media = require('wysiwyg.widgets.media');
 return {
     Dialog: Dialog,
     AltDialog: AltDialog,
-    MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
     LinkTools: LinkTools,
     ImageCropWidget: ImageCropWidget,
