@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallParticipantCard',
-    identifyingFields: [['rtcSession', 'invitedPartner', 'invitedGuest'], ['callViewOfMainCard', 'callViewOfTile']],
+    identifyingFields: [['rtcSession', 'invitedPartner', 'invitedGuest'], ['callViewAsMainCard', 'callViewAsTile']],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -25,7 +25,7 @@ registerModel({
                 return;
             }
             if (this.rtcSession) {
-                if (this.callView.activeRtcSession === this.rtcSession && this.callViewOfMainCard) {
+                if (this.callView.activeRtcSession === this.rtcSession && this.callViewAsMainCard) {
                     this.callView.update({ activeRtcSession: clear() });
                 } else {
                     this.callView.update({ activeRtcSession: replace(this.rtcSession) });
@@ -90,7 +90,7 @@ registerModel({
          * @returns {mail.callView}
          */
         _computeCallView() {
-            const callView = this.callViewOfMainCard || this.callViewOfTile;
+            const callView = this.callViewAsMainCard || this.callViewAsTile;
             if (callView) {
                 return replace(callView);
             } else {
@@ -264,14 +264,14 @@ registerModel({
         /**
          * The call view for which this card is the main card.
          */
-        callViewOfMainCard: one('CallView', {
+        callViewAsMainCard: one('CallView', {
             inverse: 'mainParticipantCard',
             readonly: true,
         }),
         /**
          * The call view for which this card is one of the tiles.
          */
-        callViewOfTile: one('CallView', {
+        callViewAsTile: one('CallView', {
             inverse: 'tileParticipantCards',
             readonly: true,
         }),
