@@ -190,6 +190,31 @@ function patchSessionInfo() {
     });
 }
 
+/**
+ * Remove all given attributes from the templates and replace them by
+ * data attributes (e.g. `src` to `data-src`, `alt` to `data-alt`).
+ *
+ * @param {string[]} attrs Attributes to replace by data-attributes.
+ * @param {Document} templates Document containing the templates to
+ * process.
+ */
+function removeUnwantedAttrsFromTemplates(templates, attrs) {
+    function replaceAttr(attrName, prefix, element) {
+        const attrKey = `${prefix}${attrName}`;
+        const attrValue = element.getAttribute(attrKey);
+        element.removeAttribute(attrKey);
+        element.setAttribute(`${prefix}data-${attrName}`, attrValue);
+    }
+    const attrPrefixes = ['', 't-att-', 't-attf-'];
+    for (const attrName of attrs) {
+        for (const prefix of attrPrefixes) {
+            for (const element of templates.querySelectorAll(`*[${prefix}${attrName}]`)) {
+                replaceAttr(attrName, prefix, element);
+            }
+        }
+    }
+}
+
 export async function setupTests() {
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
@@ -212,6 +237,12 @@ export async function setupTests() {
     // might need at some point to handle the case where we have both owl and
     // legacy templates. At the end, we'll get rid of all this.
     const doc = new DOMParser().parseFromString(templates, "text/xml");
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll programatically and the time
+    // we assert for the scroll position. The src attribute is removed
+    // as well to make sure images won't trigger a GET request on the
+    // server.
+    removeUnwantedAttrsFromTemplates(doc, ['alt', 'src']);
     const owlTemplates = [];
     for (let child of doc.querySelectorAll("templates > [owl]")) {
         child.removeAttribute("owl");
@@ -219,5 +250,6 @@ export async function setupTests() {
     }
     templates = `<templates> ${owlTemplates.join("\n")} </templates>`;
     window.__ODOO_TEMPLATES__ = templates;
+    session.owlTemplates = templates;
     await Promise.all([whenReady(), legacyProm]);
 }
