@@ -177,6 +177,14 @@ export class ORM {
         return this.call(model, "search_read", [], kwargs);
     }
 
+    searchCount(model, domain, ctx = {}) {
+        validateArray('domain', domain);
+        const kwargs = {
+            context: ctx,
+        };
+        return this.call(model, 'search_count', [domain], kwargs);
+    }
+
     unlink(model, ids, ctx) {
         validatePrimitiveList("ids", "number", ids);
         if (!ids.length) {

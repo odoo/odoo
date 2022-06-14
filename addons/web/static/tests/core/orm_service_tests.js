@@ -257,6 +257,26 @@ QUnit.test("searchRead method", async (assert) => {
     });
 });
 
+QUnit.test("searchCount method", async (assert) => {
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    await env.services.orm.searchCount("sale.order", [["user_id", "=", 2]]);
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/search_count");
+    assert.deepEqual(query.params, {
+        args: [[["user_id", "=", 2]]],
+        kwargs: {
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+            },
+        },
+        method: "search_count",
+        model: "sale.order",
+    });
+});
+
 QUnit.test("webSearchRead method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
