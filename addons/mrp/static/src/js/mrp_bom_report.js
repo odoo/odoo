@@ -142,6 +142,13 @@ var MrpBomReport = stock_report_generic.extend({
         this.$searchView.find('.o_mrp_bom_report_type').on('change', this._onChangeType.bind(this));
     },
     _onClickPrint: function (ev) {
+<<<<<<< HEAD
+=======
+        var childBomIDs = _.map(this.$el.find('.o_mrp_bom_foldable').closest('tr'), function (el) {
+            return $(el).data('id');
+        });
+        this.searchModelConfig.env.services.ui.block();
+>>>>>>> 05b381e89f5... temp
         var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id +
                          '&report_type=' + this.given_context.report_type +
                          '&quantity=' + (this.given_context.searchQty || 1) +
@@ -157,7 +164,13 @@ var MrpBomReport = stock_report_generic.extend({
             'report_name': reportname,
             'report_file': 'mrp.report_bom_structure',
         };
+<<<<<<< HEAD
         return this.do_action(action);
+=======
+        return this.do_action(action).then(() => {
+            this.searchModelConfig.env.services.ui.unblock();
+        });
+>>>>>>> 05b381e89f5... temp
     },
     _onChangeQty: function (ev) {
         var qty = $(ev.currentTarget).val().trim();
