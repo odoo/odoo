@@ -663,14 +663,8 @@ def route(route=None, **routing):
         return route_wrapper
     return decorator
 
-def _generate_routing_rules(modules, nodb_only, converters=None):
-    """
-    Two-fold algorithm used to (1) determine which method in the
-    controller inheritance tree should bind to what URL with respect to
-    the list of installed modules and (2) merge the various @route
-    arguments of said method with the @route arguments of the method it
-    overrides.
-    """
+
+def _build_controller_registry(modules):
     def is_valid(cls):
         """ Determine if the class is defined in an addon. """
         path = cls.__module__.split('.')
@@ -714,7 +708,11 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
             Ctrl = type(name, tuple(reversed(leaf_controllers)), {})
             yield Ctrl()
 
-    for ctrl in build_controllers():
+    return list(build_controllers())
+
+
+def _generate_routing_rules(controller_registry, nodb_only, converters=None):
+    for ctrl in controller_registry:
         for method_name, method in inspect.getmembers(ctrl, inspect.ismethod):
 
             # Skip this method if it is not @route decorated anywhere in
@@ -1824,9 +1822,13 @@ class Application:
             return None
 
     @lazy_property
+    def nodb_controller_registry(self):
+        return _build_controller_registry([''] + odoo.conf.server_wide_modules)
+
+    @lazy_property
     def nodb_routing_map(self):
         nodb_routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
-        for url, endpoint in _generate_routing_rules([''] + odoo.conf.server_wide_modules, nodb_only=True):
+        for url, endpoint in _generate_routing_rules(self.nodb_controller_registry, nodb_only=True):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
                 routing['methods'] = routing['methods'] + ['OPTIONS']

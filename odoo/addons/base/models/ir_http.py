@@ -24,6 +24,9 @@ from odoo.service import security
 from odoo.tools import consteq, submap
 from odoo.modules.module import get_resource_path, get_module_path
 
+
+EVENT_NAMES = []
+
 _logger = logging.getLogger(__name__)
 
 
@@ -158,28 +161,38 @@ class IrHttp(models.AbstractModel):
         return werkzeug.utils.redirect(location, code=code, Response=Response)
 
     @classmethod
-    def _generate_routing_rules(cls, modules, converters):
-        return http._generate_routing_rules(modules, False, converters)
+    def _get_controller_registry(cls):
+        installed = request.env.registry._init_modules.union(odoo.conf.server_wide_modules)
+        if tools.config['test_enable'] and odoo.modules.module.current_test:
+            installed.add(odoo.modules.module.current_test)
+        mods = sorted(installed)
+        return http._get_controller_registry(mods)
+
+    @classmethod
+    def _generate_routing_rules(cls, controller_registry, converters):
+        return http._generate_routing_rules(controller_registry, False, converters)
 
     @classmethod
     def routing_map(cls, key=None):
-
+        # Note : when routing map is generated, we put it on the class `cls`
+        # to make it available for all instance. Since `env` create an new instance
+        # of the model, each instance will regenared its own routing map and thus
+        # regenerate its EndPoint. The routing map should be static.
         if not hasattr(cls, '_routing_map'):
+            cls._registry = {}
             cls._routing_map = {}
             cls._rewrite_len = {}
+            cls._event_callbacks = defaultdict(defaultdict(list))  # indexed by key then by event name
 
         if key not in cls._routing_map:
             _logger.info("Generating routing map for key %s" % str(key))
-            installed = request.env.registry._init_modules.union(odoo.conf.server_wide_modules)
-            if tools.config['test_enable'] and odoo.modules.module.current_test:
-                installed.add(odoo.modules.module.current_test)
-            mods = sorted(installed)
-            # Note : when routing map is generated, we put it on the class `cls`
-            # to make it available for all instance. Since `env` create an new instance
-            # of the model, each instance will regenared its own routing map and thus
-            # regenerate its EndPoint. The routing map should be static.
+
+            # Build controller registry
+            cls._registry[key] = cls._get_controller_registry()
+
+            # Build routing map
             routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
-            for url, endpoint in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+            for url, endpoint in cls._generate_routing_rules(cls._registry[key], converters=cls._get_converters()):
                 routing = submap(endpoint.routing, ROUTING_KEYS)
                 if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
                     routing['methods'] = routing['methods'] + ['OPTIONS']
@@ -187,12 +200,22 @@ class IrHttp(models.AbstractModel):
                 rule.merge_slashes = False
                 routing_map.add(rule)
             cls._routing_map[key] = routing_map
+
+            # Register event callbacks
+            for ctrl in cls._registry[key]:
+                for _, method in inspect.getmembers(ctrl, inspect.ismethod):
+                    for event_name in EVENT_NAMES:
+                        if hasattr(method, event_name):
+                            cls._event_callbacks[key][event_name].append(method)
+
         return cls._routing_map[key]
 
     @classmethod
     def _clear_routing_map(cls):
         if hasattr(cls, '_routing_map'):
-            cls._routing_map = {}
+            cls._routing_map.clear()
+            cls._registry.clear()
+            cls._event_callbacks.clear()
             _logger.debug("Clear routing map")
 
     @api.autovacuum

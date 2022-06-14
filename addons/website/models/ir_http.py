@@ -81,7 +81,7 @@ class Http(models.AbstractModel):
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
     @classmethod
-    def _generate_routing_rules(cls, modules, converters):
+    def _generate_routing_rules(cls, controller_registry, converters):
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
@@ -89,7 +89,7 @@ class Http(models.AbstractModel):
         rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
         cls._rewrite_len[website_id] = len(rewrites)
 
-        for url, endpoint in super()._generate_routing_rules(modules, converters):
+        for url, endpoint in super()._generate_routing_rules(controller_registry, converters):
             if url in rewrites:
                 rewrite = rewrites[url]
                 url_to = rewrite.url_to
