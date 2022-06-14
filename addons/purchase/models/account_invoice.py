@@ -52,8 +52,12 @@ class AccountMove(models.Model):
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
         new_lines = self.env['account.move.line']
+        sequence = max(self.line_ids.mapped('sequence')) + 1 if self.line_ids else 10
         for line in po_lines.filtered(lambda l: not l.display_type):
-            new_line = new_lines.new(line._prepare_account_move_line(self))
+            line_vals = line._prepare_account_move_line(self)
+            line_vals.update({'sequence': sequence})
+            new_line = new_lines.new(line_vals)
+            sequence += 1
             new_line.account_id = new_line._get_computed_account()
             new_line._onchange_price_subtotal()
             new_lines += new_line

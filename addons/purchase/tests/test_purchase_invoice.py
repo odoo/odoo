@@ -395,3 +395,75 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
 
         self.assertEqual(po_b.invoice_ids.company_id, company_b)
         self.assertEqual(po_b.invoice_ids.partner_bank_id, partner_bank_b)
+
+    def test_sequence_invoice_lines_from_multiple_purchases(self):
+        """Test if the invoice lines are sequenced by purchase order when creating an invoice
+           from multiple selected po's"""
+        purchase_orders = self.env['purchase.order']
+
+        for _ in range(3):
+            pol_vals = [
+                (0, 0, {
+                    'name': self.product_order.name,
+                    'product_id': self.product_order.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product_order.uom_id.id,
+                    'price_unit': self.product_order.list_price,
+                    'taxes_id': False,
+                    'sequence': sequence_number,
+                }) for sequence_number in range(10, 13)]
+            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+                'partner_id': self.partner_a.id,
+                'order_line': pol_vals,
+            })
+            purchase_order.button_confirm()
+            purchase_orders |= purchase_order
+
+        action = purchase_orders.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+
+        expected_purchase = [
+            purchase_orders[0], purchase_orders[0], purchase_orders[0],
+            purchase_orders[1], purchase_orders[1], purchase_orders[1],
+            purchase_orders[2], purchase_orders[2], purchase_orders[2],
+        ]
+        for line in invoice.invoice_line_ids.sorted('sequence'):
+            self.assertEqual(line.purchase_order_id, expected_purchase.pop(0))
+
+    def test_sequence_autocomplete_invoice(self):
+        """Test if the invoice lines are sequenced by purchase order when using the autocomplete
+           feature on a bill to add lines from po's"""
+        purchase_orders = self.env['purchase.order']
+
+        for _ in range(3):
+            pol_vals = [
+                (0, 0, {
+                    'name': self.product_order.name,
+                    'product_id': self.product_order.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product_order.uom_id.id,
+                    'price_unit': self.product_order.list_price,
+                    'taxes_id': False,
+                    'sequence': sequence_number,
+                }) for sequence_number in range(10, 13)]
+            purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+                'partner_id': self.partner_a.id,
+                'order_line': pol_vals,
+            })
+            purchase_order.button_confirm()
+            purchase_orders |= purchase_order
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        PurchaseBillUnion = self.env['purchase.bill.union']
+        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
+        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
+        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[2].id)
+        invoice = move_form.save()
+
+        expected_purchase = [
+            purchase_orders[0], purchase_orders[0], purchase_orders[0],
+            purchase_orders[1], purchase_orders[1], purchase_orders[1],
+            purchase_orders[2], purchase_orders[2], purchase_orders[2],
+        ]
+        for line in invoice.invoice_line_ids.sorted('sequence'):
+            self.assertEqual(line.purchase_order_id, expected_purchase.pop(0))
