@@ -37,6 +37,8 @@ import {
     isFontAwesome,
     getInSelection,
     getDeepRange,
+    getRowIndex,
+    getColumnIndex,
     ancestors,
     firstLeaf,
     previousLeaf,
@@ -56,6 +58,12 @@ import {
     getAdjacentNextSiblings,
     rightLeafOnlyNotBlockPath,
     isBlock,
+    getTraversedNodes,
+    getSelectedNodes,
+    isVisibleTextNode,
+    descendants,
+    hasValidSelection,
+    hasTableSelection,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -510,8 +518,9 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
-        this.addDomListener(this.document, 'mousedown', this._onDoumentMousedown);
-        this.addDomListener(this.document, 'mouseup', this._onDoumentMouseup);
+        this.addDomListener(this.document, 'mousedown', this._onDocumentMousedown);
+        this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
+        this.addDomListener(this.document, 'mousemove', this._onDocumentMousemove);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -1145,6 +1154,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     historySetSelection(step) {
+        this.deselectTable();
         if (step.selection && step.selection.anchorNodeOid) {
             const anchorNode = this.idFind(step.selection.anchorNodeOid);
             const focusNode = this.idFind(step.selection.focusNodeOid) || anchorNode;
@@ -1158,6 +1168,8 @@ export class OdooEditor extends EventTarget {
                         : step.selection.anchorOffset,
                     false,
                 );
+                // If a table must be selected, ensure it's in the same tick.
+                this._handleSelectionInTable();
             }
         }
     }
@@ -1508,6 +1520,23 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    /**
+     * Remove any custom table selection from the editor.
+     *
+     * @returns {boolean} true if a table was deselected
+     */
+    deselectTable() {
+        let didDeselectTable = false;
+        for (const td of this.editable.querySelectorAll('.o_selected_table, .o_selected_td')) {
+            td.classList.remove('o_selected_td', 'o_selected_table');
+            if (!td.classList.length) {
+                td.removeAttribute('class');
+            }
+            didDeselectTable = true;
+        }
+        return didDeselectTable;
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1559,7 +1588,6 @@ export class OdooEditor extends EventTarget {
             closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
             closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
         let next = nextLeaf(end, this.editable);
-        const splitEndTd = closestElement(end, 'td') && end.nextSibling;
         const contents = range.extractContents();
         setSelection(start, nodeSize(start));
         range = getDeepRange(this.editable, { sel });
@@ -1568,26 +1596,6 @@ export class OdooEditor extends EventTarget {
             closestBlock(range.endContainer).after(n);
             n.textContent = '';
         });
-        // Restore table contents removed by extractContents.
-        const tds = [...contents.querySelectorAll('td')].filter(n => !closestElement(n, 'table'));
-        let currentFragmentTr, currentTr;
-        const currentTd = closestElement(range.endContainer, 'td');
-        tds.forEach((td, i) => {
-            const parentFragmentTr = closestElement(td, 'tr');
-            // Skip the first and the last partially selected TD.
-            if (i && !(splitEndTd && i === tds.length - 1)) {
-                if (parentFragmentTr !== currentFragmentTr) {
-                    currentTr = currentTr
-                        ? currentTr.nextElementSibling
-                        : closestElement(range.endContainer, 'tr').nextElementSibling;
-                }
-                currentTr ? currentTr.prepend(td) : currentTd.after(td);
-            }
-            currentFragmentTr = parentFragmentTr;
-            td.textContent = '';
-        });
-        this.observerFlush();
-        this._toRollback = false; // Errors caught with observerFlush were already handled.
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
@@ -1872,6 +1880,119 @@ export class OdooEditor extends EventTarget {
         this.observerActive('_stopContenteditable');
     }
 
+    // TABLE MANAGEMENT
+    // ================
+
+    /**
+     * Handle the selection of table cells rectangularly (as opposed to line by
+     * line from left to right then top to bottom). If such a special selection
+     * was indeed applied, return true (and false otherwise).
+     *
+     * @private
+     * @param {MouseEvent|undefined} [ev]
+     * @returns {boolean}
+     */
+    _handleSelectionInTable(ev=undefined) {
+        this.deselectTable();
+        const traversedNodes = getTraversedNodes(this.editable);
+        if (!traversedNodes.some(node => !!closestElement(node, 'td'))) {
+            // There is no table cell in the selection.
+            return false;
+        }
+        const selection = this.document.getSelection();
+        let range;
+        if (selection.rangeCount > 1) {
+            // Firefox selection in table works with multiple ranges.
+            const startRange = getDeepRange(this.editable, {range: selection.getRangeAt(0)});
+            const endRange = getDeepRange(this.editable, {range: selection.getRangeAt(selection.rangeCount - 1)});
+            range = this.document.createRange();
+            range.setStart(startRange.startContainer, 0);
+            range.setEnd(endRange.startContainer, 0);
+        } else {
+            range = getDeepRange(this.editable);
+        }
+        const startTd = closestElement(range.startContainer, 'td');
+        const endTd = closestElement(range.endContainer, 'td');
+        let appliedCustomSelection = false;
+        const startTable = closestElement(range.startContainer, 'table');
+        const endTable = closestElement(range.endContainer, 'table');
+        if (startTd !== endTd && startTable === endTable) {
+            // The selection goes through at least two different cells -> select
+            // cells.
+            this._selectTableCells(range);
+            appliedCustomSelection = true;
+        } else if (!traversedNodes.every(node => !!closestElement(node, 'td'))) {
+            // The selection goes through a table but also outside of it ->
+            // select the whole table.
+            this.historyPauseSteps('handleSelectionInTable');
+            for (const table of new Set(traversedNodes.map(node => closestElement(node, 'table')))) {
+                if (table) {
+                    table.classList.toggle('o_selected_table', true);
+                    for (const td of table.querySelectorAll('td')) {
+                        td.classList.toggle('o_selected_td', true);
+                    }
+                    appliedCustomSelection = true;
+                }
+            }
+        } else if (ev) {
+            // We're redirected from a mousemove event.
+            const selectedNodes = getSelectedNodes(this.editable);
+            const areCellContentsFullySelected = !!startTd && descendants(startTd).filter(d => !isBlock(d)).every(child => selectedNodes.includes(child));
+            if (areCellContentsFullySelected) {
+                const SENSITIVITY = 5;
+                const rangeRect = range.getBoundingClientRect();
+                const isMovingAwayFromSelection = ev.clientX > rangeRect.x + rangeRect.width + SENSITIVITY // moving right
+                    || ev.clientX < rangeRect.x - SENSITIVITY; // moving left
+                if (isMovingAwayFromSelection) {
+                    // A cell is fully selected and the mouse is moving away
+                    // from the selection, within said cell -> select the cell.
+                    this._selectTableCells(range);
+                    appliedCustomSelection = true;
+                }
+            } else if (!descendants(startTd).some(child => isVisibleTextNode(child) && child.textContent !== '\u200B') &&
+                ev.clientX - (this._lastMouseClickPosition ? this._lastMouseClickPosition[0] : ev.clientX) >= 15
+            ) {
+                // Handle selecting an empty cell.
+                this._selectTableCells(range);
+                appliedCustomSelection = true;
+            }
+        }
+        return appliedCustomSelection;
+    }
+    /**
+     * Helper function to `_handleSelectionInTable`. Do the actual selection of
+     * cells in a table based on the current range.
+     *
+     * @private
+     * @see _handleSelectionInTable
+     * @param {Range} range
+     */
+    _selectTableCells(range) {
+        this.historyPauseSteps('handleSelectionInTable');
+        const table = closestElement(range.startContainer, 'table');
+        const alreadyHadSelection = table.classList.contains('o_selected_table');
+        this.deselectTable(); // Undo previous selection.
+        table.classList.toggle('o_selected_table', true);
+        const columns = table.querySelectorAll('td');
+        const startCol = closestElement(range.startContainer, 'td') || columns[0];
+        const endCol = closestElement(range.endContainer, 'td') || columns[columns.length - 1];
+        const [startRow, endRow] = [closestElement(startCol, 'tr'), closestElement(range.endContainer, 'tr')];
+        const [startColIndex, endColIndex] = [getColumnIndex(startCol), getColumnIndex(endCol)];
+        const [startRowIndex, endRowIndex] = [getRowIndex(startRow), getRowIndex(endRow)];
+        const [minRowIndex, maxRowIndex] = [Math.min(startRowIndex, endRowIndex), Math.max(startRowIndex, endRowIndex)];
+        const [minColIndex, maxColIndex]  = [Math.min(startColIndex, endColIndex), Math.max(startColIndex, endColIndex)];
+        // Create an array of arrays of tds (each of which is a row).
+        const grid = [...table.querySelectorAll('tr')].map(tr => [...tr.children].filter(child => child.nodeName === 'TD'));
+        for (const tds of grid.filter((_, index) => index >= minRowIndex && index <= maxRowIndex)) {
+            for (const td of tds.filter((_, index) => index >= minColIndex && index <= maxColIndex)) {
+                td.classList.toggle('o_selected_td', true);
+            }
+        }
+        if (!alreadyHadSelection) {
+            this.toolbarShow();
+        }
+    }
+
     // HISTORY
     // =======
 
@@ -2007,13 +2128,18 @@ export class OdooEditor extends EventTarget {
         }
 
         const sel = this.document.getSelection();
-        if (!sel.anchorNode) {
-            show = false;
-        } else {
-            const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
-            const isInStars = selAncestors.some(node => node.classList && node.classList.contains('o_stars'));
-            if (isInStars) {
+        if (!hasTableSelection(this.editable)) {
+            if (this.editable.classList.contains('o_resizing_column') || this.editable.classList.contains('o_resizing_row')) {
                 show = false;
+            }
+            if (!sel.anchorNode) {
+                show = false;
+            } else {
+                const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
+                const isInStars = selAncestors.some(node => node.classList && node.classList.contains('o_stars'));
+                if (isInStars) {
+                    show = false;
+                }
             }
         }
         if (this.options.autohideToolbar) {
@@ -2162,7 +2288,14 @@ export class OdooEditor extends EventTarget {
         // height to be 0. In that case, use the rect of the startContainer if
         // possible.
         const isSelectionPotentiallyBugged = [selRect.x, selRect.y, selRect.width, selRect.height].every( x => x === 0 );
-        const correctedSelectionRect = isSelectionPotentiallyBugged && startRect ? startRect : selRect;
+        let correctedSelectionRect = isSelectionPotentiallyBugged && startRect ? startRect : selRect;
+        const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
+        // If a table is selected, we want to position the toolbar in function
+        // of the table, rather than follow the DOM selection.
+        const selectedTable = selAncestors.find(node => node.classList && node.classList.contains('o_selected_table'));
+        if (selectedTable) {
+            correctedSelectionRect = selectedTable.getBoundingClientRect();
+        }
         const toolbarWidth = this.toolbar.offsetWidth;
         const toolbarHeight = this.toolbar.offsetHeight;
         const editorRect = this.editable.getBoundingClientRect();
@@ -2524,11 +2657,52 @@ export class OdooEditor extends EventTarget {
                 this.deleteRange(selection);
             }
         }
-        if (ev.key === 'Backspace') {
+        const selectedTds = this.editable.querySelectorAll('.o_selected_td');
+        if ((ev.key === 'Backspace' || ev.key === 'Delete') && selectedTds.length) {
+            // backspace/delete with custom selected cells
+            ev.preventDefault();
+            this.historyPauseSteps();
+            const rows = [...closestElement(selectedTds[0], 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
+            const firstRowCells = [...rows[0].children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
+            const areFullColumnsSelected = getRowIndex(selectedTds[0]) === 0 && getRowIndex(selectedTds[selectedTds.length - 1]) === rows.length - 1;
+            const areFullRowsSelected = getColumnIndex(selectedTds[0]) === 0 && getColumnIndex(selectedTds[selectedTds.length - 1]) === firstRowCells.length - 1;
+            if (areFullColumnsSelected || areFullRowsSelected) {
+                // If some full columns are selected, remove them.
+                if (areFullColumnsSelected) {
+                    const startIndex = getColumnIndex(selectedTds[0]);
+                    let endIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
+                    let currentIndex = startIndex;
+                    while (currentIndex <= endIndex) {
+                        this.execCommand('removeColumn', firstRowCells[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+                // If some full rows are selected, remove them.
+                if (areFullRowsSelected) {
+                    const startIndex = getRowIndex(selectedTds[0]);
+                    let endIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
+                    let currentIndex = startIndex;
+                    while (currentIndex <= endIndex) {
+                        this.execCommand('removeRow', rows[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+                // If all rows, remove the table.
+                if (rows.every(row => !row.parentElement)) {
+                    this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
+                }
+            }
+            this.deleteRange();
+            if (this.deselectTable() && hasValidSelection(this.editable)) {
+                this.document.getSelection().collapseToStart();
+            }
+            this.historyUnpauseSteps();
+            this.historyStep();
+        } else if (ev.key === 'Backspace') {
             // backspace
             const selection = this.document.getSelection();
             if (!ev.ctrlKey && !ev.metaKey) {
-                if (selection.isCollapsed) {                    
+                if (selection.isCollapsed) {
                     // We need to hijack it because firefox doesn't trigger a
                     // deleteBackward input event with a collapsed selection in
                     // front of a contentEditable="false" (eg: font awesome).
@@ -2656,17 +2830,19 @@ export class OdooEditor extends EventTarget {
         this._computeHistorySelection();
 
         const selection = this.document.getSelection();
-        this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
         }
-        if (
-            selection.rangeCount &&
-            selection.getRangeAt(0) &&
-            this.options.onCollaborativeSelectionChange
-        ) {
-            this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
+        let appliedCustomSelection = false;
+        if (selection.rangeCount && selection.getRangeAt(0)) {
+            appliedCustomSelection = this._handleSelectionInTable();
+            if (this.options.onCollaborativeSelectionChange) {
+                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
+            }
+        }
+        if (!appliedCustomSelection) {
+            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
         }
     }
 
@@ -2814,12 +2990,16 @@ export class OdooEditor extends EventTarget {
             el.removeAttribute('data-oe-keep-contenteditable');
         }
 
-        // Remove Zero Width Spzces on Font awesome elements
+        // Remove Zero Width Spaces on Font awesome elements
         const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
         for (const el of element.querySelectorAll(faSelector)) {
             el.textContent = el.textContent.replace('\u200B', '');
         }
 
+        // Clean custom selections
+        if (this.deselectTable() && hasValidSelection(this.editable)) {
+            this.document.getSelection().collapseToStart();
+        }
     }
     /**
      * Handle the hint preview for the Powerbox.
@@ -2998,6 +3178,7 @@ export class OdooEditor extends EventTarget {
 
     _onMouseDown(ev) {
         this._currentMouseState = ev.type;
+        this._lastMouseClickPosition = [ev.x, ev.y];
 
         // When selecting all the text within a link then triggering delete or
         // inserting a character, the cursor and insertion is outside the link.
@@ -3103,15 +3284,25 @@ export class OdooEditor extends EventTarget {
         this._fixSelectionOnContenteditableFalse();
     }
 
-    _onDoumentMousedown(event) {
+    _onDocumentMousedown(event) {
         if (this.toolbar && !ancestors(event.target, this.editable).includes(this.toolbar)) {
             this.toolbar.style.pointerEvents = 'none';
+            if (this.deselectTable() && hasValidSelection(this.editable)) {
+                this.document.getSelection().collapseToStart();
+            }
         }
     }
 
-    _onDoumentMouseup() {
+    _onDocumentMouseup() {
+        this.historyUnpauseSteps('handleSelectionInTable');
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
+        }
+    }
+
+    _onDocumentMousemove(ev) {
+        if (this._currentMouseState === 'mousedown') {
+            this._handleSelectionInTable(ev);
         }
     }
 
