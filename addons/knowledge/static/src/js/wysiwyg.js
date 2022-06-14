@@ -1,73 +1,10 @@
 /** @odoo-module **/
 
 import { qweb as QWeb } from 'web.core';
-import { DocumentWidget } from 'wysiwyg.widgets.media';
-import MediaDialog from 'wysiwyg.widgets.MediaDialog';
 import Wysiwyg from 'web_editor.wysiwyg';
 import { KnowledgeArticleLinkModal } from './wysiwyg/knowledge_article_link.js';
 import { preserveCursor, setCursorStart } from '@web_editor/../lib/odoo-editor/src/OdooEditor';
 
-/**
- * Override the @see DocumentWidget to manage files in a @see MediaDialog used
- * by the /file command. The purpose of this override is to redefine the
- * rendering of the media (/file block), and to merge images in the documents
- * tab of the MediaDialog, since the /file block displays a default mimetype for
- * every files.
- */
-const KnowledgeDocumentWidget = DocumentWidget.extend({
-    /**
-     * Filter files for the documents tab of the MediaDialog. Any file with a
-     * mimetype is valid. (images and documents are displayed together)
-     *
-     * @override
-     */
-    init: function (parent, media, options) {
-        options = _.extend({
-            accept: '*/*',
-            mimetypeDomain: [['mimetype', '!=', false]],
-        }, options || {});
-        this._super(parent, media, options);
-    },
-    /**
-     * Custom rendering for the /file command
-     *
-     * @override
-     * @param {Object} img
-     * @returns {Element}
-     */
-    _renderMedia: function (img) {
-        if (img.image_src) {
-            delete img.image_src;
-        }
-        const file = this._super(...arguments);
-        const extension = (img.name && img.name.split('.').pop()) || img.mimetype;
-        this.$media = $(QWeb.render('knowledge.file_block', {
-            img: {
-                name: img.name,
-                extension: extension,
-            },
-        }));
-        this.media = this.$media[0];
-        this.media.querySelector('.o_knowledge_file_image').replaceChildren(file);
-        return this.media;
-    }
-});
-
-/**
- * Override the @see MediaDialog to manage documents with the
- * @see KnowledgeDocumentWidget for the /file command
- */
-const KnowledgeMediaDialog = MediaDialog.extend({
-    /**
-     * @override
-     * @param {Object} media
-     * @param {Object} options
-     * @returns {Widget}
-     */
-    getDocumentWidget: function (media, options) {
-        return new KnowledgeDocumentWidget(this, media, options);
-    }
-});
 Wysiwyg.include({
     /**
      * @override
@@ -131,8 +68,9 @@ Wysiwyg.include({
                         noVideos: true,
                         noImages: true,
                         noIcons: true,
-                        noDocuments: false
-                    }, KnowledgeMediaDialog);
+                        noDocuments: true,
+                        knowledgeDocuments: true,
+                    });
                 }
             }, {
                 groupName: 'Knowledge',
