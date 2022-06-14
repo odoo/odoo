@@ -5,6 +5,8 @@ const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use
 
 const core = require('web.core');
 
+const utils = require('web.utils');
+
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -121,6 +123,8 @@ class FileUploader extends Component {
                 continue;
             }
             try {
+                const hash = $.bbq.getState()
+                utils.set_cookie('cids', hash.cids);
                 const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
                     method: 'POST',
                     body: this._createFormData(file),
