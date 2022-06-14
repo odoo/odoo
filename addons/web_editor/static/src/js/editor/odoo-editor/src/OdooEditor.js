@@ -1992,6 +1992,47 @@ export class OdooEditor extends EventTarget {
             this.toolbarShow();
         }
     }
+    /**
+     * If the mouse is hovering over one of the borders of a table cell element,
+     * return the side of that border ('left'|'top'|'right'|'bottom').
+     * Otherwise, return false.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {boolean}
+     */
+    _isHoveringTdBorder(ev) {
+        if (ev.target && ev.target.nodeName === 'TD') {
+            const SENSITIVITY = 5;
+            const targetRect = ev.target.getBoundingClientRect();
+            if (ev.clientX <= targetRect.x + SENSITIVITY) {
+                return 'left';
+            } else if (ev.clientY <= targetRect.y + SENSITIVITY) {
+                return 'top';
+            } else if (ev.clientX >= targetRect.x + ev.target.clientWidth - SENSITIVITY) {
+                return 'right';
+            } else if (ev.clientY >= targetRect.y + ev.target.clientHeight - SENSITIVITY) {
+                return 'bottom';
+            }
+        }
+        return false;
+    }
+    /**
+     * Change the cursor to a resizing cursor, in the direction specified. If no
+     * direction is specified, return the cursor to its default.
+     *
+     * @private
+     * @param {'col'|'row'|false} direction 'col'/'row' to hint column/row,
+     *                                      false to remove the hints
+     */
+    _toggleTableResizeCursor(direction) {
+        this.editable.classList.remove('o_col_resize', 'o_row_resize');
+        if (direction === 'col') {
+            this.editable.classList.add('o_col_resize');
+        } else if (direction === 'row') {
+            this.editable.classList.add('o_resizing_row');
+        }
+    }
 
     // HISTORY
     // =======
@@ -2129,7 +2170,7 @@ export class OdooEditor extends EventTarget {
 
         const sel = this.document.getSelection();
         if (!hasTableSelection(this.editable)) {
-            if (this.editable.classList.contains('o_resizing_column') || this.editable.classList.contains('o_resizing_row')) {
+            if (this.editable.classList.contains('o_col_resize') || this.editable.classList.contains('o_row_resize')) {
                 show = false;
             }
             if (!sel.anchorNode) {
@@ -3304,6 +3345,8 @@ export class OdooEditor extends EventTarget {
         if (this._currentMouseState === 'mousedown') {
             this._handleSelectionInTable(ev);
         }
+        const sideToDirection = {top: 'row', right: 'col', bottom: 'row', left: 'col'};
+        this._toggleTableResizeCursor(sideToDirection[this._isHoveringTdBorder(ev)] || false);
     }
 
     /**
