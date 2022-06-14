@@ -95,7 +95,7 @@ export class MediaDialog extends Component {
         if (!this.props.noImages) {
             this.addTab(TABS.IMAGES, {
                 useMediaLibrary: this.props.useMediaLibrary,
-                multiSelect: this.props.multiImages
+                multiSelect: this.props.multiImages,
             });
         }
         if (!noDocuments) {
@@ -158,13 +158,13 @@ export class MediaDialog extends Component {
                         element.dataset.shapeColors = this.props.media.dataset.shapeColors;
                     }
                 }
-                element.classList.add(...TABS[this.state.activeTab].Component.mediaSpecificClasses);
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
                     element.classList.remove(...TABS[otherTab].Component.mediaSpecificClasses);
                 }
                 element.classList.remove(...this.initialIconClasses);
                 element.classList.remove('o_modified_image_to_save');
                 element.classList.remove('oe_edited_link');
+                element.classList.add(...TABS[this.state.activeTab].Component.mediaSpecificClasses);
             });
             if (this.props.multiImages) {
                 this.props.save(elements);

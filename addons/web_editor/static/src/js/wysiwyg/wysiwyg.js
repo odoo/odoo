@@ -1163,9 +1163,8 @@ const Wysiwyg = Widget.extend({
      * @param {object} params
      * @param {Node} [params.node] Optionnal
      * @param {Node} [params.htmlClass] Optionnal
-     * @param {Class} MediaDialog Optionnal
      */
-    openMediaDialog(params = {}, MediaDialog = weWidgets.MediaDialog) {
+    openMediaDialog(params = {}) {
         const sel = this.odooEditor.document.getSelection();
 
         if (!sel.rangeCount) {
