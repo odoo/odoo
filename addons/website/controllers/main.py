@@ -75,7 +75,7 @@ class Website(Home):
 
         homepage_id = request.website._get_cached('homepage_id')
         homepage = homepage_id and request.env['website.page'].browse(homepage_id)
-        if homepage and (homepage.sudo().is_visible or request.env.user.has_group('base.group_user')) and homepage.url != '/':
+        if homepage and (homepage.sudo().is_visible or request.env.user._is_internal()) and homepage.url != '/':
             request.env['ir.http'].reroute(homepage.url)
 
         website_page = request.env['ir.http']._serve_page()
@@ -127,7 +127,7 @@ class Website(Home):
         the frontend
         """
         if not redirect and request.params.get('login_success'):
-            if request.env['res.users'].browse(uid).has_group('base.group_user'):
+            if request.env['res.users'].browse(uid)._is_internal():
                 redirect = '/web?' + request.httprequest.query_string.decode()
             else:
                 redirect = '/my'

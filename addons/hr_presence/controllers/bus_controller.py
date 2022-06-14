@@ -11,7 +11,7 @@ class BusController(main.BusController):
 
     @route('/longpolling/poll', type="json", auth="public")
     def poll(self, channels, last, options=None):
-        if request.env.user.has_group('base.group_user'):
+        if request.env.user._is_internal():
             ip_address = request.httprequest.remote_addr
             users_log = request.env['res.users.log'].search_count([
                 ('create_uid', '=', request.env.user.id),

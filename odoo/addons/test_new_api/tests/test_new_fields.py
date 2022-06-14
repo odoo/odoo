@@ -1419,7 +1419,7 @@ class TestFields(TransactionCaseWithUserDemo):
         record.with_user(user0).foo = 'yes we can'
 
         # add ir.rule to prevent access on record
-        self.assertTrue(user0.has_group('base.group_user'))
+        self.assertTrue(user0._is_internal())
         rule = self.env['ir.rule'].create({
             'model_id': self.env['ir.model']._get_id(record._name),
             'groups': [self.env.ref('base.group_user').id],

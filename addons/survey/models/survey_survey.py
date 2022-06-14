@@ -481,7 +481,7 @@ class Survey(models.Model):
                 # no signup possible -> should be a not public user (employee or portal users)
                 if not self.users_can_signup and (not user or user._is_public()):
                     raise exceptions.UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
-            if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
+            if self.access_mode == 'internal' and (not user or not user._is_internal()):
                 raise exceptions.UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
             if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
                 raise exceptions.UserError(_('No attempts left.'))

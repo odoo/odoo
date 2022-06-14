@@ -25,7 +25,7 @@ class EditorCollaborationController(BusController):
                         res_id = int(match[3])
 
                         # Verify access to the edition channel.
-                        if not request.env.user.has_group('base.group_user'):
+                        if not request.env.user._is_internal():
                             raise AccessDenied()
 
                         document = request.env[model_name].browse([res_id])

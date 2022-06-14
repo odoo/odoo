@@ -9,6 +9,6 @@ class IrHttp(models.AbstractModel):
 
     def session_info(self):
         result = super(IrHttp, self).session_info()
-        if request.env.user.has_group('base.group_user'):
+        if request.env.user._is_internal():
             result['show_effect'] = bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect'))
         return result
