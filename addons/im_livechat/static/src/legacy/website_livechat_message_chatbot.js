@@ -19,7 +19,7 @@ WebsiteLivechatMessage.include({
     init(parent, data, options) {
         this._super(...arguments);
 
-        if (parent._isChatbot) {
+        if (parent.messaging.livechatButtonView.isChatbot) {
             this._chatbotId = parent._chatbot.chatbot_script_id;
             this._chatbotName = parent._chatbot.chatbot_name;
             this._chatbotOperatorPartnerId = parent._chatbot.chatbot_operator_partner_id;
