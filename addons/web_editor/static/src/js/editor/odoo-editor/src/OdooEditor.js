@@ -64,6 +64,7 @@ import {
     descendants,
     hasValidSelection,
     hasTableSelection,
+    pxToFloat,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1895,8 +1896,7 @@ export class OdooEditor extends EventTarget {
     _handleSelectionInTable(ev=undefined) {
         this.deselectTable();
         const traversedNodes = getTraversedNodes(this.editable);
-        if (!traversedNodes.some(node => !!closestElement(node, 'td'))) {
-            // There is no table cell in the selection.
+        if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td'))) {
             return false;
         }
         const selection = this.document.getSelection();
@@ -2030,7 +2030,128 @@ export class OdooEditor extends EventTarget {
         if (direction === 'col') {
             this.editable.classList.add('o_col_resize');
         } else if (direction === 'row') {
-            this.editable.classList.add('o_resizing_row');
+            this.editable.classList.add('o_row_resize');
+        }
+    }
+    /**
+     * Resizes a table in the given direction, by "pulling" the border between
+     * the given targets (ordered left to right or top to bottom).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _resizeTable(ev, direction, target1, target2) {
+        ev.preventDefault();
+        const position = target1 ? (target2 ? 'middle' : 'last') : 'first';
+        let [item, neighbor] = [target1 || target2, target2];
+        const table = closestElement(item, 'table');
+        const [sizeProp, positionProp, clientPositionProp] = direction === 'col' ? ['width', 'x', 'clientX'] : ['height', 'y', 'clientY'];
+
+        // Preserve current sizes.
+        const tableRect = table.getBoundingClientRect();
+        table.style[sizeProp] = tableRect[sizeProp] + 'px';
+        const unsizedItemsSelector = `${direction === 'col' ? 'td' : 'tr'}:not([style*=${sizeProp}])`;
+        for (const unsizedItem of table.querySelectorAll(unsizedItemsSelector)) {
+            unsizedItem.style[sizeProp] = unsizedItem.getBoundingClientRect()[sizeProp] + 'px';
+        }
+
+        // TD widths should only be applied in the first row. Change targets and
+        // clean the rest.
+        if (direction === 'col') {
+            let hostCell = closestElement(table, 'td');
+            const hostCells = [];
+            while (hostCell) {
+                hostCells.push(hostCell);
+                hostCell = closestElement(hostCell.parentElement, 'td');
+            }
+            const nthColumn = getColumnIndex(item);
+            const firstRow = [...table.querySelector('tr').children];
+            [item, neighbor] = [firstRow[nthColumn], firstRow[nthColumn + 1]];
+            for (const td of hostCells) {
+                if (td !== item && td !== neighbor && closestElement(td, 'table') === table && getColumnIndex(td) !== 0) {
+                    td.style.removeProperty(sizeProp);
+                }
+            }
+        }
+
+        const MIN_SIZE = 33; // TODO: ideally, find this value programmatically.
+        switch (position) {
+            case 'first': {
+                const marginProp = direction === 'col' ? 'marginLeft' : 'marginTop';
+                const itemRect = item.getBoundingClientRect();
+                const tableStyle = getComputedStyle(table);
+                const currentMargin = pxToFloat(tableStyle[marginProp]);
+                const sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                const newMargin = currentMargin - sizeDelta;
+                const currentSize = itemRect[sizeProp];
+                const newSize = currentSize + sizeDelta;
+                if (newMargin >= 0 && newSize > MIN_SIZE) {
+                    const tableRect = table.getBoundingClientRect();
+                    // Check if a nested table would overflow its parent cell.
+                    const hostCell = closestElement(table.parentElement, 'td');
+                    const childTable = item.querySelector('table');
+                    if (direction === 'col' &&
+                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
+                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        break;
+                    }
+                    table.style[marginProp] = newMargin + 'px';
+                    item.style[sizeProp] = newSize + 'px';
+                    table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
+                }
+                break;
+            }
+            case 'middle': {
+                const [itemRect, neighborRect] = [item.getBoundingClientRect(), neighbor.getBoundingClientRect()];
+                const [currentSize, newSize] = [itemRect[sizeProp], ev[clientPositionProp] - itemRect[positionProp]];
+                const editableStyle = getComputedStyle(this.editable);
+                const sizeDelta = newSize - currentSize;
+                const currentNeighborSize = neighborRect[sizeProp];
+                const newNeighborSize = currentNeighborSize - sizeDelta;
+                const maxWidth = this.editable.clientWidth - pxToFloat(editableStyle.paddingLeft) - pxToFloat(editableStyle.paddingRight);
+                const tableRect = table.getBoundingClientRect();
+                if (newSize > MIN_SIZE &&
+                        // prevent resizing horizontally beyond the bounds of
+                        // the editable:
+                        (direction === 'row' ||
+                        newNeighborSize > MIN_SIZE ||
+                        tableRect[sizeProp] + sizeDelta < maxWidth)) {
+
+                    // Check if a nested table would overflow its parent cell.
+                    const childTable = item.querySelector('table');
+                    if (direction === 'col' &&
+                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5) {
+                        break
+                    }
+                    item.style[sizeProp] = newSize + 'px';
+                    if (direction === 'col') {
+                        neighbor.style[sizeProp] = (newNeighborSize > MIN_SIZE ? newNeighborSize : currentNeighborSize) + 'px';
+                    } else {
+                        table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
+                    }
+                }
+                break;
+            }
+            case 'last': {
+                const itemRect = item.getBoundingClientRect();
+                const sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
+                const currentSize = itemRect[sizeProp];
+                const newSize = currentSize + sizeDelta;
+                if ((newSize >= 0 || direction === 'row') && newSize > MIN_SIZE) {
+                    const tableRect = table.getBoundingClientRect();
+                    // Check if a nested table would overflow its parent cell.
+                    const hostCell = closestElement(table.parentElement, 'td');
+                    const childTable = item.querySelector('table');
+                    if (direction === 'col' &&
+                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
+                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        break
+                    }
+                    table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
+                    item.style[sizeProp] = newSize + 'px';
+                }
+                break;
+            }
         }
     }
 
@@ -3337,6 +3458,49 @@ export class OdooEditor extends EventTarget {
                 this.document.getSelection().collapseToStart();
             }
         }
+        // Handle table resizing.
+        const isHoveringTdBorder = this._isHoveringTdBorder(event);
+        if (isHoveringTdBorder) {
+            event.preventDefault();
+            const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[isHoveringTdBorder] || false;
+            let target1, target2;
+            switch (isHoveringTdBorder) {
+                case 'top': {
+                    target1 = getAdjacentPreviousSiblings(closestElement(event.target, 'tr')).find(node => node.nodeName === 'TR');
+                    target2 = closestElement(event.target, 'tr');
+                    break;
+                }
+                case 'right': {
+                    target1 = event.target;
+                    target2 = getAdjacentNextSiblings(event.target).find(node => node.nodeName === 'TD');
+                    break;
+                }
+                case 'bottom': {
+                    target1 = closestElement(event.target, 'tr');
+                    target2 = getAdjacentNextSiblings(closestElement(event.target, 'tr')).find(node => node.nodeName === 'TR');
+                    break;
+                }
+                case 'left': {
+                    target1 = getAdjacentPreviousSiblings(event.target).find(node => node.nodeName === 'TD');
+                    target2 = event.target;
+                    break;
+                }
+            }
+            this._isResizingTable = true;
+            this._toggleTableResizeCursor(direction);
+            const resizeTable = ev => this._resizeTable(ev, direction, target1, target2);
+            const stopResizing = ev => {
+                ev.preventDefault();
+                this._isResizingTable = false;
+                this._toggleTableResizeCursor(false);
+                this.document.removeEventListener('mousemove', resizeTable);
+                this.document.removeEventListener('mouseup', stopResizing);
+                this.document.removeEventListener('mouseleave', stopResizing);
+            };
+            this.document.addEventListener('mousemove', resizeTable);
+            this.document.addEventListener('mouseup', stopResizing);
+            this.document.addEventListener('mouseleave', stopResizing);
+        }
     }
 
     _onDocumentMouseup() {
@@ -3347,11 +3511,13 @@ export class OdooEditor extends EventTarget {
     }
 
     _onDocumentMousemove(ev) {
-        if (this._currentMouseState === 'mousedown') {
+        if (this._currentMouseState === 'mousedown' && !this._isResizingTable) {
             this._handleSelectionInTable(ev);
         }
-        const sideToDirection = {top: 'row', right: 'col', bottom: 'row', left: 'col'};
-        this._toggleTableResizeCursor(sideToDirection[this._isHoveringTdBorder(ev)] || false);
+        const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[this._isHoveringTdBorder(ev)] || false;
+        if (direction || !this._isResizingTable) {
+            this._toggleTableResizeCursor(direction);
+        }
     }
 
     /**

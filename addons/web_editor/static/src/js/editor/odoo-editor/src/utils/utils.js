@@ -2180,6 +2180,16 @@ export function rgbToHex(rgb = '') {
     }
 }
 
+/**
+ * Take a string containing a size in pixels, return that size as a float.
+ *
+ * @param {string} sizeString
+ * @returns {number}
+ */
+export function pxToFloat(sizeString) {
+    return parseFloat(sizeString.replace('px', ''));
+}
+
 export function getRangePosition(el, document, options = {}) {
     const selection = document.getSelection();
     if (!selection.rangeCount) return;
