@@ -29,7 +29,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             this._chatbot.chatbot_welcome_steps.length - 1];
         this._channelData = chatbotData.channel;
         this.messaging.livechatButtonView.update({ isChatbot: true });
-        this._serverURL = chatbotData.serverUrl;
+        this._serverURL = this.messaging.publicLivechatServerUrlChatbot;
     },
 
     /**
@@ -88,6 +88,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
             messaging.update({
                 isInPublicLivechat: true,
                 isPublicLivechatAvailable: true,
+                publicLivechatServerUrlChatbot: this.$el.data().serverUrl,
             });
             this.livechatButton = new LivechatButtonTestChatbot(this, messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);
