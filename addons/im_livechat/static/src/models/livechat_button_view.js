@@ -65,5 +65,9 @@ registerModel({
         isOpeningChat: attr({
             default: false,
         }),
+        // livechat model
+        livechat: attr({
+            default: null,
+        }),
     },
 });

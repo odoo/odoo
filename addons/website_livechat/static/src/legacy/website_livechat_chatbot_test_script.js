@@ -53,17 +53,19 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      * @override
      */
     _openChat: function () {
-        this._livechat = new WebsiteLivechat({
-            parent: this,
-            data: this._channelData,
+        this.messaging.livechatButtonView.update({
+            livechat: new WebsiteLivechat({
+                parent: this,
+                data: this._channelData,
+            }),
         });
 
         return this._openChatWindow().then(() => {
             this._sendWelcomeMessage();
             this._renderMessages();
-            this.call('bus_service', 'addChannel', this._livechat.getUUID());
+            this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.livechat.getUUID());
             this.call('bus_service', 'startPolling');
-            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData()), true), 60 * 60);
+            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.livechat.toData()), true), 60 * 60);
             this.messaging.livechatButtonView.update({ isOpeningChat: false });
         });
     },
