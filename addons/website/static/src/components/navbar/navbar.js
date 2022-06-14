@@ -121,7 +121,7 @@ patch(NavBar.prototype, 'website_navbar', {
     },
 
     canShowAceEditor() {
-        return this.websiteService.pageDocument && this.websiteService.pageDocument.documentElement.dataset.viewXmlid
+        return this.websiteService.currentWebsite && this.websiteService.currentWebsite.metadata.viewXmlid
             && !this.websiteContext.showNewContentModal && !this.websiteContext.edition;
     },
 });

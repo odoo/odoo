@@ -192,16 +192,21 @@ export class WebsitePreview extends Component {
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
         this.websiteService.contentWindow = this.iframe.el.contentWindow;
+
+        // This is needed for the registerThemeHomepageTour tours
+        const { editable, viewXmlid } = this.websiteService.currentWebsite.metadata;
+        this.container.el.dataset.viewXmlid = viewXmlid;
+        if (!editable) {
+            this.iframefallback.el.classList.add('d-none');
+        }
+
         this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
             this.iframe.el.setAttribute('is-ready', 'true');
-            if (!this.websiteContext.edition) {
+            if (!this.websiteContext.edition && editable) {
                 this.addWelcomeMessage();
             }
             this.websiteService.websiteRootInstance = event.detail.rootInstance;
         });
-
-        // This is needed for the registerThemeHomepageTour tours
-        this.container.el.dataset.viewXmlid = this.iframe.el.contentDocument.documentElement.dataset.viewXmlid;
 
         // The clicks on the iframe are listened, so that links with external
         // redirections can be opened in the top window.
@@ -238,8 +243,11 @@ export class WebsitePreview extends Component {
         // Before leaving the iframe, its content is replicated on an
         // underlying iframe, to avoid for white flashes (visible on
         // Chrome Windows/Linux).
-        if (!this.websiteContext.edition) {
+        // If the iframe is currently displaying an XML file, the body does not
+        // exist, so we do not replace the iframefallback content.
+        if (!this.websiteContext.edition && this.iframe.el.contentDocument.body) {
             this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+            this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
         }
     }

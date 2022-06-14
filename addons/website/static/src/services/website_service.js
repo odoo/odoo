@@ -88,17 +88,28 @@ export const websiteService = {
                 if (!document) {
                     return;
                 }
-                const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable } = document.documentElement.dataset;
-                currentMetadata = {
-                    path: document.location.href,
-                    mainObject: unslugHtmlDataObject(mainObject),
-                    seoObject: unslugHtmlDataObject(seoObject),
-                    isPublished: isPublished === 'True',
-                    canPublish: canPublish === 'True',
-                    editableInBackend: editableInBackend === 'True',
-                    title: document.title,
-                    translatable: !!translatable,
-                };
+                // Not all files have a dataset. (e.g. XML)
+                if (!document.documentElement.dataset) {
+                    currentMetadata = {};
+                } else {
+                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = document.documentElement.dataset;
+                    currentMetadata = {
+                        path: document.location.href,
+                        mainObject: unslugHtmlDataObject(mainObject),
+                        seoObject: unslugHtmlDataObject(seoObject),
+                        isPublished: isPublished === 'True',
+                        canPublish: canPublish === 'True',
+                        editableInBackend: editableInBackend === 'True',
+                        title: document.title,
+                        translatable: !!translatable,
+                        // TODO: Find a better way to figure out if
+                        // a page is editable or not. For now, we use
+                        // the editable selector because it's the common
+                        // denominator of editable pages.
+                        editable: !!document.getElementById('wrapwrap'),
+                        viewXmlid: viewXmlid,
+                    };
+                }
                 websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
             get pageDocument() {
