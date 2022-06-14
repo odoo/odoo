@@ -197,6 +197,22 @@ class AccountMove(models.Model):
                 if self.l10n_es_tbai_refund_reason == 'R5':
                     raise ValidationError(_('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)'))
 
+    @api.depends('state', 'edi_document_ids.state')
+    def _compute_show_reset_to_draft_button(self):
+        # EXTENDS account_edi account.move
+        super()._compute_show_reset_to_draft_button()
+
+        for move in self:
+            if move.l10n_es_tbai_chain_index:
+                move.show_reset_to_draft_button = False
+
+    def button_draft(self):
+        # EXTENDS account account.move
+        for move in self:
+            if move.l10n_es_tbai_chain_index:
+                raise UserError(_("You cannot reset to draft an entry that has been posted to TicketBAI's chain"))
+        super().button_draft()
+
     @api.ondelete(at_uninstall=False)
     def _l10n_es_tbai_unlink_except_in_chain(self):
         # Prevent deleting moves that are part of the TicketBAI chain
