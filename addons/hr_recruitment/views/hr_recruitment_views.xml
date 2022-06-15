@@ -262,6 +262,7 @@
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Degree" name="degree" domain="[]" context="{'group_by': 'type_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Tags" name="group_by_categ_ids" context="{'group_by':'categ_ids'}"/>
                     <filter string="Refuse Reason" name="refuse_reason_id" domain="[]" context="{'group_by': 'refuse_reason_id'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
@@ -1101,6 +1102,7 @@
                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>
                    <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
+                   <filter string="Tags" name="group_by_categ_ids" context="{'group_by':'categ_ids'}"/>
                    <filter string="Stage" name="stage" context="{'group_by':'stage_id'}" />
                    <separator/>
                    <filter string="Creation Date" name="creation_month" context="{'group_by':'create_date:month'}" help="Creation Date"/>
