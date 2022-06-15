@@ -635,6 +635,28 @@ class MailActivity(models.Model):
     # TOOLS
     # ----------------------------------------------------------------------
 
+    def _classify_by_model(self):
+        """ To ease batch computation of various activities related methods they
+        are classified by model. Activities not linked to a valid record through
+        res_model / res_id are ignored.
+
+        :return dict: for each model having at least one activity in self, have
+          a sub-dict containing
+            * activities: activities related to that model;
+            * record IDs: record linked to the activities of that model, in same
+              order;
+        """
+        data_by_model = {}
+        for activity in self.filtered(lambda act: act.res_model and act.res_id):
+            if activity.res_model not in data_by_model:
+                data_by_model[activity.res_model] = {
+                    'activities': self.env['mail.activity'],
+                    'record_ids': [],
+                }
+            data_by_model[activity.res_model]['activities'] += activity
+            data_by_model[activity.res_model]['record_ids'].append(activity.res_id)
+        return data_by_model
+
     def _prepare_next_activity_values(self):
         """ Prepare the next activity values based on the current activity record and applies _onchange methods
         :returns a dict of values for the new activity
