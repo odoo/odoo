@@ -3,6 +3,7 @@ odoo.define('stock.SingletonListController', function (require) {
 
 var core = require('web.core');
 var InventoryReportListController = require('stock.InventoryReportListController');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -120,11 +121,12 @@ var SingletonListController = InventoryReportListController.extend({
         }).guardedCatch(this._enableButtons.bind(this));
     },
 
-    _onApplyAll: function () {
+    _onApplyAll: async function () {
+        const resIds = await this._domainToResIds(this.renderer.state.getDomain(), session.active_ids_limit);
         this.do_action('stock.action_stock_inventory_adjustement_name', {
             additional_context: {
                 'active_model': 'ir.ui.view',
-                'active_ids': this.renderer.state.data.map(el => el['res_id']),
+                'active_ids': resIds,
             },
             on_close: this.reload,
         });
