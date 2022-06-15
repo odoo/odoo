@@ -450,6 +450,39 @@ class MailThread(models.AbstractModel):
         if any(message.message_type != 'comment' for message in messages):
             raise exceptions.UserError(_("Only messages type comment can have their content updated"))
 
+    # ------------------------------------------------------------
+    # FIELDS HELPERS
+    # ------------------------------------------------------------
+
+    @api.model
+    def _mail_get_partner_fields(self):
+        """ This method returns the fields to use to find the contact to link
+        when sending emails or notifications. Having partner is not always
+        necessary but gives more flexibility to notifications management. """
+        return [fname for fname in ('partner_id', 'partner_ids')
+                if fname in self]
+
+    def _mail_get_partners(self):
+        """ Give the default partners associated to customers.
+
+        :return dict: for each record ID, a res.partner recordsets being default
+          customers to contact;
+        """
+        partner_fields = self._mail_get_partner_fields()
+        return dict(
+            (record.id, self.env['res.partner'].union(*[self[fname] for fname in partner_fields]))
+            for record in self
+        )
+
+    @api.model
+    def _mail_get_primary_email_field(self):
+        """ Check if the "_primary_email" model attribute is correctly set and
+        matches an existing field, and return it. Otherwise return None. """
+        primary_email = getattr(self, '_primary_email', None)
+        if primary_email and primary_email in self._fields:
+            return primary_email
+        return None
+
     # ------------------------------------------------------
     # TRACKING / LOG
     # ------------------------------------------------------
@@ -817,23 +850,12 @@ class MailThread(models.AbstractModel):
                 self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
 
     @api.model
-    def _get_primary_email_field(self):
-        """Check if the "_primary_email" model attribute is correctly set.
-
-        If it is correctly set, return the _primary_email field name
-        Otherwise return None
-        """
-        primary_email = getattr(self, '_primary_email', None)
-        if primary_email and primary_email in self._fields:
-            return primary_email
-
-    @api.model
     def _detect_loop_sender_domain(self, email_from_normalized):
         """Return the domain to be used to detect duplicated records created by alias.
 
         :param email_from_normalized: FROM of the incoming email, normalized
         """
-        primary_email = self._get_primary_email_field()
+        primary_email = self._mail_get_primary_email_field()
         if primary_email:
             return [(primary_email, 'ilike', email_from_normalized)]
 
@@ -1233,12 +1255,12 @@ class MailThread(models.AbstractModel):
         data = {}
         if isinstance(custom_values, dict):
             data = custom_values.copy()
-        fields = self.fields_get()
+        model_fields = self.fields_get()
         name_field = self._rec_name or 'name'
-        if name_field in fields and not data.get('name'):
+        if name_field in model_fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
 
-        primary_email = self._get_primary_email_field()
+        primary_email = self._mail_get_primary_email_field()
         if primary_email and msg_dict.get('email_from'):
             data[primary_email] = msg_dict['email_from']
 

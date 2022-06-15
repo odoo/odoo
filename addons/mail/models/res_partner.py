@@ -55,6 +55,9 @@ class Partner(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
+    def _mail_get_partners(self):
+        return dict((partner.id, partner) for partner in self)
+
     def _message_get_suggested_recipients(self):
         recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
