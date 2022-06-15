@@ -20,27 +20,27 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computePartner() {
+        _computePersona() {
             if (this.channelInvitationFormSelectablePartnerViewOwner) {
-                return replace(this.channelInvitationFormSelectablePartnerViewOwner.partner);
+                return replace(this.channelInvitationFormSelectablePartnerViewOwner.partner.persona);
             }
             if (this.channelMemberViewOwner) {
-                return replace(this.channelMemberViewOwner.channelMember.partner);
+                return replace(this.channelMemberViewOwner.channelMember.partner.persona);
             }
             if (this.composerSuggestionViewOwner) {
-                return replace(this.composerSuggestionViewOwner.partner);
+                return replace(this.composerSuggestionViewOwner.partner.persona);
             }
             if (this.messageViewOwner) {
-                return replace(this.messageViewOwner.message.author);
+                return replace(this.messageViewOwner.message.author.persona);
             }
             if (this.notificationRequestViewOwner) {
-                return replace(this.messaging.partnerRoot);
+                return replace(this.messaging.partnerRoot.persona);
             }
             if (this.threadNeedactionPreviewViewOwner) {
-                return replace(this.threadNeedactionPreviewViewOwner.thread.correspondent);
+                return replace(this.threadNeedactionPreviewViewOwner.thread.correspondent.persona);
             }
             if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread.correspondent);
+                return replace(this.threadPreviewViewOwner.thread.correspondent.persona);
             }
             return clear();
         },
@@ -74,8 +74,8 @@ registerModel({
             inverse: 'partnerImStatusIconView',
             readonly: true,
         }),
-        partner: one('Partner', {
-            compute: '_computePartner',
+        persona: one('Persona', {
+            compute: '_computePersona',
             readonly: true,
             required: true,
         }),

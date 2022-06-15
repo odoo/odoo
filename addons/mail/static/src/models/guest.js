@@ -2,6 +2,7 @@
 
 import { attr, many, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Guest',
@@ -43,6 +44,13 @@ registerModel({
             readonly: true,
         }),
         name: attr(),
+        persona: one('Persona', {
+            default: insertAndReplace(),
+            inverse: 'guest',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
         rtcSessions: many('RtcSession', {
             inverse: 'guest',
         }),
