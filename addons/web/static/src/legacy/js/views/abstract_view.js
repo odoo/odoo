@@ -360,6 +360,7 @@ var AbstractView = Factory.extend({
      * @param {Object} [action.controlPanelFieldsView]
      * @param {string} [action.display_name]
      * @param {Array[]} [action.domain=[]]
+     * @param {boolean} [action.editable]
      * @param {string} [action.help]
      * @param {integer} [action.id]
      * @param {integer} [action.limit]
@@ -382,6 +383,7 @@ var AbstractView = Factory.extend({
             currentId: action.res_id ? action.res_id : undefined,  // load returns 0
             displayName: action.display_name || action.name,
             domain: action.domain || [],
+            editable: action.editable,
             limit: action.limit,
             modelName: action.res_model,
             noContentHelp: action.help,
