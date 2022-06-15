@@ -684,6 +684,8 @@ class Lead(models.Model):
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
         if not stage_is_won:
+            if not ('active' in vals and not vals['active']):
+                vals['date_closed'] = False
             return super(Lead, self).write(vals)
 
         # stage change between two won stages: does not change the date_closed
