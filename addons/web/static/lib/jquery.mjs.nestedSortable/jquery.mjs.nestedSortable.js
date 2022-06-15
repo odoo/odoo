@@ -346,7 +346,17 @@
 					this.direction = intersection === 1 ? "down" : "up";
 
 					// mjs - rearrange the elements and reset timeouts and hovering state
-					if (this.options.tolerance === "pointer" || this._intersectsWithSides(item)) {
+					if ((this.options.tolerance === "pointer" || this._intersectsWithSides(item)) &&
+						// Odoo begin patch
+						// Only allow to rearrange if itemElement was
+						// intersected while going up or if the placeholder is
+						// placed before itemElement in the dom, to avoid
+						// a situation where the placeholder would go UP while
+						// the mouse is going DOWN, which will cause flickering
+						// if the placeholder has to change parent (depth)
+						(intersection === 1 || (itemElement.compareDocumentPosition(this.placeholder[0]) & Node.DOCUMENT_POSITION_PRECEDING))
+						// Odoo end patch
+					) {
 						$(itemElement).mouseleave();
 						this.mouseentered = false;
 						$(itemElement).removeClass(o.hoveringClass);
