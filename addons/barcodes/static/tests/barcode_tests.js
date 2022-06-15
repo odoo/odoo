@@ -1,7 +1,10 @@
 odoo.define('barcodes.tests', function (require) {
 "use strict";
 
-var barcodeEvents = require('barcodes.BarcodeEvents');
+const {barcodeService} = require("@barcodes/barcode_service");
+const {barcodeRemapperService} = require("@barcodes/js/barcode_events");
+const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
+const { registry } = require("@web/core/registry");
 
 var AbstractField = require('web.AbstractField');
 var fieldRegistry = require('web.field_registry');
@@ -13,6 +16,8 @@ var createView = testUtils.createView;
 var triggerKeypressEvent = testUtils.dom.triggerKeypressEvent;
 var triggerEvent = testUtils.dom.triggerEvent;
 var core = require('web.core');
+
+const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
 
 function simulateBarCode(chars, target = document.body) {
     for (let char of chars) {
@@ -33,6 +38,16 @@ function simulateBarCode(chars, target = document.body) {
 }
 
 QUnit.module('Barcodes', {
+    before() {
+        barcodeService.maxTimeBetweenKeysInMs = 0;
+        registry.category("services").add("barcode", barcodeService, { force: true});
+        // remove this one later
+        registry.category("services").add("barcode_remapper", barcodeRemapperService);
+        this.env = makeTestEnv();
+    },
+    after() {
+        barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
+    },
     beforeEach: function () {
         this.data = {
             order: {
@@ -195,8 +210,6 @@ QUnit.test('pager buttons', async function (assert) {
 QUnit.test('do no update form twice after a command barcode scanned', async function (assert) {
     assert.expect(7);
 
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
     testUtils.mock.patch(FormController, {
         update: function () {
             assert.step('update');
@@ -241,14 +254,10 @@ QUnit.test('do no update form twice after a command barcode scanned', async func
     assert.verifySteps(['update']);
 
     form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
     testUtils.mock.unpatch(FormController);
 });
 
 QUnit.test('widget field_float_scannable', async function (assert) {
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-
     this.data.product.records[0].int_field = 4;
 
     function _onBarcodeScanned (code) {
@@ -304,15 +313,11 @@ QUnit.test('widget field_float_scannable', async function (assert) {
     assert.verifySteps([]);
 
     form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
     core.bus.off('barcode_scanned', null, _onBarcodeScanned)
 });
 
 QUnit.test('widget barcode_handler', async function (assert) {
     assert.expect(4);
-
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
 
     this.data.product.fields.barcode_scanned = {string : "Scanned barcode", type: "char"};
     this.data.product.onchanges = {
@@ -355,14 +360,10 @@ QUnit.test('widget barcode_handler', async function (assert) {
     assert.verifySteps(['onchange'], "an onchange should have been done");
 
     form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
 });
 
 QUnit.test('specification of widget barcode_handler', async function (assert) {
     assert.expect(5);
-
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
 
     // Define a specific barcode_handler widget for this test case
     var TestBarcodeHandler = AbstractField.extend({
@@ -434,16 +435,12 @@ QUnit.test('specification of widget barcode_handler', async function (assert) {
     await testUtils.form.clickSave(form);
 
     form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
     delete fieldRegistry.map.test_barcode_handler;
 });
 
 QUnit.test('specification of widget barcode_handler with keypress and notifyChange', async function (assert) {
     assert.expect(6);
     var done = assert.async();
-
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
 
     this.data.order.onchanges = {
         _barcode_scanned: function () {},
@@ -514,7 +511,6 @@ QUnit.test('specification of widget barcode_handler with keypress and notifyChan
         assert.verifySteps(['read', 'read']);
 
         form.destroy();
-        barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
         delete fieldRegistry.map.test_barcode_handler;
         done();
     });
