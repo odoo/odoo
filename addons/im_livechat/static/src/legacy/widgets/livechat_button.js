@@ -35,7 +35,6 @@ const LivechatButton = Widget.extend({
             input_placeholder: _t("Ask something ..."),
             default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
-            default_message: _t("How may I help you?"),
         });
 
         this._history = null;
@@ -379,12 +378,12 @@ const LivechatButton = Widget.extend({
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.options.default_message) {
+        if (this.messaging.livechatButtonView.defaultMessage) {
             this._addMessage({
                 id: '_welcome',
                 attachment_ids: [],
                 author_id: this._livechat.getOperatorPID(),
-                body: this.options.default_message,
+                body: this.messaging.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
                 res_id: this._livechat.getID(),
