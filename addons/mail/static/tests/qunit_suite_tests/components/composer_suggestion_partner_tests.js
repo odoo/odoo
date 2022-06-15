@@ -53,7 +53,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
     await insertText('.o_ComposerTextInput_textarea', "@demo");
     assert.containsOnce(
         document.querySelector('.o_ComposerSuggestion'),
-        '.o_PartnerImStatusIcon',
+        '.o_PersonaImStatusIcon',
         "Partner's im_status should be displayed"
     );
     assert.containsOnce(

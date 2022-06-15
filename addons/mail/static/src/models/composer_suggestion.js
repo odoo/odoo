@@ -70,7 +70,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computePartnerImStatusIconView() {
+        _computePersonaImStatusIconView() {
             return this.partner && this.partner.isImStatusSet ? insertAndReplace() : clear();
         },
         /**
@@ -150,8 +150,8 @@ registerModel({
         partner: one('Partner', {
             readonly: true,
         }),
-        partnerImStatusIconView: one('PartnerImStatusIconView', {
-            compute: '_computePartnerImStatusIconView',
+        personaImStatusIconView: one('PersonaImStatusIconView', {
+            compute: '_computePersonaImStatusIconView',
             inverse: 'composerSuggestionViewOwner',
             isCausal: true,
             readonly: true,

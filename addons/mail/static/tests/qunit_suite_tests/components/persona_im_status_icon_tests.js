@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('partner_im_status_icon_tests.js');
+QUnit.module('persona_im_status_icon_tests.js');
 
 QUnit.test('initially online', async function (assert) {
     assert.expect(1);
@@ -29,9 +29,9 @@ QUnit.test('initially online', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-online`).length,
         1,
-        "partner IM status icon should have online status rendering"
+        "persona IM status icon should have online status rendering"
     );
 });
 
@@ -58,9 +58,9 @@ QUnit.test('initially offline', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-offline`).length,
         1,
-        "partner IM status icon should have offline status rendering"
+        "persona IM status icon should have offline status rendering"
     );
 });
 
@@ -87,9 +87,9 @@ QUnit.test('initially away', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-away`).length,
         1,
-        "partner IM status icon should have away status rendering"
+        "persona IM status icon should have away status rendering"
     );
 });
 
@@ -116,33 +116,33 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-online`).length,
         1,
-        "partner IM status icon should have online status rendering"
+        "persona IM status icon should have online status rendering"
     );
 
     pyEnv['res.partner'].write([partnerId], { im_status: 'offline' });
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-offline`).length,
         1,
-        "partner IM status icon should have offline status rendering"
+        "persona IM status icon should have offline status rendering"
     );
 
     pyEnv['res.partner'].write([partnerId], { im_status: 'away' });
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-away`).length,
         1,
-        "partner IM status icon should have away status rendering"
+        "persona IM status icon should have away status rendering"
     );
 
     pyEnv['res.partner'].write([partnerId], { im_status: 'online' });
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
+        document.querySelectorAll(`.o_PersonaImStatusIcon.o-online`).length,
         1,
-        "partner IM status icon should have online status rendering in the end"
+        "persona IM status icon should have online status rendering in the end"
     );
 });
 
