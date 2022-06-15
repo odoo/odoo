@@ -129,7 +129,7 @@ class Partner(models.Model):
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name, id"
-    _rec_names_search = ['display_name', 'email', 'ref', 'vat']  # TODO vat must be sanitized the same way for storing/searching
+    _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -172,6 +172,9 @@ class Partner(models.Model):
       help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
+    same_company_registry_partner_id = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
+    company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False,
+       help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country")
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Html(string='Notes')
@@ -309,7 +312,7 @@ class Partner(models.Model):
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
-    @api.depends('vat', 'company_id')
+    @api.depends('vat', 'company_id', 'company_registry')
     def _compute_same_vat_partner_id(self):
         for partner in self:
             # use _origin to deal with onchange()
@@ -324,6 +327,14 @@ class Partner(models.Model):
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
+            # check company_registry
+            domain = [
+                ('company_registry', '=', partner.company_registry),
+                ('company_id', 'in', [False, partner.company_id.id]),
+            ]
+            if partner_id:
+                domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
+            partner.same_company_registry_partner_id = bool(partner.company_registry) and not partner.parent_id and Partner.search(domain, limit=1)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -347,6 +358,11 @@ class Partner(models.Model):
         for partner in self:
             p = partner.commercial_partner_id
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
+
+    def _compute_company_registry(self):
+        # exists to allow overrides
+        for company in self:
+            company.company_registry = company.company_registry
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -484,7 +500,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat']
+        return ['vat', 'company_registry']
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
