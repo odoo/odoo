@@ -26,6 +26,24 @@ odoo.define('hr.applicant.view.kanban', function (require) {
                     }
                 });
             });
+        },
+
+        _onSearch: async function (searchQuery) {
+            this._super.apply(this, arguments);
+            var activeID = this.model.get(this.handle).context.active_id;
+            var jobID = undefined;
+            if (searchQuery.domain && !_.isEmpty(searchQuery.domain)) {
+                searchQuery.domain.forEach(elem => {
+                    if (elem.length === 3 && elem[0] === 'job_id') {
+                        jobID = elem[2];
+                    }
+                })
+            }
+            if (activeID === jobID) {
+                $('button.o_button_recruitment_populate').removeClass('d-none');
+            } else {
+                $('button.o_button_recruitment_populate').addClass('d-none');
+            }
         }
     });
 
