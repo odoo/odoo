@@ -7,11 +7,11 @@
                 <div class="o_NotificationListItem_sidebar o_NotificationRequest_sidebar m-1">
                     <div class="o_NotificationListItem_imageContainer o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem position-relative">
                         <img class="o_NotificationListItem_image o_NotificationRequest_image w-100 h-100 rounded-circle" t-att-src="messaging.partnerRoot.avatarUrl" alt="Avatar of OdooBot"/>
-                        <PartnerImStatusIcon
-                            t-if="notificationRequestView.partnerImStatusIconView"
-                            className="'o_NotificationListItem_partnerImStatusIcon o_NotificationRequest_partnerImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
+                        <PersonaImStatusIcon
+                            t-if="notificationRequestView.personaImStatusIconView"
+                            className="'o_NotificationListItem_personaImStatusIcon o_NotificationRequest_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
                             classNameObj="{ 'o-isDeviceSmall': messaging.device.isSmall, 'small': !messaging.device.isSmall }"
-                            record="notificationRequestView.partnerImStatusIconView"
+                            record="notificationRequestView.personaImStatusIconView"
                         />
                     </div>
                 </div>

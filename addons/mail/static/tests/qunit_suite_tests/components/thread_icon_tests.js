@@ -40,7 +40,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ThreadIcon_online',
-        "should have thread icon with partner im status icon 'online'"
+        "should have thread icon with persona IM status icon 'online'"
     );
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
@@ -76,7 +76,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     assert.containsOnce(
         document.body,
         '.o_ThreadIcon_online',
-        "should have thread icon with partner im status icon 'online' (no longer typing)"
+        "should have thread icon with persona IM status icon 'online' (no longer typing)"
     );
 });
 

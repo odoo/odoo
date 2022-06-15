@@ -79,7 +79,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computePartnerImStatusIconView() {
+        _computePersonaImStatusIconView() {
             return this.thread.correspondent && this.thread.correspondent.isImStatusSet ? insertAndReplace() : clear();
         },
     },
@@ -112,8 +112,8 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        partnerImStatusIconView: one('PartnerImStatusIconView', {
-            compute: '_computePartnerImStatusIconView',
+        personaImStatusIconView: one('PersonaImStatusIconView', {
+            compute: '_computePersonaImStatusIconView',
             inverse: 'threadNeedactionPreviewViewOwner',
             isCausal: true,
             readonly: true,
