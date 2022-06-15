@@ -182,7 +182,11 @@ class PortalChatter(http.Controller):
         model = request.env[res_model]
         field = model._fields['website_message_ids']
         field_domain = field.get_domain_list(model)
-        domain = expression.AND([domain, field_domain, [('res_id', '=', res_id)]])
+        domain = expression.AND([
+            domain,
+            field_domain,
+            [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
+        ])
 
         # Check access
         Message = request.env['mail.message']
