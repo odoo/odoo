@@ -22,7 +22,7 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
     _renderEdit: function () {
         var self = this;
         return Promise.resolve(this._super()).then(function () {
-            self.$input.data('enableBarcode', true);
+            self.$input[0].dataset.enableBarcode = true;
         });
     },
 

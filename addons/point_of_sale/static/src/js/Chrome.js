@@ -3,7 +3,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
     const { loadCSS } = require('web.ajax');
     const { useListener } = require("@web/core/utils/hooks");
-    const { BarcodeEvents } = require('barcodes.BarcodeEvents');
     const BarcodeParser = require('barcodes.BarcodeParser');
     const PosComponent = require('point_of_sale.PosComponent');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
@@ -20,7 +19,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
         onError,
         onMounted,
         onWillDestroy,
-        onWillUnmount,
         useExternalListener,
         useRef,
         useState,
@@ -83,12 +81,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 $(window).off();
                 $('html').off();
                 $('body').off();
-                // The above lines removed the bindings, but we really need them for the barcode
-                BarcodeEvents.start();
-            });
-
-            onWillUnmount(() => {
-                BarcodeEvents.stop();
             });
 
             onWillDestroy(() => {
