@@ -46,6 +46,7 @@ from . import ir_config_parameter
 from . import ir_http
 from . import ir_model
 from . import ir_model_fields
+from . import ir_translation
 from . import ir_ui_view
 from . import ir_qweb
 from . import res_company
