@@ -28,10 +28,10 @@ export class PartnerImStatusIcon extends Component {
      */
     _onClick(ev) {
         markEventHandled(ev, 'PartnerImStatusIcon.Click');
-        if (!this.props.hasOpenChat) {
+        if (!this.props.hasOpenChat || !this.partnerImStatusIconView.persona.partner) {
             return;
         }
-        this.partnerImStatusIconView.partner.openChat();
+        this.partnerImStatusIconView.persona.partner.openChat();
     }
 
 }
