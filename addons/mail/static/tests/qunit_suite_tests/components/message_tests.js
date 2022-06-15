@@ -858,16 +858,16 @@ QUnit.test('chat with author should be opened after clicking on their im status 
     await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
     assert.containsOnce(
         document.body,
-        '.o_Message_partnerImStatusIcon',
+        '.o_Message_personaImStatusIcon',
         "message should have the author im status icon"
     );
     assert.hasClass(
-        document.querySelector('.o_Message_partnerImStatusIcon'),
+        document.querySelector('.o_Message_personaImStatusIcon'),
         'o-has-open-chat',
         "author im status icon should have the open chat style"
     );
 
-    await click('.o_Message_partnerImStatusIcon');
+    await click('.o_Message_personaImStatusIcon');
     assert.containsOnce(
         document.body,
         '.o_ChatWindow_thread',

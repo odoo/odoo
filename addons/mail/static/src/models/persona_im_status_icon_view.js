@@ -5,7 +5,7 @@ import { registerModel } from '@mail/model/model_core';
 import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'PartnerImStatusIconView',
+    name: 'PersonaImStatusIconView',
     identifyingFields: [[
         'channelInvitationFormSelectablePartnerViewOwner',
         'channelMemberViewOwner',
@@ -47,31 +47,31 @@ registerModel({
     },
     fields: {
         channelInvitationFormSelectablePartnerViewOwner: one('ChannelInvitationFormSelectablePartnerView', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         channelMemberViewOwner: one('ChannelMemberView', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         composerSuggestionViewOwner: one('ComposerSuggestion', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         messageViewOwner: one('MessageView', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         notificationRequestViewOwner: one('NotificationRequestView', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         threadPreviewViewOwner: one('ThreadPreviewView', {
-            inverse: 'partnerImStatusIconView',
+            inverse: 'personaImStatusIconView',
             readonly: true,
         }),
         persona: one('Persona', {

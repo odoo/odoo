@@ -27,7 +27,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computePartnerImStatusIconView() {
+        _computePersonaImStatusIconView() {
             return this.messaging.partnerRoot.isImStatusSet ? insertAndReplace() : clear();
         },
     },
@@ -40,8 +40,8 @@ registerModel({
             required: true,
             readonly: true,
         }),
-        partnerImStatusIconView: one('PartnerImStatusIconView', {
-            compute: '_computePartnerImStatusIconView',
+        personaImStatusIconView: one('PersonaImStatusIconView', {
+            compute: '_computePersonaImStatusIconView',
             inverse: 'notificationRequestViewOwner',
             isCausal: true,
             readonly: true,

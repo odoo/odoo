@@ -11,14 +11,14 @@
                 <div class="o_NotificationListItem_sidebar o_ThreadNeedactionPreview_sidebar m-1">
                     <div class="o_NotificationListItem_imageContainer o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem position-relative">
                         <img class="o_NotificationListItem_image o_ThreadNeedactionPreview_image w-100 h-100" t-att-src="image()" alt="Thread Image"/>
-                        <t t-if="threadNeedactionPreviewView.partnerImStatusIconView">
-                            <PartnerImStatusIcon
-                                className="'o_NotificationListItem_partnerImStatusIcon o_ThreadNeedactionPreview_partnerImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
+                        <t t-if="threadNeedactionPreviewView.personaImStatusIconView">
+                            <PersonaImStatusIcon
+                                className="'o_NotificationListItem_personaImStatusIcon o_ThreadNeedactionPreview_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
                                 classNameObj="{
                                     'o-isDeviceSmall': messaging.device.isSmall,
                                     'small': !messaging.device.isSmall,
                                 }"
-                                record="threadNeedactionPreviewView.partnerImStatusIconView"
+                                record="threadNeedactionPreviewView.personaImStatusIconView"
                             />
                         </t>
                     </div>

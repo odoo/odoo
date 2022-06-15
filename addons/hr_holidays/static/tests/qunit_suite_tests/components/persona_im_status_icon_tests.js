@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('partner_im_status_icon_tests.js');
+QUnit.module('persona_im_status_icon_tests.js');
 
 QUnit.test('on leave & online', async function (assert) {
     assert.expect(2);
@@ -29,14 +29,14 @@ QUnit.test('on leave & online', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.hasClass(
-        document.querySelector('.o_PartnerImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIcon_icon'),
         'o-online',
-        "partner IM status icon should have online status rendering"
+        "persona IM status icon should have online status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_PartnerImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIcon_icon'),
         'fa-plane',
-        "partner IM status icon should have leave status rendering"
+        "persona IM status icon should have leave status rendering"
     );
 });
 
@@ -63,14 +63,14 @@ QUnit.test('on leave & away', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.hasClass(
-        document.querySelector('.o_PartnerImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIcon_icon'),
         'o-away',
-        "partner IM status icon should have away status rendering"
+        "persona IM status icon should have away status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_PartnerImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIcon_icon'),
         'fa-plane',
-        "partner IM status icon should have leave status rendering"
+        "persona IM status icon should have leave status rendering"
     );
 });
 
@@ -97,14 +97,14 @@ QUnit.test('on leave & offline', async function (assert) {
     await openDiscuss();
     await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.hasClass(
-        document.querySelector('.o_PartnerImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIcon_icon'),
         'o-offline',
-        "partner IM status icon should have offline status rendering"
+        "persona IM status icon should have offline status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_PartnerImStatusIcon_icon'),
+        document.querySelector('.o_PersonaImStatusIcon_icon'),
         'fa-plane',
-        "partner IM status icon should have leave status rendering"
+        "persona IM status icon should have leave status rendering"
     );
 });
 
