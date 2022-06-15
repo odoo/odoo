@@ -178,7 +178,7 @@
                     <field name="name" string="Order Number"/>
                     <field name="confirmation_date" string="Confirmation Date"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
-                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
+                    <field name="expected_date" widget="date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
@@ -199,7 +199,7 @@
                     <field name="name" string="Quotation Number"/>
                     <field name="date_order" string="Quotation Date"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
-                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
+                    <field name="expected_date" widget="date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
@@ -559,7 +559,7 @@
                         <page string="Other Information" name="other_information">
                             <group>
                                 <group string="Shipping Information" name="sale_shipping" groups="sale.group_sale_order_dates">
-                                    <field name="expected_date" groups="sale.group_sale_order_dates"/>
+                                    <field name="expected_date" widget="date" groups="sale.group_sale_order_dates"/>
                                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                                 </group>
                                 <group string="Sales Information" name="sales_person">
