@@ -80,16 +80,16 @@ function() {
 '''
 
 class TestClocCustomization(TransactionCase):
-    def create_xml_id(self, name, res_id, module='studio_customization'):
+    def create_xml_id(self, module, name, rec):
         self.env['ir.model.data'].create({
             'name': name,
-            'model': 'ir.model.fields',
-            'res_id': res_id,
+            'model': rec._name,
+            'res_id': rec.id,
             'module': module,
         })
 
     def create_field(self, name):
-        return self.env['ir.model.fields'].with_context(studio=True).create({
+        field = self.env['ir.model.fields'].with_context(studio=True).create({
             'name': name,
             'field_description': name,
             'model': 'res.partner',
@@ -98,6 +98,23 @@ class TestClocCustomization(TransactionCase):
             'store': False,
             'compute': "for rec in self: rec['x_invoice_count'] = 10",
         })
+        # Simulate the effect of https://github.com/odoo/odoo/commit/9afce4805fc8bac45fdba817488aa867fddff69b
+        # Updating a module create xml_id of the module even for manual field if it's the original module
+        # of the model
+        self.create_xml_id('base', name, field)
+        return field
+
+    def create_server_action(self, name):
+        return self.env['ir.actions.server'].create({
+            'name': name,
+            'code': """
+for rec in records:
+    rec['name'] = test
+            """,
+            'state': 'code',
+            'type': 'ir.actions.server',
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
 
     def test_ignore_auto_generated_computed_field(self):
         """
@@ -105,24 +122,65 @@ class TestClocCustomization(TransactionCase):
             Having an xml_id but no existing module is consider as not belonging to a module
         """
         f1 = self.create_field('x_invoice_count')
-        self.create_xml_id('invoice_count', f1.id)
+        self.create_xml_id('studio_customization', 'invoice_count', f1)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Studio auto generated count field should not be counted in cloc')
         f2 = self.create_field('x_studio_custom_field')
-        self.create_xml_id('studio_custom', f2.id)
+        self.create_xml_id('studio_customization', 'studio_custom', f2)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Count other studio computed field')
-        f3 = self.create_field('x_custom_field')
+        self.create_field('x_custom_field')
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'Count fields without xml_id')
         f4 = self.create_field('x_custom_field_export')
-        self.create_xml_id('studio_custom', f4.id, '__export__')
+        self.create_xml_id('__export__', 'studio_custom', f4)
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 3, 'Count fields with xml_id but without module')
+
+    def test_several_xml_id(self):
+        sa = self.create_server_action("Test double xml_id")
+        self.create_xml_id("__export__", "first", sa)
+        self.create_xml_id("base", "second", sa)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'Count Should count SA with a non standard xml_id')
+        self.create_xml_id("__import__", "third", sa)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'SA with several xml_id should be counted only once')
+
+    def test_cloc_exclude_xml_id(self):
+        sa = self.create_server_action("Test double xml_id")
+        self.create_xml_id("__cloc_exclude__", "sa_first", sa)
+        self.create_xml_id("__upgrade__", "sa_second", sa)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Should not count SA with cloc_exclude xml_id')
+
+        f1 = self.create_field('x_invoice_count')
+        self.create_xml_id("__cloc_exclude__", "field_first", f1)
+        self.create_xml_id("__upgrade__", "field_second", f1)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Should not count Field with cloc_exclude xml_id')
+
+    def test_field_no_xml_id(self):
+        self.env['ir.model.fields'].create({
+            'name': "x_no_xml_id",
+            'field_description': "no_xml_id",
+            'model': 'res.partner',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'ttype': 'integer',
+            'store': False,
+            'compute': "for rec in self: rec['x_invoice_count'] = 10",
+        })
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Should count field with no xml_id at all')
 
 
 class TestClocParser(TransactionCase):
