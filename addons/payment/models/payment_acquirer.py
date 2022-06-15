@@ -3,6 +3,7 @@ from collections import defaultdict
 import hashlib
 import hmac
 import logging
+import re
 from datetime import datetime
 from dateutil import relativedelta
 import pprint
@@ -928,14 +929,14 @@ class PaymentTransaction(models.Model):
                 FROM payment_transaction WHERE reference LIKE %s ORDER BY suffix
             ''', [prefix + '-%'])
         query_res = self._cr.fetchone()
+        suffix = ''
         if query_res:
             # Increment the last reference by one
             suffix = '%s' % (-query_res[0] + 1)
-        else:
+        elif not re.search(r"(-\d+)$", prefix):
             # Start a new indexing from 1
             suffix = '1'
-
-        return '%s-%s' % (prefix, suffix)
+        return suffix and '%s-%s' % (prefix, suffix) or prefix
 
     def action_view_invoices(self):
         action = {
