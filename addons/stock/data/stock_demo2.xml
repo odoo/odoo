@@ -477,7 +477,6 @@
         <function model="stock.picking" name="action_assign">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
-                obj().env.ref('stock.outgoing_shipment_main_warehouse4').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
                 obj().env.ref('stock.outgoing_chicago_warehouse1').id,
@@ -488,10 +487,6 @@
         <function model="stock.move.line" name="write">
             <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse1'))]"/>
             <value eval="{'qty_done': 100}"/>
-        </function>
-        <function model="stock.move.line" name="write">
-            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse4'))]"/>
-            <value eval="{'qty_done': 16}"/>
         </function>
         <function model="stock.move.line" name="write">
             <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse5'))]"/>
