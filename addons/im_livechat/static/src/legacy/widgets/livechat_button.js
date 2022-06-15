@@ -31,9 +31,7 @@ const LivechatButton = Widget.extend({
     init(parent, messaging) {
         this._super(parent);
         this.messaging = messaging;
-        this.options = _.defaults(this.messaging.publicLivechatOptions || {}, {
-            default_username: _t("Visitor"),
-        });
+        this.options = _.defaults(this.messaging.publicLivechatOptions || {});
 
         this._history = null;
         // livechat model
@@ -98,6 +96,7 @@ const LivechatButton = Widget.extend({
      */
     _addMessage(data, options) {
         options = Object.assign({}, this.options, options, {
+            default_username: this.messaging.livechatButtonView.defaultUsername,
             serverURL: this._serverURL,
         });
         const message = new WebsiteLivechatMessage(this, data, options);
@@ -327,7 +326,7 @@ const LivechatButton = Widget.extend({
     _prepareGetSessionParameters() {
         return {
             channel_id: this.options.channel_id,
-            anonymous_name: this.options.default_username,
+            anonymous_name: this.messaging.livechatButtonView.defaultUsername,
             previous_operator_id: this._get_previous_operator_id(),
         };
     },

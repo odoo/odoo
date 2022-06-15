@@ -29,6 +29,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeDefaultUsername() {
+            if (this.messaging.publicLivechatOptions.default_username) {
+                return this.messaging.publicLivechatOptions.default_username;
+            }
+            return this.env._t("Visitor");
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeInputPlaceholder() {
@@ -54,6 +64,9 @@ registerModel({
         }),
         defaultMessage: attr({
             compute: '_computeDefaultMessage',
+        }),
+        defaultUsername: attr({
+            compute: '_computeDefaultUsername',
         }),
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
