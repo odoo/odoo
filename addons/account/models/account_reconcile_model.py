@@ -725,6 +725,7 @@ class AccountReconcileModel(models.Model):
                             )
                         ) AS token
                     FROM {tables}
+                    JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
                     WHERE {where_clause} AND {table_alias}.{field} IS NOT NULL
                 ''')
 
