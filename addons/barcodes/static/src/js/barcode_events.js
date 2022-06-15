@@ -42,26 +42,29 @@ var BarcodeEvents = core.Class.extend({
     init: function() {
         // Bind event handler once the DOM is loaded
         // TODO: find a way to be active only when there are listeners on the bus
-        $(_.bind(this.start, this, false));
+        $(() => this.start());
 
         // Mobile device detection
-        this.isChromeMobile = config.device.isMobileDevice && navigator.userAgent.match(/Chrome/i);
-
-        // Creates an input who will receive the barcode scanner value.
-        this.$barcodeInput = $('<input/>', {
-            name: 'barcode',
-            type: 'text',
-            css: {
-                'position': 'fixed',
-                'top': '50%',
-                'transform': 'translateY(-50%)',
-                'z-index': '-1',
-                'opacity': '0',
-            },
-        });
-        // Avoid to show autocomplete for a non appearing input
-        this.$barcodeInput.attr('autocomplete', 'off');
-        this.$barcodeInput[0].dataset.allowHotkeys = true;
+        const isChromeMobile = config.device.isMobileDevice && navigator.userAgent.match(/Chrome/i);
+        
+        this.$barcodeInput = null;
+        if (isChromeMobile) {
+            // Creates an input who will receive the barcode scanner value.
+            this.$barcodeInput = $('<input/>', {
+                name: 'barcode',
+                type: 'text',
+                css: {
+                    'position': 'fixed',
+                    'top': '50%',
+                    'transform': 'translateY(-50%)',
+                    'z-index': '-1',
+                    'opacity': '0',
+                },
+            });
+            // Avoid to show autocomplete for a non appearing input
+            this.$barcodeInput.attr('autocomplete', 'off');
+            this.$barcodeInput[0].dataset.allowHotkeys = true;
+        };
 
         this.__blurBarcodeInput = _.debounce(this._blurBarcodeInput, this.inputTimeOut);
         this.__listenBarcodeScanner = this._listenBarcodeScanner.bind(this);
