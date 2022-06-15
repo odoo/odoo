@@ -269,6 +269,7 @@ class MailActivity(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         activities = super(MailActivity, self).create(vals_list)
+
         for activity in activities:
             need_sudo = False
             try:  # in multicompany, reading the partner might break
@@ -290,8 +291,13 @@ class MailActivity(models.Model):
                         activity.action_notify()
 
             self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
-            if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
+
+        todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
+        if todo_activities:
+            self.env['bus.bus']._sendmany([
+                (activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
+                for activity in todo_activities
+            ])
         return activities
 
     def read(self, fields=None, load='_classic_read'):
@@ -319,18 +325,27 @@ class MailActivity(models.Model):
                     user_changes.action_notify()
             for activity in user_changes:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
-                if activity.date_deadline <= fields.Date.today():
-                    self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
-            for activity in user_changes:
-                if activity.date_deadline <= fields.Date.today():
-                    for partner in pre_responsibles:
-                        self.env['bus.bus']._sendone(partner, 'mail.activity/updated', {'activity_deleted': True})
+
+            # send bus notifications
+            todo_activities = user_changes.filtered(lambda act: act.date_deadline <= fields.Date.today())
+            if todo_activities:
+                self.env['bus.bus']._sendmany([
+                    [partner, 'mail.activity/updated', {'activity_created': True}]
+                    for partner in todo_activities.user_id.partner_id
+                ])
+                self.env['bus.bus']._sendmany([
+                    [partner, 'mail.activity/updated', {'activity_deleted': True}]
+                    for partner in pre_responsibles
+                ])
         return res
 
     def unlink(self):
-        for activity in self:
-            if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus']._sendone(activity.user_id.partner_id, 'mail.activity/updated', {'activity_deleted': True})
+        todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
+        if todo_activities:
+            self.env['bus.bus']._sendmany([
+                [partner, 'mail.activity/updated', {'activity_deleted': True}]
+                for partner in todo_activities.user_id.partner_id
+            ])
         return super(MailActivity, self).unlink()
 
     @api.model
