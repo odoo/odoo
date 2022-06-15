@@ -487,7 +487,7 @@ def convert_default_and_named_import(content):
         import something, { a } from "some/path";
         import somethingElse, { b } from "legacy.module";
         // after
-        const { a , [Symbol.for("default")]: something } = require("some/path");
+        const { [Symbol.for("default")]: something, a } = require("some/path");
         const somethingElse = require("legacy.module");
         const { b } = somethingElse;
     """
@@ -497,7 +497,7 @@ def convert_default_and_named_import(content):
         if is_legacy:
             return f"""{matchobj['space']}const {matchobj['default_export']} = require({matchobj['path']});
 {matchobj['space']}const {new_object} = {matchobj['default_export']}"""
-        new_object = f"""{new_object[:-1]}, [Symbol.for("default")]: {matchobj['default_export']} }}"""
+        new_object = f"""{{ [Symbol.for("default")]: {matchobj['default_export']},{new_object[1:]}"""
         return f"{matchobj['space']}const {new_object} = require({matchobj['path']})"
     return IMPORT_DEFAULT_AND_NAMED_RE.sub(repl, content)
 
