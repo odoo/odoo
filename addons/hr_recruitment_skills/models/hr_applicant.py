@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class HrApplicant(models.Model):
     _inherit = 'hr.applicant'
 
     applicant_skill_ids = fields.One2many('hr.applicant.skill', 'applicant_id', string="Skills")
+    skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True)
+
+    @api.depends('applicant_skill_ids.skill_id')
+    def _compute_skill_ids(self):
+        for applicant in self:
+            applicant.skill_ids = applicant.applicant_skill_ids.skill_id
 
     def create_employee_from_applicant(self):
         self.ensure_one()
