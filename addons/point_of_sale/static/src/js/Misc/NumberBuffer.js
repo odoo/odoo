@@ -3,7 +3,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
 
     const { useListener } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
-    const { BarcodeEvents } = require('barcodes.BarcodeEvents');
+    const { barcodeService } = require('@barcodes/barcode_service');
     const { _t } = require('web.core');
     const { Gui } = require('point_of_sale.Gui');
 
@@ -162,7 +162,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             this.config = config;
             this.decimalPoint = config.decimalPoint || this.defaultDecimalPoint;
             this.maxTimeBetweenKeys = this.config.useWithBarcode
-                ? BarcodeEvents.max_time_between_keys_in_ms
+                ? barcodeService.maxTimeBetweenKeysInMs
                 : 0;
         }
         _onKeyboardInput(event) {
