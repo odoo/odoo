@@ -470,7 +470,7 @@ class MailThread(models.AbstractModel):
         """
         partner_fields = self._mail_get_partner_fields()
         return dict(
-            (record.id, self.env['res.partner'].union(*[self[fname] for fname in partner_fields]))
+            (record.id, self.env['res.partner'].union(*[record[fname] for fname in partner_fields]))
             for record in self
         )
 
