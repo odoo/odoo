@@ -49,7 +49,6 @@
         didLogInfoResolve = resolve;
     });
 
-    odoo.testing = typeof QUnit === "object";
     odoo.remainingJobs = jobs;
     odoo.__DEBUG__ = {
         didLogInfo: didLogInfoPromise,
