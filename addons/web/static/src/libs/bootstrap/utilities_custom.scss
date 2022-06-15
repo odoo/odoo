@@ -1,4 +1,19 @@
 // Extend utilities
+
+$rounded-sizes: () !default;
+$rounded-sizes: map-merge(
+    $rounded-sizes,
+    (
+        null: $border-radius,
+        0: 0,
+        1: $border-radius-sm,
+        2: $border-radius,
+        3: $border-radius-lg,
+        circle: 50%,
+        pill: $border-radius-pill,
+    )
+);
+
 $utilities: () !default;
 $utilities: map-merge(
     $utilities,
@@ -14,6 +29,26 @@ $utilities: map-merge(
                 75: .75,
                 100: 1,
             ),
+        ),
+        "rounded-top": (
+            property: border-top-left-radius border-top-right-radius,
+            class: rounded-top,
+            values: $rounded-sizes,
+        ),
+        "rounded-end": (
+            property: border-top-right-radius border-bottom-right-radius,
+            class: rounded-end,
+            values: $rounded-sizes,
+        ),
+        "rounded-bottom": (
+            property: border-bottom-right-radius border-bottom-left-radius,
+            class: rounded-bottom,
+            values: $rounded-sizes,
+        ),
+        "rounded-start": (
+            property: border-bottom-left-radius border-top-left-radius,
+            class: rounded-start,
+            values: $rounded-sizes,
         ),
     )
 );
