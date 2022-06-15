@@ -34,7 +34,6 @@ const LivechatButton = Widget.extend({
         this.options = _.defaults(this.messaging.publicLivechatOptions || {}, {
             input_placeholder: _t("Ask something ..."),
             default_username: _t("Visitor"),
-            button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
         });
 
@@ -62,7 +61,7 @@ const LivechatButton = Widget.extend({
         return this._loadQWebTemplate();
     },
     start() {
-        this.$el.text(this.options.button_text);
+        this.$el.text(this.messaging.livechatButtonView.buttonText);
         if (this._history) {
             this._history.forEach(m => this._addMessage(m));
             this._openChat();
