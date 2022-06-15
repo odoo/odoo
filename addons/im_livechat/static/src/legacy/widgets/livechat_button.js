@@ -32,7 +32,6 @@ const LivechatButton = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
         this.options = _.defaults(this.messaging.publicLivechatOptions || {}, {
-            input_placeholder: _t("Ask something ..."),
             default_username: _t("Visitor"),
             button_text: _t("Chat with one of our collaborators"),
             default_message: _t("How may I help you?"),
@@ -311,7 +310,7 @@ const LivechatButton = Widget.extend({
         const options = {
             displayStars: false,
             headerBackgroundColor: this.options.header_background_color,
-            placeholder: this.options.input_placeholder || "",
+            placeholder: this.messaging.livechatButtonView.inputPlaceholder,
             titleColor: this.options.title_color,
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);

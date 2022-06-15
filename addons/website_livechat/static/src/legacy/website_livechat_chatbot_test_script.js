@@ -30,8 +30,6 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         this._channelData = chatbotData.channel;
         this.messaging.livechatButtonView.update({ isChatbot: true });
         this._serverURL = chatbotData.serverUrl;
-
-        this.options.input_placeholder = '';
     },
 
     /**
