@@ -274,28 +274,41 @@ class MailActivity(models.Model):
     def create(self, vals_list):
         activities = super(MailActivity, self).create(vals_list)
 
-        for activity in activities:
-            need_sudo = False
-            try:  # in multicompany, reading the partner might break
-                partner_id = activity.user_id.partner_id.id
-            except exceptions.AccessError:
-                need_sudo = True
-                partner_id = activity.user_id.sudo().partner_id.id
+        # find partners related to responsible users, separate readable from unreadable
+        if any(user != self.env.user for user in activities.user_id):
+            user_partners = activities.user_id.partner_id
+            readable_user_partners = user_partners._filter_access_rules_python('read')
+        else:
+            readable_user_partners = self.env.user.partner_id
 
-            # send a notification to assigned user; in case of manually done activity also check
-            # target has rights on document otherwise we prevent its creation. Automated activities
-            # are checked since they are integrated into business flows that should not crash.
-            if activity.user_id != self.env.user:
-                if not activity.automated:
-                    activity._check_access_assignation()
-                if not self.env.context.get('mail_activity_quick_update', False):
-                    if need_sudo:
-                        activity.sudo().action_notify()
-                    else:
-                        activity.action_notify()
+        # when creating activities for other: send a notification to assigned user;
+        # in case of manually done activity also check target has rights on document
+        # otherwise we prevent its creation. Automated activities are checked since
+        # they are integrated into business flows that should not crash.
+        if self.env.context.get('mail_activity_quick_update'):
+            activities_to_notify = self.env['mail.activity']
+        else:
+            activities_to_notify = activities.filtered(lambda act: act.user_id != self.env.user)
+        activities_to_notify.filtered(lambda act: not act.automated)._check_access_assignation()
+        if activities_to_notify:
+            to_sudo = activities_to_notify.filtered(lambda act: act.user_id.partner_id not in readable_user_partners)
+            other = activities_to_notify - to_sudo
+            to_sudo.sudo().action_notify()
+            other.action_notify()
 
-            self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
+        # subscribe (batch by model and user to speedup)
+        for model, activity_data in activities._classify_by_model().items():
+            per_user = dict()
+            for activity in activity_data['activities'].filtered(lambda act: act.user_id):
+                if activity.user_id not in per_user:
+                    per_user[activity.user_id] = [activity.res_id]
+                else:
+                    per_user[activity.user_id].append(activity.res_id)
+            for user, res_ids in per_user.items():
+                pids = user.partner_id.ids if user.partner_id in readable_user_partners else user.sudo().partner_id.ids
+                self.env[model].browse(res_ids).message_subscribe(partner_ids=pids)
 
+        # send notifications about activity creation
         todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
             self.env['bus.bus']._sendmany([
