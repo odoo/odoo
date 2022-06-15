@@ -31,21 +31,25 @@ class MailActivity(models.Model):
         return res
 
     @api.model
-    def _default_activity_type_id(self):
-        ActivityType = self.env["mail.activity.type"]
-        activity_type_todo = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+    def _default_activity_type(self):
         default_vals = self.default_get(['res_model_id', 'res_model'])
         if not default_vals.get('res_model_id'):
-            return ActivityType
-        current_model_id = default_vals['res_model_id']
-        current_model = self.env["ir.model"].sudo().browse(current_model_id)
+            return False
+
+        current_model = self.env["ir.model"].sudo().browse(default_vals['res_model_id']).model
+        return self._default_activity_type_for_model(current_model)
+
+    @api.model
+    def _default_activity_type_for_model(self, model):
+        todo_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mail_activity_data_todo', raise_if_not_found=False)
+        activity_type_todo = self.env['mail.activity.type'].browse(todo_id) if todo_id else self.env['mail.activity.type']
         if activity_type_todo and activity_type_todo.active and \
-                (activity_type_todo.res_model == current_model.model or not activity_type_todo.res_model):
+                (activity_type_todo.res_model == model or not activity_type_todo.res_model):
             return activity_type_todo
-        activity_type_model = ActivityType.search([('res_model', '=', current_model.model)], limit=1)
+        activity_type_model = self.env['mail.activity.type'].search([('res_model', '=', model)], limit=1)
         if activity_type_model:
             return activity_type_model
-        activity_type_generic = ActivityType.search([('res_model', '=', False)], limit=1)
+        activity_type_generic = self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
         return activity_type_generic
 
     # owner
@@ -63,7 +67,7 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict',
-        default=_default_activity_type_id)
+        default=_default_activity_type)
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
@@ -450,7 +454,6 @@ class MailActivity(models.Model):
     def action_notify(self):
         if not self:
             return
-        body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
             if activity.user_id.lang:
                 # Send the notification in the assigned user's language

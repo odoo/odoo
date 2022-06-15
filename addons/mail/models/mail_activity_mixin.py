@@ -45,9 +45,7 @@ class MailActivityMixin(models.AbstractModel):
         Can be overriden to specify the default activity type of a model.
         It is only called in in activity_schedule() for now.
         """
-        return self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False) \
-            or self.env['mail.activity.type'].search([('res_model', '=', self._name)], limit=1) \
-            or self.env['mail.activity.type'].search([('res_model', '=', False)], limit=1)
+        return self.env['mail.activity']._default_activity_type_for_model(self._name)
 
     activity_ids = fields.One2many(
         'mail.activity', 'res_id', 'Activities',
@@ -401,16 +399,20 @@ class MailActivityMixin(models.AbstractModel):
         if isinstance(date_deadline, datetime):
             _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
         if act_type_xmlid:
-            activity_type = self.env.ref(act_type_xmlid, raise_if_not_found=False) or self._default_activity_type()
+            activity_type_id = self.env['ir.model.data']._xmlid_to_res_id(act_type_xmlid, raise_if_not_found=False)
+            if activity_type_id:
+                activity_type = self.env['mail.activity.type'].browse(activity_type_id)
+            else:
+                activity_type = self._default_activity_type()
         else:
             activity_type_id = act_values.get('activity_type_id', False)
-            activity_type = activity_type_id and self.env['mail.activity.type'].sudo().browse(activity_type_id)
+            activity_type = self.env['mail.activity.type'].browse(activity_type_id) if activity_type_id else self.env['mail.activity.type']
 
         model_id = self.env['ir.model']._get(self._name).id
         create_vals_list = []
         for record in self:
             create_vals = {
-                'activity_type_id': activity_type and activity_type.id,
+                'activity_type_id': activity_type.id,
                 'summary': summary or activity_type.summary,
                 'automated': True,
                 'note': note or activity_type.default_note,
