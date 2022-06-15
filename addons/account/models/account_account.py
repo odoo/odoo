@@ -443,7 +443,39 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
+    def _order_by_frequency_per_partner(self, company_id, partner_id, move_type=None, limit=None):
+        """
+        Returns the accounts ordered from most used to least used for a given partner
+        and filtered according to the move type.
+        """
+        limit = "LIMIT 1" if limit is not None else ""
+        where_internal_group = ""
+        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
+            where_internal_group = "AND account.internal_group = 'income'"
+        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
+            where_internal_group = "AND account.internal_group = 'expense'"
+        self._cr.execute(f"""
+            SELECT account.id
+              FROM account_account account
+              LEFT JOIN account_move_line aml
+                ON aml.account_id  = account.id
+                AND aml.partner_id = %s
+                AND account.deprecated = FALSE
+                AND account.company_id = aml.company_id
+                AND aml.date >= now() - interval '2 years'
+              WHERE account.company_id = %s
+                   {where_internal_group}
+            GROUP BY account.id
+            ORDER BY COUNT(aml.id) DESC, account.code
+                   {limit}
+        """, [partner_id, company_id])
+        return [r[0] for r in self._cr.fetchall()]
+
+    @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        if not name and self._context.get('partner_id') and self._context.get('move_type'):
+            return self._order_by_frequency_per_partner(
+                            self.env.company.id, self._context.get('partner_id'), self._context.get('move_type'))
         args = args or []
         domain = []
         if name:
