@@ -198,7 +198,7 @@ class OdooTestResult(unittest.result.TestResult):
 
     def addSkip(self, test, reason):
         super().addSkip(test, reason)
-        self.log(logging.INFO, 'skipped %s', self.getDescription(test), test=test)
+        self.log(logging.INFO, 'skipped %s : %s', self.getDescription(test), reason, test=test)
 
     def addUnexpectedSuccess(self, test):
         super().addUnexpectedSuccess(test)
