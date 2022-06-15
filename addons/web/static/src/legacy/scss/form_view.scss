@@ -713,6 +713,20 @@ $o-form-label-margin-right: 0px;
             padding-right: 25px;
         }
     }
+    .oe_no_translation_content {
+        &:not(.btn) {
+            display: none;
+        }
+        &.btn {
+            width: 100% !important;
+            margin-left: 0px;
+            visibility: hidden;
+        }
+        &.btn:after {
+            content: 'EN';
+            visibility: visible;
+        }
+    }
 
     // Text field with oe_inline class
     .o_field_text.oe_inline {

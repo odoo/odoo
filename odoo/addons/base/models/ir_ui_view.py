@@ -2037,10 +2037,6 @@ actual arch.
     # Misc
     #------------------------------------------------------
 
-    def open_translations(self):
-        """ Open a view for editing the translations of field 'arch_db'. """
-        return self.env['ir.translation'].translate_fields('ir.ui.view', self.id, 'arch_db')
-
     @api.model
     def _validate_custom_views(self, model):
         """Validate architecture of custom views (= without xml id) for a given model.
