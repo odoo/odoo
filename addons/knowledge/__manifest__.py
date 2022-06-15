@@ -50,6 +50,7 @@
             'knowledge/static/src/js/tools/tree_panel_mixin.js',
             'knowledge/static/src/js/widgets/knowledge_permission_panel.js',
             'knowledge/static/src/js/widgets/knowledge_emoji_picker.js',
+            'knowledge/static/src/js/widgets/knowledge_field_html.js',
             'knowledge/static/src/webclient/commands/*.js',
             'knowledge/static/src/models/*/*.js',
             'knowledge/static/src/js/form_controller.js',

@@ -89,6 +89,35 @@ const KnowledgeArticleFormController = FormController.extend({
         });
     },
 
+    /**
+     * @override
+     * @returns {Promise<boolean>}
+     */
+    canBeRemoved: function () {
+        const { data } = this.model.get(this.handle);
+        if (!data.is_locked && (data.user_has_write_access || data.user_is_admin)) {
+            /**
+             * When the user is about to leave the view by executing a new act_window
+             * action, we will commit all changes before saving them. This will
+             * ensure that the debounced fields will mark their associated values
+             * as 'dirty' and that the changes will be properly saved in db.
+             */
+            return this.renderer.commitChanges(this.handle).then(() => {
+                return this.saveChanges(this.handle);
+            });
+        }
+        return Promise.resolve(true);
+    },
+    /**
+     * @override
+     */
+    _urgentSave: function () {
+        const { data } = this.model.get(this.handle);
+        if (!data.is_locked && (data.user_has_write_access || data.user_is_admin)) {
+            return this._super.apply(this, arguments);
+        }
+    },
+
     // Listeners:
 
     /**
