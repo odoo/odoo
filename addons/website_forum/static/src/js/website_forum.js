@@ -88,6 +88,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     return {
                         query: term,
                         limit: 50,
+                        forum: $('#wrapwrap').data('forum_id'),
                     };
                 },
                 results: function (data) {

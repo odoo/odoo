@@ -179,9 +179,9 @@ class WebsiteForum(WebsiteProfile):
         return request.render("website_forum.faq_karma", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
-    def tag_read(self, query='', limit=25, **post):
+    def tag_read(self, query='', limit=25, forum='', **post):
         data = request.env['forum.tag'].search_read(
-            domain=[('name', '=ilike', (query or '') + "%")],
+            domain=[('name', '=ilike', (query or '') + "%"), ('forum_id', '=', int(forum))],
             fields=['id', 'name'],
             limit=int(limit),
         )
