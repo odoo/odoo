@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import { sprintf } from '@web/core/utils/strings';
 
@@ -23,6 +23,13 @@ registerModel({
                 { odoobotName: this.messaging.partnerRoot.nameOrDisplayName },
             );
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computePartnerImStatusIconView() {
+            return this.messaging.partnerRoot.im_status && this.messaging.partnerRoot.im_status !== 'im_partner' ? insertAndReplace() : clear();
+        },
     },
     fields: {
         headerText: attr({
@@ -31,6 +38,12 @@ registerModel({
         notificationListViewOwner: one('NotificationListView', {
             inverse: 'notificationRequestView',
             required: true,
+            readonly: true,
+        }),
+        partnerImStatusIconView: one('PartnerImStatusIconView', {
+            compute: '_computePartnerImStatusIconView',
+            inverse: 'notificationRequestViewOwner',
+            isCausal: true,
             readonly: true,
         }),
     },

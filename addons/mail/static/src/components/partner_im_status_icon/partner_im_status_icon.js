@@ -12,10 +12,10 @@ export class PartnerImStatusIcon extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Partner}
+     * @returns {PartnerImStatusIconView}
      */
-    get partner() {
-        return this.props.partner;
+    get partnerImStatusIconView() {
+        return this.props.record;
     }
 
     //--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ export class PartnerImStatusIcon extends Component {
         if (!this.props.hasOpenChat) {
             return;
         }
-        this.partner.openChat();
+        this.partnerImStatusIconView.partner.openChat();
     }
 
 }
@@ -42,13 +42,13 @@ Object.assign(PartnerImStatusIcon, {
         hasOpenChat: false,
     },
     props: {
-        partner: Object,
         hasBackground: { type: Boolean, optional: true },
         /**
          * Determines whether a click on `this` should open a chat with
          * `this.partner`.
          */
         hasOpenChat: { type: Boolean, optional: true },
+        record: Object,
     },
     template: 'mail.PartnerImStatusIcon',
 });

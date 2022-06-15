@@ -294,6 +294,13 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computePartnerImStatusIconView() {
+            return this.message.author && this.message.author.im_status && this.message.author.im_status !== 'im_partner' ? insertAndReplace() : clear();
+        },
     },
     fields: {
         /**
@@ -438,6 +445,12 @@ registerModel({
         }),
         messagingAsClickedMessageView: one('Messaging', {
             inverse: 'clickedMessageView',
+        }),
+        partnerImStatusIconView: one('PartnerImStatusIconView', {
+            compute: '_computePartnerImStatusIconView',
+            inverse: 'messageViewOwner',
+            isCausal: true,
+            readonly: true,
         }),
         /**
          * States the thread view that is displaying this messages (if any).
