@@ -109,6 +109,19 @@ $truncate-limits: 2, 3, 10;
     .o_wslides_home_nav {
         top: -40px;
 
+        // TODO Remove me in master
+        [style*="background: white"] .nav-link {
+            color: $navbar-light-color !important;
+
+            @include hover-focus {
+                color: $navbar-light-hover-color !important;
+            }
+
+            &.disabled {
+                color: $navbar-light-disabled-color !important;
+            }
+        }
+
         @include media-breakpoint-up(lg) {
             font-size: 1rem;
 
