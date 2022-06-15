@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, link } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -440,6 +440,13 @@ registerModel({
         otherMemberLongTypingInThreadTimers: many('OtherMemberLongTypingInThreadTimer', {
             inverse: 'partner',
             isCausal: true,
+        }),
+        persona: one('Persona', {
+            default: insertAndReplace(),
+            inverse: 'partner',
+            isCausal: true,
+            readonly: true,
+            required: true,
         }),
         rtcSessions: many('RtcSession', {
             inverse: 'partner',
