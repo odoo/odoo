@@ -385,6 +385,12 @@ class AccountMove(models.Model):
         readonly=True, states={'draft': [('readonly', False)]},
         help='Defines the smallest coinage of the currency that can be used to pay by cash.')
 
+    # Fiduciary mode fields
+    quick_edit_mode = fields.Boolean(compute='_compute_quick_edit_mode')
+    quick_edit_total_amount = fields.Monetary(string='Total (Tax inc.)',
+        help='Use this field to encode the total amount of the invoice. '
+             'Odoo will automatically create one invoice line with default values to match it.')
+
     # ==== Display purpose fields ====
     invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
         help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
@@ -540,7 +546,7 @@ class AccountMove(models.Model):
             if new_currency != self.currency_id:
                 self.currency_id = new_currency
                 self._onchange_currency()
-        if self.state == 'draft' and self._get_last_sequence() and self.name and self.name != '/':
+        if self.state == 'draft' and self.name and self.name != '/' and not self.quick_edit_mode and self._get_last_sequence():
             self.name = '/'
 
     @api.onchange('partner_id')
@@ -637,6 +643,121 @@ class AccountMove(models.Model):
             self.invoice_vendor_bill_id = False
             self._recompute_dynamic_lines()
 
+    @api.model
+    def _get_frequent_account_and_taxes(self, company_id, partner_id, move_type):
+        """
+        Returns the most used accounts and taxes for a given partner and company,
+        eventually filtered according to the move type.
+        """
+        where_internal_group = ""
+        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
+            where_internal_group = "AND account.internal_group = 'income'"
+        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
+            where_internal_group = "AND account.internal_group = 'expense'"
+        self._cr.execute(f"""
+            SELECT
+               COUNT(foo.id), foo.account_id, foo.taxes
+            FROM
+               (
+               SELECT
+                   account.id AS account_id,
+                   account.code,
+                   aml.id,
+                   ARRAY_AGG(tax_rel.account_tax_id) AS taxes
+               FROM account_account account
+                LEFT JOIN account_move_line aml
+                  ON (account.id = aml.account_id
+                   AND aml.partner_id = %s
+                   AND aml.date >= now() - interval '2 years')
+                LEFT JOIN account_move_line_account_tax_rel tax_rel ON (aml.id = tax_rel.account_move_line_id)
+               WHERE
+                   account.company_id = %s
+                   AND account.deprecated = FALSE
+                      {where_internal_group}
+               GROUP BY account.id, account.code, aml.id
+               ) AS foo
+            GROUP BY foo.account_id, foo.code, foo.taxes
+            ORDER BY COUNT(foo.id) DESC, foo.code
+            LIMIT 1
+        """, [partner_id, company_id])
+        return self._cr.fetchone()
+
+    @api.model
+    def _get_quick_edit_suggestions(self, amount_total, quick_edit_total_amount, move_type, journal_id, partner_id, fiscal_position_id):
+        """
+        Returns a dictionnary containing the suggested values when creating a new
+        line with the quick_edit_total_amount set. We will compute the price_unit
+        that has to be set with the correct that in order to match this total amount.
+        If the vendor/customer is set, we will suggest the most frequently used account
+        for that partner as the default one, otherwise the default of the journal.
+        """
+        if not quick_edit_total_amount:
+            return False
+        journal = self.env['account.journal'].browse(journal_id)
+        count, account_id, tax_ids = self._get_frequent_account_and_taxes(journal.company_id.id, partner_id, move_type)
+        if count:
+            taxes = self.env['account.tax'].browse(tax_ids)
+        else:
+            account_id = journal.default_account_id.id
+            if journal.default_account_id.tax_ids:
+                taxes = journal.default_account_id.tax_ids
+            else:
+                taxes = journal.company_id.account_sale_tax_id if journal.type == 'sale' else journal.company_id.account_purchase_tax_id
+            taxes = self.env['account.fiscal.position'].browse(fiscal_position_id).map_tax(taxes)
+        price_untaxed = taxes.with_context(force_price_include=True).compute_all(quick_edit_total_amount - amount_total)['total_excluded']
+        return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
+
+    @api.onchange('quick_edit_total_amount')
+    def _onchange_quick_edit_total_amount(self):
+        """
+        Creates a new line with the suggested values (for the account, the price_unit,
+        and the tax) such that the total amount matches the quick total amount.
+        """
+        if not self.quick_edit_total_amount or not self.quick_edit_mode or len(self.invoice_line_ids) > 0:
+            return
+        self.line_ids = [Command.clear()]
+        suggestions = self._get_quick_edit_suggestions(
+            self.amount_total,
+            self.quick_edit_total_amount,
+            self.move_type,
+            self.journal_id.id,
+            self.partner_id.id,
+            self.fiscal_position_id.id,
+            )
+        self.env['account.move.line'].new({
+            'move_id': self.id,
+            'partner_id': self.partner_id,
+            'account_id': suggestions['account_id'],
+            'currency_id': self.currency_id.id,
+            'price_unit': suggestions['price_unit'],
+            'tax_ids': [Command.set(suggestions['tax_ids'])],
+        })
+        self.line_ids._onchange_price_subtotal()
+        self._onchange_invoice_line_ids()
+
+    def _check_quick_edit_total_amount(self):
+        """
+        Verifies that the total amount corresponds to the quick total amount chosen as some
+        rounding errors may appear. In such a case, we round up the tax such that the total
+        is equal to the quick total amount set
+        E.g.: 100€ including 21% tax: base = 82.64, tax = 17.35, total = 99.99
+        The tax will be set to 17.36 in order to have a total of 100.00
+        """
+        self.ensure_one()
+        if not self.quick_edit_total_amount or not self.quick_edit_mode:
+            return
+        totals = json.loads(self.tax_totals_json)
+        tax_amount_rounding_error = self.quick_edit_total_amount - self.amount_total
+        if not float_compare(abs(tax_amount_rounding_error), self.currency_id.rounding, precision_rounding=self.currency_id.rounding) > 0:
+            try:
+                totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'] += tax_amount_rounding_error
+                totals['groups_by_subtotal']['Untaxed Amount'][0]['formatted_tax_group_amount'] = formatLang(self.env, totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount'], currency_obj=self.currency_id)
+                totals['amount_total'] = self.quick_edit_total_amount
+                totals['formatted_amount_total'] = formatLang(self.env, self.quick_edit_total_amount, currency_obj=self.currency_id)
+                self.tax_totals_json = json.dumps(totals)
+                self._onchange_tax_totals_json()
+            except KeyError:
+                pass
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -646,6 +767,7 @@ class AccountMove(models.Model):
             others_lines[0].recompute_tax_line = True
         self.line_ids = others_lines + self.invoice_line_ids
         self._onchange_recompute_dynamic_lines()
+        self._check_quick_edit_total_amount()
 
     @api.onchange('line_ids', 'invoice_payment_term_id', 'invoice_date_due', 'invoice_cash_rounding_id', 'invoice_vendor_bill_id')
     def _onchange_recompute_dynamic_lines(self):
@@ -1183,6 +1305,9 @@ class AccountMove(models.Model):
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 pass
+            elif (not move.name or move.name == '/') and move.quick_edit_mode:
+                # We suggest the next sequence as the default name of the new move
+                pass
             elif (move.name and move.name != '/') or move.state != 'posted':
                 try:
                     if not move.posted_before:
@@ -1236,6 +1361,17 @@ class AccountMove(models.Model):
     def _compute_highest_name(self):
         for record in self:
             record.highest_name = record._get_last_sequence()
+
+    @api.depends('journal_id.type', 'company_id.quick_edit_mode', 'quick_edit_total_amount')
+    def _compute_quick_edit_mode(self):
+        for move in self:
+            quick_edit_mode = move.company_id.quick_edit_mode
+            if move.journal_id.type == 'sale':
+                move.quick_edit_mode = quick_edit_mode in ('out_invoices', 'out_and_in_invoices')
+            elif move.journal_id.type == 'purchase':
+                move.quick_edit_mode = quick_edit_mode in ('in_invoices', 'out_and_in_invoices')
+            else:
+                move.quick_edit_mode = False
 
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
@@ -2177,7 +2313,7 @@ class AccountMove(models.Model):
 
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
                 if not self.env.user.has_group('account.group_account_manager'):
-                    raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Advisor can change it.'))
+                    raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
                 move.journal_id.sequence_override_regex = False
 
         if self._move_autocomplete_invoice_lines_write(vals):
@@ -2833,6 +2969,10 @@ class AccountMove(models.Model):
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
         for move in to_post:
+            if move.quick_edit_mode and move.quick_edit_total_amount and move.quick_edit_total_amount != move.amount_total:
+                computed_total = formatLang(self.env, move.amount_total, currency_obj=move.currency_id)
+                encoded_total = formatLang(self.env, move.quick_edit_total_amount, currency_obj=move.currency_id)
+                raise UserError(_("The current total is %s but the expected total is %s. In order to post the invoice/bill, you can adjust its lines or the expected Total (tax inc.).", computed_total, encoded_total))
             if move.partner_bank_id and not move.partner_bank_id.active:
                 raise UserError(_("The recipient bank account link to this invoice is archived.\nSo you cannot confirm the invoice."))
             if move.state == 'posted':
@@ -4391,6 +4531,28 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.is_same_currency = record.currency_id == record.company_currency_id
 
+    @api.onchange('tax_ids')
+    def _onchange_quick_suggest_price_unit(self):
+        """When a new line is created, we suggest a price_unit according to the quick suggestions"""
+        # TODO Using an onchange on tax_ids to do this is a huge hack, we should instead give default values in default_get
+        # but the current implementation of the invoice lines is sooo messy that it's overly complicated to success doing so
+        for line in self:
+            if line.price_unit != 0 or not line.move_id.quick_edit_mode:
+                continue
+            suggestions = line.move_id._get_quick_edit_suggestions(
+                line.move_id.amount_total,
+                line.move_id.quick_edit_total_amount,
+                line.move_id.move_type,
+                line.move_id.journal_id.id,
+                line.partner_id.id,
+                line.move_id.fiscal_position_id.id)
+            if suggestions:
+                line.price_unit = suggestions['price_unit']
+                line.tax_ids = suggestions['tax_ids']
+                line.exclude_from_invoice_tab = False
+                line._onchange_price_subtotal()
+                line.move_id._onchange_invoice_line_ids()
+
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
@@ -4765,8 +4927,15 @@ class AccountMoveLine(models.Model):
             and self._context.get('default_move_type') in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'):
             # Fill missing 'account_id'.
             journal = self.env['account.journal'].browse(self._context.get('default_journal_id') or self._context['journal_id'])
-            values['account_id'] = journal.default_account_id.id
+            if values['partner_id']:
+                # Get most used account of the partner as the default.
+                account_id = self.env['account.account']._order_by_frequency_per_partner(
+                    journal.company_id.id, values['partner_id'], self._context.get("default_move_type"), limit=1)[0]
+            else:
+                account_id = journal.default_account_id
+            values['account_id'] = account_id
         elif self._context.get('line_ids') and any(field_name in default_fields for field_name in ('debit', 'credit', 'account_id', 'partner_id')):
+            # MISC JOURNAL ENTRY ENCODING
             move = self.env['account.move'].new({'line_ids': self._context['line_ids']})
 
             # Suggest default value for debit / credit to balance the journal entry.

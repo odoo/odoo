@@ -3452,3 +3452,48 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Tags should be empty since the tax has been removed from the invoice line
         self.assertRecordValues(invoice.line_ids, [{'tax_tag_ids': []}, {'tax_tag_ids': []}])
+
+    def test_quick_edit_total_amount(self):
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2022-01-01')
+        move_form.partner_id = self.partner_a
+
+        # Quick edit total amount not activated yet
+        move_form.quick_edit_total_amount = 100.0
+        invoice = move_form.save()
+        self.assertEqual(invoice.amount_total, 0.0)
+        self.assertEqual(len(invoice.invoice_line_ids), 0)
+
+        # Quick edit total amount activated
+        self.env.company.quick_edit_mode = "out_and_in_invoices"
+        self.env.company.account_sale_tax_id = self.env['account.tax'].create({
+            'name': '21%',
+            'amount': 21,
+            'type_tax_use': 'sale',
+        })  # 21% tax of a total amount may create a rounding error (99.99 or 100.01)
+
+        # Let's make sure it does not (the rounding cent should be on the tax)
+        move_form.quick_edit_total_amount = 100.0
+        invoice = move_form.save()
+        self.assertEqual(invoice.amount_total, 100)
+        self.assertEqual(invoice.amount_untaxed, 82.64)
+        self.assertEqual(invoice.amount_tax, 17.36)
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+
+        # Modify one invoice line
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 50
+        invoice = move_form.save()
+        self.assertEqual(invoice.amount_total, 60.5)
+        self.assertEqual(invoice.amount_untaxed, 50)
+        self.assertEqual(invoice.amount_tax, 10.5)
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+
+        # Suggest the new amount such that the total is equal to the quick amount
+        with move_form.invoice_line_ids.new() as line_form:
+            self.assertEqual(line_form.price_unit, 32.64)
+        invoice = move_form.save()
+        self.assertEqual(invoice.amount_total, 100)
+        self.assertEqual(invoice.amount_untaxed, 82.64)
+        self.assertEqual(invoice.amount_tax, 17.36)
+        self.assertEqual(len(invoice.invoice_line_ids), 2)

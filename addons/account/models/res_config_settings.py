@@ -159,6 +159,9 @@ class ResConfigSettings(models.TransientModel):
     # Allows for the use of a different delivery address
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 
+    # Quick encoding (fiduciary mode)
+    quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
+
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)
