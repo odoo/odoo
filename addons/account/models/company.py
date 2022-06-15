@@ -172,6 +172,14 @@ class ResCompany(models.Model):
     # Storno Accounting
     account_storno = fields.Boolean(string="Storno accounting", readonly=False)
 
+    # Fiduciary mode
+    quick_edit_mode = fields.Selection(
+        selection=[
+            ('out_invoices', 'Customer Invoices'),
+            ('in_invoices', 'Vendor Bills'),
+            ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
+        string="Quick encoding")
+
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:
