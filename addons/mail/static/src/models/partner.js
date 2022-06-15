@@ -350,6 +350,13 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeIsImStatusSet() {
+            return Boolean(this.im_status && this.im_status !== 'im_partner');
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsOnline() {
             return ['online', 'away'].includes(this.im_status);
         },
@@ -410,6 +417,10 @@ registerModel({
             required: true,
         }),
         im_status: attr(),
+        isImStatusSet: attr({
+            compute: '_computeIsImStatusSet',
+            readonly: true,
+        }),
         /**
          * States whether this partner is online.
          */

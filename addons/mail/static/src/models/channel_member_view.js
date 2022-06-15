@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMemberView',
@@ -27,6 +28,13 @@ registerModel({
             }
             this.channelMember.partner.openProfile();
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computePartnerImStatusIconView() {
+            return this.channelMember.partner && this.channelMember.partner.isImStatusSet ? insertAndReplace() : clear();
+        },
     },
     fields: {
         channelMemberListCategoryViewOwner: one('ChannelMemberListCategoryView', {
@@ -38,6 +46,12 @@ registerModel({
             inverse: 'channelMemberViews',
             readonly: true,
             required: true,
+        }),
+        partnerImStatusIconView: one('PartnerImStatusIconView', {
+            compute: '_computePartnerImStatusIconView',
+            inverse: 'channelMemberViewOwner',
+            isCausal: true,
+            readonly: true,
         }),
     },
 });
