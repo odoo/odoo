@@ -46,6 +46,15 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
         };
     },
     /**
+     * @override
+     */
+    destroy: function () {
+        if (this.timer) {
+            window.clearTimeout(this._onTimeout);
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
      * Called when the chatter triggers a reload on the Form view with the
      * param 'keepChanges=true'. In this case, we only need to update the
      * chatter.
@@ -436,6 +445,38 @@ const KnowledgeArticleFormRenderer = FormRenderer.extend(KnowledgeTreePanelMixin
             'connectWith',
             'section[data-section="workspace"] .o_tree, section[data-section="private"] .o_tree'
         );
+    },
+
+    _onSaving: function () {
+        if (this.timer) {
+            window.clearTimeout(this._onTimeout);
+        }
+        this.$('.o_knowledge_saving').removeClass('d-none');
+        this.$('.o_knowledge_saved').addClass('d-none');
+        this.$('.o_knowledge_save_failed').addClass('d-none');
+    },
+
+    _onSaved: function () {
+        if (this.timer) {
+            window.clearInterval(this._onTimeout);
+        }
+        this.$('.o_knowledge_saving').addClass('d-none');
+        this.$('.o_knowledge_saved').removeClass('d-none');
+        this.$('.o_knowledge_save_failed').addClass('d-none');
+        this.timer = window.setTimeout(this._onTimeout, 3000);
+    },
+
+    _onSaveFailed: function () {
+        if (this.timer) {
+            window.clearInterval(this._onTimeout);
+        }
+        this.$('.o_knowledge_saving').addClass('d-none');
+        this.$('.o_knowledge_saved').addClass('d-none');
+        this.$('.o_knowledge_save_failed').removeClass('d-none');
+    },
+
+    _onTimeout: function () {
+        this.$('.o_knowledge_saved').addClass('d-none');
     },
 });
 

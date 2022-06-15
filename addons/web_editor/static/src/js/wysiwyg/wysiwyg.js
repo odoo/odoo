@@ -756,6 +756,7 @@ const Wysiwyg = Widget.extend({
      * @returns {Boolean}
      */
     isDirty: function () {
+        console.log('wysiwyg this._initialValue', this._initialValue);
         return this._initialValue !== (this.getValue() || this.$editable.val());
     },
     /**

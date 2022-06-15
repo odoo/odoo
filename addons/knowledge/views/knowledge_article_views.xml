@@ -66,6 +66,15 @@
                                     <div attrs="{'invisible': ['|', ('is_locked', '=', False), ('user_has_write_access', '=', False)]}">
                                         <i class="fa fa-fw fa-lock" title="This article is locked"/>
                                     </div>
+                                    <div class="text-mutted text-nowrap o_knowledge_saving d-none">
+                                        <i class="fa fa-circle-o-notch fa-spin" /> Saving
+                                    </div>
+                                    <div class="text-success text-nowrap o_knowledge_saved d-none">
+                                        <i class="fa fa-fw fa-check-circle" /> Saved
+                                    </div>
+                                    <div class="text-danger text-nowrap o_knowledge_save_failed d-none">
+                                        <i class="fa fa-w fa-times" /> Save failed
+                                    </div>
                                 </div>
                                 <!-- Buttons -->
                                 <div class="d-flex flex-shrink-0 align-items-center pr-2">

@@ -129,6 +129,7 @@ var DebouncedField = AbstractField.extend({
      */
     commitChanges: function () {
         if (this._isDirty && this.mode === 'edit') {
+            console.log('commit changes: do action');
             return this._doAction();
         }
     },
@@ -145,6 +146,7 @@ var DebouncedField = AbstractField.extend({
      * @private
      */
     _doAction: function () {
+        console.log('calling _doAction');
         // as _doAction may be debounced, it may happen that it is called after
         // the widget has been destroyed, and in this case, we don't want it to
         // do anything (commitChanges ensures that if it has local changes, they

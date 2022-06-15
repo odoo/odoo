@@ -536,12 +536,12 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             this._lastSetValue = value;
             try {
                 value = this._parseValue(value);
-                this._isValid = true;
             } catch (_e) {
                 this._isValid = false;
-                this.trigger('set-dirty', {dataPointID: this.dataPointId});
                 return Promise.reject({message: "Value set is not valid"});
             }
+            this._isValid = true;
+            console.log('this._isSameValue(value)', this._isSameValue(value));
             if (!(options && options.forceChange) && this._isSameValue(value)) {
                 return Promise.resolve();
             }

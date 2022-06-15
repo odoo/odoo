@@ -100,8 +100,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         var _super = this._super.bind(this);
         await this.wysiwyg.cleanForSave();
-        this._setValue(this._getValue());
+        await this._setValue(this._getValue());
         return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
+            console.log('is wysiwyg isDirty', this.wysiwyg.isDirty());
             this._isDirty = this.wysiwyg.isDirty();
             _super();
         });
@@ -470,6 +471,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onChange: function (ev) {
+        console.log('_onChange');
         this._doDebouncedAction.apply(this, arguments);
     },
     /**

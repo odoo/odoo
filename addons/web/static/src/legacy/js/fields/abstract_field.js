@@ -560,26 +560,29 @@ var AbstractField = Widget.extend({
      * @returns {Promise}
      */
     _setValue: function (value, options) {
+        console.log('calling _setValue');
         // we try to avoid doing useless work, if the value given has not changed.
         if (this._isLastSetValue(value)) {
+            console.log('_isLastSetValue is true');
             return Promise.resolve();
         }
         this.lastSetValue = value;
         try {
             value = this._parseValue(value);
-            this._isValid = true;
         } catch (_e) {
             this._isValid = false;
-            this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
             return Promise.reject({message: "Value set is not valid"});
         }
+        this._isValid = true;
         if (!(options && options.forceChange) && this._isSameValue(value)) {
+            console.log('_setValue: same value');
             return Promise.resolve();
         }
         var self = this;
         return new Promise(function (resolve, reject) {
             var changes = {};
             changes[self.name] = value;
+            console.log('trigger_up field_changed');
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
                 changes: changes,

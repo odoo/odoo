@@ -738,6 +738,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 this.model.notifyChanges(dataPointID, changes, options);
                 this._confirmChange(dataPointID, Object.keys(changes), event);
             }
+            console.log('_urgentSave is Dirty', this.isDirty());
             if (this.isDirty()) {
                 this._saveRecord(recordID, { reload: false, stayInEdit: true });
             }
@@ -790,12 +791,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      * @param {OdooEvent} ev
+     * @returns {Promise}
      */
     _onFieldChanged: function (ev) {
         if (this.mode === 'readonly' && !('force_save' in ev.data)) {
             ev.data.force_save = true;
         }
-        FieldManagerMixin._onFieldChanged.apply(this, arguments);
+        return FieldManagerMixin._onFieldChanged.apply(this, arguments);
     },
     /**
      * @private

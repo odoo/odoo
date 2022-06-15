@@ -96,26 +96,33 @@ const KnowledgeArticleFormController = FormController.extend({
     canBeRemoved: function () {
         const { data } = this.model.get(this.handle);
         if (!data.is_locked && (data.user_has_write_access || data.user_is_admin)) {
-            /**
-             * When the user is about to leave the view by executing a new act_window
-             * action, we will commit all changes before saving them. This will
-             * ensure that the debounced fields will mark their associated values
-             * as 'dirty' and that the changes will be properly saved in db.
-             */
-            return this.renderer.commitChanges(this.handle).then(() => {
-                return this.saveChanges(this.handle);
-            });
+            return this.commitAndSaveRecord();
         }
         return Promise.resolve(true);
     },
+
     /**
      * @override
      */
-    _urgentSave: function () {
-        const { data } = this.model.get(this.handle);
-        if (!data.is_locked && (data.user_has_write_access || data.user_is_admin)) {
-            return this._super.apply(this, arguments);
+    _urgentSave: function () {},
+
+    commitAndSaveRecord: async function () {
+        console.log('canBeRemoved (before): this.isDirty', this.isDirty(this.handle));
+        await this.renderer.commitChanges(this.handle);
+        console.log('canBeRemoved (after): this.isDirty', this.isDirty(this.handle));
+        if (!this.isDirty()) {
+            return Promise.resolve();
         }
+        const unlockedMutex = this.mutex.getUnlockedDef().then(() => {
+            return this.mutex.exec(this._saveRecord.bind(this, this.handle, {
+                stayInEdit: true,
+                reload: false,
+            }));
+        });
+        this.savingDef = new Promise((resolve, reject) => {
+            unlockedMutex.then(resolve).guardedCatch(resolve);
+        });
+        return unlockedMutex;
     },
 
     // Listeners:
@@ -207,14 +214,32 @@ const KnowledgeArticleFormController = FormController.extend({
      * @param {Event} event
      */
     _onFieldChanged: async function (event) {
-        this._super(...arguments);
+        console.log('_onFieldChanged (before) this.isDirty', this.isDirty());
+        await this._super.apply(this, arguments);
+        console.log('_onFieldChanged (after) this.isDirty', this.isDirty());
+        console.log('this.canBeSaved', this.canBeSaved());
         const { changes } = event.data;
+        console.log('changes', changes);
         for (const field of this._getFieldsToForceSave()) {
             if (changes.hasOwnProperty(field)) {
-                await this.saveRecord(this.handle, {
-                    reload: false,
-                    stayInEdit: true
-                });
+                this.renderer._onSaving();
+                let savedFields;
+                try {
+                    savedFields = await this.model.save(this.handle, {
+                        reload: false
+                    });
+                } catch (error) {
+                    this.renderer._onSaveFailed();
+                    return;
+                }
+                this.renderer._onSaved();
+                for (const field of savedFields) {
+                    if (this.onFieldSavedListeners.has(field)) {
+                        this.onFieldSavedListeners.get(field).forEach(listener => {
+                            listener.call(this, changes[field]);
+                        });
+                    }
+                }
                 return;
             }
         }
@@ -411,8 +436,8 @@ const KnowledgeArticleFormController = FormController.extend({
     /**
      * @returns {Array[String]}
      */
-    _getFieldsToForceSave: function () {
-        return ['full_width', 'icon', 'cover'];
+     _getFieldsToForceSave: function () {
+        return ['full_width', 'icon', 'cover', 'body'];
     },
     /**
      * @returns {integer}

@@ -1118,6 +1118,7 @@ var BasicModel = AbstractModel.extend({
      *   Resolved with the list of field names (whose value has been modified)
      */
     save: function (recordID, options) {
+        console.log('saving the record');
         var self = this;
         function _save() {
             options = options || {};
@@ -1169,6 +1170,7 @@ var BasicModel = AbstractModel.extend({
                 // in the case of a write, only perform the RPC if there are changes to save
                 if (method === 'create' || changedFields.length) {
                     var args = method === 'write' ? [[record.data.id], changes] : [changes];
+                    console.log('new rpc call to save the record')
                     self._rpc({
                             model: record.model,
                             method: method,
@@ -1561,6 +1563,7 @@ var BasicModel = AbstractModel.extend({
         options = options || {};
         record._changes = record._changes || {};
         if (!options.doNotSetDirty) {
+            console.log('_applyChange set record as dirty')
             record._isDirty = true;
         }
         var initialData = {};

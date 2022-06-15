@@ -44,6 +44,7 @@ var FieldManagerMixin = {
      *   updated
      */
     _applyChanges: function (dataPointID, changes, event) {
+        console.log('_applyChanges in mixin');
         var self = this;
         var options = _.pick(event.data, 'context', 'doNotSetDirty', 'notifyChange', 'viewType', 'allowWarning');
         return this.model.notifyChanges(dataPointID, changes, options)
@@ -109,6 +110,7 @@ var FieldManagerMixin = {
      * just occurred, then confirm the change.
      *
      * @param {OdooEvent} event
+     * @returns {Promise}
      */
     _onFieldChanged: function (event) {
         // in case of field changed in relational record (e.g. in the form view
