@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import http
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 from odoo.tests import tagged, users
@@ -19,6 +21,48 @@ class TestPortal(HttpCase, TestMailFullCommon, TestMailFullRecipients):
         })
 
         self.record_portal._portal_ensure_token()
+
+    def test_portal_message_fetch(self):
+        """Test retrieving chatter messages through the portal controller"""
+        self.authenticate(None, None)
+        message_fetch_url = '/mail/chatter_fetch'
+        payload = json.dumps({
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'id': 0,
+            'params': {
+                'res_model': 'mail.test.portal',
+                'res_id': self.record_portal.id,
+                'token': self.record_portal.access_token,
+            },
+        })
+
+        def get_chatter_message_count():
+            res = self.url_open(
+                url=message_fetch_url,
+                data=payload,
+                headers={'Content-Type': 'application/json'}
+            )
+            return res.json().get('result', {}).get('message_count', 0)
+
+        self.assertEqual(get_chatter_message_count(), 0)
+
+        for _ in range(8):
+            self.record_portal.message_post(
+                body='Test',
+                author_id=self.partner_1.id,
+                message_type='comment',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+
+        self.assertEqual(get_chatter_message_count(), 8)
+
+        # Empty the body of a few messages
+        for i in (2, 5, 6):
+            self.record_portal.message_ids[i].body = ""
+
+        # Empty messages should be ignored
+        self.assertEqual(get_chatter_message_count(), 5)
 
     @users('employee')
     def test_portal_mixin(self):
