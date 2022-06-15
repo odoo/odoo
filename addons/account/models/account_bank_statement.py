@@ -973,7 +973,7 @@ class AccountBankStatementLine(models.Model):
         return [
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('company_id', '=', self.company_id.id),
             # Reconciliation domain.
             ('reconciled', '=', False),
