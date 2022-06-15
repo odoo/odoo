@@ -288,6 +288,53 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(result, [[null, ""]]);
     });
 
+    QUnit.test("performRPC: search_count", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "partner",
+            method: "search_count",
+            args: [[]],
+            kwargs: {},
+        });
+        assert.deepEqual(result, 1);
+    });
+
+    QUnit.test("performRPC: search_count with domain", async function (assert) {
+        data.models.partner.records.push({ id: 4, name: "José" })
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "partner",
+            method: "search_count",
+            args: [[["name", "=", "José"]]],
+            kwargs: {},
+        });
+        assert.deepEqual(result, 1);
+    });
+
+    QUnit.test("performRPC: search_count with domain matching no record", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "partner",
+            method: "search_count",
+            args: [[[0, "=", 1]]],
+            kwargs: {},
+        });
+        assert.deepEqual(result, 0);
+    });
+
+    QUnit.test("performRPC: search_count with archived records", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "partner",
+            method: "search_count",
+            args: [[]],
+            kwargs: {
+                context: { active_test: false },
+            },
+        });
+        assert.deepEqual(result, 2);
+    });
+
     QUnit.test("performRPC: read_group, group by char", async function (assert) {
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {

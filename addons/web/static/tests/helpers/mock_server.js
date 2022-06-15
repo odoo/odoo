@@ -111,7 +111,7 @@ export class MockServer {
         //   );
         //   return Promise.reject({ message: errorString, event });
         // }
-        const resultString = JSON.stringify(result || false);
+        const resultString = JSON.stringify(result !== undefined ? result : false);
         if (this.debug) {
             console.log(
                 "%c[rpc] response" + route,
@@ -1618,10 +1618,12 @@ export class MockServer {
      * @private
      * @param {string} model
      * @param {Array} args
-     * @returns {integer}
+     * @param {object} kwargs
+     * @param {object} [kwargs.context]
+     * @returns {number}
      */
-    mockSearchCount(model, args) {
-        return this.getRecords(model, args[0]).length;
+    mockSearchCount(model, args, kwargs = {}) {
+        return this.getRecords(model, args[0], kwargs.context).length;
     }
 
     mockSearchRead(modelName, args, kwargs) {
