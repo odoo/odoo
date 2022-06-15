@@ -251,6 +251,9 @@ import  { Line10, Notification }  from 'test.Dialog2';
 import * as Line11 from "test.Dialog";
 import Default1, { Named1 } from "legacy.module";
 import Default1, { Named1 } from "@new_module/file";
+import Default1, {
+    Named1,
+} from "@new_module/file";
 import Default2, * as Star1 from "test.Dialog";
 import "test.Dialog";
 
@@ -286,7 +289,10 @@ const { Line10, Notification } = require('test.Dialog2');
 const Line11 = require("test.Dialog");
 const Default1 = require("legacy.module");
 const { Named1 } = Default1;
-const { Named1 , [Symbol.for("default")]: Default1 } = require("@new_module/file");
+const { [Symbol.for("default")]: Default1, Named1 } = require("@new_module/file");
+const { [Symbol.for("default")]: Default1,
+    Named1,
+} = require("@new_module/file");
 const Star1 = require("test.Dialog");
 const Default2 = Star1[Symbol.for("default")];
 require("test.Dialog");
