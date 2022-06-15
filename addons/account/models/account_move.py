@@ -4256,7 +4256,7 @@ class AccountMoveLine(models.Model):
             line.reconciled = (
                 comp_curr.is_zero(line.amount_residual)
                 and foreign_curr.is_zero(line.amount_residual_currency)
-                and line.move_id.state not in ('draft', 'cancel')
+                and (line.matched_debit_ids or line.matched_credit_ids)
             )
 
     @api.depends('tax_repartition_line_id.invoice_tax_id', 'tax_repartition_line_id.refund_tax_id')
@@ -4782,8 +4782,9 @@ class AccountMoveLine(models.Model):
             else:
                 return abs(line.amount_currency) / abs(line.balance)
 
-        debit_lines = iter(self.filtered(lambda line: line.balance > 0.0 or line.amount_currency > 0.0))
-        credit_lines = iter(self.filtered(lambda line: line.balance < 0.0 or line.amount_currency < 0.0))
+        debit_lines = iter(self.filtered(lambda line: line.balance > 0.0 or line.amount_currency > 0.0 and not line.reconciled))
+        credit_lines = iter(self.filtered(lambda line: line.balance < 0.0 or line.amount_currency < 0.0 and not line.reconciled))
+        void_lines = iter(self.filtered(lambda line: not line.balance and not line.amount_currency and not line.reconciled))
         debit_line = None
         credit_line = None
 
@@ -4804,7 +4805,7 @@ class AccountMoveLine(models.Model):
 
             # Move to the next available debit line.
             if not debit_line:
-                debit_line = next(debit_lines, None)
+                debit_line = next(debit_lines, None) or next(void_lines, None)
                 if not debit_line:
                     break
                 remaining_debit_amount_curr = debit_line.amount_residual_currency
@@ -4812,7 +4813,7 @@ class AccountMoveLine(models.Model):
 
             # Move to the next available credit line.
             if not credit_line:
-                credit_line = next(credit_lines, None)
+                credit_line = next(void_lines, None) or next(credit_lines, None)
                 if not credit_line:
                     break
                 remaining_credit_amount_curr = credit_line.amount_residual_currency
@@ -4887,17 +4888,6 @@ class AccountMoveLine(models.Model):
                 credit_rate = get_accounting_rate(credit_line)
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
-
-            # Check if there is something left to reconcile. Move to the next loop iteration if not.
-            skip_reconciliation = False
-            if recon_currency.is_zero(recon_debit_amount):
-                debit_line = None
-                skip_reconciliation = True
-            if recon_currency.is_zero(recon_credit_amount):
-                credit_line = None
-                skip_reconciliation = True
-            if skip_reconciliation:
-                continue
 
             # ==== Match both lines together and compute amounts to reconcile ====
 
@@ -5027,9 +5017,9 @@ class AccountMoveLine(models.Model):
                 'credit_move_id': credit_line.id,
             })
 
-            if debit_fully_matched:
+            if recon_currency.is_zero(recon_debit_amount) or debit_fully_matched:
                 debit_line = None
-            if credit_fully_matched:
+            if recon_currency.is_zero(recon_credit_amount) or credit_fully_matched:
                 credit_line = None
         return partials_vals_list, exchange_data
 
