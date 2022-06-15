@@ -1,7 +1,6 @@
 odoo.define('barcodes.FormView', function (require) {
 "use strict";
 
-var BarcodeEvents = require('barcodes.BarcodeEvents'); // handle to trigger barcode on bus
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -9,6 +8,8 @@ var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 
 var _t = core._t;
+
+const reservedBarcodePrefixes = ['O-CMD', 'O-BTN'];
 
 
 FormController.include({
@@ -308,7 +309,7 @@ FormController.include({
     _barcodeScanned: function (barcode, target) {
         var self = this;
         return this.barcodeMutex.exec(function () {
-            var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
+            var prefixed = _.any(reservedBarcodePrefixes,
                     function (reserved) {return barcode.indexOf(reserved) === 0;});
             var hasCommand = false;
             var defs = [];
@@ -490,7 +491,5 @@ FormRenderer.include({
         return $button;
     }
 });
-
-BarcodeEvents.ReservedBarcodePrefixes.push('O-BTN');
 
 });
