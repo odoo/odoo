@@ -69,8 +69,9 @@ const LivechatButton = Widget.extend({
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
             const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
-                this._autoPopupTimeout =
-                    setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000);
+                this.messaging.livechatButtonView.update({
+                    autoOpenChatTimeout: setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000),
+                });
             }
         }
         this.call('bus_service', 'onNotification', this, this._onNotification);
@@ -227,7 +228,7 @@ const LivechatButton = Widget.extend({
         const cookie = utils.get_cookie('im_livechat_session');
         let def;
         this._openingChat = true;
-        clearTimeout(this._autoPopupTimeout);
+        clearTimeout(this.messaging.livechatButtonView.autoOpenChatTimeout);
         if (cookie) {
             def = Promise.resolve(JSON.parse(cookie));
         } else {
