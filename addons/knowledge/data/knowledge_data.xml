@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <data noupdate="1">
-        <record id="knowledge_article_hr_faq" model="knowledge.article">
+        <record id="knowledge_article_hr_faq" model="knowledge.article" forcecreate="False">
             <field name="name">HR FAQ</field>
             <field name="icon">❓</field>
             <field name="body" type="html">
@@ -10,42 +10,7 @@
                     <br />
                 </h1>
                 <hr />
-                <br />
-                <h2>
-                    <font style="font-weight: bolder; text-decoration: underline;" class="text-o-color-1">Car Policy</font>
-                </h2>
-                <blockquote data-o-mail-quote="1">
-                    <span style="font-size: 18px;">How do I know which model I can order or not?</span>
-                    <br />
-                </blockquote>
-                <p>
-                    <span style="font-size: 14px;">Our catalog can be found here and is updated every 2 years. If you do not manage to find the specific model you are looking for, </span>
-                    <span style="font-weight: bolder; text-decoration: underline; font-size: 14px;"><a href="mailto:fleet@company.com">contact our Fleet Officer</a></span><span style="font-size: 14px;">.</span>
-                </p>
-                <div class="o_knowledge_file o_knowledge_toolbars_container o_knowledge_behavior_anchor o_knowledge_behavior_type_contents_container" contenteditable="false">
-                    <div class="o_knowledge_file_image">
-                        <a href="https://www.odoo.com/web/content/28674965?download=true" class="o_image" title="Car_Catalog.pdf" alt="Car_Catalog.pdf" data-mimetype="application/pdf" contenteditable="false"></a>
-                    </div>
-                    <div class="o_knowledge_file_description">
-                        <div class="o_knowledge_file_name">Car_Catalog.pdf</div>
-                        <div class="o_knowledge_file_extension">pdf</div>
-                    </div>
-                    <div class="o_knowledge_toolbar_anchor o_knowledge_toolbar_type_file mt-auto ml-auto" contenteditable="false"><div class="o_knowledge_toolbar" contenteditable="false">
-                </div></div>
-                </div>
-                <br />
-                <blockquote data-o-mail-quote="1">
-                    <span style="font-size: 18px;">Who can drive my car?</span>
-                </blockquote>
-                <p>
-                    <b style="font-size: 14px; font-weight: 400;">
-                        Your car can be driven by
-                        <span style="font-weight: bolder;">you, your spouse and by any person living under the same roof</span>
-                        as long as they have a valid permit.
-                    </b>
-                    <br />
-                </p>
-                <br />
+                <br />           
                 <h5>
                     <font class="text-o-color-1" style="font-weight: bolder; font-size: 24px;">
                         <u>Expense Policy</u>
@@ -72,6 +37,41 @@
                         <br />
                         If 2 weeks have passed and you are still waiting to be paid, get in touch with them.
                     </span>
+                </p>
+                <br />
+                <h2>
+                    <font style="font-weight: bolder; text-decoration: underline;" class="text-o-color-1">Car Policy</font>
+                </h2>
+                <blockquote data-o-mail-quote="1">
+                    <span style="font-size: 18px;">How do I know which model I can order or not?</span>
+                    <br />
+                </blockquote>
+                <p>
+                    <span style="font-size: 14px;">Our catalog can be found here and is updated every 2 years. If you do not manage to find the specific model you are looking for, </span>
+                    <span style="font-weight: bolder; text-decoration: underline; font-size: 14px;"><a href="mailto:fleet@company.com">contact our Fleet Officer</a></span><span style="font-size: 14px;">.</span>
+                </p>
+                <div class="o_knowledge_file o_knowledge_toolbars_container o_knowledge_behavior_anchor o_knowledge_behavior_type_contents_container" contenteditable="false">
+                    <div class="o_knowledge_file_image">
+                        <a href="/knowledge/static/src/img/fleet_icon.png" class="o_image" title="Car_Catalog.png" alt="Car_Catalog.png" data-mimetype="image/png" contenteditable="false"></a>
+                    </div>
+                    <div class="o_knowledge_file_description">
+                        <div class="o_knowledge_file_name">Car_Catalog.png</div>
+                        <div class="o_knowledge_file_extension">png</div>
+                    </div>
+                    <div class="o_knowledge_toolbar_anchor o_knowledge_toolbar_type_file mt-auto ml-auto" contenteditable="false"><div class="o_knowledge_toolbar" contenteditable="false">
+                </div></div>
+                </div>
+                <br />
+                <blockquote data-o-mail-quote="1">
+                    <span style="font-size: 18px;">Who can drive my car?</span>
+                </blockquote>
+                <p>
+                    <b style="font-size: 14px; font-weight: 400;">
+                        Your car can be driven by
+                        <span style="font-weight: bolder;">you, your spouse and by any person living under the same roof</span>
+                        as long as they have a valid permit.
+                    </b>
+                    <br />
                 </p>
                 <br />
                 <h5>
@@ -146,7 +146,7 @@
             <field name="parent_id" eval="False" />
             <field name="internal_permission">write</field>
         </record>
-        <record id="knowledge_article_sales_and_marketing" model="knowledge.article">
+        <record id="knowledge_article_sales_and_marketing" model="knowledge.article" forcecreate="False">
             <field name="name">Sales &amp; Marketing</field>
             <field name="icon">🤩</field>
             <field name="body" type="html">
@@ -186,19 +186,27 @@
             <field name="parent_id" eval="False" />
             <field name="internal_permission">write</field>
         </record>
-        <record id="knowledge_article_sales_playbook" model="knowledge.article">
+        <record id="knowledge_article_sales_playbook" model="knowledge.article" forcecreate="False">
             <field name="name">Sales Playbook</field>
             <field name="icon">📘</field>
             <field name="body" type="html">
                 <h1>Sales Playbook</h1>
                 <hr />
                 <p>
-                    <span style="font-size: 14px;">Compiled below are tips &amp; tricks collected among our veteran sales representatives to help newcomers get started. We hope it will help you sign contracts quickly. 🔔</span>
+                    <span style="font-size: 14px;">Compiled below are tips &amp; tricks collected among our veterans to help newcomers get started. We hope it will help you sign deals. 🔔</span>
                 </p>
                 <br />
                 <h3>Prospection Templates 👌</h3>
                 <hr />
                 <br />
+                <p>
+                    <span style="font-size: 14px;">
+                        <span style="font-weight: bolder;">
+                            <font class="text-o-color-1">PRO TIP:</font>
+                        </span>
+                        From a lead, use the 📗 button in the chatter to find this article and autocomplete your email with this template.
+                    </span>
+                </p>
                 <div class="o_knowledge_template o_knowledge_toolbars_owner"></div>
                 <div class="o_knowledge_template o_knowledge_toolbars_container o_knowledge_behavior_anchor o_knowledge_behavior_type_contents_container">
                     <div class="o_knowledge_toolbar_anchor o_knowledge_toolbar_type_template"></div>
@@ -222,13 +230,16 @@
                         <br />
                     </div>
                 </div>
-                <p>
-                    <span style="font-weight: bolder;">
-                        <font class="text-o-color-1">PRO TIP:</font>
-                    </span>
-                    Open this article from a lead to send this by email without needing to copy/paste. 
-                </p>
                 <br />
+                <p>
+                    <span style="font-size: 14px;">
+                        <span style="font-weight: bolder;">
+                            <font class="text-o-color-1">PRO TIP:</font>
+                        </span>
+                        From a lead, use the 📗 button in the chatter to find this article and autocomplete your description with this qualification template.
+                    </span>
+                    <br />
+                </p>
                 <div class="o_knowledge_template o_knowledge_toolbars_container o_knowledge_behavior_anchor o_knowledge_behavior_type_contents_container">
                     <div class="o_knowledge_toolbar_anchor o_knowledge_toolbar_type_template"></div>
                     <div class="o_knowledge_content">
@@ -255,13 +266,6 @@
                         <br />
                     </div>
                 </div>
-                <p>
-                    <span style="font-weight: bolder;">
-                        <font class="text-o-color-1">PRO TIP:</font>
-                    </span>
-                     Open this article from a lead to use this template without needing to copy/paste. 
-                    <br />
-                </p>
                 <br />
                 <h3>The 5 Commandments 🙏</h3>
                 <hr />
@@ -304,7 +308,7 @@
                 <hr />
                 <span style="font-size: 14px;">You may have heard those a million times and yet you are not entirely sure of what it means.</span>
                 <br />
-                <span style="font-size: 14px;">Here is quick recap for you to shine during the next meeting.</span>
+                <span style="font-size: 14px;">Here is a quick recap for you to shine during the next meeting.</span>
                 <br />
                 <br />
                 <table class="table table-bordered">
@@ -346,7 +350,7 @@
                                 <span style="font-size: 14px;">Nth </span>
                                 <span style="font-weight: bolder; font-size: 14px;">Q</span><span style="font-size: 14px;">uarter of the fiscal year.</span>
                                 <br />
-                                <span style="font-style: italic; font-size: 14px;">E.g. Q4 stars on Oct. 1 and ends on Dec. 31.</span>
+                                <span style="font-style: italic; font-size: 14px;">E.g. Q4 starts on Oct. 1 and ends on Dec. 31.</span>
                             </td>
                         </tr>
                     </tbody>
@@ -356,7 +360,7 @@
             <field name="parent_id" eval="ref('knowledge_article_sales_and_marketing')" />
             <field name="internal_permission">write</field>
         </record>
-        <record id="knowledge_article_brand_assets" model="knowledge.article">
+        <record id="knowledge_article_brand_assets" model="knowledge.article" forcecreate="False">
             <field name="name">Brand Assets</field>
             <field name="icon">🎨</field>
             <field name="body" type="html">
@@ -380,7 +384,7 @@
                     </li>
                 </ul>
                 <p>
-                    <span style="font-size: 14px;">For all other categories, we simply require you following the rules listed below.</span>
+                    <span style="font-size: 14px;">For all other categories, we simply require you to follow the rules listed below.</span>
                 </p>
                 <table class="table table-bordered">
                     <tbody>
@@ -413,7 +417,7 @@
                         <a href="https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png?download=true" class="o_image" title="logo.jpg" alt="logo.jpg" data-mimetype="image/jpeg" contenteditable="false"></a>
                     </div>
                     <div class="o_knowledge_file_description">
-                        <div class="o_knowledge_file_name">logo.jpg</div>
+                        <div class="o_knowledge_file_name">Odoo Logo</div>
                         <div class="o_knowledge_file_extension">jpg</div>
                     </div>
                     <div class="o_knowledge_toolbar_anchor o_knowledge_toolbar_type_file mt-auto ml-auto" contenteditable="false"><div class="o_knowledge_toolbar" contenteditable="false">
@@ -452,7 +456,7 @@
                                 <ul>
                                     <li>
                                         <span style="font-size: 14px;">Capitalize the word </span>
-                                        <b style="font-size: 14px;">YourCompany</b><span style="font-size: 14px;">, except if it's part of an url</span>
+                                        <b style="font-size: 14px;">YourCompany</b><span style="font-size: 14px;">, except if it's part of an URL</span>
                                         <br />
                                         <span style="font-size: 14px;">e.g.: website/company </span>
                                     </li>
@@ -466,7 +470,7 @@
                                     <li>
                                         <span style="font-size: 14px;">Write it without any article (</span><span style="text-decoration-line: line-through;font-style: italic; font-size: 14px;">the</span>
                                         <span style="font-style: italic; font-size: 14px;"> YourCompany, </span>
-                                        <span style="text-decoration-line: line-through;font-style: italic; font-size: 14px;">an</span>
+                                        <span style="text-decoration-line: line-through;font-style: italic; font-size: 14px;">a</span>
                                         <span style="font-style: italic; font-size: 14px;">  YourCompany
                     , ...</span><span style="font-size: 14px;">)</span>
                                     </li>
