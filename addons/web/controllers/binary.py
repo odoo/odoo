@@ -234,7 +234,7 @@ class Binary(http.Controller):
                         imgext = '.' + mimetype.split('/')[1]
                         if imgext == '.svg+xml':
                             imgext = '.svg'
-                        response = send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
+                        response = http.send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
                     else:
                         response = http.Stream.from_path(placeholder('nologo.png')).get_response()
             except Exception:
