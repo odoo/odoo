@@ -60,7 +60,7 @@
         </ul>
     </li>
     <li t-else="" t-on-click="() => this._onMenuClicked(section)"  t-att-data-menu-xmlid="section.xmlid"
-        class="d-block py-3" t-att-class="{ 'fs-4': !isNested }">
+        class="py-3" t-att-class="{ 'fs-4': !isNested }">
         <t t-esc="section.name"/>
     </li>
 </t>
