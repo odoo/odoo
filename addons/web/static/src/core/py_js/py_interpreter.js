@@ -9,7 +9,8 @@ import {
     PyTime,
     PyTimeDelta,
 } from "./py_date";
-import { parseArgs, PY_DICT, toPyDict } from "./py_utils";
+import { PY_DICT, toPyDict } from "./py_utils";
+import { parseArgs } from './py_parser';
 
 // -----------------------------------------------------------------------------
 // Types
