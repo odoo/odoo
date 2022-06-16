@@ -55,3 +55,4 @@ Fernanda Hernández fernanda@vauxoo.com https://github.com/fernandahf
 Luigys Toro luigys@vauxoo.com https://github.com/desdelinux
 Francisco J. Luna fluna@vauxoo.com https://github.com/frahikLV
 Andrea Arce andrea@vauxoo.com https://github.com/andreaarce
+Francisco Alejandro González Luna aluna@vauxoo.com https://github.com/TheAlekLuna
