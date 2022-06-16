@@ -262,6 +262,18 @@
 			childLevels = this._getChildLevels(this.helper);
 			newList = document.createElement(o.listType);
 
+			// Odoo begin patch
+			// At this stage, the registered positions of the following tree
+			// elements are not up to date with the fact that the placeholder
+			// has replaced the element that is being dragged, and may have
+			// different dimensions, which means that one would have to drag
+			// an item further than what seems to be required visually to
+			// effectively trigger an intersection if the placeholder is smaller
+			// than the dragged item. By refreshing the positions here, that
+			// problem is avoided.
+			self.refreshPositions();
+			// Odoo end patch
+
 			//Rearrange
 			for (i = this.items.length - 1; i >= 0; i--) {
 
