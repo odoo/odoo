@@ -260,9 +260,16 @@ QUnit.module("domain", {}, () => {
                 return new PyDate(2013, 4, 24);
             },
         });
-        const domainStr =
+        let domainStr =
             "[('date','>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]";
         assert.deepEqual(new Domain(domainStr).toList(), [["date", ">=", "2013-03-25"]]);
+        domainStr = "[('date', '>=', context_today() - relativedelta(days=30))]";
+        const domainList = new Domain(domainStr).toList(); // domain creation using `parseExpr` function since the parameter is a string.
+        assert.deepEqual(domainList[0][2], PyDate.create({ day: 25, month: 3, year: 2013 }), 'The right item in the rule in the domain should be a PyDate object');
+        assert.deepEqual(JSON.stringify(domainList), '[["date",">=","2013-03-25"]]');
+        const domainList2 = new Domain(domainList).toList(); // domain creation using `toAST` function since the parameter is a list.
+        assert.deepEqual(domainList2[0][2], PyDate.create({ day: 25, month: 3, year: 2013 }), 'The right item in the rule in the domain should be a PyDate object');
+        assert.deepEqual(JSON.stringify(domainList2), '[["date",">=","2013-03-25"]]');
     });
 
     QUnit.test("Check that there is no dependency between two domains", function (assert) {
