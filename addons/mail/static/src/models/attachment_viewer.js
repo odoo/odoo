@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentViewer',
@@ -59,7 +60,7 @@ registerModel({
          */
         onClickDownload(ev) {
             ev.stopPropagation();
-            this.attachment.download();
+            this.attachmentViewerViewable.download();
         },
         /**
          * Called when clicking on the header. Stop propagation of event to prevent
@@ -181,17 +182,27 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
          */
-        _computeImageUrl() {
-            if (!this.attachment) {
-                return;
+        _computeAttachmentViewerViewable() {
+            if (this.attachmentList) {
+                return insertAndReplace({
+                    attachmentOwner: replace(this.attachmentList.selectedAttachment),
+                });
             }
-            if (!this.attachment.accessToken && this.attachment.originThread && this.attachment.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.attachment.originThread.id}/image/${this.attachment.id}`;
+            return clear();
+        },
+        /**
+         * @private
+         */
+        _computeAttachmentViewerViewables() {
+            if (this.attachmentList) {
+                return insertAndReplace(
+                    this.attachmentList.viewableAttachments.map((attachment) => {
+                        return { attachmentOwner: replace(attachment) };
+                    })
+                );
             }
-            const accessToken = this.attachment.accessToken ? `?access_token=${this.attachment.accessToken}` : '';
-            return `/web/image/${this.attachment.id}${accessToken}`;
+            return clear();
         },
         /**
          * @private
@@ -221,15 +232,14 @@ registerModel({
         angle: attr({
             default: 0,
         }),
-        attachment: one('Attachment', {
-            related: 'attachmentList.selectedAttachment',
-        }),
         attachmentList: one('AttachmentList', {
             related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
-            required: true,
         }),
-        attachments: many('Attachment', {
-            related: 'attachmentList.viewableAttachments',
+        attachmentViewerViewable: one("AttachmentViewerViewable", {
+            compute: "_computeAttachmentViewerViewable",
+        }),
+        attachmentViewerViewables: many("AttachmentViewerViewable", {
+            compute: "_computeAttachmentViewerViewables",
         }),
         /**
          * States the OWL component of this attachment viewer.
@@ -248,13 +258,6 @@ registerModel({
          */
         imageStyle: attr({
             compute: '_computeImageStyle',
-        }),
-        /**
-         * Determines the source URL to use for the image.
-         */
-        imageUrl: attr({
-            compute: '_computeImageUrl',
-            readonly: true,
         }),
         /**
          * Determine whether the user is currently dragging the image.
