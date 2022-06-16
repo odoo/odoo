@@ -408,14 +408,12 @@
                     <filter string="Report Analytic Accounts" name="analytic_accounts" domain="[('analytic_account_id', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group expand="0" string="Group By">
                         <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_id'}"/>
-                        <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
-                        <filter string="Tax Tags" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                         <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
-                        <filter string="Tax Grid" name="group_by_tax_grid" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
+                        <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
                     </group>
                 </search>
