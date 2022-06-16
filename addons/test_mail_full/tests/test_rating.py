@@ -57,7 +57,7 @@ class TestRatingFlow(TestRatingCommon):
 
         # apply a rate as note (first click)
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            record_rating.rating_apply(5, token=access_token, feedback='Top Feedback', subtype_xmlid='mail.mt_note')
+            record_rating.rating_apply(5, token=access_token, feedback='Top Feedback')
         message = record_rating.message_ids[0]
         rating = record_rating.rating_ids
 
@@ -67,8 +67,7 @@ class TestRatingFlow(TestRatingCommon):
         self.assertIn('/rating/static/src/img/rating_5.png', message.body)
         self.assertEqual(message.author_id, self.partner_1)
         self.assertEqual(message.rating_ids, rating)
-        self.assertFalse(message.notified_partner_ids)
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(message.notified_partner_ids, self.partner_admin)
 
         # check rating update
         self.assertTrue(rating.consumed)
@@ -83,7 +82,7 @@ class TestRatingFlow(TestRatingCommon):
 
         # check posted message: a new message is posted with default subtype
         update_message = record_rating.message_ids[0]
-        self.assertNotEqual(update_message, message)
+        self.assertEqual(update_message, message, 'Should not create a new message')
         self.assertEqual(record_rating.message_ids, record_messages + message + update_message)
         self.assertIn('Bad Feedback', update_message.body)
         self.assertIn('/rating/static/src/img/rating_1.png', update_message.body)
@@ -129,7 +128,7 @@ class TestRatingFlow(TestRatingCommon):
             # 3713 requests if only test_mail_full is installed
             # 4511 runbot community
             # 4911 runbot enterprise
-            with self.assertQueryCount(__system__=4912):
+            with self.assertQueryCount(__system__=5012):
                 record_ratings = self.env['mail.test.rating'].create([{
                     'customer_id': partners[idx].id,
                     'name': 'Test Rating',
@@ -139,14 +138,10 @@ class TestRatingFlow(TestRatingCommon):
                     access_token = record._rating_get_access_token()
                     record.rating_apply(1, token=access_token)
 
-                record_ratings.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
                 for record in record_ratings:
                     access_token = record._rating_get_access_token()
                     record.rating_apply(5, token=access_token)
 
-            new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
-            new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
-            new_ratings.flush_model(['write_date'])
             with self.assertQueryCount(__system__=1):
                 record_ratings._compute_rating_last_value()
                 vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]

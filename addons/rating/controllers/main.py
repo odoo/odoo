@@ -24,15 +24,15 @@ class Rating(http.Controller):
         if rate not in (1, 3, 5):
             raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
 
-        rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
-        if not rating:
-            return werkzeug.exceptions.Forbidden()
+        rating, record_sudo = self._get_rating_and_record(token)
 
-        record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
-        if not record_sudo.exists():
-            return werkzeug.exceptions.Forbidden()
-
-        rating.write({'rating': rate, 'consumed': True})
+        record_sudo.rating_apply(
+            rate,
+            rating=rating,
+            feedback=_('Customer rated %r.', record_sudo.display_name),
+            subtype_xmlid=None,
+            notify_delay_send=True,
+        )
 
         lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_submit', {
@@ -52,22 +52,27 @@ class Rating(http.Controller):
         if rate not in (1, 3, 5):
             raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
 
-        rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
-        if not rating:
-            return werkzeug.exceptions.Forbidden()
+        rating, record_sudo = self._get_rating_and_record(token)
 
-        record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
-        if not record_sudo.exists():
-            return werkzeug.exceptions.Forbidden()
-
-        record_sudo.rating_apply(rate,
-                                 rating=rating,
-                                 feedback=kwargs.get('feedback'),
-                                 subtype_xmlid=None,  # force default subtype choice
-                                )
+        record_sudo.rating_apply(
+             rate,
+             rating=rating,
+             feedback=kwargs.get('feedback'),
+             subtype_xmlid=None,  # force default subtype choice
+        )
 
         lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_view', {
             'web_base_url': rating.get_base_url(),
             'rating': rating,
         })
+
+    def _get_rating_and_record(self, token):
+        rating_sudo = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
+        if not rating_sudo:
+            raise werkzeug.exceptions.NotFound()
+
+        record_sudo = request.env[rating_sudo.res_model].sudo().browse(rating_sudo.res_id)
+        if not record_sudo.exists():
+            raise werkzeug.exceptions.NotFound()
+        return rating_sudo, record_sudo

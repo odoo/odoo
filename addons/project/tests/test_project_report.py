@@ -14,9 +14,9 @@ class TestProjectReport(TestProjectCommon):
             'consumed': True,
         }
         self.env['rating.rating'].create([
-            {**rating_vals, 'rating': 5, 'res_id': self.task_1.id},
-            {**rating_vals, 'rating': 4, 'res_id': self.task_1.id},
             {**rating_vals, 'rating': 4.25, 'res_id': self.task_2.id},
+            {**rating_vals, 'rating': 4, 'res_id': self.task_1.id},
+            {**rating_vals, 'rating': 5, 'res_id': self.task_1.id},
         ])
         self.assertEqual(self.task_1.rating_avg, 4.5)
         self.assertEqual(self.task_1.rating_last_value, 5.0)

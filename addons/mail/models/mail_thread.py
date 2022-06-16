@@ -2371,7 +2371,7 @@ class MailThread(models.AbstractModel):
                                 mail_auto_delete=True, # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 check_existing=False, force_send=True, send_after_commit=True,  # email send
-                                **kwargs):
+                                scheduled_datetime=None, **kwargs):
         """ Method to send email linked to notified messages.
 
         :param message: ``mail.message`` record to notify;
@@ -2402,6 +2402,7 @@ class MailThread(models.AbstractModel):
         :param force_send: send emails directly instead of using queue;
         :param send_after_commit: if force_send, tells whether to send emails after
           the transaction has been committed using a post-commit hook;
+        :param scheduled_datetime: schedule date for the <mail.mail>
         """
         partners_data = [r for r in recipients_data if r['notif'] == 'email']
         if not partners_data:
@@ -2415,6 +2416,10 @@ class MailThread(models.AbstractModel):
             return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
 
+        if scheduled_datetime:
+            force_send = False
+            send_after_commit = False
+
         template_values = self._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company,
@@ -2423,7 +2428,10 @@ class MailThread(models.AbstractModel):
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
-        base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
+        base_mail_values = self._notify_by_email_get_base_mail_values(
+            message,
+            additional_values={'auto_delete': mail_auto_delete, 'scheduled_datetime': scheduled_datetime},
+        )
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
         # the mail.mail creation.

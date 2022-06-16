@@ -2530,8 +2530,10 @@ class Task(models.Model):
             return self.project_id.partner_id
         return res
 
-    def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None):
-        rating = super(Task, self).rating_apply(rate, token=token, rating=rating, feedback=feedback, subtype_xmlid=subtype_xmlid)
+    def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None, notify_delay_send=False):
+        rating = super(Task, self).rating_apply(
+            rate, token=token, rating=rating, feedback=feedback,
+            subtype_xmlid=subtype_xmlid, notify_delay_send=notify_delay_send)
         if self.stage_id and self.stage_id.auto_validation_kanban_state:
             kanban_state = 'done' if rating.rating >= rating_data.RATING_LIMIT_OK else 'blocked'
             self.write({'kanban_state': kanban_state})
