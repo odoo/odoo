@@ -183,6 +183,13 @@ registerModel({
         /**
          * @private
          */
+        _computeCallSideBarView() {
+            const willShowSidebar = this.hasSidebar;
+            return  willShowSidebar ? insertAndReplace() : clear();
+        },
+        /**
+         * @private
+         */
         _computeIsControllerFloating() {
             return Boolean(this.isFullScreen || this.activeRtcSession && !this.threadView.compact);
         },
@@ -320,6 +327,12 @@ registerModel({
         aspectRatio: attr({
             default: 16 / 9,
             compute: '_computeAspectRatio',
+        }),
+        callSidebarView: one('CallSidebarView', {
+            compute: '_computeCallSideBarView',
+            inverse: 'callView',
+            isCausal: true,
+            readonly: true,
         }),
         tileContainerRef: attr(),
         /**
