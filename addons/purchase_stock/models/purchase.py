@@ -610,4 +610,4 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _update_qty_received_method(self):
         """Update qty_received_method for old PO before install this module."""
-        self.search([])._compute_qty_received_method()
+        self.search(['!', ('state', 'in', ['purchase', 'done'])])._compute_qty_received_method()
