@@ -533,7 +533,7 @@ class AccountEdiFormat(models.Model):
         return self._l10n_in_edi_generate_invoice_json_managing_negative_lines(invoice, json_payload)
 
     @api.model
-    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False):
+    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False, filter_invl_to_apply=None):
         def l10n_in_grouping_key_generator(tax_values):
             base_line = tax_values["base_line_id"]
             tax_line = tax_values["tax_line_id"]
@@ -571,6 +571,7 @@ class AccountEdiFormat(models.Model):
         return move._prepare_edi_tax_details(
             filter_to_apply=l10n_in_filter_to_apply,
             grouping_key_generator=l10n_in_grouping_key_generator,
+            filter_invl_to_apply=filter_invl_to_apply,
         )
 
     @api.model
