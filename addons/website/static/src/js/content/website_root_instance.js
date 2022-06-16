@@ -5,7 +5,9 @@ import { WebsiteRoot } from "./website_root";
 import { loadWysiwyg } from "web_editor.loader";
 
 export default createPublicRoot(WebsiteRoot).then(rootInstance => {
-    if (window.parent !== window) {
+    // This data attribute is set by the WebsitePreview client action for a
+    // publisher user.
+    if (window.frameElement && window.frameElement.dataset.loadWysiwyg) {
         loadWysiwyg(['website.compiled_assets_wysiwyg']).then(() => {
             window.dispatchEvent(new CustomEvent('PUBLIC-ROOT-READY', {detail: {rootInstance}}));
         });

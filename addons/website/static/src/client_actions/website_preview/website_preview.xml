@@ -23,7 +23,8 @@
                 class="o_iframe"
                 t-ref="iframe"
                 t-on-load="_onPageLoaded"
-                is-ready="false"/>
+                is-ready="false"
+                t-att-data-load-wysiwyg="this.websiteService.isPublisher ? 'true': 'false'"/>
         </div>
         <WebsiteEditorComponent t-if="websiteContext.edition"
             reloadIframe.bind="this.reloadIframe"
