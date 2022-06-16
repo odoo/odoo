@@ -7,6 +7,7 @@ var Dialog = require('web.Dialog');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
+var { Markup } = require('web.utils');
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -256,10 +257,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             // translation, to fix in the appropriate version
             notifOptions.message = `${karma} ${_t("karma is required to perform this action. ")}`;
             if (forumID) {
-                notifOptions.messageIsHtml = true;
-                const linkLabel = _.escape(_t("Read the guidelines to know how to gain karma."));
-                notifOptions.message = `
-                    ${_.escape(notifOptions.message)}<br/>
+                const linkLabel = _t("Read the guidelines to know how to gain karma.");
+                notifOptions.message = Markup`
+                    ${notifOptions.message}<br/>
                     <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
                 `;
             }
