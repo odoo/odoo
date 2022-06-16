@@ -54,6 +54,7 @@ import {
     rightPos,
     getAdjacentPreviousSiblings,
     getAdjacentNextSiblings,
+    rightLeafOnlyNotBlockPath,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1421,9 +1422,9 @@ export class OdooEditor extends EventTarget {
         fillEmpty(closestBlock(range.endContainer));
         // Ensure trailing space remains visible.
         const joinWith = range.endContainer;
-        const joinSibling = joinWith && joinWith.nextSibling;
         const oldText = joinWith.textContent;
-        const hasSpaceAfter = joinSibling && joinSibling.textContent.startsWith(' ');
+        const rightLeaf = rightLeafOnlyNotBlockPath(range.endContainer).next().value;
+        const hasSpaceAfter = !rightLeaf || rightLeaf.textContent.startsWith(' ');
         const shouldPreserveSpace = (doJoin || hasSpaceAfter) && joinWith && oldText.endsWith(' ');
         if (shouldPreserveSpace) {
             joinWith.textContent = oldText.replace(/ $/, '\u00A0');
@@ -1451,10 +1452,9 @@ export class OdooEditor extends EventTarget {
                 break;
             }
         }
-        next = joinWith && joinWith.nextSibling;
+        next = range.endContainer && rightLeafOnlyNotBlockPath(range.endContainer).next().value;
         if (
-            shouldPreserveSpace &&
-            !(next && next.nodeType === Node.TEXT_NODE && next.textContent.startsWith(' '))
+            shouldPreserveSpace && next && !(next && next.nodeType === Node.TEXT_NODE && next.textContent.startsWith(' '))
         ) {
             // Restore the text we modified in order to preserve trailing space.
             joinWith.textContent = oldText;
