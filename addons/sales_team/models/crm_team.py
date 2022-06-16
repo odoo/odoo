@@ -29,6 +29,7 @@ class CrmTeam(models.Model):
         ], limit=1)
         if not team and 'default_team_id' in self.env.context:
             team = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
+        # Bug Fixing related to Ref. issue Id 93168
         return team or self.env['crm.team'].search(domain or [('company_id', 'in', [False])], limit=1)
 
     def _get_default_favorite_user_ids(self):
