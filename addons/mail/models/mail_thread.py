@@ -1330,7 +1330,7 @@ class MailThread(models.AbstractModel):
         try:
             # Internal transaction to be able to correct data if it fails because of incorrect data
             with self.env.cr.savepoint():
-                return self.create(data)
+                return self.create(self._get_safe_create_data(data))
         except IntegrityError:
             return self.create(self._get_safe_create_data(data, is_remove_missing_ref=True))
 

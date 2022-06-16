@@ -1661,3 +1661,84 @@ class TestMailGatewayDefensiveAlias(TestMailCommon):
             tag_inbox.unlink()
             self._assert_creation("All related data doesn't exit", alias_defaults,
                                   expected={**self.basic_fields, 'folder_id': None, 'tag_ids': None})
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.sql_db')
+    def test_skip_of_sub_record_creation(self):
+        """Test that the autocorrection of alias defaults removes any creation of sub-record."""
+        tag_inbox = self.Tag.create({'name': 'inbox'})
+        tag_name_todo = 'todo'
+        doc_name_new = 'new doc'
+
+        self._assert_creation(
+            "Many2many create command skipped",
+            {**self.basic_fields, 'tag_ids': [self._cmd_compat(Command.create({'name': tag_name_todo}))]},
+            expected={**self.basic_fields})
+        self.assertFalse(self.Tag.search([('name', '=', tag_name_todo)]), 'Tag creation must have been skipped')
+
+        self._assert_creation(
+            "Many2many create command skipped among set command",
+            {
+                **self.basic_fields,
+                'tag_ids': [self._cmd_compat(Command.set([tag_inbox.id])),
+                            self._cmd_compat(Command.create({'name': 'todo'}))]
+            },
+            expected={**self.basic_fields, 'tag_ids': tag_inbox})
+        self.assertFalse(self.Tag.search([('name', '=', tag_name_todo)]), 'Tag creation must have been skipped')
+
+        self._assert_creation(
+            "Many2many create command skipped among link command",
+            {
+                **self.basic_fields,
+                'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id)),
+                            self._cmd_compat(Command.create({'name': 'todo'}))]
+            },
+            expected={**self.basic_fields, 'tag_ids': tag_inbox})
+        self.assertFalse(self.Tag.search([('name', '=', tag_name_todo)]), 'Tag creation must have been skipped')
+
+        self._assert_creation(
+            "One2many create command skipped",
+            {
+                **self.basic_fields,
+                'sub_document_ids': [self._cmd_compat(Command.create({'name': doc_name_new}))],
+                'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))],
+            },
+            expected={**self.basic_fields, 'sub_document_ids': None, 'tag_ids': tag_inbox})
+        self.assertFalse(self.Document.search([('name', '=', doc_name_new)]), 'Doc creation must have been skipped')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.sql_db')
+    def test_skip_of_set_to_one2many_field(self):
+        """Test that the autocorrection of alias defaults remove set to one2many field."""
+        sub_doc = self.Document.create({'name': 'Sub document'})
+        self._assert_creation("One2many set command skipped",
+                              {**self.basic_fields, 'sub_document_ids': [self._cmd_compat(Command.set([sub_doc.id]))]},
+                              expected={**self.basic_fields, 'sub_document_ids': None})
+
+        self._assert_creation("One2many set skipped",
+                              {**self.basic_fields, 'sub_document_ids': [sub_doc.id]},
+                              expected={**self.basic_fields, 'sub_document_ids': None})
+
+        self._assert_creation("One2many link command skipped",
+                              {**self.basic_fields, 'sub_document_ids': [self._cmd_compat(Command.link(sub_doc.id))]},
+                              expected={**self.basic_fields, 'sub_document_ids': None})
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.sql_db')
+    def test_skip_of_set_to_non_existing_field(self):
+        """Test that the autocorrection of alias defaults removes set to non-existing fields."""
+        self._assert_creation("Non existing field must be skipped",
+                              {**self.basic_fields, 'not_existing_field': 'test'},
+                              expected=self.basic_fields)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.sql_db')
+    def test_skip_of_forbidden_command(self):
+        """Test that the autocorrection of alias defaults removes commands != LINK and SET."""
+        tag_name_inbox = 'inbox'
+        tag_inbox = self.Tag.create({'name': tag_name_inbox})
+
+        self._assert_creation("Skip update command",
+                              {
+                                  **self.basic_fields,
+                                  'tag_ids': [self._cmd_compat(Command.update(tag_inbox.id, {'name': 'inbox2'}))]
+                              },
+                              expected=self.basic_fields)
+        self.assertEqual(self.Tag.browse([tag_inbox.id]).name, tag_name_inbox)
+        # Other command not tested because seems to have no effect anyway
