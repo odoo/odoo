@@ -524,7 +524,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             delete this.resultsChart;
         }
 
-        if (!this.isStartScreen && this.showBarChart) {
+        if (!this.isStartScreen && this.showBarChart && this.$el.data('questionStatistics')) {
             this.resultsChart = new SurveySessionChart(this, {
                 questionType: this.$el.data('questionType'),
                 answersValidity: this.$el.data('answersValidity'),
