@@ -16,27 +16,13 @@
 }
 
 .o_CallView_grid {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 
-    &::-webkit-scrollbar {
-        width: 0.3vw;
-    }
-
-    &.o-isTiled {
-        overflow-y: hidden;
-
-        .o_CallView_participantCard {
-            width: var(--width);
-            height: var(--height);
-            min-width: var(--width);
-            min-height: var(--height);
-        }
-    }
-
-    &.o-isSidebar {
-        width: 120px;
-        min-width: 120px;
+    .o_CallView_participantCard {
+        width: var(--width);
+        height: var(--height);
+        min-width: var(--width);
+        min-height: var(--height);
     }
 }
 
@@ -54,16 +40,6 @@
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
-
-.o_CallView_grid {
-
-    &::-webkit-scrollbar {
-        background: gray('900');
-    }
-    &::-webkit-scrollbar-thumb {
-        background: gray('700');
-    }
-}
 
 .o_CallView_mainParticipantContainer {
     background-color: black;

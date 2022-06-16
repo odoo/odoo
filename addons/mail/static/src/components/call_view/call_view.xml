@@ -17,15 +17,13 @@
                             <i t-else="" class="o_CallView_sidebarButton position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callView.onClickShowSidebar"/>
                         </t>
                     </div>
+                    <t t-if="callView.callSidebarView">
+                        <CallSidebarView record="callView.callSidebarView"/>
+                    </t>
                 </t>
-                <t t-if="callView.tileParticipantCards.length > 0">
+                <t t-elif="callView.tileParticipantCards.length > 0">
                     <div
-                        class="o_CallView_grid d-flex align-items-center h-100"
-                        t-att-class="{
-                            'o-isTiled flex-wrap justify-content-center w-100': !callView.mainParticipantCard,
-                            'flex-column': callView.mainParticipantCard,
-                            'o-isSidebar': callView.hasSidebar and callView.mainParticipantCard,
-                        }"
+                        class="o_CallView_grid d-flex align-items-center h-100 w-100 flex-wrap justify-content-center"
                         t-ref="tileContainer"
                         t-attf-style="--height:{{callView.tileHeight}}px; --width:{{callView.tileWidth}}px;"
                     >
@@ -34,7 +32,6 @@
                                 <!-- maybe filter focused partner out? -->
                                 <CallParticipantCard
                                     className="'o_CallView_participantCard o_CallView_gridTile'"
-                                    classNameObj="{ 'w-100' : callView.hasSidebar and callView.mainParticipantCard }"
                                     record="participantCard"
                                 />
                             </t>
