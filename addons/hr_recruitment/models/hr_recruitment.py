@@ -345,15 +345,15 @@ class Applicant(models.Model):
             applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
+        for applicant in self.filtered(lambda a: a.partner_id and a.email_from):
             applicant.partner_id.email = applicant.email_from
 
     def _inverse_partner_phone(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone and not a.partner_id.phone):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone):
             applicant.partner_id.phone = applicant.partner_phone
 
     def _inverse_partner_mobile(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile):
             applicant.partner_id.mobile = applicant.partner_mobile
 
     @api.depends('stage_id.hired_stage')
