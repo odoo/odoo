@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { parseArgs } from "./py_utils";
+import { parseArgs } from "./py_parser";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -224,10 +224,18 @@ export class PyDate {
      * @returns {PyDate}
      */
     static today() {
-        const now = new Date();
-        const year = now.getUTCFullYear();
-        const month = now.getUTCMonth() + 1;
-        const day = now.getUTCDate();
+        return this.convertDate(new Date());
+    }
+
+    /**
+     * Convert a date object into PyDate
+     * @param {Date} date
+     * @returns {PyDate}
+     */
+    static convertDate(date) {
+        const year = date.getUTCFullYear();
+        const month = date.getUTCMonth() + 1;
+        const day = date.getUTCDate();
         return new PyDate(year, month, day);
     }
 
@@ -323,13 +331,21 @@ export class PyDateTime {
      * @returns {PyDateTime}
      */
     static now() {
-        const now = new Date();
-        const year = now.getUTCFullYear();
-        const month = now.getUTCMonth() + 1;
-        const day = now.getUTCDate();
-        const hour = now.getUTCHours();
-        const minute = now.getUTCMinutes();
-        const second = now.getUTCSeconds();
+        return this.convertDate(new Date());
+    }
+
+    /**
+     * Convert a date object into PyDateTime
+     * @param {Date} date
+     * @returns {PyDateTime}
+     */
+    static convertDate(date) {
+        const year = date.getUTCFullYear();
+        const month = date.getUTCMonth() + 1;
+        const day = date.getUTCDate();
+        const hour = date.getUTCHours();
+        const minute = date.getUTCMinutes();
+        const second = date.getUTCSeconds();
         return new PyDateTime(year, month, day, hour, minute, second, 0);
     }
 
