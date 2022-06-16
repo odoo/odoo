@@ -11,6 +11,7 @@ import hashlib
 import hmac
 import lxml
 import logging
+from psycopg2 import IntegrityError
 import pytz
 import re
 import time
@@ -1151,7 +1152,13 @@ class MailThread(models.AbstractModel):
         name_field = self._rec_name or 'name'
         if name_field in fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
-        return self.create(data)
+        try:
+            # Internal transaction to be able to correct data if it fails because of incorrect data
+            with self.env.cr.savepoint():
+                return self.create(data)
+        except IntegrityError:
+            safe_data, _ = self._get_safe_create_data(data, is_remove_missing_ref=True)
+            return self.create(safe_data)
 
     def message_update(self, msg_dict, update_vals=None):
         """Called by ``message_process`` when a new message is received
