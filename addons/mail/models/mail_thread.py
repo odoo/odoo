@@ -2381,7 +2381,7 @@ class MailThread(models.AbstractModel):
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
-                                mail_auto_delete=True, # mail.mail
+                                mail_auto_delete=True,  # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 resend_existing=False, force_send=True, send_after_commit=True,  # email send
                                 **kwargs):
