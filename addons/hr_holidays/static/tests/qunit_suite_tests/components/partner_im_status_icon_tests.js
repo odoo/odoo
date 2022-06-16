@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { start } from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {
@@ -9,13 +9,25 @@ QUnit.module('partner_im_status_icon_tests.js');
 QUnit.test('on leave & online', async function (assert) {
     assert.expect(2);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'leave_online',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'leave_online' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.hasClass(
         document.querySelector('.o_PartnerImStatusIcon_icon'),
         'o-online',
@@ -31,13 +43,25 @@ QUnit.test('on leave & online', async function (assert) {
 QUnit.test('on leave & away', async function (assert) {
     assert.expect(2);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'leave_away',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'leave_away' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.hasClass(
         document.querySelector('.o_PartnerImStatusIcon_icon'),
         'o-away',
@@ -53,13 +77,25 @@ QUnit.test('on leave & away', async function (assert) {
 QUnit.test('on leave & offline', async function (assert) {
     assert.expect(2);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'leave_offline',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'leave_offline' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.hasClass(
         document.querySelector('.o_PartnerImStatusIcon_icon'),
         'o-offline',
