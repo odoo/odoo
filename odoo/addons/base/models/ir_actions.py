@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
-from odoo.osv import expression
+from odoo import api, fields, models, tools, _, Command
+from odoo.exceptions import MissingError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
@@ -438,15 +437,30 @@ class IrActionsServer(models.Model):
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
-    crud_model_id = fields.Many2one('ir.model', string='Target Model',
-                                    help="Model for record creation / update. Set this field only to specify a different model than the base model.")
+    crud_model_id = fields.Many2one(
+        'ir.model', string='Target Model',
+        compute='_compute_crud_model_id', readonly=False, store=True,
+        help="Model for record creation / update. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
-    link_field_id = fields.Many2one('ir.model.fields', string='Link Field',
-                                    help="Provide the field used to link the newly created record "
-                                         "on the record used by the server action.")
+    link_field_id = fields.Many2one(
+        'ir.model.fields', string='Link Field',
+        compute='_compute_link_field_id', readonly=False, store=True,
+        help="Provide the field used to link the newly created record on the record used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Groups')
+
+    @api.onchange('model_id')
+    def _compute_crud_model_id(self):
+        invalid = self.filtered(lambda act: act.crud_model_id != act.model_id)
+        if invalid:
+            invalid.crud_model_id = False
+
+    @api.depends('model_id')
+    def _compute_link_field_id(self):
+        invalid = self.filtered(lambda act: act.link_field_id.model_id != act.model_id)
+        if invalid:
+            invalid.link_field_id = False
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -488,10 +502,6 @@ class IrActionsServer(models.Model):
                         "RPC-public action methods are deprecated, found %r (in class %s.%s)",
                         symbol, cls.__module__, cls.__name__
                     )
-
-    @api.onchange('crud_model_id')
-    def _onchange_crud_model_id(self):
-        self.link_field_id = False
 
     def create_action(self):
         """ Create a contextual action for each server action. """
