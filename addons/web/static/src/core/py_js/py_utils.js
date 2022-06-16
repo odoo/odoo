@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { bp } from "./py_parser";
+import { PyDate, PyDateTime } from './py_date';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -13,21 +14,6 @@ import { bp } from "./py_parser";
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
-
-/**
- * @param {any[]} args
- * @param {string[]} spec
- * @returns {{[name: string]: any}}
- */
-export function parseArgs(args, spec) {
-    const last = args[args.length - 1];
-    const unnamedArgs = typeof last === "object" ? args.slice(0, -1) : args;
-    const kwargs = typeof last === "object" ? last : {};
-    for (let [index, val] of unnamedArgs.entries()) {
-        kwargs[spec[index]] = val;
-    }
-    return kwargs;
-}
 
 /**
  * Represent any value as a primitive AST
@@ -48,6 +34,10 @@ export function toPyValue(value) {
                 return { type: 4 /* List */, value: value.map(toPyValue) };
             } else if (value === null) {
                 return { type: 3 /* None */ };
+            } else if (value instanceof Date) {
+                return { type: 1, value: PyDateTime.convertDate(value) };
+            } else if (value instanceof PyDate || value instanceof PyDateTime) {
+                return { type: 1, value };
             } else {
                 const content = {};
                 for (let key in value) {
