@@ -120,3 +120,10 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         # -> this should have generated answer lines and closed the answer
         self.assertAnswer(answers, 'done', page_1)
         self.assertAnswerLines(page_1, answers, answer_data)
+
+        # Step: survey manager shares results with customer
+        # --------------------------------------------------
+        with self.with_user('survey_manager'):
+            results_url = survey.action_result_survey()['url']
+        r = self.url_open(results_url)
+        self.assertTrue(r)
