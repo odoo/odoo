@@ -15,6 +15,7 @@ from . import mail_thread_blacklist
 from . import mail_thread_cc
 
 # mail models
+from . import fetchmail
 from . import mail_notification  # keep before as decorated m2m
 from . import mail_activity_type
 from . import mail_activity

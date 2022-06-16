@@ -55,6 +55,7 @@
                                     <group string="Headers">
                                         <field name="message_id"/>
                                         <field name="references"/>
+                                        <field name="fetchmail_server_id"/>
                                         <field name="headers"/>
                                     </group>
                                 </group>
@@ -141,6 +142,15 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_mail_search"/>
+        </record>
+
+        <record id="act_server_history" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.mail</field>
+            <field name="domain">[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]</field>
+            <field name="context">{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}</field>
+            <field name="binding_model_id" ref="model_fetchmail_server"/>
+            <field name="binding_view_types">form</field>
         </record>
 
     </data>

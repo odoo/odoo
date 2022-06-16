@@ -11,7 +11,6 @@
     'depends': [
         'hr',
         'calendar',
-        'fetchmail',
         'utm',
         'attachment_indexation',
         'web_tour',

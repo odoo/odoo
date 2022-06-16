@@ -18,6 +18,12 @@
         parent="base.menu_email"
         action="action_view_mail_mail"
         sequence="1"/>
+    <menuitem name="Incoming Mail Servers"
+        id="menu_action_fetchmail_server_tree"
+        parent="base.menu_email"
+        action="action_email_server_tree"
+        sequence="6"
+        groups="base.group_no_one"/>
     <menuitem id="menu_email_templates"
         parent="base.menu_email"
         action="action_email_template_tree_all"

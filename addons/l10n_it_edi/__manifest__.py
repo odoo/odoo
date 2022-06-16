@@ -7,7 +7,6 @@
     'version': '0.3',
     'depends': [
         'l10n_it',
-        'fetchmail',
         'account_edi'
     ],
     'auto_install': ['l10n_it', 'account_edi'],
