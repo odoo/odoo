@@ -2377,6 +2377,15 @@ X[]
                     <p>before[]after</p>`),
             });
         });
+        it('should transform the last space of a container to an &nbsp; after removing the last word through deleteRange', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a [b]</p>`,
+                stepFunction: async editor => {
+                    await deleteBackward(editor);
+                },
+                contentAfter: `<p>a&nbsp;[]</p>`,
+            });
+        });
     });
 
     describe('insertParagraphBreak', () => {
