@@ -53,6 +53,7 @@ odoo.define('payment.manage_form', require => {
             this._rpc({
                 route: this.txContext.assignTokenRoute,
                 params: {
+                    'access_token': this.txContext.accessToken,
                     'token_id': tokenId,
                     'csrf_token': core.csrf_token,
                 }
