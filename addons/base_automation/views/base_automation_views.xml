@@ -26,14 +26,21 @@
                 <xpath expr="//group[@name='action_content']" position="inside">
                     <field name="active" widget="boolean_toggle"/>
                     <field name="trigger"/>
-                    <field name="trigger_field_ids" domain="[('model_id', '=', model_id)]" attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}" widget="many2many_tags"/>
-                    <field name="on_change_field_ids" string="Trigger Fields" domain="[('model_id', '=', model_id)]"
+                    <field name="trigger_field_ids"
+                        options="{'no_open': True, 'no_create': True}"
+                        domain="[('model_id', '=', model_id)]"
+                        attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}" widget="many2many_tags"/>
+                    <field name="on_change_field_ids" string="Trigger Fields"
+                        options="{'no_open': True, 'no_create': True}"
+                        domain="[('model_id', '=', model_id)]"
                         attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}"
-                        widget='many2many_tags' options="{'no_create': True}"/>
+                        widget='many2many_tags'/>
 
-                    <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}"/>
+                    <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"
+                           attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}"/>
                     <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
                     <field name="trg_date_id"
+                        options="{'no_open': True, 'no_create': True}"
                         attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
                     <label for="trg_date_range"
                         attrs="{'invisible': [('trigger', '!=', 'on_time')]}"/>
@@ -42,6 +49,7 @@
                         <field name="trg_date_range_type" attrs="{'required': [('trigger','=','on_time')]}"/>
                     </div>
                     <field name="trg_date_calendar_id"
+                        options="{'no_open': True, 'no_create': True}"
                         attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
                 </xpath>
                 <xpath expr="//group[@name='action_wrapper']" position="after">
