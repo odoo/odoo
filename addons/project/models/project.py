@@ -202,8 +202,7 @@ class Project(models.Model):
             "A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n\n"
             "- All internal users: all internal users can access the project and all of its tasks without distinction.\n\n"
             "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-            "Portal users can only access the projects and the tasks they are following. "
-            "This access can be modified on each task individually by adding or removing the portal user as follower.\n\n"
+            "When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n\n"
             "In any case, an internal user with no project access rights can still access a task, "
             "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
