@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import io
-
 from collections import OrderedDict
 
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.tools import pdf
 
 
 class IrActionsReport(models.Model):
@@ -25,10 +25,15 @@ class IrActionsReport(models.Model):
 
         collected_streams = OrderedDict()
         for invoice in invoices:
-            if invoice.message_main_attachment_id:
+            attachment = invoice.message_main_attachment_id
+            if attachment:
+                stream = io.BytesIO(attachment.raw)
+                if attachment.mimetype == 'application/pdf':
+                    record = self.env[attachment.res_model].browse(attachment.res_id)
+                    stream = pdf.add_banner(stream, record.name, logo=True)
                 collected_streams[invoice.id] = {
-                    'stream': io.BytesIO(invoice.message_main_attachment_id.raw),
-                    'attachment': invoice.message_main_attachment_id,
+                    'stream': stream,
+                    'attachment': attachment,
                 }
         return collected_streams
 
