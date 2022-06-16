@@ -3144,6 +3144,9 @@ exports.Order = Backbone.Model.extend({
         } else {
             receipt.footer = this.pos.config.receipt_footer || '';
         }
+        if (!receipt.date.localestring && (!this.state || this.state == 'draft')){
+            receipt.date.localestring = field_utils.format.datetime(moment(new Date()), {}, {timezone: false});
+        }
 
         return receipt;
     },
