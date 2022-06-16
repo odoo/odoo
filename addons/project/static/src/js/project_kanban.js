@@ -352,7 +352,7 @@ const ProjectTaskKanbanModel = KanbanModel.extend({
         if (groupedBy === 'personal_stage_type_ids') {
             list.domain = Domain.and([
                 [['user_ids', 'in', this.getSession().user_id[0]]],
-                list.domain
+                JSON.stringify(list.domain),
             ]).toList();
         }
         return this._super(...arguments);
