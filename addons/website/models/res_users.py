@@ -19,12 +19,6 @@ class ResUsers(models.Model):
         ('login_key', 'unique (login, website_id)', 'You can not have two users with the same login!'),
     ]
 
-    def _has_unsplash_key_rights(self):
-        self.ensure_one()
-        if self.has_group('website.group_website_designer'):
-            return True
-        return super(ResUsers, self)._has_unsplash_key_rights()
-
     @api.constrains('login', 'website_id')
     def _check_login(self):
         """ Do not allow two users with the same login without website """
