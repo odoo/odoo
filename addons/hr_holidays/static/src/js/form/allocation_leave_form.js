@@ -25,7 +25,9 @@ export const AllocationLeaveFormController = FormController.extend({
                 context: nameSearchContext,
                 limit: 1
             });
-            this.$el.find("div[name='holiday_status_id']").find('input')[0].value = nameSearch[0][1];
+            if (this.$el.find("div[name='holiday_status_id']").find('input')[0]) {
+                this.$el.find("div[name='holiday_status_id']").find('input')[0].value = nameSearch[0][1];
+            }
         }
         return result;
     }
