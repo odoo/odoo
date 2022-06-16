@@ -21,7 +21,7 @@ Preferences
 """,
     'depends': ['sale', 'stock_account'],
     'data': [
-        'security/sale_stock_security.xml',
+        'security/res_groups.xml',
         'security/ir.model.access.csv',
 
         'views/sale_order_views.xml',
