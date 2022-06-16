@@ -12,6 +12,8 @@ options.registry.Map = options.Class.extend({
         const iframeEl = generateGMapIframe();
         this.$target[0].querySelector('.s_map_color_filter').before(iframeEl);
         this._updateSource();
+
+        $(el).html(hello); // JUST A TEST
     },
 
     //--------------------------------------------------------------------------
