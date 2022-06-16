@@ -268,7 +268,7 @@ class Web_Editor(http.Controller):
                 _, args = request.env['ir.http']._match(src)
                 record = request.env['ir.binary']._find_record(
                     xmlid=args.get('xmlid'),
-                    res_model=args.get('model'),
+                    res_model=args.get('model', 'ir.attachment'),
                     res_id=args.get('id'),
                 )
                 if record._name == 'ir.attachment':
