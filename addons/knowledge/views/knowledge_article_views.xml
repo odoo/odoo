@@ -193,6 +193,18 @@
                                                                  aria-labelledby="o_article_emoji" />
                                                         </div>
                                                     </div>
+                                                    <!-- No article helper -->
+                                                    <field name="category" invisible="1"/>
+                                                    <div class="o_view_nocontent" attrs="{'invisible': [('id', '!=', False)]}">
+                                                        <div class="o_nocontent_help">
+                                                            <p class="o_view_nocontent_smiling_face">
+                                                                 No article yet.
+                                                            </p>
+                                                            <p>
+                                                                <a href="#" role="button" class="btn-create">Create an article</a> to unleash the power of Knowledge !
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                     <!-- Article body -->
                                                     <div class="o_knowledge_editor d-flex flex-grow-1">
                                                         <field name="body" widget="html" no_label="1" default_focus="1"
@@ -295,6 +307,7 @@
             <search>
                 <field name="name"/>
                 <field name="root_article_id"/>
+                <field name="body"/>
                 <field name="last_edition_uid"/>
 
                 <filter name="filter_active" string="Archived"
