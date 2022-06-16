@@ -300,6 +300,10 @@ registerModel({
         attachmentLists: many('AttachmentList', {
             inverse: 'attachments',
         }),
+        attachmentViewerViewable: one('AttachmentViewerViewable', {
+            inverse: 'attachmentOwner',
+            isCausal: true,
+        }),
         checksum: attr(),
         /**
          * States on which composer this attachment is currently being created.
