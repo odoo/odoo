@@ -19,7 +19,7 @@ trigger an automatic reminder email.
     'data': [
         'security/ir.model.access.csv',
         'data/base_automation_data.xml',
-        'views/base_automation_view.xml',
+        'views/base_automation_views.xml',
     ],
     'assets': {
         'web.assets_qweb': [
