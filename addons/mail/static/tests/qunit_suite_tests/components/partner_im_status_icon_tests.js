@@ -1,34 +1,33 @@
 /** @odoo-module **/
 
-import {
-    afterNextRender,
-    start,
-} from '@mail/../tests/helpers/test_utils';
+import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('partner_im_status_icon_tests.js');
 
 QUnit.test('initially online', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'online',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'online' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon`).length,
-        1,
-        "should have partner IM status icon"
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_PartnerImStatusIcon`).dataset.partnerLocalId,
-        partner.localId,
-        "partner IM status icon should be linked to partner with ID 7"
-    );
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,
@@ -39,13 +38,25 @@ QUnit.test('initially online', async function (assert) {
 QUnit.test('initially offline', async function (assert) {
     assert.expect(1);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'offline',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'offline' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
         1,
@@ -56,13 +67,25 @@ QUnit.test('initially offline', async function (assert) {
 QUnit.test('initially away', async function (assert) {
     assert.expect(1);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'away',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'away' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
         1,
@@ -73,34 +96,49 @@ QUnit.test('initially away', async function (assert) {
 QUnit.test('change icon on change partner im_status', async function (assert) {
     assert.expect(4);
 
-    const { createRootMessagingComponent, messaging } = await start();
-    const partner = messaging.models['Partner'].create({
-        id: 7,
-        name: "Demo User",
-        im_status: 'online',
+    const pyEnv = await startServer();
+    const partnerId = pyEnv['res.partner'].create({ im_status: 'online' });
+    const mailChannelId = pyEnv['mail.channel'].create({});
+    pyEnv['mail.message'].create({
+        author_id: partnerId,
+        body: 'not empty',
+        model: 'mail.channel',
+        res_id: mailChannelId,
     });
-    await createRootMessagingComponent('PartnerImStatusIcon', { partner });
+    const { advanceTime, afterNextRender, messaging, openDiscuss } = await start({
+        discuss: {
+            params: {
+                default_active_id: mailChannelId,
+            },
+        },
+        hasTimeControl: true,
+    });
+    await openDiscuss();
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,
         "partner IM status icon should have online status rendering"
     );
 
-    await afterNextRender(() => partner.update({ im_status: 'offline' }));
+    pyEnv['res.partner'].write([partnerId], { im_status: 'offline' });
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-offline`).length,
         1,
         "partner IM status icon should have offline status rendering"
     );
 
-    await afterNextRender(() => partner.update({ im_status: 'away' }));
+    pyEnv['res.partner'].write([partnerId], { im_status: 'away' });
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-away`).length,
         1,
         "partner IM status icon should have away status rendering"
     );
 
-    await afterNextRender(() => partner.update({ im_status: 'online' }));
+    pyEnv['res.partner'].write([partnerId], { im_status: 'online' });
+    await afterNextRender(() => advanceTime(messaging.fetchImStatusTimerDuration));
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon.o-online`).length,
         1,
