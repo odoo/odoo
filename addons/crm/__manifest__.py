@@ -15,7 +15,6 @@
         'mail',
         'calendar',
         'resource',
-        'fetchmail',
         'utm',
         'web_tour',
         'web_kanban_gauge',

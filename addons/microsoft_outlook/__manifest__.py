@@ -7,7 +7,6 @@
     "category": "Hidden",
     "description": "Outlook support for incoming / outgoing mail servers",
     "depends": [
-        "fetchmail",
         "mail",
     ],
     "data": [

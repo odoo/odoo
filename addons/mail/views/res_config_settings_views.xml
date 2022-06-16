@@ -42,6 +42,16 @@
                                         <span>@</span>
                                         <field name="alias_domain" placeholder='e.g. "mycompany.com"'/>
                                     </div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(action_email_server_tree)d"
+                                        string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(base.action_ir_mail_server_list)d"
+                                        string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
                                 </div>
                                 <div class="mt-3 d-flex" attrs="{'invisible': [('external_email_server_default', '=', False)]}">
                                     <field name="module_google_gmail"/>
