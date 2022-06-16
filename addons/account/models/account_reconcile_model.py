@@ -467,9 +467,18 @@ class AccountReconcileModel(models.Model):
                 'currency_id': st_line_id.company_id.currency_id.id,
             })
         return {
-            **counterpart_vals,
+            'name': counterpart_vals['name'],
             'balance': counterpart_vals['amount_currency'],
+            'debit': counterpart_vals['debit'],
+            'credit': counterpart_vals['credit'],
+            'account_id': counterpart_vals['account_id'],
+            'currency_id': counterpart_vals['currency_id'],
+            'analytic_account_id': counterpart_vals.get('analytic_account_id'),
+            'analytic_tag_ids': counterpart_vals.get('analytic_tag_ids', []),
             'reconcile_model_id': self.id,
+            'journal_id': counterpart_vals['journal_id'],
+            'tax_ids': counterpart_vals.get('tax_ids', []),
+            'tax_tag_ids': counterpart_vals.get('tax_tag_ids', []),
         }
 
     ####################################################
