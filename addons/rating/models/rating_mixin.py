@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import operator
+import datetime
+import markupsafe
 
 from odoo import api, fields, models, tools
 from odoo.addons.rating.models import rating_data
@@ -25,7 +26,7 @@ class RatingMixin(models.AbstractModel):
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
     rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
 
-    @api.depends('rating_ids.rating', 'rating_ids.consumed')
+    @api.depends('rating_ids', 'rating_ids.rating', 'rating_ids.consumed')
     def _compute_rating_last_value(self):
         # Pure SQL instead of calling read_group to allow ordering array_agg
         self.flush_model(['rating_ids'])
@@ -198,7 +199,8 @@ class RatingMixin(models.AbstractModel):
                 subtype_id=subtype_id
             )
 
-    def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None):
+    def rating_apply(self, rate, token=None, rating=None, feedback=None,
+                     subtype_xmlid=None, notify_delay_send=False):
         """ Apply a rating to the record. This rating can either be linked to a
         token (customer flow) or directly a rating record (code flow).
 
@@ -215,6 +217,8 @@ class RatingMixin(models.AbstractModel):
         :param string subtype_xmlid: xml id of a valid mail.message.subtype used
           to post the message (if it applies). If not given a classic comment is
           posted;
+        :param notify_delay_send: Delay the sending by 2 hours of the email so the user
+            can still change his feedback. If False, the email will be sent immediately.
 
         :returns rating: rating.rating record
         """
@@ -226,19 +230,37 @@ class RatingMixin(models.AbstractModel):
             raise ValueError('Invalid token or rating.')
 
         rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
-        if hasattr(self, 'message_post'):
+        if issubclass(type(self), self.env.registry['mail.thread']):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
             else:
                 subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
             feedback = tools.plaintext2html(feedback or '')
-            self.message_post(
-                author_id=rating.partner_id.id or None,  # None will set the default author in mail_thread.py
-                body="<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
-                % (rating.rating_image_url, rate, feedback),
-                rating_id=rating.id,
-                subtype_id=subtype_id,
+
+            scheduled_datetime = (
+                fields.Datetime.now() + datetime.timedelta(hours=2)
+                if notify_delay_send else None
             )
+            rating_body = (
+                markupsafe.Markup(
+                    "<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+                ) % (rating.rating_image_url, rate, feedback)
+            )
+
+            if rating.message_id:
+                self._message_update_content(
+                    rating.message_id, rating_body,
+                    scheduled_date=scheduled_datetime,
+                    strict=False
+                )
+            else:
+                self.message_post(
+                    author_id=rating.partner_id.id or None,  # None will set the default author in mail_thread.py
+                    body=rating_body,
+                    rating_id=rating.id,
+                    scheduled_date=scheduled_datetime,
+                    subtype_id=subtype_id,
+                )
         return rating
 
     def _rating_apply_get_default_subtype_id(self):
