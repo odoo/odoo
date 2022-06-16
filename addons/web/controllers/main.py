@@ -1534,7 +1534,10 @@ class Binary(http.Controller):
             try:
                 cids = request.httprequest.cookies.get('cids', str(request.env.user.company_id.id))
                 allowed_company_ids = [int(cid) for cid in cids.split(',')]
-                attachment = Model.with_context(allowed_company_ids=allowed_company_ids).create({
+                main_cid = allowed_company_ids[0]
+                user_allowed_companies = Model.env.user.company_ids.ids
+                ordered_companies = sorted(user_allowed_companies, key=lambda c: c == main_cid, reverse=True)
+                attachment = Model.with_context(allowed_company_ids=ordered_companies).create({
                     'name': filename,
                     'datas': base64.encodebytes(ufile.read()),
                     'res_model': model,

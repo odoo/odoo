@@ -9,6 +9,8 @@ var DocumentViewer = require('mail.DocumentViewer');
 var QWeb = core.qweb;
 var _t = core._t;
 
+const utils = require('web.utils');
+
 var AttachmentBox = Widget.extend({
     template: 'mail.chatter.AttachmentBox',
     events: {
@@ -110,6 +112,8 @@ var AttachmentBox = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onUploadAttachments: function (ev) {
+        const hash = $.bbq.getState()
+        utils.set_cookie('cids', hash.cids);
         this.$('input.o_input_file').click();
     },
     /**
