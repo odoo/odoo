@@ -421,7 +421,7 @@ class AccountEdiFormat(models.Model):
         return json_payload
 
     @api.model
-    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False):
+    def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False, filter_invl_to_apply=None):
         def l10n_in_grouping_key_generator(base_line, tax_values):
             invl = base_line['record']
             tax = tax_values['tax_repartition_line'].tax_id
@@ -459,6 +459,7 @@ class AccountEdiFormat(models.Model):
         return move._prepare_edi_tax_details(
             filter_to_apply=l10n_in_filter_to_apply,
             grouping_key_generator=l10n_in_grouping_key_generator,
+            filter_invl_to_apply=filter_invl_to_apply,
         )
 
     @api.model
