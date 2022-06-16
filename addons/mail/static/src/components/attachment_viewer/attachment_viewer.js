@@ -93,13 +93,13 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _handleImageLoad() {
-        if (!this.attachmentViewer.exists() || !this.attachmentViewer.attachment) {
+        if (!this.attachmentViewer.exists() || !this.attachmentViewer.attachmentViewerViewable) {
             return;
         }
         const refs = this._getRefs();
-        const image = refs[`image_${this.attachmentViewer.attachment.id}`];
+        const image = refs[`image_${this.attachmentViewer.attachmentViewerViewable.localId}`];
         if (
-            this.attachmentViewer.attachment.isImage &&
+            this.attachmentViewer.attachmentViewerViewable.isImage &&
             (!image || !image.complete)
         ) {
             this.attachmentViewer.update({ isImageLoading: true });
@@ -142,7 +142,7 @@ export class AttachmentViewer extends Component {
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
         const refs = this._getRefs();
-        const image = refs[`image_${this.attachmentViewer.attachment.id}`];
+        const image = refs[`image_${this.attachmentViewer.attachmentViewerViewable.localId}`];
         const tx = image.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
             ? this._translate.x + this._translate.dx
             : 0;
