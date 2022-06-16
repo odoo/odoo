@@ -262,6 +262,7 @@ class MailThread(models.AbstractModel):
             return threads
 
         threads = super(MailThread, self).create(vals_list)
+        self = self.with_context(clean_context(self._context))
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe'):
             for thread in threads:
