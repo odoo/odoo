@@ -32,26 +32,52 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var self = this;
         var def = this._super.apply(this, arguments);
 
-        var always = function (data) {
-            var isSubscriber = data.is_subscriber;
-            self.$('.js_subscribe_btn').prop('disabled', isSubscriber);
-            self.$('input.js_subscribe_email')
-                .val(data.email || "")
-                .prop('disabled', isSubscriber);
-            // Compat: remove d-none for DBs that have the button saved with it.
-            self.$target.removeClass('d-none');
-            self.$('.js_subscribe_btn').toggleClass('d-none', !!isSubscriber);
-            self.$('.js_subscribed_btn').toggleClass('d-none', !isSubscriber);
-        };
+        if (this.editableMode) {
+            // Since there is an editor option to choose whether "Thanks" button
+            // should be visible or not, we should not vary its visibility here.
+            return def;
+        }
+        const always = this._updateView.bind(this);
         return Promise.all([def, this._rpc({
             route: '/website_mass_mailing/is_subscriber',
             params: {
                 'list_id': this.$target.data('list-id'),
             },
         }).then(always).guardedCatch(always)]);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._updateView({is_subscriber: false});
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Modifies the elements to have the view of a subscriber/non-subscriber.
+     *
+     * @param {Object} data
+     */
+    _updateView(data) {
+        const isSubscriber = data.is_subscriber;
+        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
+        const thanksBtnEl = this.$target[0].querySelector('.js_subscribed_btn');
+        const emailInputEl = this.$target[0].querySelector('input.js_subscribe_email');
+
+        subscribeBtnEl.disabled = isSubscriber;
+        emailInputEl.value = data.email || '';
+        emailInputEl.disabled = isSubscriber;
+        // Compat: remove d-none for DBs that have the button saved with it.
+        this.$target[0].classList.remove('d-none');
+
+        subscribeBtnEl.classList.toggle('d-none', !!isSubscriber);
+        thanksBtnEl.classList.toggle('d-none', !isSubscriber);
     },
 
     //--------------------------------------------------------------------------

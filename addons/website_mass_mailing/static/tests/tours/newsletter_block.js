@@ -30,6 +30,14 @@ tour.register('newsletter_block_edition', {
         trigger: '#oe_snippets.o_loaded',
     },
     {
+        content: 'Click on the Subscribe button',
+        trigger: '.s_newsletter_block .js_subscribe_btn',
+    },
+    {
+        content: 'Toggle the option to display the Thanks button',
+        trigger: 'we-button[data-toggle-thanks-button] we-checkbox',
+    },
+    {
         content: 'Click on the Thanks button',
         trigger: '.s_newsletter_block .js_subscribed_btn',
     },
