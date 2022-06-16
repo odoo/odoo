@@ -279,6 +279,7 @@
                                 <field name="link_field_id"
                                     domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                     ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
+                                    options="{'no_create': True}"
                                     attrs="{'invisible': [('state', '!=', 'object_create')]}"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                             </group>

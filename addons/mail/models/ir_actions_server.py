@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 class ServerActions(models.Model):
@@ -19,48 +19,108 @@ class ServerActions(models.Model):
         ('next_activity', 'Create Next Activity'),
         ], ondelete={'email': 'cascade', 'followers': 'cascade', 'next_activity': 'cascade'})
     # Followers
-    partner_ids = fields.Many2many('res.partner', string='Add Followers')
+    partner_ids = fields.Many2many(
+        'res.partner', string='Add Followers',
+        compute='_compute_partner_ids', readonly=False, store=True)
     # Template
     template_id = fields.Many2one(
-        'mail.template', 'Email Template', ondelete='set null',
+        'mail.template', 'Email Template',
         domain="[('model_id', '=', model_id)]",
+        compute='_compute_template_id',
+        ondelete='set null', readonly=False, store=True,
     )
     # Next Activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity',
         domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
+        compute='_compute_activity_type_id', readonly=False, store=True,
         ondelete='restrict')
-    activity_summary = fields.Char('Summary')
-    activity_note = fields.Html('Note')
-    activity_date_deadline_range = fields.Integer(string='Due Date In')
-    activity_date_deadline_range_type = fields.Selection([
-        ('days', 'Days'),
-        ('weeks', 'Weeks'),
-        ('months', 'Months'),
-    ], string='Due type', default='days')
-    activity_user_type = fields.Selection([
-        ('specific', 'Specific User'),
-        ('generic', 'Generic User From Record')], default="specific",
+    activity_summary = fields.Char(
+        'Summary',
+        compute='_compute_activity_info', readonly=False, store=True)
+    activity_note = fields.Html(
+        'Note',
+        compute='_compute_activity_info', readonly=False, store=True)
+    activity_date_deadline_range = fields.Integer(
+        string='Due Date In',
+        compute='_compute_activity_info', readonly=False, store=True)
+    activity_date_deadline_range_type = fields.Selection(
+        [('days', 'Days'),
+         ('weeks', 'Weeks'),
+         ('months', 'Months')],
+        string='Due type', default='days',
+        compute='_compute_activity_info', readonly=False, store=True)
+    activity_user_type = fields.Selection(
+        [('specific', 'Specific User'),
+         ('generic', 'Generic User From Record')],
+        compute='_compute_activity_info', readonly=False, store=True,
         help="Use 'Specific User' to always assign the same user on the next activity. Use 'Generic User From Record' to specify the field name of the user to choose on the record.")
-    activity_user_id = fields.Many2one('res.users', string='Responsible')
-    activity_user_field_name = fields.Char('User field name', default="user_id")
+    activity_user_id = fields.Many2one(
+        'res.users', string='Responsible',
+        compute='_compute_activity_info', readonly=False, store=True)
+    activity_user_field_name = fields.Char(
+        'User field name',
+        compute='_compute_activity_info', readonly=False, store=True)
 
-    @api.onchange('activity_date_deadline_range')
-    def _onchange_activity_date_deadline_range(self):
-        if self.activity_date_deadline_range < 0:
-            raise UserError(_("The 'Due Date In' value can't be negative."))
+    @api.depends('model_id', 'state')
+    def _compute_template_id(self):
+        to_reset = self.filtered(
+            lambda act: act.state != 'email' or \
+                        (act.model_id != act.template_id.model_id)
+        )
+        if to_reset:
+            to_reset.template_id = False
+
+    @api.depends('state')
+    def _compute_partner_ids(self):
+        to_reset = self.filtered(lambda act: act.state != 'followers')
+        if to_reset:
+            to_reset.partner_ids = False
+
+    @api.depends('model_id')
+    def _compute_activity_type_id(self):
+        to_reset = self.filtered(
+            lambda act: act.state != 'next_activity' or \
+                        (act.model_id.model != act.activity_type_id.res_model)
+        )
+        if to_reset:
+            to_reset.activity_type_id = False
+
+    @api.depends('state')
+    def _compute_activity_info(self):
+        to_reset = self.filtered(lambda act: act.state != 'next_activity')
+        if to_reset:
+            to_reset.activity_summary = False
+            to_reset.activity_note = False
+            to_reset.activity_date_deadline_range = False
+            to_reset.activity_date_deadline_range_type = False
+            to_reset.activity_user_type = False
+            to_reset.activity_user_id = False
+            to_reset.activity_user_field_name = False
+        to_default = self.filtered(lambda act: act.state == 'next_activity')
+        for activity in to_default:
+            if not activity.activity_date_deadline_range_type:
+                activity.activity_date_deadline_range_type = 'days'
+            if not activity.activity_user_type:
+                activity.activity_user_type = 'specific'
+            if not activity.activity_user_field_name:
+                activity.activity_user_field_name = 'user_id'
+
+
+    @api.constrains('activity_date_deadline_range')
+    def _check_activity_date_deadline_range(self):
+        if any(action.activity_date_deadline_range < 0 for action in self):
+            raise ValidationError(_("The 'Due Date In' value can't be negative."))
 
     @api.constrains('state', 'model_id')
-    def _check_mail_thread(self):
+    def _check_model_coherency(self):
         for action in self:
+            if action.state in ('followers', 'next_activity') and action.model_id.transient:
+                raise ValidationError(_("This action cannot be done on transient models."))
             if action.state == 'followers' and not action.model_id.is_mail_thread:
-                raise ValidationError(_("Add Followers can only be done on a mail thread model"))
-
-    @api.constrains('state', 'model_id')
-    def _check_activity_mixin(self):
-        for action in self:
-            if action.state == 'next_activity' and not action.model_id.is_mail_thread:
-                raise ValidationError(_("A next activity can only be planned on models that use the chatter"))
+                raise ValidationError(_("Add Followers can only be done on a mail thread models"))
+            if action.state == 'next_activity' and not action.model_id.is_mail_activity:
+                raise ValidationError(_("A next activity can only be planned on models that use activities."))
 
     def _run_action_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
