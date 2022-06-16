@@ -22,11 +22,10 @@
         <field name="name">knowledge.article.member.view.tree</field>
         <field name="model">knowledge.article.member</field>
         <field name="arch" type="xml">
-            <tree string="Members">
+            <tree string="Members" sample="1" create="0" edit="0">
                 <field name="article_id"/>
-                <field name="partner_id"/>
+                <field name="partner_id" widget="many2one_avatar"/>
                 <field name="permission"/>
-                <field name="article_permission"/>
             </tree>
         </field>
     </record>
@@ -52,6 +51,14 @@
         <field name="name">Members</field>
         <field name="res_model">knowledge.article.member</field>
         <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Members yet!
+            </p>
+            <p>
+                Adding members allows you to share Articles while granting specific access rights<br />(can write, can read, ...).
+            </p>
+        </field>
     </record>
 
 </odoo>

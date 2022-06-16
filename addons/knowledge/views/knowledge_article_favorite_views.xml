@@ -20,10 +20,9 @@
         <field name="name">knowledge.article.favorite.view.tree</field>
         <field name="model">knowledge.article.favorite</field>
         <field name="arch" type="xml">
-            <tree string="Favorites">
-                <field name="sequence" widget="handle"/>
-                <field name="article_id"/>
-                <field name="user_id"/>
+            <tree string="Favorites" sample="1" editable="bottom">
+                <field name="article_id" options="{'no_open': True}"/>
+                <field name="user_id" widget="many2one_avatar"/>
             </tree>
         </field>
     </record>
@@ -49,6 +48,14 @@
         <field name="name">Favorites</field>
         <field name="res_model">knowledge.article.favorite</field>
         <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Favorites yet!
+            </p>
+            <p>
+                Add articles in your list of favorites by clicking on the <i class="fa fa-star-o"/> next to the article name.
+            </p>
+        </field>
     </record>
 
 </odoo>
