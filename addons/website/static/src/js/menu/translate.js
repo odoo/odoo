@@ -310,13 +310,6 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             var trans = self._getTranlationObject(this);
             trans.value = (trans.value ? trans.value : $node.html()).replace(/[ \t\n\r]+/, ' ');
         });
-        this._getEditableArea().prependEvent('click.translator', function (ev) {
-            if (ev.ctrlKey || !$(ev.target).is(':o_editable')) {
-                return;
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-        });
 
         // attributes
 
