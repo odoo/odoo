@@ -3,7 +3,7 @@
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
 from odoo.addons.sale_timesheet.tests.common_reporting import TestCommonReporting
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('-at_install', 'post_install')
@@ -1029,3 +1029,127 @@ class TestReporting(TestCommonReporting):
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_cost'], precision_rounding=rounding), "The expense cost of the project from SO1 should be 0.0")
         self.assertEqual(float_compare(project_so_1_stat['other_revenues'], invoice_1.amount_untaxed, precision_rounding=rounding), 0, "The other revenues of the project from SO1 should be the same as the untaxed amount in invoice")
+
+    def test_profitability_partial_refund_invoice(self):
+        ProjectProfitabilityReport = self.env['project.profitability.report']
+        analytic_account = self.project_global.analytic_account_id
+        product = self.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'name': "Product",
+            'standard_price': 100.0,
+            'list_price': 100.0,
+            'taxes_id': False,
+        })
+        test_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'currency_id': self.env.user.company_id.currency_id,
+            'partner_id': self.partner_a,
+            'invoice_date': '2021-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'quantity': 2,
+                'product_id': product.id,
+                'price_unit': 100.0,
+                'analytic_account_id': analytic_account.id,
+            })]
+        })
+        test_invoice.action_post()
+        ProjectProfitabilityReport.flush()
+
+        project_stat = ProjectProfitabilityReport.read_group([('project_id', 'in', self.project_global.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced', 'other_revenues'], ['project_id'])[0]
+        self.assertAlmostEqual(project_stat['amount_untaxed_invoiced'], 0, msg="The invoiced amount of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['amount_untaxed_to_invoice'], 0, msg="The amount to invoice of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_unit_amount'], 0, msg="The timesheet unit amount of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_cost'], 0, msg="The timesheet cost of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_to_invoice'], 0, msg="The expense cost to reinvoice of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_invoiced'], 0, msg="The expense invoiced amount of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['expense_cost'], 0, msg="The expense cost of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['other_revenues'], test_invoice.amount_total_signed, msg="The other revenues of the project should be equal to the the invoice line price, after credit note.")
+
+        refund_note_wizard = self.env['account.move.reversal'].with_context({
+            'active_model': 'account.move',
+            'active_ids': test_invoice.ids,
+            'active_id': test_invoice.id,
+        }).create({
+            'refund_method': 'refund',
+            'reason': 'no reason',
+            'journal_id': self.company_data['default_journal_sale'].id
+        })
+        refund = self.env['account.move'].browse(refund_note_wizard.reverse_moves()["res_id"])
+
+        move_form = Form(refund)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 1
+        refund = move_form.save()
+        refund.action_post()
+        ProjectProfitabilityReport.flush()
+
+        project_stat = ProjectProfitabilityReport.read_group([('project_id', 'in', self.project_global.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced', 'other_revenues'], ['project_id'])[0]
+        self.assertAlmostEqual(project_stat['amount_untaxed_invoiced'], 0, msg="The invoiced amount of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['amount_untaxed_to_invoice'], 0, msg="The amount to invoice of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_unit_amount'], 0, msg="The timesheet unit amount of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_cost'], 0, msg="The timesheet cost of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_to_invoice'], 0, msg="The expense cost to reinvoice of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_invoiced'], 0, msg="The expense invoiced amount of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['expense_cost'], 0, msg="The expense costs (credit note) of the project should be zero (not taken into account), after credit note.")
+        self.assertAlmostEqual(project_stat['other_revenues'], test_invoice.amount_total_signed + refund.amount_total_signed, msg="The other revenues of the project should be zero, as it is balanced by credit note.")
+
+    def test_profitability_partial_refund_vendor_bill(self):
+        ProjectProfitabilityReport = self.env['project.profitability.report']
+        analytic_account = self.project_global.analytic_account_id
+        product = self.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'name': "Product",
+            'standard_price': 100.0,
+            'list_price': 100.0,
+            'taxes_id': False,
+        })
+        test_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'currency_id': self.env.user.company_id.currency_id,
+            'partner_id': self.partner_a,
+            'invoice_date': '2021-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'quantity': 2,
+                'product_id': product.id,
+                'price_unit': 100.0,
+                'analytic_account_id': analytic_account.id,
+            })]
+        })
+        test_invoice.action_post()
+        ProjectProfitabilityReport.flush()
+
+        project_stat = ProjectProfitabilityReport.read_group([('project_id', 'in', self.project_global.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced', 'other_revenues'], ['project_id'])[0]
+        self.assertAlmostEqual(project_stat['amount_untaxed_invoiced'], 0, msg="The invoiced amount of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['amount_untaxed_to_invoice'], 0, msg="The amount to invoice of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_unit_amount'], 0, msg="The timesheet unit amount of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_cost'], 0, msg="The timesheet cost of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_to_invoice'], 0, msg="The expense cost to reinvoice of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_invoiced'], 0, msg="The expense invoiced amount of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['expense_cost'], test_invoice.amount_total_signed, msg="The expense cost of the project should be zero, before credit note.")
+        self.assertAlmostEqual(project_stat['other_revenues'], 0, msg="The other revenues of the project should be equal to the the invoice line price, after credit note.")
+
+        refund_note_wizard = self.env['account.move.reversal'].with_context({
+            'active_model': 'account.move',
+            'active_ids': test_invoice.ids,
+            'active_id': test_invoice.id,
+        }).create({
+            'refund_method': 'refund',
+            'reason': 'no reason',
+            'journal_id': self.company_data['default_journal_purchase'].id
+        })
+        refund = self.env['account.move'].browse(refund_note_wizard.reverse_moves()["res_id"])
+
+        move_form = Form(refund)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = 1
+        refund = move_form.save()
+        refund.action_post()
+        ProjectProfitabilityReport.flush()
+
+        project_stat = ProjectProfitabilityReport.read_group([('project_id', 'in', self.project_global.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced', 'other_revenues'], ['project_id'])[0]
+        self.assertAlmostEqual(project_stat['amount_untaxed_invoiced'], 0, msg="The invoiced amount of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['amount_untaxed_to_invoice'], 0, msg="The amount to invoice of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_unit_amount'], 0, msg="The timesheet unit amount of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['timesheet_cost'], 0, msg="The timesheet cost of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_to_invoice'], 0, msg="The expense cost to reinvoice of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['expense_amount_untaxed_invoiced'], 0, msg="The expense invoiced amount of the project should be zero, after credit note.")
+        self.assertAlmostEqual(project_stat['expense_cost'], test_invoice.amount_total_signed + refund.amount_total_signed, msg="The expense costs (credit note) of the project should be zero (not taken into account), after credit note.")
+        self.assertAlmostEqual(project_stat['other_revenues'], 0, msg="The other revenues of the project should be zero, as it is balanced by credit note.")
