@@ -95,6 +95,9 @@ class Field(Node):
         text = (el.get('text') or (hasattr(el, 'text') and el.text) or '').strip()
         ref = el.get('ref', '').strip()
         _eval = el.get('eval', '')
+        unquoted = el.get('unquoted', '')
+        if unquoted:
+            text = Unquoted(text)
         if isinstance(_eval, str):
             _eval = _eval.strip()
         if text:
@@ -236,6 +239,11 @@ class AccountTax(Record):
             child._value = bool(child._value)
         return child
 
+    def get_repartition_lines(self):
+        for name, child in self['children'].items():
+            if name in ('invoice_repartition_line_ids', 'refund_repartition_line_ids'):
+                yield child._value
+
 class AccountTaxRepartitionLine(Record):
     _from = 'account.tax.repartition.line'
     def cleanup(self, child):
@@ -244,8 +252,22 @@ class AccountTaxRepartitionLine(Record):
         if record_id == 'account_id':
             child._value = unquote_ref(child._value)
         elif record_id in ('plus_report_line_ids', 'minus_report_line_ids'):
-            child._value = [unquote_ref(x) for x in child._value]
+            values = [f"'{x}'" for x in child._value]
+            child._value = Unquoted(f"tags({', '.join(values)})")
         return child
+
+    def cleanup_tags(self, tags):
+        tokens = []
+        to_be_removed = []
+        for name, child in self.get('children', {}).items():
+            if name in ('plus_report_line_ids', 'minus_report_line_ids'):
+                sign = '+' if name == 'plus_report_line_ids' else '-'
+                tokens += [f"'{sign}{tags[x]}'" for x in re.findall("'([^']+)'", child._value)]
+                to_be_removed.append(name)
+        for name in to_be_removed:
+            del self['children'][name]
+        if tokens:
+            self['children']['tag_ids'] = Field({'id': 'tag_ids', 'text': "tags(" + ", ".join(tokens) + ")", 'unquoted': True})
 
 class AccountFiscalPosition(Record):
     _from = 'account.fiscal.position'
@@ -290,6 +312,18 @@ class AccountTaxReport(Record):
             child._value = self.cleanup_o2m(child)
         return child
 
+    def get_lines(self):
+        for name, child in self['children'].items():
+            if name == 'root_line_ids':
+                yield from child['children']
+                break
+
+    def get_tags(self):
+        tags = {}
+        for line in self.get_lines():
+            tags.update(line.get_tags())
+        return tags
+
 class AccountTaxReportLine(Record):
     _from = 'account.tax.report.line'
     def cleanup(self, child):
@@ -298,6 +332,27 @@ class AccountTaxReportLine(Record):
         if record_id == 'sequence':
             child._value = int(child._value)
         return child
+
+    def get_lines(self):
+        for name, child in self.get('children', {}).items():
+            if name == 'children_line_ids':
+                yield from child['children']
+                break
+
+    def get_tag_name(self):
+        for name, child in self.get('children', {}).items():
+            if name == 'tag_name':
+                return child._value
+
+    def get_tags(self):
+        tags = {}
+        tag = self.get_tag_name()
+        if tag:
+            tags[self['id']] = tag
+        for line in self.get_lines():
+            subtags = line.get_tags()
+            tags.update(subtags)
+        return tags
 
 # TOOLS -----------------------------------------------
 
@@ -407,6 +462,17 @@ f"""<?xml version="1.0" encoding="utf-8"?>
     </data>
 </odoo>""")
 
+def get_tags(records):
+    return {k: v for report in records for k, v in report.get_tags().items()}
+
+def cleanup_tax_tags(all_records):
+    tags = get_tags(all_records.get('account.tax.report', {}).values())
+    taxes = all_records.get('account.tax.template', {}).values()
+    many_fields = [line for x in taxes for lines in x.get_repartition_lines() for line in lines]
+    for token in many_fields:
+        if len(token) == 3 and token[0] == 0:
+            token[2].cleanup_tags(tags)
+
 def do_module(code, module, lang):
     """
         Translate an old Chart Template from a module to a new set of files and a Python class.
@@ -432,6 +498,8 @@ def do_module(code, module, lang):
     else:
         convert_old_csv(module, source='account.tax.group.csv', destination="account.tax.group.csv")
     convert_try_loading(lang[-2:].lower(), all_records)
+
+    cleanup_tax_tags(all_records)
 
     # XML files
     contents = {}
@@ -499,6 +567,7 @@ def convert_records_to_function(all_records, model, function_name, set_company=F
     stream.write(indent(1, f"def {function_name}(self, template_code, company):\n") +
                  (set_company and indent(2, "company = (company or self.env.company)\n") or '') +
                  indent(2, "cid = (company or self.env.company).id\n") +
+                 (model == 'account.tax.template' and indent(2, "tags = self._get_tag_mapper(template_code)\n") or '') +
                  indent(2, "return "))
 
     if one_level:

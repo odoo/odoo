@@ -18,7 +18,7 @@ class AccountChartTemplateTest(TransactionCase):
             'name': 'Because I am accountman!',
             'login': 'accountman',
             'password': 'accountman',
-            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_invoice').id)],
+            'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_manager').id)],
         })
         user.partner_id.email = 'accountman@test.com'
 

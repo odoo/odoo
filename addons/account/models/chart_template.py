@@ -98,9 +98,22 @@ class AccountChartTemplate(models.AbstractModel):
         country_code = country.get_external_id()[country.id]
         return next((x for x in self._get_template_codes_for_country(country_code)), default_chart_template)
 
+    @lru_cache
     def _get_template_codes_for_country(self, country_code):
         chart_templates = self.get_chart_template_mapping()
         return [key for key, template in chart_templates.items() if template['country'] == country_code]
+
+    @lru_cache
+    def _get_country_code_for_template_code(self, template_code):
+        country_ref = self.get_chart_template_mapping()[template_code]['country']
+        return self.env.ref(country_ref).code
+
+    def _get_tag_mapper(self, template_code):
+        tags = {x.name: x.id for x in self.env['account.account.tag'].search([
+            ('applicability', '=', 'taxes'),
+            ('country_id.code', '=', self._get_country_code_for_template_code(template_code)),
+        ])}
+        return lambda *args: [tags[x] for x in args]
 
     def try_loading(self, template_code=False, company=False, install_demo=True):
         """ Checks if the chart template can be loaded then proceeds installing it.
@@ -503,7 +516,15 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_chart_template_data(self, template_code, company):
         company = company or self.env.company
         data = {}
-        models = ('res.company', 'account.account', 'account.tax.group', 'account.tax', 'account.journal', 'account.group')
+        models = (
+            'res.company',
+            'account.account',
+            'account.tax.group',
+            'account.tax',
+            'account.journal',
+            'account.group',
+            'account.reconcile.model',
+        )
         try:
             for model in models:
                 data[model] = self._get_data(template_code, company, model)
@@ -618,4 +639,33 @@ class AccountChartTemplate(models.AbstractModel):
                 ('sale', _('Tax 15%')),
                 ('purchase', _('Purchase Tax 15%'))
             )
+        }
+
+    def _get_account_reconcile_model(self, template_code, company):
+        cid = (company or self.env.company).id
+        return {
+            f"{cid}_reconcile_perfect_match": {
+                "name": _('Invoices/Bills Perfect Match'),
+                "company_id": cid,
+                "sequence": 1,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": True,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": True,
+                "payment_tolerance_type": 'percentage',
+                "payment_tolerance_param": 0,
+                "match_partner": True,
+            },
+            f"{cid}_reconcile_partial_underpaid": {
+                "name": _('Invoices/Bills Partial Match if Underpaid'),
+                "company_id": cid,
+                "sequence": 2,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": False,
+                "match_partner": True,
+            }
         }
