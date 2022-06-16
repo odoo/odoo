@@ -35,4 +35,4 @@ class HrDepartureWizard(models.TransientModel):
             # ignore contact links to internal users
             private_address = employee.address_home_id
             if private_address and private_address.active and not self.env['res.users'].search([('partner_id', '=', private_address.id)]):
-                private_address.toggle_active()
+                private_address.sudo().toggle_active()
