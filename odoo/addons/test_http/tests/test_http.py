@@ -52,6 +52,10 @@ class TestHttpBase(HttpCase):
             db_filter.return_value = []
             return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
 
+    def nodb_redirect(self, url, local=True):
+        self.db = False
+        return Request.redirect(self, url, local=local).headers['location']
+
     def multidb_url_open(self, url, *args, allow_redirects=False, dblist=(), **kwargs):
         dblist = dblist or self.db_list
         assert len(dblist) >= 2, "There should be at least 2 databases"
@@ -405,6 +409,14 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
             self.assertEqual(res.json()['HTTP_HOST'], host)
+
+    def test_misc2_local_redirect(self):
+        self.assertEqual(self.nodb_redirect('https://www.domain.com/hello?a=b'), '/hello?a=b')
+        self.assertEqual(self.nodb_redirect('/hello?a=b'), '/hello?a=b')
+        self.assertEqual(self.nodb_redirect('hello?a=b'), '/hello?a=b')
+        self.assertEqual(self.nodb_redirect('www.domain.com/hello?a=b'), '/www.domain.com/hello?a=b')
+        self.assertEqual(self.nodb_redirect('https://www.domain.comhttps://www.domain2.com/hello?a=b'), '/www.domain2.com/hello?a=b')
+        self.assertEqual(self.nodb_redirect('https://https://www.domain.com/hello?a=b'), '/www.domain.com/hello?a=b')
 
 
 @tagged('post_install', '-at_install')
