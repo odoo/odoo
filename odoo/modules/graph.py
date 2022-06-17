@@ -19,14 +19,15 @@ class Graph(dict):
     """
 
     def add_node(self, name, info):
-        max_depth, father = 0, None
-        for d in info['depends']:
+        child_node = None
+        for d in info['depends'] + info['soft_depends']:
             n = self.get(d) or Node(d, self, None)  # lazy creation, do not use default value for get()
-            if n.depth >= max_depth:
-                father = n
-                max_depth = n.depth
-        if father:
-            return father.add_child(name, info)
+            # the child node instance is always the same as long as the name remains
+            # the same (thanks to `Node.__new__` implementation). This allow us to have
+            # the exact same Node under multiple parents.
+            child_node = n.add_child(name, info)
+        if child_node:
+            return child_node
         else:
             return Node(name, self, info)
 
@@ -64,12 +65,21 @@ class Graph(dict):
             elif module != 'studio_customization':
                 _logger.warning('module %s: not installable, skipped', module)
 
+        # sort packages by name to ensure consistent loading
+        # m[0] is the module name, m[1] is the manifest dictionnary.
+        packages.sort(key=lambda m: m[0])
+
         dependencies = dict([(p, info['depends']) for p, info in packages])
         current, later = set([p for p, info in packages]), set()
 
         while packages and current > later:
             package, info = packages[0]
             deps = info['depends']
+
+            # add soft dependencies only if these modules exists
+            available_deps = [x for x in info['soft_depends'] if x in dependencies]
+            if available_deps:
+                deps = deps + available_deps
 
             # if all dependencies of 'package' are already in the graph, add 'package' in the graph
             if all(dep in self for dep in deps):
@@ -97,17 +107,40 @@ class Graph(dict):
 
 
     def __iter__(self):
-        level = 0
-        done = set(self.keys())
-        while done:
-            level_modules = sorted((name, module) for name, module in self.items() if module.depth==level)
-            for name, module in level_modules:
-                done.remove(name)
+        todo = set(self.keys())
+
+        def fill_modules_children(module, modlist):
+            modlist.append(module)
+            for child in module.children:
+                fill_modules_children(child, modlist)
+
+        # retrieve all root modules
+        root_modules = Node.sort([m for m in self.values() if not m.parents])
+        all_modules = []
+        for root_module in root_modules:
+            fill_modules_children(root_module, all_modules)
+        # now returns all modules in the given order which respects priorities but waits
+        # for all dependencies to be added first.
+        while todo:
+            todo_modules = [m for m in all_modules if m.name in todo]
+            for module in todo_modules:
+                if module.name not in todo:
+                    continue
+                waiting_dependencies = [m for m in module.depends if m in todo]
+                if waiting_dependencies:
+                    continue
+                todo.remove(module.name)
                 yield module
-            level += 1
 
     def __str__(self):
-        return '\n'.join(str(n) for n in self if n.depth == 0)
+        return '\n'.join(str(n) for n in self if not n.parents)
+    
+    def _pprint(self):
+        TABLE_FMT = "{:<6} {:<10} {:<60} {}\n"
+        res = TABLE_FMT.format("Index", "Priority", "Name", "Dependencies")
+        for index, node in enumerate(self):
+            res += TABLE_FMT.format(index, node.priority or "", node.name, str(node.depends))
+        return res
 
 class Node(object):
     """ One module in the modules dependency graph.
@@ -120,6 +153,7 @@ class Node(object):
     def __new__(cls, name, graph, info):
         if name in graph:
             inst = graph[name]
+            inst.info = info
         else:
             inst = object.__new__(cls)
             graph[name] = inst
@@ -131,22 +165,37 @@ class Node(object):
         self.info = info or getattr(self, 'info', {})
         if not hasattr(self, 'children'):
             self.children = []
-        if not hasattr(self, 'depth'):
-            self.depth = 0
+        if not hasattr(self, 'parents'):
+            self.parents = []
+        if not hasattr(self, 'priority'):
+            self.priority = 0
 
     @property
     def data(self):
         return self.info
 
+    @property
+    def depends(self):
+        if self.info:
+            return self.info["depends"] + self.info["soft_depends"]
+        return []
+
+    @staticmethod
+    def sort(nodes):
+        return sorted(nodes, key=lambda node: (-node.priority, node.name))
+
     def add_child(self, name, info):
         node = Node(name, self.graph, info)
-        node.depth = self.depth + 1
+        if self not in node.parents:
+            node.parents.append(self)
         if node not in self.children:
             self.children.append(node)
         for attr in ('init', 'update', 'demo'):
             if hasattr(self, attr):
                 setattr(node, attr, True)
-        self.children.sort(key=lambda x: x.name)
+        if node.priority:
+            self._add_priority(node.priority)
+        self.children = Node.sort(self.children)
         return node
 
     def __setattr__(self, name, value):
@@ -155,9 +204,14 @@ class Node(object):
             tools.config[name][self.name] = 1
             for child in self.children:
                 setattr(child, name, value)
-        if name == 'depth':
-            for child in self.children:
-                setattr(child, name, value + 1)
+        if name == "info":
+            if self.info and self.info.get("loading_priority"):
+                self.priority = self.info.get("loading_priority")
+
+    def _add_priority(self, value):
+        self.priority += value
+        for parent in self.parents:
+            parent._add_priority(value)
 
     def __iter__(self):
         return itertools.chain(
@@ -168,22 +222,14 @@ class Node(object):
     def __str__(self):
         return self._pprint()
 
-    def _pprint(self, depth=0):
-        s = '%s\n' % self.name
+    def _pprint(self, level=0):
+        s = '%s' % self.name
+        if self.priority:
+            s += ' (priority: %d)' % self.priority
+        s += '\n'
         for c in self.children:
-            s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
+            s += '%s`-> %s' % ('   ' * level, c._pprint(level+1))
         return s
 
     def should_have_demo(self):
         return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)
-
-    @property
-    def parents(self):
-        if self.depth == 0:
-            return []
-
-        return (
-            node for node in self.graph.values()
-            if node.depth < self.depth
-            if self in node.children
-        )

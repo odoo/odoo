@@ -34,6 +34,7 @@ _DEFAULT_MANIFEST = {
     'demo': [],
     'demo_xml': [],
     'depends': [],
+    'soft_depends': [],
     'description': '',
     'external_dependencies': {},
     #icon: f'/{module}/static/description/icon.png',  # automatic
@@ -48,6 +49,7 @@ _DEFAULT_MANIFEST = {
     'post_load': None,
     'pre_init_hook': '',
     'sequence': 100,
+    'loading_priority': 0,
     'snippet_lists': {},  # website themes
     'summary': '',
     'test': [],
