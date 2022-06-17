@@ -486,7 +486,6 @@ class Controller:
             module = path[2] if path[:2] == ['odoo', 'addons'] else ''
             Controller.children_classes[module].append(cls)
 
-
 def route(route=None, **routing):
     """
     Decorate a controller method in order to route incoming requests
@@ -1242,7 +1241,7 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = url_parse(location).replace(scheme='', netloc='').to_url()
+            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
