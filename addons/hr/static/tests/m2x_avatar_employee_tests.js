@@ -118,7 +118,7 @@ QUnit.module('hr', {}, function () {
         assert.expect(3);
 
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv['res.partner'].create();
+        const resPartnerId1 = pyEnv['res.partner'].create({});
         const resUsersId1 = pyEnv['res.users'].create({ partner_id: resPartnerId1 });
         const hrEmployeePublicId1 = pyEnv['hr.employee.public'].create({ user_id: resUsersId1, user_partner_id: resPartnerId1 });
         pyEnv['m2x.avatar.employee'].create({ employee_id: hrEmployeePublicId1, employee_ids: [hrEmployeePublicId1] });
@@ -389,8 +389,8 @@ QUnit.module('hr', {}, function () {
         assert.expect(10);
 
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv['res.partner'].create();
-        const resUsersId1 = pyEnv['res.users'].create();
+        const resPartnerId1 = pyEnv['res.partner'].create({});
+        const resUsersId1 = pyEnv['res.users'].create({});
         const [hrEmployeePublicId1, hrEmployeePublicId2] = pyEnv['hr.employee.public'].create([
             {},
             { user_id: resUsersId1, user_partner_id: resPartnerId1 },

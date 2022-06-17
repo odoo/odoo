@@ -9,8 +9,8 @@ QUnit.test('rating value displayed on the thread preview', async function (asser
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create([
         { author_id: resPartnerId1, model: 'mail.channel', res_id: mailChannelId1 },
     ]);

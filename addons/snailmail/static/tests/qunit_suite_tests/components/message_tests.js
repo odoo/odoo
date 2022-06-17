@@ -21,7 +21,7 @@ QUnit.test('Sent', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
@@ -99,7 +99,7 @@ QUnit.test('Canceled', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
@@ -177,7 +177,7 @@ QUnit.test('Pending', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
@@ -255,7 +255,7 @@ QUnit.test('No Price Available', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
@@ -348,7 +348,7 @@ QUnit.test('Credit Error', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
@@ -446,7 +446,7 @@ QUnit.test('Trial Error', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',
@@ -544,7 +544,7 @@ QUnit.test('Format Error', async function (assert) {
         name: "Someone",
         partner_share: true,
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'snailmail',

@@ -98,7 +98,7 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
@@ -173,7 +173,7 @@ QUnit.test('add an emoji', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
@@ -193,7 +193,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
@@ -220,7 +220,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChanelId1,
@@ -250,7 +250,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
     const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -276,7 +276,7 @@ QUnit.test('use a canned response', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -313,7 +313,7 @@ QUnit.test('use a canned response some text', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -356,7 +356,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChanelId1 = pyEnv['mail.channel'].create();
+    const mailChanelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({ source: "hello", substitution: "Hello! How are you?" });
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
@@ -575,7 +575,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -598,7 +598,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -733,7 +733,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     const resPartnerId1 = pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
     pyEnv['res.partner'].create({ email: "testpartner2@odoo.com", name: "TestPartner2" });
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -764,7 +764,7 @@ QUnit.test('mention a partner', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -801,7 +801,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -844,7 +844,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
 
     const pyEnv = await startServer();
     pyEnv['res.partner'].create({ email: "testpartner@odoo.com", name: "TestPartner" });
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, insertText, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -889,7 +889,7 @@ QUnit.test('composer: add an attachment', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -919,7 +919,7 @@ QUnit.test('composer: drop attachments', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -982,7 +982,7 @@ QUnit.test('composer: paste attachments', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -1016,7 +1016,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, insertText, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
@@ -1053,7 +1053,7 @@ QUnit.test('composer with thread typing notification status', async function (as
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -1081,7 +1081,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -1109,7 +1109,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -1146,7 +1146,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { advanceTime, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -1182,7 +1182,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { advanceTime, insertText } = await start({
         autoOpenDiscuss: true,
         discuss: {
@@ -1224,7 +1224,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
 
     const pyEnv = await startServer();
     const attachmentUploadedPromise = makeTestPromise();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start({
         async mockRPC(route) {
             if (route === '/mail/attachment/upload') {
@@ -1295,7 +1295,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,
@@ -1336,7 +1336,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, createComposerComponent, messaging } = await start({
         async mockRPC(route) {
             if (route === '/mail/attachment/upload') {
@@ -1389,7 +1389,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { afterEvent, createComposerComponent, messaging } = await start({
         async mockRPC(route) {
             if (route === '/mail/attachment/upload') {
@@ -1437,7 +1437,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const views = {
         'res.partner,false,form':
             `<form string="Partners">
@@ -1505,7 +1505,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, insertText, messaging } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
@@ -1540,7 +1540,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     const pyEnv = await startServer();
     // Promise to block attachment uploading
     const uploadPromise = makeTestPromise();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start({
         async mockRPC(route) {
             if (route === '/mail/attachment/upload') {
@@ -1590,7 +1590,7 @@ QUnit.test('send button on mail.channel should have "Send" as label', async func
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { createComposerComponent, messaging } = await start();
     const thread = messaging.models['Thread'].findFromIdentifyingData({
         id: mailChannelId1,

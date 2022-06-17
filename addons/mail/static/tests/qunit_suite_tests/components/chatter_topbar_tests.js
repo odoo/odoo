@@ -12,7 +12,7 @@ QUnit.test('base rendering', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -110,7 +110,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { advanceTime, createChatterContainerComponent } = await start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
@@ -153,7 +153,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { createChatterContainerComponent } = await start({
         async mockRPC(route) {
             if (route.includes('/mail/thread/data')) {
@@ -192,7 +192,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
     assert.expect(7);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const attachmentPromise = makeTestPromise();
     const { createChatterContainerComponent } = await start({
         async mockRPC(route) {
@@ -249,7 +249,7 @@ QUnit.test('attachment counter without attachments', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -282,7 +282,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
@@ -329,7 +329,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -457,7 +457,7 @@ QUnit.test('log note/send message switching', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -513,7 +513,7 @@ QUnit.test('log note toggling', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -549,7 +549,7 @@ QUnit.test('send message toggling', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,

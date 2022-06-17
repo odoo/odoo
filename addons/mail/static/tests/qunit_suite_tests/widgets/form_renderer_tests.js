@@ -569,7 +569,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         author_id: resPartnerId1,
         // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
@@ -657,7 +657,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create([{
         author_id: resPartnerId1,
         // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
@@ -900,7 +900,7 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const views = {
         'res.partner,false,form':
             `<form string="Partners">
