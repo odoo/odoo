@@ -160,7 +160,7 @@ class AccountFrFec(models.TransientModel):
             'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
-            replace(replace(MIN(aa.name), '|', '/'), '\t', '') AS CompteLib,
+            replace(replace(MIN(aa.name->>'en_US'), '|', '/'), '\t', '') AS CompteLib,
             '' AS CompAuxNum,
             '' AS CompAuxLib,
             '-' AS PieceRef,
@@ -243,7 +243,7 @@ class AccountFrFec(models.TransientModel):
             'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
-            replace(MIN(aa.name), '|', '/') AS CompteLib,
+            replace(MIN(aa.name->>'en_US'), '|', '/') AS CompteLib,
             CASE WHEN MIN(aa.account_type) IN ('asset_receivable', 'liability_payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
@@ -301,11 +301,11 @@ class AccountFrFec(models.TransientModel):
         sql_query = '''
         SELECT
             REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
-            REGEXP_REPLACE(replace(COALESCE(aj__name.value, aj.name), '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
+            REGEXP_REPLACE(replace(COALESCE(aj.name->>%s, aj.name->>'en_US'), '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
             REGEXP_REPLACE(replace(am.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
-            REGEXP_REPLACE(replace(aa.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
+            REGEXP_REPLACE(replace(aa.name->>'en_US', '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
             CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
@@ -343,11 +343,6 @@ class AccountFrFec(models.TransientModel):
             LEFT JOIN account_move am ON am.id=aml.move_id
             LEFT JOIN res_partner rp ON rp.id=aml.partner_id
             JOIN account_journal aj ON aj.id = am.journal_id
-            LEFT JOIN ir_translation aj__name ON aj__name.res_id = aj.id
-                                             AND aj__name.type = 'model'
-                                             AND aj__name.name = 'account.journal,name'
-                                             AND aj__name.lang = %s
-                                             AND aj__name.value != ''
             JOIN account_account aa ON aa.id = aml.account_id
             LEFT JOIN res_currency rc ON rc.id = aml.currency_id
             LEFT JOIN account_full_reconcile rec ON rec.id = aml.full_reconcile_id

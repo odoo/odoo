@@ -85,7 +85,7 @@ class AccountTax(models.Model):
     def _default_tax_group(self):
         return self.env.ref('account.tax_group_taxes')
 
-    name = fields.Char(string='Tax Name', required=True)
+    name = fields.Char(string='Tax Name', required=True, translate=True)
     name_searchable = fields.Char(store=False, search='_search_name',
           help="This dummy field lets us use another search method on the field 'name'."
                "This allows more freedom on how to search the 'name' compared to 'filter_domain'."
@@ -115,7 +115,7 @@ class AccountTax(models.Model):
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0)
     real_amount = fields.Float(string='Real amount to apply', compute='_compute_real_amount', store=True)
-    description = fields.Char(string='Label on Invoices')
+    description = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
