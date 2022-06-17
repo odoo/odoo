@@ -10,7 +10,7 @@ QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { createChatterContainerComponent } = await start();
     const chatterContainerComponent = await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
@@ -42,7 +42,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
@@ -88,7 +88,7 @@ QUnit.test('view attachments', async function (assert) {
     assert.expect(7);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const [irAttachmentId1] = pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
@@ -160,7 +160,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['ir.attachment'].create({
         mimetype: 'text/plain',
         name: 'Blah.txt',

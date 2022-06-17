@@ -9,8 +9,8 @@ QUnit.test('rating value displayed on the thread needaction preview', async func
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const mailTestRating1 = pyEnv['mail.test.rating'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const mailTestRating1 = pyEnv['mail.test.rating'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'mail.test.rating',
         needaction: true,

@@ -493,7 +493,7 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         model: "mail.channel",
@@ -858,7 +858,7 @@ QUnit.test('default thread rendering', async function (assert) {
     assert.expect(16);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging } = await this.start();
     assert.strictEqual(
         document.querySelectorAll(`
@@ -1069,7 +1069,7 @@ QUnit.test('load single message from channel initially', async function (assert)
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         date: "2019-04-20 10:00:00",
@@ -1128,7 +1128,7 @@ QUnit.test('open channel from active_id as channel id', async function (assert) 
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { messaging } = await this.start({
         discuss: {
             context: {
@@ -1152,7 +1152,7 @@ QUnit.test('basic rendering of message', async function (assert) {
     assert.expect(15);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
     const mailMessageId1 = pyEnv['mail.message'].create({
         author_id: resPartnerId1,
@@ -1258,7 +1258,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, insertText } = await this.start({
         discuss: {
             params: {
@@ -1286,8 +1286,8 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
     assert.expect(12);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         {
             author_id: resPartnerId1, // must be same author as other message
@@ -1393,8 +1393,8 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         {
             author_id: resPartnerId1, // must be same author as other message
@@ -1480,9 +1480,9 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    pyEnv['res.partner'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    pyEnv['res.partner'].create({});
     for (let i = 28; i >= 0; i--) {
         pyEnv['mail.message'].create({
             author_id: resPartnerId1,
@@ -1539,9 +1539,9 @@ QUnit.test('load more messages from channel', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    pyEnv['res.partner'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    pyEnv['res.partner'].create({});
     for (let i = 0; i < 40; i++) {
         pyEnv['mail.message'].create({
             author_id: resPartnerId1,
@@ -1609,7 +1609,7 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 1; i <= 25; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
@@ -1656,7 +1656,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i < 40; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
@@ -2255,7 +2255,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         {
             body: "not empty",
@@ -2416,7 +2416,7 @@ QUnit.test('toggle_star message', async function (assert) {
     assert.expect(16);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         model: 'mail.channel',
@@ -2647,7 +2647,7 @@ QUnit.test('post a simple message', async function (assert) {
     assert.expect(16);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, insertText, messaging } = await this.start({
         discuss: {
             params: {
@@ -2744,7 +2744,7 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async funct
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { insertText } = await this.start({
         discuss: {
             params: {
@@ -2778,7 +2778,7 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { insertText } = await this.start({
         discuss: {
             params: {
@@ -3197,7 +3197,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     assert.expect(10);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         {
             body: "not empty",
@@ -3860,7 +3860,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     assert.expect(7);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { messaging } = await this.start({
         discuss: {
             context: {
@@ -3930,7 +3930,7 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { insertText } = await this.start({
         discuss: {
             context: {
@@ -3962,7 +3962,7 @@ QUnit.test('message being a replied to another message should show message being
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "1st message",
         model: 'mail.channel',

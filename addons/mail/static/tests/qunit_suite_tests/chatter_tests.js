@@ -96,8 +96,8 @@ QUnit.test('list activity widget with exception', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailActivityId1 = pyEnv['mail.activity'].create();
-    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create({});
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create({});
     pyEnv['res.users'].write([pyEnv.currentUserId], {
         activity_ids: [mailActivityId1],
         activity_state: 'today',
@@ -285,7 +285,7 @@ QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortc
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create();
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create({});
     const mailActivityId1 = pyEnv['mail.activity'].create([
         {
             display_name: "Call with Al",
@@ -335,7 +335,7 @@ QUnit.test('list activity widget: done and schedule the next activity with "ENTE
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create();
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create({});
     const mailActivityId1 = pyEnv['mail.activity'].create([
         {
             display_name: "Call with Al",

@@ -70,7 +70,7 @@ QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
 
     const { click, createChatterContainerComponent } = await start({
         async mockRPC(route, args, performRPC) {
@@ -437,7 +437,7 @@ QUnit.test('Show "No Followers" dropdown-item if there are no followers and user
 
     const pyEnv = await startServer();
 
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent } = await start({
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {

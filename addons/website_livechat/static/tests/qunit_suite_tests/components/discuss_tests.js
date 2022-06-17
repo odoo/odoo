@@ -199,7 +199,7 @@ QUnit.test('livechat without visitor should not show visitor banner', async func
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_last_seen_partner_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],

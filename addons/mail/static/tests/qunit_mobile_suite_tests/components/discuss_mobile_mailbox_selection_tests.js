@@ -65,7 +65,7 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
 
     patchUiSize({ height: 360, width: 640 });
     const { click, messaging } = await start({

@@ -12,7 +12,7 @@ QUnit.test('openChat: display notification for partner without user', async func
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { messaging } = await start({
         services: {
             notification: makeFakeNotificationService(message => {
@@ -36,7 +36,7 @@ QUnit.test('openChat: display notification for wrong user', async function (asse
     assert.expect(2);
 
     const pyEnv = await startServer();
-    pyEnv['res.users'].create();
+    pyEnv['res.users'].create({});
     const { messaging } = await start({
         services: {
             notification: makeFakeNotificationService(message => {
@@ -61,7 +61,7 @@ QUnit.test('openChat: open new chat for user', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
 
     const { messaging } = await start({ data: this.data });
@@ -79,7 +79,7 @@ QUnit.test('openChat: open existing chat for user', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_last_seen_partner_ids: [

@@ -12,7 +12,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -62,7 +62,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -113,7 +113,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
     assert.expect(7);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -154,7 +154,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
     assert.expect(7);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -199,7 +199,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailActivityId1 = pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,
@@ -248,7 +248,7 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['mail.activity'].create({
         activity_category: 'not_upload_file',
         can_write: true,

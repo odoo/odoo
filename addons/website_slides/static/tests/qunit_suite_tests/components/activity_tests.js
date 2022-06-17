@@ -10,8 +10,8 @@ QUnit.test('grant course access', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const slideChannelId1 = pyEnv['slide.channel'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const slideChannelId1 = pyEnv['slide.channel'].create({});
     pyEnv['mail.activity'].create({
         can_write: true,
         res_id: slideChannelId1,
@@ -47,8 +47,8 @@ QUnit.test('refuse course access', async function (assert) {
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
-    const slideChannelId1 = pyEnv['slide.channel'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
+    const slideChannelId1 = pyEnv['slide.channel'].create({});
     pyEnv['mail.activity'].create({
         can_write: true,
         res_id: slideChannelId1,

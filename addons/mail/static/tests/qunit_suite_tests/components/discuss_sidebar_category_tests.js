@@ -22,7 +22,7 @@ QUnit.test('channel - counter: should not have a counter if the category is unfo
     assert.expect(1);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
 
     await this.start();
     assert.strictEqual(
@@ -73,7 +73,7 @@ QUnit.test('channel - counter: should not have a counter if category is folded a
     assert.expect(1);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -193,7 +193,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -217,7 +217,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -241,7 +241,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
     assert.expect(2);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -277,7 +277,7 @@ QUnit.test('channel - states: open should update the value on the server', async
     assert.expect(2);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -313,7 +313,7 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -342,7 +342,7 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const resUsersSettingsId1 = pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -371,7 +371,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging } = await this.start();
 
     assert.containsOnce(
@@ -609,7 +609,7 @@ QUnit.test('chat - states: close should call update server data', async function
     assert.expect(2);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
@@ -645,7 +645,7 @@ QUnit.test('chat - states: open should call update server data', async function 
     assert.expect(2);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
     pyEnv['res.users.settings'].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
