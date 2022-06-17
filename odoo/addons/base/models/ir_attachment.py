@@ -140,7 +140,7 @@ class IrAttachment(models.Model):
     @api.model
     def _file_gc(self):
         """ Perform the garbage collection of the filestore. """
-        if self._storage() != 'file':
+        if not self._storage().startswith('file'):
             return
 
         # Continue in a new transaction. The LOCK statement below must be the
