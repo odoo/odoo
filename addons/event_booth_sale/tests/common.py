@@ -20,3 +20,12 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
         (cls.event_booth_category_1 + cls.event_booth_category_2).write({
             'product_id': cls.event_booth_product.id,
         })
+
+        cls.tax_10 = cls.env['account.tax'].sudo().create({
+            'name': 'Tax 10',
+            'amount': 10,
+        })
+
+        cls.test_pricelist = cls.env['product.pricelist'].sudo().create({
+            'name': 'Test Pricelist',
+        })
