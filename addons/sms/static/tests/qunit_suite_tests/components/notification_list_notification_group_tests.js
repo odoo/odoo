@@ -53,7 +53,7 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
     assert.expect(11);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const [mailMessageId1, mailMessageId2] = pyEnv['mail.message'].create([
         {
             message_type: 'sms', // different type from second message

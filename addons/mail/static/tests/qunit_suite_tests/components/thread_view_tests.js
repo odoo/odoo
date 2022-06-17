@@ -1060,7 +1060,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
         {
             email: "partner1@example.com",

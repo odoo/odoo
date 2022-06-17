@@ -245,7 +245,7 @@ QUnit.test('counter is taking into account failure notification', async function
         },
     });
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'mail.channel',
         res_id: mailChannelId1,
@@ -685,7 +685,7 @@ QUnit.test('open chat window from preview', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    pyEnv['mail.channel'].create();
+    pyEnv['mail.channel'].create({});
     const { click, createMessagingMenuComponent } = await start();
     await createMessagingMenuComponent();
 
@@ -702,7 +702,7 @@ QUnit.test('no code injection in message body preview', async function (assert) 
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.message'].create({
         body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
         model: "mail.channel",
@@ -744,7 +744,7 @@ QUnit.test('no code injection in message body preview from sanitized message', a
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.message'].create({
         body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
         model: "mail.channel",
@@ -786,7 +786,7 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.message'].create({
         body: "<p>a<br/>b<br>c<br   />d<br     ></p>",
         model: "mail.channel",

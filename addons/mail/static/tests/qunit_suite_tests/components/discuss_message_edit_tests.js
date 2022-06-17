@@ -10,7 +10,7 @@ QUnit.test('click on message edit button should open edit composer', async funct
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.message'].create({
         body: 'not empty',
         message_type: 'comment',

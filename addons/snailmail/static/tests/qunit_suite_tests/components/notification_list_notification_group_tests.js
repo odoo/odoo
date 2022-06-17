@@ -16,7 +16,7 @@ QUnit.test('mark as read', async function (assert) {
     // The following code simulates the cancel of the notification without using "snailmail.letter" model
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     // message that is expected to have a failure
     const mailMessageId1 = pyEnv['mail.message'].create({
         author_id: pyEnv.currentPartnerId,

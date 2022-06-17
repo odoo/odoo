@@ -872,7 +872,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const mailChannelId = pyEnv['mail.channel'].create();
+    const mailChannelId = pyEnv['mail.channel'].create({});
     const { click, createMessagingMenuComponent, insertText, openDiscuss, openView } = await start();
     const messagingMenuComponent = await createMessagingMenuComponent();
     await click(`.o_MessagingMenu_toggler`);
@@ -940,7 +940,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i < 10; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
@@ -1478,7 +1478,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i < 10; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
@@ -1628,7 +1628,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     for (let i = 0; i < 10; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
@@ -1968,7 +1968,7 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const resUsersId1 = pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     pyEnv['mail.channel'].create({
         channel_last_seen_partner_ids: [

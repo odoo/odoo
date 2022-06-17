@@ -10,7 +10,7 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({
         source: 'hello',
         substitution: "Hello, how are you?",
@@ -35,7 +35,7 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({
         source: 'hello',
         substitution: "Hello, how are you?",
@@ -75,7 +75,7 @@ QUnit.test('canned response suggestion active', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     pyEnv['mail.shortcode'].create({
         source: 'hello',
         substitution: "Hello, how are you?",

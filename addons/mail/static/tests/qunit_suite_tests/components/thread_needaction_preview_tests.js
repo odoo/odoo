@@ -12,7 +12,7 @@ QUnit.test('mark as read', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const resPartnerId1 =  pyEnv['res.partner'].create();
+    const resPartnerId1 =  pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
@@ -71,7 +71,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
@@ -135,7 +135,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
     assert.expect(8);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
@@ -209,7 +209,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         model: 'res.partner',
         needaction: true,
@@ -313,7 +313,7 @@ QUnit.test('chat window header should not have unread counter for non-channel th
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         author_id: resPartnerId1,
         body: 'not empty',

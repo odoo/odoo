@@ -188,7 +188,10 @@ const VIEW_TYPE_TO_ARCH = {
                      * @returns {integer[]|integer} array of ids if more than one value was passed,
                      * id of created record otherwise.
                      */
-                    create(values = {}) {
+                    create(values) {
+                        if (!values) {
+                            return;
+                        }
                         if (!Array.isArray(values)) {
                             values = [values];
                         }

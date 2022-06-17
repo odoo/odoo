@@ -12,7 +12,7 @@ QUnit.test('notification group basic layout', async function (assert) {
     assert.expect(10);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         message_type: 'email', // message must be email (goal of the test)
         model: 'mail.channel', // expected value to link message to channel
@@ -89,7 +89,7 @@ QUnit.test('mark as read', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         message_type: 'email', // message must be email (goal of the test)
         model: 'mail.channel', // expected value to link message to channel
@@ -472,7 +472,7 @@ QUnit.test('non-failure notifications are ignored', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
             message_type: 'email', // message must be email (goal of the test)
             model: 'res.partner', // random model

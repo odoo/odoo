@@ -14,7 +14,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { messaging } = await start({
         autoOpenDiscuss: true,
     });
@@ -39,7 +39,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
     });
@@ -113,7 +113,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create();
+    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging } = await start({
         autoOpenDiscuss: true,
     });

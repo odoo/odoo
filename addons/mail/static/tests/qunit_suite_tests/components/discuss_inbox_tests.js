@@ -128,7 +128,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         model: 'res.partner',
@@ -186,7 +186,7 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         model: 'res.partner',
@@ -238,7 +238,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
     assert.expect(7);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         model: 'res.partner',
@@ -318,7 +318,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         is_discussion: false,
@@ -384,7 +384,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         is_discussion: true,
@@ -450,7 +450,7 @@ QUnit.test('error notifications should not be shown in Inbox', async function (a
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const mailMessageId1 = pyEnv['mail.message'].create({
         body: "not empty",
         model: 'mail.channel',

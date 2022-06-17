@@ -22,7 +22,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     for (let i = 0; i < 60; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
@@ -134,7 +134,7 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
@@ -175,7 +175,7 @@ QUnit.test('show attachment box', async function (assert) {
     assert.expect(6);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['ir.attachment'].create([
         {
             mimetype: 'text/plain',
@@ -233,7 +233,7 @@ QUnit.test('chatter: drop attachments', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -295,7 +295,7 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
     assert.expect(10);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -367,7 +367,7 @@ QUnit.test('should display subject when subject is not the same as the thread na
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['mail.message'].create({
         body: "not empty",
         model: 'res.partner',
@@ -420,7 +420,7 @@ QUnit.test('should not display user notification messages in chatter', async fun
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['mail.message'].create({
         message_type: 'user_notification',
         model: 'res.partner',
@@ -443,7 +443,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent, insertText } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -472,7 +472,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent, insertText } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
@@ -504,7 +504,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv['res.partner'].create();
+    const resPartnerId1 = pyEnv['res.partner'].create({});
     const { click, createChatterContainerComponent, insertText } = await start();
     await createChatterContainerComponent({
         threadId: resPartnerId1,
