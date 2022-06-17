@@ -169,8 +169,8 @@
                                 <AliquotaIVA t-esc="format_numbers(tax_dict['tax'].amount)"/>
                                 <Natura t-if="tax_dict['tax'].l10n_it_has_exoneration" t-esc="tax_dict['tax'].l10n_it_kind_exoneration"/>
                                 <Arrotondamento t-if="tax_dict.get('rounding')" t-esc="format_numbers(tax_dict['rounding'])"/>
-                                <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount']), currency)"/>
-                                <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount']), currency)"/>
+                                <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount_currency']), currency)"/>
+                                <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount_currency']), currency)"/>
                                 <EsigibilitaIVA t-if="not tax_dict['tax'].l10n_it_has_exoneration or tax_dict['tax'].l10n_it_kind_exoneration=='N6'" t-esc="tax_dict['tax'].l10n_it_vat_due_date"/>
                                 <RiferimentoNormativo t-if="tax_dict['tax'].l10n_it_has_exoneration" t-esc="format_alphanumeric(tax_dict['tax'].l10n_it_law_reference[:100])"/>
                             </DatiRiepilogo>

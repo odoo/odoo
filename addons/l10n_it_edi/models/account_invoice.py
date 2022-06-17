@@ -169,14 +169,14 @@ class AccountMove(models.Model):
         #   taxable base = sum(taxable base for each unit) + Arrotondamento
         tax_details = self._prepare_edi_tax_details()
         for _tax_name, tax_dict in tax_details['tax_details'].items():
-            base_amount = tax_dict['base_amount']
-            tax_amount = tax_dict['tax_amount']
+            base_amount = tax_dict['base_amount_currency']
+            tax_amount = tax_dict['tax_amount_currency']
             tax_rate = tax_dict['tax'].amount
             if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
                 expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
                 if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
                     tax_dict['rounding'] = base_amount - (tax_amount * 100 / tax_rate)
-                    tax_dict['base_amount'] = base_amount - tax_dict['rounding']
+                    tax_dict['base_amount_currency'] = base_amount - tax_dict['rounding']
 
         # Create file content.
         template_values = {
