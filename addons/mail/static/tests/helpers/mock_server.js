@@ -527,6 +527,7 @@ patch(MockServer.prototype, 'mail', {
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
             ); // order not done for simplicity
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id));
+            res['mainAttachment'] = thread.message_main_attachment_id ? [['insert-and-replace', { 'id': thread.message_main_attachment_id }]] : [['clear']];
         }
         if (request_list.includes('followers')) {
             const followers = this.pyEnv['mail.followers'].searchRead([['id', 'in', thread.message_follower_ids || []]]);
