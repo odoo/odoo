@@ -73,4 +73,4 @@ class MicrosoftOutlookController(http.Controller):
             'microsoft_outlook_access_token_expiration': expiration,
         })
 
-        return werkzeug.utils.redirect(f'/web?#id={rec_id}&model={model_name}&view_type=form', 303)
+        return request.redirect(f'/web?#id={rec_id}&model={model_name}&view_type=form')
