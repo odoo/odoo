@@ -93,9 +93,9 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days_date = fields.Date(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Preferred Route', domain="[('product_selectable', '=', True)]")
-    qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty')
-    qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty')
-    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False)
+    qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
+    qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit of Measure')
+    qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False, digits='Product Unit of Measure')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
     visibility_days = fields.Float(
