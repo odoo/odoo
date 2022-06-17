@@ -697,6 +697,10 @@ class AccountPaymentRegister(models.TransientModel):
                     for line in batch_result['lines']:
                         new_batches.append({
                             **batch_result,
+                            'payment_values': {
+                                **batch_result['payment_values'],
+                                'payment_type': 'inbound' if line.balance > 0 else 'outbound'
+                            },
                             'lines': line,
                         })
                 batches = new_batches
