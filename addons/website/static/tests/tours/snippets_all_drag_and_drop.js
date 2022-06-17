@@ -62,7 +62,7 @@ tour.register("snippets_all_drag_and_drop", {
 }, [
     {
         content: "Ensure snippets are actually passed at the test.",
-        trigger: "#oe_snippets",
+        trigger: "body",
         run: function () {
             // safety check, otherwise the test might "break" one day and
             // receive no steps. The test would then not test anything anymore

@@ -27,7 +27,7 @@ tour.register('newsletter_block_edition', {
     wTourUtils.clickOnEdit(),
     {
         content: 'Wait for the editor to be fully started',
-        trigger: '#oe_snippets',
+        trigger: '#oe_snippets.o_loaded',
     },
     {
         content: 'Click on the Thanks button',
