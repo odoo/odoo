@@ -3,9 +3,9 @@
 # * payment_stripe_checkout_webhook
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-06 13:53+0000\n"
 "PO-Revision-Date: 2021-08-03 09:10+0000\n"
-"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_stripe_checkout_webhook
 #: model:ir.model.fields,help:payment_stripe_checkout_webhook.field_payment_acquirer__stripe_webhook_secret
@@ -57,10 +57,11 @@ msgstr "Webhook de Stripe con contraseña secreta"
 #: code:addons/payment_stripe_checkout_webhook/models/payment.py:54
 #, python-format
 msgid "Stripe Webhook data does not conform to the expected API."
-msgstr ""
+msgstr "Los datos de Webhook de Stripe no se ajustan a la API esperada."
 
 #. module: payment_stripe_checkout_webhook
 #: code:addons/payment_stripe_checkout_webhook/models/payment.py:148
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr "Stripe nos proporcionó la siguiente información sobre el problema: \"%s\""
+msgstr ""
+"Stripe nos proporcionó la siguiente información sobre el problema: '%s'"

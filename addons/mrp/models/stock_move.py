@@ -125,6 +125,19 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
+    @api.depends('raw_material_production_id.name')
+    def _compute_reference(self):
+        not_prod_move = self.env['stock.move']
+        for move in self:
+            if not move.raw_material_production_id:
+                not_prod_move |= move
+                continue
+            move.write({
+                'name': move.raw_material_production_id.name,
+                'reference': move.raw_material_production_id.name,
+            })
+        super(StockMove, not_prod_move)._compute_reference()
+
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)

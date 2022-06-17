@@ -17,6 +17,7 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2020
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2020
 # Jonas Zinkevicius <jozi@odoo.com>, 2021
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2021\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2153,7 +2154,7 @@ msgstr "Įvertinimas"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scoring_type
 msgid "Scoring Type"
-msgstr ""
+msgstr "Vertinimo tipas"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
@@ -2194,12 +2195,12 @@ msgstr "Sekcija"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_and_page_ids
 msgid "Sections and Questions"
-msgstr ""
+msgstr "Sekcijos ir klausimai"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "See results"
-msgstr ""
+msgstr "Pasižiūrėti rezultatus:"
 
 #. module: survey
 #: model:survey.question,question:survey.vendor_certification_page_1_question_3
@@ -2211,7 +2212,7 @@ msgstr ""
 #: model:survey.question,question:survey.vendor_certification_page_1_question_2
 #: model:survey.question,title:survey.vendor_certification_page_1_question_2
 msgid "Select all the existing products"
-msgstr ""
+msgstr "Pasirinkite visus egzistuojančius produktus."
 
 #. module: survey
 #: model:survey.question,question:survey.vendor_certification_page_2_question_2
@@ -2278,7 +2279,7 @@ msgstr "Praleista"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
-msgstr ""
+msgstr "El.pašto adresas nėra korektiškas:%s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -2299,7 +2300,7 @@ msgstr "Atsiprašome, niekas neatsakė į šį klausimą"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Sorry, no one answered this survey yet."
-msgstr ""
+msgstr "Atleiskite, bet niekas dar neatsakė į apklausą."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_init
@@ -2315,7 +2316,7 @@ msgstr "Pradėti apklausą"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__start_datetime
 msgid "Start date and time"
-msgstr ""
+msgstr "Pradžios data ir laikas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -2567,7 +2568,7 @@ msgstr "Atsakymas turi būti tinkamo tipo"
 #: model:survey.question,validation_error_msg:survey.vendor_certification_page_2_question_3
 #, python-format
 msgid "The answer you entered is not valid."
-msgstr ""
+msgstr "Atsakymas yra negaliojantis."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_attempts_limit_check
@@ -2579,26 +2580,26 @@ msgstr ""
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
-msgstr ""
+msgstr "Kiekvienai apklausai turi būti unikalus ženkliukas!"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row4
 msgid "The checkout process is clear and secure"
-msgstr ""
+msgstr "Apklausos procesas yra aiškus ir saugus."
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/js/survey.js:0
 #, python-format
 msgid "The date you selected is greater than the maximum date: "
-msgstr ""
+msgstr "Data, kurią pasirinkote yra didesnė nei: "
 
 #. module: survey
 #. openerp-web
 #: code:addons/survey/static/src/js/survey.js:0
 #, python-format
 msgid "The date you selected is lower than the minimum date: "
-msgstr ""
+msgstr "Data, kurią pasirinkote yra mažesnė nei: "
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
@@ -2631,7 +2632,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row1
 msgid "The new layout and design is fresh and up-to-date"
-msgstr ""
+msgstr "Išdėstymas ir dizainas yra nauji bei modernūs"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
@@ -2641,13 +2642,15 @@ msgstr "Puslapis, kurio ieškote, negalėjo būti patvirtintas."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
 msgid "The survey is limited in time"
-msgstr ""
+msgstr "Apklausa laikas yra limituotas"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_time_limit_check
 msgid ""
 "The time limit needs to be a positive number if the survey is time limited."
 msgstr ""
+"Laiko apribojimas privalo būti teigiamas skaičius, jei apklausos pildymo "
+"laikas yra limituotas."
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row3
