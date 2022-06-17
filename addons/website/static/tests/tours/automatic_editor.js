@@ -47,6 +47,7 @@ tour.register('automatic_editor_on_new_website', {
     },
     {
         content: "Select parseltongue",
+        extra_trigger: 'a.js_change_lang .o_lang_flag',
         trigger: 'a.js_change_lang[data-url_code=pa_GB]',
     },
     {
