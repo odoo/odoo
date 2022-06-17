@@ -7,7 +7,7 @@ import pytz
 from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime, is_html_empty
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
@@ -329,9 +329,9 @@ class EventEvent(models.Model):
 
     def _search_is_ongoing(self, operator, value):
         if operator not in ['=', '!=']:
-            raise ValueError(_('This operator is not supported'))
+            raise UserError(_('This operator is not supported'))
         if not isinstance(value, bool):
-            raise ValueError(_('Value should be True or False (not %s)'), value)
+            raise UserError(_('Value should be True or False (not %s)') % value)
         now = fields.Datetime.now()
         if (operator == '=' and value) or (operator == '!=' and not value):
             domain = [('date_begin', '<=', now), ('date_end', '>', now)]
