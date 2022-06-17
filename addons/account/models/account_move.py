@@ -135,9 +135,9 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
         states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        string='Partner', change_default=True)
+        string='Partner', change_default=True, ondelete="restrict")
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
-        compute='_compute_commercial_partner_id')
+        compute='_compute_commercial_partner_id', ondelete="restrict")
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
@@ -216,6 +216,7 @@ class AccountMove(models.Model):
         domain=[('exclude_from_invoice_tab', '=', False)],
         states={'draft': [('readonly', False)]})
     invoice_partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
+        compute="_compute_invoice_partner_bank_id", store=True, readonly=False,
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     invoice_incoterm_id = fields.Many2one('account.incoterms', string='Incoterm',
@@ -362,7 +363,6 @@ class AccountMove(models.Model):
                 line.account_id = new_term_account
 
         self._compute_bank_partner_id()
-        self.invoice_partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
 
         # Find the new fiscal position.
         delivery_partner_id = self._get_invoice_delivery_partner_id()
@@ -1071,7 +1071,13 @@ class AccountMove(models.Model):
         for move in self:
             move.commercial_partner_id = move.partner_id.commercial_partner_id
 
-    @api.depends('commercial_partner_id')
+    @api.depends('bank_partner_id')
+    def _compute_invoice_partner_bank_id(self):
+        for move in self:
+            filtered_bank_partner_id = move.bank_partner_id.filtered(lambda bank: bank.company_id.id in (False, move.company_id.id))
+            move.invoice_partner_bank_id = filtered_bank_partner_id.bank_ids[:1]
+
+    @api.depends('commercial_partner_id', 'type')
     def _compute_bank_partner_id(self):
         for move in self:
             if move.is_outbound():
@@ -2347,6 +2353,12 @@ class AccountMove(models.Model):
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
 
+            # Fix inconsistencies that may occure if the OCR has been editing the invoice at the same time of a user. We force the
+            # partner on the lines to be the same as the one on the move, because that's the only one the user can see/edit.
+            wrong_lines = move.is_invoice() and move.line_ids.filtered(lambda aml: aml.partner_id != move.commercial_partner_id and not aml.display_type)
+            if wrong_lines:
+                wrong_lines.partner_id = move.commercial_partner_id.id
+
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
             to_write = {'state': 'posted'}
@@ -2587,7 +2599,7 @@ class AccountMove(models.Model):
                         'debit' : line_vals['credit'],
                         'credit' : line_vals['debit']
                     })
-            move.write({'invoice_line_ids' : [(5, 0, 0)], 'invoice_partner_bank_id': False})
+            move.write({'invoice_line_ids' : [(5, 0, 0)]})
             move.write({'invoice_line_ids' : new_invoice_line_ids})
 
     def _get_report_base_filename(self):

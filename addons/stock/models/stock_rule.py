@@ -650,18 +650,12 @@ class ProcurementGroup(models.Model):
                             else:
                                 raise
 
-            try:
-                if use_new_cursor:
-                    cr.commit()
-            except OperationalError:
-                if use_new_cursor:
-                    cr.rollback()
-                    continue
-                else:
-                    raise
-
             if use_new_cursor:
-                cr.commit()
-                cr.close()
+                try:
+                    cr.commit()
+                except OperationalError:
+                    cr.rollback()
+                finally:
+                    cr.close()
 
         return {}
