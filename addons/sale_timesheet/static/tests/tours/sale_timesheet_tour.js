@@ -85,7 +85,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Click on Create button to create a task into your project.',
     run: 'click',
 }, {
-    trigger: 'input[name="name"]',
+    trigger: 'div[name="name"] > input',
     content: 'Select the name of the task (e.g. Onboarding)',
     run: function (actions) {
         actions.text('Onboarding', this.$anchor);

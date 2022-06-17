@@ -1419,7 +1419,7 @@
                                             <t t-else=""><field name="name" widget="name_with_subtask_count"/></t>
                                         </strong>
                                         <t t-if="!record.is_private.raw_value">
-                                            <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
+                                            <span invisible="context.get('default_project_id', False)"><br/><field name="project_id"/></span>
                                             <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-attf-class="{{record.has_late_and_unreached_milestone.raw_value ? 'text-danger' : ''}}">
                                                 <br/>
                                                 <field name="milestone_id" />

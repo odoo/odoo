@@ -63,6 +63,7 @@
             'project/static/src/project_control_panel/*',
             'project/static/src/stop_recurrence_confirmation_dialog/*',
             'project/static/src/services/**/*',
+            'project/static/src/project_task_kanban/*',
             'project/static/src/project_task_list/*',
             'project/static/src/css/project.css',
             'project/static/src/js/project_activity.js',
