@@ -686,3 +686,54 @@ class TestUnbuild(TestMrpCommon):
         uo.action_unbuild()
 
         self.assertEqual(uo.produce_line_ids.filtered(lambda sm: sm.product_id == compo).lot_ids, lot01 + lot02)
+
+    def test_unbuild_and_multilocations(self):
+        """
+        Basic flow: produce p_final, transfer it to a sub-location and then
+        unbuild it. The test ensures that the source/destination locations of an
+        unbuild order are applied on the stock moves
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.user.id)])
+        subloc01, subloc02, = self.stock_location.child_ids[:2]
+
+        mo, _, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        # Transfer the finished product from WH/Stock to `subloc01`
+        internal_form = Form(self.env['stock.picking'])
+        internal_form.picking_type_id = warehouse.int_type_id
+        internal_form.location_id = self.stock_location
+        internal_form.location_dest_id = subloc01
+        with internal_form.move_ids_without_package.new() as move:
+            move.product_id = p_final
+            move.product_uom_qty = 1.0
+        internal_transfer = internal_form.save()
+        internal_transfer.action_confirm()
+        internal_transfer.action_assign()
+        internal_transfer.move_line_ids.qty_done = 1.0
+        internal_transfer.button_validate()
+
+        unbuild_order_form = Form(self.env['mrp.unbuild'])
+        unbuild_order_form.mo_id = mo
+        unbuild_order_form.location_id = subloc01
+        unbuild_order_form.location_dest_id = subloc02
+        unbuild_order = unbuild_order_form.save()
+        unbuild_order.action_unbuild()
+
+        self.assertRecordValues(unbuild_order.produce_line_ids, [
+            # pylint: disable=bad-whitespace
+            {'product_id': p_final.id,  'location_id': subloc01.id,         'location_dest_id': prod_location.id},
+            {'product_id': p2.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
+            {'product_id': p1.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
+        ])
