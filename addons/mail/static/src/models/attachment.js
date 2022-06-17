@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { clear, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
@@ -23,9 +23,6 @@ registerModel({
             }
             if ('id' in data) {
                 data2.id = data.id;
-            }
-            if ('is_main' in data) {
-                data2.is_main = data.is_main;
             }
             if ('mimetype' in data) {
                 data2.mimetype = data.mimetype;
@@ -263,6 +260,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeThreadsAsAttachmentsInWebClientView() {
+            return (this.isPdf || this.isImage) && !this.isUploading ? replace(this.allThreads) : clear();
+        },
+        /**
+         * @private
          * @returns {AbortController|undefined}
          */
         _computeUploadingAbortController() {
@@ -285,6 +289,10 @@ registerModel({
         accessToken: attr(),
         activities: many('Activity', {
             inverse: 'attachments',
+        }),
+        allThreads: many('Thread', {
+            inverse: 'allAttachments',
+            readonly: true,
         }),
         /**
          * States the attachment lists that are displaying this attachment.
@@ -332,7 +340,6 @@ registerModel({
         isImage: attr({
             compute: '_computeIsImage',
         }),
-        is_main: attr(),
         /**
          * States if the attachment is a PDF file.
          */
@@ -394,6 +401,11 @@ registerModel({
         size: attr(),
         threads: many('Thread', {
             inverse: 'attachments',
+        }),
+        threadsAsAttachmentsInWebClientView: many('Thread', {
+            compute: '_computeThreadsAsAttachmentsInWebClientView',
+            inverse: 'attachmentsInWebClientView',
+            readonly: true,
         }),
         type: attr(),
         /**

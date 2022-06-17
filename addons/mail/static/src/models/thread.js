@@ -525,6 +525,7 @@ registerModel({
                 attachments: attachmentsData,
                 followers: followersData,
                 hasWriteAccess,
+                mainAttachment,
                 suggestedRecipients: suggestedRecipientsData,
             } = await this.messaging.rpc({
                 route: '/mail/thread/data',
@@ -537,7 +538,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            const values = { hasWriteAccess };
+            const values = { hasWriteAccess, mainAttachment };
             if (activitiesData) {
                 Object.assign(values, {
                     activities: insertAndReplace(activitiesData.map(activityData =>
@@ -1653,6 +1654,15 @@ registerModel({
          * @private
          * @returns {Array[]}
          */
+        _sortAttachmentsInWebClientView() {
+            return [
+                ['greater-first', 'id'],
+            ];
+        },
+        /**
+         * @private
+         * @returns {Array[]}
+         */
         _sortGuestMembers() {
             return [
                 ['truthy-first', 'name'],
@@ -1701,12 +1711,18 @@ registerModel({
         }),
         allAttachments: many('Attachment', {
             compute: '_computeAllAttachments',
+            inverse: 'allThreads',
         }),
         areAttachmentsLoaded: attr({
             default: false,
         }),
         attachments: many('Attachment', {
             inverse: 'threads',
+        }),
+        attachmentsInWebClientView: many('Attachment', {
+            inverse: 'threadsAsAttachmentsInWebClientView',
+            readonly: true,
+            sort: '_sortAttachmentsInWebClientView',
         }),
         authorizedGroupFullName: attr(),
         /**
@@ -2040,6 +2056,7 @@ registerModel({
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
         }),
+        mainAttachment: one('Attachment'),
         /**
          * States the number of members in this thread according to the server.
          * Guests are excluded from the count.
