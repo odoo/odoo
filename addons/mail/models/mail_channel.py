@@ -644,7 +644,7 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(self, 'mail.message/insert', {
             'id': message.id,
             'body': message.body,
-            'attachments': [('insert-and-replace', message.attachment_ids._attachment_format(commands=True))],
+            'attachments': [('insert-and-replace', message.attachment_ids._attachment_format())],
         })
         return super()._message_update_content_after_hook(message=message)
 

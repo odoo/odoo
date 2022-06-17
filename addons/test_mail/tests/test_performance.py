@@ -1045,7 +1045,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
-                self.assertEqual(len(message['attachment_ids']), 2)
+                self.assertEqual(len(message['attachment_ids'][0][1]), 2)
 
         self.env.flush_all()
         self.env.invalidate_all()
@@ -1054,7 +1054,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
-                self.assertEqual(len(message['attachment_ids']), 2)
+                self.assertEqual(len(message['attachment_ids'][0][1]), 2)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')

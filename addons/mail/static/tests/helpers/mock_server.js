@@ -526,7 +526,7 @@ patch(MockServer.prototype, 'mail', {
             const attachments = this.pyEnv['ir.attachment'].searchRead(
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
             ); // order not done for simplicity
-            res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
+            res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id));
         }
         if (request_list.includes('followers')) {
             const followers = this.pyEnv['mail.followers'].searchRead([['id', 'in', thread.message_follower_ids || []]]);
@@ -591,11 +591,10 @@ patch(MockServer.prototype, 'mail', {
      * Simulates `_attachment_format` on `ir.attachment`.
      *
      * @private
-     * @param {string} res_model
-     * @param {string} domain
+     * @param {integer} ids
      * @returns {Object}
      */
-    _mockIrAttachment_attachmentFormat(ids, commands = false) {
+    _mockIrAttachment_attachmentFormat(ids) {
         const attachments = this.mockRead('ir.attachment', [ids]);
         return attachments.map(attachment => {
             const res = {
@@ -605,17 +604,10 @@ patch(MockServer.prototype, 'mail', {
                 'mimetype': attachment.mimetype,
                 'name': attachment.name,
             };
-            if (commands) {
-                res['originThread'] = [['insert', {
-                    'id': attachment.res_id,
-                    'model': attachment.res_model,
-                }]];
-            } else {
-                Object.assign(res, {
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
-                });
-            }
+            res['originThread'] = [['insert', {
+                'id': attachment.res_id,
+                'model': attachment.res_model,
+            }]];
             return res;
         });
     },
@@ -1494,18 +1486,7 @@ patch(MockServer.prototype, 'mail', {
             const attachments = this.getRecords('ir.attachment', [
                 ['id', 'in', message.attachment_ids],
             ]);
-            const formattedAttachments = attachments.map(attachment => {
-                return Object.assign({
-                    'checksum': attachment.checksum,
-                    'id': attachment.id,
-                    'filename': attachment.name,
-                    'name': attachment.name,
-                    'mimetype': attachment.mimetype,
-                    'is_main': thread && thread.message_main_attachment_id === attachment.id,
-                    'res_id': attachment.res_id || messages.res_id,
-                    'res_model': attachment.res_model || message.model,
-                });
-            });
+            const formattedAttachments = [['insert-and-replace', this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id))]];
             const allNotifications = this.getRecords('mail.notification', [
                 ['mail_message_id', '=', message.id],
             ]);

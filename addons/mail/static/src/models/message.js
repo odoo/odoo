@@ -21,15 +21,7 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
-            if ('attachment_ids' in data) {
-                if (!data.attachment_ids) {
-                    data2.attachments = clear();
-                } else {
-                    data2.attachments = insertAndReplace(data.attachment_ids.map(attachmentData =>
-                        this.messaging.models['Attachment'].convertData(attachmentData)
-                    ));
-                }
-            }
+            data2.attachments = data.attachment_ids;
             if ('author_id' in data) {
                 if (!data.author_id) {
                     data2.author = clear();

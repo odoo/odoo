@@ -47,7 +47,7 @@ class IrAttachment(models.Model):
             })
         self.unlink()
 
-    def _attachment_format(self, commands=False):
+    def _attachment_format(self, legacy=False):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         res_list = []
         for attachment in self:
@@ -61,7 +61,7 @@ class IrAttachment(models.Model):
             if attachment.res_id and issubclass(self.pool[attachment.res_model], self.pool['mail.thread']):
                 main_attachment = self.env[attachment.res_model].sudo().browse(attachment.res_id).message_main_attachment_id
                 res['is_main'] = attachment == main_attachment
-            if commands:
+            if not legacy:
                 res['originThread'] = [('insert', {
                     'id': attachment.res_id,
                     'model': attachment.res_model,

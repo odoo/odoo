@@ -833,7 +833,7 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    def _message_format(self, fnames, format_reply=True):
+    def _message_format(self, fnames, format_reply=True, legacy=False):
         """Reads values from messages and formats them for the web client."""
         self.check_access_rule('read')
         vals_list = self._read_format(fnames)
@@ -883,7 +883,7 @@ class Message(models.Model):
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': message_sudo.attachment_ids._attachment_format(),
+                'attachment_ids': [('insert-and-replace', message_sudo.attachment_ids._attachment_format())] if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
                 'trackingValues': [('insert-and-replace', allowed_tracking_ids._tracking_value_format())],
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
@@ -915,14 +915,14 @@ class Message(models.Model):
                     'body': HTML content of the message
                     'model': u'res.partner',
                     'record_name': u'Agrolait',
-                    'attachment_ids': [
+                    'attachment_ids': [('insert-and-replace', [
                         {
                             'file_type_icon': u'webimage',
                             'id': 45,
                             'name': u'sample.png',
                             'filename': u'sample.png'
                         }
-                    ],
+                    ])],
                     'needaction_partner_ids': [], # list of partner ids
                     'res_id': 7,
                     'trackingValues': [('insert-and-replace',
