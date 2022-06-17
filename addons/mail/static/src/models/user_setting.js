@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 /**
  * Models various user settings. It is used as a complement to
@@ -37,8 +37,8 @@ registerModel({
                 echoCancellation: true,
                 noiseSuppression: true,
             };
-            if (this.audioInputDeviceId) {
-                constraints.deviceId = this.audioInputDeviceId;
+            if (this.audioInputDevice) {
+                constraints.deviceId = this.audioInputDevice.id;
             }
             return constraints;
         },
@@ -80,13 +80,11 @@ registerModel({
             return `${f(ctrlKey, 'Ctrl + ')}${f(altKey, 'Alt + ')}${f(shiftKey, 'Shift + ')}${key}`;
         },
         /**
-         * @param {String} audioInputDeviceId
+         * @param {MediaDevice} audioInputDevice
          */
-        async setAudioInputDevice(audioInputDeviceId) {
-            this.update({
-                audioInputDeviceId,
-            });
-            browser.localStorage.setItem('mail_user_setting_audio_input_device_id', audioInputDeviceId);
+        async setAudioInputDevice(audioInputDevice) {
+            this.update({ audioInputDevice: replace(audioInputDevice) });
+            browser.localStorage.setItem('mail_user_setting_audio_input_device_id', audioInputDevice.id);
             await this.messaging.rtc.updateLocalAudioTrack(true);
         },
         /**
@@ -200,7 +198,7 @@ registerModel({
             );
             this.update({
                 voiceActivationThreshold: voiceActivationThresholdString ? parseFloat(voiceActivationThresholdString) : undefined,
-                audioInputDeviceId: audioInputDeviceId || undefined,
+                audioInputDevice: audioInputDeviceId ? insertAndReplace({ id: audioInputDeviceId }) : clear(),
             });
         },
         /**
@@ -278,11 +276,9 @@ registerModel({
     },
     fields: {
         /**
-         * DeviceId of the audio input selected by the user
+         * MediaDevice of the audio input selected by the user
          */
-        audioInputDeviceId: attr({
-            default: '',
-        }),
+        audioInputDevice: one('MediaDevice'),
         /**
          * Model for the component with the controls for RTC related settings.
          */

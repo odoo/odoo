@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallSettingsMenu',
@@ -12,6 +13,7 @@ registerModel({
         _created() {
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
+            this._loadMediaDevices();
         },
         _willDelete() {
             browser.removeEventListener('keydown', this._onKeyDown);
@@ -34,12 +36,6 @@ registerModel({
             this.userSetting.togglePushToTalk();
         },
         /**
-         * @param {Event} ev
-         */
-        onChangeSelectAudioInput(ev) {
-            this.userSetting.setAudioInputDevice(ev.target.value);
-        },
-        /**
          * @param {MouseEvent} ev
          */
         onChangeThreshold(ev) {
@@ -52,6 +48,29 @@ registerModel({
         },
         toggle() {
             this.update({ isOpen: !this.isOpen });
+        },
+        /**
+         * @private
+         */
+        async _loadMediaDevices() {
+            try {
+                const mediaDevicesData = await browser.navigator.mediaDevices.enumerateDevices();
+                this.messaging.update({
+                    mediaDevices: insertAndReplace(
+                        mediaDevicesData.map(
+                            data => {
+                                return {
+                                    id: data.deviceId,
+                                    kind: data.kind,
+                                    label: data.label,
+                                };
+                            },
+                        ),
+                    ),
+                });
+            } catch (_err) {
+                this.messaging.update({ mediaDevices: clear() });
+            }
         },
         _onKeyDown(ev) {
             if (!this.isRegisteringKey) {
@@ -81,6 +100,11 @@ registerModel({
          */
         isRegisteringKey: attr({
             default: false,
+        }),
+        inputSelection: one('InputSelection', {
+            default: insertAndReplace(),
+            isCausal: true,
+            inverse: 'callSettingsMenuOwner',
         }),
         userSetting: one('UserSetting', {
             inverse: 'callSettingsMenu',

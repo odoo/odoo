@@ -6,14 +6,10 @@
             <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">
                 <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 o_cursor_pointer" title="Input device" aria-label="Input device">
                     <span class="o_CallSettingsMenuoptionName me-2 text-truncate font-weight-bolder">Input device</span>
-                    <div>
-                        <select name="inputDevice" class="o_CallSettingsMenu_optionDeviceSelect custom-select" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="callSettingsMenu.onChangeSelectAudioInput">
-                            <option value="">Browser default</option>
-                            <t t-if="state.userDevices" t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                                <CallSettingsMenuDevice device="device"/>
-                            </t>
-                        </select>
-                    </div>
+                    <InputSelection className="'flex-shrink-1'" record="callSettingsMenu.inputSelection"/>
+                    <!-- <div>
+                        <option value="">Browser default</option>
+                    </div> -->
                 </label>
             </div>
             <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">

@@ -2,26 +2,9 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import { browser } from "@web/core/browser/browser";
-
-const { Component, onWillStart, useState } = owl;
+const { Component } = owl;
 
 export class CallSettingsMenu extends Component {
-
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        this.state = useState({
-            userDevices: undefined,
-        });
-        onWillStart(() => this._willStart());
-    }
-
-    async _willStart() {
-        this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
-    }
 
     /**
      * @returns {CallSettingsMenu}

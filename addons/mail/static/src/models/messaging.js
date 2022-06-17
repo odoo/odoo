@@ -423,6 +423,9 @@ registerModel({
         loadingBaseDelayDuration: attr({
             default: 400,
         }),
+        mediaDevices: many('MediaDevice', {
+            isCausal: true,
+        }),
         /**
          * Determines the bus that is used to communicate messaging events.
          */

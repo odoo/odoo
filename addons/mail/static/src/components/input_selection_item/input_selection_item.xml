@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.InputSelectionItem" owl="1">
+        <div class="o_InputSelectionItem o_cursor_pointer" t-attf-class="{{ inputSelectionItem.isSoftSelected ? 'bg-300' : '' }} {{ className }}" t-esc="inputSelectionItem.mediaDevice.label" t-on-click="inputSelectionItem.onClick" t-on-mouseenter="inputSelectionItem.onMouseenter" t-on-mouseleave="inputSelectionItem.onMouseleave" t-ref="root"/>
+    </t>
+
+</templates>

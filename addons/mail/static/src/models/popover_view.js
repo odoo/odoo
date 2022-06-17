@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: [['activityViewOwnerAsMarkDone', 'composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
+    identifyingFields: [['activityViewOwnerAsMarkDone', 'composerViewOwnerAsEmoji', 'inputSelectionOwnerAsCallSettingsMenuMediaInput', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -50,6 +50,9 @@ registerModel({
             if (this.composerViewOwnerAsEmoji) {
                 return this.composerViewOwnerAsEmoji.buttonEmojisRef;
             }
+            if (this.inputSelectionOwnerAsCallSettingsMenuMediaInput) {
+                return this.inputSelectionOwnerAsCallSettingsMenuMediaInput.component.root;
+            }
             if (this.messageActionListOwnerAsReaction) {
                 return this.messageActionListOwnerAsReaction.actionReactionRef;
             }
@@ -78,6 +81,9 @@ registerModel({
             }
             if (this.emojiListView) {
                 return replace(this.emojiListView);
+            }
+            if (this.inputSelectionPromptView) {
+                return replace(this.inputSelectionPromptView);
             }
             return clear();
         },
@@ -108,6 +114,9 @@ registerModel({
             if (this.emojiListView) {
                 return 'EmojiList';
             }
+            if (this.inputSelectionPromptView) {
+                return 'InputSelectionPrompt';
+            }
             return clear();
         },
         /**
@@ -119,6 +128,16 @@ registerModel({
                 return insertAndReplace();
             }
             if (this.messageActionListOwnerAsReaction) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeInputSelectionPromptView() {
+            if (this.inputSelectionOwnerAsCallSettingsMenuMediaInput) {
                 return insertAndReplace();
             }
             return clear();
@@ -237,6 +256,16 @@ registerModel({
          */
         emojiListView: one('EmojiListView', {
             compute: '_computeEmojiListView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
+            readonly: true,
+        }),
+        inputSelectionOwnerAsCallSettingsMenuMediaInput: one('InputSelection', {
+            inverse: 'popoverView',
+            readonly: true,
+        }),
+        inputSelectionPromptView: one('InputSelectionPromptView', {
+            compute: '_computeInputSelectionPromptView',
             inverse: 'popoverViewOwner',
             isCausal: true,
             readonly: true,

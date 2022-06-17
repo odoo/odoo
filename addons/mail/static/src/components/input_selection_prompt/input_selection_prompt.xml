@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.InputSelectionPrompt" owl="1">
+        <div class="o_InputSelectionPrompt" t-attf-class="{{ className }}" t-ref="root">
+            <InputSelectionItem t-foreach="inputSelectionPromptView.items" t-as="item" t-key="item.localId" record="item"/>
+        </div>
+    </t>
+
+</templates>
