@@ -6,11 +6,14 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.addons.event_booth.tests.common import TestEventBoothCommon
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests.common import users, Form
+from odoo.tests.common import users, Form, tagged
+from odoo.tools import mute_logger
 
 
+@tagged('post_install', '-at_install')
 class TestEventData(TestEventBoothCommon):
 
+    @mute_logger('odoo.models.unlink')
     @users('user_eventmanager')
     def test_event_configuration_booths_from_type(self):
         """ Test data computation (related to booths) of event coming from its event.type template. """
