@@ -3,7 +3,6 @@
 
 import json
 import logging
-import werkzeug
 
 from werkzeug.exceptions import Forbidden
 from werkzeug.urls import url_encode
@@ -73,4 +72,4 @@ class GoogleGmailController(http.Controller):
             'view_type': 'form'
         }
         url = '/web?#' + url_encode(url_params)
-        return werkzeug.utils.redirect(url, 303)
+        return request.redirect(url)

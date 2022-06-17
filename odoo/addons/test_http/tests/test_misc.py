@@ -49,6 +49,17 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
             self.assertEqual(res.json()['HTTP_HOST'], host)
 
+    def test_misc2_local_redirect(self):
+        def local_redirect(path):
+            fake_req = odoo.tools.misc.DotDict(db=False)
+            return odoo.http.Request.redirect(fake_req, path, local=True).headers['Location']
+        self.assertEqual(local_redirect('https://www.example.com/hello?a=b'), '/hello?a=b')
+        self.assertEqual(local_redirect('/hello?a=b'), '/hello?a=b')
+        self.assertEqual(local_redirect('hello?a=b'), '/hello?a=b')
+        self.assertEqual(local_redirect('www.example.com/hello?a=b'), '/www.example.com/hello?a=b')
+        self.assertEqual(local_redirect('https://www.example.comhttps://www.example2.com/hello?a=b'), '/www.example2.com/hello?a=b')
+        self.assertEqual(local_redirect('https://https://www.example.com/hello?a=b'), '/www.example.com/hello?a=b')
+
     def test_misc3_is_static_file(self):
         uri = 'test_http/static/src/img/gizeh.png'
         path = file_path(uri)
