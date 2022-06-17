@@ -36,15 +36,6 @@ class TestEventBoothSaleWData(TestEventBoothSaleCommon, TestSalesCommon):
             }
         ])
 
-        cls.tax_10 = cls.env['account.tax'].sudo().create({
-            'name': 'Tax 10',
-            'amount': 10,
-        })
-
-        cls.pricelist = cls.env['product.pricelist'].sudo().create({
-            'name': 'Test Pricelist',
-        })
-
         cls.event_booth_product.taxes_id = cls.tax_10
 
 
@@ -54,7 +45,7 @@ class TestEventBoothSale(TestEventBoothSaleWData):
     def test_event_booth_prices_with_sale_order(self):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.event_customer.id,
-            'pricelist_id': self.pricelist.id,
+            'pricelist_id': self.test_pricelist.id,
             'order_line': [
                 Command.create({
                     'product_id': self.event_booth_product.id,
@@ -67,7 +58,7 @@ class TestEventBoothSale(TestEventBoothSaleWData):
 
         self.assertEqual(self.booth_1.price, self.event_booth_product.list_price,
                          "Booth price should be equal from product price.")
-        self.assertEqual(self.event_booth_category_1.with_context(pricelist=self.pricelist.id).price_reduce_taxinc, 22.0,
+        self.assertEqual(self.event_booth_category_1.with_context(pricelist=self.test_pricelist.id).price_reduce_taxinc, 22.0,
                          "Booth price reduce tax should be equal to its price with 10% taxes ($20.0 + $2.0)")
         # Here we expect the price to be the sum of the booth ($40.0)
         self.assertEqual(float_compare(sale_order.amount_untaxed, 40.0, precision_rounding=0.1), 0,
@@ -80,7 +71,7 @@ class TestEventBoothSale(TestEventBoothSaleWData):
 
         self.assertNotEqual(self.booth_1.price, self.event_booth_product.list_price,
                             "Booth price should be different from product price.")
-        self.assertEqual(self.event_booth_category_1.with_context(pricelist=self.pricelist.id).price_reduce_taxinc, 110.0,
+        self.assertEqual(self.event_booth_category_1.with_context(pricelist=self.test_pricelist.id).price_reduce_taxinc, 110.0,
                          "Booth price reduce tax should be equal to its price with 10% taxes ($100.0 + $10.0)")
         # Here we expect the price to be the sum of the booth ($200.0)
         self.assertEqual(float_compare(sale_order.amount_untaxed, 200.0, precision_rounding=0.1), 0,
@@ -135,7 +126,7 @@ class TestEventBoothSaleInvoice(TestEventBoothSaleWData):
 
         sale_order = self.env['sale.order'].create({
             'partner_id': self.event_customer.id,
-            'pricelist_id': self.pricelist.id,
+            'pricelist_id': self.test_pricelist.id,
             'order_line': [
                 Command.create({
                     'product_id': self.event_booth_product.id,
