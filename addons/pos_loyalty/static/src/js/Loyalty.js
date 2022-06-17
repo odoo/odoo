@@ -1027,7 +1027,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }
-            discountablePerTax[taxKey] += line.price * line.get_quantity();
+            discountablePerTax[taxKey] += line.get_base_price();
         }
         return {discountable, discountablePerTax};
     }
@@ -1163,7 +1163,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }
-            discountablePerTax[taxKey] += (line.price * line.get_quantity()) * (remainingAmountPerLine[line.cid] / line.get_price_with_tax());
+            discountablePerTax[taxKey] += (line.get_base_price()) * (remainingAmountPerLine[line.cid] / line.get_price_with_tax());
         }
         return {discountable, discountablePerTax};
     }
