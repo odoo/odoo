@@ -1095,8 +1095,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids, [
             # pylint: disable=C0326
             # Exchange difference lines:
-            {'balance': 46.43,      'amount_currency': 0.0},
             {'balance': 92.86,      'amount_currency': 0.0},
+            {'balance': 46.43,      'amount_currency': 0.0},
             # Other lines:
             {'balance': 50.0,       'amount_currency': 100.0},
             {'balance': 25.0,       'amount_currency': 50.0},
@@ -1119,8 +1119,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             # pylint: disable=C0326
             # Other lines:
             {'balance': -187.5,     'amount_currency': -150.0},
-            {'balance': 90.91,      'amount_currency': 200.0},
             {'balance': -22.73,     'amount_currency': -50.0},
+            {'balance': 90.91,      'amount_currency': 200.0},
             # Exchange difference lines:
             {'balance': 119.32,     'amount_currency': 0.0},
         ])
