@@ -656,3 +656,35 @@ class TestReorderingRule(TransactionCase):
             {'product_id': self.product_01.id, 'qty_done': 1.0, 'state': 'done', 'location_dest_id': stock_location.id},
             {'product_id': self.product_01.id, 'qty_done': 2.0, 'state': 'done', 'location_dest_id': sub_location.id},
         ])
+
+    def test_change_of_scheduled_date(self):
+        """
+        A user creates a delivery, an orderpoint is created. Its forecast
+        quantity becomes -1 and the quantity to order is 1. Then the user
+        postpones the scheduled date of the delivery. The quantities of the
+        orderpoint should be reset to zero.
+        """
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_01
+            move.product_uom_qty = 1
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        self.env['report.stock.quantity'].flush()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', self.product_01.id)])
+        self.assertRecordValues(orderpoint, [
+            {'qty_forecast': -1, 'qty_to_order': 1},
+        ])
+
+        delivery.scheduled_date += td(days=7)
+        orderpoint.invalidate_cache(fnames=['qty_forecast', 'qty_to_order'], ids=orderpoint.ids)
+        orderpoint.product_id.invalidate_cache(fnames=['virtual_available'], ids=orderpoint.product_id.ids)
+
+        self.assertRecordValues(orderpoint, [
+            {'qty_forecast': 0, 'qty_to_order': 0},
+        ])
