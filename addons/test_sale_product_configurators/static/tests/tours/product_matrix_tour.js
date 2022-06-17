@@ -24,9 +24,15 @@ tour.register('sale_matrix_tour', {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order'
+    extra_trigger: '.o_sale_order',
 }, {
-    trigger: 'a:contains("Add a product")'
+    trigger: '.o_required_modifier[name=partner_id] input',
+    run: 'text Agrolait',
+}, {
+    trigger: '.ui-menu-item > a:contains("Agrolait")',
+    auto: true,
+}, {
+    trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: "text Matrix",
@@ -40,6 +46,10 @@ tour.register('sale_matrix_tour', {
     }
 }, {
     trigger: 'span:contains("Confirm")',
+}, {
+    trigger: '.o_sale_order',
+    // wait for qty to be 1 => check the total to be sure all qties are set to 1
+    extra_trigger: '.oe_subtotal_footer_separator:contains("248.40")',
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
@@ -66,9 +76,12 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: 'span:contains("Confirm")',  // apply the matrix
 }, {
+    trigger: '.o_sale_order',
+    // wait for qty to be 3 => check the total to be sure all qties are set to 3
+    extra_trigger: '.oe_subtotal_footer_separator:contains("745.20")',
+}, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
-    run: 'click'
 }, {
     trigger: '.o_edit_product_configuration',  // edit the matrix
 }, {
@@ -80,14 +93,9 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: 'span:contains("Confirm")',  // apply the matrix
 }, {
-    trigger: '.o_form_editable .o_field_many2one[name="partner_id"] input',
-    // wait for qty to be 1
-    extra_trigger: '.o_sale_order .o_field_cell.o_data_cell.o_list_number:contains("1.00")',
-    run: 'text Agrolait'
-}, {
-    trigger: '.ui-menu-item > a',
-    auto: true,
-    in_modal: false,
+    trigger: '.o_sale_order',
+    // wait for qty to be 1 => check the total to be sure all qties are set to 1
+    extra_trigger: '.oe_subtotal_footer_separator:contains("248.40")',
 }, {
     trigger: '.o_form_button_save:contains("Save")',  // SAVE Sales Order.
 },
@@ -97,7 +105,6 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
-    run: 'click'
 }, {
     trigger: '.o_edit_product_configuration',  // edit the matrix
 }, {
@@ -111,7 +118,7 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: '.o_form_button_save:contains("Save")',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
-    run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
+    run: 'click', // SAVE Sales Order, after matrix has been applied (extra_trigger).
 }, {
     trigger: '.o_form_button_edit:contains("Edit")',  // Edit Sales Order.
 },
@@ -135,6 +142,6 @@ tour.register('sale_matrix_tour', {
 }, {
     trigger: '.o_form_button_save:contains("Save")',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")',
-    run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
+    run: 'click', // SAVE Sales Order, after matrix has been applied (extra_trigger).
 },
 ]);
