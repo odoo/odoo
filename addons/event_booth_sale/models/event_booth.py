@@ -26,7 +26,7 @@ class EventBooth(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_sale_order(self):
-        booth_with_so = self.filtered('sale_order_id')
+        booth_with_so = self.sudo().filtered('sale_order_id')
         if booth_with_so:
             raise UserError(_(
                 'You can\'t delete the following booths as they are linked to sales orders: '
