@@ -748,7 +748,7 @@ class WebsiteSlides(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
         # redirection to channel's homepage for category slides
         if slide.is_category:
-            return werkzeug.utils.redirect(slide.channel_id.website_url)
+            return request.redirect(slide.channel_id.website_url)
 
         if slide.can_self_mark_completed and not slide.user_has_completed \
            and slide.channel_id.channel_type == 'training':

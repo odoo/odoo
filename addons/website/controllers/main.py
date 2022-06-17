@@ -169,8 +169,11 @@ class Website(Home):
         if lang == 'default':
             lang = request.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
-        redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
         lang_code = request.env['res.lang']._lang_get_code(lang)
+        # replace context with correct lang, to avoid that the url_for of request.redirect remove the
+        # default lang in case we switch from /fr -> /en with /en as default lang.
+        request.update_context(lang=lang_code)
+        redirect = request.redirect(r or ('/%s' % lang))
         redirect.set_cookie('frontend_lang', lang_code)
         return redirect
 
@@ -573,8 +576,8 @@ class Website(Home):
         url = page['url']
 
         if ext_special_case:  # redirect non html pages to backend to edit
-            return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
-        return werkzeug.utils.redirect(request.env['website'].get_client_action_url(url, True))
+            return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
+        return request.redirect(request.env['website'].get_client_action_url(url, True))
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
