@@ -48,6 +48,7 @@ wTourUtils.registerEditionTour('automatic_editor_on_new_website', {
     {
         content: "Select parseltongue",
         trigger: 'iframe a.js_change_lang[data-url_code=pa_GB]',
+        extra_trigger: 'iframe a.js_change_lang .o_lang_flag',
     },
     {
         content: "Check that we're on parseltongue and then go to settings",
