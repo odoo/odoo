@@ -418,7 +418,7 @@ class Website(models.Model):
 
     @api.model
     def _get_current_fiscal_position_id(self, partner_sudo):
-        AccountFiscalPosition = self.env['account.fiscal.position']
+        AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         fpos = AccountFiscalPosition
 
         # If the current user is the website public user, the fiscal position
@@ -427,7 +427,7 @@ class Website(models.Model):
             country_code = request.geoip.get('country_code')
             if country_code:
                 country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id
-                fpos = self.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id)
+                fpos = AccountFiscalPosition._get_fpos_by_region(country_id)
 
         if not fpos:
             fpos = AccountFiscalPosition._get_fiscal_position(partner_sudo)
