@@ -38,8 +38,7 @@ export class Chatter extends LegacyComponent {
      */
     _notifyRendered() {
         this.trigger('o-chatter-rendered', {
-            attachments: this.chatter.thread.allAttachments,
-            thread: this.chatter.thread.localId,
+            thread: this.chatter.thread,
         });
     }
 
