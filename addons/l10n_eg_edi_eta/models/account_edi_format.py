@@ -270,7 +270,7 @@ class AccountEdiFormat(models.Model):
             totals['total_price_subtotal_before_discount'] += price_subtotal_before_discount
             if invoice.currency_id != self.env.ref('base.EGP'):
                 lines[-1]['unitValue']['currencyExchangeRate'] = self._l10n_eg_edi_round(invoice._l10n_eg_edi_exchange_currency_rate())
-                lines[-1]['unitValue']['amountSold'] = line.price_unit
+                lines[-1]['unitValue']['amountSold'] = self._l10n_eg_edi_round(line.price_unit)
         return lines, totals
 
     @api.model
