@@ -212,8 +212,8 @@ const FileToolbar = KnowledgeToolbar.extend({
                     const response = await fetch(href).then((response) => response);
                     if (response.ok) {
                         downloadLink.setAttribute('href', href);
-                        downloadLink.setAttribute('download', '');
-                        downloadLink.setAttribute('target', '_blank');
+                        // downloadLink.setAttribute('download', '');
+                        // downloadLink.setAttribute('target', '_blank');
                         downloadLink.click();
                     } else {
                         Dialog.alert(this,
