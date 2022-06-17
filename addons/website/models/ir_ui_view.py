@@ -97,7 +97,10 @@ class View(models.Model):
         # We need to consider inactive views when handling multi-website cow
         # feature (to copy inactive children views, to search for specific
         # views, ...)
-        for view in self.with_context(active_test=False):
+        # Website-specific views need to be updated first because they might
+        # be relocated to new ids by the cow if they are involved in the
+        # inheritance tree.
+        for view in self.with_context(active_test=False).sorted(key='website_id', reverse=True):
             # Make sure views which are written in a website context receive
             # a value for their 'key' field
             if not view.key and not vals.get('key'):
