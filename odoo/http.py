@@ -305,7 +305,7 @@ class WebRequest(object):
         if isinstance(location, urls.URL):
             location = location.to_url()
         if local:
-            location = urls.url_parse(location).replace(scheme='', netloc='').to_url()
+            location = '/' + urls.url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/')
         if request and request.db:
             return request.registry['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
