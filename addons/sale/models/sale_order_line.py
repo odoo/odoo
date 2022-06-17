@@ -379,22 +379,11 @@ class SaleOrderLine(models.Model):
                 line.pricelist_item_id = False
             else:
                 line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
-                    line.product_id, line.product_uom_qty or 1.0, line.product_uom,
-                    line.order_id.date_order, **line._get_price_computing_kwargs()
+                    line.product_id,
+                    line.product_uom_qty or 1.0,
+                    line.product_uom,
+                    line.order_id.date_order,
                 )
-
-    def _get_price_rule_id(self, **product_context):
-        self.ensure_one()
-
-        pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
-        product = self.product_id.with_context(**product_context)
-        qty = self.product_uom_qty or 1.0
-
-        price = pricelist_rule._compute_price(
-            product, qty, self.product_uom, order_date, self.currency_id)
-
-        return price, pricelist_rule.id
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
@@ -402,7 +391,7 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or not line.product_id or not line.order_id.pricelist_id:
                 line.price_unit = 0.0
             else:
-                price = line._get_display_price()
+                price = line.with_company(line.company_id)._get_display_price()
                 line.price_unit = line.product_id._get_tax_included_unit_price(
                     line.company_id,
                     line.order_id.currency_id,
@@ -413,45 +402,109 @@ class SaleOrderLine(models.Model):
                     product_currency=line.currency_id
                 )
 
-
     def _get_display_price(self):
+        """Compute the displayed unit price for a given line.
+
+        Overridden in custom flows:
+        * where the price is not specified by the pricelist
+        * where the discount is not specified by the pricelist
+
+        Note: self.ensure_one()
+        """
+        self.ensure_one()
+
+        pricelist_price = self._get_pricelist_price()
+
+        if self.order_id.pricelist_id.discount_policy == 'with_discount':
+            return pricelist_price
+
+        if not self.pricelist_item_id:
+            # No pricelist rule found => no discount from pricelist
+            return pricelist_price
+
+        base_price = self._get_pricelist_price_before_discount()
+
+        # negative discounts (= surcharge) are included in the display price
+        return max(base_price, pricelist_price)
+
+    def _get_pricelist_price(self):
+        """Compute the price given by the pricelist for the given line information.
+
+        :return: the product sales price in the order currency (without taxes)
+        :rtype: float
+        """
         self.ensure_one()
         self.product_id.ensure_one()
 
-        product = self.product_id
+        pricelist_rule = self.pricelist_item_id
+        order_date = self.order_id.date_order or fields.Date.today()
+        product = self.product_id.with_context(**self._get_product_price_context())
+        qty = self.product_uom_qty or 1.0
 
-        # NOTE VFE: no_variant attributes are not considered while computing discount
-        # Is it expected or unexpected behavior ?
-        # it is possible that a no_variant attribute is still in a variant if
+        price = pricelist_rule._compute_price(
+            product, qty, self.product_uom, order_date, self.currency_id)
+
+        return price
+
+    def _get_product_price_context(self):
+        """Gives the context for product price computation.
+
+        :return: additional context to consider extra prices from attributes in the base product price.
+        :rtype: dict
+        """
+        self.ensure_one()
+        res = {}
+
+        # It is possible that a no_variant attribute is still in a variant if
         # the type of the attribute has been changed after creation.
         no_variant_attributes_price_extra = [
             ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
                 lambda ptav:
                     ptav.price_extra and
-                    ptav not in product.product_template_attribute_value_ids
+                    ptav not in self.product_id.product_template_attribute_value_ids
             )
         ]
         if no_variant_attributes_price_extra:
-            final_price, rule_id = self._get_price_rule_id(
-                no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
-            )
-        else:
-            final_price, rule_id = self._get_price_rule_id()
+            res['no_variant_attributes_price_extra'] = tuple(no_variant_attributes_price_extra)
 
-        if self.order_id.pricelist_id.discount_policy == 'with_discount':
-            return final_price
+        return res
 
-        base_price, currency = self._get_real_price_currency(
-            product, rule_id, self.product_uom_qty, self.product_uom, date=self.order_id.date_order)
+    def _get_pricelist_price_before_discount(self):
+        """Compute the price used as base for the pricelist price computation.
 
-        if currency != self.currency_id:
-            base_price = currency._convert(
-                base_price,
-                self.currency_id,
-                self.company_id or self.env.company,
-                self.order_id.date_order or fields.Date.today())
-        # negative discounts (= surcharge) are included in the display price
-        return max(base_price, final_price)
+        :return: the product sales price in the order currency (without taxes)
+        :rtype: float
+        """
+        self.ensure_one()
+        self.product_id.ensure_one()
+
+        pricelist_rule = self.pricelist_item_id
+        order_date = self.order_id.date_order or fields.Date.today()
+        product = self.product_id.with_context(**self._get_product_price_context())
+        qty = self.product_uom_qty or 1.0
+        uom = self.product_uom
+
+        if pricelist_rule:
+            pricelist_item = pricelist_rule
+            if pricelist_item.pricelist_id.discount_policy == 'without_discount':
+                # Find the lowest pricelist rule whose pricelist is configured
+                # to show the discount to the customer.
+                while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
+                    rule_id = pricelist_item.base_pricelist_id._get_product_rule(
+                        product, qty, uom=uom, date=order_date)
+                    pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+
+            pricelist_rule = pricelist_item
+
+        price = pricelist_rule._compute_base_price(
+            product,
+            qty,
+            uom,
+            order_date,
+            target_currency=self.currency_id,
+        )
+
+        return price
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
@@ -460,81 +513,29 @@ class SaleOrderLine(models.Model):
                 line.discount = 0.0
 
             if not (
-                line.product_uom
-                and line.order_partner_id
-                and line.order_id.pricelist_id
+                line.order_id.pricelist_id
                 and line.order_id.pricelist_id.discount_policy == 'without_discount'
             ):
                 continue
 
             line.discount = 0.0
 
-            price, rule_id = line._get_price_rule_id()
-            new_list_price, currency = line.with_company(line.company_id)._get_real_price_currency(
-                line.product_id, rule_id, line.product_uom_qty, line.product_uom, date=line.order_id.date_order)
+            if not line.pricelist_item_id:
+                # No pricelist rule was found for the product
+                # therefore, the pricelist didn't apply any discount/change
+                # to the existing sales price.
+                continue
 
-            if new_list_price != 0:
-                if line.order_id.pricelist_id.currency_id != currency:
-                    # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                    new_list_price = currency._convert(
-                        new_list_price, line.order_id.pricelist_id.currency_id,
-                        line.order_id.company_id or self.env.company,
-                        line.order_id.date_order or fields.Date.today())
-                discount = (new_list_price - price) / new_list_price * 100
-                if (discount > 0 and new_list_price > 0) or (discount < 0 and new_list_price < 0):
+            line = line.with_company(line.company_id)
+            pricelist_price = line._get_pricelist_price()
+            base_price = line._get_pricelist_price_before_discount()
+
+            if base_price != 0:  # Avoid division by zero
+                discount = (base_price - pricelist_price) / base_price * 100
+                if (discount > 0 and base_price > 0) or (discount < 0 and base_price < 0):
+                    # only show negative discounts if price is negative
+                    # otherwise it's a surcharge which shouldn't be shown to the customer
                     line.discount = discount
-
-    def _get_real_price_currency(self, product, rule_id, qty, uom=None, date=False):
-        """Retrieve the price before applying the pricelist
-
-        WARNING: make sure this method is called with the right company in the environment.
-
-        :param recordset product: object of current product record
-        :param int rule_id: suitable rule found, as a `product.pricelist.item` id
-        :param float qty: total quentity of product
-        :param recordset uom: unit of measure of current order line
-        :param int pricelist_id: pricelist id of sales order
-        """
-        product.ensure_one()
-
-        if rule_id:
-            PricelistItem = self.env['product.pricelist.item']
-
-            pricelist_item = PricelistItem.browse(rule_id)
-            if pricelist_item.pricelist_id.discount_policy == 'without_discount':
-                while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    _price, rule_id = pricelist_item.base_pricelist_id._get_product_price_rule(
-                        product, qty, uom=uom, date=date, **self._get_price_computing_kwargs()
-                    )
-                    pricelist_item = PricelistItem.browse(rule_id)
-
-            if pricelist_item.base == 'standard_price':
-                price = product.standard_price
-                currency = product.cost_currency_id
-            elif pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
-                price = pricelist_item.base_pricelist_id._get_product_price(
-                    product, qty, uom=uom, date=date, **self._get_price_computing_kwargs()
-                )
-                currency = pricelist_item.base_pricelist_id.currency_id
-            else:
-                price = product.lst_price
-                currency = product.currency_id
-            target_currency = pricelist_item.pricelist_id.currency_id
-
-        else:
-            price = product.lst_price
-            currency = product.currency_id
-
-            target_currency = currency
-
-        product_uom = product.uom_id
-        if uom and uom != product_uom:
-            price = product_uom._compute_price(price, uom)
-
-        if currency != target_currency:
-            price = currency._convert(price, target_currency, self.env.company, date)
-
-        return price, target_currency
 
     @api.depends('price_unit', 'discount')
     def _compute_price_reduce(self):
@@ -1070,14 +1071,3 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
-
-    #=== PRICE COMPUTING HOOKS ===#
-
-    def _get_price_computing_kwargs(self):
-        """ Get optional fields which may impact price computing
-        """
-        if not self:
-            return {}
-
-        self.ensure_one()
-        return {}
