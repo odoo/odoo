@@ -626,7 +626,12 @@ class IrHttp(models.AbstractModel):
         code, values = cls._get_exception_code_values(exception)
 
         request.cr.rollback()
-        if code == 500:
+        if code == 403:
+            response = cls._serve_fallback()
+            if response:
+                cls._post_dispatch(response)
+                return response
+        elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:
             code, html = cls._get_error_html(request.env, code, values)
