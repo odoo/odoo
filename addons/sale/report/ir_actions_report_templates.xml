@@ -165,17 +165,17 @@
                 </div>
             </div>
 
-            <div class="oe_structure"/>
-
-            <p t-field="doc.note" />
-            <p t-if="not is_html_empty(doc.payment_term_id.note)">
-                <span t-field="doc.payment_term_id.note"/>
-            </p>
-            <p t-if="doc.fiscal_position_id and not is_html_empty(doc.fiscal_position_id.sudo().note)"
-                id="fiscal_position_remark">
-                <strong>Fiscal Position Remark:</strong>
-                <span t-field="doc.fiscal_position_id.sudo().note"/>
-            </p>
+            <div>
+                <p t-field="doc.note" />
+                <p t-if="not is_html_empty(doc.payment_term_id.note)">
+                    <span t-field="doc.payment_term_id.note"/>
+                </p>
+                <p t-if="doc.fiscal_position_id and not is_html_empty(doc.fiscal_position_id.sudo().note)"
+                    id="fiscal_position_remark">
+                    <strong>Fiscal Position Remark:</strong>
+                    <span t-field="doc.fiscal_position_id.sudo().note"/>
+                </p>
+            </div>
         </div>
     </t>
 </template>
