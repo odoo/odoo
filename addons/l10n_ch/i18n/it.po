@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: l10n_ch
 #: model:ir.actions.report,print_report_name:l10n_ch.l10n_ch_isr_report
@@ -658,7 +658,7 @@ msgstr ""
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Importo</span>"
 
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
@@ -688,7 +688,7 @@ msgstr ""
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Riferimento</span>"
 
 #. module: l10n_ch
 #: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_solde
@@ -894,7 +894,7 @@ msgstr "Debiti bancari"
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "Configurazione manuale della banca"
 
 #. module: l10n_ch
 #: model:ir.model.fields,help:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
@@ -993,7 +993,7 @@ msgstr "Commissioni sugli acquisti"
 #. module: l10n_ch
 #: model:ir.model.fields,field_description:l10n_ch.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr ""
+msgstr "Standard di comunicazione"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_company
@@ -1980,7 +1980,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ch.selection__account_journal__invoice_reference_model__ch
 #: model:ir.ui.menu,name:l10n_ch.account_reports_ch_statements_menu
 msgid "Switzerland"
-msgstr ""
+msgstr "Svizzera"
 
 #. module: l10n_ch
 #: model:account.tax.group,name:l10n_ch.tax_group_tva_0
@@ -2243,6 +2243,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"È possibile scegliere modelli diversi per ciascun tipo di riferimento. Il "
+"predefinito è il riferimento Odoo."
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/models/account_invoice.py:0

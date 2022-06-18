@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: l10n_be
 #: model:account.tax,name:l10n_be.1_attn_VAT-IN-V83-00
@@ -801,7 +801,7 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Modello piano dei conti"
 
 #. module: l10n_be
 #: model:account.account,name:l10n_be.1_a052
@@ -1632,7 +1632,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_be.selection__account_journal__invoice_reference_model__be
 #: model:ir.ui.menu,name:l10n_be.account_reports_be_statements_menu
 msgid "Belgium"
-msgstr ""
+msgstr "Belgio"
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_07
@@ -1906,7 +1906,7 @@ msgstr ""
 #: model:account.group,name:l10n_be.2_be_group_6
 #: model:account.group.template,name:l10n_be.be_group_6
 msgid "Charges"
-msgstr ""
+msgstr "Addebiti"
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_653
@@ -2033,7 +2033,7 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.model.fields,field_description:l10n_be.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr ""
+msgstr "Standard di comunicazione"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_res_company
@@ -6031,7 +6031,7 @@ msgstr ""
 #. module: l10n_be
 #: model:account.tax.report.line,name:l10n_be.tax_report_title_taxes
 msgid "Taxes"
-msgstr ""
+msgstr "Imposte"
 
 #. module: l10n_be
 #: model:account.account,name:l10n_be.1_a412
@@ -6549,6 +6549,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"È possibile scegliere modelli diversi per ciascun tipo di riferimento. Il "
+"predefinito è il riferimento Odoo."
 
 #. module: l10n_be
 #: model:account.group,name:l10n_be.1_be_group_755

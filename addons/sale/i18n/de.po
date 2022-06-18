@@ -10,8 +10,8 @@
 # Martin Trigaux, 2022
 # Robert Förster <hello@suppliot.eu>, 2022
 # TomTietze <tietze.development@web.de>, 2022
-# Friederike Fasterling-Nesselbosch, 2022
 # Desausoi Laurent, 2022
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Desausoi Laurent, 2022\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1406,7 +1406,7 @@ msgstr "Benutzerdefiniert"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr "Benutzerdefinierter Werte"
+msgstr "Benutzerdefiniert"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
@@ -2736,8 +2736,8 @@ msgstr "Nur Entwurfsaufträge können als direkt gesendet markiert werden."
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
-"Es ist nur ein benutzerdefinierter Wert pro Attributwert pro "
-"Kundenauftragszeile zulässig."
+"Es ist nur ein benutzerdefinierter Wert pro Merkmalswert pro "
+"Auftragsposition zulässig."
 
 #. module: sale
 #. openerp-web
@@ -3071,7 +3071,7 @@ msgstr "Produktattribut"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Produktattribut benutzerdefinierter Wert"
+msgstr "Produktmerkmal Benutzerdefiniert"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4588,7 +4588,7 @@ msgstr "Nettobetrag"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
-msgstr "UoM"
+msgstr "Mengeneinheit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4736,6 +4736,15 @@ msgstr ""
 "Sie können hier die Kommunikationsart einstellen, die auf Kundenaufträgen "
 "angezeigt wird, die dem Kunden bei der Auswahl der Zahlungsmethode "
 "mitgeteilt wird."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
