@@ -289,10 +289,10 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertSentEmail(self.user_employee.partner_id, [self.partner_1])
         # self.assertEqual(len(self._mails), 1)
         self.assertEqual(len(self._mails[0]['attachments']), 4)
-        self.assertIn(('List1', b'My first attachment', 'application/octet-stream'), self._mails[0]['attachments'])
-        self.assertIn(('List2', b'My second attachment', 'application/octet-stream'), self._mails[0]['attachments'])
-        self.assertIn(('Attach1', b'migration test', 'application/octet-stream'),  self._mails[0]['attachments'])
-        self.assertIn(('Attach2', b'migration test', 'application/octet-stream'), self._mails[0]['attachments'])
+        self.assertIn(('List1', b'My first attachment', 'text/plain'), self._mails[0]['attachments'])
+        self.assertIn(('List2', b'My second attachment', 'text/plain'), self._mails[0]['attachments'])
+        self.assertIn(('Attach1', b'migration test', 'text/plain'),  self._mails[0]['attachments'])
+        self.assertIn(('Attach2', b'migration test', 'text/plain'), self._mails[0]['attachments'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_answer(self):

@@ -1253,10 +1253,10 @@ class MailThread(models.AbstractModel):
     def _part_get_content_decoded(self, part):
         try:
             return part.get_content(errors='strict')
-        except TypeError: # no "errors" argument on the underlyding content manager
-            return tools.ustr(part.get_content())
         except UnicodeDecodeError:
             return part.get_payload(decode=True).decode(errors='replace')
+        except TypeError: # no "errors" argument on the underlyding content manager
+            return part.get_content()  # left as bytes
 
     def _message_parse_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
