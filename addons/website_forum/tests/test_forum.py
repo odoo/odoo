@@ -436,3 +436,25 @@ class TestForum(TestForumCommon):
             not discussions_post.uid_has_answered or discussions_post.forum_id.mode == 'discussions', True)
         self.assertEqual(
             discussions_post.uid_has_answered and discussions_post.forum_id.mode == 'questions', False)
+
+    def test_tag_creation_multi_forum(self):
+        Post = self.env['forum.post']
+        forum_1 = self.forum
+        forum_2 = forum_1.copy({
+            'name': 'Questions Forum'
+        })
+        self.user_portal.karma = KARMA['tag_create']
+        Post.with_user(self.user_portal).create({
+            'name': "Post Forum 1",
+            'forum_id': forum_1.id,
+            'tag_ids': forum_1._tag_to_write_vals('_Food'),
+        })
+        Post.with_user(self.user_portal).create({
+            'name': "Post Forum 2",
+            'forum_id': forum_2.id,
+            'tag_ids': forum_2._tag_to_write_vals('_Food'),
+        })
+        food_tags = self.env['forum.tag'].search([('name', '=', 'Food')])
+        self.assertEqual(len(food_tags), 2, "One Food tag should have been created in each forum.")
+        self.assertIn(forum_1, food_tags.forum_id, "One Food tag should have been created for forum 1.")
+        self.assertIn(forum_2, food_tags.forum_id, "One Food tag should have been created for forum 2.")
