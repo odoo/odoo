@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
+from psycopg2 import OperationalError
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.odoo.service.model import PG_CONCURRENCY_ERRORS_TO_RETRY
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -668,8 +673,29 @@ class AccountPaymentRegister(models.TransientModel):
                 })
 
         payments = self._init_payments(to_process, edit_mode=edit_mode)
-        self._post_payments(to_process, edit_mode=edit_mode)
-        self._reconcile_payments(to_process, edit_mode=edit_mode)
+        try:
+            self._post_payments(to_process, edit_mode=edit_mode)
+            self._reconcile_payments(to_process, edit_mode=edit_mode)
+        except OperationalError as e:
+            # In case of PSQL error, prevent the automatic retry process
+            # Just skip the reconciliation part and let the user do it manually
+
+            if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
+                raise  # Only handle errors that triggers the retry process
+
+            payment_refs = [p['create_vals']['ref'] for p in to_process]
+            invoice_ids = self.line_ids.mapped('move_id')
+            refs = '\n - '.join([ref for ref in payment_refs])
+
+            message = _("Could not reconcile payments due to a concurrent access error. The payment must be reconciled manually.\n"
+                        "Payment refs in the batch: %s" % refs)
+
+            for invoice_id in invoice_ids:
+                invoice_id.message_post(body=message)
+
+            log_message = message + "\n %s"
+            _logger.warning(log_message, repr(invoice_ids))
+
         return payments
 
     def action_create_payments(self):
