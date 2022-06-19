@@ -226,7 +226,7 @@ class Forum(models.Model):
         self._update_website_count()
         return super(Forum, self).unlink()
 
-    @api.model
+    @api.model  # TODO: Remove me, this is not an `api.model` method
     def _tag_to_write_vals(self, tags=''):
         Tag = self.env['forum.tag']
         post_tags = []
@@ -235,7 +235,7 @@ class Forum(models.Model):
         for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
                 # check that not already created meanwhile or maybe excluded by the limit on the search
-                tag_ids = Tag.search([('name', '=', tag[1:])])
+                tag_ids = Tag.search([('name', '=', tag[1:]), ('forum_id', '=', self.id)])
                 if tag_ids:
                     existing_keep.append(int(tag_ids[0]))
                 else:
