@@ -22,6 +22,7 @@
 # Jonatan Gk, 2022
 # marcescu, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# eriiikgt, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: eriiikgt, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2400,6 +2401,7 @@ msgstr "Es va acabar el compte enrere - Firework"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
 #, python-format
 msgid "Countries"
 msgstr "Països"
@@ -4570,6 +4572,10 @@ msgid ""
 "            we recommend you to try to use the new color system, which is\n"
 "            still customizable."
 msgstr ""
+"Sembla que el vostre lloc web encara utilitza l'antic sistema de color de\n"
+"            Odoo 13.0 en alguns llocs. Ens hem assegurat que encara funciona, però\n"
+"            us recomanem que proveu d'utilitzar el nou sistema de color, que és\n"
+"            encara personalitzable."
 
 #. module: website
 #. openerp-web
@@ -4593,12 +4599,12 @@ msgstr "Article 2"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options
 msgid "Items per row"
-msgstr ""
+msgstr "Elements per fila"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.dynamic_snippet_carousel_options_template
 msgid "Items per slide"
-msgstr ""
+msgstr "Elements per diapositiva"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -4842,7 +4848,7 @@ msgstr "Fons de la disposició"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background Color"
-msgstr ""
+msgstr "Color de fons de la disposició"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -4878,7 +4884,7 @@ msgstr "Llegenda"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Let your customers follow <br/>and understand your process."
-msgstr ""
+msgstr "Deixa que els teus clients segueixin <br/>i entenguin el teu procés."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4926,12 +4932,12 @@ msgstr "Enllaç"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Link Anchor"
-msgstr ""
+msgstr "Àncora d'enllaç"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
-msgstr ""
+msgstr "Estil d'enllaç"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5350,7 +5356,7 @@ msgstr "Barra de navegació"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Network Advertising Initiative opt-out page"
-msgstr ""
+msgstr "Pàgina de desactivació de la Network Advertising Initiative"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5522,7 +5528,7 @@ msgstr "Versió d'Odoo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Off-Canvas"
-msgstr ""
+msgstr "Fora de la tela"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -5658,17 +5664,17 @@ msgstr "Contorn"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Outset"
-msgstr ""
+msgstr "Inici"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Outstanding images"
-msgstr ""
+msgstr "Imatges destacades"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Over The Content"
-msgstr ""
+msgstr "Sobre El Contingut"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5716,7 +5722,7 @@ msgstr "Pàgina indexada"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Page Layout"
-msgstr ""
+msgstr "Disseny de pàgina"
 
 #. module: website
 #. openerp-web
@@ -5798,6 +5804,8 @@ msgid ""
 "Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
 "elit. <i>Integer posuere erat a ante</i>."
 msgstr ""
+"Text del paràgraf. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing"
+" elit. <i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5833,7 +5841,7 @@ msgstr "Ruta arrel"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__partner_id
 msgid "Partner of the last logged in user."
-msgstr ""
+msgstr "Soci de l'últim usuari connectat."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
@@ -5867,7 +5875,7 @@ msgstr "Paga"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
 msgid "Pick a Theme"
-msgstr ""
+msgstr "Tria un tema"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -6295,7 +6303,7 @@ msgstr "Menú dret"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Ripple Effect"
-msgstr ""
+msgstr "Efecte dòmino"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -6337,7 +6345,7 @@ msgstr "Arrodonit"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Rounded Miniatures"
-msgstr ""
+msgstr "Miniatures arrodonides"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__route_id
@@ -6348,7 +6356,7 @@ msgstr "Ruta"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "SEO"
-msgstr ""
+msgstr "SEO"
 
 #. module: website
 #: model:ir.model,name:website.model_website_seo_metadata
@@ -6438,14 +6446,14 @@ msgstr "Desplaça el botó superior"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Scroll down button"
-msgstr ""
+msgstr "Botó de desplaçament cap avall"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Scroll down to next section"
-msgstr ""
+msgstr "Desplaceu-vos cap avall fins a la secció següent"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -6478,6 +6486,10 @@ msgid ""
 "free and high quality photos, makes it possible for you to get the perfect "
 "picture, in just a few clicks."
 msgstr ""
+"Cerqueu al diàleg dels mitjans quan necessiteu fotos per il·lustrar el "
+"vostre lloc web. La integració d'Odoo amb Unsplash, que inclou milions de "
+"fotografies d'alta qualitat i lliures de drets d'autor, et permet obtenir la"
+" imatge perfecta amb només uns quants clics."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
@@ -6670,17 +6682,17 @@ msgstr "Mostrar com herència opcional"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show Header"
-msgstr ""
+msgstr "Mostra la capçalera"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Show Message"
-msgstr ""
+msgstr "Mostra el missatge"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show Sign In"
-msgstr ""
+msgstr "Mostra la sessió"
 
 #. module: website
 #. openerp-web
@@ -6724,6 +6736,9 @@ msgid ""
 "and which have recently changed, and to crawl your site accordingly. This "
 "file is automatically generated by Odoo."
 msgstr ""
+"Sitemap.xml: Ajudeu els rastrejadors dels motors de cerca a esbrinar quines "
+"pàgines hi ha i quines han canviat recentment, i a rastrejar el vostre lloc "
+"en conseqüència. Aquest fitxer el genera automàticament Odoo."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -6744,32 +6759,32 @@ msgstr "Diapositiva"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Down"
-msgstr ""
+msgstr "Saltar i començar des de zero"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slide Hover"
-msgstr ""
+msgstr "Llisca el cursor"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Left"
-msgstr ""
+msgstr "Feu lliscar cap a l'esquerra"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Right"
-msgstr ""
+msgstr "Feu lliscar cap a la dreta"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Up"
-msgstr ""
+msgstr "Fesu lliscar cap amunt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slideout Effect"
-msgstr ""
+msgstr "Slideout Effect"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -6797,7 +6812,7 @@ msgstr "Petit"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
-msgstr ""
+msgstr "Capçalera petita"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -6806,6 +6821,8 @@ msgid ""
 "Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
 "<i>Integer posuere erat a ante</i>."
 msgstr ""
+"Text petit. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8330,6 +8347,9 @@ msgid ""
 "We use them to store info about your habits on our website. It will helps us"
 " to provide you the very best experience and customize what you see."
 msgstr ""
+"Els fem servir per emmagatzemar informació sobre els vostres hàbits al "
+"nostre lloc web. Ens ajudarà a oferir-te la millor experiència i "
+"personalitzar el que veus."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -8389,7 +8409,7 @@ msgstr "Favicon del lloc web"
 #: model:ir.model.fields,field_description:website.field_website__logo
 #, python-format
 msgid "Website Logo"
-msgstr ""
+msgstr "Logotip del lloc web"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_menu
@@ -8449,7 +8469,7 @@ msgstr "Configuració del lloc web"
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Filtre de fragments de lloc web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.onboarding_website_theme_step
@@ -8506,7 +8526,7 @@ msgstr "Visitant del lloc web #%s"
 #: model:ir.cron,cron_name:website.website_visitor_cron
 #: model:ir.cron,name:website.website_visitor_cron
 msgid "Website Visitor : Archive old visitors"
-msgstr ""
+msgstr "Visitant del lloc web: arxiva els visitants antics"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -8555,17 +8575,17 @@ msgstr "Imatge del lloc web"
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
 msgid "Website rewrite"
-msgstr ""
+msgstr "Reescriptura del lloc web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "Website rewrite Settings"
-msgstr ""
+msgstr "Configuració de reescriptura del lloc web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.action_website_rewrite_tree
 msgid "Website rewrites"
-msgstr ""
+msgstr "Reescritures del lloc web"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_google_analytics
@@ -8611,7 +8631,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "What you see is what you get"
-msgstr ""
+msgstr "El que veus és el que obtens"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
@@ -8647,6 +8667,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
+"Escriu un o dos paràgrafs que descriguin el teu producte o servei. Per tenir"
+" èxit, el vostre contingut ha de ser útil per als vostres lectors."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -8679,6 +8701,8 @@ msgid ""
 "You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.\n"
 "                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies."
 msgstr ""
+"Podeu triar que el vostre ordinador us avisi cada vegada que s'enviï una galeta, o podeu optar per desactivar totes les cookies.\n"
+"                            Cada navegador és una mica diferent, així que mireu el menú d'ajuda del vostre navegador per conèixer la manera correcta de modificar les vostres galetes."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
