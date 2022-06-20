@@ -38,7 +38,9 @@ const endPos = OdooEditorLib.endPos;
 
 var id = 0;
 const faZoomClassRegex = RegExp('fa-[0-9]x');
-const mediaSelector = 'img, .fa, .o_image, .media_iframe_video';
+const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
+// TODO review in master (see isImageSupportedForStyle).
+const mediaSelector = basicMediaSelector.split(',').map(s => `${s}:not([data-oe-xpath])`).join(',');
 
 // Time to consider a user offline in ms. This fixes the problem of the
 // navigator closing rtc connection when the mac laptop screen is closed.

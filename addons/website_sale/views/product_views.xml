@@ -133,6 +133,9 @@
             <div name="button_box" position="inside">
                 <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('sale_ok','=',False)]}"/>
             </div>
+            <group name="upsell" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
             <xpath expr="//group[@name='upsell']" position="inside">
                 <field name="accessory_product_ids" widget="many2many_tags" attrs="{'invisible': [('sale_ok','=',False)]}"
                        placeholder="Suggested accessories in the eCommerce cart"/>

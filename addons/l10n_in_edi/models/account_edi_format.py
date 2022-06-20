@@ -290,7 +290,9 @@ class AccountEdiFormat(models.Model):
             This method is call for rounding.
             If anything is wrong with rounding then we quick fix in method
         """
-        return round(amount, precision_digits)
+        value = round(amount, precision_digits)
+        # avoid -0.0
+        return value if value else 0.0
 
     def _get_l10n_in_edi_line_details(self, index, line, line_tax_details, sign):
         """

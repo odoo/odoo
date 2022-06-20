@@ -51,3 +51,26 @@ class WebsiteSaleVisitorTests(TransactionCase):
         new_tracks = self.env['website.track'].search([('id', 'not in', existing_tracks.ids)])
         self.assertEqual(len(new_visitors), 1, "No visitor should be created after visiting another tracked product")
         self.assertEqual(len(new_tracks), 2, "A track should be created after visiting another tracked product")
+
+    def test_recently_viewed_company_changed(self):
+        # Test that, by changing the company of a tracked product, the recently viewed product do not crash
+        new_company = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        public_user = self.env.ref('base.public_user')
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'website_published': True,
+            'sale_ok': True,
+        })
+
+        self.website = self.website.with_user(public_user).with_context(website_id=self.website.id)
+        with MockRequest(self.website.env, website=self.website):
+            self.cookies = self.WebsiteSaleController.products_recently_viewed_update(product.id)
+        product.product_tmpl_id.company_id = new_company
+        product.product_tmpl_id.flush(['company_id'], product.product_tmpl_id)
+        with MockRequest(self.website.env, website=self.website, cookies=self.cookies):
+            # Should not raise an error
+            res = self.website.env['website.snippet.filter']._get_products_latest_viewed(self.website, 16, [], {})
+            self.assertFalse(res)

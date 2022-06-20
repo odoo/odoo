@@ -77,9 +77,9 @@ class SaleOrderLine(models.Model):
                     raise ValidationError(
                         _('The following booths are unavailable, please remove them to continue : %(booth_names)s',
                           booth_names=''.join('\n\t- %s' % booth.display_name for booth in unavailable)))
-                so_line.event_booth_registration_ids.action_confirm()
+                so_line.event_booth_registration_ids.sudo().action_confirm()
             if so_line.event_booth_ids and set_paid:
-                so_line.event_booth_ids.action_set_paid()
+                so_line.event_booth_ids.sudo().action_set_paid()
         return True
 
     def get_sale_order_line_multiline_description_sale(self, product):
