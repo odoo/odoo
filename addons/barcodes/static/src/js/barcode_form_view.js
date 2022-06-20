@@ -4,11 +4,10 @@ odoo.define('barcodes.FormView', function (require) {
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var FormController = require('web.FormController');
-var FormRenderer = require('web.FormRenderer');
 
 var _t = core._t;
 
-const reservedBarcodePrefixes = ['O-CMD', 'O-BTN'];
+const reservedBarcodePrefixes = ['O-CMD'];
 
 
 FormController.include({
@@ -342,85 +341,6 @@ FormController.include({
             });
         });
     },
-});
-
-
-FormRenderer.include({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-    /**
-     * trigger_up 'activeBarcode' to Add barcode event handler
-     *
-     * @private
-     * @param {jQueryElement} $button
-     * @param {Object} node
-     */
-    _barcodeButtonHandler: function ($button, node) {
-        var commands = {};
-        commands.barcode = function () {return Promise.resolve();};
-        commands['O-BTN.' + node.attrs.barcode_trigger] = function () {
-            if (!$button.hasClass('o_invisible_modifier')) {
-                $button.click();
-            }
-            return Promise.resolve();
-        };
-        var name = node.attrs.name;
-        if (node.attrs.string) {
-            name = name + '_' + node.attrs.string;
-        }
-
-        this.trigger_up('activeBarcode', {
-            name: name,
-            commands: commands
-        });
-    },
-    /**
-     * Add barcode event handler
-     *
-     * @override
-     * @private
-     * @param {Object} node
-     * @returns {jQueryElement}
-     */
-    _renderHeaderButton: function (node) {
-        var $button = this._super.apply(this, arguments);
-        if (node.attrs.barcode_trigger) {
-            this._barcodeButtonHandler($button, node);
-        }
-        return $button;
-    },
-    /**
-     * Add barcode event handler
-     *
-     * @override
-     * @private
-     * @param {Object} node
-     * @returns {jQueryElement}
-     */
-    _renderStatButton: function (node) {
-        var $button = this._super.apply(this, arguments);
-        if (node.attrs.barcode_trigger) {
-            this._barcodeButtonHandler($button, node);
-        }
-        return $button;
-    },
-    /**
-     * Add barcode event handler
-     *
-     * @override
-     * @private
-     * @param {Object} node
-     * @returns {jQueryElement}
-     */
-    _renderTagButton: function (node) {
-        var $button = this._super.apply(this, arguments);
-        if (node.attrs.barcode_trigger) {
-            this._barcodeButtonHandler($button, node);
-        }
-        return $button;
-    }
 });
 
 });
