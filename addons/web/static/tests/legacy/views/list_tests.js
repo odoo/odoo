@@ -10063,9 +10063,7 @@ QUnit.module('Views', {
                 type: 'ir.actions.act_window',
                 views: [[3, 'list']],
                 search_view_id: [9, 'search'],
-                flags: {
-                    context: { group_by: ['int_field'] },
-                },
+                context: { group_by: ['int_field'] },
             },
         };
 

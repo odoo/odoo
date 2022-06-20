@@ -9,6 +9,5 @@ export function editModelDebug(env, title, model, id) {
         views: [[false, "form"]],
         view_mode: "form",
         target: "new",
-        flags: { action_buttons: true, headless: true },
     });
 }

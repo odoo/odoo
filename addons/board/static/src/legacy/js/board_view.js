@@ -461,11 +461,6 @@ var BoardView = FormView.extend({
     _extractParamsFromAction(action) {
         action.target = "inline";
         action.flags = action.flags || {};
-        Object.assign(action.flags, {
-            hasActionMenus: false,
-            hasSearchView: false,
-            headless: true,
-        });
         return this._super.apply(this, arguments);
     },
 });

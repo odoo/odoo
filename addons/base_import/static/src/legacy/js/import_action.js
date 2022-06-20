@@ -124,12 +124,6 @@ var DataImport = AbstractAction.extend({
             });
             this.do_action(_.extend(action, {
                 target: 'new',
-                flags: {
-                    search_view: true,
-                    display_title: true,
-                    pager: true,
-                    list: {selectable: false}
-                }
             }));
         },
     },

@@ -90,7 +90,6 @@ class SaleCouponShare(models.TransientModel):
             'view_mode': 'form',
             'res_model': 'coupon.share',
             'target': 'new',
-            'flags': {'form': {'action_buttons': True}},
             'context': {
                 'form_view_initial_mode': 'edit',
                 'default_program_id': program and program.id or coupon.program_id.id,
