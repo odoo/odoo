@@ -4078,8 +4078,8 @@ class AccountMoveLine(models.Model):
         for line in self:
             if not line.move_id.is_invoice(include_receipts=True):
                 continue
-
-            line.update(line._get_price_total_and_subtotal())
+            price_unit = abs(line.amount_currency) if (not line.display_type and line.tax_repartition_line_id) else None
+            line.update(line._get_price_total_and_subtotal(price_unit=price_unit))
             line.update(line._get_fields_onchange_subtotal())
 
     @api.onchange('currency_id')
